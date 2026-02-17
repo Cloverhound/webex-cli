@@ -1,0 +1,367 @@
+package cc
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var agentsCmd = &cobra.Command{
+	Use:   "agents",
+	Short: "Agents commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(agentsCmd)
+
+	{ // login
+		var dialNumber string
+		var roles []string
+		var teamId string
+		var isExtension bool
+		var deviceType string
+		var deviceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "login",
+			Short: "Login",
+			Long:  `Allows the user to login to their desktop. It does not allow a duplicate login and sends an error message over websocket, if an active session already exists. Requires 'cjp:user' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/agents/login")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("dialNumber", dialNumber)
+					req.BodyStringSlice("roles", roles)
+					req.BodyString("teamId", teamId)
+					req.BodyBool("isExtension", isExtension, cmd.Flags().Changed("is-extension"))
+					req.BodyString("deviceType", deviceType)
+					req.BodyString("deviceId", deviceId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&dialNumber, "dial-number", "", "")
+		cmd.Flags().StringSliceVar(&roles, "roles", nil, "")
+		cmd.Flags().StringVar(&teamId, "team-id", "", "")
+		cmd.Flags().BoolVar(&isExtension, "is-extension", false, "")
+		cmd.Flags().StringVar(&deviceType, "device-type", "", "")
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // logout
+		var logoutReason string
+		var agentId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "logout",
+			Short: "Logout",
+			Long:  `Allows the user to logout from their Desktop. This API needs to be called once the WSS session has been successfully established. Requires 'cjp:user','id_full_admin','id_readonly_admin','atlas-portal.partner.salesadmin','cjp.admin','cjp.supervisor','atlas-portal.partner.provision_admin' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/v2/agents/logout")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("logoutReason", logoutReason)
+					req.BodyString("agentId", agentId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&logoutReason, "logout-reason", "", "")
+		cmd.Flags().StringVar(&agentId, "agent-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // state-change
+		var channelType []string
+		var state string
+		var auxCodeId string
+		var reason string
+		var agentId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "state-change",
+			Short: "State Change",
+			Long:  `Allows the user to toggle between the Idle and Available states. An Administrator within the organization having an Agent license can perform a self state change when they have an active agent session. Supervisors can perform a self state change as well as state changes for agents and admin users within their authorized teams when 'Change Agent States' module is enabled. Requires 'cjp:user' scope for authorization.For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/v2/agents/session/state")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("channelType", channelType)
+					req.BodyString("state", state)
+					req.BodyString("auxCodeId", auxCodeId)
+					req.BodyString("reason", reason)
+					req.BodyString("agentId", agentId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringSliceVar(&channelType, "channel-type", nil, "")
+		cmd.Flags().StringVar(&state, "state", "", "")
+		cmd.Flags().StringVar(&auxCodeId, "aux-code-id", "", "")
+		cmd.Flags().StringVar(&reason, "reason", "", "")
+		cmd.Flags().StringVar(&agentId, "agent-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // reload
+		cmd := &cobra.Command{
+			Use:   "reload",
+			Short: "Reload",
+			Long:  `Allows the user to receive all the contact assigned to particular agent and state. Requires 'cjp:user' scope for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/agents/reload")
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // buddy-list
+		var agentProfileId string
+		var mediaType string
+		var state string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "buddy-list",
+			Short: "Buddy Agents List",
+			Long:  `Returns the list of agents in the given state and media according to agent profile settings. Requires 'cjp:user' scope for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/agents/buddyList")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("agentProfileId", agentProfileId)
+					req.BodyString("mediaType", mediaType)
+					req.BodyString("state", state)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&agentProfileId, "agent-profile-id", "", "")
+		cmd.Flags().StringVar(&mediaType, "media-type", "", "")
+		cmd.Flags().StringVar(&state, "state", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // get-activities
+		var agentIds string
+		var teamIds string
+		var channelTypes string
+		var from string
+		var to string
+		var pageSize string
+		var page string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-activities",
+			Short: "Get Agent Activities",
+			Long: `Retrieve agent activities. Sorted by start time ascending.
+Maximum number of records that can be fetched for the given from and to is 10,000. 
+For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
+The response will be compressed only if its size exceeds 1 MB.
+If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/agents/activities")
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("teamIds", teamIds)
+				req.QueryParam("channelTypes", channelTypes)
+				req.QueryParam("channelTypes", channelTypes)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("pageSize", pageSize)
+				req.QueryParam("page", page)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&agentIds, "agent-ids", "", "Filter agent activities by agent ids separated with commas if more than one value (max 100). By default, there is no agent filtering.")
+		cmd.Flags().StringVar(&teamIds, "team-ids", "", "Filter agent activities by team ids separated with commas if more than one value (max 100). By default, there is no team filtering.")
+		cmd.Flags().StringVar(&channelTypes, "channel-types", "", "Channel type(s) permitted in response. Separate values with commas. Must be lowercase. By default, there is no channelType filtering.")
+		cmd.Flags().StringVar(&from, "from", "", "Filter agent activities created after given epoch timestamp in UTC (in milliseconds).")
+		cmd.Flags().StringVar(&to, "to", "", "Filter agent activities created before given epoch timestamp in UTC (in milliseconds). If unspecified, queries up to the present.  The difference between to and from timestamps must be less than 24 hours (86400000 milli seconds)")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Maximum page size in response. Maximum allowed value is 1000. Defaults to 100 items per page.")
+		cmd.Flags().StringVar(&page, "page", "", "Page number to be passed. Maximum number of records that can be fetched for the given from and to is 10,000. So maximum page number allowed is based on it. Defaults to 0.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		agentsCmd.AddCommand(cmd)
+	}
+
+	{ // get-statistics
+		var from string
+		var to string
+		var interval string
+		var agentIds string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-statistics",
+			Short: "Get Agent Statistics",
+			Long: `Retrieve Agent statistics information for specified time duration and interval.
+For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
+The response will be compressed only if its size exceeds 1 MB.
+If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/agents/statistics")
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("interval", interval)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("agentIds", agentIds)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&from, "from", "", "Start time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:05 will be rounded down to 12:00.")
+		cmd.Flags().StringVar(&to, "to", "", "End time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:55 will be rounded down to 12:45.  The difference between to and from time must be less than 24 hours (86400000 milliseconds).")
+		cmd.Flags().StringVar(&interval, "interval", "", "Time interval (in minutes) to chunk statistics by i.e. break up the entire from-to timeframe by this interval amount so that statistics can be viewed incrementally. Supported values are 15, 30, or 60.")
+		cmd.Flags().StringVar(&agentIds, "agent-ids", "", "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		agentsCmd.AddCommand(cmd)
+	}
+
+}

@@ -1,0 +1,338 @@
+package calling
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var pstnCmd = &cobra.Command{
+	Use:   "pstn",
+	Short: "Pstn commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(pstnCmd)
+
+	{ // get-connection-options-location
+		var locationId string
+		var orgId string
+		var serviceTypes string
+		cmd := &cobra.Command{
+			Use:   "get-connection-options-location",
+			Short: "Retrieve PSTN Connection Options for a Location",
+			Long:  "Retrieve the list of PSTN connection options available for a location.\n\nPSTN location connection settings enables the admin to configure or change the PSTN provider for a location.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_pstn_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/pstn/locations/{locationId}/connectionOptions")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("serviceTypes", serviceTypes)
+				req.QueryParam("serviceTypes", serviceTypes)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of List PSTN location connection options for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List PSTN location connection options for this organization.")
+		cmd.Flags().StringVar(&serviceTypes, "service-types", "", "Use the `serviceTypes` parameter to fetch connections for the following services * `MOBILE_NUMBERS`")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // setup-connection-location
+		var locationId string
+		var orgId string
+		var id string
+		var premiseRouteType string
+		var premiseRouteId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "setup-connection-location",
+			Short: "Setup PSTN Connection for a Location",
+			Long:  "Set up or update the PSTN connection details for a location.\n\nPSTN location connection settings enables the admin to configure or change the PSTN provider for a location.\n\nSetting up PSTN connection on a location requires a full administrator auth token with scopes of `spark-admin:telephony_pstn_write` and `spark-admin:telephony_pstn_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/pstn/locations/{locationId}/connection")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("id", id)
+					req.BodyString("premiseRouteType", premiseRouteType)
+					req.BodyString("premiseRouteId", premiseRouteId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Setup PSTN location connection options for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Setup PSTN location connection for this organization.")
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.Flags().StringVar(&premiseRouteType, "premise-route-type", "", "")
+		cmd.Flags().StringVar(&premiseRouteId, "premise-route-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // get-connection-location
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-connection-location",
+			Short: "Retrieve PSTN Connection for a Location",
+			Long:  "Retrieves the current configured PSTN connection details for a location.\n\nPSTN location connection settings enables the admin to configure or change the PSTN provider for a location.\n\nRetrieving the PSTN connection details for a location requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_pstn_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/pstn/locations/{locationId}/connection")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve PSTN location connection details for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve PSTN location connection details for this organization.")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // update-emergency-address-phone-number
+		var phoneNumber string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-emergency-address-phone-number",
+			Short: "Update the Emergency Address for a Phone Number",
+			Long:  "Update the emergency address for a phone number.\n\nEmergency address settings allow the admin to configure or update the physical address associated with a phone number or a location.\n\nUpdating the emergency address for a phone number requires a full administrator auth token with scope of `spark-admin:telephony_pstn_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/pstn/numbers/{phoneNumber}/emergencyAddress")
+				req.PathParam("phoneNumber", phoneNumber)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Update the emergency address for this phone number.")
+		cmd.MarkFlagRequired("phone-number")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update the emergency address of phone number in this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // emergency-address-lookup-verify-address-is-valid
+		var locationId string
+		var orgId string
+		var address1 string
+		var address2 string
+		var city string
+		var state string
+		var postalCode string
+		var country string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "emergency-address-lookup-verify-address-is-valid",
+			Short: "Emergency Address Lookup to Verify if Address is Valid",
+			Long:  "Returns a suggested address. If the input address is valid and unchanged, no errors are returned. If the input address requires corrections, the response includes a suggested address along with error details.\n\nEmergency address settings allow the admin to configure or update the physical address associated with a phone number or a location.\n\nEmergency address lookup to verify if address is valid requires a full administrator auth token with scope of `spark-admin:telephony_pstn_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/pstn/locations/{locationId}/emergencyAddress/lookup")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("address1", address1)
+					req.BodyString("address2", address2)
+					req.BodyString("city", city)
+					req.BodyString("state", state)
+					req.BodyString("postalCode", postalCode)
+					req.BodyString("country", country)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Emergency address lookup for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Emergency address lookup for this organization.")
+		cmd.Flags().StringVar(&address1, "address1", "", "")
+		cmd.Flags().StringVar(&address2, "address2", "", "")
+		cmd.Flags().StringVar(&city, "city", "", "")
+		cmd.Flags().StringVar(&state, "state", "", "")
+		cmd.Flags().StringVar(&postalCode, "postal-code", "", "")
+		cmd.Flags().StringVar(&country, "country", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // create-emergency-address-location
+		var locationId string
+		var orgId string
+		var address1 string
+		var address2 string
+		var city string
+		var state string
+		var postalCode string
+		var country string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-emergency-address-location",
+			Short: "Add an Emergency Address to a Location",
+			Long:  "Adds a new emergency address to the specified location. On success, returns the unique identifier of the newly created emergency address.\n\nEmergency address settings allow the admin to configure or update the physical address associated with a phone number or a location.\n\nAdding emergency address to a location requires a full administrator auth token with scope of `spark-admin:telephony_pstn_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/pstn/locations/{locationId}/emergencyAddress")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("address1", address1)
+					req.BodyString("address2", address2)
+					req.BodyString("city", city)
+					req.BodyString("state", state)
+					req.BodyString("postalCode", postalCode)
+					req.BodyString("country", country)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location to which the emergency address will be added.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Adding emergency address for a location in this organization.")
+		cmd.Flags().StringVar(&address1, "address1", "", "")
+		cmd.Flags().StringVar(&address2, "address2", "", "")
+		cmd.Flags().StringVar(&city, "city", "", "")
+		cmd.Flags().StringVar(&state, "state", "", "")
+		cmd.Flags().StringVar(&postalCode, "postal-code", "", "")
+		cmd.Flags().StringVar(&country, "country", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		pstnCmd.AddCommand(cmd)
+	}
+
+	{ // update-emergency-address-location
+		var locationId string
+		var addressId string
+		var orgId string
+		var address1 string
+		var address2 string
+		var city string
+		var state string
+		var postalCode string
+		var country string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-emergency-address-location",
+			Short: "Update the Emergency Address of a Location",
+			Long:  "Updates the emergency address of the specified location.\n\nEmergency address settings allow the admin to configure or update the physical address associated with a phone number or a location.\n\nUpdating the emergency address of a location requires a full administrator auth token with scope of `spark-admin:telephony_pstn_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/pstn/locations/{locationId}/emergencyAddresses/{addressId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("addressId", addressId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("address1", address1)
+					req.BodyString("address2", address2)
+					req.BodyString("city", city)
+					req.BodyString("state", state)
+					req.BodyString("postalCode", postalCode)
+					req.BodyString("country", country)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location for which the emergency address will be updated.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&addressId, "address-id", "", "Unique identifier for the emergency address that will be updated.")
+		cmd.MarkFlagRequired("address-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Updating the emergency address of a location in this organization.")
+		cmd.Flags().StringVar(&address1, "address1", "", "")
+		cmd.Flags().StringVar(&address2, "address2", "", "")
+		cmd.Flags().StringVar(&city, "city", "", "")
+		cmd.Flags().StringVar(&state, "state", "", "")
+		cmd.Flags().StringVar(&postalCode, "postal-code", "", "")
+		cmd.Flags().StringVar(&country, "country", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		pstnCmd.AddCommand(cmd)
+	}
+
+}

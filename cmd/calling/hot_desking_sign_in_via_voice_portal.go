@@ -1,0 +1,166 @@
+package calling
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var hotDeskingSignInViaVoicePortalCmd = &cobra.Command{
+	Use:   "hot-desking-sign-in-via-voice-portal",
+	Short: "HotDeskingSignInViaVoicePortal commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(hotDeskingSignInViaVoicePortalCmd)
+
+	{ // location
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "location",
+			Short: "Voice Portal Hot desking sign in details for a location",
+			Long:  "Get the Hot desking sign in details for a location.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/features/hotDesking")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which the hot desking sign in resides.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		hotDeskingSignInViaVoicePortalCmd.AddCommand(cmd)
+	}
+
+	{ // update-location
+		var locationId string
+		var orgId string
+		var voicePortalHotDeskSignInEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-location",
+			Short: "Update Voice Portal Hot desking sign in details for a location",
+			Long:  "Update the Hot desking sign in details for a location.\n\nThis requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/features/hotDesking")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("voicePortalHotDeskSignInEnabled", voicePortalHotDeskSignInEnabled, cmd.Flags().Changed("voice-portal-hot-desk-sign-in-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which the hot desking sign in resides.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&voicePortalHotDeskSignInEnabled, "voice-portal-hot-desk-sign-in-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		hotDeskingSignInViaVoicePortalCmd.AddCommand(cmd)
+	}
+
+	{ // user
+		var personId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "user",
+			Short: "Voice Portal Hot desking sign in details for a user",
+			Long:  "Get the Hot desking sign in details for a user.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/features/hotDesking/guest")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the person associated with the hot desking details.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		hotDeskingSignInViaVoicePortalCmd.AddCommand(cmd)
+	}
+
+	{ // update-user
+		var personId string
+		var orgId string
+		var voicePortalHotDeskSignInEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-user",
+			Short: "Update Voice Portal Hot desking sign in details for a user",
+			Long:  "Update the Hot desking sign in details for a user.\n\nThis requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/{personId}/features/hotDesking/guest")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("voicePortalHotDeskSignInEnabled", voicePortalHotDeskSignInEnabled, cmd.Flags().Changed("voice-portal-hot-desk-sign-in-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the person associated with the hot desking details.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&voicePortalHotDeskSignInEnabled, "voice-portal-hot-desk-sign-in-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		hotDeskingSignInViaVoicePortalCmd.AddCommand(cmd)
+	}
+
+}

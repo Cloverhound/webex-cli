@@ -1,0 +1,260 @@
+package calling
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var announcementPlaylistCmd = &cobra.Command{
+	Use:   "announcement-playlist",
+	Short: "AnnouncementPlaylist commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(announcementPlaylistCmd)
+
+	{ // list
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Announcement Playlists",
+			Long:  "Fetch a list of announcement playlist at an organization.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/playlists")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get announcements playlist in this organization.")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var orgId string
+		var name string
+		var announcementIds []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create Announcement Playlist",
+			Long:  "Create announcement Playlist at an organization level. A maximum of 25 announcement files can be included in a single playlist.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/announcements/playlists")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyStringSlice("announcementIds", announcementIds)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create an announcement playlist in this organization.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringSliceVar(&announcementIds, "announcement-ids", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var playlistId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Announcement Playlist",
+			Long:  "Fetch details of announcement playlist by its ID at an organization level.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/playlists/{playlistId}")
+				req.PathParam("playlistId", playlistId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&playlistId, "playlist-id", "", "Unique identifier of an announcement playlist.")
+		cmd.MarkFlagRequired("playlist-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get an announcement playlist in this organization.")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var playlistId string
+		var orgId string
+		var name string
+		var announcementIds []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update Announcement Playlist",
+			Long:  "Modify an existing announcement playlist at an organization level.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/announcements/playlists/{playlistId}")
+				req.PathParam("playlistId", playlistId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyStringSlice("announcementIds", announcementIds)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&playlistId, "playlist-id", "", "Unique identifier of an announcement playlist.")
+		cmd.MarkFlagRequired("playlist-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify an announcement playlist in this organization.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringSliceVar(&announcementIds, "announcement-ids", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var playlistId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete Announcement Playlist",
+			Long:  "Delete an announcement playlist for an organization.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/announcements/playlists/{playlistId}")
+				req.PathParam("playlistId", playlistId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&playlistId, "playlist-id", "", "Unique identifier of an announcement playlist.")
+		cmd.MarkFlagRequired("playlist-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete an announcement playlist in this organization.")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // list-locations
+		var playlistId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-locations",
+			Short: "List Playlist Locations",
+			Long:  "Fetch list of locations which are assigned to the given announcement playlist\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/playlists/{playlistId}/locations")
+				req.PathParam("playlistId", playlistId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&playlistId, "playlist-id", "", "Unique identifier of playlist.")
+		cmd.MarkFlagRequired("playlist-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get location associated to a playlist in this organization.")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+	{ // update-locations
+		var playlistId string
+		var orgId string
+		var locationIds []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-locations",
+			Short: "Update Playlist Locations",
+			Long:  "Modify list of assigned locations or add new locations to the announcement playlist. This will assing the playlist to the location's music on hold.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/announcements/playlists/{playlistId}/locations")
+				req.PathParam("playlistId", playlistId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("locationIds", locationIds)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&playlistId, "playlist-id", "", "Unique identifier of an announcement playlist.")
+		cmd.MarkFlagRequired("playlist-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify an assign location for announcement playlist for organization.")
+		cmd.Flags().StringSliceVar(&locationIds, "location-ids", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		announcementPlaylistCmd.AddCommand(cmd)
+	}
+
+}

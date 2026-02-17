@@ -1,0 +1,67 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var realtimeCmd = &cobra.Command{
+	Use:   "realtime",
+	Short: "Realtime commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(realtimeCmd)
+
+	{ // subscribe-notification
+		var isKeepAliveEnabled bool
+		var clientType string
+		var allowMultiLogin bool
+		var force bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "subscribe-notification",
+			Short: "Subscribe Realtime Notification",
+			Long:  `Access this endpoint when the user has to register for a WebSocket Session to receive realtime events. Requires 'cjp:user' scope or roles 'id_full_admin', 'id_readonly_admin', 'atlas-portal.partner.salesadmin', 'atlas-portal.partner.helpdesk', 'cjp.supervisor', 'cjp.admin', 'atlas-portal.partner.provision_admin' for authorization`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/realtime/subscribe")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("isKeepAliveEnabled", isKeepAliveEnabled, cmd.Flags().Changed("is-keep-alive-enabled"))
+					req.BodyString("clientType", clientType)
+					req.BodyBool("allowMultiLogin", allowMultiLogin, cmd.Flags().Changed("allow-multi-login"))
+					req.BodyBool("force", force, cmd.Flags().Changed("force"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&isKeepAliveEnabled, "is-keep-alive-enabled", false, "")
+		cmd.Flags().StringVar(&clientType, "client-type", "", "")
+		cmd.Flags().BoolVar(&allowMultiLogin, "allow-multi-login", false, "")
+		cmd.Flags().BoolVar(&force, "force", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		realtimeCmd.AddCommand(cmd)
+	}
+
+}

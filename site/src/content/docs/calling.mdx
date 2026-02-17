@@ -1,0 +1,70 @@
+---
+title: Calling Commands
+description: Webex Calling API commands reference.
+---
+
+The `webex calling` subcommand provides access to the Webex Calling API. No `--orgid` is needed — the organization is inferred from your authentication token.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `people` | Users and their calling settings |
+| `locations` | Location management |
+| `devices` | Device provisioning and management |
+| `numbers` | Phone number inventory |
+| `call-queue` | Call queue configuration |
+| `hunt-group` | Hunt group configuration |
+| `auto-attendant` | Auto attendant / IVR |
+| `call-park` | Call park settings |
+| `call-pickup` | Call pickup groups |
+| `paging-group` | Paging groups |
+| `call-controls` | Active call control operations |
+| `call-recording` | Call recording settings |
+| `user-call` | Per-user call settings |
+| `workspace-call` | Per-workspace call settings |
+| `device-call` | Per-device call settings |
+| `location-call` | Per-location call settings |
+| `dect-devices` | DECT handset and base station management |
+| `pstn` | PSTN connection and trunk settings |
+| `emergency-services` | E911 and emergency callback |
+| `operating-modes` | Operating mode schedules |
+| `single-number-reach` | Single number reach / simultaneous ring |
+| `virtual-extensions` | Virtual extension configuration |
+| `converged-recordings` | Recording access and management |
+| `reports` | CDR and call history reports |
+
+## Common Patterns
+
+```bash
+# List resources
+webex calling <resource> list
+
+# Get by ID
+webex calling <resource> get --id "..."
+
+# Create
+webex calling <resource> create --body-file config.json
+
+# Update
+webex calling <resource> update --id "..." --body-file updated.json
+
+# Delete
+webex calling <resource> delete --id "..."
+```
+
+## Examples
+
+```bash
+# List all people
+webex calling people list --paginate
+
+# Get call settings for a person
+webex calling user-call get-voicemail --person-id "PERSON_ID"
+
+# List call queues at a location
+webex calling call-queue list --location-id "LOCATION_ID"
+
+# Get detailed call history
+webex calling reports-detailed-call-history list --start-time "2024-01-01T00:00:00Z"
+```

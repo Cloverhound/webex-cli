@@ -1,0 +1,285 @@
+package calling
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var callPickupCmd = &cobra.Command{
+	Use:   "call-pickup",
+	Short: "CallPickup commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(callPickupCmd)
+
+	{ // list
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var order string
+		var name string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "Read the List of Call Pickups",
+			Long:  "List all Call Pickups for the organization.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callPickups")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("order", order)
+				req.QueryParam("name", name)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of call pickups for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List call pickups for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of call pickups returned to this maximum count. Default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching call pickups. Default is 0.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list of call pickups by name, either ASC or DSC. Default is ASC.")
+		cmd.Flags().StringVar(&name, "name", "", "Return the list of call pickups that contains the given name. The maximum length is 80.")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var locationId string
+		var orgId string
+		var name string
+		var notificationType string
+		var notificationDelayTimerSeconds int64
+		var agents []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Call Pickup",
+			Long:  "Create new Call Pickups for the given location.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nCreating a call pickup requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/callPickups")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("notificationType", notificationType)
+					req.BodyInt("notificationDelayTimerSeconds", notificationDelayTimerSeconds, cmd.Flags().Changed("notification-delay-timer-seconds"))
+					req.BodyStringSlice("agents", agents)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Create the call pickup for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create the call pickup for this organization.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&notificationType, "notification-type", "", "")
+		cmd.Flags().Int64Var(&notificationDelayTimerSeconds, "notification-delay-timer-seconds", 0, "")
+		cmd.Flags().StringSliceVar(&agents, "agents", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var locationId string
+		var callPickupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Call Pickup",
+			Long:  "Delete the designated Call Pickup.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nDeleting a call pickup requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/callPickups/{callPickupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("callPickupId", callPickupId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location from which to delete a call pickup.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&callPickupId, "call-pickup-id", "", "Delete the call pickup with the matching ID.")
+		cmd.MarkFlagRequired("call-pickup-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete the call pickup from this organization.")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var locationId string
+		var callPickupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Details for a Call Pickup",
+			Long:  "Retrieve the designated Call Pickup details.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nRetrieving call pickup details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callPickups/{callPickupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("callPickupId", callPickupId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve settings for a call pickup in this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&callPickupId, "call-pickup-id", "", "Retrieve settings for a call pickup with the matching ID.")
+		cmd.MarkFlagRequired("call-pickup-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve call pickup settings from this organization.")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var locationId string
+		var callPickupId string
+		var orgId string
+		var name string
+		var notificationType string
+		var notificationDelayTimerSeconds int64
+		var agents []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Call Pickup",
+			Long:  "Update the designated Call Pickup.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nUpdating a call pickup requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/callPickups/{callPickupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("callPickupId", callPickupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("notificationType", notificationType)
+					req.BodyInt("notificationDelayTimerSeconds", notificationDelayTimerSeconds, cmd.Flags().Changed("notification-delay-timer-seconds"))
+					req.BodyStringSlice("agents", agents)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this call pickup exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&callPickupId, "call-pickup-id", "", "Update settings for a call pickup with the matching ID.")
+		cmd.MarkFlagRequired("call-pickup-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update call pickup settings from this organization.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&notificationType, "notification-type", "", "")
+		cmd.Flags().Int64Var(&notificationDelayTimerSeconds, "notification-delay-timer-seconds", 0, "")
+		cmd.Flags().StringSliceVar(&agents, "agents", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-agents
+		var locationId string
+		var orgId string
+		var callPickupName string
+		var max string
+		var start string
+		var name string
+		var phoneNumber string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "get-available-agents",
+			Short: "Get available agents from Call Pickups",
+			Long:  "Retrieve available agents from call pickups for a given location.\n\nCall Pickup enables a user (agent) to answer any ringing line within their pickup group.\n\nRetrieving available agents from call pickups requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callPickups/availableUsers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("callPickupName", callPickupName)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("name", name)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the available agents for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Return the available agents for this organization.")
+		cmd.Flags().StringVar(&callPickupName, "call-pickup-name", "", "Only return available agents from call pickups with the matching name.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of available agents returned to this maximum count.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching available agents.")
+		cmd.Flags().StringVar(&name, "name", "", "Only return available agents with the matching name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Only return available agents with the matching primary number.")
+		cmd.Flags().StringVar(&order, "order", "", "Order the available agents according to the designated fields. Up to three vertical bar (|) separated sort order fields may be specified. Available sort fields: `fname`, `lname`, `extension`, `number`.")
+		callPickupCmd.AddCommand(cmd)
+	}
+
+}

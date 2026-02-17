@@ -1,0 +1,289 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var journeyTriggerActionsCmd = &cobra.Command{
+	Use:   "journey-trigger-actions",
+	Short: "JourneyTriggerActions commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(journeyTriggerActionsCmd)
+
+	{ // get-all
+		var workspaceId string
+		var sortBy string
+		var sort string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "get-all",
+			Short: "Get all Journey Actions",
+			Long: `Get all Journey Actions in JDS. 
+
+Role and Scope: Requires id full admin or any role with cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("sort", sort)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort By Field")
+		cmd.Flags().StringVar(&sort, "sort", "", "Sort direction")
+		cmd.Flags().StringVar(&page, "page", "", "Index of the page of results to be fetched.  Results are returned in blocks of pageSize elements. This parameter specifies which page number to retrieve. The page numbering starts with 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Number of items to be displayed on a page.")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-template
+		var workspaceId string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "get-all-template",
+			Short: "Get all Journey Actions for a template",
+			Long: `Get all Journey Actions for a template in JDS. 
+
+Role and Scope: It requires id full admin or any role with cjp:config_read or cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var workspaceId string
+		var templateId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a new  Journey Action",
+			Long:  "Create a new Journey Action in JDS. \n\n **Role and Scope**: It requires id full admin or any role with cjp:config_write scope.\n\n **Sample Input for Creating new Journey action**: \n  ```\n  {\n    \"name\": \"Closed Queue Action\",\n    \"cooldownPeriodInMinutes\": 1,\n    \"rules\": {\n      \"logic\": \"SINGLE\",\n      \"condition\": \"Closed Queue,category,string,Value GTE 2\"\n    },\n    \"actionTriggers\": [\n      {\n        \"type\": \"Webhook\",\n        \"webhookURL\": \"https://hooks.us.webexconnect.io/events/6M347NJ6\",\n        \"attributes\": {\n          \"httpverb\": \"post\",\n          \"requestbody\": \"{\\\"SMS\\\":\\\"12263762551\\\",\\\"callID\\\":\\\"\\\",\\\"MessageToSend\\\":\\\"Hello there!\\\"}\"\n        }\n      }\n    ],\n    \"isActive\": true\n  }\n ```\nThe action trigger's evaluation process is predicated on the progressive profile that has been established. \nIn this specific action trigger, the rule assessment verifies whether the progressive profile value from the prior template evaluation was in excess of 2. \nIf this condition is met, the webhook is subsequently activated.\n\n\nPrior to rule evaluation for actions, several conditions must be satisfied. \nFirstly, the event associated with the template must align with the rule event, which, in this case, is 'Closed Queue'. \nSecondly, the metadata assigned to the template must correspond with the metadata set by the rules, which in this context, is 'category'. \nThirdly, the aggregation mode of the template must be equivalent to the rules' aggregation mode, which is 'value' in this instance. \nFinally, the operator of the template's aggregation mode must match those defined for 'value'. \nIn this scenario, it is 'GTE' (greater than or equal), which is an accepted value for 'value'.\n",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // get-name
+		var workspaceId string
+		var templateId string
+		var actionName string
+		cmd := &cobra.Command{
+			Use:   "get-name",
+			Short: "Get specific Journey Action By Name",
+			Long: `Get specific Journey Action By Name in JDS. 
+
+Role and Scope:It requires id full admin or any role with cjp:config_read or cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-name/{actionName}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				req.PathParam("actionName", actionName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&actionName, "action-name", "", "Action Name")
+		cmd.MarkFlagRequired("action-name")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // get-actionid
+		var workspaceId string
+		var templateId string
+		var actionId string
+		cmd := &cobra.Command{
+			Use:   "get-actionid",
+			Short: "Get specific Journey Action By ActionId",
+			Long: `Get specific Journey Action By ActionId in JDS. 
+
+Role and Scope: It requires id full admin role with cjp:config_read or cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				req.PathParam("actionId", actionId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&actionId, "action-id", "", "Action ID")
+		cmd.MarkFlagRequired("action-id")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var workspaceId string
+		var templateId string
+		var actionId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update existing Journey Action",
+			Long: `Update existing Journey Action in JDS. 
+
+Role and Scope: It requires id full admin or any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				req.PathParam("actionId", actionId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&actionId, "action-id", "", "Action ID")
+		cmd.MarkFlagRequired("action-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-configuration-actionid
+		var workspaceId string
+		var templateId string
+		var actionId string
+		cmd := &cobra.Command{
+			Use:   "delete-configuration-actionid",
+			Short: "Delete Journey Action configuration By ActionId",
+			Long: `Delete Journey Action configuration By ActionId in JDS. 
+
+Role and Scope: It requires id full admin role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				req.PathParam("actionId", actionId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&actionId, "action-id", "", "Action ID")
+		cmd.MarkFlagRequired("action-id")
+		journeyTriggerActionsCmd.AddCommand(cmd)
+	}
+
+}

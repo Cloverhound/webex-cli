@@ -1,0 +1,116 @@
+---
+title: Quick Start
+description: Get up and running with the Webex CLI.
+---
+
+## Authentication
+
+The CLI uses OAuth with tokens stored in your OS keyring.
+
+```bash
+# Login (opens browser)
+webex login
+
+# Check auth status
+webex auth status
+
+# List stored accounts
+webex auth list
+
+# Switch between accounts
+webex auth switch user@example.com
+```
+
+You can also use a token directly:
+
+```bash
+webex --token "$WEBEX_TOKEN" calling people list
+```
+
+## Command Structure
+
+```
+webex calling <resource> <action> [flags]     # Webex Calling APIs
+webex cc <resource> <action> [flags]          # Contact Center APIs
+```
+
+## Global Flags
+
+| Flag | Description |
+|------|-------------|
+| `--token <token>` | Override authentication |
+| `--user <email>` | Use a specific authenticated user |
+| `--organization <orgId>` | Override org ID |
+| `--output json\|table\|raw` | Output format (default: json) |
+| `--debug` | Show HTTP request/response details |
+| `--paginate` | Auto-paginate list results |
+
+## Calling Examples
+
+```bash
+# List people
+webex calling people list --max 10
+
+# Get your own details
+webex calling people get-my-own
+
+# List locations
+webex calling locations list
+
+# List devices
+webex calling devices list
+```
+
+## Contact Center Examples
+
+CC commands auto-populate `--orgid` from your login:
+
+```bash
+# List sites
+webex cc site list
+
+# List teams
+webex cc team list
+
+# List users
+webex cc users list
+
+# List queues
+webex cc contact-service-queue list
+
+# List entry points
+webex cc entry-point list
+
+# With filtering
+webex cc site list --filter='name=="Site A"'
+
+# With pagination
+webex cc entry-point list --paginate
+```
+
+## Output Formats
+
+```bash
+# Pretty JSON (default)
+webex cc site list
+
+# Table format
+webex cc site list --output=table
+
+# Raw JSON
+webex cc site list --output=raw
+
+# Save to file
+webex cc site list > sites.json
+```
+
+## Discover Commands
+
+Use `--help` at any level to see available commands:
+
+```bash
+webex --help
+webex calling --help
+webex cc --help
+webex cc users --help
+```

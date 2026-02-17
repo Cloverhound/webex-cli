@@ -1,0 +1,1414 @@
+package calling
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var locationCallCmd = &cobra.Command{
+	Use:   "location-call",
+	Short: "LocationCall commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(locationCallCmd)
+
+	{ // list-dial-patterns
+		var dialPlanId string
+		var orgId string
+		var dialPattern string
+		var max string
+		var start string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "list-dial-patterns",
+			Short: "Read the List of Dial Patterns",
+			Long:  "List all Dial Patterns for the organization.\n\nDial plans route calls to on-premises destinations by use of trunks or route groups.\nThey are configured globally for an enterprise and apply to all users, regardless of location.\nA dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.\nSpecific dial patterns can be defined as part of your dial plan.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/dialPlans/{dialPlanId}/dialPatterns")
+				req.PathParam("dialPlanId", dialPlanId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("dialPattern", dialPattern)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&dialPlanId, "dial-plan-id", "", "ID of the dial plan.")
+		cmd.MarkFlagRequired("dial-plan-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization to which the dial patterns belong.")
+		cmd.Flags().StringVar(&dialPattern, "dial-pattern", "", "An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters. Valid wildcard characters are `!` (matches any sequence of digits) and `X` (matches a single digit, 0-9). The `!` wildcard can only occur once at the end and only in an E.164 pattern ")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of objects returned to this maximum count.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
+		cmd.Flags().StringVar(&order, "order", "", "Order the dial patterns according to the designated fields.  Available sort fields: `dialPattern`.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-webex-calling
+		var orgId string
+		var max string
+		var start string
+		var name string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "list-webex-calling",
+			Short: "List Locations Webex Calling Details",
+			Long:  "Lists Webex Calling locations for an organization with Webex Calling details.\n\nSearching and viewing locations with Webex Calling details in your\norganization require an administrator auth token with the\n`spark-admin:telephony_config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("name", name)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List locations for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of locations in the response.")
+		cmd.Flags().StringVar(&start, "start", "", "Specify the offset from the first result that you want to fetch.")
+		cmd.Flags().StringVar(&name, "name", "", "List locations whose name contains this string.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list of locations based on `name`, either asc or desc.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // enable-webex-calling
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "enable-webex-calling",
+			Short: "Enable a Location for Webex Calling",
+			Long:  "Enable a location by adding it to Webex Calling. This add Webex Calling support to a\nlocation created created using the POST /v1/locations API.\n\nLocations are used to support calling features which can be defined at the location level.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-webex-calling
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-webex-calling",
+			Short: "Get Location Webex Calling Details",
+			Long: `Shows Webex Calling details for a location, by ID.
+
+Specifies the location ID in the locationId parameter in the URI.
+
+Searching and viewing locations in your organization requires an administrator auth token with the spark-admin:telephony_config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve Webex Calling location attributes for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve Webex Calling location attributes for this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-webex-calling
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-webex-calling",
+			Short: "Update Location Webex Calling Details",
+			Long:  "Update Webex Calling details for a location, by ID.\n\nSpecifies the location ID in the `locationId` parameter in the URI.\n\nModifying the `connection` via API is only supported for the local PSTN types of `TRUNK` and `ROUTE_GROUP`.\n\nUpdating a location in your organization requires an administrator auth token with the `spark-admin:telephony_config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Updating Webex Calling location attributes for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Updating Webex Calling location attributes for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-update-routing-prefix-jobs
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-update-routing-prefix-jobs",
+			Short: "Get a List of Update Routing Prefix jobs",
+			Long:  "Get the list of all update routing prefix jobs in an organization.\n\nThe routing prefix is associated with a location and is used to route calls belonging to that location.\nThis API allows users to retrieve all the update routing prefix jobs in an organization.\n\nRetrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of update routing prefix jobs in this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-status-update-routing-prefix-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-status-update-routing-prefix-job",
+			Short: "Get the job status of Update Routing Prefix job",
+			Long:  "Get the status of the update routing prefix job by its job ID.\n\nThe routing prefix is associated with a location and is used to route calls belonging to that location.\nThis API allows users to check the status of update routing prefix job by job ID in an organization.\n\nChecking the status of the update routing prefix job in an organization requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix/{jobId}")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job status for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Check update routing prefix job status in this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-errors-update-routing-prefix-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-errors-update-routing-prefix-job",
+			Short: "Get job errors for update routing prefix job",
+			Long:  "GET job errors for the update routing prefix job in an organization.\n\nThe routing prefix is associated with a location and is used to route calls belonging to that location.\nThis API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.\n\nRetrieving all the errors of the update routing prefix job in an organization requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job errors for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of errors for update routing prefix job in this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-announcement-language
+		var locationId string
+		var orgId string
+		var announcementLanguageCode string
+		var agentEnabled bool
+		var serviceEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-announcement-language",
+			Short: "Change Announcement Language",
+			Long:  "Change announcement language for the given location.\n\nChange announcement language for current people/workspaces and/or existing feature configurations. This does not change the default announcement language which is applied to new users/workspaces and new feature configurations.\n\nChanging the announcement language for the given location requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/actions/modifyAnnouncementLanguage/invoke")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("announcementLanguageCode", announcementLanguageCode)
+					req.BodyBool("agentEnabled", agentEnabled, cmd.Flags().Changed("agent-enabled"))
+					req.BodyBool("serviceEnabled", serviceEnabled, cmd.Flags().Changed("service-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Change announcement language for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Change announcement language for this organization.")
+		cmd.Flags().StringVar(&announcementLanguageCode, "announcement-language-code", "", "")
+		cmd.Flags().BoolVar(&agentEnabled, "agent-enabled", false, "")
+		cmd.Flags().BoolVar(&serviceEnabled, "service-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-emergency-callback
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-emergency-callback",
+			Short: "Get a Location Emergency callback number",
+			Long:  "Get location emergency callback number.\n\n* To retrieve location callback number requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/features/emergencyCallbackNumber")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update location attributes for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update location attributes for this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-emergency-callback
+		var locationId string
+		var orgId string
+		var selected string
+		var locationMemberId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-emergency-callback",
+			Short: "Update a Location Emergency callback number",
+			Long:  "Update details for a location emergency callback number.\n\n* Updating a location callback number requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/features/emergencyCallbackNumber")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("selected", selected)
+					req.BodyString("locationMemberId", locationMemberId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update location attributes for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update location attributes for this organization.")
+		cmd.Flags().StringVar(&selected, "selected", "", "")
+		cmd.Flags().StringVar(&locationMemberId, "location-member-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // validate-list-extensions
+		var orgId string
+		var extensions []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "validate-list-extensions",
+			Short: "Validate the List of Extensions",
+			Long:  "Validates the list of Extensions provided by the customer at the organization level. It checks the extension meets the current extension length limits and does not conflict with the extensions of organization-level entities and settings. To check for extension use across all locations, use the [Get Phone Numbers](/v1/telephony/config/numbers) API. To validate an extension and check for conflicts for a specific location, use the [Validate Extensions](/docs/api/v1/location-call-settings/validate-extensions) API.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/actions/validateExtensions/invoke")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("extensions", extensions)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Validate Extension for this organization.")
+		cmd.Flags().StringSliceVar(&extensions, "extensions", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // validate-extensions
+		var locationId string
+		var orgId string
+		var extensions []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "validate-extensions",
+			Short: "Validate Extensions",
+			Long:  "Validate extensions for a specific location.\n\nValidating extensions requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/actions/validateExtensions/invoke")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("extensions", extensions)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Validate extensions for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Validate extensions for this organization.")
+		cmd.Flags().StringSliceVar(&extensions, "extensions", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-music-hold
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-music-hold",
+			Short: "Update Music On Hold",
+			Long:  "Update the location's music on hold settings.\n\nLocation music on hold settings allows you to play music when a call is placed on hold or parked.\n\nUpdating a location's music on hold settings requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/musicOnHold")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update music on hold settings for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update music on hold settings for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-music-hold
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-music-hold",
+			Short: "Get Music On Hold",
+			Long:  "Retrieve the location's music on hold settings.\n\nLocation music on hold settings allows you to play music when a call is placed on hold or parked.\n\nRetrieving a location's music on hold settings requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/musicOnHold")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve music on hold settings for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve music on hold settings for this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-private-network-connect
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-private-network-connect",
+			Short: "Get Private Network Connect",
+			Long:  "Retrieve the location's network connection type.\n\nNetwork Connection Type determines if the location's network connection is public or private.\n\nRetrieving a location's network connection type requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/privateNetworkConnect")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve the network connection type for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve the network connection type for this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-private-network-connect
+		var locationId string
+		var orgId string
+		var networkConnectionType string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-private-network-connect",
+			Short: "Update Private Network Connect",
+			Long:  "Update the location's network connection type.\n\nNetwork Connection Type determines if the location's network connection is public or private.\n\nUpdating a location's network connection type requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/privateNetworkConnect")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("networkConnectionType", networkConnectionType)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update the network connection type for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update network connection type for this organization.")
+		cmd.Flags().StringVar(&networkConnectionType, "network-connection-type", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-routing-choices
+		var orgId string
+		var routeGroupName string
+		var trunkName string
+		var max string
+		var start string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "list-routing-choices",
+			Short: "Read the List of Routing Choices",
+			Long:  "List all Routes for the organization.\n\nTrunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex Calling to manage calls between Webex Calling hosted users and premises PBX users. This solution lets you configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/routeChoices")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("routeGroupName", routeGroupName)
+				req.QueryParam("trunkName", trunkName)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List route identities for this organization.")
+		cmd.Flags().StringVar(&routeGroupName, "route-group-name", "", "Return the list of route identities matching the Route group name.")
+		cmd.Flags().StringVar(&trunkName, "trunk-name", "", "Return the list of route identities matching the Trunk name.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of objects returned to this maximum count.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
+		cmd.Flags().StringVar(&order, "order", "", "Order the route identities according to the designated fields.  Available sort fields: `routeName`, `routeType`.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-phone-numbers-available-external-caller-id
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "list-phone-numbers-available-external-caller-id",
+			Short: "Get the List of Phone Numbers Available for External Caller ID",
+			Long:  "Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a person, virtual line, or workspace) within the specified location.\nNumbers from the specified location are returned and cross location numbers are returned as well where the number's location has the same country, PSTN provider, and zone (only applicable for India locations) as the specified location.\nWhen `personId` is specified, and the person belongs to a cisco PSTN location, has a mobile number assigned as primary DN, and does not have a billing plan, only the assigned mobile number is returned as the available number for caller ID.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/externalCallerId/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("personId", personId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve available external caller ID numbers for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the provided list in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Retrieve available external caller ID numbers for this person. If `personId` is not provided it may result in the unsuccessful assignment of the returned number. This parameter has no effect when workspace or virtual line ID is used.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		cmd := &cobra.Command{
+			Use:   "get-available-numbers",
+			Short: "Get Available Phone Numbers for a Location with Given Criteria",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the location's main number.\nThese numbers are associated with the location specified in the request URL and can be active/inactive and assigned to an owning entity or unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-webex-go-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-webex-go-available-numbers",
+			Short: "Get Webex Go Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as the webex go phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/webexGo/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-ecbn-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		cmd := &cobra.Command{
+			Use:   "get-ecbn-available-numbers",
+			Short: "Get Location ECBN Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as the location's emergency callback number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/emergencyCallbackNumber/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-intercept-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-intercept-available-numbers",
+			Short: "Get Location Call Intercept Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the location's call intercept number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callIntercept/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Returns the list of phone numbers with the given `extension`.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-receptionist-contact-directory
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-receptionist-contact-directory",
+			Short: "Create a Receptionist Contact Directory",
+			Long:  "Create a new Receptionist Contact Directory for a location.\n\nReceptionist Contact Directories can be used to create named directories of users and/or location features (Auto Attendant, Call Queue, Hunt Group, Single Number Reach, and Paging Group).\n\nAdding a directory requires a full or write-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/receptionistContacts/directories")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Add a Receptionist Contact Directory to this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Add a Receptionist Contact Directory to this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-receptionist-contact-directories
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-receptionist-contact-directories",
+			Short: "Read list of Receptionist Contact Directories",
+			Long:  "List all Receptionist Contact Directories for a location.\n\nReceptionist Contact Directories can be used to create named directories of users.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/receptionistContacts/directories")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "List Receptionist Contact Directories for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List Receptionist Contact Directories for this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-receptionist-contact-directory
+		var locationId string
+		var directoryId string
+		var orgId string
+		var searchCriteriaModeOr string
+		var firstName string
+		var lastName string
+		var phoneNumber string
+		var extension string
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "get-receptionist-contact-directory",
+			Short: "Get details for a Receptionist Contact Directory",
+			Long:  "Get details for a specific Receptionist Contact Directory from a location.\n\nReceptionist Contact Directories are uniquely named per location and contain directories of Persons, Auto Attendants, Call Queues, Hunt Groups, Single Number Reaches, and Paging Groups.\n\nThis API is currently supported for Webex calling organizations with fewer than 2000 users or location-based calling features. For organizations with more than 2000 users or location features, the API will throw an error 25395.\n\nRetrieving details requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/receptionistContacts/directories/{directoryId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("directoryId", directoryId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("searchCriteriaModeOr", searchCriteriaModeOr)
+				req.QueryParam("firstName", firstName)
+				req.QueryParam("lastName", lastName)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("extension", extension)
+				req.QueryParam("personId", personId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Get a Receptionist Contact Directory from this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&directoryId, "directory-id", "", "Get details for the Receptionist Contact Directory with this identifier.")
+		cmd.MarkFlagRequired("directory-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get a Receptionist Contact Directory from this organization.")
+		cmd.Flags().StringVar(&searchCriteriaModeOr, "search-criteria-mode-or", "", "When `true`, results matching any one of the search criteria are included. The value can only be `true` or not included in the request. Specifying `searchCriteriaModeOr` without any search criteria, or setting it to `false` results in an `ErrorResponse`. If no search criteria is specified, all results are returned.")
+		cmd.Flags().StringVar(&firstName, "first-name", "", "Search for directories that contain people with the indicated first name.")
+		cmd.Flags().StringVar(&lastName, "last-name", "", "Search for directories that contain people with the indicated last name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search for directories that contain people with the indicated phone number.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Search for directories that contain people with the indicated extension.")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Search for directories that contain people with the indicated person ID.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-receptionist-contact-directory
+		var locationId string
+		var directoryId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-receptionist-contact-directory",
+			Short: "Delete a Receptionist Contact Directory",
+			Long:  "Delete a Receptionist Contact Directory from a location.\n\nReceptionist Contact Directories can be used to create named directories of users.\n\nDeleting a directory requires a full or write-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/receptionistContacts/directories/{directoryId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("directoryId", directoryId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Delete a Receptionist Contact Directory from this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&directoryId, "directory-id", "", "Delete the Receptionist Contact Directory ID with the matching ID.")
+		cmd.MarkFlagRequired("directory-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete a Receptionist Contact Directory from this organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-receptionist-contact-directory
+		var locationId string
+		var directoryId string
+		var orgId string
+		var name string
+		var contacts []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-receptionist-contact-directory",
+			Short: "Modify a Receptionist Contact Directory",
+			Long:  "Modify Receptionist Contact Directories attached to a location. This modification will replace the existing list of contacts with the new incoming contacts list from the request body. The API does not support incremental updates.\n\nReceptionist Contact Directories can be used to create named groups of Persons, Auto Attendants, Call Queues, Hunt Groups, Single Number Reaches, and Paging Groups.\n\nModifying a directory requires a full or write-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/receptionistContacts/directories/{directoryId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("directoryId", directoryId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyStringSlice("contacts", contacts)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Modify list of Receptionist Contact Directories for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&directoryId, "directory-id", "", "Get details for the Receptionist Contact Directory with this identifier.")
+		cmd.MarkFlagRequired("directory-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify list of Receptionist Contact Directories for this organization.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringSliceVar(&contacts, "contacts", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-charge-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		cmd := &cobra.Command{
+			Use:   "get-available-charge-numbers",
+			Short: "Get Available Charge Numbers for a Location with Given Criteria",
+			Long:  "List the numbers that are available to be assigned as the location's charge number.\n\nThese numbers are non-toll-free and non-mobile numbers assigned to the location specified in the request URL.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/chargeNumber/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of available charge numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // disable-webex-calling
+		var orgId string
+		var locationId string
+		var locationName string
+		var forceDelete bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "disable-webex-calling",
+			Short: "Disable a Location for Webex Calling",
+			Long:  "Disable a Location for Webex Calling.\n\nInitiating a disable calling location job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\nThe API returns a jobId that can be used with other job-related APIs to track the status and progress of the disable operation.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/locations/deleteCallingLocation")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("locationId", locationId)
+					req.BodyString("locationName", locationName)
+					req.BodyBool("forceDelete", forceDelete, cmd.Flags().Changed("force-delete"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for disabling the location for Webex Calling.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "")
+		cmd.Flags().StringVar(&locationName, "location-name", "", "")
+		cmd.Flags().BoolVar(&forceDelete, "force-delete", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-disable-calling-jobs
+		var orgId string
+		var max string
+		var start string
+		cmd := &cobra.Command{
+			Use:   "list-disable-calling-jobs",
+			Short: "Get a List of Disable Calling Location Jobs",
+			Long:  "Get a List of Disable Calling Location Jobs for the organization.\n\nRetrieving the list of disable calling location jobs requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/locations/deleteCallingLocation")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List disable calling location jobs for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Maximum number of jobs to return.")
+		cmd.Flags().StringVar(&start, "start", "", "Offset to start returning records from.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // check-delete-check-disabling-webex-calling
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "check-delete-check-disabling-webex-calling",
+			Short: "Safe Delete Check Before Disabling a Location for Webex Calling",
+			Long:  "Performs a safe delete check operation to identify any issues that would prevent the calling location from being disabled. This API helps identify resources that need to be addressed before a calling location can be successfully disabled.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/actions/precheckForDeletion/invoke")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location to be checked.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for which the safe delete check operation is being performed.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // pause-disable-calling-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "pause-disable-calling-job",
+			Short: "Pause a Disable Calling Location Job",
+			Long:  "Pause an in-progress disable calling location job. The job must be in the PROCESSING state to be paused.\n\nPausing a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}/actions/pause/invoke")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Unique identifier for the job to pause.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for which to pause the job.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // resume-paused-disable-calling-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "resume-paused-disable-calling-job",
+			Short: "Resume a Paused Disable Calling Location Job",
+			Long:  "Resume a previously paused disable calling location job. The job must be in the PAUSED state to be resumed.\n\nResuming a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}/actions/resume/invoke")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Unique identifier for the job to resume.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for which to resume the job.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-errors-disable-calling-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-errors-disable-calling-job",
+			Short: "Retrieve Errors for a Disable Calling Location Job",
+			Long:  "Retrieve detailed error information for a disable calling location job. This is particularly useful for jobs that have failed or encountered errors during processing.\n\nRetrieving job errors requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\nPossible error codes include:\n* `BATCH-1012002` - Unable to delete calling location from Broadworks.\n* `BATCH-1012004` - Safe delete checks failed.\n* `BATCH-1012005` - Failed to perform safe delete checks.\n* `BATCH-1012006` - Trunks in use in the location. Count: {0}\n* `BATCH-1012007` - Users associated with the location. Count: {0}\n* `BATCH-1012008` - Workspaces associated with the location. Count: {0}\n* `BATCH-1012009` - Virtual lines associated with the location. Count: {0}\n* `BATCH-1012010` - Number order is pending.\n* `BATCH-1012011` - Features associated with the location. This is a blocking error, use forceDelete to disable the calling location.\n* `BATCH-1012012` - Not allowed to delete the last calling location. Calling requires at least one active location in the organization, This is a blocking error.\n* `BATCH-1012013` - Local gateway's associated with the location. Count: {0}. This is a blocking error, use forceDelete to disable the calling location.\n* `BATCH-1012014` - Location not found.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Unique identifier for the job to get errors for.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for disable calling location job.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-disable-calling-job-status
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-disable-calling-job-status",
+			Short: "Get Disable Calling Location Job Status",
+			Long:  "Get the status and details of a specific disable calling location job.\n\nRetrieving job status requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Unique identifier for the job.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for which to retrieve the job status.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-captions-settings
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-captions-settings",
+			Short: "Get the location call captions settings",
+			Long:  "Retrieve the location's call captions settings.\n\n**NOTE**: The call captions feature is not supported for locations in India.\n\nThe call caption feature allows the customer to enable and manage closed captions and transcript functionality (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.\n\nThis API requires a full, read-only, or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callCaptions")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Unique identifier for the organization.")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-captions-settings
+		var locationId string
+		var orgId string
+		var locationClosedCaptionsEnabled bool
+		var locationTranscriptsEnabled bool
+		var useOrgSettingsEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-captions-settings",
+			Short: "Update the location call captions settings",
+			Long:  "Update the location's call captions settings.\n\n**NOTE**: The call captions feature is not supported for locations in India.\n\nThe call caption feature allows the customer to enable and manage closed captions and transcript functionality (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/callCaptions")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("locationClosedCaptionsEnabled", locationClosedCaptionsEnabled, cmd.Flags().Changed("location-closed-captions-enabled"))
+					req.BodyBool("locationTranscriptsEnabled", locationTranscriptsEnabled, cmd.Flags().Changed("location-transcripts-enabled"))
+					req.BodyBool("useOrgSettingsEnabled", useOrgSettingsEnabled, cmd.Flags().Changed("use-org-settings-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Unique identifier for the organization.")
+		cmd.Flags().BoolVar(&locationClosedCaptionsEnabled, "location-closed-captions-enabled", false, "")
+		cmd.Flags().BoolVar(&locationTranscriptsEnabled, "location-transcripts-enabled", false, "")
+		cmd.Flags().BoolVar(&useOrgSettingsEnabled, "use-org-settings-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationCallCmd.AddCommand(cmd)
+	}
+
+}

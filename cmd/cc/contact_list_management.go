@@ -1,0 +1,226 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var contactListManagementCmd = &cobra.Command{
+	Use:   "contact-list-management",
+	Short: "ContactListManagement commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(contactListManagementCmd)
+
+	{ // create
+		var campaignId string
+		var supportedChannels []string
+		var activationTimeLagMinutes int64
+		var activationDateTime string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create contact list",
+			Long:  `Creates and activates a contact list for a campaign. The system can activate a contact list even if there are no contact records within it.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v3/campaign-management/campaigns/{campaignId}/contact-list")
+				req.PathParam("campaignId", campaignId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("supportedChannels", supportedChannels)
+					req.BodyInt("activationTimeLagMinutes", activationTimeLagMinutes, cmd.Flags().Changed("activation-time-lag-minutes"))
+					req.BodyString("activationDateTime", activationDateTime)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID to which the contact list belongs.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringSliceVar(&supportedChannels, "supported-channels", nil, "")
+		cmd.Flags().Int64Var(&activationTimeLagMinutes, "activation-time-lag-minutes", 0, "")
+		cmd.Flags().StringVar(&activationDateTime, "activation-date-time", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+	{ // create-within
+		var campaignId string
+		var contactListId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-within",
+			Short: "Create contacts within a contact list",
+			Long:  `Creates contacts within a contact list (only if that contact list was created using API method). If the contact record is invalid, it will be added as INVALID and reflected in the 'Processed' and 'Invalid' counts. This is an Asynchronous operation. The values within the 'contactAttributes' param should conform to datatypes of the contact attributes as specified in the 'Field mapping' associated with the campaign.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/contacts")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("contactListId", contactListId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID to which the contact list belongs.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&contactListId, "contact-list-id", "", "Contact List ID (as a number string).")
+		cmd.MarkFlagRequired("contact-list-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+	{ // update-status-within
+		var campaignId string
+		var contactListId string
+		var contactId string
+		var contactStatus string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-status-within",
+			Short: "Update a contact's status within a contact list",
+			Long:  `Updates a contact's status within a contact list. After update, system overwrites 'Latest Telephony Outcome' to blank and 'Latest Business Outcome' to 'Closed via API call' if status is CLOSED. This is an Asynchronous operation.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/contacts/{contactId}")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("contactListId", contactListId)
+				req.PathParam("contactId", contactId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("contactStatus", contactStatus)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&contactListId, "contact-list-id", "", "Contact List ID (as a number string).")
+		cmd.MarkFlagRequired("contact-list-id")
+		cmd.Flags().StringVar(&contactId, "contact-id", "", "Contact Unique ID (Customer Unique ID or Account Unique ID or Contact_Phone)")
+		cmd.MarkFlagRequired("contact-id")
+		cmd.Flags().StringVar(&contactStatus, "contact-status", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+	{ // update-status
+		var campaignId string
+		var contactListId string
+		var contactListStatus string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-status",
+			Short: "Update contact list status",
+			Long:  `Updates the status of a contact list (e.g., EXPIRED). Note: This value is not case-sensitive.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/status")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("contactListId", contactListId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("contactListStatus", contactListStatus)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&contactListId, "contact-list-id", "", "Contact List ID (as a number string).")
+		cmd.MarkFlagRequired("contact-list-id")
+		cmd.Flags().StringVar(&contactListStatus, "contact-list-status", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+	{ // get-within-campaign
+		var campaignId string
+		var status string
+		var source string
+		cmd := &cobra.Command{
+			Use:   "get-within-campaign",
+			Short: "Get Contact Lists within a Campaign",
+			Long:  `Retrieves all contact lists within a campaign, with optional filters for status and source.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v3/campaign-management/campaigns/{campaignId}/contact-lists")
+				req.PathParam("campaignId", campaignId)
+				req.QueryParam("status", status)
+				req.QueryParam("source", source)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&status, "status", "", "Contact List Status filter (Active, Expired, UploadFailed, etc.)")
+		cmd.Flags().StringVar(&source, "source", "", "Contact List Source filter (API, SFTP, ManualFile, GlobalUpload, GlobalSFTP)")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+}

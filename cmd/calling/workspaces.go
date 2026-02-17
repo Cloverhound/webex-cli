@@ -1,0 +1,283 @@
+package calling
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var workspacesCmd = &cobra.Command{
+	Use:   "workspaces",
+	Short: "Workspaces commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(workspacesCmd)
+
+	{ // list
+		var orgId string
+		var locationId string
+		var workspaceLocationId string
+		var floorId string
+		var displayName string
+		var capacity string
+		var typeVal string
+		var start string
+		var max string
+		var calling string
+		var supportedDevices string
+		var calendar string
+		var deviceHostedMeetingsEnabled string
+		var devicePlatform string
+		var healthLevel string
+		var includeDevices string
+		var includeCapabilities string
+		var plannedMaintenance string
+		var customAttribute string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Workspaces",
+			Long:  "List workspaces.\n\nUse query parameters to filter the response. The `orgId` parameter can only be used by admin users of another organization (such as partners). The `locationId`, `workspaceLocationId`, `indoorNavigation`, `floorId`, `capacity` and `type` fields will only be present for workspaces that have a value set for them. The special values `notSet` (for filtering on category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a type and/or capacity.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("workspaceLocationId", workspaceLocationId)
+				req.QueryParam("floorId", floorId)
+				req.QueryParam("displayName", displayName)
+				req.QueryParam("capacity", capacity)
+				req.QueryParam("type", typeVal)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				req.QueryParam("calling", calling)
+				req.QueryParam("supportedDevices", supportedDevices)
+				req.QueryParam("calendar", calendar)
+				req.QueryParam("deviceHostedMeetingsEnabled", deviceHostedMeetingsEnabled)
+				req.QueryParam("devicePlatform", devicePlatform)
+				req.QueryParam("healthLevel", healthLevel)
+				req.QueryParam("includeDevices", includeDevices)
+				req.QueryParam("includeCapabilities", includeCapabilities)
+				req.QueryParam("plannedMaintenance", plannedMaintenance)
+				req.QueryParam("customAttribute", customAttribute)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List workspaces in this organization. Only admin users of another organization (such as partners) may use this parameter.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location associated with the workspace. Values must originate from the /locations API and not the legacy /workspaceLocations API.")
+		cmd.Flags().StringVar(&workspaceLocationId, "workspace-location-id", "", "Location associated with the workspace. Both values from the /locations API and the legacy /workspaceLocations API are supported. This field is deprecated and integrations should prefer `locationId` going forward.")
+		cmd.Flags().StringVar(&floorId, "floor-id", "", "Floor associated with the workspace.")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "List workspaces by display name.")
+		cmd.Flags().StringVar(&capacity, "capacity", "", "List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces with no capacity set.")
+		cmd.Flags().StringVar(&typeVal, "type", "", "List workspaces by type.")
+		cmd.Flags().StringVar(&start, "start", "", "Offset. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of workspaces in the response.")
+		cmd.Flags().StringVar(&calling, "calling", "", "List workspaces by calling type.")
+		cmd.Flags().StringVar(&supportedDevices, "supported-devices", "", "List workspaces by supported devices.")
+		cmd.Flags().StringVar(&calendar, "calendar", "", "List workspaces by calendar type.")
+		cmd.Flags().StringVar(&deviceHostedMeetingsEnabled, "device-hosted-meetings-enabled", "", "List workspaces enabled for device hosted meetings.")
+		cmd.Flags().StringVar(&devicePlatform, "device-platform", "", "List workspaces by device platform.")
+		cmd.Flags().StringVar(&healthLevel, "health-level", "", "List workspaces by health level.")
+		cmd.Flags().StringVar(&includeDevices, "include-devices", "", "Flag identifying whether to include the devices associated with the workspace in the response.")
+		cmd.Flags().StringVar(&includeCapabilities, "include-capabilities", "", "Flag identifying whether to include the workspace capabilities in the response.")
+		cmd.Flags().StringVar(&plannedMaintenance, "planned-maintenance", "", "List workspaces with given maintenance mode.")
+		cmd.Flags().StringVar(&customAttribute, "custom-attribute", "", "List workspaces with given custom attribute key.")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Workspace",
+			Long:  "Create a workspace.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).\n\n* Information for Webex Calling fields may be found here: [locations](/docs/api/v1/locations/list-locations), [available numbers](/docs/api/v1/numbers/get-phone-numbers-for-an-organization-with-given-criterias) and [licenses](/docs/api/v1/licenses).\n\n* The `locationId` and `supportedDevices` fields cannot be changed once configured.\n\n* When creating a `webexCalling` workspace that is not hot desk only, a `locationId` and either a `phoneNumber` or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be automaticaly applied.\n\n* When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable. Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields are provided the API will return an error. The `calling` type is `webexCalling`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/workspaces")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var workspaceId string
+		var includeDevices string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Workspace Details",
+			Long:  "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("includeDevices", includeDevices)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "(Required) A unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&includeDevices, "include-devices", "", "Flag identifying whether to include the devices associated with the workspace in the response.")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var workspaceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Workspace",
+			Long:  "Updates details for a workspace by ID.\n\nSpecify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that are present in a [GET request for the workspace details](/docs/api/v1/workspaces/get-workspace-details). Not including the optional `capacity`, `type` or `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`, `calendar` and `calling` fields do not change when omitted from the update request.\n\n* Information for Webex Calling fields may be found here: [locations](/docs/api/v1/locations/list-locations) and [available numbers](/docs/api/v1/numbers/get-phone-numbers-for-an-organization-with-given-criterias).\n\n* Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`, `thirdPartySipCalling` or `webexCalling`.\n\n* Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the workspace contains any devices.\n\n* The `locationId` and `supportedDevices` fields cannot be changed once configured.\n\n* When updating `webexCalling` information on a workspace that is not hot desk only, a `locationId` and either a `phoneNumber` or `extension` or both is required. Furthermore, the `licenses` field can be set with a list of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license ID is omitted, it will be replaced with one from the list provided. If the `licenses` field is omitted, the current calling license will be retained.\n\n* When specifying a hot desk only license on a hot desk only workspace, `deviceHostedMeetingsEnabled`, and `calendar` services are not supported and will be automatically disabled. In addition to this, the `phoneNumber` and `extension` will be removed from the workspace. Attempting to enable any of these services, or provide a `phoneNumber` or `extension` will result in an error. The `calling` type for these requests is `webexCalling`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "A unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var workspaceId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Workspace",
+			Long:  "Deletes a workspace by ID.\n\nAlso deletes all devices associated with the workspace. Any deleted devices will need to be reactivated. Specify the workspace ID in the `workspaceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/workspaces/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "A unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // get-capabilities
+		var workspaceId string
+		cmd := &cobra.Command{
+			Use:   "get-capabilities",
+			Short: "Get Workspace Capabilities",
+			Long:  "Shows the capabilities for a workspace by ID.\n\nReturns a set of capabilities, including whether or not the capability is supported by any device in the workspace, and if the capability is configured (enabled). For example for a specific capability like `occupancyDetection`, the API will return if the capability is supported and/or configured such that occupancy detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the `workspaceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/capabilities")
+				req.PathParam("workspaceId", workspaceId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "A unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+	{ // get-2
+		var workspaceId string
+		var includeDevices string
+		var includeCapabilities string
+		cmd := &cobra.Command{
+			Use:   "get-2",
+			Short: "Get Workspace Details",
+			Long:  "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("includeDevices", includeDevices)
+				req.QueryParam("includeCapabilities", includeCapabilities)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "A unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&includeDevices, "include-devices", "", "Flag identifying whether to include the devices associated with the workspace in the response.")
+		cmd.Flags().StringVar(&includeCapabilities, "include-capabilities", "", "Flag identifying whether to include the workspace capabilities in the response.")
+		workspacesCmd.AddCommand(cmd)
+	}
+
+}

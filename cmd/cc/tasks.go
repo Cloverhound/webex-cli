@@ -1,0 +1,714 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var tasksCmd = &cobra.Command{
+	Use:   "tasks",
+	Short: "Tasks commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(tasksCmd)
+
+	{ // create
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create Task",
+			Long:  `This API is to create a task for work or handling assignments. Represents both inbound tasks (originating from customer-facing channels) and outbound tasks (originating from contact center to customer-facing channel). Requires 'cjp:user' scope for authorization. For a list of possible response messages, see the Call Control API Guide.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var channelTypes string
+		var from string
+		var to string
+		var pageSize string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Tasks",
+			Long: `Retrieve open and closed tasks. Sorted by createdTime ascending. Uses offset-based pagination.
+For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
+The response will be compressed only if its size exceeds 1 MB.
+If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/tasks")
+				req.QueryParam("channelTypes", channelTypes)
+				req.QueryParam("channelTypes", channelTypes)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("pageSize", pageSize)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&channelTypes, "channel-types", "", "Task channel type(s) permitted in response. Separate values with commas. Use lowercase. By default, there is no channelType filtering.")
+		cmd.Flags().StringVar(&from, "from", "", "Filters tasks created after the given epoch timestamp (in milliseconds).")
+		cmd.Flags().StringVar(&to, "to", "", "Filters tasks created before the given epoch timestamp (in milliseconds); queries up to the present if timestamp is not specified.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Maximum page size in the response. Maximum allowed value is 1000. Defaults to 100 items per page.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var taskId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update Task",
+			Long:  `This API is to update a task. Represents both inbound tasks (originating from customer-facing channels) and outbound tasks (originating from contact center to customer-facing channel). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.. For a list of possible response messages, see the Call Control API Guide.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v1/tasks/{taskId}")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // accept
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "accept",
+			Short: "Accept Task",
+			Long:  `Access this endpoint when the user has to accept either an inbound or an outbound requests. The request can be social, a chat or an email. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/accept")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // end
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "end",
+			Short: "End Task",
+			Long:  `Access this endpoint when the user has to end either an inbound or an outbound requests. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/end")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // wrap-up
+		var taskId string
+		var wrapUpReason string
+		var auxCodeId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "wrap-up",
+			Short: "Wrap Up Task",
+			Long:  `Access this endpoint when the user has to wrap up a call. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/wrapup")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("wrapUpReason", wrapUpReason)
+					req.BodyString("auxCodeId", auxCodeId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&wrapUpReason, "wrap-up-reason", "", "")
+		cmd.Flags().StringVar(&auxCodeId, "aux-code-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // hold
+		var taskId string
+		var mediaResourceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "hold",
+			Short: "Hold Task",
+			Long:  `Access this endpoint when the user has to hold a call. When an user is in consulting state, the task will be put on hold. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/hold")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("mediaResourceId", mediaResourceId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&mediaResourceId, "media-resource-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // resume
+		var taskId string
+		var mediaResourceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "resume",
+			Short: "Resume Task",
+			Long:  `Access this endpoint when the user has to resume a call from hold. When an user is done consulting, the previously held interaction with the customer should be resumed. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/unhold")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("mediaResourceId", mediaResourceId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&mediaResourceId, "media-resource-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // reject
+		var taskId string
+		var mediaResourceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "reject",
+			Short: "Reject Task",
+			Long:  `Access this endpoint when the user has to reject a task. Once a task is rejected, the status of the user goes to idle from available. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/reject")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("mediaResourceId", mediaResourceId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&mediaResourceId, "media-resource-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // pause-recording
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "pause-recording",
+			Short: "Pause Recording Task",
+			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might want to pause the recording and later on resume recording. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/record/pause")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // resume-recording
+		var taskId string
+		var autoResumed bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "resume-recording",
+			Short: "Resume Recording Task",
+			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might resume the recording after the pause. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/record/resume")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("autoResumed", autoResumed, cmd.Flags().Changed("auto-resumed"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().BoolVar(&autoResumed, "auto-resumed", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // transfer
+		var taskId string
+		var to string
+		var destinationType string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "transfer",
+			Short: "Transfer Task",
+			Long:  `Access this endpoint when the user has to transfer a call to another user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/transfer")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("to", to)
+					req.BodyString("destinationType", destinationType)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&destinationType, "destination-type", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // consult-task
+		var taskId string
+		var to string
+		var destinationType string
+		var holdParticipants bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "consult-task",
+			Short: "Consult Task",
+			Long:  `Access this endpoint when the user has to consult a call to another user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/consult")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("to", to)
+					req.BodyString("destinationType", destinationType)
+					req.BodyBool("holdParticipants", holdParticipants, cmd.Flags().Changed("hold-participants"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&destinationType, "destination-type", "", "")
+		cmd.Flags().BoolVar(&holdParticipants, "hold-participants", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // consult-conference
+		var taskId string
+		var to string
+		var agentId string
+		var destinationType string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "consult-conference",
+			Short: "Consult Conference Task",
+			Long:  `Access this endpoint when the user has to initiate a conference with the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/consult/conference")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("to", to)
+					req.BodyString("agentId", agentId)
+					req.BodyString("destinationType", destinationType)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&agentId, "agent-id", "", "")
+		cmd.Flags().StringVar(&destinationType, "destination-type", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // consult-transfer
+		var taskId string
+		var to string
+		var destinationType string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "consult-transfer",
+			Short: "Consult Transfer Task",
+			Long:  `Access this endpoint when the user has to transfer a call to the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/consult/transfer")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("to", to)
+					req.BodyString("destinationType", destinationType)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&destinationType, "destination-type", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // consult-accept
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "consult-accept",
+			Short: "Consult Accept Task",
+			Long:  `Access this endpoint when the user has to accept a call to the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/consult/accept")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // assign
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "assign",
+			Short: "Assign Task",
+			Long:  "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to assign tasks to themselves. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/assign")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user want to assign.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // consult-end
+		var taskId string
+		var queueId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "consult-end",
+			Short: "Consult End Task",
+			Long:  `Access this endpoint when the user has to end a call with the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/consult/end")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("queueId", queueId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&queueId, "queue-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // exit-conference
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "exit-conference",
+			Short: "Exit Conference Task",
+			Long:  `Access this endpoint when the user wants to exit from a conference call. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/conference/exit")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The taskId represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // accept-preview
+		var campaignId string
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "accept-preview",
+			Short: "Accept Preview Task",
+			Long:  `API to accept the preview campaign task offered to the agent.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/accept")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique ID represents the campaign that the user is currently working on.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // skip-preview
+		var campaignId string
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "skip-preview",
+			Short: "Skip Preview Task",
+			Long:  `API to skip the preview campaign task offered to the agent.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/skip")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique ID represents the campaign that the user is currently working on.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // delete-preview
+		var campaignId string
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "delete-preview",
+			Short: "Remove Preview Task",
+			Long:  `API to remove the preview campaign task offered to the agent`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/remove")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique ID represents the campaign that the user is currently working on.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+}

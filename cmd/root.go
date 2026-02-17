@@ -1,0 +1,148 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/Cloverhound/webex-cli/internal/appconfig"
+	"github.com/Cloverhound/webex-cli/internal/auth"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+var rootCmd = &cobra.Command{
+	Use:   "webex",
+	Short: "Webex CLI — manage Webex Calling and Contact Center",
+	Long:  `A command-line interface for Webex Cloud Calling and Contact Center APIs.`,
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		// Debug mode (set early so auth debug works)
+		debug, _ := cmd.Flags().GetBool("debug")
+		config.SetDebug(debug)
+
+		// Output format
+		format, _ := cmd.Flags().GetString("output")
+		output.SetFormat(format)
+
+		// Pagination
+		paginate, _ := cmd.Flags().GetBool("paginate")
+		config.SetPaginate(paginate)
+
+		// Skip auth for certain commands
+		if skipAuth(cmd) {
+			return nil
+		}
+
+		// Load app config
+		cfg, err := appconfig.Load()
+		if err != nil {
+			return fmt.Errorf("loading config: %w", err)
+		}
+
+		// Resolve token
+		flagToken, _ := cmd.Flags().GetString("token")
+		envToken := os.Getenv("WEBEX_TOKEN")
+		userFlag, _ := cmd.Flags().GetString("user")
+		envUser := os.Getenv("WEBEX_USER")
+
+		result, err := auth.ResolveToken(flagToken, envToken, userFlag, envUser, cfg)
+		if err != nil {
+			return err
+		}
+
+		config.SetToken(result.Token)
+
+		// Wire up token refresher for keyring-based auth
+		if result.Source == auth.SourceKeyring && result.UserEmail != "" {
+			config.TokenRefresher = auth.MakeRefresher(result.UserEmail, cfg)
+		}
+
+		// Organization: --organization flag > resolved user's org > default user's org from config.
+		// SetOrgID auto-decodes base64 Webex IDs to UUID.
+		orgFlag, _ := cmd.Flags().GetString("organization")
+		if orgFlag != "" {
+			config.SetOrgID(orgFlag)
+		} else if result.OrgID != "" {
+			config.SetOrgID(result.OrgID)
+		} else if cfg.DefaultUser != "" {
+			// Fallback: use default user's org from config (covers env/flag token sources)
+			if userInfo, ok := cfg.Users[cfg.DefaultUser]; ok && userInfo.OrgID != "" {
+				config.SetOrgID(userInfo.OrgID)
+			}
+		}
+
+		// Auto-populate --orgid on CC commands from the resolved org.
+		// Also auto-decode any user-provided --orgid base64 value.
+		if f := cmd.Flags().Lookup("orgid"); f != nil {
+			if f.Value.String() == "" {
+				// Not set by user — fill from resolved org
+				if config.OrgID() != "" {
+					cmd.Flags().Set("orgid", config.OrgID())
+				}
+			} else {
+				// User provided a value — decode it in case it's base64
+				cmd.Flags().Set("orgid", config.DecodeOrgID(f.Value.String()))
+			}
+		}
+
+		return nil
+	},
+	SilenceUsage: true,
+}
+
+func Execute() error {
+	// Remove "required" from --orgid flags on all CC subcommands.
+	// This allows PersistentPreRunE to auto-populate orgid from config/login.
+	stripRequiredOrgID(rootCmd)
+	return rootCmd.Execute()
+}
+
+// stripRequiredOrgID recursively removes the "required" annotation from --orgid flags.
+func stripRequiredOrgID(cmd *cobra.Command) {
+	if f := cmd.Flags().Lookup("orgid"); f != nil {
+		cmd.Flags().SetAnnotation("orgid", cobra.BashCompOneRequiredFlag, []string{"false"})
+		// Clear the required flag by re-marking it as not required
+		// Cobra stores required flags in annotations
+		annotations := f.Annotations
+		if annotations != nil {
+			delete(annotations, cobra.BashCompOneRequiredFlag)
+		}
+	}
+	for _, child := range cmd.Commands() {
+		stripRequiredOrgID(child)
+	}
+}
+
+func init() {
+	rootCmd.PersistentFlags().String("token", "", "Webex API token (overrides keyring)")
+	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, yaml, raw")
+	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
+	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
+	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
+	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
+}
+
+// skipAuth returns true for commands that don't need authentication.
+func skipAuth(cmd *cobra.Command) bool {
+	// Walk up to find the root-level command name
+	name := cmd.Name()
+
+	// Check the command itself and all parents
+	for c := cmd; c != nil; c = c.Parent() {
+		switch c.Name() {
+		case "login", "logout", "auth", "config", "version", "help", "webex":
+			// "webex" is the root — only skip if it's the actual command being run (bare `webex`)
+			if c.Name() == "webex" {
+				continue
+			}
+			return true
+		}
+	}
+
+	// Also skip bare root command and help
+	if name == "help" || name == "webex" {
+		return true
+	}
+
+	return false
+}

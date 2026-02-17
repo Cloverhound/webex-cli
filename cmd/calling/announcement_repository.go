@@ -1,0 +1,349 @@
+package calling
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var announcementRepositoryCmd = &cobra.Command{
+	Use:   "announcement-repository",
+	Short: "AnnouncementRepository commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(announcementRepositoryCmd)
+
+	{ // list-greetings
+		var orgId string
+		var locationId string
+		var max string
+		var start string
+		var order string
+		var fileName string
+		var fileType string
+		var mediaFileType string
+		var name string
+		cmd := &cobra.Command{
+			Use:   "list-greetings",
+			Short: "Fetch list of announcement greetings on location and organization level",
+			Long:  "Fetch a list of binary announcement greetings at an organization as well as location level.\n\nAn admin can upload a file at an organization level. This file will be uploaded to the announcement repository.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("order", order)
+				req.QueryParam("fileName", fileName)
+				req.QueryParam("fileType", fileType)
+				req.QueryParam("mediaFileType", mediaFileType)
+				req.QueryParam("name", name)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get announcements in this organization.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of enterprise or Location announcement files. Without this parameter, the Enterprise level announcements are returned.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of objects returned to this maximum count.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list according to fileName or fileSize. The default sort will be in Ascending order.")
+		cmd.Flags().StringVar(&fileName, "file-name", "", "Return the list of announcements with the given fileName.")
+		cmd.Flags().StringVar(&fileType, "file-type", "", "Return the list of announcement files for this fileType.")
+		cmd.Flags().StringVar(&mediaFileType, "media-file-type", "", "Return the list of announcement files for this mediaFileType.")
+		cmd.Flags().StringVar(&name, "name", "", "Return the list of announcement files for this announcement label.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // upload-binary-greeting
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "upload-binary-greeting",
+			Short: "Upload a binary announcement greeting at organization level",
+			Long:  "Upload a binary file to the announcement repository at an organization level.\n\nAn admin can upload a file at an organization level. This file will be uploaded to the announcement repository.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\n**Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g., \"greeting.wav\"). Refer to the example below for the complete request structure.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/announcements")
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create an announcement in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-usage
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-usage",
+			Short: "Fetch repository usage for announcements for an organization",
+			Long:  "Retrieves repository usage for announcements for an organization.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/usage")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get announcement usage in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // delete-greeting-org
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-greeting-org",
+			Short: "Delete an announcement greeting of the organization",
+			Long:  "Delete an announcement greeting for an organization.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/announcements/{announcementId}")
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete an announcement in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-binary-greeting
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-binary-greeting",
+			Short: "Fetch details of a binary announcement greeting at the organization level",
+			Long:  "Fetch details of a binary announcement greeting by its ID at an organization level.\n\nAn admin can upload a file at an organization level. This file will be uploaded to the announcement repository.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/{announcementId}")
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get an announcement in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // update-binary-greeting
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "update-binary-greeting",
+			Short: "Modify a binary announcement greeting at organization level",
+			Long:  "Modify an existing announcement greeting at a organization level.\n\nAn admin can upload a file or modify an existing file at a location level. This file will be uploaded to the announcement repository.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/announcements/{announcementId}")
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify an announcement in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // upload-binary-greeting-2
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "upload-binary-greeting-2",
+			Short: "Upload a binary announcement greeting at the location level",
+			Long:  "Upload a binary file to the announcement repository at a location level.\n\nAn admin can upload a file at a location level. This file will be uploaded to the announcement repository.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\n**Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g., \"greeting.wav\"). Refer to the example below for the complete request structure.\n\nThis API requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write` .",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/announcements")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier of a location where an announcement is being created.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create an announcement for location in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-usage-location
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-usage-location",
+			Short: "Fetch repository usage for announcements in a location",
+			Long:  "Retrieves repository usage for announcements in a location.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/announcements/usage")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier of a location where an announcement is being created.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get announcement usage for location in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // delete-greeting-location
+		var locationId string
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-greeting-location",
+			Short: "Delete an announcement greeting in a location",
+			Long:  "Delete an announcement greeting in a location.\n\nThis API requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/announcements/{announcementId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier of a location where announcement is being created.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete an announcement for location in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-binary-greeting-2
+		var locationId string
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-binary-greeting-2",
+			Short: "Fetch details of a binary announcement greeting at location level",
+			Long:  "Fetch details of a binary announcement greeting by its ID at a location level.\n\nAn admin can upload a file at a location level. This file will be uploaded to the announcement repository.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/announcements/{announcementId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier of a location where an announcement is being created.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Fetch an announcement for location in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // update-binary-greeting-2
+		var locationId string
+		var announcementId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "update-binary-greeting-2",
+			Short: "Modify a binary announcement greeting at location level",
+			Long:  "Modify an existing announcement greeting at a location level.\n\nAn admin can upload a file or modify an existing file at a location level. This file will be uploaded to the announcement repository.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/announcements/{announcementId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("announcementId", announcementId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier of a location where an announcement is being created.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&announcementId, "announcement-id", "", "Unique identifier of an announcement.")
+		cmd.MarkFlagRequired("announcement-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify an announcement for location in this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+}

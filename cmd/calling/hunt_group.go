@@ -1,0 +1,600 @@
+package calling
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var huntGroupCmd = &cobra.Command{
+	Use:   "hunt-group",
+	Short: "HuntGroup commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(huntGroupCmd)
+
+	{ // list
+		var orgId string
+		var locationId string
+		var max string
+		var start string
+		var name string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "Read the List of Hunt Groups",
+			Long:  "List all calling Hunt Groups for the organization.\n\nHunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/huntGroups")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("name", name)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List hunt groups for this organization.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Only return hunt groups with matching location ID.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of objects returned to this maximum count.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
+		cmd.Flags().StringVar(&name, "name", "", "Only return hunt groups with the matching name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Only return hunt groups with the matching primary phone number or extension.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Hunt Group",
+			Long:  "Create new Hunt Groups for the given location.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nCreating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/huntGroups")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Create the hunt group for the given location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create the hunt group for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Hunt Group",
+			Long:  "Delete the designated Hunt Group.\n\nHunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.\n\nDeleting a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location from which to delete a hunt group.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Delete the hunt group with the matching ID.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete the hunt group from this organization.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Details for a Hunt Group",
+			Long:  "Retrieve Hunt Group details.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nRetrieving hunt group details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve settings for a hunt group in this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Retrieve settings for the hunt group with this identifier.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve hunt group settings from this organization.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Hunt Group",
+			Long:  "Update the designated Hunt Group.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nUpdating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update the hunt group for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Update settings for the hunt group with the matching ID.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update hunt group settings from this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get-call-forward
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-call-forward",
+			Short: "Get Call Forwarding Settings for a Hunt Group",
+			Long:  "Retrieve Call Forwarding settings for the specified Hunt Group including the list of call forwarding rules.\n\nThe call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.\nBelow are the available options for configuring your call forwarding:\n1. Always forward calls to a designated number.\n2. Forward calls to a designated number based on certain criteria.\n3. Forward calls using different modes.\n\nRetrieving call forwarding settings for a hunt group requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Read the call forwarding settings for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve hunt group forwarding settings from this organization.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // update-call-forward
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-call-forward",
+			Short: "Update Call Forwarding Settings for a Hunt Group",
+			Long:  "Update Call Forwarding settings for the specified Hunt Group.\n\nThe call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.\nBelow are the available options for configuring your call forwarding:\n1. Always forward calls to a designated number.\n2. Forward calls to a designated number based on certain criteria.\n3. Forward calls using different modes.\n\nUpdating call forwarding settings for a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location from which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Update call forwarding settings for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update hunt group forwarding settings from this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // create-selective-forward-rule
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-selective-forward-rule",
+			Short: "Create a Selective Call Forwarding Rule for a Hunt Group",
+			Long:  "Create a Selective Call Forwarding Rule for the designated Hunt Group.\n\nA selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.\n\nNote that the list of existing call forward rules is available in the hunt group's call forwarding settings.\n\nCreating a selective call forwarding rule for a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Create the rule for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create the hunt group rule for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-forward-rule
+		var locationId string
+		var huntGroupId string
+		var ruleId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-forward-rule",
+			Short: "Get Selective Call Forwarding Rule for a Hunt Group",
+			Long:  "Retrieve a Selective Call Forwarding Rule's settings for the designated Hunt Group.\n\nA selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.\n\nNote that the list of existing call forward rules is available in the hunt group's call forwarding settings.\n\nRetrieving a selective call forwarding rule's settings for a hunt group requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.PathParam("ruleId", ruleId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Retrieve settings for a rule for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&ruleId, "rule-id", "", "Hunt group rule you are retrieving settings for.")
+		cmd.MarkFlagRequired("rule-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve hunt group rule settings for this organization.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-forward-rule
+		var locationId string
+		var huntGroupId string
+		var ruleId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-forward-rule",
+			Short: "Update a Selective Call Forwarding Rule for a Hunt Group",
+			Long:  "Update a Selective Call Forwarding Rule's settings for the designated Hunt Group.\n\nA selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.\n\nNote that the list of existing call forward rules is available in the hunt group's call forwarding settings.\n\nUpdating a selective call forwarding rule's settings for a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.PathParam("ruleId", ruleId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Update settings for a rule for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&ruleId, "rule-id", "", "Hunt group rule you are updating settings for.")
+		cmd.MarkFlagRequired("rule-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update hunt group rule settings for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-forward-rule
+		var locationId string
+		var huntGroupId string
+		var ruleId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-forward-rule",
+			Short: "Delete a Selective Call Forwarding Rule for a Hunt Group",
+			Long:  "Delete a Selective Call Forwarding Rule for the designated Hunt Group.\n\nA selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.\n\nNote that the list of existing call forward rules is available in the hunt group's call forwarding settings.\n\nDeleting a selective call forwarding rule for a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.PathParam("ruleId", ruleId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location in which this hunt group exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Delete the rule for this hunt group.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&ruleId, "rule-id", "", "Hunt group rule you are deleting.")
+		cmd.MarkFlagRequired("rule-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete hunt group rule from this organization.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get-primary-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-primary-numbers",
+			Short: "Get Hunt Group Primary Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the hunt group's primary phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get-alternate-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-alternate-numbers",
+			Short: "Get Hunt Group Alternate Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the hunt group's alternate phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/alternate/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // get-forward-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-forward-available-numbers",
+			Short: "Get Hunt Group Call Forward Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the hunt group's call forward number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/callForwarding/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Returns the list of PSTN phone numbers with the given `extension`.")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+	{ // switch-mode-call-forward
+		var locationId string
+		var huntGroupId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "switch-mode-call-forward",
+			Short: "Switch Mode for Call Forwarding Settings for a Hunt Group",
+			Long:  "Switches the current operating mode of the `Hunt Group` to the mode as per normal operations.\n\nSwitching operating mode for a `hunt group` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/actions/switchMode/invoke")
+				req.PathParam("locationId", locationId)
+				req.PathParam("huntGroupId", huntGroupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "`Location` in which this `hunt group` exists.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&huntGroupId, "hunt-group-id", "", "Switch operating mode to normal operations for this `hunt group`.")
+		cmd.MarkFlagRequired("hunt-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Switch operating mode as per normal operations for the `hunt group` from this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		huntGroupCmd.AddCommand(cmd)
+	}
+
+}

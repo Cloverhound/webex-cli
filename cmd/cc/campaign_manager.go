@@ -1,0 +1,145 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var campaignManagerCmd = &cobra.Command{
+	Use:   "campaign-manager",
+	Short: "CampaignManager commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(campaignManagerCmd)
+
+	{ // start-request
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "start-request",
+			Short: "Start Campaign Request",
+			Long:  `A start campaign API allows businesses to programmatically start outbound campaigns using their own software applications. This type of API typically allows businesses to set up the parameters for a campaign, such as the list of phone numbers to call, the message or script to deliver, and the time of day or day of the week to call. Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/dialer/campaign")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		campaignManagerCmd.AddCommand(cmd)
+	}
+
+	{ // update-request
+		var campaignId string
+		var dialingRate float64
+		var dialingListFetchUrl string
+		var outdialAni string
+		var campaignName string
+		var authToken string
+		var noAnswerRingLimit int64
+		var maxDialingRate float64
+		var reservationPercentage int64
+		var previewOfferTimeout int64
+		var previewOfferTimeoutAutoAction string
+		var previewActionsDisabled []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-request",
+			Short: "Update Campaign Request",
+			Long:  `By using an update campaign API, businesses can automate the process of modifying and managing outbound campaigns, and integrate campaign updates into their existing workflows or applications. This can help to improve efficiency and reduce errors, as well as allow for greater flexibility and control over outbound campaigns.  Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/v1/dialer/campaign/{campaignId}")
+				req.PathParam("campaignId", campaignId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyFloat("dialingRate", dialingRate, cmd.Flags().Changed("dialing-rate"))
+					req.BodyString("dialingListFetchURL", dialingListFetchUrl)
+					req.BodyString("outdialANI", outdialAni)
+					req.BodyString("campaignName", campaignName)
+					req.BodyString("authToken", authToken)
+					req.BodyInt("noAnswerRingLimit", noAnswerRingLimit, cmd.Flags().Changed("no-answer-ring-limit"))
+					req.BodyFloat("maxDialingRate", maxDialingRate, cmd.Flags().Changed("max-dialing-rate"))
+					req.BodyInt("reservationPercentage", reservationPercentage, cmd.Flags().Changed("reservation-percentage"))
+					req.BodyInt("previewOfferTimeout", previewOfferTimeout, cmd.Flags().Changed("preview-offer-timeout"))
+					req.BodyString("previewOfferTimeoutAutoAction", previewOfferTimeoutAutoAction)
+					req.BodyStringSlice("previewActionsDisabled", previewActionsDisabled)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique request id of the campaign that needs to be updated")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().Float64Var(&dialingRate, "dialing-rate", 0, "")
+		cmd.Flags().StringVar(&dialingListFetchUrl, "dialing-list-fetch-url", "", "")
+		cmd.Flags().StringVar(&outdialAni, "outdial-ani", "", "")
+		cmd.Flags().StringVar(&campaignName, "campaign-name", "", "")
+		cmd.Flags().StringVar(&authToken, "auth-token", "", "")
+		cmd.Flags().Int64Var(&noAnswerRingLimit, "no-answer-ring-limit", 0, "")
+		cmd.Flags().Float64Var(&maxDialingRate, "max-dialing-rate", 0, "")
+		cmd.Flags().Int64Var(&reservationPercentage, "reservation-percentage", 0, "")
+		cmd.Flags().Int64Var(&previewOfferTimeout, "preview-offer-timeout", 0, "")
+		cmd.Flags().StringVar(&previewOfferTimeoutAutoAction, "preview-offer-timeout-auto-action", "", "")
+		cmd.Flags().StringSliceVar(&previewActionsDisabled, "preview-actions-disabled", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		campaignManagerCmd.AddCommand(cmd)
+	}
+
+	{ // stop-request
+		var campaignId string
+		cmd := &cobra.Command{
+			Use:   "stop-request",
+			Short: "Stop Campaign Request",
+			Long:  `The stop campaign API enables businesses to automate the process of managing outbound campaigns and integrate campaign deletion into their existing workflows or applications. Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/dialer/campaign/{campaignId}")
+				req.PathParam("campaignId", campaignId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique request id of the campaign that needs to be stopped")
+		cmd.MarkFlagRequired("campaign-id")
+		campaignManagerCmd.AddCommand(cmd)
+	}
+
+}

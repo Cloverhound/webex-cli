@@ -1,0 +1,257 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var dataSourcesCmd = &cobra.Command{
+	Use:   "data-sources",
+	Short: "DataSources commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(dataSourcesCmd)
+
+	{ // register
+		var audience string
+		var nonce string
+		var schemaId string
+		var subject string
+		var tokenLifetimeMinutes int64
+		var url string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "register",
+			Short: "Register a Data Source",
+			Long:  "Register your data source to the Webex BYODS system. Authentication must happen via a Service App with the scope `spark-admin:datasource_write`.\nThe schema IDs determine what data types are sent from Webex to the DAP and the expected responses. The schemas can be inspected on developer.webex.com.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/dataSources")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("audience", audience)
+					req.BodyString("nonce", nonce)
+					req.BodyString("schemaId", schemaId)
+					req.BodyString("subject", subject)
+					req.BodyInt("tokenLifetimeMinutes", tokenLifetimeMinutes, cmd.Flags().Changed("token-lifetime-minutes"))
+					req.BodyString("url", url)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&audience, "audience", "", "")
+		cmd.Flags().StringVar(&nonce, "nonce", "", "")
+		cmd.Flags().StringVar(&schemaId, "schema-id", "", "")
+		cmd.Flags().StringVar(&subject, "subject", "", "")
+		cmd.Flags().Int64Var(&tokenLifetimeMinutes, "token-lifetime-minutes", 0, "")
+		cmd.Flags().StringVar(&url, "url", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // get-all
+		cmd := &cobra.Command{
+			Use:   "get-all",
+			Short: "Retrieve All Data Sources",
+			Long:  "Show all data sources registered for this Service App with the scope `spark-admin:datasource_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // get-schemas
+		cmd := &cobra.Command{
+			Use:   "get-schemas",
+			Short: "Retrieve Data Source Schemas",
+			Long:  `Show available schemas. No specific scope is needed to retrieve the dataSource schemas, but a valid API token should be presented.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/schemas")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // get-schema
+		var schemaId string
+		cmd := &cobra.Command{
+			Use:   "get-schema",
+			Short: "Retrieve Details of a Specific Data Source Schema",
+			Long:  `Retrieve details of a specific data source schema by schema id. No specific scope is needed to retrieve the dataSource schemas, but a valid API token should be presented.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/schemas/{schemaId}")
+				req.PathParam("schemaId", schemaId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&schemaId, "schema-id", "", "The unique identifier for the schema.")
+		cmd.MarkFlagRequired("schema-id")
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var dataSourceId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Data Source",
+			Long:  "Delete a Data Source, by Data Source ID.\n\nSpecify the Data Source ID in the `dataSourceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/dataSources/{dataSourceId}")
+				req.PathParam("dataSourceId", dataSourceId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the dataSource.")
+		cmd.MarkFlagRequired("data-source-id")
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var dataSourceId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Retrieve Data Source Details",
+			Long:  "Show details for a data source, by dataSource id.\nTo see details for a data source, use the Service App token with the `spark-admin:datasource_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/{dataSourceId}")
+				req.PathParam("dataSourceId", dataSourceId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the dataSource.")
+		cmd.MarkFlagRequired("data-source-id")
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var dataSourceId string
+		var audience string
+		var errorMessage string
+		var nonce string
+		var schemaId string
+		var status string
+		var subject string
+		var tokenLifetimeMinutes int64
+		var url string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Data Source",
+			Long:  "Updates a Data Source. The updateable fields are the `audience,` `subject,` `nonce,` `url` and `tokenLifetimeMinutes.`\nYou can update the `status` from `active` to `disabled` only when providing an `errorMessage` that may be shown to the customer admin in Control Hub. \nTokens must be regularly updated before their expiration to maintain system uptime.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/dataSources/{dataSourceId}")
+				req.PathParam("dataSourceId", dataSourceId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("audience", audience)
+					req.BodyString("errorMessage", errorMessage)
+					req.BodyString("nonce", nonce)
+					req.BodyString("schemaId", schemaId)
+					req.BodyString("status", status)
+					req.BodyString("subject", subject)
+					req.BodyInt("tokenLifetimeMinutes", tokenLifetimeMinutes, cmd.Flags().Changed("token-lifetime-minutes"))
+					req.BodyString("url", url)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the data source.")
+		cmd.MarkFlagRequired("data-source-id")
+		cmd.Flags().StringVar(&audience, "audience", "", "")
+		cmd.Flags().StringVar(&errorMessage, "error-message", "", "")
+		cmd.Flags().StringVar(&nonce, "nonce", "", "")
+		cmd.Flags().StringVar(&schemaId, "schema-id", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
+		cmd.Flags().StringVar(&subject, "subject", "", "")
+		cmd.Flags().Int64Var(&tokenLifetimeMinutes, "token-lifetime-minutes", 0, "")
+		cmd.Flags().StringVar(&url, "url", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		dataSourcesCmd.AddCommand(cmd)
+	}
+
+}

@@ -1,0 +1,69 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var estimatedWaitTimeCmd = &cobra.Command{
+	Use:   "estimated-wait-time",
+	Short: "EstimatedWaitTime commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(estimatedWaitTimeCmd)
+
+	{ // get
+		var queueId string
+		var lookbackMinutes string
+		var maxCv string
+		var minValidSamples string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Estimated Wait Time",
+			Long: `Retrieve Estimated Wait Time information for a specified look back interval for a specific orgId and queueId combination, with ability to customomize maxCV and minValidSamples (See description above).
+`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/ewt")
+				req.QueryParam("queueId", queueId)
+				req.QueryParam("lookbackMinutes", lookbackMinutes)
+				req.QueryParam("maxCV", maxCv)
+				req.QueryParam("minValidSamples", minValidSamples)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&queueId, "queue-id", "", "Id of the queue for which the EWT is to be returned")
+		cmd.Flags().StringVar(&lookbackMinutes, "lookback-minutes", "", "Integer between 5 and 240 (4 hours) signifying how long back to look at the data points to determine EWT for this queue")
+		cmd.Flags().StringVar(&maxCv, "max-cv", "", "This an optional parameter. Maximum value of Coefficient of Variance in a subset of samples (wait times for tasks that got connected to agent in one minute interval) to determine whether the average of such values should be treated as a valid sample for EWT computation. If its not passed it takes the default value of 40 %")
+		cmd.Flags().StringVar(&minValidSamples, "min-valid-samples", "", "This an optional parameter. Minimum value of percentage of valid samples (with respect to total number of samples) in the specified lookbackMinutes minutes. If its not passed it takes the default value of 40 %")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		estimatedWaitTimeCmd.AddCommand(cmd)
+	}
+
+}

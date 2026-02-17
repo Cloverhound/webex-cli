@@ -1,0 +1,3723 @@
+package calling
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var workspaceCallCmd = &cobra.Command{
+	Use:   "workspace-call",
+	Short: "WorkspaceCall commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(workspaceCallCmd)
+
+	{ // get-forward
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-forward",
+			Short: "Retrieve Call Forwarding Settings for a Workspace",
+			Long:  "Retrieve Call Forwarding Settings for a Workspace.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy, forwards all incoming calls to the destination you chose while the phone is in use or the person is busy.\n\n+ When no answer, forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/callForwarding")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-forward
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-forward",
+			Short: "Modify Call Forwarding Settings for a Workspace",
+			Long:  "Modify call forwarding settings for a Workspace.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy, forwards all incoming calls to the destination you chose while the phone is in use or the person is busy.\n\n+ When no answer, forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/callForwarding")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-waiting-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-waiting-settings",
+			Short: "Retrieve Call Waiting Settings for a Workspace",
+			Long:  "Retrieve Call Waiting Settings for a Workspace.\n\nCall Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/callWaiting")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-waiting-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-waiting-settings",
+			Short: "Modify Call Waiting Settings for a Workspace",
+			Long:  "Modify Call Waiting Settings for a Workspace.\n\nCall Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/callWaiting")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-caller-id
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-caller-id",
+			Short: "Read Caller ID Settings for a Workspace",
+			Long:  "Retrieve a workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/callerId")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-caller-id
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-caller-id",
+			Short: "Configure Caller ID Settings for a Workspace",
+			Long:  "Configure workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/callerId")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-monitoring-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-monitoring-settings",
+			Short: "Retrieve Monitoring Settings for a Workspace",
+			Long:  "Retrieves Monitoring settings for a Workspace.\n\nAllow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/monitoring")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-monitoring-settings
+		var workspaceId string
+		var orgId string
+		var enableCallParkNotification bool
+		var monitoredElements []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-monitoring-settings",
+			Short: "Modify Monitoring Settings for a Workspace",
+			Long:  "Modify Monitoring settings for a Workspace.\n\nAllow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/monitoring")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enableCallParkNotification", enableCallParkNotification, cmd.Flags().Changed("enable-call-park-notification"))
+					req.BodyStringSlice("monitoredElements", monitoredElements)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enableCallParkNotification, "enable-call-park-notification", false, "")
+		cmd.Flags().StringSliceVar(&monitoredElements, "monitored-elements", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-numbers-associated
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-numbers-associated",
+			Short: "List numbers associated with a specific workspace",
+			Long:  "List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows the location and organization associated with the workspace.\n\nRetrieving this list requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/numbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "List numbers for this workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-incoming-permission-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-incoming-permission-settings",
+			Short: "Retrieve Incoming Permission Settings for a Workspace",
+			Long:  "Retrieve Incoming Permission settings for a Workspace.\n\nIncoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/incomingPermission")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-incoming-permission-settings
+		var workspaceId string
+		var orgId string
+		var useCustomEnabled bool
+		var externalTransfer string
+		var internalCallsEnabled bool
+		var collectCallsEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-incoming-permission-settings",
+			Short: "Modify Incoming Permission Settings for a Workspace",
+			Long:  "Modify Incoming Permission settings for a Workspace.\n\nIncoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/incomingPermission")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("useCustomEnabled", useCustomEnabled, cmd.Flags().Changed("use-custom-enabled"))
+					req.BodyString("externalTransfer", externalTransfer)
+					req.BodyBool("internalCallsEnabled", internalCallsEnabled, cmd.Flags().Changed("internal-calls-enabled"))
+					req.BodyBool("collectCallsEnabled", collectCallsEnabled, cmd.Flags().Changed("collect-calls-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&useCustomEnabled, "use-custom-enabled", false, "")
+		cmd.Flags().StringVar(&externalTransfer, "external-transfer", "", "")
+		cmd.Flags().BoolVar(&internalCallsEnabled, "internal-calls-enabled", false, "")
+		cmd.Flags().BoolVar(&collectCallsEnabled, "collect-calls-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-outgoing-permission-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-outgoing-permission-settings",
+			Short: "Retrieve Outgoing Permission Settings for a Workspace",
+			Long:  "Retrieve Outgoing Permission settings for a Workspace.\n\nTurn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/outgoingPermission")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-outgoing-permission-settings
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-outgoing-permission-settings",
+			Short: "Modify Outgoing Permission Settings for a Workspace",
+			Long:  "Modify Outgoing Permission settings for a Place.\n\nTurn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/outgoingPermission")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-access-codes
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-access-codes",
+			Short: "Retrieve Access Codes for a Workspace",
+			Long:  "Retrieve Access codes for a Workspace.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/outgoingPermission/accessCodes")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-access-codes
+		var workspaceId string
+		var orgId string
+		var deleteCodes []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-access-codes",
+			Short: "Modify Access Codes for a Workspace",
+			Long:  "Modify Access codes for a workspace.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/outgoingPermission/accessCodes")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("deleteCodes", deleteCodes)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringSliceVar(&deleteCodes, "delete-codes", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-access-codes
+		var workspaceId string
+		var orgId string
+		var code string
+		var description string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-access-codes",
+			Short: "Create Access Codes for a Workspace",
+			Long:  "Create new Access codes for the given workspace.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/workspaces/{workspaceId}/features/outgoingPermission/accessCodes")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("code", code)
+					req.BodyString("description", description)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&code, "code", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-all-access-codes
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-all-access-codes",
+			Short: "Delete all Access Codes for a Workspace",
+			Long:  "Deletes all Access codes for the given workspace.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/workspaces/{workspaceId}/features/outgoingPermission/accessCodes")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-intercept-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-intercept-settings",
+			Short: "Read Call Intercept Settings for a Workspace",
+			Long:  "Retrieves Workspace's Call Intercept Settings\n\nThe intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/intercept")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-intercept-settings
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-intercept-settings",
+			Short: "Configure Call Intercept Settings for a Workspace",
+			Long:  "Configures a Workspace's Call Intercept Settings\n\nThe intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_write` or a user auth token with `spark:workspaces_read` scope can be used by a person to read their settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/intercept")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-transfer-numbers-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-transfer-numbers-settings",
+			Short: "Retrieve Transfer Numbers Settings for a Workspace",
+			Long:  "Retrieve Transfer Numbers Settings for a Workspace.\n\nWhen calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-transfer-numbers-settings
+		var workspaceId string
+		var orgId string
+		var useCustomTransferNumbers bool
+		var autoTransferNumber1 string
+		var autoTransferNumber2 string
+		var autoTransferNumber3 string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-transfer-numbers-settings",
+			Short: "Modify Transfer Numbers Settings for a Workspace",
+			Long:  "Modify Transfer Numbers Settings for a place.\n\nWhen calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("useCustomTransferNumbers", useCustomTransferNumbers, cmd.Flags().Changed("use-custom-transfer-numbers"))
+					req.BodyString("autoTransferNumber1", autoTransferNumber1)
+					req.BodyString("autoTransferNumber2", autoTransferNumber2)
+					req.BodyString("autoTransferNumber3", autoTransferNumber3)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&useCustomTransferNumbers, "use-custom-transfer-numbers", false, "")
+		cmd.Flags().StringVar(&autoTransferNumber1, "auto-transfer-number1", "", "")
+		cmd.Flags().StringVar(&autoTransferNumber2, "auto-transfer-number2", "", "")
+		cmd.Flags().StringVar(&autoTransferNumber3, "auto-transfer-number3", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-music-hold-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-music-hold-settings",
+			Short: "Retrieve Music On Hold Settings for a Workspace",
+			Long:  "Retrieve Music On Hold Settings for a Workspace.\n\nMusic on hold is played when a caller is put on hold, or the call is parked.\n\nRetrieving a workspace's music on hold settings requires a full, device or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/musicOnHold")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-music-hold-settings
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-music-hold-settings",
+			Short: "Modify Music On Hold Settings for a Workspace",
+			Long:  "Modify music on hold settings for a Workspace.\n\nMusic on hold is played when a caller is put on hold, or the call is parked.\n\nTo configure music on hold setting for a workspace, music on hold setting must be enabled for this location.\n\nThis API requires a full or device administrator or location administrator auth token with the `spark-admin:telephony_config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/musicOnHold")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-access-code
+		var workspaceId string
+		var accessCode string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-access-code",
+			Short: "Delete a Specific Access Code for a Workspace",
+			Long:  "Deletes a specific access code for the given workspace.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full, device or location administrator auth token with the scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/features/accessCodes/{accessCode}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("accessCode", accessCode)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&accessCode, "access-code", "", "Access code for outgoing calls.")
+		cmd.MarkFlagRequired("access-code")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-digit-patterns
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-all-digit-patterns",
+			Short: "Retrieve all Digit Patterns for a Workspace",
+			Long:  "Retrieve all digit patterns for a Workspace.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-digit-pattern
+		var workspaceId string
+		var orgId string
+		var name string
+		var pattern string
+		var action string
+		var transferEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-digit-pattern",
+			Short: "Create Digit Pattern for a Workspace",
+			Long:  "Create a new digit pattern for the given workspace.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("pattern", pattern)
+					req.BodyString("action", action)
+					req.BodyBool("transferEnabled", transferEnabled, cmd.Flags().Changed("transfer-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&pattern, "pattern", "", "")
+		cmd.Flags().StringVar(&action, "action", "", "")
+		cmd.Flags().BoolVar(&transferEnabled, "transfer-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-digit-pattern-control
+		var workspaceId string
+		var orgId string
+		var useCustomDigitPatterns bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-digit-pattern-control",
+			Short: "Modify the Digit Pattern Category Control Settings for the Workspace",
+			Long:  "Modifies whether this workspace uses the specified digit patterns when placing outbound calls or not.\n\nUpdating the digit pattern category control settings requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("useCustomDigitPatterns", useCustomDigitPatterns, cmd.Flags().Changed("use-custom-digit-patterns"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&useCustomDigitPatterns, "use-custom-digit-patterns", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-all-digit-patterns
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-all-digit-patterns",
+			Short: "Delete all Digit Patterns for a Workspace",
+			Long:  "Delete all digit patterns for a Workspace.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-digit-pattern
+		var workspaceId string
+		var digitPatternId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-digit-pattern",
+			Short: "Retrieve a Digit Pattern details for the Workspace",
+			Long:  "Retrieve the designated digit pattern.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns/{digitPatternId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("digitPatternId", digitPatternId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&digitPatternId, "digit-pattern-id", "", "Unique identifier for the digit pattern.")
+		cmd.MarkFlagRequired("digit-pattern-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-digit-pattern
+		var workspaceId string
+		var digitPatternId string
+		var orgId string
+		var name string
+		var pattern string
+		var action string
+		var transferEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-digit-pattern",
+			Short: "Modify a Digit Pattern for the Workspace",
+			Long:  "Modify the designated digit pattern.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns/{digitPatternId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("digitPatternId", digitPatternId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("pattern", pattern)
+					req.BodyString("action", action)
+					req.BodyBool("transferEnabled", transferEnabled, cmd.Flags().Changed("transfer-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&digitPatternId, "digit-pattern-id", "", "Unique identifier for the digit pattern.")
+		cmd.MarkFlagRequired("digit-pattern-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&pattern, "pattern", "", "")
+		cmd.Flags().StringVar(&action, "action", "", "")
+		cmd.Flags().BoolVar(&transferEnabled, "transfer-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-digit-pattern
+		var workspaceId string
+		var digitPatternId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-digit-pattern",
+			Short: "Delete a Digit Pattern for the Workspace",
+			Long:  "Delete a digit pattern for a Workspace.\n\nDigit patterns are used to bypass permissions.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/outgoingPermission/digitPatterns/{digitPatternId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("digitPatternId", digitPatternId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&digitPatternId, "digit-pattern-id", "", "Unique identifier for the digit pattern.")
+		cmd.MarkFlagRequired("digit-pattern-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // upload-intercept-announcement-file
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "upload-intercept-announcement-file",
+			Short: "Upload Call Intercept Announcement file for a Workspace",
+			Long:  "Upload call intercept announcement file for a workspace.\n\nThe upload announcement feature for a call intercept is used to play custom announcements for a workspace.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full, device or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/features/intercept/actions/announcementUpload/invoke")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create an announcement in this organization.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-recording
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-recording",
+			Short: "Retrieve Call Recording Settings for a Workspace",
+			Long:  "Retrieve call recording settings for a workspace.\n\nThe Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.\n\nThis API requires a full, read-only, device or location administrator auth token with the `spark-admin:telephony_config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/features/callRecordings")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-recording
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-recording",
+			Short: "Modify Call Recording Settings for a Workspace",
+			Long:  "Modify call forwarding settings for a workspace.\n\nThe Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.\n\nThe vendor's terms of service have to be accepted to enable call recording. Vendor details along with the terms of service URL are shared when the vendor's terms of service are not accepted yet.\n\nThis API requires a full, device or location administrator auth token with the `spark-admin:telephony_config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/features/callRecordings")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-numbers
+		var orgId string
+		var locationId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-available-numbers",
+			Short: "Get Workspace Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as a workspace's phone number.\nBy default, this API returns numbers from all locations that are unassigned. To select the suitable number for assignment, ensure the workspace's location ID is provided as the `locationId` request parameter.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/availableNumbers")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-ecbn-available-numbers
+		var workspaceId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		cmd := &cobra.Command{
+			Use:   "get-ecbn-available-numbers",
+			Short: "Get Workspace ECBN Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as a workspace's emergency callback number.\nThese numbers are associated with the location of the workspace specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/emergencyCallbackNumber/availableNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-forward-available-numbers
+		var workspaceId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-forward-available-numbers",
+			Short: "Get Workspace Call Forward Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as a workspace's call forward number.\nThese numbers are associated with the location of the workspace specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/callForwarding/availableNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Returns the list of PSTN phone numbers with the given `extension`.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-intercept-available-numbers
+		var workspaceId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-intercept-available-numbers",
+			Short: "Get Workspace Call Intercept Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as a workspace's call intercept number.\nThese numbers are associated with the location of the workspace specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/callIntercept/availableNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Returns the list of PSTN phone numbers with the given `extension`.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-anonymous-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-anonymous-settings",
+			Short: "Retrieve Anonymous Call Settings for a Workspace",
+			Long:  "Retrieve Anonymous Call Settings for a Workspace.\n\nAnonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/anonymousCallReject")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-anonymous-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-anonymous-settings",
+			Short: "Modify Anonymous Call Settings for a Workspace",
+			Long:  "Modify Anonymous Call Settings for a Workspace.\n\nAnonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/anonymousCallReject")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-barge-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-barge-settings",
+			Short: "Retrieve Barge In Call Settings for a Workspace",
+			Long:  "Retrieve Barge In Call Settings for a Workspace.\n\nBarge In, when enabled, allows you to use the Feature Access Code (FAC) on your desk phone to answer someone else\u2019s phone call or barge in on a call they\u2019ve already answered.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/bargeIn")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-barge-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var toneEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-barge-settings",
+			Short: "Modify Barge In Call Settings for a Workspace",
+			Long:  "Modify Barge In Call Settings for a Workspace.\n\nBarge In, when enabled, allows you to use the Feature Access Code (FAC) on your desk phone to answer someone else\u2019s phone call or barge in on a call they\u2019ve already answered.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/bargeIn")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyBool("toneEnabled", toneEnabled, cmd.Flags().Changed("tone-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().BoolVar(&toneEnabled, "tone-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-donotdisturb-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-donotdisturb-settings",
+			Short: "Retrieve DoNotDisturb Settings for a Workspace",
+			Long:  "Retrieve DoNotDisturb Settings for a Workspace.\n\nSilence incoming calls with the Do Not Disturb feature.\nWhen enabled, callers hear the busy signal.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is available for professional and common area licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/doNotDisturb")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-donotdisturb-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var ringSplashEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-donotdisturb-settings",
+			Short: "Modify DoNotDisturb Settings for a Workspace",
+			Long:  "Modify DoNotDisturb Settings for a Workspace.\n\nSilence incoming calls with the Do Not Disturb feature.\nWhen enabled, callers hear the busy signal.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional and common area licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/doNotDisturb")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyBool("ringSplashEnabled", ringSplashEnabled, cmd.Flags().Changed("ring-splash-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().BoolVar(&ringSplashEnabled, "ring-splash-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-bridge-warning-tone
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-bridge-warning-tone",
+			Short: "Retrieve Call Bridge Warning Tone Settings for a Workspace",
+			Long:  "Retrieve Call Bridge Warning Tone Settings for a Workspace.\n\nCall Bridge Warning Tone, when enabled, ensures that users hear a warning tone when other users bridge into an active call on the same shared line appearance.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/callBridge")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-bridge-warning-tone
+		var workspaceId string
+		var orgId string
+		var warningToneEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-bridge-warning-tone",
+			Short: "Modify Call Bridge Warning Tone Settings for a Workspace",
+			Long:  "Modify Call Bridge Warning Tone Settings for a Workspace.\n\nCall Bridge Warning Tone, when enabled, ensures that users hear a warning tone when other users bridge into an active call on the same shared line appearance.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/callBridge")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("warningToneEnabled", warningToneEnabled, cmd.Flags().Changed("warning-tone-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&warningToneEnabled, "warning-tone-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-push-to-talk-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-push-to-talk-settings",
+			Short: "Read Push-to-Talk Settings for a Workspace",
+			Long:  "Retrieve Push-to-Talk settings for a workspace.\n\nPush-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people/workspaces in different parts of your organization.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` scope can be used to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/pushToTalk")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-push-to-talk-settings
+		var workspaceId string
+		var orgId string
+		var allowAutoAnswer bool
+		var connectionType string
+		var accessType string
+		var members []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-push-to-talk-settings",
+			Short: "Configure Push-to-Talk Settings for a Workspace",
+			Long:  "Configure Push-to-Talk settings for a workspace.\n\nPush-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people/workspaces in different parts of your organization.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/pushToTalk")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("allowAutoAnswer", allowAutoAnswer, cmd.Flags().Changed("allow-auto-answer"))
+					req.BodyString("connectionType", connectionType)
+					req.BodyString("accessType", accessType)
+					req.BodyStringSlice("members", members)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&allowAutoAnswer, "allow-auto-answer", false, "")
+		cmd.Flags().StringVar(&connectionType, "connection-type", "", "")
+		cmd.Flags().StringVar(&accessType, "access-type", "", "")
+		cmd.Flags().StringSliceVar(&members, "members", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-privacy-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-privacy-settings",
+			Short: "Retrieve Privacy Settings for a Workspace",
+			Long:  "Retrieve Privacy Settings for a Workspace.\n\nThe privacy feature enables the Workspaces line to be monitored by others and determine if they can be reached by Auto Attendant services.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` scope to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/privacy")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-privacy-settings
+		var workspaceId string
+		var orgId string
+		var aaExtensionDialingEnabled bool
+		var aaNamingDialingEnabled bool
+		var enablePhoneStatusDirectoryPrivacy bool
+		var enablePhoneStatusPickupBargeInPrivacy bool
+		var monitoringAgents []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-privacy-settings",
+			Short: "Modify Privacy Settings for a Workspace",
+			Long:  "Modify Privacy Settings for a Workspace.\n\nThe privacy feature enables the Workspaces line to be monitored by others and determine if they can be reached by Auto Attendant services.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/privacy")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("aaExtensionDialingEnabled", aaExtensionDialingEnabled, cmd.Flags().Changed("aa-extension-dialing-enabled"))
+					req.BodyBool("aaNamingDialingEnabled", aaNamingDialingEnabled, cmd.Flags().Changed("aa-naming-dialing-enabled"))
+					req.BodyBool("enablePhoneStatusDirectoryPrivacy", enablePhoneStatusDirectoryPrivacy, cmd.Flags().Changed("enable-phone-status-directory-privacy"))
+					req.BodyBool("enablePhoneStatusPickupBargeInPrivacy", enablePhoneStatusPickupBargeInPrivacy, cmd.Flags().Changed("enable-phone-status-pickup-barge-in-privacy"))
+					req.BodyStringSlice("monitoringAgents", monitoringAgents)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&aaExtensionDialingEnabled, "aa-extension-dialing-enabled", false, "")
+		cmd.Flags().BoolVar(&aaNamingDialingEnabled, "aa-naming-dialing-enabled", false, "")
+		cmd.Flags().BoolVar(&enablePhoneStatusDirectoryPrivacy, "enable-phone-status-directory-privacy", false, "")
+		cmd.Flags().BoolVar(&enablePhoneStatusPickupBargeInPrivacy, "enable-phone-status-pickup-barge-in-privacy", false, "")
+		cmd.Flags().StringSliceVar(&monitoringAgents, "monitoring-agents", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-voicemail
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-voicemail",
+			Short: "Read Voicemail Settings for a Workspace",
+			Long:  "Retrieve a workspace Voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, `.wav`, format.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` scope can be used to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/voicemail")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-voicemail
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-voicemail",
+			Short: "Configure Voicemail Settings for a Workspace",
+			Long:  "Configure a workspace Voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, `.wav`, format.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/voicemail")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-voicemail-passcode
+		var placeId string
+		var orgId string
+		var passcode string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-voicemail-passcode",
+			Short: "Modify Voicemail Passcode for a Workspace",
+			Long:  "Modify voicemail passcode for a workspace.\n\nModifying the voicemail passcode for a workspace requires a full administrator, device administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{placeId}/voicemail/passcode")
+				req.PathParam("placeId", placeId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("passcode", passcode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&placeId, "place-id", "", "Modify voicemail passcode for this workspace.")
+		cmd.MarkFlagRequired("place-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify voicemail passcode for a workspace in this organization.")
+		cmd.Flags().StringVar(&passcode, "passcode", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-sequential-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-sequential-ring",
+			Short: "Retrieve Sequential Ring Criteria for a Workspace",
+			Long:  "Retrieve sequential ring criteria for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\nThe sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially ring or not.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-sequential-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var ringEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-sequential-ring",
+			Short: "Modify Sequential Ring Criteria for a Workspace",
+			Long:  "Modify sequential ring criteria for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\nThe sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially ring or not.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-sequential-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-sequential-ring",
+			Short: "Delete Sequential Ring Criteria for a Workspace",
+			Long:  "Delete sequential ring criteria for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\nThe sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially ring or not.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-policy-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-policy-settings",
+			Short: "Read Call Policy Settings for a Workspace",
+			Long:  "Retrieve a workspace Call Policies settings.\n\nThe call policy feature enables administrator to configure call policy settings such as Connected Line Identification Privacy on Redirected Calls for a professional workspace.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` scope can be used to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/callPolicies")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-policy-settings
+		var workspaceId string
+		var orgId string
+		var connectedLineIdPrivacyOnRedirectedCalls string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-policy-settings",
+			Short: "Configure Call Policy Settings for a Workspace",
+			Long:  "Configure a workspace Call Policies settings.\n\nThe call policy feature enables administrator to configure call policy settings such as Connected Line Identification Privacy on Redirected Calls for a professional workspace.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/callPolicies")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("connectedLineIdPrivacyOnRedirectedCalls", connectedLineIdPrivacyOnRedirectedCalls)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&connectedLineIdPrivacyOnRedirectedCalls, "connected-line-id-privacy-on-redirected-calls", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-busy-voicemail-greeting-place
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "update-busy-voicemail-greeting-place",
+			Short: "Configure Busy Voicemail Greeting for a Place",
+			Long:  "Configure a workspace's Busy Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadBusyGreeting/invoke")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-no-answer-voicemail-greeting-place
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "update-no-answer-voicemail-greeting-place",
+			Short: "Configure No Answer Voicemail Greeting for a Place",
+			Long:  "Configure a workspace's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadNoAnswerGreeting/invoke")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-sequential-ring
+		var workspaceId string
+		var orgId string
+		var callsFrom string
+		var ringEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-sequential-ring",
+			Short: "Create Sequential Ring Criteria for a Workspace",
+			Long:  "Create sequential ring criteria for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\nThe sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially ring or not.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-sequential-ring-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-sequential-ring-settings",
+			Short: "Retrieve Sequential Ring Settings for a Workspace",
+			Long:  "Retrieve sequential ring settings for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/sequentialRing")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-sequential-ring-settings
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-sequential-ring-settings",
+			Short: "Modify Sequential Ring Settings for a Workspace",
+			Long:  "Modify sequential ring settings for a workspace.\n\nThe sequential ring feature enables you to create a list of up to five phone numbers. When the workspace receives incoming calls, these numbers will ring one after another.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/sequentialRing")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-simultaneous-ring-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-simultaneous-ring-settings",
+			Short: "Retrieve Simultaneous Ring Settings for a Workspace",
+			Long:  "Retrieve Simultaneous Ring Settings for a Workspace.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously.\nSchedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/simultaneousRing")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-simultaneous-ring-settings
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-simultaneous-ring-settings",
+			Short: "Modify Simultaneous Ring Settings for a Workspace",
+			Long:  "Modify Simultaneous Ring Settings for a Workspace.\n\nThe Simultaneous Ring feature allows you to configure the workspace phones of your choice to ring simultaneously.\nSchedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/simultaneousRing")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-simultaneous-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-simultaneous-ring",
+			Short: "Retrieve Simultaneous Ring Criteria for a Workspace",
+			Long:  "Retrieve Simultaneous Ring Criteria Settings for a Workspace.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously.\nSimultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-simultaneous-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var ringEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-simultaneous-ring",
+			Short: "Modify Simultaneous Ring Criteria for a Workspace",
+			Long:  "Modify Simultaneous Ring Criteria Settings for a Workspace.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously.\nSimultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-simultaneous-ring
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-simultaneous-ring",
+			Short: "Delete Simultaneous Ring Criteria for a Workspace",
+			Long:  "Delete simultaneous ring criteria Settings for a workspace.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously.\nSimultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-simultaneous-ring
+		var workspaceId string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var ringEnabled bool
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-simultaneous-ring",
+			Short: "Create Simultaneous Ring Criteria for a Workspace",
+			Long:  "Create Simultaneous Ring Criteria Settings for a Workspace.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously.\nSimultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-reject-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-reject-settings",
+			Short: "Retrieve Selective Reject Settings for a Workspace",
+			Long:  "Retrieve Selective Reject Settings for a Workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveReject")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-reject-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-reject-settings",
+			Short: "Modify Selective Reject Settings for a Workspace",
+			Long:  "Modify Selective Reject Settings for a Workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveReject")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-reject
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-reject",
+			Short: "Retrieve Selective Reject Criteria for a Workspace",
+			Long:  "Retrieve Selective Reject Criteria Settings for a Workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-reject
+		var workspaceId string
+		var id string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var rejectEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-reject",
+			Short: "Modify Selective Reject Criteria for a Workspace",
+			Long:  "Modify Selective Reject Criteria Settings for a Workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("rejectEnabled", rejectEnabled, cmd.Flags().Changed("reject-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&rejectEnabled, "reject-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-reject
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-reject",
+			Short: "Delete Selective Reject Criteria for a Workspace",
+			Long:  "Delete Selective Reject criteria Settings for a workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-selective-reject
+		var workspaceId string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var rejectEnabled bool
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-selective-reject",
+			Short: "Create Selective Reject Criteria for a Workspace",
+			Long:  "Create Selective Reject Criteria Settings for a Workspace.\n\nWith the Selective Reject feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("rejectEnabled", rejectEnabled, cmd.Flags().Changed("reject-enabled"))
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&rejectEnabled, "reject-enabled", false, "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // assign-unassign-numbers-associated
+		var workspaceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "assign-unassign-numbers-associated",
+			Short: "Assign or Unassign numbers associated with a specific workspace",
+			Long:  "Assign or unassign alternate phone numbers associated with a specific workspace.\n\nEach location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers must follow the E.164 format for all countries, except for the United States, which can also follow the National format. Active phone numbers are in service.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/numbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-accept-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-accept-settings",
+			Short: "Retrieve Selective Accept Settings for a Workspace",
+			Long:  "Retrieve Selective Accept Settings for a Workspace.\n\nWith the Selective Accept feature, you can accept calls at specific times from specific callers.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveAccept")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-accept-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-accept-settings",
+			Short: "Modify Selective Accept Settings for a Workspace",
+			Long:  "Modify Selective Accept Settings for a Workspace.\n\nWith the Selective Accept feature, you can accept calls at specific times from specific callers.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveAccept")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-accept
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-accept",
+			Short: "Retrieve Selective Accept Criteria for a Workspace",
+			Long:  "Retrieve Selective Accept Criteria Settings for a Workspace.\n\nWith the Selective Accept feature, you can accept calls at specific times from specific callers.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-accept
+		var workspaceId string
+		var id string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var acceptEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-accept",
+			Short: "Modify Selective Accept Criteria for a Workspace",
+			Long:  "Modify Selective Accept Criteria Settings for a Workspace.\n\nWith the Selective Accept feature, you can accept calls at specific times from specific callers\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("acceptEnabled", acceptEnabled, cmd.Flags().Changed("accept-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&acceptEnabled, "accept-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-accept
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-accept",
+			Short: "Delete Selective Accept Criteria for a Workspace",
+			Long:  "Delete Selective Accept criteria Settings for a workspace.\n\nWith the Selective Accept feature, you can accept calls at specific times from specific callers.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-selective-accept
+		var workspaceId string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var acceptEnabled bool
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-selective-accept",
+			Short: "Create Selective Accept Criteria for a Workspace",
+			Long:  "Create Selective Accept Criteria Settings for a Workspace.\n\nWith the Selective Accept feature, you can reject calls at specific times from specific callers. This setting takes precedence over Selectively Accept Calls.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("acceptEnabled", acceptEnabled, cmd.Flags().Changed("accept-enabled"))
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&acceptEnabled, "accept-enabled", false, "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-priority-alert-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-priority-alert-settings",
+			Short: "Retrieve Priority Alert Settings for a Workspace",
+			Long:  "Retrieve Priority Alert Settings for a Workspace.\n\nThe priority alert feature enables administrators to configure priority alert settings for a professional workspace.\n\nThis API requires a full, user, or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/priorityAlert")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-priority-alert-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-priority-alert-settings",
+			Short: "Configure Priority Alert Settings for a Workspace",
+			Long:  "Configure a workspace Priority Alert Settings.\n\nThe priority alert feature enables administrator to configure priority alert settings for a professional workspace.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope that can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/priorityAlert")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-priority-alert
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-priority-alert",
+			Short: "Retrieve Priority Alert Criteria for a Workspace",
+			Long:  "Retrieve Priority Alert Criteria Settings for a Workspace.\n\nThe priority alert feature enables administrators to configure priority alert settings for a professional workspace.\nPriority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or days of the week.\n\nThis API requires a full, user, or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-priority-alert
+		var workspaceId string
+		var id string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var notificationEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-priority-alert",
+			Short: "Modify Priority Alert Criteria for a Workspace",
+			Long:  "Modify Priority Alert Criteria Settings for a Workspace.\n\nThe priority alert feature enables administrators to configure priority alert settings for a professional workspace.\nPriority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or days of the week.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-priority-alert
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-priority-alert",
+			Short: "Delete Priority Alert Criteria for a Workspace",
+			Long:  "Delete Priority Alert criteria Settings for a workspace.\n\nThe priority alert feature enables administrators to configure priority alert settings for a professional workspace.\nPriority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or days of the week.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-priority-alert
+		var workspaceId string
+		var orgId string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var notificationEnabled bool
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-priority-alert",
+			Short: "Create Priority Alert Criteria for a Workspace",
+			Long:  "Create Priority Alert Criteria Settings for a Workspace.\n\nThe priority alert feature enables administrators to configure priority alert settings for a professional workspace.\nPriority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or days of the week.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-forward-settings
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-forward-settings",
+			Short: "Retrieve Selective Forward Settings for a Workspace",
+			Long:  "Retrieve Selective Forward Call Settings for a Workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveForward")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-forward-settings
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var defaultPhoneNumberToForward string
+		var ringReminderEnabled bool
+		var destinationVoicemailEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-forward-settings",
+			Short: "Modify Selective Forward Settings for a Workspace",
+			Long:  "Modify Selective Forward Call Settings for a Workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveForward")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyString("defaultPhoneNumberToForward", defaultPhoneNumberToForward)
+					req.BodyBool("ringReminderEnabled", ringReminderEnabled, cmd.Flags().Changed("ring-reminder-enabled"))
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&defaultPhoneNumberToForward, "default-phone-number-to-forward", "", "")
+		cmd.Flags().BoolVar(&ringReminderEnabled, "ring-reminder-enabled", false, "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-forward
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-selective-forward",
+			Short: "Retrieve Selective Forward Criteria for a Workspace",
+			Long:  "Retrieve Selective Forward Criteria Settings for a Workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-forward
+		var workspaceId string
+		var id string
+		var orgId string
+		var callsFrom string
+		var forwardToPhoneNumber string
+		var destinationVoicemailEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var numbers []string
+		var forwardEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-forward",
+			Short: "Modify Selective Forward Criteria for a Workspace",
+			Long:  "Modify Selective Forward Call Criteria Settings for a Workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyString("forwardToPhoneNumber", forwardToPhoneNumber)
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("numbers", numbers)
+					req.BodyBool("forwardEnabled", forwardEnabled, cmd.Flags().Changed("forward-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().StringVar(&forwardToPhoneNumber, "forward-to-phone-number", "", "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&numbers, "numbers", nil, "")
+		cmd.Flags().BoolVar(&forwardEnabled, "forward-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-forward
+		var workspaceId string
+		var id string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-forward",
+			Short: "Delete Selective Forward Criteria for a Workspace",
+			Long:  "Delete Selective Forward Call criteria Settings for a workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-selective-forward
+		var workspaceId string
+		var orgId string
+		var callsFrom string
+		var forwardToPhoneNumber string
+		var destinationVoicemailEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var numbers []string
+		var forwardEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-selective-forward",
+			Short: "Create Selective Forward Criteria for a Workspace",
+			Long:  "Create Selective Forward Call Criteria Settings for a Workspace.\n\nWith the Selective Forward feature, you can forward calls at specific times from specific callers. This setting takes precedence over call forwarding.\nSchedules can also be set up for this feature during certain times of the day or days of the week.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyString("forwardToPhoneNumber", forwardToPhoneNumber)
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("numbers", numbers)
+					req.BodyBool("forwardEnabled", forwardEnabled, cmd.Flags().Changed("forward-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().StringVar(&forwardToPhoneNumber, "forward-to-phone-number", "", "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&numbers, "numbers", nil, "")
+		cmd.Flags().BoolVar(&forwardEnabled, "forward-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-fax-available-numbers
+		var workspaceId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-fax-available-numbers",
+			Short: "Get Workspace Fax Message Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as a workspace's FAX message number.\nThese numbers are associated with the location of the workspace specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n<div><Callout type=\"info\">Only available for workspaces with the professional license entitlement.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/faxMessage/availableNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-secondary-available-numbers
+		var workspaceId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-secondary-available-numbers",
+			Short: "Get Workspace Secondary Available Phone Numbers",
+			Long:  "List standard numbers that are available to be assigned as a workspace's secondary number.\nThese numbers are associated with the location of the workspace specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n<div><Callout type=\"info\">Only available for workspaces with the professional license entitlement.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/secondary/availableNumbers")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		workspaceCallCmd.AddCommand(cmd)
+	}
+
+}

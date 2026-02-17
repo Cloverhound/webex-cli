@@ -1,0 +1,484 @@
+package cc
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var subscriptionsCmd = &cobra.Command{
+	Use:   "subscriptions",
+	Short: "Subscriptions commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(subscriptionsCmd)
+
+	{ // list-v1
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "list-v1",
+			Short: "List Subscriptions",
+			Long:  "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V1 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/subscriptions")
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // list-v2
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "list-v2",
+			Short: "List Subscriptions",
+			Long:  "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V2 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/subscriptions")
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // register-v1
+		var trackingId string
+		var destinationUrl string
+		var eventTypes []string
+		var name string
+		var description string
+		var secret string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "register-v1",
+			Short: "Register Subscription",
+			Long:  "Create a subscription which would allow consumers to listen to events. If creating a subscription causes the org-level limit to be exceeded, the subscription registration will be denied. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/subscriptions")
+				req.Header("TrackingId", trackingId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("destinationUrl", destinationUrl)
+					req.BodyStringSlice("eventTypes", eventTypes)
+					req.BodyString("name", name)
+					req.BodyString("description", description)
+					req.BodyString("secret", secret)
+					req.BodyString("orgId", orgId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		cmd.Flags().StringVar(&destinationUrl, "destination-url", "", "")
+		cmd.Flags().StringSliceVar(&eventTypes, "event-types", nil, "")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // register-v2
+		var trackingId string
+		var destinationUrl string
+		var eventTypes []string
+		var name string
+		var resourceVersion string
+		var description string
+		var secret string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "register-v2",
+			Short: "Register Subscription",
+			Long:  "Create a subscription which would allow consumers to listen to events. If creating a subscription causes the org-level limit to be exceeded, the subscription registration will be denied. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/subscriptions")
+				req.Header("TrackingId", trackingId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("destinationUrl", destinationUrl)
+					req.BodyStringSlice("eventTypes", eventTypes)
+					req.BodyString("name", name)
+					req.BodyString("resourceVersion", resourceVersion)
+					req.BodyString("description", description)
+					req.BodyString("secret", secret)
+					req.BodyString("orgId", orgId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		cmd.Flags().StringVar(&destinationUrl, "destination-url", "", "")
+		cmd.Flags().StringSliceVar(&eventTypes, "event-types", nil, "")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&resourceVersion, "resource-version", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // get-v1
+		var id string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-v1",
+			Short: "Get Subscription",
+			Long:  "Retrieve a subscription for a given subscription ID. Requires `cjp:config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // get-v2
+		var id string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-v2",
+			Short: "Get Subscription",
+			Long:  "Retrieve a subscription for a given subscription ID. Requires `cjp:config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-v1
+		var id string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "delete-v1",
+			Short: "Delete Subscription",
+			Long:  "Deletes a subscription for a given subscription ID. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-v2
+		var id string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "delete-v2",
+			Short: "Delete Subscription",
+			Long:  "Deletes a subscription for a given subscription ID. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v2/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // update-v1
+		var id string
+		var trackingId string
+		var description string
+		var eventTypes []string
+		var destinationUrl string
+		var status string
+		var secret string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-v1",
+			Short: "Update Subscription",
+			Long:  "Updates some of the properties in a subscription, for a given subscription ID. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v1/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.Header("TrackingId", trackingId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("description", description)
+					req.BodyStringSlice("eventTypes", eventTypes)
+					req.BodyString("destinationUrl", destinationUrl)
+					req.BodyString("status", status)
+					req.BodyString("secret", secret)
+					req.BodyString("orgId", orgId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringSliceVar(&eventTypes, "event-types", nil, "")
+		cmd.Flags().StringVar(&destinationUrl, "destination-url", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // update-v2
+		var id string
+		var trackingId string
+		var resourceVersion string
+		var description string
+		var eventTypes []string
+		var destinationUrl string
+		var status string
+		var secret string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-v2",
+			Short: "Update Subscription",
+			Long:  "Updates some of the properties in a subscription, for a given subscription ID. Requires `cjp:config_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v2/subscriptions/{id}")
+				req.PathParam("id", id)
+				req.Header("TrackingId", trackingId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("resourceVersion", resourceVersion)
+					req.BodyString("description", description)
+					req.BodyStringSlice("eventTypes", eventTypes)
+					req.BodyString("destinationUrl", destinationUrl)
+					req.BodyString("status", status)
+					req.BodyString("secret", secret)
+					req.BodyString("orgId", orgId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		cmd.Flags().StringVar(&resourceVersion, "resource-version", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringSliceVar(&eventTypes, "event-types", nil, "")
+		cmd.Flags().StringVar(&destinationUrl, "destination-url", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // list-event-types-v1
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "list-event-types-v1",
+			Short: "List Event Types",
+			Long:  "Retrieve all available event types for an organization. Requires `cjp:config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/event-types")
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+	{ // list-event-types-v2
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "list-event-types-v2",
+			Short: "List Event Types",
+			Long:  "Retrieve all available event types for an organization along with information about the currently supported resource versions. Requires `cjp:config_read` scope. ",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/event-types")
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
+		subscriptionsCmd.AddCommand(cmd)
+	}
+
+}

@@ -1,0 +1,327 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var multimediaProfileCmd = &cobra.Command{
+	Use:   "multimedia-profile",
+	Short: "MultimediaProfile commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(multimediaProfileCmd)
+
+	{ // list
+		var orgid string
+		var filter string
+		var attributes string
+		var search string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Multimedia Profile(s)",
+			Long:  `Retrieve a list of Multimedia Profile(s) in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/multimedia-profile")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("filter", filter)
+				req.QueryParam("attributes", attributes)
+				req.QueryParam("search", search)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, description)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"description\");value==\"Cisco\" ")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var orgid string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a new Multimedia Profile",
+			Long:  `Create a new Multimedia Profile in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/multimedia-profile")
+				req.PathParam("orgid", orgid)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // bulk-save
+		var orgid string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "bulk-save",
+			Short: "Bulk save Multimedia Profile(s)",
+			Long:  `Create, Update or delete Multimedia Profile(s) in bulk in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/multimedia-profile/bulk")
+				req.PathParam("orgid", orgid)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // bulk-export
+		var orgid string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "bulk-export",
+			Short: "Bulk export Multimedia Profile(s)",
+			Long:  `Export all Multimedia Profile(s) in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/multimedia-profile/bulk-export")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // purge-inactive
+		var orgid string
+		var nextStartId string
+		cmd := &cobra.Command{
+			Use:   "purge-inactive",
+			Short: "Purge inactive Multimedia Profile(s)",
+			Long:  `Purge inactive Multimedia Profile(s) older than the configured interval for a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/multimedia-profile/purge-inactive-entities")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("nextStartId", nextStartId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch with be selected.")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // get-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-id",
+			Short: "Get specific Multimedia Profile by ID",
+			Long:  `Retrieve an existing Multimedia Profile by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/multimedia-profile/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Multimedia Profile.")
+		cmd.MarkFlagRequired("id")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // update-id
+		var orgid string
+		var id string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-id",
+			Short: "Update specific Multimedia Profile by ID",
+			Long:  `Update an existing Multimedia Profile by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/multimedia-profile/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Multimedia Profile.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // delete-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-id",
+			Short: "Delete specific Multimedia Profile by ID",
+			Long:  `Delete an existing Multimedia Profile by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/multimedia-profile/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Multimedia Profile.")
+		cmd.MarkFlagRequired("id")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+	{ // list-references
+		var orgid string
+		var id string
+		var typeVal string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list-references",
+			Short: "List references for a specific Multimedia Profile",
+			Long:  `Retrieve a list of all entities that have reference to an existing Multimedia Profile by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/multimedia-profile/{id}/incoming-references")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				req.QueryParam("type", typeVal)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "ID of this contact center resource.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&typeVal, "type", "", "Entity type of the other entity that has a reference to this specific entity.")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		multimediaProfileCmd.AddCommand(cmd)
+	}
+
+}

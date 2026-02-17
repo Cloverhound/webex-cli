@@ -1,0 +1,213 @@
+package cc
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var callMonitoringCmd = &cobra.Command{
+	Use:   "call-monitoring",
+	Short: "CallMonitoring commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(callMonitoringCmd)
+
+	{ // create-request
+		var id string
+		var monitorType string
+		var taskId string
+		var queueIds []string
+		var teams []string
+		var sites []string
+		var agents []string
+		var trackingId string
+		var invisibleMode bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-request",
+			Short: "Create Monitoring Request",
+			Long:  `Create a successful monitoring request. It can be done either on an on-going or next successful inbound/outbound call. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("id", id)
+					req.BodyString("monitorType", monitorType)
+					req.BodyString("taskId", taskId)
+					req.BodyStringSlice("queueIds", queueIds)
+					req.BodyStringSlice("teams", teams)
+					req.BodyStringSlice("sites", sites)
+					req.BodyStringSlice("agents", agents)
+					req.BodyString("trackingId", trackingId)
+					req.BodyBool("invisibleMode", invisibleMode, cmd.Flags().Changed("invisible-mode"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.Flags().StringVar(&monitorType, "monitor-type", "", "")
+		cmd.Flags().StringVar(&taskId, "task-id", "", "")
+		cmd.Flags().StringSliceVar(&queueIds, "queue-ids", nil, "")
+		cmd.Flags().StringSliceVar(&teams, "teams", nil, "")
+		cmd.Flags().StringSliceVar(&sites, "sites", nil, "")
+		cmd.Flags().StringSliceVar(&agents, "agents", nil, "")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "")
+		cmd.Flags().BoolVar(&invisibleMode, "invisible-mode", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // barge-in-request
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "barge-in-request",
+			Short: "BargeIn Request",
+			Long:  `Create a successful barge-in request for the supervisor to barge in the call that is being monitored already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/bargeIn")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID representing the task that needs to be barged by the supervisor.")
+		cmd.MarkFlagRequired("task-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // end-request
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "end-request",
+			Short: "End Monitoring Request",
+			Long:  `Allows to successfully end the on-going monitoring request. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/end")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that needs to end.")
+		cmd.MarkFlagRequired("task-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // hold-request
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "hold-request",
+			Short: "Hold Monitoring Request",
+			Long:  `Place the monitoring session on hold for a particular call. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/hold")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID representing the task that needs to be held.")
+		cmd.MarkFlagRequired("task-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // unhold-request
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "unhold-request",
+			Short: "Unhold Monitoring Request",
+			Long:  `Resume a particular monitoring request that was on hold already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/unhold")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID representing the task that needs to be resumed and was on hold already.")
+		cmd.MarkFlagRequired("task-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // get-sessions
+		cmd := &cobra.Command{
+			Use:   "get-sessions",
+			Short: "Fetch Monitoring Sessions",
+			Long:  `Fetches all active subscriptions for a given clientID.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/monitor/sessions")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+	{ // delete-request
+		var requestId string
+		cmd := &cobra.Command{
+			Use:   "delete-request",
+			Short: "Delete Monitoring Request",
+			Long:  `Delete a particular monitoring request that was created. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/monitor/{requestId}")
+				req.PathParam("requestId", requestId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&requestId, "request-id", "", "The id with which the monitoring request has been created.")
+		cmd.MarkFlagRequired("request-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
+}

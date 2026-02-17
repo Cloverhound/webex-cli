@@ -1,0 +1,236 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var agentWellbeingCmd = &cobra.Command{
+	Use:   "agent-wellbeing",
+	Short: "AgentWellbeing commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(agentWellbeingCmd)
+
+	{ // subscribe-realtime-burnout-events
+		var xOrganizationId string
+		var destinationUrl string
+		var eventTypes []string
+		var name string
+		var description string
+		var secret string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "subscribe-realtime-burnout-events",
+			Short: "Subscribe for realtime burnout events",
+			Long:  `This endpoint provides real-time burnout events that are generated for agents belonging to the organization. It gives us a WebSocket URL to which we can connect to receive the real-time burnout events.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/agentburnout/subscribe")
+				req.Header("X-ORGANIZATION-ID", xOrganizationId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("destinationUrl", destinationUrl)
+					req.BodyStringSlice("eventTypes", eventTypes)
+					req.BodyString("name", name)
+					req.BodyString("description", description)
+					req.BodyString("secret", secret)
+					req.BodyString("orgId", orgId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&xOrganizationId, "x-organization-id", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.Flags().StringVar(&destinationUrl, "destination-url", "", "")
+		cmd.Flags().StringSliceVar(&eventTypes, "event-types", nil, "")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentWellbeingCmd.AddCommand(cmd)
+	}
+
+	{ // record-realtime-burnout-events
+		var xOrganizationId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "record-realtime-burnout-events",
+			Short: "Record the realtime burnout events",
+			Long:  `The endpoint need to be invoked by Partners and Third-Party that will subscribe to the Agent Burnout system, in order to take certain action based on the agent burnout index calculated.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/agentburnout/action")
+				req.Header("X-ORGANIZATION-ID", xOrganizationId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&xOrganizationId, "x-organization-id", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentWellbeingCmd.AddCommand(cmd)
+	}
+
+	{ // get-burnout-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-burnout-id",
+			Short: "Get specific Agent Burnout resource by ID",
+			Long:  `Retrieve an existing Agent Burnout resource by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/agent-burnout/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Agent Burnout resource.")
+		cmd.MarkFlagRequired("id")
+		agentWellbeingCmd.AddCommand(cmd)
+	}
+
+	{ // update-burnout-id
+		var orgid string
+		var id string
+		var agentInclusionType string
+		var enabled bool
+		var organizationId string
+		var version int64
+		var wellnessBreakReminders string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-burnout-id",
+			Short: "Update specific Agent Burnout resource by ID",
+			Long:  `Update an existing Agent Burnout resource by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/agent-burnout/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("agentInclusionType", agentInclusionType)
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyString("organizationId", organizationId)
+					req.BodyString("id", id)
+					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+					req.BodyString("wellnessBreakReminders", wellnessBreakReminders)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Agent Burnout resource.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&agentInclusionType, "agent-inclusion-type", "", "")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
+		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().StringVar(&wellnessBreakReminders, "wellness-break-reminders", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentWellbeingCmd.AddCommand(cmd)
+	}
+
+	{ // list-burnout
+		var orgid string
+		var filter string
+		var attributes string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list-burnout",
+			Short: "List Agent Burnout resource(s)",
+			Long:  `Retrieve a list of Agent Burnout resource(s) in a given organization.Only one entry per organization can exist for Agent Burnout resource.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-burnout")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("filter", filter)
+				req.QueryParam("attributes", attributes)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		agentWellbeingCmd.AddCommand(cmd)
+	}
+
+}

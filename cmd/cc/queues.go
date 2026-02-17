@@ -1,0 +1,78 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var queuesCmd = &cobra.Command{
+	Use:   "queues",
+	Short: "Queues commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(queuesCmd)
+
+	{ // get-statistics
+		var from string
+		var to string
+		var interval string
+		var queueIds string
+		var orgId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-statistics",
+			Short: "Get Queue Statistics",
+			Long: `Retrieve Queue statistics for a given interval of time. 
+An important thing to note is that each stat produced is for a specified time window (last 15, 30, or 60 minutes etc) and is not cumulative. 
+Contacts that span across intervals will also have stats broken down across intervals. For example: A contact that starts at 12:05 and ends at 12:25 will have stats for Interval A (12:00-12:15) and Interval B (12:15-12:30) assuming the interval window is for 15 minutes. 
+Stats that only require the start time of the contact like 'totalOfferedTasks' and 'totalAcceptedTasks' will be counted only once and it will be present in the interval where the contact started i.e. Interval A. 
+Whereas, stats that require the end time as well for calculations like 'averageHandledTime', will be present in the interval where the contact ended i.e. interval B. 
+
+For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
+The response will be compressed only if its size exceeds 1 MB.
+If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients. 
+`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/queues/statistics")
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("interval", interval)
+				req.QueryParam("queueIds", queueIds)
+				req.QueryParam("queueIds", queueIds)
+				req.QueryParam("orgId", orgId)
+				req.Header("TrackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&from, "from", "", "Start time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:05 will be rounded down to 12:00.")
+		cmd.Flags().StringVar(&to, "to", "", "End time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:55 will be rounded down to 12:45.  The difference between to and from time must be less than 24 hours (86400000 milliseconds).")
+		cmd.Flags().StringVar(&interval, "interval", "", "Time interval (in minutes) to chunk statistics by i.e. break up the entire from-to timeframe by this interval amount so that statistics can be viewed incrementally. Supported values are 15, 30, or 60.")
+		cmd.Flags().StringVar(&queueIds, "queue-ids", "", "Comma-separated list of queue IDs. A maximum of 100 values is permitted. If values are not provided, all queues for an organization are returned.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		queuesCmd.AddCommand(cmd)
+	}
+
+}

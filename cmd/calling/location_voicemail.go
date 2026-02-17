@@ -1,0 +1,497 @@
+package calling
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var locationVoicemailCmd = &cobra.Command{
+	Use:   "location-voicemail",
+	Short: "LocationVoicemail commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(locationVoicemailCmd)
+
+	{ // get
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Location Voicemail",
+			Long:  "Retrieve voicemail settings for a specific location.\n\nLocation voicemail settings allows you to enable voicemail transcription for a specific location.\n\nRetrieving a location's voicemail settings requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicemail")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve voicemail settings for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve voicemail settings for this organization.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var locationId string
+		var orgId string
+		var voicemailTranscriptionEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update Location Voicemail",
+			Long:  "Update the voicemail settings for a specific location.\n\nLocation voicemail settings allows you to enable voicemail transcription for a specific location.\n\nUpdating a location's voicemail settings requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/voicemail")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("voicemailTranscriptionEnabled", voicemailTranscriptionEnabled, cmd.Flags().Changed("voicemail-transcription-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Update voicemail settings for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update voicemail settings for this organization.")
+		cmd.Flags().BoolVar(&voicemailTranscriptionEnabled, "voicemail-transcription-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-voiceportal
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-voiceportal",
+			Short: "Get VoicePortal",
+			Long:  "Retrieve Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant announcements.\n\nRetrieving voice portal information for an organization requires a full read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicePortal")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location to which the voice portal belongs.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the voice portal belongs.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // update-voiceportal
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-voiceportal",
+			Short: "Update VoicePortal",
+			Long:  "Update Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant anouncements.\n\nUpdating voice portal information for an organization and/or rules requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/voicePortal")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location to which the voice portal belongs.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Update voicemail rules for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-voiceportal-passcode-rule
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-voiceportal-passcode-rule",
+			Short: "Get VoicePortal Passcode Rule",
+			Long:  "Retrieve the voice portal passcode rule for a location.\n\nVoice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant anouncements\n\nRetrieving the voice portal passcode rule requires a full read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicePortal/passcodeRules")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve voice portal passcode rules for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve voice portal passcode rules for this organization.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // list-voicemailgroup
+		var orgId string
+		var locationId string
+		var name string
+		var phoneNumber string
+		var max string
+		var start string
+		cmd := &cobra.Command{
+			Use:   "list-voicemailgroup",
+			Short: "List VoicemailGroup",
+			Long:  "List the voicemail group information for the organization.\n\nYou can create a shared voicemail box and inbound FAX box to\nassign to users or call routing features like an auto attendant, call queue, or hunt group.\n\nRetrieving a voicemail group for the organization requires a full read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/voicemailGroups")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("name", name)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the voicemail group belongs.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location to which the voicemail group belongs.")
+		cmd.Flags().StringVar(&name, "name", "", "Search (Contains) based on voicemail group name")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search (Contains) based on number or extension")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. The maximum value is `200`.")
+		cmd.Flags().StringVar(&start, "start", "", "Offset from the first result that you want to fetch.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-group
+		var locationId string
+		var voicemailGroupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-group",
+			Short: "Get Location Voicemail Group",
+			Long:  "Retrieve voicemail group details for a location.\n\nManage your voicemail group settings for a specific location, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nRetrieving voicemail group details requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("voicemailGroupId", voicemailGroupId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve voicemail group details for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&voicemailGroupId, "voicemail-group-id", "", "Retrieve voicemail group details for this voicemail group ID.")
+		cmd.MarkFlagRequired("voicemail-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve voicemail group details for a customer location.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // update-group
+		var locationId string
+		var voicemailGroupId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-group",
+			Short: "Modify Location Voicemail Group",
+			Long:  "Modifies the voicemail group location details for a particular location for a customer.\n\nManage your voicemail settings, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nModifying the voicemail group location details requires a full, user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("voicemailGroupId", voicemailGroupId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Modifies the voicemail group details for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&voicemailGroupId, "voicemail-group-id", "", "Modifies the voicemail group details for this voicemail group ID.")
+		cmd.MarkFlagRequired("voicemail-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modifies the voicemail group details for a customer location.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // delete-group
+		var locationId string
+		var voicemailGroupId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-group",
+			Short: "Delete a Voicemail Group for a Location",
+			Long:  "Delete the designated voicemail group.\n\nDeleting a voicemail group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("voicemailGroupId", voicemailGroupId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location from which to delete a voicemail group.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&voicemailGroupId, "voicemail-group-id", "", "Delete the voicemail group with the matching ID.")
+		cmd.MarkFlagRequired("voicemail-group-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete the voicemail group from this organization.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // create-group
+		var locationId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-group",
+			Short: "Create a new Voicemail Group for a Location",
+			Long:  "Create a new voicemail group for the given location for a customer.\n\nA voicemail group can be created for given location for a customer.\n\nCreating a voicemail group for the given location requires a full or user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/voicemailGroups")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Create a new voice mail group for this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create a new voice mail group for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-group-fax-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-group-fax-available-numbers",
+			Short: "Get Voicemail Group Fax Message Available Phone Numbers",
+			Long:  "List the standard and service PSTN numbers that are available to be assigned as a voicemail group's FAX message phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicemailGroups/faxMessage/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-group-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-group-available-numbers",
+			Short: "Get Voicemail Group Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as a voicemail group's phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicemailGroups/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // get-voiceportal-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-voiceportal-available-numbers",
+			Short: "Get VoicePortal Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as the location voice portal's phone number.\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicePortal/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		locationVoicemailCmd.AddCommand(cmd)
+	}
+
+}

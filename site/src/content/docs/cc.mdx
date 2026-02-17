@@ -1,0 +1,89 @@
+---
+title: Contact Center Commands
+description: Webex Contact Center API commands reference.
+---
+
+The `webex cc` subcommand provides access to the Webex Contact Center API. The `--orgid` flag is auto-populated from your login, so you typically don't need to pass it.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `site` | Contact center sites |
+| `team` | Agent teams |
+| `users` | CC-enabled users |
+| `entry-point` | Inbound entry points (voice, chat, email, social) |
+| `contact-service-queue` | Contact service queues |
+| `skill` | Skill definitions |
+| `skill-profile` | Skill profile assignments |
+| `user-profiles` | User profile (access control) |
+| `desktop-profile` | Agent desktop profiles |
+| `desktop-layout` | Agent desktop layouts |
+| `multimedia-profile` | Channel blending profiles |
+| `auxiliary-code` | Idle and wrap-up reason codes |
+| `global-variables` | Flow global variables |
+| `business-hour` | Business hours schedules |
+| `holiday-list` | Holiday lists |
+| `dial-plan` | Outdial plans |
+| `dial-number` | DN-to-entry-point mappings |
+| `outdial-ani` | Outdial ANI lists |
+| `audio-files` | IVR prompts and audio |
+| `flow` | Flow export/import/publish |
+| `agents` | Agent state operations |
+| `address-book` | Address books |
+| `work-types` | Work type definitions |
+| `overrides` | Schedule overrides |
+
+## Common Patterns
+
+```bash
+# List resources
+webex cc <resource> list
+
+# Get by ID
+webex cc <resource> get-id --orgid "..." --id "..."
+
+# Create
+webex cc <resource> create --orgid "..." --body-file config.json
+
+# Update
+webex cc <resource> update-id --orgid "..." --id "..." --body-file updated.json
+
+# Delete
+webex cc <resource> delete-id --orgid "..." --id "..."
+
+# List references (what depends on this resource)
+webex cc <resource> list-references --orgid "..." --id "..."
+```
+
+## Filtering and Pagination
+
+CC list endpoints support RSQL filtering:
+
+```bash
+webex cc site list --filter='name=="Site A"'
+webex cc team list --search="Sales"
+```
+
+Auto-paginate to get all results:
+
+```bash
+webex cc entry-point list --paginate
+```
+
+Manual pagination:
+
+```bash
+webex cc entry-point list --page=0 --page-size=100
+webex cc entry-point list --page=1 --page-size=100
+```
+
+## Exceptions
+
+Most resources use `list` as the list subcommand. One exception:
+
+| Resource | List command |
+|----------|-------------|
+| `dial-number` | `list-dialed-mapping` |
+
+Use `--help` on any resource to see its available subcommands.

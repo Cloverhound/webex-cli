@@ -1,0 +1,407 @@
+package calling
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var operatingModesCmd = &cobra.Command{
+	Use:   "operating-modes",
+	Short: "OperatingModes commands",
+}
+
+func init() {
+	cmd.CallingCmd.AddCommand(operatingModesCmd)
+
+	{ // list
+		var name string
+		var limitToLocationId string
+		var limitToOrgLevelEnabled string
+		var max string
+		var start string
+		var order string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "Read the List of Operating Modes",
+			Long:  "Retrieve `Operating Modes` list defined at location, or organization level. Use query parameters to filter the result set by location or level. The list returned is sorted in ascending order by operating mode name. Long result sets are split into [pages](/docs/basics#pagination).\n\n`Operating modes` help manage calls more efficiently by routing them based on predefined settings.\n\nRetrieving this list requires a full, read-only, or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/operatingModes")
+				req.QueryParam("name", name)
+				req.QueryParam("limitToLocationId", limitToLocationId)
+				req.QueryParam("limitToOrgLevelEnabled", limitToOrgLevelEnabled)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("order", order)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&name, "name", "", "List `operating modes` whose name contains this string.")
+		cmd.Flags().StringVar(&limitToLocationId, "limit-to-location-id", "", "Location query parameter to filter the `operating modes` from that location only.")
+		cmd.Flags().StringVar(&limitToOrgLevelEnabled, "limit-to-org-level-enabled", "", "If true, only return `operating modes` defined at the organization level.")
+		cmd.Flags().StringVar(&max, "max", "", "Maximum number of `operating modes` to return in a single page. `max` must be equal to, or greater than `1`, and equal to or less than `100`.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list of `operating modes` based on `name`, either asc, or desc.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve `operating modes` list from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var modeId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Details for an Operating Mode",
+			Long:  "Retrieve an `Operating Mode` by `Operating Mode ID`.\n\n`Operating modes` can be used to define call routing rules for different scenarios like business hours, after hours, holidays, etc.\n\nRetrieving an `operating mode` requires a full, read-only, or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/operatingModes/{modeId}")
+				req.PathParam("modeId", modeId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Get the `operating mode` with the matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get the `operating mode` from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var modeId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Modify an Operating Mode",
+			Long:  "Modify the designated `Operating Mode's` configuration.\n\n`Operating modes` can be used to define call routing rules for different scenarios like business hours, after hours, holidays, etc.\n\nModifying an `Operating Mode` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/operatingModes/{modeId}")
+				req.PathParam("modeId", modeId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Modify the `operating mode` with the matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify the `operating mode` from this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var modeId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete an Operating Mode",
+			Long:  "Delete the designated `Operating Mode`.\n\nDeleting an `Operating Mode` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/operatingModes/{modeId}")
+				req.PathParam("modeId", modeId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Delete the `operating mode` with the matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete the `operating mode` from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create an Operating Mode",
+			Long:  "Create an `Operating Mode` at an organization, or a location level.\n\n`Operating modes` can be used to define call routing rules for different scenarios like business hours, after hours, holidays, etc.\n\nCreating an `Operating Mode` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/operatingModes")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create the `operating mode` for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // get-holiday
+		var modeId string
+		var holidayId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-holiday",
+			Short: "Get details for an Operating Mode Holiday",
+			Long:  "Retrieve an `Operating Mode Holiday` by ID.\n\nHolidays define a recurring schedule for the `Operating Modes`.\n\nRetrieving an `Operating Mode Holiday` requires a full, read-only, or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/operatingModes/{modeId}/holidays/{holidayId}")
+				req.PathParam("modeId", modeId)
+				req.PathParam("holidayId", holidayId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Get the holiday from this `operating mode` matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&holidayId, "holiday-id", "", "Get the `operating mode Holiday` with the matching ID.")
+		cmd.MarkFlagRequired("holiday-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get the `operating mode` from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // update-holiday
+		var modeId string
+		var holidayId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-holiday",
+			Short: "Modify an Operating Mode Holiday",
+			Long:  "Modify the designated `Operating Mode Holiday's` configuration.\n\nModifying an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/operatingModes/{modeId}/holidays/{holidayId}")
+				req.PathParam("modeId", modeId)
+				req.PathParam("holidayId", holidayId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Modify the holiday from this `operating mode` matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&holidayId, "holiday-id", "", "Modify the `Holiday` with the matching ID.")
+		cmd.MarkFlagRequired("holiday-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify the `operating mode` from this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // delete-holiday
+		var modeId string
+		var holidayId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-holiday",
+			Short: "Delete an Operating Mode Holiday",
+			Long:  "Delete the designated `Operating Mode Holiday`.\n\nDeleting an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/operatingModes/{modeId}/holidays/{holidayId}")
+				req.PathParam("modeId", modeId)
+				req.PathParam("holidayId", holidayId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Delete the holiday from this `operating mode` matching ID.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&holidayId, "holiday-id", "", "Delete the holiday with the matching ID.")
+		cmd.MarkFlagRequired("holiday-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete the `operating mode` from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // create-holiday
+		var modeId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-holiday",
+			Short: "Create an Operating Mode Holiday",
+			Long:  "Create a holiday schedule event for the designated `Operating Mode`.\n\nHolidays define a recurring schedule for the `Operating Modes`. An `Operating Mode` can have a max of 150 holidays.\n\nCreating an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/operatingModes/{modeId}/holidays")
+				req.PathParam("modeId", modeId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&modeId, "mode-id", "", "Create the holiday for this `operating mode`.")
+		cmd.MarkFlagRequired("mode-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Create the `operating mode holiday` for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // list-available-location
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-available-location",
+			Short: "Retrieve the List of Available Operating Modes in a Location",
+			Long:  "Retrieve list of `Operating Modes` which are available to be assigned to a location level feature (`Auto Attendant`, `Call Queue`, or `Hunt Group`). Since each location and an org can have a max of 100 `Operating Modes` defined. The max number of `operating modes` that can be returned is 200.\n\n`Operating modes` can be used to define call routing rules for different scenarios like business hours, after hours, holidays, etc. for the `Auto Attendant`, `Call Queue`, and `Hunt Group` features.\n\nRetrieving this list requires a full, read-only, or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/operatingModes/availableOperatingModes")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Retrieve `operating modes` list from this location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve `operating modes` list from this organization.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+	{ // get-forward-available-numbers
+		var locationId string
+		var orgId string
+		var max string
+		var start string
+		var phoneNumber string
+		var ownerName string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-forward-available-numbers",
+			Short: "Get Operating Mode Call Forward Available Phone Numbers",
+			Long:  "List the service and standard PSTN numbers that are available to be assigned as a operating mode's call forward number.\n\nThese numbers are associated with the location specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/operatingModes/callForwarding/availableNumbers")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("ownerName", ownerName)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Return the list of phone numbers for this location within the given organization. The maximum length is 36.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List numbers for this organization.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of phone numbers returned to this maximum count. The default is 2000.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching phone numbers. The default is 0.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter phone numbers based on the comma-separated list provided in the `phoneNumber` array.")
+		cmd.Flags().StringVar(&ownerName, "owner-name", "", "Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is 255.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Returns the list of PSTN phone numbers with the given `extension`.")
+		operatingModesCmd.AddCommand(cmd)
+	}
+
+}

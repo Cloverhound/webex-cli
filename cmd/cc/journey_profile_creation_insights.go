@@ -1,0 +1,551 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var journeyProfileCreationInsightsCmd = &cobra.Command{
+	Use:   "journey-profile-creation-insights",
+	Short: "JourneyProfileCreationInsights commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(journeyProfileCreationInsightsCmd)
+
+	{ // get-template-searched-template-id
+		var workspaceId string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "get-template-searched-template-id",
+			Short: "Get A specific Template searched by template id",
+			Long: `Get Template details by template Id in JDS. 
+
+Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // update-profileviewtemplate
+		var workspaceId string
+		var templateId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-profileviewtemplate",
+			Short: "Update existing ProfileViewTemplate",
+			Long: `Update existing Profile View Template in JDS. 
+
+Role and Scope: Requires id full admin or any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-template-template-id
+		var workspaceId string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "delete-template-template-id",
+			Short: "Delete Template by template Id",
+			Long: `Delete Template By template id in JDS. 
+
+Role and Scope: Requires id full admin or any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateId", templateId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-template
+		var workspaceId string
+		var filter string
+		var sort string
+		var sortBy string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "get-all-template",
+			Short: "Get All Template Details",
+			Long: `Get Template details by Organization Id and workspaceId in JDS. 
+
+Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("filter", filter)
+				req.QueryParam("sort", sort)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&filter, "filter", "", "Optional filter which can be applied to the elements to be fetched.   This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		cmd.Flags().StringVar(&sort, "sort", "", "Sort direction")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort By Field")
+		cmd.Flags().StringVar(&page, "page", "", "Index of the page of results to be fetched.  Results are returned in blocks of pageSize elements. This parameter specifies which page number to retrieve.The page numbering starts with 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Number of items to be displayed on a page.")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // create-template
+		var workspaceId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-template",
+			Short: "Create Template",
+			Long:  "Creates a Profile View Template in JDS. \n\n **Role and Scope**: Requires id full admin or any role with cjp:config_write scope.\n\n **Template with single rule**: \n  ```\n  {\n    \"name\": \"ClosedCaller\",\n    \"attributes\": [\n      {\n        \"version\": \"0.1\",\n        \"event\": \"Closed Queue\",\n        \"metaDataType\": \"string\",\n        \"metaData\": \"category\",\n        \"limit\": 100,\n        \"displayName\": \"ClosedCaller\",\n        \"lookBackDurationType\": \"minutes\",\n        \"lookBackPeriod\": 5,\n        \"aggregationMode\": \"Count\",\n        \"rules\": {\n          \"logic\": \"SINGLE\",\n          \"condition\": \"Closed Queue,category,string,Value EQ Closed\"\n        },\n        \"widgetAttributes\": {\n          \"type\": \"table\"\n        },\n        \"verbose\": false\n      }\n    ]\n  }\n ```\n\n\n **Example Event:** \n  ```\n  {\n    \"id\": \"{{$guid}}\",\n    \"specversion\": \"1.0\",\n    \"type\": \"Closed Queue\",\n    \"source\": \"Voice%20Contact\",\n    \"identity\": \"jes@gmail.com\",\n    \"identitytype\": \"email\",\n    \"datacontenttype\": \"application/json\",\n    \"data\": {\n      \"Email\": \"jes@gmail.com\",\n      \"CallsQueuedNow\": \"Use GetQueueInfoNode Values\",\n      \"OldestCallTime\": \"Use GetQueueInfoNode Values\",\n      \"LoggedOnAgents\": \"Use GetQueueInfoNode Values\",\n      \"PIQ\": \"Use GetQueueInfoNode Values\",\n      \"EWT\": \"Use GetQueueInfoNode Values\",\n      \"category\": \"Closed\",\n      \"origin\": \"Past Due - 1st Notification\",\n      \"channelType\": \"QueueCall\",\n      \"channelBreakout\": \"voice\"\n    }\n  }\n  ```\n\n\n **Key components of the rule:** \n   * template.event: This refers to the specific event type you want to match (e.g., \"Closed Queue\").\n   * event.type: This refers to the actual event type present in the event data.\n   * event.data: This is the dictionary/object containing all the metadata associated with the event.\n   * template.rules.condition - category: This is the specific metadata field you want to compare within event.data.\n   * template.rules.condition - string: This indicates that the category metadata is a string type.\n   * template.rules.condition - Value EQ Closed: This defines the condition: the value of the category field (as a string) must be equal to \"Closed\".\n\n\n **Evaluation process:** \n  1. The rule checks if template.event matches the event.type in the incoming event.\n  2. If they match, the rule retrieves the value of the category field from event.data.\n  3. It then compares the value of category (treated as a string) to \"Closed\" using an equality operator (EQ).\n  4. If the values are equal, the condition evaluates to True and creates a progressive profile for the identity. Otherwise, it evaluates to False.\n  \n  The template has lookBackPeriod and lookBackDurationType which decide how long to look back for the calculation. In the above template, it fetches events triggered in the last 5 minutes and performs the aggregation mode on the data received from rules.\n  \n  * When the aggregation mode is Value, the profile result will have the value of the rule as the output.\n  * When the aggregation mode is Count, the profile will have the count of events with category closed in the past 5 minutes.\n  * When the aggregation mode is Distinct, the profile will have the value closed.\n  * When aggregation mode is Sum, the data type should be Integer or double and it will be the sum of all matching values in the last 5 minutes.\n  * When aggregation mode is Max, the data type should be Integer or double and it will be the max of all matching values in the last 5 minutes.\n  * When aggregation mode is Min, the data type should be Integer or double and it will be the min of all matching values in the last 5 minutes.\n  * When aggregation mode is Average, the data type should be Integer or double and it will be the average of all matching values in the last 5 minutes.\n\n\n **Example template with multiple rules :** \n  ```\n1. {\n2.   \"name\": \"sample-template-multi-condition\",\n3.   \"attributes\": [\n4.     {\n5.       \"version\": \"0.1\",\n6.       \"event\": \"Quote\",\n7.       \"metaDataType\": \"string\",\n8.       \"metaData\": \"email\",\n9.       \"limit\": 1,\n10.      \"displayName\": \"Email\",\n11.      \"lookBackDurationType\": \"days\",\n12.      \"lookBackPeriod\": 50,\n13.      \"aggregationMode\": \"Value\",\n14.      \"rules\": {\n15.        \"args\": [\n16.          \"Quote,isEV,string,Value EQ Yes\",\n17.          \"Quote,isEV,string,Value EQ No\",\n18.          {\n19.            \"args\": [\n20.              \"Quote,make,string,Value EQ Honda\",\n21.              \"Quote,model,string,Value EQ CR-V\"\n22.            ],\n23.            \"logic\": \"AND\"\n24.          }\n25.        ],\n26.        \"logic\": \"OR\"\n27.      },\n28.      \"widgetAttributes\": {\n29.        \"type\": \"table\"\n30.      },\n31.      \"verbose\": false\n32.    }\n33.  ]\n34. }\n  ```\n1. In the above template we have multiple rules.\n2. The arguments in line 20 and 21 are evaluated with logical AND condition.\n3. Then arguments in line 16 and 17 along with the result for 20 AND 21 are evaluated with logical OR (line 26).\n",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-template-searched-template-name
+		var workspaceId string
+		var templateName string
+		cmd := &cobra.Command{
+			Use:   "get-template-searched-template-name",
+			Short: "Get A specific Template searched by template name",
+			Long: `Get Template details by template Name in JDS. 
+
+Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-name/{templateName}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("templateName", templateName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&templateName, "template-name", "", "Template Name")
+		cmd.MarkFlagRequired("template-name")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-historic-view-template-name
+		var workspaceId string
+		var personId string
+		var templateName string
+		cmd := &cobra.Command{
+			Use:   "get-historic-view-template-name",
+			Short: "Historic Progressive Profile View by Template Name",
+			Long: `Get Historic Progressive Profile View in JDS. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				req.PathParam("templateName", templateName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&templateName, "template-name", "", "Template Name")
+		cmd.MarkFlagRequired("template-name")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-historic-view
+		var workspaceId string
+		var personId string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "get-historic-view",
+			Short: "Historic Progressive Profile View",
+			Long: `Get Historic Progressive Profile View in JDS. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				req.PathParam("templateId", templateId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-historic-view-template-name-2
+		var workspaceId string
+		var identity string
+		var templateName string
+		cmd := &cobra.Command{
+			Use:   "get-historic-view-template-name-2",
+			Short: "Historic Progressive Profile View By Template Name",
+			Long:  `Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("identity", identity)
+				req.PathParam("templateName", templateName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "Identity")
+		cmd.MarkFlagRequired("identity")
+		cmd.Flags().StringVar(&templateName, "template-name", "", "Template Name")
+		cmd.MarkFlagRequired("template-name")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-historic-view-template-id
+		var workspaceId string
+		var identity string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "get-historic-view-template-id",
+			Short: "Historic Progressive Profile View By Template Id",
+			Long:  `Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("identity", identity)
+				req.PathParam("templateId", templateId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "identity")
+		cmd.MarkFlagRequired("identity")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // stream-views-template-name
+		var workspaceId string
+		var identity string
+		var templateName string
+		cmd := &cobra.Command{
+			Use:   "stream-views-template-name",
+			Short: "Stream Progressive profile Views By Template Name",
+			Long: `Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("identity", identity)
+				req.PathParam("templateName", templateName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "Identity to search Progressive Profile View for.    In case the identity contains non-uri-encodable characters, eg: '+', '>' etc, you can URL-encode the same and then pass it as parameter.")
+		cmd.MarkFlagRequired("identity")
+		cmd.Flags().StringVar(&templateName, "template-name", "", "Template Name")
+		cmd.MarkFlagRequired("template-name")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // stream-views-template-id
+		var workspaceId string
+		var identity string
+		var templateId string
+		cmd := &cobra.Command{
+			Use:   "stream-views-template-id",
+			Short: "Stream Progressive profile Views By Template Id",
+			Long: `Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("identity", identity)
+				req.PathParam("templateId", templateId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "Identity to search Progressive Profile View for.    In case the identity contains non-uri-encodable characters, eg: '+', '>' etc, you can URL-encode the same and then pass it as parameter.")
+		cmd.MarkFlagRequired("identity")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Template ID")
+		cmd.MarkFlagRequired("template-id")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // get-historic-events
+		var workspaceId string
+		var identity string
+		var sortBy string
+		var sort string
+		var filter string
+		var data string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "get-historic-events",
+			Short: "Historic Journey Events",
+			Long: `Getting Historic Customer Journey Events from Pinot. These events are append-only, immutable data ledger that can be queried to retrieve snapshot of latest events that moment in time or historically to play-back events as they occurred to understand or analyze Journeys using ML/AI models. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/events/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("identity", identity)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("sort", sort)
+				req.QueryParam("filter", filter)
+				req.QueryParam("data", data)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "Identity to search events for.    In case the identity contains non-uri-encodable characters, eg: '+', '>' etc, you can URL-encode the same and then pass it as parameter.")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "sort By Field")
+		cmd.Flags().StringVar(&sort, "sort", "", "sort direction")
+		cmd.Flags().StringVar(&filter, "filter", "", "Optional filter which can be applied to the elements to be fetched.  This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this  [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		cmd.Flags().StringVar(&data, "data", "", "Optional filter on data filed which can be applied to the elements to be fetched.  This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this  [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		cmd.Flags().StringVar(&page, "page", "", "Index of the page of results to be fetched.  Results are returned in blocks of pageSize elements. This parameter specifies which page number to retrieve.The page numbering starts with 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Number of items to be displayed on a page.")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+	{ // stream-events-identity
+		var workspaceId string
+		var identity string
+		var filter string
+		var data string
+		cmd := &cobra.Command{
+			Use:   "stream-events-identity",
+			Short: "Stream Events By Identity",
+			Long: `Real-time streaming enables API consumers to listen for events as it arrives as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. Optionally accepts filter and data parameters slice/dice further. 
+
+Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/api/events/stream/workspace-id/{workspaceId}/identity/{identity}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("identity", identity)
+				req.QueryParam("filter", filter)
+				req.QueryParam("data", data)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&identity, "identity", "", "Person Identity.    In case the identity contains non-uri-encodable characters, eg: '+', '>' etc, you can URL-encode the same and then pass it as parameter.")
+		cmd.MarkFlagRequired("identity")
+		cmd.Flags().StringVar(&filter, "filter", "", "Optional filter which can be applied to the elements to be fetched.  This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this  [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		cmd.Flags().StringVar(&data, "data", "", "Optional filter on data filed which can be applied to the elements to be fetched.  This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		journeyProfileCreationInsightsCmd.AddCommand(cmd)
+	}
+
+}

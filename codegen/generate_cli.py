@@ -1,0 +1,389 @@
+#!/usr/bin/env python3
+"""Generate Go CLI command files from api_spec.json.
+
+Reads the enriched API spec and writes one .go file per group
+into cmd/calling/ and cmd/cc/ directories.
+"""
+
+import json
+import os
+import re
+import subprocess
+import textwrap
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
+SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
+
+# Collection name → (subcommand package, parent var, base URL const, is_calling)
+COLLECTIONS = {
+    "Webex Cloud Calling": ("calling", "cmd.CallingCmd", "config.CallingBaseURL", True),
+    "Webex Contact Center": ("cc", "cmd.CcCmd", "config.CcBaseURL", False),
+}
+
+
+def camel_to_kebab(name):
+    """Convert camelCase to kebab-case."""
+    s = re.sub(r'([a-z0-9])([A-Z])', r'\1-\2', name)
+    return s.lower()
+
+
+def kebab_to_camel(name):
+    """Convert kebab-case to camelCase."""
+    parts = name.split('-')
+    return parts[0] + ''.join(p.capitalize() for p in parts[1:])
+
+
+def kebab_to_go_var(name):
+    """Convert kebab-case to a Go variable name (camelCase, safe)."""
+    parts = name.split('-')
+    var = parts[0] + ''.join(p.capitalize() for p in parts[1:])
+    # Avoid Go keywords
+    if var in ('type', 'range', 'map', 'func', 'var', 'return', 'select',
+               'default', 'switch', 'case', 'break', 'continue', 'interface',
+               'package', 'import', 'go', 'defer', 'chan', 'struct'):
+        var += 'Val'
+    return var
+
+
+def kebab_to_pascal(name):
+    """Convert kebab-case to PascalCase."""
+    return ''.join(p.capitalize() for p in name.split('-'))
+
+
+def escape_go_string(s):
+    """Escape a string for use in Go backtick raw string literal."""
+    # Backtick strings can't contain backticks — use double-quoted with escaping
+    if '`' in s:
+        return json.dumps(s)  # JSON double-quoted escaping works for Go
+    return '`' + s + '`'
+
+
+def escape_go_double_quoted(s):
+    """Escape a string for Go double-quoted literal."""
+    return json.dumps(s)
+
+
+def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_calling):
+    """Generate Go source for one group's commands."""
+    group_var = kebab_to_camel(group) + "Cmd"
+    group_pascal = kebab_to_pascal(group)
+
+    lines = []
+    lines.append(f'package {pkg}')
+    lines.append('')
+    lines.append('import (')
+    lines.append('\t"fmt"')
+
+    # Check if we need strconv
+    needs_strconv = False
+    needs_strings = False
+    for ep in endpoints:
+        for f in ep.get('body_fields', []):
+            if f['type'] in ('int64', 'float64'):
+                needs_strconv = True
+            if f['type'] == '[]string':
+                needs_strings = True
+        for p in ep.get('query_params', []):
+            pass  # query params are always strings
+
+    if needs_strconv:
+        lines.append('\t"strconv"')
+    if needs_strings:
+        lines.append('\t"strings"')
+
+    lines.append('')
+    lines.append('\tcmd "github.com/Cloverhound/webex-cli/cmd"')
+    lines.append('\t"github.com/Cloverhound/webex-cli/internal/client"')
+    lines.append('\t"github.com/Cloverhound/webex-cli/internal/config"')
+    lines.append('\t"github.com/Cloverhound/webex-cli/internal/output"')
+    lines.append('\t"github.com/spf13/cobra"')
+    lines.append(')')
+    lines.append('')
+
+    # Silence import warnings - use a reference
+    lines.append('// Ensure imports are used.')
+    lines.append('var _ = fmt.Sprintf')
+    lines.append('var _ = config.Token')
+    lines.append('var _ = output.Print')
+    if needs_strconv:
+        lines.append('var _ = strconv.Itoa')
+    if needs_strings:
+        lines.append('var _ = strings.Join')
+    lines.append('')
+
+    lines.append(f'var {group_var} = &cobra.Command{{')
+    lines.append(f'\tUse:   "{group}",')
+    lines.append(f'\tShort: "{group_pascal} commands",')
+    lines.append(f'}}')
+    lines.append('')
+    lines.append('func init() {')
+    lines.append(f'\t{parent_var}.AddCommand({group_var})')
+    lines.append('')
+
+    for ep in endpoints:
+        lines.extend(generate_command(ep, group_var, base_url_const, is_calling))
+        lines.append('')
+
+    lines.append('}')
+
+    return '\n'.join(lines) + '\n'
+
+
+def generate_command(ep, group_var, base_url_const, is_calling):
+    """Generate Go source for one command within a group's init()."""
+    lines = []
+    indent = '\t'
+
+    cmd_name = ep['command']
+    method = ep['method']
+    path = ep['path']
+    path_params = ep.get('path_params', [])
+    query_params = ep.get('query_params', [])
+    body_fields = ep.get('body_fields', [])
+    complex_body = ep.get('complex_body', False)
+    has_body = ep.get('has_body', False)
+    description = ep.get('description', '')
+    extra_headers = ep.get('extra_headers', [])
+    original_name = ep.get('original_name', cmd_name)
+
+    # Block scope
+    lines.append(f'{indent}{{ // {cmd_name}')
+    indent2 = indent + '\t'
+
+    # Track declared variable names and flag names to avoid duplicates
+    declared_vars = set()
+    declared_flags = set()
+
+    # Declare flag variables
+    all_flags = []
+
+    for p in path_params:
+        var = kebab_to_go_var(camel_to_kebab(p['name']))
+        flag = camel_to_kebab(p['name'])
+        if var not in declared_vars:
+            declared_vars.add(var)
+            declared_flags.add(flag)
+            all_flags.append((var, 'string', flag, p.get('description', ''), True, p['name']))
+            lines.append(f'{indent2}var {var} string')
+
+    for p in query_params:
+        var = kebab_to_go_var(camel_to_kebab(p['name']))
+        flag = camel_to_kebab(p['name'])
+        if var not in declared_vars:
+            declared_vars.add(var)
+            declared_flags.add(flag)
+            all_flags.append((var, 'string', flag, p.get('description', ''), False, p['name']))
+            lines.append(f'{indent2}var {var} string')
+
+    for h in extra_headers:
+        var = kebab_to_go_var(camel_to_kebab(h['name']))
+        flag = camel_to_kebab(h['name'])
+        if var not in declared_vars:
+            declared_vars.add(var)
+            declared_flags.add(flag)
+            all_flags.append((var, 'header', flag, h.get('description', ''), False, h['name']))
+            lines.append(f'{indent2}var {var} string')
+
+    # Body flags — skip fields that duplicate path/query param names
+    body_flag_vars = []
+    if not complex_body:
+        for f in body_fields:
+            flag_name = camel_to_kebab(f['name'])
+            go_type = f['type']
+            var = kebab_to_go_var(flag_name)
+
+            if var in declared_vars:
+                # Body field duplicates a param — use param var for body too,
+                # but only if it's a string (query/path params are always string)
+                if go_type == 'string':
+                    body_flag_vars.append((var, go_type, flag_name, f['name'], True))
+                continue
+
+            declared_vars.add(var)
+            declared_flags.add(flag_name)
+            body_flag_vars.append((var, go_type, flag_name, f['name'], False))
+
+            if go_type == 'string':
+                lines.append(f'{indent2}var {var} string')
+            elif go_type == 'int64':
+                lines.append(f'{indent2}var {var} int64')
+            elif go_type == 'float64':
+                lines.append(f'{indent2}var {var} float64')
+            elif go_type == 'bool':
+                lines.append(f'{indent2}var {var} bool')
+            elif go_type == '[]string':
+                lines.append(f'{indent2}var {var} []string')
+
+    # --body and --body-file for POST/PUT/PATCH or complex bodies
+    if has_body:
+        lines.append(f'{indent2}var bodyRaw string')
+        lines.append(f'{indent2}var bodyFile string')
+
+    lines.append(f'{indent2}cmd := &cobra.Command{{')
+    lines.append(f'{indent2}\tUse:   {escape_go_double_quoted(cmd_name)},')
+    lines.append(f'{indent2}\tShort: {escape_go_double_quoted(original_name)},')
+
+    if description:
+        lines.append(f'{indent2}\tLong:  {escape_go_string(description)},')
+
+    # RunE
+    lines.append(f'{indent2}\tRunE: func(cmd *cobra.Command, args []string) error {{')
+    indent3 = indent2 + '\t\t'
+
+    lines.append(f'{indent3}req := client.NewRequest({base_url_const}, "{method}", {escape_go_double_quoted(path)})')
+
+    # Path params
+    for p in path_params:
+        var = kebab_to_go_var(camel_to_kebab(p['name']))
+        lines.append(f'{indent3}req.PathParam("{p["name"]}", {var})')
+
+    # Query params
+    for p in query_params:
+        var = kebab_to_go_var(camel_to_kebab(p['name']))
+        lines.append(f'{indent3}req.QueryParam("{p["name"]}", {var})')
+
+    # Extra headers
+    for h in extra_headers:
+        var = kebab_to_go_var(camel_to_kebab(h['name']))
+        lines.append(f'{indent3}req.Header("{h["name"]}", {var})')
+
+    # Body handling
+    if has_body:
+        lines.append(f'{indent3}if bodyFile != "" {{')
+        lines.append(f'{indent3}\tif err := req.SetBodyFile(bodyFile); err != nil {{')
+        lines.append(f'{indent3}\t\treturn err')
+        lines.append(f'{indent3}\t}}')
+        lines.append(f'{indent3}}} else if bodyRaw != "" {{')
+        lines.append(f'{indent3}\treq.SetBodyRaw(bodyRaw)')
+        if not complex_body and body_flag_vars:
+            lines.append(f'{indent3}}} else {{')
+            for var, go_type, flag_name, orig_name, *rest in body_flag_vars:
+                if go_type == 'string':
+                    lines.append(f'{indent3}\treq.BodyString("{orig_name}", {var})')
+                elif go_type == 'int64':
+                    lines.append(f'{indent3}\treq.BodyInt("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
+                elif go_type == 'float64':
+                    lines.append(f'{indent3}\treq.BodyFloat("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
+                elif go_type == 'bool':
+                    lines.append(f'{indent3}\treq.BodyBool("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
+                elif go_type == '[]string':
+                    lines.append(f'{indent3}\treq.BodyStringSlice("{orig_name}", {var})')
+        lines.append(f'{indent3}}}')
+
+    # Pagination-aware Do for GET commands
+    if method == 'GET':
+        is_calling_go = 'true' if is_calling else 'false'
+        lines.append(f'{indent3}if config.Paginate() {{')
+        lines.append(f'{indent3}\tresp, statusCode, err := req.DoPaginated({is_calling_go})')
+        lines.append(f'{indent3}\tif err != nil {{')
+        lines.append(f'{indent3}\t\treturn err')
+        lines.append(f'{indent3}\t}}')
+        lines.append(f'{indent3}\treturn output.Print(resp, statusCode)')
+        lines.append(f'{indent3}}}')
+
+    lines.append(f'{indent3}resp, statusCode, err := req.Do()')
+    lines.append(f'{indent3}if err != nil {{')
+    lines.append(f'{indent3}\treturn err')
+    lines.append(f'{indent3}}}')
+    lines.append(f'{indent3}return output.Print(resp, statusCode)')
+
+    lines.append(f'{indent2}\t}},')
+    lines.append(f'{indent2}}}')
+
+    # Register flags
+    for var, ftype, flag_name, desc, required, orig in all_flags:
+        desc_escaped = desc.replace('"', '\\"').replace('\n', ' ')
+        if ftype == 'header':
+            lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "{desc_escaped}")')
+        else:
+            lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "{desc_escaped}")')
+        if required:
+            lines.append(f'{indent2}cmd.MarkFlagRequired("{flag_name}")')
+
+    # Body field flags — skip those that reuse a param/query variable
+    if not complex_body:
+        for var, go_type, flag_name, orig_name, *rest in body_flag_vars:
+            is_reused = rest[0] if rest else False
+            if is_reused:
+                continue  # already registered as a param/query flag
+            if go_type == 'string':
+                lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "")')
+            elif go_type == 'int64':
+                lines.append(f'{indent2}cmd.Flags().Int64Var(&{var}, "{flag_name}", 0, "")')
+            elif go_type == 'float64':
+                lines.append(f'{indent2}cmd.Flags().Float64Var(&{var}, "{flag_name}", 0, "")')
+            elif go_type == 'bool':
+                lines.append(f'{indent2}cmd.Flags().BoolVar(&{var}, "{flag_name}", false, "")')
+            elif go_type == '[]string':
+                lines.append(f'{indent2}cmd.Flags().StringSliceVar(&{var}, "{flag_name}", nil, "")')
+
+    # --body and --body-file
+    if has_body:
+        lines.append(f'{indent2}cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")')
+        lines.append(f'{indent2}cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")')
+
+    lines.append(f'{indent2}{group_var}.AddCommand(cmd)')
+    lines.append(f'{indent}}}')
+
+    return lines
+
+
+def main():
+    with open(SPEC_PATH) as f:
+        spec = json.load(f)
+
+    for collection_name, groups in spec.items():
+        if collection_name not in COLLECTIONS:
+            print(f"Skipping unknown collection: {collection_name}")
+            continue
+
+        pkg, parent_var, base_url_const, is_calling = COLLECTIONS[collection_name]
+        out_dir = os.path.join(CLI_DIR, "cmd", pkg)
+        os.makedirs(out_dir, exist_ok=True)
+
+        # Clean existing generated files
+        for f in os.listdir(out_dir):
+            if f.endswith('.go'):
+                os.remove(os.path.join(out_dir, f))
+
+        file_count = 0
+        cmd_count = 0
+        for group_data in groups:
+            group = group_data['group']
+            endpoints = group_data['endpoints']
+            if not endpoints:
+                continue
+
+            source = generate_group_file(
+                group, endpoints, pkg, parent_var, base_url_const, is_calling
+            )
+
+            filename = group.replace('-', '_') + '.go'
+            filepath = os.path.join(out_dir, filename)
+            with open(filepath, 'w') as f:
+                f.write(source)
+
+            file_count += 1
+            cmd_count += len(endpoints)
+
+        print(f"{collection_name}: generated {file_count} files, {cmd_count} commands → cmd/{pkg}/")
+
+    # Run gofmt
+    print("\nRunning gofmt...")
+    for pkg in ('calling', 'cc'):
+        pkg_dir = os.path.join(CLI_DIR, "cmd", pkg)
+        result = subprocess.run(
+            ['gofmt', '-w', pkg_dir],
+            capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            print(f"gofmt error in {pkg}: {result.stderr}")
+        else:
+            print(f"  gofmt {pkg}/ OK")
+
+    print("\nDone. Run 'go build ./...' in webex-cli/ to verify.")
+
+
+if __name__ == "__main__":
+    main()

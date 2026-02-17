@@ -1,0 +1,36 @@
+version: 2
+
+builds:
+  - binary: webex
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/Cloverhound/webex-cli/cmd.Version={{.Version}}
+      - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientID={{.Env.WEBEX_CLIENT_ID}}
+      - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientSecret={{.Env.WEBEX_CLIENT_SECRET}}
+      - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultScopes={{.Env.WEBEX_SCOPES}}
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: Cloverhound
+    name: webex-cli
+  draft: false
+  prerelease: auto

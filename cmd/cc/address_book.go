@@ -1,0 +1,567 @@
+package cc
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var addressBookCmd = &cobra.Command{
+	Use:   "address-book",
+	Short: "AddressBook commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(addressBookCmd)
+
+	{ // list
+		var orgid string
+		var filter string
+		var attributes string
+		var search string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Address Book(s)",
+			Long:  `Retrieve a list of Address Book(s) in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v3/address-book")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("filter", filter)
+				req.QueryParam("attributes", attributes)
+				req.QueryParam("search", search)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, number)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"number\");value==\"Cisco\" ")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var orgid string
+		var name string
+		var parentType string
+		var organizationId string
+		var id string
+		var version int64
+		var description string
+		var siteId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a new Address Book",
+			Long:  `Create a new Address Book in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v3/address-book")
+				req.PathParam("orgid", orgid)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("parentType", parentType)
+					req.BodyString("organizationId", organizationId)
+					req.BodyString("id", id)
+					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+					req.BodyString("description", description)
+					req.BodyString("siteId", siteId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&parentType, "parent-type", "", "")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&siteId, "site-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // bulk-export
+		var orgid string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "bulk-export",
+			Short: "Bulk export Address Book(s)",
+			Long:  `Export all Address Book(s) in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/address-book/bulk-export")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // create-entry
+		var orgid string
+		var addressBookId string
+		var name string
+		var number string
+		var organizationId string
+		var id string
+		var version int64
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-entry",
+			Short: "Create a new Address Book Entry",
+			Long:  `Create a new Address Book Entry in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/address-book/{addressBookId}/entry")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("number", number)
+					req.BodyString("organizationId", organizationId)
+					req.BodyString("id", id)
+					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&number, "number", "", "")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // bulk-save-entry
+		var orgid string
+		var addressBookId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "bulk-save-entry",
+			Short: "Bulk save Address Book Entry(s)",
+			Long:  `Create, Update or delete Address Book Entry(s) in bulk for an Address Book in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/address-book/{addressBookId}/entry/bulk")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // get-entry-id
+		var orgid string
+		var addressBookId string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-entry-id",
+			Short: "Get specific Address Book Entry by ID",
+			Long:  `Retrieve an existing Address Book Entry by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/address-book/{addressBookId}/entry/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book Entry")
+		cmd.MarkFlagRequired("id")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // update-entry-id
+		var orgid string
+		var addressBookId string
+		var id string
+		var name string
+		var number string
+		var organizationId string
+		var version int64
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-entry-id",
+			Short: "Update specific Address Book Entry by ID",
+			Long:  `Update an existing Address Book Entry by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/address-book/{addressBookId}/entry/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("number", number)
+					req.BodyString("organizationId", organizationId)
+					req.BodyString("id", id)
+					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book Entry")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&number, "number", "", "")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
+		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // delete-entry-id
+		var orgid string
+		var addressBookId string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-entry-id",
+			Short: "Delete specific Address Book Entry by ID",
+			Long:  `Delete an existing Address Book Entry by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/address-book/{addressBookId}/entry/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book Entry")
+		cmd.MarkFlagRequired("id")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // get-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-id",
+			Short: "Get specific Address Book by ID",
+			Long:  `Retrieve an existing Address Book by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v3/address-book/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book.")
+		cmd.MarkFlagRequired("id")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // update-id
+		var orgid string
+		var id string
+		var name string
+		var parentType string
+		var organizationId string
+		var version int64
+		var description string
+		var siteId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-id",
+			Short: "Update specific Address Book by ID",
+			Long:  `Update an existing Address Book by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/v3/address-book/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("parentType", parentType)
+					req.BodyString("organizationId", organizationId)
+					req.BodyString("id", id)
+					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+					req.BodyString("description", description)
+					req.BodyString("siteId", siteId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&parentType, "parent-type", "", "")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
+		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&siteId, "site-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // delete-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-id",
+			Short: "Delete specific Address Book by ID",
+			Long:  `Delete an existing Address Book by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/v3/address-book/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Address Book.")
+		cmd.MarkFlagRequired("id")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // list-references
+		var orgid string
+		var id string
+		var typeVal string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list-references",
+			Short: "List references for a specific Address Book",
+			Long:  `Retrieve a list of all entities that have reference to an existing Address Book by ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/address-book/{id}/incoming-references")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				req.QueryParam("type", typeVal)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "ID of this contact center resource.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&typeVal, "type", "", "Entity type of the other entity that has a reference to this specific entity.")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+	{ // list-entry
+		var orgid string
+		var addressBookId string
+		var filter string
+		var attributes string
+		var search string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list-entry",
+			Short: "List Address Book Entry(s)",
+			Long:  `Retrieve a list of Address Book Entry(s) in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/address-book/{addressBookId}/entry")
+				req.PathParam("orgid", orgid)
+				req.PathParam("addressBookId", addressBookId)
+				req.QueryParam("filter", filter)
+				req.QueryParam("attributes", attributes)
+				req.QueryParam("search", search)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Resource ID of the Address Book")
+		cmd.MarkFlagRequired("address-book-id")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, number)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"number\");value==\"Cisco\" ")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		addressBookCmd.AddCommand(cmd)
+	}
+
+}

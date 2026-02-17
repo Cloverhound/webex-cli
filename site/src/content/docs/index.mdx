@@ -1,0 +1,32 @@
+---
+title: Webex CLI
+description: A command-line tool for Webex Calling and Contact Center APIs.
+template: splash
+hero:
+  tagline: Query and manage Webex Calling and Contact Center from your terminal.
+  actions:
+    - text: Get Started
+      link: /webex-cli/installation/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/Cloverhound/webex-cli
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Webex Calling" icon="seti:config">
+    Manage people, locations, devices, call queues, hunt groups, and more via the Webex Calling API.
+  </Card>
+  <Card title="Contact Center" icon="setting">
+    Administer sites, teams, users, queues, entry points, skills, flows, and the full WxCC configuration.
+  </Card>
+  <Card title="OAuth Authentication" icon="approve-check">
+    Browser-based OAuth login with tokens stored securely in your OS keyring. Multi-user support.
+  </Card>
+  <Card title="Claude Code Integration" icon="rocket">
+    Use the included Claude Code skill to let AI agents query and manage your Webex environment.
+  </Card>
+</CardGrid>

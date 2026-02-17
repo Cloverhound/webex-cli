@@ -1,0 +1,437 @@
+package cc
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var journeyCustomerIdentificationCmd = &cobra.Command{
+	Use:   "journey-customer-identification",
+	Short: "JourneyCustomerIdentification commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(journeyCustomerIdentificationCmd)
+
+	{ // delete-person-id
+		var workspaceId string
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "delete-person-id",
+			Short: "Delete specific Person by id",
+			Long: `Delete Person Details searched by Person id in JDS. 
+
+Role and Scope: Requires id full admin or any role with cjp:config_write scope`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // create-remove-replace-person
+		var workspaceId string
+		var personId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-remove-replace-person",
+			Short: "Add/Remove/Replace details of a Person",
+			Long: `The Patch Api can be used to add/remove identities(email, phone, customerId) or replace firstName and lastName of an Individual. We support only add, replace and remove operations. 
+
+For a more information on Patch Requests, see this  [JSON PATCH guide](https://jsonpatch.com). 
+
+Role and Scope: Requires id full admin role with cjp:config_write or any role with cjp:user or cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // create-one-more-identities-person
+		var workspaceId string
+		var personId string
+		var phone []string
+		var email []string
+		var temporaryId []string
+		var customerId []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-one-more-identities-person",
+			Short: "Add one/more Identities to a person",
+			Long: `This Patch Api can be used to add identities(email, phone, customerId) to a person.
+
+Role and Scope: Requires id full admin or any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/admin/v1/api/person/add-identities/workspace-id/{workspaceId}/person-id/{personId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("phone", phone)
+					req.BodyStringSlice("email", email)
+					req.BodyStringSlice("temporaryId", temporaryId)
+					req.BodyStringSlice("customerId", customerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringSliceVar(&phone, "phone", nil, "")
+		cmd.Flags().StringSliceVar(&email, "email", nil, "")
+		cmd.Flags().StringSliceVar(&temporaryId, "temporary-id", nil, "")
+		cmd.Flags().StringSliceVar(&customerId, "customer-id", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // delete-one-more-identities-person
+		var workspaceId string
+		var personId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "delete-one-more-identities-person",
+			Short: "Remove one/more Identities from a person",
+			Long: `This Patch Api can be used to remove identities(email, phone, customerId) from a person.
+
+Role and Scope: Requires id full admin or any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/admin/v1/api/person/remove-identities/workspace-id/{workspaceId}/person-id/{personId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("personId", personId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-person
+		var workspaceId string
+		var personId string
+		var filter string
+		var sortBy string
+		var sort string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "get-all-person",
+			Short: "Get all or a specific Person Details",
+			Long: `Get Person Details in JDS. If personId is provided by query parameter, this returns the Person whose personId matches the parameter.
+If not, this will return ALL the Persons within the organization and workspace. 
+
+Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or it requires any role with cjp:user, cjp:config_write  or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/person/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("personId", personId)
+				req.QueryParam("filter", filter)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("sort", sort)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID")
+		cmd.Flags().StringVar(&filter, "filter", "", "Optional filter which can be applied to the elements to be fetched.   This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see [this reference](https://developer.here.com/documentation/data-client-library/dev_guide/client/rsql.html). For a list of supported operators, see this [syntax guide](https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference).")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort By Field")
+		cmd.Flags().StringVar(&sort, "sort", "", "Sort direction")
+		cmd.Flags().StringVar(&page, "page", "", "Index of the page of results to be fetched.  Results are returned in blocks of pageSize elements. This parameter specifies which page number to retrieve. The page numbering starts with 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Number of items to be displayed on a page")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // create-person
+		var workspaceId string
+		var firstName string
+		var lastName string
+		var phone []string
+		var email []string
+		var temporaryId []string
+		var customerId []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-person",
+			Short: "Create a Person",
+			Long: `This API helps to create a Person in JDS.
+
+Role and Scope: Requires id full admin OR any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/admin/v1/api/person/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("firstName", firstName)
+					req.BodyString("lastName", lastName)
+					req.BodyStringSlice("phone", phone)
+					req.BodyStringSlice("email", email)
+					req.BodyStringSlice("temporaryId", temporaryId)
+					req.BodyStringSlice("customerId", customerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&firstName, "first-name", "", "")
+		cmd.Flags().StringVar(&lastName, "last-name", "", "")
+		cmd.Flags().StringSliceVar(&phone, "phone", nil, "")
+		cmd.Flags().StringSliceVar(&email, "email", nil, "")
+		cmd.Flags().StringSliceVar(&temporaryId, "temporary-id", nil, "")
+		cmd.Flags().StringSliceVar(&customerId, "customer-id", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // merges-identities-primary-identity
+		var workspaceId string
+		var primaryPersonId string
+		var personIdsToMerge []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "merges-identities-primary-identity",
+			Short: "Merges Identities to a Primary Identity",
+			Long: `Merges one/more Identities to a **Primary** Individual in JDS. 
+
+Role and Scope: Requires id full admin role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/admin/v1/api/person/merge/workspace-id/{workspaceId}/primary-person-id/{primaryPersonId}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("primaryPersonId", primaryPersonId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("personIdsToMerge", personIdsToMerge)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&primaryPersonId, "primary-person-id", "", "Primary Person ID")
+		cmd.MarkFlagRequired("primary-person-id")
+		cmd.Flags().StringSliceVar(&personIdsToMerge, "person-ids-to-merge", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // creates-merges-aliases-individual-jds
+		var workspaceId string
+		var override bool
+		var firstName string
+		var lastName string
+		var phone []string
+		var email []string
+		var temporaryId []string
+		var customerId []string
+		var socialId []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "creates-merges-aliases-individual-jds",
+			Short: "Creates or merges aliases to an Individual in JDS",
+			Long: `This API enables you to consolidate multiple customer identifiers into a single, unified profile effortlessly. By integrating it with your Flow Designer, you can automatically retrieve and merge customer identifiers from various systems, such as your CRM or other third-party tools. This integration ensures all relevant data is consolidated into one profile, enhancing personalization and streamlining customer interactions. 
+
+**Adding a New Alias** - To associate an additional alias (e.g., a new phone number) with an existing customer profile, simply update the API with the new identifier while leaving the existing identifiers intact. The system will automatically merge the new alias into the current profile, maintaining a comprehensive view of the customer.
+
+**Removing an Alias** - If you need to delete an alias from a customer’s profile, set the override flag to true in your API request. Include only the identifiers you wish to retain in the payload. The system will remove any identifiers not included in the updated payload, keeping the profile streamlined and up-to-date.
+
+Role and Scope: Requires id full admin OR any role with cjp:config_write scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/admin/v1/api/person/merge-identities/workspace-id/{workspaceId}")
+				req.PathParam("workspaceId", workspaceId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("override", override, cmd.Flags().Changed("override"))
+					req.BodyString("firstName", firstName)
+					req.BodyString("lastName", lastName)
+					req.BodyStringSlice("phone", phone)
+					req.BodyStringSlice("email", email)
+					req.BodyStringSlice("temporaryId", temporaryId)
+					req.BodyStringSlice("customerId", customerId)
+					req.BodyStringSlice("socialId", socialId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().BoolVar(&override, "override", false, "")
+		cmd.Flags().StringVar(&firstName, "first-name", "", "")
+		cmd.Flags().StringVar(&lastName, "last-name", "", "")
+		cmd.Flags().StringSliceVar(&phone, "phone", nil, "")
+		cmd.Flags().StringSliceVar(&email, "email", nil, "")
+		cmd.Flags().StringSliceVar(&temporaryId, "temporary-id", nil, "")
+		cmd.Flags().StringSliceVar(&customerId, "customer-id", nil, "")
+		cmd.Flags().StringSliceVar(&socialId, "social-id", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+	{ // search-identity-aliases
+		var workspaceId string
+		var aliases string
+		var sortBy string
+		var sort string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "search-identity-aliases",
+			Short: "Search for an Identity via aliases",
+			Long: `Get one or more Person Details searched by aliases in JDS. Multiple aliases should be separated by a comma.
+
+Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or it requires any role with cjp:user, cjp:config_write  or cjp:config_read scope.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/person/workspace-id/{workspaceId}/aliases/{aliases}")
+				req.PathParam("workspaceId", workspaceId)
+				req.PathParam("aliases", aliases)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("sort", sort)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Workspace ID")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&aliases, "aliases", "", "Aliases to search for. Multiple aliases should be separated by a comma.    In case the alias(es) contain(s) non-uri-encodable characters, eg: '+', '>' etc, you can URL-encode the same and then pass it as parameter.")
+		cmd.MarkFlagRequired("aliases")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort By Field")
+		cmd.Flags().StringVar(&sort, "sort", "", "Sort direction")
+		cmd.Flags().StringVar(&page, "page", "", "Index of the page of results to be fetched.  Results are returned in blocks of pageSize elements. This parameter specifies which page number to retrieve.The page numbering starts with 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Number of items to be displayed on a page.")
+		journeyCustomerIdentificationCmd.AddCommand(cmd)
+	}
+
+}

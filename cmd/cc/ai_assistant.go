@@ -1,0 +1,54 @@
+package cc
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var aiAssistantCmd = &cobra.Command{
+	Use:   "ai-assistant",
+	Short: "AiAssistant commands",
+}
+
+func init() {
+	cmd.CcCmd.AddCommand(aiAssistantCmd)
+
+	{ // get-suggestions
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-suggestions",
+			Short: "Get suggestions",
+			Long:  "API for getting suggestions based on transcripts. \n\nNotes:\n- Requires machine account token with scope `cjp:config_read` for WxCC\n- Requires machine account token with scope `cjp-hybrid-conn:read` for WxCCE/CCE.\n- `aiAssistantSkillId` / `source` is required for WxCCE/CCE.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/event")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		aiAssistantCmd.AddCommand(cmd)
+	}
+
+}

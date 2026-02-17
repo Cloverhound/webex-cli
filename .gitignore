@@ -1,0 +1,24 @@
+# Build artifacts
+webex
+webex-cli
+*.exe
+
+# Codegen intermediates
+codegen/api_outline.json
+codegen/api_spec.json
+codegen/__pycache__/
+
+# Astro
+site/node_modules/
+site/dist/
+site/.astro/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
