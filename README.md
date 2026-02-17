@@ -36,11 +36,11 @@ webex cc entry-point list
 # Admin
 webex admin people list
 webex admin licenses list
-webex admin organizations get --orgId <id>
+webex admin organizations get --org-id <id>
 
 # Devices
 webex device devices list
-webex device xapi execute-command --deviceId <id> --commandName <name>
+webex device xapi execute-command --device-id <id> --command-name <name>
 
 # Meetings
 webex meetings meetings list
@@ -48,7 +48,7 @@ webex meetings recordings list
 
 # Messaging
 webex messaging rooms list
-webex messaging messages list --roomId <id>
+webex messaging messages list --room-id <id>
 ```
 
 ## API Coverage
