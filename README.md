@@ -138,7 +138,7 @@ See the [docs site](https://cloverhound.github.io/webex-cli/) for full API refer
 
 ## Claude Code Integration
 
-A sample Claude Code skill is included in `skill/SKILL.md`. See the [docs](https://cloverhound.github.io/webex-cli/claude-skill/) for setup instructions.
+A sample Claude Code skill is included in `skill/SKILL.md`. See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for setup instructions.
 
 ## Development
 
