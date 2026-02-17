@@ -30,8 +30,12 @@ webex --token "$WEBEX_TOKEN" calling people list
 ## Command Structure
 
 ```
+webex admin <resource> <action> [flags]       # Webex Admin APIs
 webex calling <resource> <action> [flags]     # Webex Calling APIs
 webex cc <resource> <action> [flags]          # Contact Center APIs
+webex device <resource> <action> [flags]      # Webex Device APIs
+webex meetings <resource> <action> [flags]    # Webex Meetings APIs
+webex messaging <resource> <action> [flags]   # Webex Messaging APIs
 ```
 
 ## Global Flags
@@ -41,9 +45,22 @@ webex cc <resource> <action> [flags]          # Contact Center APIs
 | `--token <token>` | Override authentication |
 | `--user <email>` | Use a specific authenticated user |
 | `--organization <orgId>` | Override org ID |
-| `--output json\|table\|raw` | Output format (default: json) |
+| `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results |
+
+## Admin Examples
+
+```bash
+# List people in the organization
+webex admin people list --max 10
+
+# List licenses
+webex admin licenses list
+
+# List roles
+webex admin roles list
+```
 
 ## Calling Examples
 
@@ -88,6 +105,42 @@ webex cc site list --filter='name=="Site A"'
 webex cc entry-point list --paginate
 ```
 
+## Device Examples
+
+```bash
+# List devices
+webex device devices list
+
+# List workspaces
+webex device workspaces list
+```
+
+## Meetings Examples
+
+```bash
+# List meetings
+webex meetings meetings list
+
+# List recordings
+webex meetings recordings list --paginate
+
+# List transcripts
+webex meetings transcripts list
+```
+
+## Messaging Examples
+
+```bash
+# List rooms
+webex messaging rooms list
+
+# List messages in a room
+webex messaging messages list --room-id "ROOM_ID"
+
+# List teams
+webex messaging teams list
+```
+
 ## Output Formats
 
 ```bash
@@ -96,6 +149,9 @@ webex cc site list
 
 # Table format
 webex cc site list --output=table
+
+# CSV format
+webex admin people list --output=csv
 
 # Raw JSON
 webex cc site list --output=raw
@@ -110,7 +166,11 @@ Use `--help` at any level to see available commands:
 
 ```bash
 webex --help
+webex admin --help
 webex calling --help
 webex cc --help
+webex device --help
+webex meetings --help
+webex messaging --help
 webex cc users --help
 ```

@@ -16,8 +16,12 @@ export default defineConfig({
 					{ label: 'Quick Start', slug: 'getting-started' },
 				]},
 				{ label: 'API Reference', items: [
+					{ label: 'Admin Commands', slug: 'admin' },
 					{ label: 'Calling Commands', slug: 'calling' },
 					{ label: 'Contact Center Commands', slug: 'cc' },
+					{ label: 'Device Commands', slug: 'device' },
+					{ label: 'Meetings Commands', slug: 'meetings' },
+					{ label: 'Messaging Commands', slug: 'messaging' },
 				]},
 				{ label: 'Integrations', items: [
 					{ label: 'Claude Code Skill', slug: 'claude-skill' },

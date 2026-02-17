@@ -1,0 +1,74 @@
+---
+title: Meetings Commands
+description: Webex Meetings API commands reference.
+---
+
+The `webex meetings` subcommand provides access to the Webex Meetings APIs for managing meetings, recordings, transcripts, and related resources.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `chats` | Meeting chat management |
+| `closed-captions` | Closed caption management |
+| `invitees` | Meeting invitee management |
+| `meeting-polls` | Meeting poll management |
+| `meeting-qa` | Meeting Q&A management |
+| `meeting-qualities` | Meeting quality metrics |
+| `meeting-summary` | Meeting summary management |
+| `meetings` | Meeting scheduling and management |
+| `messages` | Meeting message management |
+| `participants` | Meeting participant management |
+| `people` | People in meetings context |
+| `preferences` | Meeting preferences |
+| `recording-report` | Recording reports |
+| `recordings` | Recording management |
+| `session-types` | Session type configuration |
+| `site` | Meeting site management |
+| `slido` | Slido integration |
+| `summaries` | Meeting summary management |
+| `tracking-codes` | Tracking code management |
+| `transcripts` | Transcript management |
+| `video-mesh` | Video mesh management |
+| `webhooks` | Meeting webhook management |
+
+## Common Patterns
+
+```bash
+# List resources
+webex meetings <resource> list
+
+# Get by ID
+webex meetings <resource> get --id "..."
+
+# Create
+webex meetings <resource> create --body-file config.json
+
+# Update
+webex meetings <resource> update --id "..." --body-file updated.json
+
+# Delete
+webex meetings <resource> delete --id "..."
+```
+
+## Examples
+
+```bash
+# List meetings
+webex meetings meetings list
+
+# List recordings
+webex meetings recordings list --paginate
+
+# List transcripts
+webex meetings transcripts list
+
+# Get meeting participants
+webex meetings participants list --meeting-id "MEETING_ID"
+
+# List meeting summaries
+webex meetings summaries list
+
+# Manage webhooks
+webex meetings webhooks list
+```

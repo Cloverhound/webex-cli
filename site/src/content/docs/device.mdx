@@ -1,0 +1,58 @@
+---
+title: Device Commands
+description: Webex Device API commands reference.
+---
+
+The `webex device` subcommand provides access to the Webex Device APIs for managing devices, workspaces, and device configurations.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `device-call` | Device call settings |
+| `device-configurations` | Device configuration management |
+| `devices` | Device provisioning and management |
+| `hot-desk` | Hot desk configuration |
+| `workspace-locations` | Workspace location management |
+| `workspace-metrics` | Workspace usage metrics |
+| `workspace-personalization` | Workspace personalization settings |
+| `workspaces` | Workspace management |
+| `xapi` | xAPI commands for device control |
+
+## Common Patterns
+
+```bash
+# List resources
+webex device <resource> list
+
+# Get by ID
+webex device <resource> get --id "..."
+
+# Create
+webex device <resource> create --body-file config.json
+
+# Update
+webex device <resource> update --id "..." --body-file updated.json
+
+# Delete
+webex device <resource> delete --id "..."
+```
+
+## Examples
+
+```bash
+# List all devices
+webex device devices list --paginate
+
+# List workspaces
+webex device workspaces list
+
+# Get device configurations
+webex device device-configurations list
+
+# List workspace locations
+webex device workspace-locations list
+
+# Execute xAPI command
+webex device xapi list
+```

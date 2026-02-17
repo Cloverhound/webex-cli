@@ -1,0 +1,97 @@
+---
+title: Admin Commands
+description: Webex Admin API commands reference.
+---
+
+The `webex admin` subcommand provides access to the Webex Admin APIs for managing organizations, users, licenses, roles, and platform-level configuration.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `admin-audit` | Admin audit event logs |
+| `analytics` | Analytics data |
+| `archive-users` | Archived user management |
+| `authorizations` | Authorization management |
+| `classifications` | Data classification management |
+| `data-sources` | Data source configuration |
+| `domain-management` | Domain management |
+| `events` | Event management |
+| `groups` | Group management |
+| `guest-management` | Guest user management |
+| `hybrid-clusters` | Hybrid cluster management |
+| `hybrid-connectors` | Hybrid connector management |
+| `identity-org` | Identity and organization management |
+| `licenses` | License management |
+| `live-monitoring` | Live monitoring |
+| `meeting-qualities` | Meeting quality reports |
+| `org-contacts` | Organizational contact management |
+| `organizations` | Organization management |
+| `partner-administrators` | Partner administrator management |
+| `partner-reports-templates` | Partner report templates |
+| `partner-tags` | Partner tag management |
+| `people` | People management |
+| `recording-report` | Recording reports |
+| `recordings` | Recording management |
+| `report-templates` | Report templates |
+| `reports` | General reports |
+| `resource-groups` | Resource group management |
+| `resource-memberships` | Resource membership management |
+| `roles` | Role management |
+| `scim-2-bulk` | SCIM 2.0 bulk operations |
+| `scim-2-groups` | SCIM 2.0 group provisioning |
+| `scim-2-schemas` | SCIM 2.0 schema discovery |
+| `scim-2-users` | SCIM 2.0 user provisioning |
+| `security-audit` | Security audit event logs |
+| `send-activation-email` | Send activation emails |
+| `service-apps` | Service app management |
+| `settings` | Organization settings |
+| `workspace-locations` | Workspace location management |
+| `workspace-metrics` | Workspace metrics |
+
+## Common Patterns
+
+```bash
+# List resources
+webex admin <resource> list
+
+# Get by ID
+webex admin <resource> get --id "..."
+
+# Create
+webex admin <resource> create --body-file config.json
+
+# Update
+webex admin <resource> update --id "..." --body-file updated.json
+
+# Delete
+webex admin <resource> delete --id "..."
+```
+
+## Examples
+
+```bash
+# List people in the organization
+webex admin people list --paginate
+
+# List licenses
+webex admin licenses list
+
+# List roles
+webex admin roles list
+
+# List groups
+webex admin groups list
+
+# Get organization details
+webex admin organizations list
+
+# View admin audit events
+webex admin admin-audit list
+
+# List hybrid clusters
+webex admin hybrid-clusters list
+
+# SCIM user provisioning
+webex admin scim-2-users list
+```

@@ -9,30 +9,51 @@ The `webex calling` subcommand provides access to the Webex Calling API. No `--o
 
 | Resource | Description |
 |----------|-------------|
-| `people` | Users and their calling settings |
-| `locations` | Location management |
-| `devices` | Device provisioning and management |
-| `numbers` | Phone number inventory |
-| `call-queue` | Call queue configuration |
-| `hunt-group` | Hunt group configuration |
-| `auto-attendant` | Auto attendant / IVR |
+| `announcement-playlist` | Announcement playlist management |
+| `announcement-repository` | Announcement repository management |
+| `auto-attendant` | Auto attendant / IVR configuration |
+| `call-controls` | Active call control operations |
 | `call-park` | Call park settings |
 | `call-pickup` | Call pickup groups |
-| `paging-group` | Paging groups |
-| `call-controls` | Active call control operations |
+| `call-queue` | Call queue configuration |
 | `call-recording` | Call recording settings |
-| `user-call` | Per-user call settings |
-| `workspace-call` | Per-workspace call settings |
-| `device-call` | Per-device call settings |
-| `location-call` | Per-location call settings |
-| `dect-devices` | DECT handset and base station management |
-| `pstn` | PSTN connection and trunk settings |
-| `emergency-services` | E911 and emergency callback |
-| `operating-modes` | Operating mode schedules |
-| `single-number-reach` | Single number reach / simultaneous ring |
-| `virtual-extensions` | Virtual extension configuration |
+| `call-routing` | Call routing configuration |
+| `call-settings-for-me` | Personal call settings |
+| `caller-reputation-provider` | Caller reputation / spam management |
+| `calling-service` | Calling service configuration |
+| `client-call` | Client call management |
+| `conference-controls` | Conference call controls |
 | `converged-recordings` | Recording access and management |
+| `customer-experience-essentials` | Customer experience essentials |
+| `dect-devices` | DECT handset and base station management |
+| `device-call` | Per-device call settings |
+| `devices` | Device provisioning and management |
+| `emergency-services` | E911 and emergency callback |
+| `external-voicemail` | External voicemail settings |
+| `hot-desk` | Hot desk configuration |
+| `hot-desking-sign-in-via-voice-portal` | Hot desking voice portal sign-in |
+| `hunt-group` | Hunt group configuration |
+| `location-call` | Per-location call settings |
+| `location-call-handling` | Location call handling rules |
+| `location-schedules` | Location schedule management |
+| `location-voicemail` | Location voicemail settings |
+| `locations` | Location management |
+| `numbers` | Phone number inventory |
+| `operating-modes` | Operating mode schedules |
+| `paging-group` | Paging group configuration |
+| `partner-reports-templates` | Partner report templates |
+| `people` | Users and their calling settings |
+| `pstn` | PSTN connection and trunk settings |
+| `recording-report` | Recording reports |
 | `reports` | CDR and call history reports |
+| `reports-detailed-call-history` | Detailed call history reports |
+| `send-activation-email` | Send activation emails |
+| `single-number-reach` | Single number reach / simultaneous ring |
+| `user-call` | Per-user call settings |
+| `virtual-extensions` | Virtual extension configuration |
+| `virtual-line-call` | Virtual line call settings |
+| `workspace-call` | Per-workspace call settings |
+| `workspaces` | Workspace management |
 
 ## Common Patterns
 
@@ -59,6 +80,12 @@ webex calling <resource> delete --id "..."
 # List all people
 webex calling people list --paginate
 
+# Get your own details
+webex calling people get-my-own
+
+# List locations
+webex calling locations list
+
 # Get call settings for a person
 webex calling user-call get-voicemail --person-id "PERSON_ID"
 
@@ -67,4 +94,7 @@ webex calling call-queue list --location-id "LOCATION_ID"
 
 # Get detailed call history
 webex calling reports-detailed-call-history list --start-time "2024-01-01T00:00:00Z"
+
+# List devices
+webex calling devices list --paginate
 ```

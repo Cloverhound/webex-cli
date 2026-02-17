@@ -1,0 +1,64 @@
+---
+title: Messaging Commands
+description: Webex Messaging API commands reference.
+---
+
+The `webex messaging` (alias: `webex msg`) subcommand provides access to the Webex Messaging APIs for managing rooms, messages, teams, and webhooks.
+
+## Resource Groups
+
+| Resource | Description |
+|----------|-------------|
+| `attachment-actions` | Attachment action management |
+| `ecm-folder-linking` | ECM folder linking |
+| `events` | Event management |
+| `hds` | Hybrid Data Security management |
+| `memberships` | Room membership management |
+| `messages` | Message management |
+| `people` | People in messaging context |
+| `room-tabs` | Room tab management |
+| `rooms` | Room (space) management |
+| `team-memberships` | Team membership management |
+| `teams` | Team management |
+| `webhooks` | Webhook management |
+
+## Common Patterns
+
+```bash
+# List resources
+webex messaging <resource> list
+
+# Get by ID
+webex messaging <resource> get --id "..."
+
+# Create
+webex messaging <resource> create --body-file config.json
+
+# Update
+webex messaging <resource> update --id "..." --body-file updated.json
+
+# Delete
+webex messaging <resource> delete --id "..."
+```
+
+## Examples
+
+```bash
+# List rooms
+webex messaging rooms list --paginate
+
+# List messages in a room
+webex messaging messages list --room-id "ROOM_ID"
+
+# List teams
+webex messaging teams list
+
+# List team memberships
+webex messaging team-memberships list --team-id "TEAM_ID"
+
+# List webhooks
+webex messaging webhooks list
+
+# List room memberships
+webex messaging memberships list --room-id "ROOM_ID"
+```

@@ -1,9 +1,9 @@
 ---
 title: Webex CLI
-description: A command-line tool for Webex Calling and Contact Center APIs.
+description: A command-line tool for Webex APIs.
 template: splash
 hero:
-  tagline: Query and manage Webex Calling and Contact Center from your terminal.
+  tagline: Query and manage Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging from your terminal.
   actions:
     - text: Get Started
       link: /webex-cli/installation/
@@ -17,16 +17,28 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid stagger>
+  <Card title="Admin" icon="setting">
+    Manage organizations, people, licenses, roles, groups, hybrid services, SCIM provisioning, and more.
+  </Card>
   <Card title="Webex Calling" icon="seti:config">
-    Manage people, locations, devices, call queues, hunt groups, and more via the Webex Calling API.
+    Manage people, locations, devices, call queues, hunt groups, auto attendants, PSTN, and more via the Webex Calling API.
   </Card>
-  <Card title="Contact Center" icon="setting">
-    Administer sites, teams, users, queues, entry points, skills, flows, and the full WxCC configuration.
+  <Card title="Contact Center" icon="list-format">
+    Administer sites, teams, users, queues, entry points, skills, flows, campaigns, AI features, and the full WxCC configuration.
   </Card>
-  <Card title="OAuth Authentication" icon="approve-check">
+  <Card title="Devices" icon="laptop">
+    Manage devices, workspaces, configurations, xAPI commands, hot desking, and workspace personalization.
+  </Card>
+  <Card title="Meetings" icon="approve-check">
+    Manage meetings, recordings, transcripts, participants, polls, Q&A, Slido, video mesh, and webhooks.
+  </Card>
+  <Card title="Messaging" icon="rocket">
+    Manage rooms, messages, memberships, teams, webhooks, and attachment actions via the Messaging API.
+  </Card>
+  <Card title="OAuth Authentication" icon="star">
     Browser-based OAuth login with tokens stored securely in your OS keyring. Multi-user support.
   </Card>
-  <Card title="Claude Code Integration" icon="rocket">
+  <Card title="Claude Code Integration" icon="puzzle">
     Use the included Claude Code skill to let AI agents query and manage your Webex environment.
   </Card>
 </CardGrid>
