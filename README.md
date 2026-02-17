@@ -2,6 +2,8 @@
 
 A command-line tool for Webex APIs — Calling, Contact Center, Admin, Devices, Meetings, and Messaging.
 
+See the [docs site](https://cloverhound.github.io/webex-cli/) for full API reference and guides.
+
 ## Install
 
 **macOS / Linux:**
@@ -131,10 +133,6 @@ webex config get client-id               # View current value
 ```
 
 Config is stored in `~/.webex-cli/config.json`.
-
-## Documentation
-
-See the [docs site](https://cloverhound.github.io/webex-cli/) for full API reference and guides.
 
 ## Claude Code Integration
 
