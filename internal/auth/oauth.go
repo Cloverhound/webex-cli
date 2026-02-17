@@ -124,7 +124,7 @@ func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
 	// Fetch org name
 	orgName := ""
 	if identity.orgID != "" {
-		orgName, _ = fetchOrgName(tok.AccessToken, identity.orgID)
+		orgName, _ = FetchOrgName(tok.AccessToken, identity.orgID)
 	}
 
 	return &LoginResult{
@@ -259,7 +259,7 @@ func fetchIdentity(accessToken string) (*identityInfo, error) {
 	}, nil
 }
 
-func fetchOrgName(accessToken, orgID string) (string, error) {
+func FetchOrgName(accessToken, orgID string) (string, error) {
 	req, _ := http.NewRequest("GET", "https://webexapis.com/v1/organizations/"+orgID, nil)
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 

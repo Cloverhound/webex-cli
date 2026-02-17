@@ -8,6 +8,7 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/auth"
+	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -50,6 +51,12 @@ var authStatusCmd = &cobra.Command{
 			fmt.Printf("Org:     %s (%s)\n", userInfo.OrgName, userInfo.OrgID)
 		} else if userInfo.OrgID != "" {
 			fmt.Printf("Org:     %s\n", userInfo.OrgID)
+		}
+
+		if cfg.DefaultOrgName != "" {
+			fmt.Printf("Org override: %s (%s)\n", cfg.DefaultOrgName, cfg.DefaultOrgID)
+		} else if cfg.DefaultOrgID != "" {
+			fmt.Printf("Org override: %s\n", cfg.DefaultOrgID)
 		}
 
 		fmt.Printf("Source:  keyring\n")
@@ -148,12 +155,100 @@ var authSwitchCmd = &cobra.Command{
 			return fmt.Errorf("user %s not found — run: webex login", email)
 		}
 
+		clearedOrg := cfg.DefaultOrgName
+		if clearedOrg == "" {
+			clearedOrg = cfg.DefaultOrgID
+		}
+
 		cfg.SetDefaultUser(email)
+		cfg.DefaultOrgID = ""
+		cfg.DefaultOrgName = ""
 		if err := cfg.Save(); err != nil {
 			return fmt.Errorf("saving config: %w", err)
 		}
 
 		fmt.Printf("Default user set to %s\n", email)
+		if clearedOrg != "" {
+			fmt.Printf("Cleared org override (was: %s)\n", clearedOrg)
+		}
+		return nil
+	},
+}
+
+var authSetOrgCmd = &cobra.Command{
+	Use:   "set-org <org-id>",
+	Short: "Set a persistent organization override",
+	Long:  "Set a default organization ID that will be used for all commands unless overridden by --organization.",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		orgInput := args[0]
+
+		// Normalize to base64 for the API call (Webex org IDs are base64-encoded)
+		uuid := config.DecodeOrgID(orgInput)
+		base64ID := config.EncodeOrgID(uuid)
+
+		// Validate by fetching the org name
+		orgName, err := auth.FetchOrgName(config.Token(), base64ID)
+		if err != nil {
+			fmt.Printf("Error: could not validate org %s\n", orgInput)
+			fmt.Printf("  %s\n", err)
+			fmt.Println()
+			fmt.Println("To see available users and their orgs: webex auth list")
+			fmt.Println("To switch to a different user:         webex auth switch <email>")
+			return nil
+		}
+
+		cfg, err := appconfig.Load()
+		if err != nil {
+			return fmt.Errorf("loading config: %w", err)
+		}
+
+		cfg.DefaultOrgID = base64ID
+		cfg.DefaultOrgName = orgName
+		if err := cfg.Save(); err != nil {
+			return fmt.Errorf("saving config: %w", err)
+		}
+
+		fmt.Printf("Org override set: %s (%s)\n", orgName, uuid)
+		return nil
+	},
+}
+
+var authClearOrgCmd = &cobra.Command{
+	Use:   "clear-org",
+	Short: "Clear the persistent organization override",
+	Long:  "Remove the default organization override, reverting to the login user's home org.",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cfg, err := appconfig.Load()
+		if err != nil {
+			return fmt.Errorf("loading config: %w", err)
+		}
+
+		if cfg.DefaultOrgID == "" {
+			fmt.Println("No org override is set.")
+			return nil
+		}
+
+		was := cfg.DefaultOrgName
+		if was == "" {
+			was = cfg.DefaultOrgID
+		}
+
+		cfg.DefaultOrgID = ""
+		cfg.DefaultOrgName = ""
+		if err := cfg.Save(); err != nil {
+			return fmt.Errorf("saving config: %w", err)
+		}
+
+		fmt.Printf("Org override cleared (was: %s)\n", was)
+
+		// Show what org will now be used
+		if cfg.DefaultUser != "" {
+			if userInfo, ok := cfg.Users[cfg.DefaultUser]; ok && userInfo.OrgName != "" {
+				fmt.Printf("Now using: %s (%s)\n", userInfo.OrgName, cfg.DefaultUser)
+			}
+		}
+
 		return nil
 	},
 }
@@ -162,6 +257,8 @@ func init() {
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authListCmd)
 	authCmd.AddCommand(authSwitchCmd)
+	authCmd.AddCommand(authSetOrgCmd)
+	authCmd.AddCommand(authClearOrgCmd)
 	rootCmd.AddCommand(authCmd)
 }
 

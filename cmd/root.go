@@ -29,15 +29,15 @@ var rootCmd = &cobra.Command{
 		paginate, _ := cmd.Flags().GetBool("paginate")
 		config.SetPaginate(paginate)
 
-		// Skip auth for certain commands
-		if skipAuth(cmd) {
-			return nil
-		}
-
-		// Load app config
+		// Load app config early (safe local file read, needed by skipAuth-exempt commands like set-org)
 		cfg, err := appconfig.Load()
 		if err != nil {
 			return fmt.Errorf("loading config: %w", err)
+		}
+
+		// Skip auth for certain commands
+		if skipAuth(cmd) {
+			return nil
 		}
 
 		// Resolve token
@@ -58,11 +58,13 @@ var rootCmd = &cobra.Command{
 			config.TokenRefresher = auth.MakeRefresher(result.UserEmail, cfg)
 		}
 
-		// Organization: --organization flag > resolved user's org > default user's org from config.
+		// Organization: --organization flag > config default org > resolved user's org > default user's org.
 		// SetOrgID stores both UUID and base64 formats for downstream use.
 		orgFlag, _ := cmd.Flags().GetString("organization")
 		if orgFlag != "" {
 			config.SetOrgID(orgFlag)
+		} else if cfg.DefaultOrgID != "" {
+			config.SetOrgID(cfg.DefaultOrgID)
 		} else if result.OrgID != "" {
 			config.SetOrgID(result.OrgID)
 		} else if cfg.DefaultUser != "" {
@@ -168,6 +170,10 @@ func skipAuth(cmd *cobra.Command) bool {
 		case "login", "logout", "auth", "config", "version", "update", "help", "webex":
 			// "webex" is the root — only skip if it's the actual command being run (bare `webex`)
 			if c.Name() == "webex" {
+				continue
+			}
+			// set-org needs a token to validate the org, so don't skip auth
+			if c.Name() == "auth" && cmd.Name() == "set-org" {
 				continue
 			}
 			return true

@@ -21,11 +21,13 @@ type UserInfo struct {
 }
 
 type Config struct {
-	DefaultUser  string              `json:"default_user"`
-	Users        map[string]UserInfo `json:"users"`
-	ClientID     string              `json:"client_id,omitempty"`
-	ClientSecret string              `json:"client_secret,omitempty"`
-	Scopes       string              `json:"scopes,omitempty"`
+	DefaultUser    string              `json:"default_user"`
+	Users          map[string]UserInfo `json:"users"`
+	ClientID       string              `json:"client_id,omitempty"`
+	ClientSecret   string              `json:"client_secret,omitempty"`
+	Scopes         string              `json:"scopes,omitempty"`
+	DefaultOrgID   string              `json:"default_org_id,omitempty"`
+	DefaultOrgName string              `json:"default_org_name,omitempty"`
 
 	path string // file path, not serialized
 }
