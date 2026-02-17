@@ -294,6 +294,12 @@ def normalize_endpoint(name, group=''):
     # Strip words that duplicate the group name (using stems for plural matching)
     if group:
         gw_stems = {simple_stem(w) for w in group_words(group)}
+        # Also apply phrase abbreviations to group name so abbreviated words
+        # (e.g. "Org" from "Organization") match during dedup
+        g = group.replace('-', ' ')
+        for long, short in PHRASE_ABBREVIATIONS:
+            g = re.sub(re.escape(long), short, g, flags=re.IGNORECASE)
+        gw_stems |= {simple_stem(w) for w in g.lower().split()}
         # Only strip if we'd still have something left
         filtered = [w for w in noun_words if simple_stem(w) not in gw_stems]
         if filtered or verb:

@@ -25,7 +25,7 @@ var virtualExtensionsCmd = &cobra.Command{
 func init() {
 	cmd.CallingCmd.AddCommand(virtualExtensionsCmd)
 
-	{ // create-vext
+	{ // create
 		var orgId string
 		var displayName string
 		var phoneNumber string
@@ -36,7 +36,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-vext",
+			Use:   "create",
 			Short: "Create a Virtual Extension",
 			Long:  "Create new Virtual Extension for the given organization or location.\n\nYou can set up virtual extensions at the organization or location level. The organization level enables everyone across your organization to dial the same extension number to reach someone.\nYou can use the location level virtual extension like any other extension assigned to the specific location.\nUsers at the specific location can dial the extension. However, users at other locations can reach the virtual extension by dialing the ESN.\n\nCreating a virtual extension requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -75,7 +75,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // list-vexts
+	{ // list
 		var orgId string
 		var max string
 		var start string
@@ -87,7 +87,7 @@ func init() {
 		var locationId string
 		var orgLevelOnly string
 		cmd := &cobra.Command{
-			Use:   "list-vexts",
+			Use:   "list",
 			Short: "Read the List of Virtual Extensions",
 			Long:  "Retrieve virtual extensions associated with a specific customer.\n\nThe GET Virtual Extensions API allows administrators to retrieve a list of virtual extensions configured within their organization. Virtual extensions enable users to dial extension numbers that route to external phone numbers, such as those of remote workers or frequently contacted clients.\nThis API returns key information including the  extension, associated  phone number (in E.164 format), display name, and the location to which the virtual extension belongs\nThe API supports filtering by various parameters, such as extension number, phone number, and location name. The results can be paginated using the `max` and `start` parameters, and the order of the results can be specified using the `order` parameter.\n\nRetrieving a Virtual Extension requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -129,11 +129,11 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // get-vext
+	{ // get
 		var extensionId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vext",
+			Use:   "get",
 			Short: "Get a Virtual Extension",
 			Long:  "Retrieve Virtual Extension details for the given extension ID.\n\nVirtual extensions integrate remote workers on separate telephony systems into Webex Calling, enabling users to reach them via extension dialing.\nThis endpoint allows administrators to retrieve configuration details for a specific virtual extension, ensuring visibility into the mapping between extensions and external phone numbers.\n\nRetrieving a Virtual Extension requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -160,7 +160,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // update-vext
+	{ // update
 		var extensionId string
 		var orgId string
 		var firstName string
@@ -171,7 +171,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vext",
+			Use:   "update",
 			Short: "Update a Virtual Extension",
 			Long:  "Update Virtual Extension details for the given extension ID.\n\nThis API updates the configuration of an existing virtual extension identified by its unique extension ID. Administrators can modify fields such as the extension, associated phone number (in E.164 format), display name, and location etc.\n\nUpdating a Virtual Extension requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -211,11 +211,11 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // delete-vext
+	{ // delete
 		var extensionId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "delete-vext",
+			Use:   "delete",
 			Short: "Delete a Virtual Extension",
 			Long:  "Delete Virtual Extension using the extension ID.\n\nThis API permanently deletes a virtual extension from the organization. Once deleted, the extension will no longer route calls to the external phone number, and users won\u2019t be able to reach it via the assigned extension.\n\nDeleting a Virtual Extension requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -235,10 +235,10 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // get-vext-settings
+	{ // get-settings
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vext-settings",
+			Use:   "get-settings",
 			Short: "Get Virtual extension settings",
 			Long:  "Retrieve Virtual Extension settings for the given Org.\n\nThis API retrieves the virtual extension mode settings configured for a given organization. Virtual extensions can operate in two modes: STANDARD and ENHANCED. The selected mode determines how the system handles routing and signaling for virtual extensions.\nBy default, the virtual extensions that you create use the Standard mode. Another mode, enhanced signaling mode, is available to all customers, however, virtual extensions won't function properly in this mode unless your PSTN provider supports special network signaling extensions and there aren't many PSTN providers that do.\n\nRetrieving a Virtual Extension settings requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -262,13 +262,13 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // update-vext-settings
+	{ // update-settings
 		var orgId string
 		var mode string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vext-settings",
+			Use:   "update-settings",
 			Short: "Modify Virtual Extension Settings",
 			Long:  "Update Virtual Extension details for the given extension ID.\n\nThis endpoint updates the virtual extension settings for an organization. It is primarily used to configure the operating mode for virtual extensions.\nModes determine how virtual extensions are assigned or managed within the system.\n\nUpdating a Virtual Extension requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -332,7 +332,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // create-vext-range
+	{ // create-range
 		var orgId string
 		var name string
 		var prefix string
@@ -341,7 +341,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-vext-range",
+			Use:   "create-range",
 			Short: "Create a Virtual Extension Range",
 			Long:  "Create a new Virtual Extension Range for the given organization or location.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nVirtual extension range can be set up at the organization or location level.\n\nCreating a virtual extension range requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -376,7 +376,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // list-vext-range
+	{ // list-range
 		var orgId string
 		var max string
 		var start string
@@ -386,7 +386,7 @@ func init() {
 		var locationId string
 		var orgLevelOnly string
 		cmd := &cobra.Command{
-			Use:   "list-vext-range",
+			Use:   "list-range",
 			Short: "Get a list of a Virtual Extension Range",
 			Long:  "Retrieves the list of Virtual Extension Ranges.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nRetrieving a virtual extension range requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -424,11 +424,11 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // get-vext-range
+	{ // get-range
 		var extensionRangeId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vext-range",
+			Use:   "get-range",
 			Short: "Get details of a Virtual Extension Range",
 			Long:  "Retrieve virtual extension range details for the given extension range ID.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nRetrieving a virtual extension range requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -455,11 +455,11 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // delete-vext-range
+	{ // delete-range
 		var extensionRangeId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "delete-vext-range",
+			Use:   "delete-range",
 			Short: "Delete a Virtual Extension Range",
 			Long:  "Delete a virtual extension range for the given extension range ID.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nDeleting a virtual extension range requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -479,7 +479,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // update-vext-range
+	{ // update-range
 		var extensionRangeId string
 		var orgId string
 		var name string
@@ -489,7 +489,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vext-range",
+			Use:   "update-range",
 			Short: "Modify Virtual Extension Range",
 			Long:  "Modify virtual extension range for the given extension range ID.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nModifying a virtual extension range requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -527,7 +527,7 @@ func init() {
 		virtualExtensionsCmd.AddCommand(cmd)
 	}
 
-	{ // validate-prefix-pattern-vext-range
+	{ // validate-prefix-pattern-range
 		var orgId string
 		var locationId string
 		var name string
@@ -537,7 +537,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "validate-prefix-pattern-vext-range",
+			Use:   "validate-prefix-pattern-range",
 			Short: "Validate the prefix and extension pattern for a Virtual Extension Range",
 			Long:  "Validate the prefix and extension pattern for a Virtual Extension Range.\n\nVirtual extension ranges integrate remote workers on a separate telephony system into Webex Calling and enable extension dialing. Using these ranges, you can define patterns that can be used to route calls at a location level or an organization level. You are allowed to define virtual extensions ranges in addition to individual virtual extensions.\nThis works in both Standard and Enhanced modes\n\nValidating a prefix and extension pattern for a Virtual Extension Range requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {

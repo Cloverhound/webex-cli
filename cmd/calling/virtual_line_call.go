@@ -25,7 +25,7 @@ var virtualLineCallCmd = &cobra.Command{
 func init() {
 	cmd.CallingCmd.AddCommand(virtualLineCallCmd)
 
-	{ // list-vlines
+	{ // list
 		var orgId string
 		var locationId string
 		var max string
@@ -39,7 +39,7 @@ func init() {
 		var hasExtensionAssigned string
 		var hasDnAssigned string
 		cmd := &cobra.Command{
-			Use:   "list-vlines",
+			Use:   "list",
 			Short: "Read the List of Virtual Lines",
 			Long:  "List all Virtual Lines for the organization.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -91,7 +91,7 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // create-vline
+	{ // create
 		var orgId string
 		var firstName string
 		var lastName string
@@ -105,7 +105,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-vline",
+			Use:   "create",
 			Short: "Create a Virtual Line",
 			Long:  "Create new Virtual Line for the given location.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nCreating a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -150,11 +150,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-recording-vline
+	{ // get-recording
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-recording-vline",
+			Use:   "get-recording",
 			Short: "Read Call Recording Settings for a Virtual Line",
 			Long:  "Retrieve Virtual Line's Call Recording settings.\n\nThe Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -181,13 +181,13 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-recording-vline
+	{ // update-recording
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-recording-vline",
+			Use:   "update-recording",
 			Short: "Configure Call Recording Settings for a Virtual Line",
 			Long:  "Configure virtual line's Call Recording settings.\n\nThe Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -216,11 +216,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // delete-vline
+	{ // delete
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "delete-vline",
+			Use:   "delete",
 			Short: "Delete a Virtual Line",
 			Long:  "Delete the designated Virtual Line.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nDeleting a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -240,11 +240,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline
+	{ // get
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vline",
+			Use:   "get",
 			Short: "Get Details for a Virtual Line",
 			Long:  "Retrieve Virtual Line details.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nRetrieving virtual line details requires a full or user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -271,7 +271,7 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-vline
+	{ // update
 		var virtualLineId string
 		var orgId string
 		var firstName string
@@ -287,7 +287,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vline",
+			Use:   "update",
 			Short: "Update a Virtual Line",
 			Long:  "Update the designated Virtual Line.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nUpdating a virtual line requires a full or user or location administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -337,11 +337,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-phone-number-assigned-vline
+	{ // get-phone-number-assigned
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-phone-number-assigned-vline",
+			Use:   "get-phone-number-assigned",
 			Short: "Get Phone Number assigned for a Virtual Line",
 			Long:  "Get details on the assigned phone number and extension for the virtual line.\n\nRetrieving virtual line phone number details requires a full or user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -368,14 +368,14 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-directory-search-vline
+	{ // update-directory-search
 		var virtualLineId string
 		var orgId string
 		var enabled bool
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-directory-search-vline",
+			Use:   "update-directory-search",
 			Short: "Update Directory search for a Virtual Line",
 			Long:  "Update the directory search for a designated Virtual Line.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nUpdating Directory search for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -407,11 +407,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // list-devices-assigned-vline
+	{ // list-devices-assigned
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "list-devices-assigned-vline",
+			Use:   "list-devices-assigned",
 			Short: "Get List of Devices assigned for a Virtual Line",
 			Long:  "Retrieve Device details assigned for a virtual line.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nRetrieving the assigned device detials for a virtual line requires a full or user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -438,11 +438,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // list-networks-handsets-vline
+	{ // list-networks-handsets
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "list-networks-handsets-vline",
+			Use:   "list-networks-handsets",
 			Short: "Get List of DECT Networks Handsets for a Virtual Line",
 			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>\n\nRetrieve DECT Network details assigned for a virtual line.\n\nVirtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.\n\nRetrieving the assigned device detials for a virtual line requires a full or user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -469,11 +469,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-caller-id-vline
+	{ // get-caller-id
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-caller-id-vline",
+			Use:   "get-caller-id",
 			Short: "Read Caller ID Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nRetrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -500,13 +500,13 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-caller-id-vline
+	{ // update-caller-id
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-caller-id-vline",
+			Use:   "update-caller-id",
 			Short: "Configure Caller ID Settings for a Virtual Line",
 			Long:  "Configure a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nUpdating the caller ID settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -535,11 +535,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-waiting-settings-vline
+	{ // get-waiting-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-waiting-settings-vline",
+			Use:   "get-waiting-settings",
 			Short: "Read Call Waiting Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's Call Waiting settings.\n\nWith this feature, a virtual line can place an active call on hold and answer an incoming call.  When enabled, while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the call.\n\nRetrieving the call waiting settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -566,14 +566,14 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-waiting-settings-vline
+	{ // update-waiting-settings
 		var virtualLineId string
 		var orgId string
 		var enabled bool
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-waiting-settings-vline",
+			Use:   "update-waiting-settings",
 			Short: "Configure Call Waiting Settings for a Virtual Line",
 			Long:  "Configure a virtual line's Call Waiting settings.\n\nWith this feature, a virtual line can place an active call on hold and answer an incoming call.  When enabled, while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the call.\n\nUpdating the call waiting settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -605,11 +605,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-forward-vline
+	{ // get-forward
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-forward-vline",
+			Use:   "get-forward",
 			Short: "Read Call Forwarding Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's Call Forwarding settings.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy - forwards all incoming calls to the destination you chose while the phone is in use or the virtual line is busy.\n\n+ When no answer - forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nRetrieving the call forwarding settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -636,13 +636,13 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-forward-vline
+	{ // update-forward
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-forward-vline",
+			Use:   "update-forward",
 			Short: "Configure Call Forwarding Settings for a Virtual Line",
 			Long:  "Configure a virtual line's Call Forwarding settings.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy - forwards all incoming calls to the destination you chose while the phone is in use or the virtual line is busy.\n\n+ When no answer - forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nUpdating the call forwarding settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -671,11 +671,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-incoming-permission-settings-vline
+	{ // get-incoming-permission-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-incoming-permission-settings-vline",
+			Use:   "get-incoming-permission-settings",
 			Short: "Read Incoming Permission Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's Incoming Permission settings.\n\nYou can change the incoming calling permissions for a virtual line if you want them to be different from your organization's default.\n\nRetrieving the incoming permission settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -702,7 +702,7 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-incoming-permission-settings-vline
+	{ // update-incoming-permission-settings
 		var virtualLineId string
 		var orgId string
 		var useCustomEnabled bool
@@ -712,7 +712,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-incoming-permission-settings-vline",
+			Use:   "update-incoming-permission-settings",
 			Short: "Configure Incoming Permission Settings for a Virtual Line",
 			Long:  "Configure a virtual line's Incoming Permission settings.\n\nYou can change the incoming calling permissions for a virtual line if you want them to be different from your organization's default.\n\nUpdating the incoming permission settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -750,11 +750,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-outgoing-permissions-settings
+	{ // get-outgoing-permissions-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vline-outgoing-permissions-settings",
+			Use:   "get-outgoing-permissions-settings",
 			Short: "Retrieve a virtual line's Outgoing Calling Permissions Settings",
 			Long:  "Retrieve a virtual line's Outgoing Calling Permissions settings.\n\nOutgoing calling permissions regulate behavior for calls placed to various destinations and default to the local level settings. You can change the outgoing calling permissions for a virtual line if you want them to be different from your organization's default.\n\nRetrieving the outgoing permission settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -781,13 +781,13 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-vline-outgoing-permissions-settings
+	{ // update-outgoing-permissions-settings
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vline-outgoing-permissions-settings",
+			Use:   "update-outgoing-permissions-settings",
 			Short: "Modify a virtual line's Outgoing Calling Permissions Settings",
 			Long:  "Modify a virtual line's Outgoing Calling Permissions settings.\n\nOutgoing calling permissions regulate behavior for calls placed to various destinations and default to the local level settings. You can change the outgoing calling permissions for a virtual line if you want them to be different from your organization's default.\n\nUpdating the outgoing permission settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -816,11 +816,11 @@ func init() {
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-access-codes-vline
+	{ // get-access-codes
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-access-codes-vline",
+			Use:   "get-access-codes",
 			Short: "Retrieve Access Codes for a Virtual Line",
 			Long: `Retrieve the virtual line's access codes.
 
@@ -851,14 +851,14 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-access-codes-vline
+	{ // update-access-codes
 		var virtualLineId string
 		var orgId string
 		var deleteCodes []string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-access-codes-vline",
+			Use:   "update-access-codes",
 			Short: "Modify Access Codes for a Virtual Line",
 			Long:  "Modify a virtual line's access codes.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -890,7 +890,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // create-access-codes-vline
+	{ // create-access-codes
 		var virtualLineId string
 		var orgId string
 		var code string
@@ -898,7 +898,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-access-codes-vline",
+			Use:   "create-access-codes",
 			Short: "Create Access Codes for a Virtual Line",
 			Long:  "Create a new access codes for the virtual line.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -932,11 +932,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // delete-access-codes-vline
+	{ // delete-access-codes
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "delete-access-codes-vline",
+			Use:   "delete-access-codes",
 			Short: "Delete Access Codes for a Virtual Line",
 			Long:  "Deletes all access codes for the virtual line.\n\nAccess codes are used to bypass permissions.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -956,11 +956,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-transfer-numbers-vline
+	{ // get-transfer-numbers
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-transfer-numbers-vline",
+			Use:   "get-transfer-numbers",
 			Short: "Retrieve Transfer Numbers for a Virtual Line",
 			Long: `Retrieve the virtual line's transfer numbers.
 
@@ -991,7 +991,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-transfer-numbers-vline
+	{ // update-transfer-numbers
 		var virtualLineId string
 		var orgId string
 		var useCustomTransferNumbers bool
@@ -1001,7 +1001,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-transfer-numbers-vline",
+			Use:   "update-transfer-numbers",
 			Short: "Modify Transfer Numbers for a Virtual Line",
 			Long:  "Modify a virtual line's transfer numbers.\n\nWhen calling a specific call type, this virtual line will be automatically transferred to another number. The virtual line assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.\n\nThis API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1296,11 +1296,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-intercept-settings-vline
+	{ // get-intercept-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-intercept-settings-vline",
+			Use:   "get-intercept-settings",
 			Short: "Read Call Intercept Settings for a Virtual Line",
 			Long:  "Retrieves Virtual Line's Call Intercept settings.\n\nThe intercept feature gracefully takes a virtual line's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified virtual line are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.\n\nRetrieving the intercept settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1327,13 +1327,13 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-intercept-settings-vline
+	{ // update-intercept-settings
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-intercept-settings-vline",
+			Use:   "update-intercept-settings",
 			Short: "Configure Call Intercept Settings for a Virtual Line",
 			Long:  "Configures a virtual line's Call Intercept settings.\n\nThe intercept feature gracefully takes a virtual line's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified virtual line are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.\n\nUpdating the intercept settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1362,11 +1362,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-intercept-greeting-vline
+	{ // update-intercept-greeting
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "update-intercept-greeting-vline",
+			Use:   "update-intercept-greeting",
 			Short: "Configure Call Intercept Greeting for a Virtual Line",
 			Long:  "Configure a virtual line's Call Intercept Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the intercept greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1481,11 +1481,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-voicemail-vline
+	{ // get-voicemail
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-voicemail-vline",
+			Use:   "get-voicemail",
 			Short: "Read Voicemail Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via voicemail.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nRetrieving the voicemail settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1512,13 +1512,13 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-voicemail-vline
+	{ // update-voicemail
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-voicemail-vline",
+			Use:   "update-voicemail",
 			Short: "Configure Voicemail Settings for a Virtual Line",
 			Long:  "Configure a virtual line's voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via voicemail.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nUpdating the voicemail settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1547,11 +1547,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-busy-voicemail-greeting-vline
+	{ // update-busy-voicemail-greeting
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "update-busy-voicemail-greeting-vline",
+			Use:   "update-busy-voicemail-greeting",
 			Short: "Configure Busy Voicemail Greeting for a Virtual Line",
 			Long:  "Configure a virtual line's Busy Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the voicemail busy greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1571,11 +1571,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-no-answer-voicemail-greeting-vline
+	{ // update-no-answer-voicemail-greeting
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "update-no-answer-voicemail-greeting-vline",
+			Use:   "update-no-answer-voicemail-greeting",
 			Short: "Configure No Answer Voicemail Greeting for a Virtual Line",
 			Long:  "Configure a virtual line's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the voicemail no answer greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1595,13 +1595,13 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // reset-voicemail-pin-vline
+	{ // reset-voicemail-pin
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "reset-voicemail-pin-vline",
+			Use:   "reset-voicemail-pin",
 			Short: "Reset Voicemail PIN for a Virtual Line",
 			Long:  "Reset a voicemail PIN for a virtual line.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.\n\nUpdating the voicemail pin for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: This API is expected to have an empty request body and Content-Type header should be set to `application/json`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1630,14 +1630,14 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-vline-voicemail-passcode
+	{ // update-voicemail-passcode
 		var virtualLineId string
 		var orgId string
 		var passcode string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vline-voicemail-passcode",
+			Use:   "update-voicemail-passcode",
 			Short: "Modify a virtual line's voicemail passcode",
 			Long:  "Modify a virtual line's voicemail passcode.\n\nModifying a virtual line's voicemail passcode requires a full administrator, user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1669,11 +1669,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-music-hold-settings-vline
+	{ // get-music-hold-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-music-hold-settings-vline",
+			Use:   "get-music-hold-settings",
 			Short: "Retrieve Music On Hold Settings for a Virtual Line",
 			Long:  "Retrieve the virtual line's music on hold settings.\n\nMusic on hold is played when a caller is put on hold, or the call is parked.\n\nRetrieving the music on hold settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1700,13 +1700,13 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-music-hold-settings-vline
+	{ // update-music-hold-settings
 		var virtualLineId string
 		var orgId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-music-hold-settings-vline",
+			Use:   "update-music-hold-settings",
 			Short: "Configure Music On Hold Settings for a Virtual Line",
 			Long:  "Configure a virtual line's music on hold settings.\n\nMusic on hold is played when a caller is put on hold, or the call is parked.\n\nTo configure music on hold settings for a virtual line, music on hold setting must be enabled for this location.\n\nUpdating the music on hold settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1735,11 +1735,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-push-to-talk-settings-vline
+	{ // get-push-to-talk-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-push-to-talk-settings-vline",
+			Use:   "get-push-to-talk-settings",
 			Short: "Read Push-to-Talk Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's Push-to-Talk settings.\n\nPush-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in different parts of your organization.\n\nRetrieving the Push-to-Talk settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1766,7 +1766,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-push-to-talk-settings-vline
+	{ // update-push-to-talk-settings
 		var virtualLineId string
 		var orgId string
 		var allowAutoAnswer bool
@@ -1776,7 +1776,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-push-to-talk-settings-vline",
+			Use:   "update-push-to-talk-settings",
 			Short: "Configure Push-to-Talk Settings for a Virtual Line",
 			Long:  "Configure a virtual line's Push-to-Talk settings.\n\nPush-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in different parts of your organization.\n\nUpdating the Push-to-Talk settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1814,11 +1814,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-bridge-settings-vline
+	{ // get-bridge-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-bridge-settings-vline",
+			Use:   "get-bridge-settings",
 			Short: "Read Call Bridge Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's call bridge settings.\n\nRetrieving the call bridge settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1845,14 +1845,14 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-bridge-settings-vline
+	{ // update-bridge-settings
 		var virtualLineId string
 		var orgId string
 		var warningToneEnabled bool
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-bridge-settings-vline",
+			Use:   "update-bridge-settings",
 			Short: "Configure Call Bridge Settings for a Virtual Line",
 			Long:  "Configure a virtual line's call bridge settings.\n\nUpdating the call bridge settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1884,11 +1884,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-barge-settings-vline
+	{ // get-barge-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-barge-settings-vline",
+			Use:   "get-barge-settings",
 			Short: "Read Barge In Settings for a Virtual Line",
 			Long:  "Retrieve a virtual line's barge in settings.\n\nThe Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.\n\nRetrieving the barge in settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1915,7 +1915,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-barge-settings-vline
+	{ // update-barge-settings
 		var virtualLineId string
 		var orgId string
 		var enabled bool
@@ -1923,7 +1923,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-barge-settings-vline",
+			Use:   "update-barge-settings",
 			Short: "Configure Barge In Settings for a Virtual Line",
 			Long:  "Configure a virtual line's barge in settings.\n\nThe Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.\n\nUpdating the barge in settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1957,11 +1957,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-privacy-settings
+	{ // get-privacy-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-vline-privacy-settings",
+			Use:   "get-privacy-settings",
 			Short: "Get a Virtual Line's Privacy Settings",
 			Long:  "Get a virtual line's privacy settings for the specified virtual line ID.\n\nThe privacy feature enables the virtual line's line to be monitored by others and determine if they can be reached by Auto Attendant services.\n\nRetrieving the privacy settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -1988,7 +1988,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-vline-privacy-settings
+	{ // update-privacy-settings
 		var virtualLineId string
 		var orgId string
 		var aaExtensionDialingEnabled bool
@@ -1999,7 +1999,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-vline-privacy-settings",
+			Use:   "update-privacy-settings",
 			Short: "Configure a Virtual Line's Privacy Settings",
 			Long:  "Configure a virtual line's privacy settings for the specified virtual line ID.\n\nThe privacy feature enables the virtual line's line to be monitored by others and determine if they can be reached by Auto Attendant services.\n\nUpdating the privacy settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2039,14 +2039,14 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-fax-available-numbers
+	{ // get-fax-available-numbers
 		var virtualLineId string
 		var orgId string
 		var max string
 		var start string
 		var phoneNumber string
 		cmd := &cobra.Command{
-			Use:   "get-vline-fax-available-numbers",
+			Use:   "get-fax-available-numbers",
 			Short: "Get Virtual Line Fax Message Available Phone Numbers",
 			Long:  "List standard numbers that are available to be assigned as a virtual line's FAX message number.\nThese numbers are associated with the location of the virtual line specified in the request URL, can be active or inactive, and are unassigned.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2080,7 +2080,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-forward-available-numbers
+	{ // get-forward-available-numbers
 		var virtualLineId string
 		var orgId string
 		var max string
@@ -2089,7 +2089,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var ownerName string
 		var extension string
 		cmd := &cobra.Command{
-			Use:   "get-vline-forward-available-numbers",
+			Use:   "get-forward-available-numbers",
 			Short: "Get Virtual Line Call Forward Available Phone Numbers",
 			Long:  "List the service and standard PSTN numbers that are available to be assigned as a virtual line's call forward number.\nThese numbers are associated with the location of the virtual line specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2127,14 +2127,14 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-available-numbers
+	{ // get-available-numbers
 		var orgId string
 		var locationId string
 		var max string
 		var start string
 		var phoneNumber string
 		cmd := &cobra.Command{
-			Use:   "get-vline-available-numbers",
+			Use:   "get-available-numbers",
 			Short: "Get Virtual Line Available Phone Numbers",
 			Long:  "List standard numbers that are available to be assigned as a virtual line's phone number.\nBy default, this API returns unassigned numbers from all locations. To select the suitable number for assignment, ensure the virtual line's location ID is provided as the `locationId` request parameter.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2167,7 +2167,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-ecbn-available-numbers
+	{ // get-ecbn-available-numbers
 		var virtualLineId string
 		var orgId string
 		var max string
@@ -2175,7 +2175,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var phoneNumber string
 		var ownerName string
 		cmd := &cobra.Command{
-			Use:   "get-vline-ecbn-available-numbers",
+			Use:   "get-ecbn-available-numbers",
 			Short: "Get Virtual Line ECBN Available Phone Numbers",
 			Long:  "List standard numbers that can be assigned as a virtual line's call forward number.\nThese numbers are associated with the location of the virtual line specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2211,7 +2211,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-vline-intercept-available-numbers
+	{ // get-intercept-available-numbers
 		var virtualLineId string
 		var orgId string
 		var max string
@@ -2220,7 +2220,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var ownerName string
 		var extension string
 		cmd := &cobra.Command{
-			Use:   "get-vline-intercept-available-numbers",
+			Use:   "get-intercept-available-numbers",
 			Short: "Get Virtual Line Call Intercept Available Phone Numbers",
 			Long:  "List the service and standard PSTN numbers that are available to be assigned as a virtual line's call intercept number.\nThese numbers are associated with the location of the virtual line specified in the request URL, can be active or inactive, and are assigned to an owning entity.\n\nThe available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment or association of these numbers to members or features.\n\nRetrieving this list requires a full, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2258,11 +2258,11 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // get-donotdisturb-settings-vline
+	{ // get-donotdisturb-settings
 		var virtualLineId string
 		var orgId string
 		cmd := &cobra.Command{
-			Use:   "get-donotdisturb-settings-vline",
+			Use:   "get-donotdisturb-settings",
 			Short: "Retrieve DoNotDisturb Settings for a Virtual Line",
 			Long:  "Retrieve DoNotDisturb Settings for a Virtual Line.\n\nSilence incoming calls with the Do Not Disturb feature.\nWhen enabled, callers hear the busy signal.\n\nThis API requires a full, read-only or location administrator auth token with a scope of `telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -2289,7 +2289,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-donotdisturb-settings-vline
+	{ // update-donotdisturb-settings
 		var virtualLineId string
 		var orgId string
 		var enabled bool
@@ -2297,7 +2297,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-donotdisturb-settings-vline",
+			Use:   "update-donotdisturb-settings",
 			Short: "Modify DoNotDisturb Settings for a Virtual Line",
 			Long:  "Modify DoNotDisturb Settings for a Virtual Line.\n\nSilence incoming calls with the Do Not Disturb feature.\nWhen enabled, callers hear the busy signal.\n\nThis API requires a full, user or location administrator auth token with the `spark-admin:telephony_config_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
