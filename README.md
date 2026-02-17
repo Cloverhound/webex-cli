@@ -4,8 +4,14 @@ A command-line tool for Webex APIs — Calling, Contact Center, Admin, Devices, 
 
 ## Install
 
+**macOS / Linux:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | iex
 ```
 
 Or download from [Releases](https://github.com/Cloverhound/webex-cli/releases).

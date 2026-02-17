@@ -5,11 +5,19 @@ description: How to install the Webex CLI.
 
 ## Quick Install
 
+**macOS / Linux:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh
 ```
 
-This downloads the latest release for your platform and installs it to `/usr/local/bin/webex`.
+This downloads the latest release and installs it to `/usr/local/bin/webex`.
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | iex
+```
+
+This downloads the latest release and installs it to `%LOCALAPPDATA%\webex-cli\webex.exe`, and adds it to your user PATH.
 
 ## Manual Download
 
@@ -22,6 +30,7 @@ Download the binary for your platform from the [GitHub Releases](https://github.
 | Linux | x86_64 | `webex-cli_*_linux_amd64.tar.gz` |
 | Linux | ARM64 | `webex-cli_*_linux_arm64.tar.gz` |
 | Windows | x86_64 | `webex-cli_*_windows_amd64.zip` |
+| Windows | ARM64 | `webex-cli_*_windows_arm64.zip` |
 
 ## Build from Source
 
@@ -31,7 +40,7 @@ cd webex-cli
 go build -o webex .
 ```
 
-Requires Go 1.20+.
+Requires Go 1.23+.
 
 ## Verify Installation
 
