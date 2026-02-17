@@ -159,3 +159,90 @@ func TestPrintTableSimpleArrayIncluded(t *testing.T) {
 		t.Errorf("expected joined emails, got:\n%s", out)
 	}
 }
+
+// --- CSV tests ---
+
+func TestPrintCSVWrapperObject(t *testing.T) {
+	SetFormat("csv")
+	data := []byte(`{"items":[{"displayName":"Alice","orgId":"abc-123","created":"2024-01-01"},{"displayName":"Bob","orgId":"def-456","created":"2024-02-15"}]}`)
+	out := captureStdout(func() {
+		Print(data, 200)
+	})
+	lines := strings.Split(strings.TrimSpace(out), "\n")
+	if len(lines) != 3 {
+		t.Fatalf("expected 3 lines (header + 2 rows), got %d:\n%s", len(lines), out)
+	}
+	// Header should contain human-readable column names
+	if !strings.Contains(lines[0], "Display Name") {
+		t.Errorf("expected 'Display Name' in header, got: %s", lines[0])
+	}
+	if !strings.Contains(lines[0], "Org ID") {
+		t.Errorf("expected 'Org ID' in header, got: %s", lines[0])
+	}
+	// Data rows
+	if !strings.Contains(lines[1], "Alice") {
+		t.Errorf("expected 'Alice' in first data row, got: %s", lines[1])
+	}
+	if !strings.Contains(lines[2], "Bob") {
+		t.Errorf("expected 'Bob' in second data row, got: %s", lines[2])
+	}
+}
+
+func TestPrintCSVSingleObject(t *testing.T) {
+	SetFormat("csv")
+	data := []byte(`{"displayName":"Charlie","email":"charlie@example.com","isActive":true}`)
+	out := captureStdout(func() {
+		Print(data, 200)
+	})
+	lines := strings.Split(strings.TrimSpace(out), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("expected 2 lines (header + 1 row), got %d:\n%s", len(lines), out)
+	}
+	if !strings.Contains(lines[0], "Display Name") {
+		t.Errorf("expected 'Display Name' in header, got: %s", lines[0])
+	}
+	if !strings.Contains(lines[1], "Charlie") {
+		t.Errorf("expected 'Charlie' in data row, got: %s", lines[1])
+	}
+}
+
+func TestPrintCSVExcludesComplexColumns(t *testing.T) {
+	SetFormat("csv")
+	data := []byte(`{"items":[{"name":"Alice","details":{"nested":"obj"}}]}`)
+	out := captureStdout(func() {
+		Print(data, 200)
+	})
+	if !strings.Contains(out, "Name") {
+		t.Errorf("expected 'Name' header, got:\n%s", out)
+	}
+	if strings.Contains(out, "Details") {
+		t.Errorf("should not contain complex column 'Details', got:\n%s", out)
+	}
+}
+
+func TestPrintCSVEmpty(t *testing.T) {
+	SetFormat("csv")
+	data := []byte(`{"items":[]}`)
+	out := captureStdout(func() {
+		Print(data, 200)
+	})
+	if out != "" {
+		t.Errorf("expected empty output for empty items, got:\n%s", out)
+	}
+}
+
+func TestPrintCSVQuoting(t *testing.T) {
+	SetFormat("csv")
+	data := []byte(`[{"name":"O'Brien, James","note":"He said \"hello\""}]`)
+	out := captureStdout(func() {
+		Print(data, 200)
+	})
+	// CSV should quote fields with commas
+	if !strings.Contains(out, `"O'Brien, James"`) {
+		t.Errorf("expected quoted field with comma, got:\n%s", out)
+	}
+	// CSV should escape double quotes by doubling them
+	if !strings.Contains(out, `"He said ""hello"""`) {
+		t.Errorf("expected escaped double quotes, got:\n%s", out)
+	}
+}

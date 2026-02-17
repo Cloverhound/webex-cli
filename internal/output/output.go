@@ -2,6 +2,7 @@ package output
 
 import (
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -38,6 +39,8 @@ func Print(data []byte, statusCode int) error {
 		return err
 	case "table":
 		return printTable(data)
+	case "csv":
+		return printCSV(data)
 	default:
 		return printJSON(data)
 	}
@@ -165,7 +168,11 @@ func getTerminalWidth() int {
 // preferredArrayKeys is checked in order when unwrapping a wrapper object.
 var preferredArrayKeys = []string{"items", "data"}
 
-func printTable(data []byte) error {
+// extractRows parses JSON into rows with headers.
+// Returns (headers, rows, error). headers uses camelToHeader() formatting.
+// Complex columns are excluded. Empty results return nil headers/rows with no error.
+// Returns a special empty sentinel when the input contains an empty array.
+func extractRows(data []byte) ([]string, [][]string, bool, error) {
 	var items []map[string]interface{}
 
 	// Try to parse as array of objects directly
@@ -173,7 +180,7 @@ func printTable(data []byte) error {
 		// Try as single object
 		var obj map[string]interface{}
 		if err2 := json.Unmarshal(data, &obj); err2 != nil {
-			return printJSON(data) // fallback
+			return nil, nil, false, fmt.Errorf("not tabular JSON")
 		}
 
 		// Try preferred keys first
@@ -219,10 +226,9 @@ func printTable(data []byte) error {
 			}
 		}
 
-		// If an array was found but empty, show empty message
+		// If an array was found but empty, signal empty
 		if foundEmpty {
-			fmt.Println("(empty)")
-			return nil
+			return nil, nil, true, nil
 		}
 
 		// If no array found at all, treat the single object as a one-row table
@@ -232,8 +238,7 @@ func printTable(data []byte) error {
 	}
 
 	if len(items) == 0 {
-		fmt.Println("(empty)")
-		return nil
+		return nil, nil, true, nil
 	}
 
 	// Classify all values and determine which columns to include.
@@ -284,8 +289,8 @@ func printTable(data []byte) error {
 	}
 
 	if len(cols) == 0 {
-		// All columns are complex — fall back to JSON
-		return printJSON(data)
+		// All columns are complex
+		return nil, nil, false, nil
 	}
 
 	// Build headers
@@ -304,6 +309,23 @@ func printTable(data []byte) error {
 		rows[i] = row
 	}
 
+	return headers, rows, false, nil
+}
+
+func printTable(data []byte) error {
+	headers, rows, empty, err := extractRows(data)
+	if err != nil {
+		return printJSON(data) // fallback
+	}
+	if empty {
+		fmt.Println("(empty)")
+		return nil
+	}
+	if headers == nil {
+		// All columns are complex — fall back to JSON
+		return printJSON(data)
+	}
+
 	// Render with tablewriter
 	termWidth := getTerminalWidth()
 
@@ -317,12 +339,12 @@ func printTable(data []byte) error {
 
 	// Truncate wide cells to keep table within terminal width
 	// Account for borders: | col | col | = len(cols)+1 pipe chars + 2*len(cols) spaces
-	borderOverhead := len(cols) + 1 + 2*len(cols)
+	borderOverhead := len(headers) + 1 + 2*len(headers)
 	availWidth := termWidth - borderOverhead
-	if availWidth < len(cols)*4 {
-		availWidth = len(cols) * 4
+	if availWidth < len(headers)*4 {
+		availWidth = len(headers) * 4
 	}
-	maxColWidth := availWidth / len(cols)
+	maxColWidth := availWidth / len(headers)
 	if maxColWidth < 4 {
 		maxColWidth = 4
 	}
@@ -339,4 +361,30 @@ func printTable(data []byte) error {
 	table.Render()
 
 	return nil
+}
+
+func printCSV(data []byte) error {
+	headers, rows, empty, err := extractRows(data)
+	if err != nil {
+		return printJSON(data) // fallback
+	}
+	if empty {
+		return nil // empty CSV — no output
+	}
+	if headers == nil {
+		// All columns are complex — fall back to JSON
+		return printJSON(data)
+	}
+
+	w := csv.NewWriter(os.Stdout)
+	if err := w.Write(headers); err != nil {
+		return err
+	}
+	for _, row := range rows {
+		if err := w.Write(row); err != nil {
+			return err
+		}
+	}
+	w.Flush()
+	return w.Error()
 }

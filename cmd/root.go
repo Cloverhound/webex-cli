@@ -115,7 +115,7 @@ func stripRequiredOrgID(cmd *cobra.Command) {
 
 func init() {
 	rootCmd.PersistentFlags().String("token", "", "Webex API token (overrides keyring)")
-	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, yaml, raw")
+	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, csv, raw")
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
