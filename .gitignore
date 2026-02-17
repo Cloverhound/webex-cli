@@ -2,6 +2,7 @@
 webex
 webex-cli
 *.exe
+dist/
 
 # Codegen intermediates
 codegen/api_outline.json

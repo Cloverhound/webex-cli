@@ -9,7 +9,7 @@ builds:
       - -X github.com/Cloverhound/webex-cli/cmd.Version={{.Version}}
       - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientID={{.Env.WEBEX_CLIENT_ID}}
       - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientSecret={{.Env.WEBEX_CLIENT_SECRET}}
-      - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultScopes={{.Env.WEBEX_SCOPES}}
+      - "-X 'github.com/Cloverhound/webex-cli/internal/appconfig.DefaultScopes={{.Env.WEBEX_SCOPES}}'"
     goos:
       - darwin
       - linux
@@ -19,11 +19,13 @@ builds:
       - arm64
 
 archives:
-  - format: tar.gz
+  - formats:
+      - tar.gz
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
 
 checksum:
   name_template: "checksums.txt"
