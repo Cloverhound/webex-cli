@@ -1,0 +1,191 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var membershipsCmd = &cobra.Command{
+	Use:   "memberships",
+	Short: "Memberships commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(membershipsCmd)
+
+	{ // list
+		var roomId string
+		var personId string
+		var personEmail string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Memberships",
+			Long:  "Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.\n\nUse query parameters to filter the response.\n\nUse `roomId` to list memberships for a room, by ID.\n\n**NOTE**: For moderated team spaces, the list of memberships will include only the space moderators if the user is a team member but not a direct participant of the space.\n\nUse either `personId` or `personEmail` to filter the results. The `roomId` parameter is required when using these parameters.\n\nWhen the requester is a compliance officer, they can query by `personId` or `personEmail` **WITHOUT** specifying a `roomId`. The response will include **ALL** memberships for the user where a space is owned by an org to which the user belongs.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/memberships")
+				req.QueryParam("roomId", roomId)
+				req.QueryParam("personId", personId)
+				req.QueryParam("personEmail", personEmail)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&roomId, "room-id", "", "List memberships associated with a room, by ID.")
+		cmd.Flags().StringVar(&personId, "person-id", "", "List memberships associated with a person, by ID. The `roomId` parameter is required when using this parameter.")
+		cmd.Flags().StringVar(&personEmail, "person-email", "", "List memberships associated with a person, by email address. The `roomId` parameter is required when using this parameter.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of memberships in the response.")
+		membershipsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var roomId string
+		var personId string
+		var personEmail string
+		var isModerator bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Membership",
+			Long:  `Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers cannot add people to empty (team) spaces.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/memberships")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("roomId", roomId)
+					req.BodyString("personId", personId)
+					req.BodyString("personEmail", personEmail)
+					req.BodyBool("isModerator", isModerator, cmd.Flags().Changed("is-moderator"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&roomId, "room-id", "", "")
+		cmd.Flags().StringVar(&personId, "person-id", "", "")
+		cmd.Flags().StringVar(&personEmail, "person-email", "", "")
+		cmd.Flags().BoolVar(&isModerator, "is-moderator", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		membershipsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var membershipId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Membership Details",
+			Long:  "Get details for a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the membership.")
+		cmd.MarkFlagRequired("membership-id")
+		membershipsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var membershipId string
+		var isModerator bool
+		var isRoomHidden bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Membership",
+			Long:  "Updates properties for a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("isModerator", isModerator, cmd.Flags().Changed("is-moderator"))
+					req.BodyBool("isRoomHidden", isRoomHidden, cmd.Flags().Changed("is-room-hidden"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the membership.")
+		cmd.MarkFlagRequired("membership-id")
+		cmd.Flags().BoolVar(&isModerator, "is-moderator", false, "")
+		cmd.Flags().BoolVar(&isRoomHidden, "is-room-hidden", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		membershipsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var membershipId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Membership",
+			Long:  "Deletes a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.\n\nThe membership for the last moderator of a [Team](/docs/api/v1/teams)'s General space may not be deleted; [promote another user](/docs/api/v1/team-memberships/update-a-team-membership) to team moderator first.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the membership.")
+		cmd.MarkFlagRequired("membership-id")
+		membershipsCmd.AddCommand(cmd)
+	}
+
+}

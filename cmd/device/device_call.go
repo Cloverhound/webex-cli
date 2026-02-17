@@ -1,0 +1,2238 @@
+package device
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var deviceCallCmd = &cobra.Command{
+	Use:   "device-call",
+	Short: "DeviceCall commands",
+}
+
+func init() {
+	cmd.DeviceCmd.AddCommand(deviceCallCmd)
+
+	{ // get-members
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-members",
+			Short: "Get Device Members",
+			Long:  "Get the list of all the members of the device including primary and secondary users.\n\nA device member can be either a person or a workspace. An admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/members")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the list of all members of the device in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-members
+		var deviceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-members",
+			Short: "Update Members on the device",
+			Long:  "Modify member details on the device.\n\nA device member can be either a person, virtual line or a workspace. An admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nModifying members on the device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/members")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify members on the device in this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // search-members
+		var deviceId string
+		var orgId string
+		var start string
+		var max string
+		var memberName string
+		var phoneNumber string
+		var locationId string
+		var extension string
+		var usageType string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "search-members",
+			Short: "Search Members",
+			Long:  "Search members that can be assigned to the device.\n\nA device member can be either a person or a workspace. A admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/availableMembers")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				req.QueryParam("memberName", memberName)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("extension", extension)
+				req.QueryParam("usageType", usageType)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the list of available members on the device in this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Specifies the offset from the first result that you want to fetch.")
+		cmd.Flags().StringVar(&max, "max", "", "Specifies the maximum number of records that you want to fetch.")
+		cmd.Flags().StringVar(&memberName, "member-name", "", "Search (Contains) numbers based on member name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search (Contains) based on number.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Search (Contains) based on extension.")
+		cmd.Flags().StringVar(&usageType, "usage-type", "", "Search for members eligible to become the owner of the device, or share line on the device.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list of available members on the device in ascending order by name, use either last name `lname` or first name `fname`. Default: last name in ascending order.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // apply-changes
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "apply-changes",
+			Short: "Apply Changes for a specific device",
+			Long:  "Issues request to the device to download and apply changes to the configuration.\n\nApplying changes for a specific device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/devices/{deviceId}/actions/applyChanges/invoke")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Apply changes for a device in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-settings
+		var deviceId string
+		var orgId string
+		var deviceModel string
+		cmd := &cobra.Command{
+			Use:   "get-settings",
+			Short: "Get Device Settings",
+			Long:  "Get override settings for a device.\n\nDevice settings lists all the applicable settings for MPP, ATA and Wifi devices at the device level. An admin can also modify the settings. DECT devices do not support settings at the device level.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/settings")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("deviceModel", deviceModel)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Settings on the device in this organization.")
+		cmd.Flags().StringVar(&deviceModel, "device-model", "", "The model type of the device. The corresponding device model display name sometimes called the product name, can also be used to specify the model.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-settings
+		var deviceId string
+		var orgId string
+		var deviceModel string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-settings",
+			Short: "Update device settings",
+			Long:  "Modify override settings for a device.\n\nDevice settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can also modify the settings. NOTE: DECT devices do not support settings at the device level.\n\nUpdating settings on the device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/settings")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("deviceModel", deviceModel)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization in which the device resides..")
+		cmd.Flags().StringVar(&deviceModel, "device-model", "", "The model type of the device. The corresponding device model display name sometimes called the product name, can also be used to specify the model.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-location-settings
+		var locationId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-location-settings",
+			Short: "Get Location Device Settings",
+			Long:  "Get device override settings for a location.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/devices/settings")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization in which the device resides.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-webex-calling
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-webex-calling",
+			Short: "Get Webex Calling Device Details",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>\n\nRetrieves Webex Calling device details that include information needed for third-party device management.\n\nWebex calling devices are associated with a specific user Workspace or Virtual Line. Webex Calling devices share the location with the entity that owns them.\n\nPerson or workspace to which the device is assigned. Its fields point to a primary line/port of the device.\n\nRequires a full, location, user, or read-only admin auth token with the scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the device resides.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-third-party
+		var deviceId string
+		var orgId string
+		var sipPassword string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-third-party",
+			Short: "Update Third Party Device",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>\n\nModify a device's `sipPassword`.\n\nUpdating `sipPassword` on the device requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("sipPassword", sipPassword)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the device resides.")
+		cmd.Flags().StringVar(&sipPassword, "sip-password", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-person
+		var personId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-person",
+			Short: "Get Person Devices",
+			Long:  "Get all devices for a person.\n\nThis requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person for whom to retrieve devices.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the person belongs.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-hoteling-settings-person-primary
+		var personId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-hoteling-settings-person-primary",
+			Short: "Modify Hoteling Settings for a Person's Primary Devices",
+			Long:  "Modify hoteling login configuration on a person's Webex Calling Devices which are in effect when the device is the user's primary device and device type is PRIMARY. To view the current hoteling login settings, see the `hoteling` field in [Get Person Devices](/docs/api/v1/device-call-settings/get-person-devices).\n\nModifying devices for a person requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/{personId}/devices/settings/hoteling")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the person associated with the device.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the person belongs.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-workspace
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-workspace",
+			Short: "Get Workspace Devices",
+			Long:  "Get all devices for a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/devices")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace for which to retrieve devices.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the workspace belongs.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-workspace
+		var workspaceId string
+		var orgId string
+		var enabled bool
+		var limitGuestUse bool
+		var guestHoursLimit int64
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-workspace",
+			Short: "Modify Workspace Devices",
+			Long:  "Modify devices for a workspace.\n\nModifying devices for a workspace requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/devices")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyBool("limitGuestUse", limitGuestUse, cmd.Flags().Changed("limit-guest-use"))
+					req.BodyInt("guestHoursLimit", guestHoursLimit, cmd.Flags().Changed("guest-hours-limit"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace for which to modify devices.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the workspace belongs.")
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().BoolVar(&limitGuestUse, "limit-guest-use", false, "")
+		cmd.Flags().Int64Var(&guestHoursLimit, "guest-hours-limit", 0, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-supported
+		var orgId string
+		var allowConfigureLayoutEnabled string
+		var typeVal string
+		cmd := &cobra.Command{
+			Use:   "list-supported",
+			Short: "Read the List of Supported Devices",
+			Long:  "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supportedDevices")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
+				req.QueryParam("type", typeVal)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List supported devices for an organization.")
+		cmd.Flags().StringVar(&allowConfigureLayoutEnabled, "allow-configure-layout-enabled", "", "List supported devices that allow the user to configure the layout.")
+		cmd.Flags().StringVar(&typeVal, "type", "", "List supported devices of a specific type. To excluded device types from a request or query, add `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-override-settings
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-override-settings",
+			Short: "Read the device override settings for a organization",
+			Long:  "Get device override settings for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/settings")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List supported devices for an organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // create-line-key-template
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-line-key-template",
+			Short: "Create a Line Key Template",
+			Long:  "Create a Line Key Template in this organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows customers to create a `Line Key Template` for a device model.\n\nCreating a Line Key Template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/devices/lineKeyTemplates")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the line key template belongs.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-line-key-templates
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-line-key-templates",
+			Short: "Read the list of Line Key Templates",
+			Long:  "List all Line Key Templates available for this organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve the list of Line Key Templates that are available for the organization.\n\nRetrieving this list requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/lineKeyTemplates")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List line key templates for this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-line-key-template
+		var templateId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-line-key-template",
+			Short: "Get details of a Line Key Template",
+			Long:  "Get detailed information about a Line Key Template by template ID in an organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve a line key template by its ID in an organization.\n\nRetrieving a line key template requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/lineKeyTemplates/{templateId}")
+				req.PathParam("templateId", templateId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Get line key template for this template ID.")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve a line key template for this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-line-key-template
+		var templateId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-line-key-template",
+			Short: "Modify a Line Key Template",
+			Long:  "Modify a Line Key Template by its template ID in an organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to modify an existing Line Key Template by its ID in an organization.\n\nModifying an existing Line Key Template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/lineKeyTemplates/{templateId}")
+				req.PathParam("templateId", templateId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Modify line key template with this template ID.")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify a line key template for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-line-key-template
+		var templateId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-line-key-template",
+			Short: "Delete a Line Key Template",
+			Long:  "Delete a Line Key Template by its template ID in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to delete an existing Line Key Templates by its ID in an organization.\n\nDeleting an existing line key template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/devices/lineKeyTemplates/{templateId}")
+				req.PathParam("templateId", templateId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&templateId, "template-id", "", "Delete line key template with this template ID.")
+		cmd.MarkFlagRequired("template-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Delete a line key template for this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // preview-apply-line-key-template
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "preview-apply-line-key-template",
+			Short: "Preview Apply Line Key Template",
+			Long:  "Preview the number of devices that will be affected by the application of a Line Key Template or when resetting devices to their factory Line Key settings.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to preview the number of devices that will be affected if a customer were to apply a Line Key Template or apply factory default Line Key settings to devices.\n\nRetrieving the number of devices affected requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/devices/actions/previewApplyLineKeyTemplate/invoke")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Preview Line Key Template for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // apply-line-key-template
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "apply-line-key-template",
+			Short: "Apply a Line Key Template",
+			Long:  "Apply a Line Key Template or reset devices to their factory Line Key settings.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to apply a line key template or apply factory default Line Key settings to devices in a set of locations or across all locations in the organization.\n\nApplying a Line Key Template or resetting devices to their default Line Key configuration requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/devices/applyLineKeyTemplate")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Apply Line Key Template for this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-apply-line-key-template-jobs
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-apply-line-key-template-jobs",
+			Short: "Get List of Apply Line Key Template jobs",
+			Long:  "Get the list of all apply line key templates jobs in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve all the apply line key templates jobs in an organization.\n\nRetrieving the list of apply line key templates jobs in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of line key templates jobs in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-status-apply-line-key-template-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-status-apply-line-key-template-job",
+			Short: "Get the job status of an Apply Line Key Template job",
+			Long:  "Get the status of an apply line key template job by its job ID.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to check the status of an apply line key templates job by job ID in an organization.\n\nChecking the the status of an apply line key templates job in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job status for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Check a line key template job status in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-errors-apply-line-key-template-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-errors-apply-line-key-template-job",
+			Short: "Get job errors for an Apply Line Key Template job",
+			Long:  "GET job errors for an apply Line Key Template job in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve all the errors of an apply line key templates job by job ID in an organization.\n\nRetrieving all the errors of an apply line key templates job in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job errors for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of errors for an apply line key template job in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dect-type-list-deprecated
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-dect-type-list-deprecated",
+			Short: "Read the DECT device type list - Deprecated",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP).</Callout></div>\n\n<div><Callout type=\"warning\">The REST path for this API has changed to [GET /telephony/config/devices/dectNetworks/supportedDevices{?orgId}]. The use of this old REST path is deprecated and will be decommissioned on October 10, 2024. Please start using it for all future projects.</Callout></div>\n\nGet DECT device type list with base stations and line ports supported count. This is a static list.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dects/supportedDevices")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dect-type-list
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-dect-type-list",
+			Short: "Read the DECT device type list",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP).</Callout></div>\n\nGet DECT device type list with base stations and line ports supported count. This is a static list.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dectNetworks/supportedDevices")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // validate-list-mac-address
+		var orgId string
+		var macs []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "validate-list-mac-address",
+			Short: "Validate a list of MAC address",
+			Long:  "Validate a list of MAC addresses.\n\nValidating this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/devices/actions/validateMacs/invoke")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("macs", macs)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Validate the mac address(es) for this organization.")
+		cmd.Flags().StringSliceVar(&macs, "macs", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-settings-across-org-location-job
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-settings-across-org-location-job",
+			Short: "Change Device Settings Across Organization Or Location Job",
+			Long:  "Change device settings across organization or locations jobs.\n\nPerforms bulk and asynchronous processing for all types of device settings initiated by organization and system admins in a stateful persistent manner. This job will modify the requested device settings across all the devices. Whenever a location ID is specified in the request, it will modify the requested device settings only for the devices that are part of the provided location within an organization.\n\nReturns a unique job ID which can then be utilized further to retrieve status and errors for the same.\n\nOnly one job per customer can be running at any given time within the same organization. An attempt to run multiple jobs at the same time will result in a 409 error response.\n\nRunning a job requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/devices/callDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Apply change device settings for all the devices under this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-change-settings-jobs
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-change-settings-jobs",
+			Short: "List Change Device Settings Jobs",
+			Long:  "List change device settings jobs.\n\nLists all the jobs for jobType `calldevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/callDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of 'calldevicesettings' jobs for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of jobs. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of jobs returned to this maximum count. Default is 2000.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-change-settings-job-status
+		var jobId string
+		cmd := &cobra.Command{
+			Use:   "get-change-settings-job-status",
+			Short: "Get Change Device Settings Job Status",
+			Long:  "Get change device settings job status.\n\nProvides details of the job with `jobId` of `jobType` `calldevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/callDeviceSettings/{jobId}")
+				req.PathParam("jobId", jobId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-change-settings-job-errors
+		var jobId string
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-change-settings-job-errors",
+			Short: "List Change Device Settings Job Errors",
+			Long:  "List change device settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `calldevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of jobs for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Specifies the offset from the first result that you want to fetch. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Specifies the maximum number of records that you want to fetch. Default is 2000")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-layout-id
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-layout-id",
+			Short: "Get Device Layout by Device ID",
+			Long:  "Get layout information of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/layout")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Get device layout for this device ID.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve a device layout for the device in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-layout-id
+		var deviceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-layout-id",
+			Short: "Modify Device Layout by Device ID",
+			Long:  "Modify the layout of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/layout")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Modify device layout for this device ID.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify a device layout for the device in this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // rebuild-phones-configuration
+		var orgId string
+		var locationId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "rebuild-phones-configuration",
+			Short: "Rebuild Phones Configuration",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nRebuild all phone configurations for the specified location.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/devices/rebuildPhones")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("locationId", locationId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Rebuild phones for this organization.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-rebuild-phones-jobs
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-rebuild-phones-jobs",
+			Short: "List Rebuild Phones Jobs",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet the list of all Rebuild Phones jobs in an organization.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List of rebuild phones jobs in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-status-rebuild-phones-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-status-rebuild-phones-job",
+			Short: "Get the Job Status of a Rebuild Phones Job",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet the details of a rebuild phones job by its job ID.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones/{jobId}")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job status for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Check a rebuild phones job status in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-job-errors-rebuild-phones-job
+		var jobId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-job-errors-rebuild-phones-job",
+			Short: "Get Job Errors for a Rebuild Phones Job",
+			Long:  "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet errors for a rebuild phones job in an organization.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job errors for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of errors for a rebuild phones job in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-settings-person
+		var personId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-settings-person",
+			Short: "Get Device Settings for a Person",
+			Long:  "Device settings list the compression settings for a person.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices/settings")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the person for whom to retrieve device settings.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the device settings for a person in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-settings-person
+		var personId string
+		var orgId string
+		var compression string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-settings-person",
+			Short: "Update Device Settings for a Person",
+			Long:  "Update device settings modifies the compression settings for a person.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/{personId}/devices/settings")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("compression", compression)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the person for whom to update device settings.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify device settings for a person in this organization.")
+		cmd.Flags().StringVar(&compression, "compression", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-settings-workspace
+		var workspaceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-settings-workspace",
+			Short: "Get Device Settings for a Workspace",
+			Long:  "Device settings list the compression settings for a workspace.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/devices/settings")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace for which to retrieve device settings.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the device settings for a workspace in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-settings-workspace
+		var workspaceId string
+		var orgId string
+		var compression string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-settings-workspace",
+			Short: "Update Device Settings for a Workspace",
+			Long:  "Update device settings modifies the compression settings for a workspace.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/workspaces/{workspaceId}/devices/settings")
+				req.PathParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("compression", compression)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace for which to update device settings.")
+		cmd.MarkFlagRequired("workspace-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Modify the device settings for a workspace in this organization.")
+		cmd.Flags().StringVar(&compression, "compression", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-background-images
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-background-images",
+			Short: "Read the List of Background Images",
+			Long:  "Gets the list of device background images for an organization.\n\nWebex Calling supports the upload of up to 100 background image files for each org. These image files can then be referenced by MPP phones in that org for use as their background image.\n\nRetrieving this list requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/backgroundImages")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the list of images in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // delete-background-images
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "delete-background-images",
+			Short: "Delete Device Background Images",
+			Long:  "Delete the list of designated device background images for an organization. Maximum is 10 images per request.\n\nDeleting a device background image requires a full or device administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/devices/backgroundImages")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Deletes the list of images in this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // upload-background-image
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "upload-background-image",
+			Short: "Upload a Device Background Image",
+			Long:  "Configure a device's background image by uploading an image with file format, `.jpeg` or `.png`, encoded image file. Maximum image file size allowed to upload is 625 KB.\n\nThe request must be a multipart/form-data request rather than JSON, using the image/jpeg or image/png content-type.\n\nWebex Calling supports the upload of up to 100 background image files for each org. These image files can then be referenced by MPP phones in that org for use as their background image.\n\nUploading a device background image requires a full or device administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Uploads the image in this organization.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-user-count
+		var personId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-user-count",
+			Short: "Get User Devices Count",
+			Long:  "Get the total device and application count for a person.\n\nThe device count can be used to determine if more devices can be added for users with a device count limit. For example, users with standard calling licenses can only have one physical device.\n\nThis requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices/count")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person for whom to retrieve the device count.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the person belongs.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-supported-2
+		var orgId string
+		var allowConfigureLayoutEnabled string
+		var typeVal string
+		cmd := &cobra.Command{
+			Use:   "list-supported-2",
+			Short: "Read the List of Supported Devices",
+			Long:  "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supportedDevices")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
+				req.QueryParam("type", typeVal)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List supported devices for an organization.")
+		cmd.Flags().StringVar(&allowConfigureLayoutEnabled, "allow-configure-layout-enabled", "", "List supported devices that allow the user to configure the layout.")
+		cmd.Flags().StringVar(&typeVal, "type", "", "List supported devices of a specific type. To excluded device types from a request or query, add `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-validation-schema
+		var orgId string
+		var familyOrModelDisplayName string
+		cmd := &cobra.Command{
+			Use:   "get-validation-schema",
+			Short: "Get Validation Schema",
+			Long:  "This API returns the validation schema for `tags` of all or specific `familyOrModelDisplayName`.\n\nThe schema is used to validate the `tag` for devices in the `Webex Calling` platform. The schema includes information about the required fields, data types, and validation rules for each setting.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dynamicSettings/validationSchema")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Validation schema for devices in this organization.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "Device family or model display name to filter the schema.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-settings-groups
+		var orgId string
+		var familyOrModelDisplayName string
+		var includeSettingsType string
+		cmd := &cobra.Command{
+			Use:   "get-settings-groups",
+			Short: "Get Settings Groups",
+			Long:  "This API returns the `settingsGroups` that define the structure and association of tags for dynamic device settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure dynamic device settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dynamicSettings/settingsGroups")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				req.QueryParam("includeSettingsType", includeSettingsType)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Settings groups for devices in this organization.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "Device family or model display name to filter the `settingsGroups`.")
+		cmd.Flags().StringVar(&includeSettingsType, "include-settings-type", "", "To show groups or tabs or both. Query param is case insensitive. Default is `ALL`.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-customer-dynamic-settings
+		var orgId string
+		var familyOrModelDisplayName string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-customer-dynamic-settings",
+			Short: "Get Customer Device Dynamic Settings",
+			Long:  "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List of device dynamic settings in this organization.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "(Required) The family or model name for the device. If no tag is specified, all tags related to `familyOrModelDisplayName` are returned.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-location-dynamic-settings
+		var locationId string
+		var orgId string
+		var familyOrModelDisplayName string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-location-dynamic-settings",
+			Short: "Get Location Device Dynamic Settings",
+			Long:  "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "(Required) Unique identifier for the `location`.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Unique identifier for the `organization` to which this location belongs.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "(Required) The family or model name for the device. If no tag is specified, all tags related to `familyOrModelDisplayName` are returned.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dynamic-settings
+		var deviceId string
+		var orgId string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-dynamic-settings",
+			Short: "Get Device Dynamic Settings",
+			Long:  "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "(Required) Device for which to retrieve settings.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the `device` belongs.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-specified-settings
+		var deviceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-specified-settings",
+			Short: "Update specified settings for the device.",
+			Long:  "Modify dynamic settings for a specified device.\n\nThis API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has no effect.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/dynamicSettings")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "(Required) Device for which to update settings.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the device belongs.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // updates-dynamic-settings-across-org-location
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "updates-dynamic-settings-across-org-location",
+			Short: "Updates dynamic Device Settings Across Organization Or Location",
+			Long:  "Creates a job to update device settings at location or organization level.\n\nThe job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices, which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices in that location are affected.\n\nA unique job ID is returned to track status and errors.\n\nOnly one job can run per customer per organization at a time. Additionally, this job cannot run in parallel with other device jobs such as [Call device settings](/docs/api/v1/device-call-settings/change-device-settings-across-organization-or-location-job) and [Rebuild Phones](/docs/api/v1/device-call-settings/rebuild-phones-configuration).\n\nRunning a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/devices/dynamicDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Apply update dynamic device settings for all the devices under this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-dynamic-settings-jobs
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-dynamic-settings-jobs",
+			Short: "List dynamic device Settings Jobs",
+			Long:  "List dynamic device settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of dynamic device settings jobs for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of jobs. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of jobs returned to this maximum count. Default is 2000.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dynamic-settings-job-status
+		var jobId string
+		cmd := &cobra.Command{
+			Use:   "get-dynamic-settings-job-status",
+			Short: "Get Device Dynamic Settings Job Status",
+			Long:  "Get dynamic device settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}")
+				req.PathParam("jobId", jobId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "(Required) Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-dynamic-settings-job-errors
+		var jobId string
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-dynamic-settings-job-errors",
+			Short: "List Dynamic Device Settings Job Errors",
+			Long:  "List Update dynamic device settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "(Required) Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve the status of job for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Specifies the offset from the first result that you want to fetch. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Specifies the maximum number of records that you want to fetch. Default is 2000")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-supported-3
+		var orgId string
+		var allowConfigureLayoutEnabled string
+		var typeVal string
+		cmd := &cobra.Command{
+			Use:   "list-supported-3",
+			Short: "Read the List of Supported Devices",
+			Long:  "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supportedDevices")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
+				req.QueryParam("type", typeVal)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List supported devices for an organization.")
+		cmd.Flags().StringVar(&allowConfigureLayoutEnabled, "allow-configure-layout-enabled", "", "List supported devices that allow the user to configure the layout.")
+		cmd.Flags().StringVar(&typeVal, "type", "", "List supported devices of a specific type. To excluded device types from a request or query, add `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-settings-groups-2
+		var orgId string
+		var familyOrModelDisplayName string
+		var includeSettingsType string
+		cmd := &cobra.Command{
+			Use:   "get-settings-groups-2",
+			Short: "Get Settings Groups",
+			Long:  "This API returns the `settingsGroups` that define the structure and association of tags for device dynamic settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure device dynamic settings.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dynamicSettings/settingsGroups")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				req.QueryParam("includeSettingsType", includeSettingsType)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Settings groups for devices in this organization.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "Device family or model display name to filter the `settingsGroups`.")
+		cmd.Flags().StringVar(&includeSettingsType, "include-settings-type", "", "To show groups or tabs or both. Query param is case insensitive. Default is `ALL`.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-customer-dynamic-settings-2
+		var orgId string
+		var familyOrModelDisplayName string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-customer-dynamic-settings-2",
+			Short: "Get Customer Device Dynamic Settings",
+			Long:  "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List of device dynamic settings in this organization.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "The family or model name for the device. If no tag is specified, all tags related to `familyOrModelDisplayName` are returned.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-location-dynamic-settings-2
+		var locationId string
+		var orgId string
+		var familyOrModelDisplayName string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-location-dynamic-settings-2",
+			Short: "Get Location Device Dynamic Settings",
+			Long:  "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke")
+				req.PathParam("locationId", locationId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the `location`.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Unique identifier for the `organization` to which this location belongs.")
+		cmd.Flags().StringVar(&familyOrModelDisplayName, "family-or-model-display-name", "", "The family or model name for the device. If no tag is specified, all tags related to `familyOrModelDisplayName` are returned.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dynamic-settings-2
+		var deviceId string
+		var orgId string
+		var tags []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "get-dynamic-settings-2",
+			Short: "Get Device Dynamic Settings",
+			Long:  "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("tags", tags)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Device for which to retrieve settings.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the `device` belongs.")
+		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-dynamic-settings
+		var deviceId string
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-dynamic-settings",
+			Short: "Update Device Dynamic Settings",
+			Long:  "Modify dynamic settings for a specified device.\n\nThis API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has no effect.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/dynamicSettings")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Device for which to update settings.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization to which the device belongs.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-dynamic-settings-across-org-location
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-dynamic-settings-across-org-location",
+			Short: "Update Device Dynamic Settings Across Organization or Location",
+			Long:  "Creates a job to update device settings at location or organization level.\n\nThe job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices, which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices in that location are affected.\n\nA unique job ID is returned to track status and errors.\n\nOnly one job can run per customer per organization at a time. Additionally, this job cannot run in parallel with other device jobs such as [Call device settings](/docs/api/v1/device-call-settings/change-device-settings-across-organization-or-location-job) and [Rebuild Phones](/docs/api/v1/device-call-settings/rebuild-phones-configuration).\n\nRunning a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/jobs/devices/dynamicDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Apply update device dynamic settings for all the devices under this organization.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-dynamic-settings-jobs-2
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-dynamic-settings-jobs-2",
+			Short: "List Device Dynamic Settings Jobs",
+			Long:  "List device dynamic settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve list of device dynamic settings jobs for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of jobs. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the number of jobs returned to this maximum count. Default is 2000.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-dynamic-settings-job-status-2
+		var jobId string
+		cmd := &cobra.Command{
+			Use:   "get-dynamic-settings-job-status-2",
+			Short: "Get Device Dynamic Settings Job Status",
+			Long:  "Get device dynamic settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}")
+				req.PathParam("jobId", jobId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // list-dynamic-settings-job-errors-2
+		var jobId string
+		var orgId string
+		var start string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-dynamic-settings-job-errors-2",
+			Short: "List Device Dynamic Settings Job Errors",
+			Long:  "List Update device dynamic settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors")
+				req.PathParam("jobId", jobId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("start", start)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&jobId, "job-id", "", "Retrieve job details for this `jobId`.")
+		cmd.MarkFlagRequired("job-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve the status of job for this organization.")
+		cmd.Flags().StringVar(&start, "start", "", "Specifies the offset from the first result that you want to fetch. Default is 0.")
+		cmd.Flags().StringVar(&max, "max", "", "Specifies the maximum number of records that you want to fetch. Default is 2000")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+}

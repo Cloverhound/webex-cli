@@ -1,0 +1,82 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var attachmentActionsCmd = &cobra.Command{
+	Use:   "attachment-actions",
+	Short: "AttachmentActions commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(attachmentActionsCmd)
+
+	{ // create
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create an Attachment Action",
+			Long:  `Create a new attachment action.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/attachment/actions")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		attachmentActionsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Attachment Action Details",
+			Long:  "Shows details for a attachment action, by ID.\n\nSpecify the attachment action ID in the `id` URI parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/attachment/actions/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "A unique identifier for the attachment action.")
+		cmd.MarkFlagRequired("id")
+		attachmentActionsCmd.AddCommand(cmd)
+	}
+
+}

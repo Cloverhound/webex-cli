@@ -1,0 +1,181 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var teamsCmd = &cobra.Command{
+	Use:   "teams",
+	Short: "Teams commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(teamsCmd)
+
+	{ // list
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Teams",
+			Long:  `Lists teams to which the authenticated user belongs.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/teams")
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of teams in the response.")
+		teamsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var name string
+		var description string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Team",
+			Long: `Creates a team.
+
+The authenticated user is automatically added as a member of the team. See the [Team Memberships API](/docs/api/v1/team-memberships) to learn how to add more people to the team.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/teams")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("description", description)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		teamsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var teamId string
+		var description string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Team Details",
+			Long:  "Shows details for a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/teams/{teamId}")
+				req.PathParam("teamId", teamId)
+				req.QueryParam("description", description)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&teamId, "team-id", "", "The unique identifier for the team.")
+		cmd.MarkFlagRequired("team-id")
+		cmd.Flags().StringVar(&description, "description", "", "The teams description.")
+		teamsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var teamId string
+		var name string
+		var description string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Team",
+			Long:  "Updates details for a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/teams/{teamId}")
+				req.PathParam("teamId", teamId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("description", description)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&teamId, "team-id", "", "The unique identifier for the team.")
+		cmd.MarkFlagRequired("team-id")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&description, "description", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		teamsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var teamId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Team",
+			Long:  "Deletes a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/teams/{teamId}")
+				req.PathParam("teamId", teamId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&teamId, "team-id", "", "The unique identifier for the team.")
+		cmd.MarkFlagRequired("team-id")
+		teamsCmd.AddCommand(cmd)
+	}
+
+}

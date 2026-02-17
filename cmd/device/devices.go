@@ -1,0 +1,303 @@
+package device
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var devicesCmd = &cobra.Command{
+	Use:   "devices",
+	Short: "Devices commands",
+}
+
+func init() {
+	cmd.DeviceCmd.AddCommand(devicesCmd)
+
+	{ // list
+		var max string
+		var start string
+		var displayName string
+		var personId string
+		var workspaceId string
+		var orgId string
+		var connectionStatus string
+		var product string
+		var typeVal string
+		var serial string
+		var tag string
+		var software string
+		var upgradeChannel string
+		var errorCode string
+		var capability string
+		var permission string
+		var locationId string
+		var workspaceLocationId string
+		var mac string
+		var devicePlatform string
+		var plannedMaintenance string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Devices",
+			Long:  "Lists all active Webex devices associated with the authenticated user, such as devices activated in personal mode. This requires the `spark:devices_read` scope. Administrators can list all devices within their organization. This requires an administrator auth token with the `spark-admin:devices_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/devices")
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("displayName", displayName)
+				req.QueryParam("personId", personId)
+				req.QueryParam("workspaceId", workspaceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("connectionStatus", connectionStatus)
+				req.QueryParam("product", product)
+				req.QueryParam("type", typeVal)
+				req.QueryParam("serial", serial)
+				req.QueryParam("tag", tag)
+				req.QueryParam("software", software)
+				req.QueryParam("upgradeChannel", upgradeChannel)
+				req.QueryParam("errorCode", errorCode)
+				req.QueryParam("capability", capability)
+				req.QueryParam("permission", permission)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("workspaceLocationId", workspaceLocationId)
+				req.QueryParam("mac", mac)
+				req.QueryParam("devicePlatform", devicePlatform)
+				req.QueryParam("plannedMaintenance", plannedMaintenance)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of devices in the response.")
+		cmd.Flags().StringVar(&start, "start", "", " Offset. Default is 0. ")
+		cmd.Flags().StringVar(&displayName, "display-name", "", " List devices with this display name. ")
+		cmd.Flags().StringVar(&personId, "person-id", "", " List devices by person ID. ")
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", " List devices by workspace ID. ")
+		cmd.Flags().StringVar(&orgId, "org-id", "", " List devices in this organization. Only admin users of another organization (such as partners) may use this parameter. ")
+		cmd.Flags().StringVar(&connectionStatus, "connection-status", "", " List devices with this connection status. ")
+		cmd.Flags().StringVar(&product, "product", "", " List devices with this product name. ")
+		cmd.Flags().StringVar(&typeVal, "type", "", " List devices with this type. ")
+		cmd.Flags().StringVar(&serial, "serial", "", " List devices with this serial number. ")
+		cmd.Flags().StringVar(&tag, "tag", "", " List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma separating the `tag` values or adding several `tag` parameters. ")
+		cmd.Flags().StringVar(&software, "software", "", " List devices with this software version. ")
+		cmd.Flags().StringVar(&upgradeChannel, "upgrade-channel", "", " List devices with this upgrade channel. ")
+		cmd.Flags().StringVar(&errorCode, "error-code", "", " List devices with this error code. ")
+		cmd.Flags().StringVar(&capability, "capability", "", " List devices with this capability. ")
+		cmd.Flags().StringVar(&permission, "permission", "", " List devices with this permission. ")
+		cmd.Flags().StringVar(&locationId, "location-id", "", " List devices by location ID. ")
+		cmd.Flags().StringVar(&workspaceLocationId, "workspace-location-id", "", " List devices by workspace location ID. Deprecated, prefer `locationId`. ")
+		cmd.Flags().StringVar(&mac, "mac", "", " List devices with this MAC address. ")
+		cmd.Flags().StringVar(&devicePlatform, "device-platform", "", " List devices with this device platform. ")
+		cmd.Flags().StringVar(&plannedMaintenance, "planned-maintenance", "", " List devices with this planned maintenance. ")
+		devicesCmd.AddCommand(cmd)
+	}
+
+	{ // create-mac-address
+		var orgId string
+		var mac string
+		var model string
+		var workspaceId string
+		var personId string
+		var password string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-mac-address",
+			Short: "Create a Device by MAC Address",
+			Long:  "Create a phone by its MAC address in a specific workspace or for a person.\n\nSpecify the `mac`, `model` and either `workspaceId` or `personId`.\n\n* You can get the `model` from the [supported devices](/docs/api/v1/device-call-settings/read-the-list-of-supported-devices) API.\n\n* Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.\n\n* The `password` field is only required for third party devices. You can obtain the required third party phone configuration from [here](/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third-party-device).\n\n<div><Callout type=\"warning\">Adding a device to a person with a Webex Calling Standard license will disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/devices")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("mac", mac)
+					req.BodyString("model", model)
+					req.BodyString("workspaceId", workspaceId)
+					req.BodyString("personId", personId)
+					req.BodyString("password", password)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization associated with the device. If left empty, the organization associated with the caller will be used.")
+		cmd.Flags().StringVar(&mac, "mac", "", "")
+		cmd.Flags().StringVar(&model, "model", "", "")
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "")
+		cmd.Flags().StringVar(&personId, "person-id", "", "")
+		cmd.Flags().StringVar(&password, "password", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		devicesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Device Details",
+			Long:  "Shows details for a device, by ID. This requires an auth token with the `spark:devices_read` scope to see your own device, or `spark-admin:devices_read` to see any other device in your organization.\n\nSpecify the device ID in the `deviceId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/devices/{deviceId}")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", " A unique identifier for the device. ")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization associated with the device. If left empty, the organization associated with the caller will be used.")
+		devicesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var deviceId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Device",
+			Long:  "Deletes a device, by ID. Deleting your own device requires an auth token with the `spark:devices_write` scope. Deleting any other device in the organization will require an administrator auth token with the `spark-admin:devices_write` scope.\n\nSpecify the device ID in the `deviceId` parameter in the URI.\n\n<div><Callout type=\"warning\">Deleting a device from a person with a Webex Calling Standard license will enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/devices/{deviceId}")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "A unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization associated with the device. If left empty, the organization associated with the caller will be used.")
+		devicesCmd.AddCommand(cmd)
+	}
+
+	{ // update-tags
+		var deviceId string
+		var orgId string
+		var op string
+		var path string
+		var value []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-tags",
+			Short: "Modify Device Tags",
+			Long:  "Create, delete or update tags on a device. For your own device, this requires an auth token with the `spark:devices_write` scope. An auth token with the `spark-admin:devices_write` scope is required to operate on other devices within the organization.\n\nSpecify the device ID in the `deviceId` parameter in the URI.\n\nInclude only the tag array in the request body, no other device attributes can be changed. This action will overwrite any previous tags. A common approach is to first [GET the devices's details](/docs/api/v1/devices/get-device-details), make changes to the `tags` array, and then PATCH the new complete array with this endpoint.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/devices/{deviceId}")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("op", op)
+					req.BodyString("path", path)
+					req.BodyStringSlice("value", value)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization associated with the device. If left empty, the organization associated with the caller will be used.")
+		cmd.Flags().StringVar(&op, "op", "", "")
+		cmd.Flags().StringVar(&path, "path", "", "")
+		cmd.Flags().StringSliceVar(&value, "value", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		devicesCmd.AddCommand(cmd)
+	}
+
+	{ // create-activation-code
+		var orgId string
+		var workspaceId string
+		var personId string
+		var model string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-activation-code",
+			Short: "Create a Device Activation Code",
+			Long:  "Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by `personId`. This requires an auth token with the `spark-admin:devices_write` scope, and either `identity:placeonetimepassword_create` (allows creating activation codes for workspaces only) or `identity:one_time_password` (allows creating activation codes for workspaces or persons).\n\n* Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace calling type to `freeCalling`.\n\n* Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.\n\n* If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.\n\n* If your device is a phone, you must provide the `model` as a field. You can get the `model` from the [supported devices](/docs/api/v1/device-call-settings/read-the-list-of-supported-devices) API.\n\n<div><Callout type=\"warning\">Adding a device to a person with a Webex Calling Standard license will disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/devices/activationCode")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("workspaceId", workspaceId)
+					req.BodyString("personId", personId)
+					req.BodyString("model", model)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization associated with the activation code generated. If left empty, the organization associated with the caller will be used.")
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "")
+		cmd.Flags().StringVar(&personId, "person-id", "", "")
+		cmd.Flags().StringVar(&model, "model", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		devicesCmd.AddCommand(cmd)
+	}
+
+}

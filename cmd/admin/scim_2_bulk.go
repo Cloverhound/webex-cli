@@ -1,0 +1,62 @@
+package admin
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var scim2BulkCmd = &cobra.Command{
+	Use:   "scim-2-bulk",
+	Short: "Scim2Bulk commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(scim2BulkCmd)
+
+	{ // user-api
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "user-api",
+			Short: "User bulk API",
+			Long:  "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\n**Usage**:\n\n1. The input JSON must conform to the following schema: 'urn:ietf:params:scim:api:messages:2.0:BulkRequest'.\n\n1. The request must be accompanied with a body in JSON format according to the standard SCIM schema definition.\n   The maximum number of operations in a request is 100; an error is thrown if the limit is exceeded.\n\n1. `failOnErrors` parameter\n\n   An integer specifies the number of errors that the service provider will accept before the operation is terminated and an error response is returned.\n   It is OPTIONAL in a request.\n   Maximum number of operations allowed to fail before the server stops processing the request. The value must be between 1 and 100.\n\n1. `operations` parameter\n\n   Contains a list of bulk operations for POST/PATCH/DELETE operations. (REQUIRED)\n    + `operations.method`\n\n      The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.\n    + `operations.path`\n\n      The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;\n      e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;\n      e.g., /Users/2819c223-7f76-453a-919d-413861904646.\n    + `operations.data`\n\n      The Resource data as it would appear for a single POST or PATCH Resource operation.\n      It is REQUIRED in a request when method is POST and PATCH.\n      Refer to corresponding wiki for SCIM 2.0 POST, PATCH and DELETE API.\n    + `operations.bulkId`\n\n      The transient identifier of a newly created resource, unique within a bulk request and created by the client.\n      The bulkId serves as a surrogate resource id enabling clients to uniquely identify newly created resources in the response and cross-reference new resources in and across operations within a bulk request.\n      It is REQUIRED when \"method\" is \"POST\".",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/identity/scim/{orgId}/v2/Bulk")
+				req.PathParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Webex Identity assigned organization identifier for user's organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		scim2BulkCmd.AddCommand(cmd)
+	}
+
+}

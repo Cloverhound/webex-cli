@@ -1,0 +1,182 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var teamMembershipsCmd = &cobra.Command{
+	Use:   "team-memberships",
+	Short: "TeamMemberships commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(teamMembershipsCmd)
+
+	{ // list
+		var teamId string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Team Memberships",
+			Long:  "Lists all team memberships for a given team, specified by the `teamId` query parameter.\n\nUse query parameters to filter the response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/team/memberships")
+				req.QueryParam("teamId", teamId)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&teamId, "team-id", "", "List memberships for a team, by ID.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of team memberships in the response.")
+		teamMembershipsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var teamId string
+		var personId string
+		var personEmail string
+		var isModerator bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Team Membership",
+			Long:  `Add someone to a team by Person ID or email address, optionally making them a moderator.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/team/memberships")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("teamId", teamId)
+					req.BodyString("personId", personId)
+					req.BodyString("personEmail", personEmail)
+					req.BodyBool("isModerator", isModerator, cmd.Flags().Changed("is-moderator"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&teamId, "team-id", "", "")
+		cmd.Flags().StringVar(&personId, "person-id", "", "")
+		cmd.Flags().StringVar(&personEmail, "person-email", "", "")
+		cmd.Flags().BoolVar(&isModerator, "is-moderator", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		teamMembershipsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var membershipId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Team Membership Details",
+			Long:  "Shows details for a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/team/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the team membership.")
+		cmd.MarkFlagRequired("membership-id")
+		teamMembershipsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var membershipId string
+		var isModerator bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Team Membership",
+			Long:  "Updates a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/team/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("isModerator", isModerator, cmd.Flags().Changed("is-moderator"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the team membership.")
+		cmd.MarkFlagRequired("membership-id")
+		cmd.Flags().BoolVar(&isModerator, "is-moderator", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		teamMembershipsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var membershipId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Team Membership",
+			Long:  "Deletes a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.\n\nThe team membership for the last moderator of a team may not be deleted; [promote another user](/docs/api/v1/team-memberships/update-a-team-membership) to team moderator first.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/team/memberships/{membershipId}")
+				req.PathParam("membershipId", membershipId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&membershipId, "membership-id", "", "The unique identifier for the team membership.")
+		cmd.MarkFlagRequired("membership-id")
+		teamMembershipsCmd.AddCommand(cmd)
+	}
+
+}

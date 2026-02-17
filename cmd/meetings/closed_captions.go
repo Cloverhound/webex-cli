@@ -1,0 +1,121 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var closedCaptionsCmd = &cobra.Command{
+	Use:   "closed-captions",
+	Short: "ClosedCaptions commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(closedCaptionsCmd)
+
+	{ // list-meeting
+		var meetingId string
+		cmd := &cobra.Command{
+			Use:   "list-meeting",
+			Short: "List Meeting Closed Captions",
+			Long:  "Lists closed captions of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) specified by `meetingId`.\n\n* Closed captions are ready 15 minutes after the meeting is finished.\n\n* Only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.\n\n* Currently, a meeting may have only one closed caption associated with its `meetingId`. The response is a closed captions array, which may contain multiple values to allow for future expansion, but currently only one closed caption is included in the response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingClosedCaptions")
+				req.QueryParam("meetingId", meetingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed captions belong to. This parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings or scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meetings.")
+		closedCaptionsCmd.AddCommand(cmd)
+	}
+
+	{ // list-meeting-snippets
+		var closedCaptionId string
+		var meetingId string
+		cmd := &cobra.Command{
+			Use:   "list-meeting-snippets",
+			Short: "List Meeting Closed Caption Snippets",
+			Long:  "Lists snippets of a meeting closed caption specified by `closedCaptionId`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingClosedCaptions/{closedCaptionId}/snippets")
+				req.PathParam("closedCaptionId", closedCaptionId)
+				req.QueryParam("meetingId", meetingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&closedCaptionId, "closed-caption-id", "", "Unique identifier for the meeting closed caption which the snippets belong to.")
+		cmd.MarkFlagRequired("closed-caption-id")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed caption snippets belong to. This parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings or scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meetings.")
+		closedCaptionsCmd.AddCommand(cmd)
+	}
+
+	{ // download-meeting-snippets
+		var closedCaptionId string
+		var format string
+		var meetingId string
+		var timezone string
+		cmd := &cobra.Command{
+			Use:   "download-meeting-snippets",
+			Short: "Download Meeting Closed Caption Snippets",
+			Long:  "Download meeting closed caption snippets from the meeting closed caption specified by `closedCaptionId` formatted either as a Video Text Track (.vtt) file or plain text (.txt) file.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.*",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingClosedCaptions/{closedCaptionId}/download")
+				req.PathParam("closedCaptionId", closedCaptionId)
+				req.QueryParam("format", format)
+				req.QueryParam("meetingId", meetingId)
+				req.Header("timezone", timezone)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&closedCaptionId, "closed-caption-id", "", "Unique identifier for the meeting closed caption.")
+		cmd.MarkFlagRequired("closed-caption-id")
+		cmd.Flags().StringVar(&format, "format", "", "Format for the downloaded meeting closed caption snippets.")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed caption snippets belong to. This parameter only applies to meeting instances in the `ended` state. It does not apply to meeting series, scheduled meetings or scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meetings.")
+		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		closedCaptionsCmd.AddCommand(cmd)
+	}
+
+}

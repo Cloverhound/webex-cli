@@ -1,0 +1,203 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var hdsCmd = &cobra.Command{
+	Use:   "hds",
+	Short: "Hds commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(hdsCmd)
+
+	{ // get-test-results-node
+		var nodeId string
+		var triggerType string
+		cmd := &cobra.Command{
+			Use:   "get-test-results-node",
+			Short: "Get test results for HDS node",
+			Long: `Get the latest results of the network tests triggered for a single HDS node. The test results are generated as part of the Network Test execution on the node. The network tests include the Bandwidth Test, DNS Resolution Test, and HTTPS Connectivity Test.
+To obtain the Node ID needed for this API, use the [Get cluster details API](</docs/api/v1/hds/get-cluster-details>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/testResults/nodes/{nodeId}/networkTest")
+				req.PathParam("nodeId", nodeId)
+				req.QueryParam("triggerType", triggerType)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&nodeId, "node-id", "", "Unique ID of the HDS node.")
+		cmd.MarkFlagRequired("node-id")
+		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-cluster
+		var clusterId string
+		cmd := &cobra.Command{
+			Use:   "get-cluster",
+			Short: "Get cluster details",
+			Long: `Retrieve details for a specific HDS cluster, such as the cluster name, cluster status, upgrade schedule, and HDS nodes in the cluster.
+To obtain the Cluster ID needed for this API, use the [Get organization details API](</docs/api/v1/hds/get-organization-details>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}")
+				req.PathParam("clusterId", clusterId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "Unique ID of the HDS cluster.")
+		cmd.MarkFlagRequired("cluster-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-org
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "get-org",
+			Short: "Get organization details",
+			Long: `Retrieve details for an HDS organization, such as the organization name, type of organization, and clusters in the organization.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-node
+		var nodeId string
+		cmd := &cobra.Command{
+			Use:   "get-node",
+			Short: "Get node details",
+			Long: `Retrieve details for a specific HDS node, such as host name, release version, proxy details, deployment and build type, availability details, etc.
+To obtain the Node ID needed for this API, use the [Get cluster details API](</docs/api/v1/hds/get-cluster-details>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/nodes/{nodeId}")
+				req.PathParam("nodeId", nodeId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&nodeId, "node-id", "", "Unique ID of the HDS node")
+		cmd.MarkFlagRequired("node-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-database-org
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "get-database-org",
+			Short: "Get database details for the HDS organization",
+			Long: `Retrieve details of database information for an HDS organization, such as database type and version used.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/database/details")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-multi-tenant-org
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "get-multi-tenant-org",
+			Short: "Get Multi-Tenant HDS organization details",
+			Long: `Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/multiTenant")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+}

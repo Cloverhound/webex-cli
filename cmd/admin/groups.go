@@ -1,0 +1,228 @@
+package admin
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var groupsCmd = &cobra.Command{
+	Use:   "groups",
+	Short: "Groups commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(groupsCmd)
+
+	{ // create
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Group",
+			Long:  `Create a new group for a given organization. The group may optionally be created with group members.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/groups")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		groupsCmd.AddCommand(cmd)
+	}
+
+	{ // list-search
+		var orgId string
+		var filter string
+		var attributes string
+		var sortBy string
+		var sortOrder string
+		var includeMembers string
+		var startIndex string
+		var count string
+		cmd := &cobra.Command{
+			Use:   "list-search",
+			Short: "List and Search Groups",
+			Long:  "List groups in your organization.\n\n* Set the `includeMembers` parameter to `true` to return group members. The total number of members returned is limited to 500.\n\n* Use the `startIndex` and `count` parameters to page through result set.\n\n* To search for a specific group use the `filter` parameter.\n\n* Use `sortBy` parameter to sort the responses by `id` or `displayName`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/groups")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("filter", filter)
+				req.QueryParam("attributes", attributes)
+				req.QueryParam("sortBy", sortBy)
+				req.QueryParam("sortOrder", sortOrder)
+				req.QueryParam("includeMembers", includeMembers)
+				req.QueryParam("startIndex", startIndex)
+				req.QueryParam("count", count)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List groups in this organization. Only admin users of another organization (such as partners) may use this parameter.")
+		cmd.Flags().StringVar(&filter, "filter", "", "Searches the group by `displayName` with an operator and a value.  The available operators are `eq` (equal) and `sw` (starts with).  Only `displayName` can be used to filter results.")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "The attributes to return.")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort the results based by group `displayName`.")
+		cmd.Flags().StringVar(&sortOrder, "sort-order", "", "Sort results alphabetically by group display name, in ascending or descending order.")
+		cmd.Flags().StringVar(&includeMembers, "include-members", "", "Optionally return group members in the response. The maximum number of members returned is 500.")
+		cmd.Flags().StringVar(&startIndex, "start-index", "", "The index to start for group pagination.")
+		cmd.Flags().StringVar(&count, "count", "", "Specifies the desired number of search results per page.")
+		groupsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var groupId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Group",
+			Long:  "Update the group details, by ID.\n\nSpecify the group ID in the `groupId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/groups/{groupId}")
+				req.PathParam("groupId", groupId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&groupId, "group-id", "", "A unique identifier for the group.")
+		cmd.MarkFlagRequired("group-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		groupsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var groupId string
+		var includeMembers string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Group Details",
+			Long: `Get details for a group, by ID.
+
+Optionally, the members may be retrieved with this request. The maximum number of members returned is 500.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/groups/{groupId}")
+				req.PathParam("groupId", groupId)
+				req.QueryParam("includeMembers", includeMembers)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&groupId, "group-id", "", "A unique identifier for the group.")
+		cmd.MarkFlagRequired("group-id")
+		cmd.Flags().StringVar(&includeMembers, "include-members", "", "Include the members as part of the response.")
+		groupsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var groupId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Group",
+			Long:  "Remove a group from the system.\n\nSpecify the group ID in the `groupId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/groups/{groupId}")
+				req.PathParam("groupId", groupId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&groupId, "group-id", "", "A unique identifier for the group.")
+		cmd.MarkFlagRequired("group-id")
+		groupsCmd.AddCommand(cmd)
+	}
+
+	{ // get-members
+		var groupId string
+		var startIndex string
+		var count string
+		cmd := &cobra.Command{
+			Use:   "get-members",
+			Short: "Get Group Members",
+			Long: `Gets the members of a group.
+
+* The default maximum members returned is 500.
+
+* Control parameters is available to page through the members and to control the size of the results.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/groups/{groupId}/members")
+				req.PathParam("groupId", groupId)
+				req.QueryParam("startIndex", startIndex)
+				req.QueryParam("count", count)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&groupId, "group-id", "", "A unique identifier for the group.")
+		cmd.MarkFlagRequired("group-id")
+		cmd.Flags().StringVar(&startIndex, "start-index", "", "The index to start for group pagination.")
+		cmd.Flags().StringVar(&count, "count", "", "Non-negative integer that specifies the desired number of search results per page. Maximum value for the count is 500.")
+		groupsCmd.AddCommand(cmd)
+	}
+
+}

@@ -1,0 +1,157 @@
+package admin
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var reportsCmd = &cobra.Command{
+	Use:   "reports",
+	Short: "Reports commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(reportsCmd)
+
+	{ // list
+		var reportId string
+		var service string
+		var templateId string
+		var from string
+		var to string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Reports",
+			Long:  "Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from` and `to` parameters should be provided together.\n\n**Notes**:\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.\n\nReports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream` does indicate the zip format. There is usually no .zip file extension.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/reports")
+				req.QueryParam("reportId", reportId)
+				req.QueryParam("service", service)
+				req.QueryParam("templateId", templateId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&reportId, "report-id", "", "List reports by ID.")
+		cmd.Flags().StringVar(&service, "service", "", "List reports which use this service.")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "List reports with this report template ID.")
+		cmd.Flags().StringVar(&from, "from", "", "List reports that were created on or after this date.")
+		cmd.Flags().StringVar(&to, "to", "", "List reports that were created before this date.")
+		reportsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var templateId int64
+		var startDate string
+		var endDate string
+		var siteList string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Report",
+			Long:  "Create a new report. For each `templateId`, there are a set of validation rules that need to be followed. For example, for templates belonging to Webex, the user needs to provide `siteUrl`. These validation rules can be retrieved via the [Report Templates API](/docs/api/v1/report-templates).\n\nThe 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is passed as a string when you try to test the API from here.\n\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/reports")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("templateId", templateId, cmd.Flags().Changed("template-id"))
+					req.BodyString("startDate", startDate)
+					req.BodyString("endDate", endDate)
+					req.BodyString("siteList", siteList)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().Int64Var(&templateId, "template-id", 0, "")
+		cmd.Flags().StringVar(&startDate, "start-date", "", "")
+		cmd.Flags().StringVar(&endDate, "end-date", "", "")
+		cmd.Flags().StringVar(&siteList, "site-list", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		reportsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var reportId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Report Details",
+			Long:  "Shows details for a report, by report ID.\n\nSpecify the report ID in the `reportId` parameter in the URI.\n\n**Notes**:\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.\n\nReports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream` does indicate the zip     format. There is usually no .zip file extension.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/reports/{reportId}")
+				req.PathParam("reportId", reportId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&reportId, "report-id", "", "The unique identifier for the report.")
+		cmd.MarkFlagRequired("report-id")
+		reportsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var reportId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Report",
+			Long:  "Remove a report from the system.\n\nSpecify the report ID in the `reportId` parameter in the URI\n\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/reports/{reportId}")
+				req.PathParam("reportId", reportId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&reportId, "report-id", "", "The unique identifier for the report.")
+		cmd.MarkFlagRequired("report-id")
+		reportsCmd.AddCommand(cmd)
+	}
+
+}

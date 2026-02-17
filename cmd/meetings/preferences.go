@@ -1,0 +1,504 @@
+package meetings
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+var _ = strings.Join
+
+var preferencesCmd = &cobra.Command{
+	Use:   "preferences",
+	Short: "Preferences commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(preferencesCmd)
+
+	{ // get-meeting
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-meeting",
+			Short: "Get Meeting Preference Details",
+			Long:  `Retrieves meeting preferences for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the required [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will return details of the meeting preferences for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // get-personal-meeting-room-options
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-personal-meeting-room-options",
+			Short: "Get Personal Meeting Room Options",
+			Long:  `Retrieves the Personal Meeting Room options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/personalMeetingRoom")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will return details of the Personal Meeting Room options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // update-personal-meeting-room-options
+		var userEmail string
+		var siteUrl string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-personal-meeting-room-options",
+			Short: "Update Personal Meeting Room Options",
+			Long:  `Updates Personal Meeting Room options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingPreferences/personalMeetingRoom")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update Personal Meeting Room options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // get-audio-options
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-audio-options",
+			Short: "Get Audio Options",
+			Long:  `Retrieves audio options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/audio")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will return details of the audio options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // update-audio-options
+		var userEmail string
+		var siteUrl string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-audio-options",
+			Short: "Update Audio Options",
+			Long:  `Updates audio options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingPreferences/audio")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update audio options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // get-video-options
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-video-options",
+			Short: "Get Video Options",
+			Long:  `Retrieves video options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/video")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will return details of the video options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved using [Get Site List](/docs/api/v1/meeting-preferences/get-site-list).")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // update-video-options
+		var userEmail string
+		var siteUrl string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-video-options",
+			Short: "Update Video Options",
+			Long:  `Updates video options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingPreferences/video")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update video options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // get-scheduling-options
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-scheduling-options",
+			Short: "Get Scheduling Options",
+			Long:  `Retrieves scheduling options for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/schedulingOptions")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will return details of the scheduling options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // update-scheduling-options
+		var userEmail string
+		var siteUrl string
+		var enabledJoinBeforeHost bool
+		var joinBeforeHostMinutes int64
+		var enabledAutoShareRecording bool
+		var enabledWebexAssistantByDefault bool
+		var delegateEmails []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-scheduling-options",
+			Short: "Update Scheduling Options",
+			Long:  "Updates scheduling options for the authenticated user.\n\n* If `delegateEmails` is null or not specified, the user's delegate emails are not changed. If `delegateEmails` is specified and not empty, the user's delegate emails are updated with the specified emails. If `delegateEmails` is specified as an empty array, the user's existing delegate emails are removed.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingPreferences/schedulingOptions")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabledJoinBeforeHost", enabledJoinBeforeHost, cmd.Flags().Changed("enabled-join-before-host"))
+					req.BodyInt("joinBeforeHostMinutes", joinBeforeHostMinutes, cmd.Flags().Changed("join-before-host-minutes"))
+					req.BodyBool("enabledAutoShareRecording", enabledAutoShareRecording, cmd.Flags().Changed("enabled-auto-share-recording"))
+					req.BodyBool("enabledWebexAssistantByDefault", enabledWebexAssistantByDefault, cmd.Flags().Changed("enabled-webex-assistant-by-default"))
+					req.BodyStringSlice("delegateEmails", delegateEmails)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update scheduling options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().BoolVar(&enabledJoinBeforeHost, "enabled-join-before-host", false, "")
+		cmd.Flags().Int64Var(&joinBeforeHostMinutes, "join-before-host-minutes", 0, "")
+		cmd.Flags().BoolVar(&enabledAutoShareRecording, "enabled-auto-share-recording", false, "")
+		cmd.Flags().BoolVar(&enabledWebexAssistantByDefault, "enabled-webex-assistant-by-default", false, "")
+		cmd.Flags().StringSliceVar(&delegateEmails, "delegate-emails", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // insert-delegate-emails
+		var userEmail string
+		var siteUrl string
+		var emails []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "insert-delegate-emails",
+			Short: "Insert Delegate Emails",
+			Long:  `Insert delegate emails for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingPreferences/schedulingOptions/delegateEmails/insert")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("emails", emails)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update scheduling options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().StringSliceVar(&emails, "emails", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // delete-delegate-emails
+		var userEmail string
+		var siteUrl string
+		var emails []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "delete-delegate-emails",
+			Short: "Delete Delegate Emails",
+			Long:  `Delete delegate emails for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingPreferences/schedulingOptions/delegateEmails/delete")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("emails", emails)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update scheduling options for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list).")
+		cmd.Flags().StringSliceVar(&emails, "emails", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // get-site-list
+		var userEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "get-site-list",
+			Short: "Get Site List",
+			Long:  "Retrieves the list of Webex sites that the authenticated user is set up to use.\nWhen the admin tries to get the site list via `userEmail`, if `siteUrl` is not specified, the API searches the user ID from the admin's default site. If `siteUrl` is specified, the API searches the user ID from the specified site.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/sites")
+				req.QueryParam("userEmail", userEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user and the API will return the list of Webex sites for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site to query. If `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call.")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // update-default-site
+		var defaultSite string
+		var userEmail string
+		var siteUrl string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-default-site",
+			Short: "Update Default Site",
+			Long:  `Updates the default site for the authenticated user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingPreferences/sites")
+				req.QueryParam("defaultSite", defaultSite)
+				req.QueryParam("userEmail", userEmail)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("siteUrl", siteUrl)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&defaultSite, "default-site", "", "Whether or not to change user's default site. ***Note***: `defaultSite` should be set to true for the user's single default site")
+		cmd.Flags().StringVar(&userEmail, "user-email", "", "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update default site for that user.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+	{ // batch-refresh-personal-meeting-room-id
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "batch-refresh-personal-meeting-room-id",
+			Short: "Batch Refresh Personal Meeting Room ID",
+			Long:  "Refreshes personal room IDs automatically according to the current personal room ID rule of the target site or by the values specified by the admin user.\n\nThe new personal room IDs are generated by the site's settings automatically if `systemGenerated` is true; otherwise, replace the existing personal room IDs with the specified values if `systemGenerated` is false or not specified.\n\nIt may take up to 30 minutes to see the updated personal room ID on the Webex meeting page after refreshing the personal room ID due to cache.\n\nEither all items in `personalMeetingRoomIds` have `personalMeetingRoomId`, or they all have `systemGenerated` which equals true. `personalMeetingRoomId` and `systemGenerated: true` cannot be specified at the same time.\n\nThe items in `personalMeetingRoomIds` either all have `personId` or all have `email` in a single request. Partial `personId` and partial `email` is not allowed in the same request.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/admin/meetingPreferences/personalMeetingRoom/refreshId")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		preferencesCmd.AddCommand(cmd)
+	}
+
+}

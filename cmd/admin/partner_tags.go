@@ -1,0 +1,244 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var partnerTagsCmd = &cobra.Command{
+	Use:   "partner-tags",
+	Short: "PartnerTags commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(partnerTagsCmd)
+
+	{ // get-all-customer
+		var typeVal string
+		cmd := &cobra.Command{
+			Use:   "get-all-customer",
+			Short: "Retrieve all customer tags",
+			Long:  "Retrieves all tags which are being used by any customer organizations. Once a tag is unassigned from the last customer, it is automatically removed and is not returned by this API.\nThis API can be used by a partner full admin, a read-only partner, or an partner admin. \nThe `type` can have the value ORGANIZATION or SUBSCRIPTION. If not provided, the value is ORGANIZATION",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags")
+				req.QueryParam("type", typeVal)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&typeVal, "type", "", "List tags associated with an organization.")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // create-replace-customer-provided-ones
+		var orgId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-replace-customer-provided-ones",
+			Short: "Create or Replace existing customer tags with the provided ones",
+			Long:  "Assign or replace tag(s) which for a customer organization. If the tag doesn't already exist, a new one is created and assigned to the customer automatically.\nThis API can be used by partner full admins and partner admins. \nEach tag has a character limit of 25. Currently, there is a limit of 5 tags per organization when creating tags. To remove all the tags, pass an empty array.\nSpecify the customer organization ID in the `orgId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/partner/tags/organizations/{orgId}/assignTags")
+				req.PathParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the customer organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // get-customer-org
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-customer-org",
+			Short: "Get customer organization's tags",
+			Long:  "Retrieve tags associated with a customer organization based on the `orgId` provided.\nThis API can be used by a partner full admin, a read-only partner, or an partner admin. \nSpecify the customer orgId in the `orgId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/organizations/{orgId}")
+				req.PathParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Fetch all customers and associated tags for the customer.")
+		cmd.MarkFlagRequired("org-id")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-customers-set
+		var tags string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "get-all-customers-set",
+			Short: "Fetch all customers for a given set of tags",
+			Long: `For a set of tags, retrieve all customer organizations that match any one of the tags.
+This API can be used by a partner full admin, a read-only partner, or an partner admin.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/organizations")
+				req.QueryParam("tags", tags)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&tags, "tags", "", "A comma separated list of tags to filter by.")
+		cmd.Flags().StringVar(&max, "max", "", "Value must be between 1 and 100, inclusive.")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // create-replace-subscription-provided-ones
+		var orgId string
+		var subscriptionId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-replace-subscription-provided-ones",
+			Short: "Create or Replace existing subscription tags with the provided ones",
+			Long:  "Assign or replace tags specific to each subscription for an organization. Each organization may have one or more subscriptions.\nThis API can be used by partner full admins and partner admins. \nCurrently there is a limit of 5 tags per subscription when creating tags. To remove all the tags, pass an empty array.\nSpecify the customer organization ID in the `orgId` parameter in the URI and subscription ID in `subscriptionId` parameter",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/partner/tags/organizations/{orgId}/subscriptions/{subscriptionId}/assignTags")
+				req.PathParam("orgId", orgId)
+				req.PathParam("subscriptionId", subscriptionId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the customer organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&subscriptionId, "subscription-id", "", "The unique identifier for the subscription.")
+		cmd.MarkFlagRequired("subscription-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // subscription-list-name-set
+		var tags string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "subscription-list-name-set",
+			Short: "Subscription List on a given tag name or a set of tags",
+			Long: `For a partner organization fetch all it's subscriptions with their tag list for a given tag names.
+This API can be used by partner full admins, partner admins and admin read-only partners.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/subscriptions")
+				req.QueryParam("tags", tags)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&tags, "tags", "", "A comma separated list of tags to filter by.")
+		cmd.Flags().StringVar(&max, "max", "", "Value must be between 1 and 100, inclusive.")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+	{ // get-subscription
+		var orgId string
+		var subscriptionId string
+		cmd := &cobra.Command{
+			Use:   "get-subscription",
+			Short: "Fetch a Subscription",
+			Long: `For a given partner org, customer org and external subscription id, fetch subscription details with its associated tags.
+This API can be used by partner full admins, partner admins and admin read-only partners.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/organizations/{orgId}/subscriptions/{subscriptionId}")
+				req.PathParam("orgId", orgId)
+				req.PathParam("subscriptionId", subscriptionId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the customer organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&subscriptionId, "subscription-id", "", "The unique identifier for the subscription.")
+		cmd.MarkFlagRequired("subscription-id")
+		partnerTagsCmd.AddCommand(cmd)
+	}
+
+}

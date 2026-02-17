@@ -1,0 +1,100 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var adminAuditCmd = &cobra.Command{
+	Use:   "admin-audit",
+	Short: "AdminAudit commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(adminAuditCmd)
+
+	{ // list-events
+		var orgId string
+		var from string
+		var to string
+		var actorId string
+		var max string
+		var offset string
+		var eventCategories string
+		cmd := &cobra.Command{
+			Use:   "list-events",
+			Short: "List Admin Audit Events",
+			Long: `List admin audit events in your organization. Several query parameters are available to filter the response.
+
+Long result sets will be split into [pages](/docs/basics#pagination).
+
+**NOTE**: A maximum of one year of audit events can be returned per request.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/adminAudit/events")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("actorId", actorId)
+				req.QueryParam("max", max)
+				req.QueryParam("offset", offset)
+				req.QueryParam("eventCategories", eventCategories)
+				req.QueryParam("eventCategories", eventCategories)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List events in this organization, by ID.")
+		cmd.Flags().StringVar(&from, "from", "", "List events which occurred after a specific date and time.")
+		cmd.Flags().StringVar(&to, "to", "", "List events which occurred before a specific date and time.")
+		cmd.Flags().StringVar(&actorId, "actor-id", "", "List events performed by this person, by ID.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. The maximum value is `200`.")
+		cmd.Flags().StringVar(&offset, "offset", "", "Offset from the first result that you want to fetch.")
+		cmd.Flags().StringVar(&eventCategories, "event-categories", "", "List events, by event categories.")
+		adminAuditCmd.AddCommand(cmd)
+	}
+
+	{ // list-event-categories
+		cmd := &cobra.Command{
+			Use:   "list-event-categories",
+			Short: "List Admin Audit Event Categories",
+			Long:  `Get the list of all admin event categories.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/adminAudit/eventCategories")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		adminAuditCmd.AddCommand(cmd)
+	}
+
+}

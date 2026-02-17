@@ -30,8 +30,11 @@ def normalize_folder(name):
     # Strip "(1/2)", "(2/2)" splits
     s = re.sub(r'\s*\(\d+/\d+\)$', '', s)
 
-    # Strip trailing " API"
-    s = re.sub(r'\s+API$', '', s)
+    # Strip trailing " API" or " APIs"
+    s = re.sub(r'\s+APIs?$', '', s)
+
+    # Strip "API - " prefix (e.g. "API - Domain Management")
+    s = re.sub(r'^API\s*-\s*', '', s)
 
     # "Journey - Xxx" → "Journey Xxx"
     s = re.sub(r'^Journey\s*-\s*', 'Journey ', s)
@@ -56,6 +59,18 @@ FOLDER_MERGES = {
     'call-for-me': 'call-for-me',
     'call-queue-with-playlist': 'call-queue',
     'settings-features-for-barge-in': 'call-settings-for-me',
+    # Admin
+    'bulk-manage-scim-2-users-and-groups': 'scim-2-bulk',
+    'identity-organization': 'identity-org',
+    'organization-contacts': 'org-contacts',
+    'admin-audit-events': 'admin-audit',
+    'security-audit-events': 'security-audit',
+    'historical-analytics': 'analytics',
+    'resource-group-memberships': 'resource-memberships',
+    # Meetings
+    'meeting-q-and-a': 'meeting-qa',
+    'meetings-summary-report': 'meeting-summary',
+    'slido-secure-premium': 'slido',
 }
 
 def resolve_folder(normalized):

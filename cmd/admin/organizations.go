@@ -1,0 +1,99 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var organizationsCmd = &cobra.Command{
+	Use:   "organizations",
+	Short: "Organizations commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(organizationsCmd)
+
+	{ // list-orgs
+		cmd := &cobra.Command{
+			Use:   "list-orgs",
+			Short: "List Organizations",
+			Long:  `List all organizations visible by your account. The results will not be [paginated](/docs/basics#pagination).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/organizations")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		organizationsCmd.AddCommand(cmd)
+	}
+
+	{ // get-org
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-org",
+			Short: "Get Organization Details",
+			Long:  "Shows details for an organization, by ID.\n\nSpecify the org ID in the `orgId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/organizations/{orgId}")
+				req.PathParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the organization.")
+		cmd.MarkFlagRequired("org-id")
+		organizationsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-org
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-org",
+			Short: "Delete Organization",
+			Long:  "Deletes an organization, by ID. It may take up to 10 minutes for the organization to be deleted after the response is returned.\n<br/><br/>\nSpecify the org ID in the `orgId` parameter in the URI.\n\n<div><Callout type=\"warning\">Deleting your organization permanently deletes all of the information associated with your organization and is irreversible.</Callout></div>\n\nDeleting an Organization may fail with a HTTP 409 Conflict response and encounter one or more of the errors described below. Resolve these conditions to allow the delete to succeed.\n<br/><br/>\n\n+ Org cannot be deleted as it has Linked sites.\n\n+ Org cannot be deleted as it has active subscriptions or licenses.\n\n+ Org cannot be deleted as [Directory Synchronization](https://developer.webex.com/docs/api/v1/broadworks-enterprises/get-directory-sync-status-for-an-enterprise) is enabled.\n\n+ Org cannot be deleted as it has more than 1 user.\n\n+ Org cannot be deleted as it has more than 1 managed by relationship.\n\n+ Org cannot be deleted as it has managed orgs.\n\n<div>\n<Callout type='info'>When deleting a Webex for BroadWorks Organization with BroadWorks Directory Synchronization enabled, a prerequisite is to disable BroadWorks Directory Synchronization for the given Organization. Refer to the [Organization Deletion](https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#organization-deletion) section of the [Webex for BroadWorks](/docs/api/guides/webex-for-broadworks-developers-guide) guide for more information.</Callout>\n</div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/organizations/{orgId}")
+				req.PathParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the organization.")
+		cmd.MarkFlagRequired("org-id")
+		organizationsCmd.AddCommand(cmd)
+	}
+
+}

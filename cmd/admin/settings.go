@@ -1,0 +1,97 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var settingsCmd = &cobra.Command{
+	Use:   "settings",
+	Short: "Settings commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(settingsCmd)
+
+	{ // get-org
+		var orgId string
+		var settingKey string
+		cmd := &cobra.Command{
+			Use:   "get-org",
+			Short: "Get an Organization Setting",
+			Long:  `This endpoint retrieves the specified setting for the given organization and is accessible with the scope 'identity:organizations_read'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/settings/organizations/{orgId}/settings/{settingKey}")
+				req.PathParam("orgId", orgId)
+				req.PathParam("settingKey", settingKey)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The Webex organization id in Control Hub UUID or API orgId format.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&settingKey, "setting-key", "", "The key of the setting.")
+		cmd.MarkFlagRequired("setting-key")
+		settingsCmd.AddCommand(cmd)
+	}
+
+	{ // create-update-org
+		var orgId string
+		var key string
+		var value bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-update-org",
+			Short: "Create or Update an Organization Setting",
+			Long:  `This endpoint creates or updates the specified setting for the given organization; however, the 'name' of the setting cannot be modified. It is accessible with the scope 'identity:organizations_rw'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/settings/organizations/{orgId}/settings")
+				req.PathParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("key", key)
+					req.BodyBool("value", value, cmd.Flags().Changed("value"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The Webex organization id in Control Hub UUID or API orgId format.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&key, "key", "", "")
+		cmd.Flags().BoolVar(&value, "value", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		settingsCmd.AddCommand(cmd)
+	}
+
+}

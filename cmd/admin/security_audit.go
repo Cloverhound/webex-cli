@@ -1,0 +1,69 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var securityAuditCmd = &cobra.Command{
+	Use:   "security-audit",
+	Short: "SecurityAudit commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(securityAuditCmd)
+
+	{ // list-events
+		var orgId string
+		var startTime string
+		var endTime string
+		var actorId string
+		var max string
+		var eventCategories string
+		cmd := &cobra.Command{
+			Use:   "list-events",
+			Short: "List Security Audit Events",
+			Long:  "List Security Audit Events. This API currently returns user sign-in and sign-out data.\nTo call this API the `audit:events_read` scope must be selected for the Integration or Service App and authorized by a Full Admin.\n\nSeveral query parameters are available to filter the response.\n\nLong result sets will be split into multiple [pages](/docs/basics#pagination)\n\n**NOTE**: A maximum of one year of audit events can be returned per request.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/securityAudit/events")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("startTime", startTime)
+				req.QueryParam("endTime", endTime)
+				req.QueryParam("actorId", actorId)
+				req.QueryParam("max", max)
+				req.QueryParam("eventCategories", eventCategories)
+				req.QueryParam("eventCategories", eventCategories)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List events in this organization, by ID.")
+		cmd.Flags().StringVar(&startTime, "start-time", "", "List events which occurred after a specific date and time.")
+		cmd.Flags().StringVar(&endTime, "end-time", "", "List events which occurred before a specific date and time.")
+		cmd.Flags().StringVar(&actorId, "actor-id", "", "List events performed by this person, by ID.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. The maximum value is `1000`.")
+		cmd.Flags().StringVar(&eventCategories, "event-categories", "", "List events, by event categories.")
+		securityAuditCmd.AddCommand(cmd)
+	}
+
+}

@@ -1,0 +1,90 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var meetingQaCmd = &cobra.Command{
+	Use:   "meeting-qa",
+	Short: "MeetingQa commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(meetingQaCmd)
+
+	{ // list-q
+		var meetingId string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-q",
+			Short: "List Meeting Q and A",
+			Long:  "Lists questions and answers from a meeting, when ready.\n\nNotes:\n\n* Only [meeting instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).\n\n* This API is paginated by the sum of answers in a meeting, These pagination links are returned in the response header.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetings/q_and_a")
+				req.QueryParam("meetingId", meetingId)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the Q&A belongs to.")
+		cmd.Flags().StringVar(&max, "max", "", "Limits the maximum number of answers in the response, up to 100.")
+		meetingQaCmd.AddCommand(cmd)
+	}
+
+	{ // list-answers-question
+		var questionId string
+		var meetingId string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-answers-question",
+			Short: "List Answers of a Question",
+			Long:  "Lists the answers to a specific question asked in a meeting.\n\n* Only [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetings/q_and_a/{questionId}/answers")
+				req.PathParam("questionId", questionId)
+				req.QueryParam("meetingId", meetingId)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&questionId, "question-id", "", "The ID of a question.")
+		cmd.MarkFlagRequired("question-id")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the Q&A belongs to.")
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of Q&A's answers in the response, up to 100.")
+		meetingQaCmd.AddCommand(cmd)
+	}
+
+}

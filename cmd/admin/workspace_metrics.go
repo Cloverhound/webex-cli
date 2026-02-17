@@ -1,0 +1,110 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var workspaceMetricsCmd = &cobra.Command{
+	Use:   "workspace-metrics",
+	Short: "WorkspaceMetrics commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(workspaceMetricsCmd)
+
+	{ // workspace-metrics
+		var workspaceId string
+		var metricName string
+		var aggregation string
+		var from string
+		var to string
+		var unit string
+		var sortBy string
+		cmd := &cobra.Command{
+			Use:   "workspace-metrics",
+			Short: "Workspace Metrics",
+			Long:  "Get metric data for the specified workspace and metric name, optionally aggregated over a specified time period.\n\n* The `workspaceId` and `metricName` parameters indicate which workspace to fetch metrics for and what kind of metrics to get.\n\n* When executing an aggregated query, the result bucket start times will be truncated to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation modes `none` and `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.\n\n* If the aggregation mode query parameter is set to `none`, the returned data in the response will be an array of items with the `deviceId`, `timestamp` and the raw `value`.\n\n* If the aggregation mode is `hourly` or `daily`, the returned data in the response will be an array of items with the `start` and `end` of the aggregation time bucket, and the `mean`, `max` and `min` values of the requested value. Note that zeroes and negative values are ignored. For example, this means that the `peopleCount` mean value should be interpreted as the average number of people in the room _when it is in use_.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceMetrics")
+				req.QueryParam("workspaceId", workspaceId)
+				req.QueryParam("metricName", metricName)
+				req.QueryParam("aggregation", aggregation)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("unit", unit)
+				req.QueryParam("sortBy", sortBy)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace to get metrics for.")
+		cmd.Flags().StringVar(&metricName, "metric-name", "", "The type of data to extract.")
+		cmd.Flags().StringVar(&aggregation, "aggregation", "", "Time unit over which to aggregate measurements.")
+		cmd.Flags().StringVar(&from, "from", "", "List only data points after a specific date and time (ISO 8601 timestamp)")
+		cmd.Flags().StringVar(&to, "to", "", "List data points before a specific date and time (ISO 8601 timestamp)")
+		cmd.Flags().StringVar(&unit, "unit", "", "Output data unit (only a valid parameter if `metricName` is `temperature`).")
+		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort results.")
+		workspaceMetricsCmd.AddCommand(cmd)
+	}
+
+	{ // duration
+		var workspaceId string
+		var aggregation string
+		var measurement string
+		var from string
+		var to string
+		cmd := &cobra.Command{
+			Use:   "duration",
+			Short: "Workspace Duration Metrics",
+			Long:  "Get metrics for how much time a workspace has been in the state given by the `measurement` parameter.\n\nFor example, if the measurement is  `timeBooked` then the duration for which the workspace has been booked is returned. The `workspaceId` parameter indicates which workspace to fetch metrics for. If no `measurement` is given, the default value is `timeUsed`.\n\n* When executing a query, the result bucket start times will default to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation mode `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceDurationMetrics")
+				req.QueryParam("workspaceId", workspaceId)
+				req.QueryParam("aggregation", aggregation)
+				req.QueryParam("measurement", measurement)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "ID of the workspace to get metrics for.")
+		cmd.Flags().StringVar(&aggregation, "aggregation", "", "Unit of time over which to aggregate measurements.")
+		cmd.Flags().StringVar(&measurement, "measurement", "", "The measurement to return duration for.")
+		cmd.Flags().StringVar(&from, "from", "", "Include data points after a specific date and time (ISO 8601 timestamp).")
+		cmd.Flags().StringVar(&to, "to", "", "Include data points before a specific date and time (ISO 8601 timestamp).")
+		workspaceMetricsCmd.AddCommand(cmd)
+	}
+
+}

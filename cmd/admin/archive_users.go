@@ -1,0 +1,58 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var archiveUsersCmd = &cobra.Command{
+	Use:   "archive-users",
+	Short: "ArchiveUsers commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(archiveUsersCmd)
+
+	{ // get
+		var orgId string
+		var useruuid string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Archive User",
+			Long:  "The `useruuid` is the unique identifier of a user in the system. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser/{useruuid}")
+				req.PathParam("orgId", orgId)
+				req.PathParam("useruuid", useruuid)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&useruuid, "useruuid", "", "The unique identifier for the user.")
+		cmd.MarkFlagRequired("useruuid")
+		archiveUsersCmd.AddCommand(cmd)
+	}
+
+}

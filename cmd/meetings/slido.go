@@ -1,0 +1,73 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var slidoCmd = &cobra.Command{
+	Use:   "slido",
+	Short: "Slido commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(slidoCmd)
+
+	{ // list-compliance-events
+		var sessionOrgId string
+		var sessionId string
+		var start string
+		cmd := &cobra.Command{
+			Use:   "list-compliance-events",
+			Short: "List Compliance Events",
+			Long: `Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)
+
+Events capture who performed the action and on what resource.
+
+The events are paginated by the server into pages of max 256 items per page without any order.
+
+The events are available within 15 minutes after they happened.
+
+Every resource has properties:
+* type - event type
+
+* ... event specific ids
+
+* ... event specific properties
+`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/slido/compliance/events")
+				req.QueryParam("sessionOrgId", sessionOrgId)
+				req.QueryParam("sessionId", sessionId)
+				req.QueryParam("start", start)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&sessionOrgId, "session-org-id", "", "Webex organization UUID.")
+		cmd.Flags().StringVar(&sessionId, "session-id", "", "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).")
+		cmd.Flags().StringVar(&start, "start", "", "Pagination token. Returned in the response body as the `next` property.")
+		slidoCmd.AddCommand(cmd)
+	}
+
+}

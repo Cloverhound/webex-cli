@@ -1,0 +1,205 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var webhooksCmd = &cobra.Command{
+	Use:   "webhooks",
+	Short: "Webhooks commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(webhooksCmd)
+
+	{ // list
+		var max string
+		var ownedBy string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Webhooks",
+			Long:  `List all of your webhooks.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/webhooks")
+				req.QueryParam("max", max)
+				req.QueryParam("ownedBy", ownedBy)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of webhooks in the response.")
+		cmd.Flags().StringVar(&ownedBy, "owned-by", "", "Limit the result list to org wide webhooks. Only allowed value is `org`.")
+		webhooksCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var name string
+		var targetUrl string
+		var resource string
+		var event string
+		var filter string
+		var secret string
+		var ownedBy string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Webhook",
+			Long: `Creates a webhook.
+
+To learn more about how to create and use webhooks, see The [Webhooks Guide](/docs/api/guides/webhooks).`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/webhooks")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("targetUrl", targetUrl)
+					req.BodyString("resource", resource)
+					req.BodyString("event", event)
+					req.BodyString("filter", filter)
+					req.BodyString("secret", secret)
+					req.BodyString("ownedBy", ownedBy)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&targetUrl, "target-url", "", "")
+		cmd.Flags().StringVar(&resource, "resource", "", "")
+		cmd.Flags().StringVar(&event, "event", "", "")
+		cmd.Flags().StringVar(&filter, "filter", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&ownedBy, "owned-by", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		webhooksCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var webhookId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Webhook Details",
+			Long:  "Shows details for a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/webhooks/{webhookId}")
+				req.PathParam("webhookId", webhookId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&webhookId, "webhook-id", "", "The unique identifier for the webhook.")
+		cmd.MarkFlagRequired("webhook-id")
+		webhooksCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var webhookId string
+		var name string
+		var targetUrl string
+		var secret string
+		var ownedBy string
+		var status string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Webhook",
+			Long:  "Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated.\nThe fields that can be updated are `name`, `targetURL`, `secret` and `status`. All other fields, if supplied, are ignored.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/webhooks/{webhookId}")
+				req.PathParam("webhookId", webhookId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("name", name)
+					req.BodyString("targetUrl", targetUrl)
+					req.BodyString("secret", secret)
+					req.BodyString("ownedBy", ownedBy)
+					req.BodyString("status", status)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&webhookId, "webhook-id", "", "The unique identifier for the webhook.")
+		cmd.MarkFlagRequired("webhook-id")
+		cmd.Flags().StringVar(&name, "name", "", "")
+		cmd.Flags().StringVar(&targetUrl, "target-url", "", "")
+		cmd.Flags().StringVar(&secret, "secret", "", "")
+		cmd.Flags().StringVar(&ownedBy, "owned-by", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		webhooksCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var webhookId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Webhook",
+			Long:  "Deletes a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/webhooks/{webhookId}")
+				req.PathParam("webhookId", webhookId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&webhookId, "webhook-id", "", "The unique identifier for the webhook.")
+		cmd.MarkFlagRequired("webhook-id")
+		webhooksCmd.AddCommand(cmd)
+	}
+
+}

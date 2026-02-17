@@ -1,0 +1,124 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var authorizationsCmd = &cobra.Command{
+	Use:   "authorizations",
+	Short: "Authorizations commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(authorizationsCmd)
+
+	{ // list-user
+		var personId string
+		var personEmail string
+		cmd := &cobra.Command{
+			Use:   "list-user",
+			Short: "List authorizations for a user",
+			Long:  "Lists all authorizations for a user. Either `personId` or `personEmail` must be provided. This API does not support pagination.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/authorizations")
+				req.QueryParam("personId", personId)
+				req.QueryParam("personEmail", personEmail)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "List authorizations for this user id.")
+		cmd.Flags().StringVar(&personEmail, "person-email", "", "List authorizations for this user email.")
+		authorizationsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-org-client-id
+		var clientId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "delete-org-client-id",
+			Short: "Delete authorization of org and client ID",
+			Long:  `Deletes an authorization by org ID and client ID.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/authorizations")
+				req.QueryParam("clientId", clientId)
+				req.QueryParam("orgId", orgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&clientId, "client-id", "", "The unique oAuth client id.")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The ID of the organization to which this person belongs.  If no orgId is specified, use orgId from the OAuth token.")
+		authorizationsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var authorizationId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete authorization",
+			Long:  "Deletes an authorization by authorization ID.\n\nSpecify the authorization Id in the `authorizationId` parameter in the URI, which was listed in the list resource.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/authorizations/{authorizationId}")
+				req.PathParam("authorizationId", authorizationId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&authorizationId, "authorization-id", "", "The unique identifier for the message.")
+		cmd.MarkFlagRequired("authorization-id")
+		authorizationsCmd.AddCommand(cmd)
+	}
+
+	{ // get-expiration-status-token
+		cmd := &cobra.Command{
+			Use:   "get-expiration-status-token",
+			Short: "Get expiration status for a token",
+			Long:  `Epoch-based expiration time for the token.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/authorizations/tokenExpiry")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		authorizationsCmd.AddCommand(cmd)
+	}
+
+}

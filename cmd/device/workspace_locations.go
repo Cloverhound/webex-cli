@@ -1,0 +1,390 @@
+package device
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var workspaceLocationsCmd = &cobra.Command{
+	Use:   "workspace-locations",
+	Short: "WorkspaceLocations commands",
+}
+
+func init() {
+	cmd.DeviceCmd.AddCommand(workspaceLocationsCmd)
+
+	{ // list
+		var orgId string
+		var displayName string
+		var address string
+		var countryCode string
+		var cityName string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Workspace Locations",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace locations. Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another\norganization (such as partners). The `displayName`, `address`, `countryCode` and `cityName` parameters are all optional.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("displayName", displayName)
+				req.QueryParam("address", address)
+				req.QueryParam("countryCode", countryCode)
+				req.QueryParam("cityName", cityName)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List workspace locations in this organization. Only admin users of another organization (such as partners) may use this parameter.")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "Location display name.")
+		cmd.Flags().StringVar(&address, "address", "", "Location address.")
+		cmd.Flags().StringVar(&countryCode, "country-code", "", "Location country code (ISO 3166-1).")
+		cmd.Flags().StringVar(&cityName, "city-name", "", "Location city name.")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var displayName string
+		var address string
+		var countryCode string
+		var latitude int64
+		var longitude int64
+		var cityName string
+		var notes string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Workspace Location",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a location. The `cityName` and `notes` parameters are optional, and omitting them will result in the creation of a location without values for those attributes.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/workspaceLocations")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("displayName", displayName)
+					req.BodyString("address", address)
+					req.BodyString("countryCode", countryCode)
+					req.BodyInt("latitude", latitude, cmd.Flags().Changed("latitude"))
+					req.BodyInt("longitude", longitude, cmd.Flags().Changed("longitude"))
+					req.BodyString("cityName", cityName)
+					req.BodyString("notes", notes)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&address, "address", "", "")
+		cmd.Flags().StringVar(&countryCode, "country-code", "", "")
+		cmd.Flags().Int64Var(&latitude, "latitude", 0, "")
+		cmd.Flags().Int64Var(&longitude, "longitude", 0, "")
+		cmd.Flags().StringVar(&cityName, "city-name", "", "")
+		cmd.Flags().StringVar(&notes, "notes", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var locationId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get a Workspace Location Details",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}")
+				req.PathParam("locationId", locationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var locationId string
+		var displayName string
+		var address string
+		var countryCode string
+		var latitude int64
+		var longitude int64
+		var id string
+		var cityName string
+		var notes string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Workspace Location",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI. The request should include all details for the location returned in a previous call to [Get Workspace Location Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `cityName` or `notes` fields will result in those fields no longer being defined for the location.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaceLocations/{locationId}")
+				req.PathParam("locationId", locationId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("displayName", displayName)
+					req.BodyString("address", address)
+					req.BodyString("countryCode", countryCode)
+					req.BodyInt("latitude", latitude, cmd.Flags().Changed("latitude"))
+					req.BodyInt("longitude", longitude, cmd.Flags().Changed("longitude"))
+					req.BodyString("id", id)
+					req.BodyString("cityName", cityName)
+					req.BodyString("notes", notes)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&address, "address", "", "")
+		cmd.Flags().StringVar(&countryCode, "country-code", "", "")
+		cmd.Flags().Int64Var(&latitude, "latitude", 0, "")
+		cmd.Flags().Int64Var(&longitude, "longitude", 0, "")
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.Flags().StringVar(&cityName, "city-name", "", "")
+		cmd.Flags().StringVar(&notes, "notes", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var locationId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Workspace Location",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new location can be reassigned to them.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/workspaceLocations/{locationId}")
+				req.PathParam("locationId", locationId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // list-floors
+		var locationId string
+		cmd := &cobra.Command{
+			Use:   "list-floors",
+			Short: "List Workspace Location Floors",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace location floors.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}/floors")
+				req.PathParam("locationId", locationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // create-floor
+		var locationId string
+		var floorNumber int64
+		var displayName string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-floor",
+			Short: "Create a Workspace Location Floor",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a new floor in the given location. The `displayName` parameter is optional, and omitting it will result in the creation of a floor without that value set.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/workspaceLocations/{locationId}/floors")
+				req.PathParam("locationId", locationId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("floorNumber", floorNumber, cmd.Flags().Changed("floor-number"))
+					req.BodyString("displayName", displayName)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().Int64Var(&floorNumber, "floor-number", 0, "")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // get-floor
+		var locationId string
+		var floorId string
+		cmd := &cobra.Command{
+			Use:   "get-floor",
+			Short: "Get a Workspace Location Floor Details",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}/floors/{floorId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("floorId", floorId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&floorId, "floor-id", "", "A unique identifier for the floor.")
+		cmd.MarkFlagRequired("floor-id")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // update-floor
+		var locationId string
+		var floorId string
+		var floorNumber int64
+		var displayName string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-floor",
+			Short: "Update a Workspace Location Floor",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all details for the floor returned by a previous call to [Get Workspace Location Floor Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `displayName` field will result in that field no longer being defined for the floor.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaceLocations/{locationId}/floors/{floorId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("floorId", floorId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("floorNumber", floorNumber, cmd.Flags().Changed("floor-number"))
+					req.BodyString("displayName", displayName)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&floorId, "floor-id", "", "A unique identifier for the floor.")
+		cmd.MarkFlagRequired("floor-id")
+		cmd.Flags().Int64Var(&floorNumber, "floor-number", 0, "")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+	{ // delete-floor
+		var locationId string
+		var floorId string
+		cmd := &cobra.Command{
+			Use:   "delete-floor",
+			Short: "Delete a Workspace Location Floor",
+			Long:  "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a floor, by ID.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/workspaceLocations/{locationId}/floors/{floorId}")
+				req.PathParam("locationId", locationId)
+				req.PathParam("floorId", floorId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&locationId, "location-id", "", "A unique identifier for the location.")
+		cmd.MarkFlagRequired("location-id")
+		cmd.Flags().StringVar(&floorId, "floor-id", "", "A unique identifier for the floor.")
+		cmd.MarkFlagRequired("floor-id")
+		workspaceLocationsCmd.AddCommand(cmd)
+	}
+
+}

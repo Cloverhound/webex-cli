@@ -1,0 +1,64 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var reportTemplatesCmd = &cobra.Command{
+	Use:   "report-templates",
+	Short: "ReportTemplates commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(reportTemplatesCmd)
+
+	{ // list
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Report Templates",
+			Long: `List all the available report templates that can be generated.
+
+CSV (comma separated value) reports for Webex services are only supported for organizations based in the North American region. Organizations based in other regions will return blank CSV files for any Webex reports.
+
+#### Validation Fields
+
+Each template includes validation rules that specify which fields are required when generating a report using the [Reports API](/docs/api/v1/reports). The possible validation field values are:
+
+- **templateId**: The unique identifier of the report template to use. This is always required when creating a report.
+- **siteList**: A comma-separated list of Webex sites (e.g., "cisco.webex.com"). Required for site-based templates, typically for Webex Meetings reports.
+- **subIds**: Subscription IDs for the report. Required for certain enterprise agreement templates, particularly for Webex Onboarding service reports.
+- **startDate**: The start date for the report data range in YYYY-MM-DD format. Required for date-range based templates.
+- **endDate**: The end date for the report data range in YYYY-MM-DD format. Required for date-range based templates.
+
+When creating a report, ensure you provide all fields marked as "required": "yes" in the template's validation rules.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/report/templates")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		reportTemplatesCmd.AddCommand(cmd)
+	}
+
+}

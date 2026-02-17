@@ -1,0 +1,196 @@
+package admin
+
+import (
+	"fmt"
+	"strconv"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strconv.Itoa
+
+var partnerReportsTemplatesCmd = &cobra.Command{
+	Use:   "partner-reports-templates",
+	Short: "PartnerReportsTemplates commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(partnerReportsTemplatesCmd)
+
+	{ // list
+		var service string
+		var templateId string
+		var from string
+		var to string
+		var regionId string
+		var onBehalfOfSubPartnerOrgId string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Reports",
+			Long:  "Lists all reports previously generated from a given region. Use query parameters to filter the response. The parameters are optional.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` scopes.\n\n<div><Callout type=\"info\">CSV reports for Webex suite services are only supported for organizations based in one region per API request. Organizations based in a different region will require a separate request with region specified.</Callout></div>\n\n<div><Callout type=\"info\">When no region is specified, the request defaults to Partner organization's home region.</Callout></div>\n\n<div><Callout type=\"info\">Reports are usually provided in zip format. A content-header application/zip or application/octet-stream does indicate the zip format. There is usually no .zip file extension.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/reports")
+				req.QueryParam("service", service)
+				req.QueryParam("templateId", templateId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("regionId", regionId)
+				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&service, "service", "", "List reports which use this service.")
+		cmd.Flags().StringVar(&templateId, "template-id", "", "List reports with this report template ID.")
+		cmd.Flags().StringVar(&from, "from", "", "List reports that were created on or after this date.")
+		cmd.Flags().StringVar(&to, "to", "", "List reports that were created before this date.")
+		cmd.Flags().StringVar(&regionId, "region-id", "", "Data in the report will be from organizations in this region, for example, US, CA, or EU.")
+		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		partnerReportsTemplatesCmd.AddCommand(cmd)
+	}
+
+	{ // create
+		var onBehalfOfSubPartnerOrgId string
+		var templateId int64
+		var startDate string
+		var endDate string
+		var regionId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create",
+			Short: "Create a Report",
+			Long:  "Create a new report. A new report can be created using `templateId` available from the _List Report Templates_ API. For each `templateId`, there are a set of validation rules that need to be followed.\n\nThe `templateId` parameter is a number. However, it is a limitation of developer.webex.com platform that it is passed as a string when you try to test the API from here.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_write` and `identity:people_read` scopes.\n\n**Notes**:\n\n<div><Callout type=\"info\">CSV reports for Webex suite services are only created for organizations in the specified region. Organizations based in a different region will require a separate request with region specified.</Callout></div>\n\n<div><Callout type=\"info\">When no region is specified, the request defaults to Partner organization's home region. A request against a region where there are no organizations will return blank CSV files.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/partner/reports")
+				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("templateId", templateId, cmd.Flags().Changed("template-id"))
+					req.BodyString("startDate", startDate)
+					req.BodyString("endDate", endDate)
+					req.BodyString("regionId", regionId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		cmd.Flags().Int64Var(&templateId, "template-id", 0, "")
+		cmd.Flags().StringVar(&startDate, "start-date", "", "")
+		cmd.Flags().StringVar(&endDate, "end-date", "", "")
+		cmd.Flags().StringVar(&regionId, "region-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		partnerReportsTemplatesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var reportId string
+		var onBehalfOfSubPartnerOrgId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Report Details",
+			Long:  "Shows details for a report by report ID.\n\nSpecify the report ID in the `reportId` parameter in the URI.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` scopes.\n\n**Notes**:\n\n<div><Callout type=\"info\">Reports are usually provided in zip format. A content-header application/zip or application/octet-stream does indicate the zip format. There is usually no .zip file extension.</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/reports/{reportId}")
+				req.PathParam("reportId", reportId)
+				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&reportId, "report-id", "", "The unique identifier for the report.")
+		cmd.MarkFlagRequired("report-id")
+		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		partnerReportsTemplatesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var reportId string
+		var onBehalfOfSubPartnerOrgId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Report",
+			Long:  "Remove a report from the system.\n\nSpecify the report ID in the `reportId` parameter in the URI\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/partner/reports/{reportId}")
+				req.PathParam("reportId", reportId)
+				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&reportId, "report-id", "", "The unique identifier for the report.")
+		cmd.MarkFlagRequired("report-id")
+		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		partnerReportsTemplatesCmd.AddCommand(cmd)
+	}
+
+	{ // list-2
+		var onBehalfOfSubPartnerOrgId string
+		cmd := &cobra.Command{
+			Use:   "list-2",
+			Short: "List Report Templates",
+			Long:  "List report templates. Report templates are available for use with the Partner Reports API.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` [scopes](/docs/integrations#scopes). The authenticated user must be a Partner full administrator or Partner read-only administrator of the organization.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/reports/templates")
+				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		partnerReportsTemplatesCmd.AddCommand(cmd)
+	}
+
+}

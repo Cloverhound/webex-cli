@@ -1,0 +1,152 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var partnerAdministratorsCmd = &cobra.Command{
+	Use:   "partner-administrators",
+	Short: "PartnerAdministrators commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(partnerAdministratorsCmd)
+
+	{ // get-all-customers-managed-admin
+		var managedBy string
+		cmd := &cobra.Command{
+			Use:   "get-all-customers-managed-admin",
+			Short: "Get all customers managed by a partner admin",
+			Long:  "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/organizations")
+				req.QueryParam("managedBy", managedBy)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&managedBy, "managed-by", "", "List customer orgs associated with this person ID.")
+		partnerAdministratorsCmd.AddCommand(cmd)
+	}
+
+	{ // get-all-admins-assigned-customer
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-all-admins-assigned-customer",
+			Short: "Get all partner admins assigned to a customer",
+			Long:  "For a given customer, get all the partner admins with their role details.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/organizations/{orgId}/partnerAdmins")
+				req.PathParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List partner admins associated with this customer org ID.")
+		cmd.MarkFlagRequired("org-id")
+		partnerAdministratorsCmd.AddCommand(cmd)
+	}
+
+	{ // assign-admin-customer
+		var orgId string
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "assign-admin-customer",
+			Short: "Assign partner admin to a customer",
+			Long:  "Assign a specific Partner Admin to a customer organization. The partner admin is a user that has the Partner Administrator role.\nOther partner roles, such as Partner Full Administrator are not applicable for this API, since this role manages all customer organizations.\n\nThis API can be used b a Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/partner/organizations/{orgId}/partnerAdmin/{personId}/assign")
+				req.PathParam("orgId", orgId)
+				req.PathParam("personId", personId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The ID of the customer organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "User ID of the partner admin in the partners org.")
+		cmd.MarkFlagRequired("person-id")
+		partnerAdministratorsCmd.AddCommand(cmd)
+	}
+
+	{ // unassign-admin-customer
+		var orgId string
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "unassign-admin-customer",
+			Short: "Unassign partner admin from a customer",
+			Long:  "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/partner/organizations/{orgId}/partnerAdmin/{personId}/unassign")
+				req.PathParam("orgId", orgId)
+				req.PathParam("personId", personId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The ID of the customer organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "User ID of the partner admin in the partners org.")
+		cmd.MarkFlagRequired("person-id")
+		partnerAdministratorsCmd.AddCommand(cmd)
+	}
+
+	{ // revoke-all-admin-roles-person-id
+		var personId string
+		cmd := &cobra.Command{
+			Use:   "revoke-all-admin-roles-person-id",
+			Short: "Revoke all partner admin roles for a given person ID",
+			Long:  "Revoke all partner administrator roles from a user, thereby revoking access to Partner Hub and all managed customer organizations.\nThis action does not grant or revoke Control Hub administrator roles (e.g. Full Administrator, User and Device Administrator, etc.).\nThis API can be used by Partner Full Admin.\nSpecify the `personId` in the path param.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/partner/organizations/partnerAdmin/{personId}")
+				req.PathParam("personId", personId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "ID of the user whose partner roles needs to be revoked.")
+		cmd.MarkFlagRequired("person-id")
+		partnerAdministratorsCmd.AddCommand(cmd)
+	}
+
+}

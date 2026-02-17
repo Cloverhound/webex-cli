@@ -1,0 +1,312 @@
+package meetings
+
+import (
+	"fmt"
+	"strings"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+var _ = strings.Join
+
+var participantsCmd = &cobra.Command{
+	Use:   "participants",
+	Short: "Participants commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(participantsCmd)
+
+	{ // list-meeting
+		var max string
+		var meetingId string
+		var breakoutSessionId string
+		var meetingStartTimeFrom string
+		var meetingStartTimeTo string
+		var hostEmail string
+		var joinTimeFrom string
+		var joinTimeTo string
+		var timezone string
+		cmd := &cobra.Command{
+			Use:   "list-meeting",
+			Short: "List Meeting Participants",
+			Long:  "List all participants in an in-progress meeting or an ended meeting. The `meetingId` parameter is required, which is the unique identifier for the meeting.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.\n\n* If the `meetingId` value specified is for a meeting series, the operation returns participants' details for the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the meeting series in the time range.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the scheduled meeting in the time range.\n\n* If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation returns participants' details for that meeting instance.\n\n* If the meeting is in progress, the operation returns all the real-time participants. If the meeting is ended, the operation returns all the participants that have joined the meeting.\n\n* If the `breakoutSessionId` parameter is specified, the operation returns participants who joined the specified breakout session. It only applies to end meeting instances.\n\n* The `breakoutSessionsAttended` attribute is only returned for a participant of an ended meeting instance if the participant joined breakout sessions in the meeitng.\n\n* The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an occurrence ID.\n\n* If the webinar is in progress when the attendee has ever been unmuted to speak in the webinar, this attendee becomes a panelist. The operation returns include the people who have been designated as panelists when the webinar is created and have joined the webinar, and the attendees who have joined the webinar and are unmuted to speak in the webinar temporarily. If the webinar is ended, the operation returns all the participants, including all panelists and all attendees who are not panelists.\n\n#### Request Header\n\n* `timezone`: Time zone for time stamps in the response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingParticipants")
+				req.QueryParam("max", max)
+				req.QueryParam("meetingId", meetingId)
+				req.QueryParam("breakoutSessionId", breakoutSessionId)
+				req.QueryParam("meetingStartTimeFrom", meetingStartTimeFrom)
+				req.QueryParam("meetingStartTimeTo", meetingStartTimeTo)
+				req.QueryParam("hostEmail", hostEmail)
+				req.QueryParam("joinTimeFrom", joinTimeFrom)
+				req.QueryParam("joinTimeTo", joinTimeTo)
+				req.Header("timezone", timezone)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of participants in the response, up to 100.")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "The unique identifier for the meeting. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API.")
+		cmd.Flags().StringVar(&breakoutSessionId, "breakout-session-id", "", "The unique identifier for a breakout session which happened during an ended meeting instance. If the `breakoutSessionId` is specified, the operation returns participants who joined the breakout session. Only applies to ended meeting instances.")
+		cmd.Flags().StringVar(&meetingStartTimeFrom, "meeting-start-time-from", "", "Meetings start from the specified date and time(exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `meetingStartTimeFrom` is not specified, it equals `meetingStartTimeTo` minus 1 month; if `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is 1 month before current date and time.")
+		cmd.Flags().StringVar(&meetingStartTimeTo, "meeting-start-time-to", "", "Meetings start before the specified date and time(exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `meetingStartTimeTo` is not specified, it equals the result of a comparison, `meetingStartTimeFrom` plus one month and the current time, and the result is the earlier of the two; if `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is current date and time minus 1 month.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage and the API will return meeting participants of the meetings that are hosted by that user.")
+		cmd.Flags().StringVar(&joinTimeFrom, "join-time-from", "", "The time participants join a meeting starts from the specified date and time (inclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `joinTimeFrom` is not specified, it equals `joinTimeTo` minus 7 days.")
+		cmd.Flags().StringVar(&joinTimeTo, "join-time-to", "", "The time participants join a meeting before the specified date and time (exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `joinTimeTo` is not specified, it equals `joinTimeFrom` plus 7 days. The interval between `joinTimeFrom` and `joinTimeTo` must be within 90 days.")
+		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // query-meeting-email
+		var meetingId string
+		var meetingStartTimeFrom string
+		var meetingStartTimeTo string
+		var hostEmail string
+		var timezone string
+		var emails []string
+		var joinTimeFrom string
+		var joinTimeTo string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "query-meeting-email",
+			Short: "Query Meeting Participants with Email",
+			Long:  "Query participants in a live meeting, or after the meeting, using participant's email. The `meetingId` parameter is the unique identifier for the meeting and is required.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.\n\n* If the `meetingId` value specified is for a meeting series, the operation returns participants' details for the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the meeting series in the time range.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the scheduled meeting in the time range.\n\n* If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation returns participants' details for that meeting instance.\n\n* The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an occurrence ID.\n\n#### Request Header\n\n* `timezone`: Time zone for time stamps in the response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingParticipants/query")
+				req.QueryParam("meetingId", meetingId)
+				req.QueryParam("meetingStartTimeFrom", meetingStartTimeFrom)
+				req.QueryParam("meetingStartTimeTo", meetingStartTimeTo)
+				req.QueryParam("hostEmail", hostEmail)
+				req.Header("timezone", timezone)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("emails", emails)
+					req.BodyString("joinTimeFrom", joinTimeFrom)
+					req.BodyString("joinTimeTo", joinTimeTo)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "The unique identifier for the meeting.")
+		cmd.Flags().StringVar(&meetingStartTimeFrom, "meeting-start-time-from", "", "Meetings start from the specified date and time(exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `meetingStartTimeFrom` is not specified, it equals `meetingStartTimeTo` minus 1 month; if `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is 1 month before current date and time.")
+		cmd.Flags().StringVar(&meetingStartTimeTo, "meeting-start-time-to", "", "Meetings start before the specified date and time(exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If `meetingStartTimeTo` is not specified, it equals the result of a comparison, `meetingStartTimeFrom` plus one month and the current time, and the result is the earlier of the two; if `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is current date and time minus 1 month.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage and the API will return meeting participants of the meetings that are hosted by that user.")
+		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringSliceVar(&emails, "emails", nil, "")
+		cmd.Flags().StringVar(&joinTimeFrom, "join-time-from", "", "")
+		cmd.Flags().StringVar(&joinTimeTo, "join-time-to", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // get-meeting
+		var participantId string
+		var hostEmail string
+		cmd := &cobra.Command{
+			Use:   "get-meeting",
+			Short: "Get Meeting Participant Details",
+			Long:  "Get a meeting participant details of a live or post meeting. The `participantId` is required to identify the meeting and the participant.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingParticipants/{participantId}")
+				req.PathParam("participantId", participantId)
+				req.QueryParam("hostEmail", hostEmail)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&participantId, "participant-id", "", "The unique identifier for the meeting and the participant.")
+		cmd.MarkFlagRequired("participant-id")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage and the API will return meeting participants of the meetings that are hosted by that user.")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // update
+		var participantId string
+		var muted bool
+		var admit bool
+		var expel bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update",
+			Short: "Update a Participant",
+			Long:  "Mute, un-mute, expel, or admit a participant in a live meeting. The `participantId` is required to identify the meeting and the participant.\n\nNotes:\n\n* The owner of the OAuth token calling this API needs to be the meeting host or co-host.\n\n* The `expel` attribute always takes precedence over `admit` and `muted`. The request can have all `expel`, `admit` and `muted` or any of them.\n\n<div><Callout type=\"warning\">There is an inconsistent behavior in Webex Meetings App when all active meeting participants join using Webex Meetings App and the host attempts to change meeting participant status using this API. Requests to mute, un-mute, admit, or expel a meeting participant return a successful response and update the state in the API, but the changes will not be applied to the Webex Meetings App participants. The inconsistent behavior in Webex Meetings App will be corrected in a future release.\n**Workaround**: [Enable closed captions](https://help.webex.com/en-us/article/WBX47352/How-Do-I-Enable-Closed-Captions?) or enable the [Webex Assistant](https://help.webex.com/en-us/article/n91uf2x/Turn-on-or-turn-off-Webex-Assistant-during-a-meeting-or-webinar).</Callout></div>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingParticipants/{participantId}")
+				req.PathParam("participantId", participantId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("muted", muted, cmd.Flags().Changed("muted"))
+					req.BodyBool("admit", admit, cmd.Flags().Changed("admit"))
+					req.BodyBool("expel", expel, cmd.Flags().Changed("expel"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&participantId, "participant-id", "", "The unique identifier for the meeting and the participant.")
+		cmd.MarkFlagRequired("participant-id")
+		cmd.Flags().BoolVar(&muted, "muted", false, "")
+		cmd.Flags().BoolVar(&admit, "admit", false, "")
+		cmd.Flags().BoolVar(&expel, "expel", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // admit
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "admit",
+			Short: "Admit Participants",
+			Long:  "Admit multiple participants to a meeting in progress.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingParticipants/admit")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // call-out-sip
+		var address string
+		var displayName string
+		var meetingId string
+		var meetingNumber string
+		var addressType string
+		var invitationCorrelationId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "call-out-sip",
+			Short: "Call Out a SIP Participant",
+			Long:  "Initiate a call to a SIP participant to join a meeting.\n\nIf a user invoking the API is not a [Service App](/docs/service-apps), the user must join the meeting before invoking the API. If a user is a [Service App](/docs/service-apps), the service app can invoke the API without joining the meeting. In both cases, the normal user or the service app that invokes the API must be the meeting host or cohost. If the meeting is created by the service app on behalf of the real host, the service app cannot use the admin on behalf function to invoke this API. Instead the host or cohost must execute the action.\n\nThe authenticated user calling this API must have the `meeting:participants_write` scope.\n\nThe ringing on the invited SIP device stops in 30 seconds if there is no response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingParticipants/callout")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("address", address)
+					req.BodyString("displayName", displayName)
+					req.BodyString("meetingId", meetingId)
+					req.BodyString("meetingNumber", meetingNumber)
+					req.BodyString("addressType", addressType)
+					req.BodyString("invitationCorrelationId", invitationCorrelationId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&address, "address", "", "")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "")
+		cmd.Flags().StringVar(&meetingNumber, "meeting-number", "", "")
+		cmd.Flags().StringVar(&addressType, "address-type", "", "")
+		cmd.Flags().StringVar(&invitationCorrelationId, "invitation-correlation-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		participantsCmd.AddCommand(cmd)
+	}
+
+	{ // cancel-calling-out-sip
+		var participantId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "cancel-calling-out-sip",
+			Short: "Cancel Calling Out a SIP Participant",
+			Long:  "Cancel the call to a SIP participant before the ringing on the invited SIP device stops. The ringing on the invited SIP device stops in 30 seconds if there is no response.\n\nIf a user invoking the API is not a [Service App](/docs/service-apps), the user must join the meeting before invoking the API. If a user is a [Service App](/docs/service-apps), the service app can invoke the API without joining the meeting. In both cases, the normal user or the service app that invokes the API must be the meeting host or cohost. If the meeting is created by the service app on behalf of the real host, the service app cannot use the admin on behalf function to invoke this API. Instead the host or cohost must execute the action.\n\nThe authenticated user calling this API must have the `meeting:participants_write` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingParticipants/cancelCallout")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("participantId", participantId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&participantId, "participant-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		participantsCmd.AddCommand(cmd)
+	}
+
+}

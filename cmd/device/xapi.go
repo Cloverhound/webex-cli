@@ -1,0 +1,89 @@
+package device
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var xapiCmd = &cobra.Command{
+	Use:   "xapi",
+	Short: "Xapi commands",
+}
+
+func init() {
+	cmd.DeviceCmd.AddCommand(xapiCmd)
+
+	{ // query-status
+		var deviceId string
+		var name string
+		cmd := &cobra.Command{
+			Use:   "query-status",
+			Short: "Query Status",
+			Long:  "Query the current status of the Webex RoomOS Device. You specify the target device in the `deviceId` parameter in the URI. The target device is queried for statuses according to the expression in the `name` parameter.\n\nSee the [xAPI section of the Device Developers Guide](/docs/api/guides/device-developers-guide#xapi) or the [xAPI Command Reference](https://roomos.cisco.com/xapi) for a description of status expressions.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/xapi/status")
+				req.QueryParam("deviceId", deviceId)
+				req.QueryParam("name", name)
+				req.QueryParam("name", name)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "The unique identifier for the Webex RoomOS Device.")
+		cmd.Flags().StringVar(&name, "name", "", "A list of status expressions used to query the Webex RoomOS Device. See the [xAPI section of the Device Developers Guide](/docs/api/guides/device-developers-guide#xapi) for a description of status expressions. A request can contain at most 10 different status expressions.")
+		xapiCmd.AddCommand(cmd)
+	}
+
+	{ // execute-command
+		var commandName string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "execute-command",
+			Short: "Execute Command",
+			Long:  "Executes a command on the Webex RoomOS Device. Specify the command to execute in the `commandName` URI parameter.\n\nSee the [xAPI section of the Device Developers Guide](/docs/devices#xapi) for a description of command expressions.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/xapi/command/{commandName}")
+				req.PathParam("commandName", commandName)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&commandName, "command-name", "", "Command to execute on the Webex RoomOS Device.")
+		cmd.MarkFlagRequired("command-name")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		xapiCmd.AddCommand(cmd)
+	}
+
+}

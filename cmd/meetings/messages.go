@@ -1,0 +1,47 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var messagesCmd = &cobra.Command{
+	Use:   "messages",
+	Short: "Messages commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(messagesCmd)
+
+	{ // delete-meeting
+		var meetingMessageId string
+		cmd := &cobra.Command{
+			Use:   "delete-meeting",
+			Short: "Delete a Meeting Message",
+			Long:  "Deletes a Meeting Message from the In Meeting Chat, using its ID.\n\nThis ID can be retrieved by a Compliance Officer using the [events API](/docs/api/v1/events/list-events) filtering on the `meetingMessages` resource type.\n\nNOTE: When viewing the response from the events API, there are 2 `id` fields. The ID to be used here can be found under the `data` field in the response.\n\nSpecify the `meetingMessage` ID in the `meetingMessageId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/meeting/messages/{meetingMessageId}")
+				req.PathParam("meetingMessageId", meetingMessageId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingMessageId, "meeting-message-id", "", "The unique identifier for the message.")
+		cmd.MarkFlagRequired("meeting-message-id")
+		messagesCmd.AddCommand(cmd)
+	}
+
+}

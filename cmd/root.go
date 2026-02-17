@@ -13,8 +13,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "webex",
-	Short: "Webex CLI — manage Webex Calling and Contact Center",
-	Long:  `A command-line interface for Webex Cloud Calling and Contact Center APIs.`,
+	Short: "Webex CLI — manage Webex APIs",
+	Long:  `A command-line interface for Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		// Debug mode (set early so auth debug works)
 		debug, _ := cmd.Flags().GetBool("debug")

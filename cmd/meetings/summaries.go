@@ -1,0 +1,101 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var summariesCmd = &cobra.Command{
+	Use:   "summaries",
+	Short: "Summaries commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(summariesCmd)
+
+	{ // get-meeting-id
+		var meetingId string
+		cmd := &cobra.Command{
+			Use:   "get-meeting-id",
+			Short: "Get Summary by Meeting ID",
+			Long:  "Get the summary of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) by the meeting ID.\n\nPlease note that only **meeting instances** in state `ended` are supported, and currently the meeting ID of a meeting series, a scheduled meeting, an in-progress meeting instance, or a scheduled personal room meeting is not supported for this API. This API can only fetch summaries that you have access to, and if a meeting summary is deleted, you won't be able to see it either. And, this is an API for normal user. If you are a compliance officer, please use the Get Summary For Compliance Officer API",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingSummaries")
+				req.QueryParam("meetingId", meetingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the summary belongs. Please note that currently the meeting ID of a meeting series, a scheduled meeting, an in-progress meeting instance, or a scheduled personal room meeting is not supported for this API. If `meetingId` is not specified, the query will be rejected.")
+		summariesCmd.AddCommand(cmd)
+	}
+
+	{ // get-compliance-officer
+		var meetingId string
+		cmd := &cobra.Command{
+			Use:   "get-compliance-officer",
+			Short: "Get Summary For Compliance Officer",
+			Long:  `Lists available or deleted summaries of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) by meeting ID. This API can only be accessed by compliance officers. With this API, a compliance officer can list summaries of any ended meeting instances in his organization including available and deleted summaries`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meetingSummaries")
+				req.QueryParam("meetingId", meetingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the summary belongs. Please note that currently the meeting ID of a meeting series, a scheduled meeting, an in-progress meeting instance, or a scheduled personal room meeting is not supported for this API. If `meetingId` is not specified, the query will be rejected.")
+		summariesCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var summaryId string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Summary",
+			Long:  `Removes a summary with a specified summary ID. The deleted summary cannot be recovered. A deleted summary can not be accessed by regular users, i.e. host or attendees, but can be access by compliance officers`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/meetingSummaries/{summaryId}")
+				req.PathParam("summaryId", summaryId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&summaryId, "summary-id", "", "Unique identifier for the meeting summary.")
+		cmd.MarkFlagRequired("summary-id")
+		summariesCmd.AddCommand(cmd)
+	}
+
+}

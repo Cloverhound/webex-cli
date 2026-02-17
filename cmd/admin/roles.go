@@ -1,0 +1,78 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var rolesCmd = &cobra.Command{
+	Use:   "roles",
+	Short: "Roles commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(rolesCmd)
+
+	{ // list
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Roles",
+			Long:  `List all roles. Must be called by an admin user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/roles")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		rolesCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var roleId string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get Role Details",
+			Long:  "Shows details for a role, by ID.\n\nSpecify the role ID in the `roleId` parameter in the URI.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/roles/{roleId}")
+				req.PathParam("roleId", roleId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&roleId, "role-id", "", "The unique identifier for the role.")
+		cmd.MarkFlagRequired("role-id")
+		rolesCmd.AddCommand(cmd)
+	}
+
+}

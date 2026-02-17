@@ -1,0 +1,118 @@
+package admin
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var licensesCmd = &cobra.Command{
+	Use:   "licenses",
+	Short: "Licenses commands",
+}
+
+func init() {
+	cmd.AdminCmd.AddCommand(licensesCmd)
+
+	{ // list
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Licenses",
+			Long:  "List all licenses for a given organization.  If no `orgId` is specified, the default is the organization of the authenticated user.\n\nResponse properties that are not applicable to the license will not be present in the response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/licenses")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List licenses for this organization.")
+		licensesCmd.AddCommand(cmd)
+	}
+
+	{ // get-license
+		var licenseId string
+		var includeAssignedTo string
+		var next string
+		var limit string
+		cmd := &cobra.Command{
+			Use:   "get-license",
+			Short: "Get License Details",
+			Long:  "Shows details for a license, by ID.\n\nSpecify the license ID in the `licenseId` parameter in the URI.\nUse the optional query parameter `includeAssignedTo` to get a list of all objects that are assigned with the license. The objects include but not limited to, users including external users. Long result sets will be split into [pages](/docs/basics#pagination).\n\nResponse properties that are not applicable to the license will not be present in the response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/licenses/{licenseId}")
+				req.PathParam("licenseId", licenseId)
+				req.QueryParam("includeAssignedTo", includeAssignedTo)
+				req.QueryParam("next", next)
+				req.QueryParam("limit", limit)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&licenseId, "license-id", "", "The unique identifier for the license.")
+		cmd.MarkFlagRequired("license-id")
+		cmd.Flags().StringVar(&includeAssignedTo, "include-assigned-to", "", "The type of object to whom the license is assigned to.")
+		cmd.Flags().StringVar(&next, "next", "", "List the next set of users. Applicable only if `includeAssignedTo` is populated.")
+		cmd.Flags().StringVar(&limit, "limit", "", "A limit on the number of users to be returned in the response. Applicable only if `includeAssignedTo` is populated. limit cannot be more than 300.")
+		licensesCmd.AddCommand(cmd)
+	}
+
+	{ // assign-users
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "assign-users",
+			Short: "Assign Licenses to Users",
+			Long:  "Assign licenses and attendee `siteUrls` to existing users. Only an admin can assign licenses. Only existing users can be assigned a license. Assign meeting licenses to users outside your organization (Status will be pending until the user accepts the invite)\n\nAt least one of the following body parameters is required to assign license to the user: `email`, `personId`. For Calling license assignment, properties `phoneNumber` or `extension` are required. If `phoneNumber` is not provided then `locationId` is mandatory.\n\nWhen assigning licenses and attendee siteUrls to a user who does not belong to the organization, the licenses and siteUrls remain in pending state until the user accepts them. The `pendingLicenses` and `pendingSiteUrls` are part of the response.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/licenses/users")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		licensesCmd.AddCommand(cmd)
+	}
+
+}

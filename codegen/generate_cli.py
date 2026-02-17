@@ -19,6 +19,10 @@ SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
 COLLECTIONS = {
     "Webex Cloud Calling": ("calling", "cmd.CallingCmd", "config.CallingBaseURL", True),
     "Webex Contact Center": ("cc", "cmd.CcCmd", "config.CcBaseURL", False),
+    "Webex Admin":          ("admin", "cmd.AdminCmd", "config.CallingBaseURL", True),
+    "Webex Device":         ("device", "cmd.DeviceCmd", "config.CallingBaseURL", True),
+    "Webex Meetings":       ("meetings", "cmd.MeetingsCmd", "config.CallingBaseURL", True),
+    "Webex Messaging":      ("messaging", "cmd.MessagingCmd", "config.CallingBaseURL", True),
 }
 
 
@@ -293,7 +297,7 @@ def generate_command(ep, group_var, base_url_const, is_calling):
 
     # Register flags
     for var, ftype, flag_name, desc, required, orig in all_flags:
-        desc_escaped = desc.replace('"', '\\"').replace('\n', ' ')
+        desc_escaped = desc.replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
         if ftype == 'header':
             lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "{desc_escaped}")')
         else:
@@ -371,7 +375,7 @@ def main():
 
     # Run gofmt
     print("\nRunning gofmt...")
-    for pkg in ('calling', 'cc'):
+    for pkg in sorted(set(c[0] for c in COLLECTIONS.values())):
         pkg_dir = os.path.join(CLI_DIR, "cmd", pkg)
         result = subprocess.run(
             ['gofmt', '-w', pkg_dir],

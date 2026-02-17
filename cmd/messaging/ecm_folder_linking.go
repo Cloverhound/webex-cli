@@ -1,0 +1,200 @@
+package messaging
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var ecmFolderLinkingCmd = &cobra.Command{
+	Use:   "ecm-folder-linking",
+	Short: "EcmFolderLinking commands",
+}
+
+func init() {
+	cmd.MessagingCmd.AddCommand(ecmFolderLinkingCmd)
+
+	{ // list
+		var roomId string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List ECM folder",
+			Long:  "Lists the ECM folder of a room specified by the `roomId` query parameter.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/room/linkedFolders")
+				req.QueryParam("roomId", roomId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&roomId, "room-id", "", "ID of the room for which to list the ECM folder.")
+		ecmFolderLinkingCmd.AddCommand(cmd)
+	}
+
+	{ // create-configuration
+		var roomId string
+		var contentUrl string
+		var displayName string
+		var driveId string
+		var itemId string
+		var defaultFolder string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-configuration",
+			Short: "Create an ECM folder configuration",
+			Long:  "Adds an existing ECM folder to a room as (default or reference) file storage. There is no data validation happening for the request. Please ensure the correct `driveId` and `itemId.` These can be collected from the MS Graph API. The `contentUrl` and `displayName` are used only for user convenience. The folder will be configured with the MS folder name as `displayName`, and the `contentURL` may be updated or corrected as needed. To assess final configuration, please make a GET request on the linkedFolder.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/room/linkedFolders")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("roomId", roomId)
+					req.BodyString("contentUrl", contentUrl)
+					req.BodyString("displayName", displayName)
+					req.BodyString("driveId", driveId)
+					req.BodyString("itemId", itemId)
+					req.BodyString("defaultFolder", defaultFolder)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&roomId, "room-id", "", "")
+		cmd.Flags().StringVar(&contentUrl, "content-url", "", "")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&driveId, "drive-id", "", "")
+		cmd.Flags().StringVar(&itemId, "item-id", "", "")
+		cmd.Flags().StringVar(&defaultFolder, "default-folder", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		ecmFolderLinkingCmd.AddCommand(cmd)
+	}
+
+	{ // get
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get",
+			Short: "Get ECM Folder Details",
+			Long:  `Get details for a room ECM folder with the specified folder id.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/room/linkedFolders/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The unique identifier for the folder.")
+		cmd.MarkFlagRequired("id")
+		ecmFolderLinkingCmd.AddCommand(cmd)
+	}
+
+	{ // update-linked
+		var id string
+		var roomId string
+		var contentUrl string
+		var displayName string
+		var driveId string
+		var itemId string
+		var defaultFolder string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-linked",
+			Short: "Update an ECM Linked Folder",
+			Long:  "Updates the configuration of the specified Room folder. There is no data validation happening for the request. Please ensure the correct `driveId` and `itemId.` These can be collected from the MS Graph API. The `contentUrl` and `displayName` are used only for user convenience. The folder will be configured with the MS folder name as `displayName`, and the `contentURL` may be updated or corrected as needed. To assess final configuration, please make a GET request on the linkedFolder.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/room/linkedFolders/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("roomId", roomId)
+					req.BodyString("contentUrl", contentUrl)
+					req.BodyString("displayName", displayName)
+					req.BodyString("driveId", driveId)
+					req.BodyString("itemId", itemId)
+					req.BodyString("defaultFolder", defaultFolder)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The unique identifier for the room folder.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&roomId, "room-id", "", "")
+		cmd.Flags().StringVar(&contentUrl, "content-url", "", "")
+		cmd.Flags().StringVar(&displayName, "display-name", "", "")
+		cmd.Flags().StringVar(&driveId, "drive-id", "", "")
+		cmd.Flags().StringVar(&itemId, "item-id", "", "")
+		cmd.Flags().StringVar(&defaultFolder, "default-folder", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		ecmFolderLinkingCmd.AddCommand(cmd)
+	}
+
+	{ // unlink-linked
+		var id string
+		cmd := &cobra.Command{
+			Use:   "unlink-linked",
+			Short: "Unlink an ECM linked folder",
+			Long:  `Unlinks the room-linked folder with the specified ID from the space.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/room/linkedFolders/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The unique identifier for the folder to disassociate from the space.")
+		cmd.MarkFlagRequired("id")
+		ecmFolderLinkingCmd.AddCommand(cmd)
+	}
+
+}

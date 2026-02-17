@@ -1,6 +1,6 @@
 ---
 name: webex-cli
-description: "Webex CLI: query and manage Webex Calling and Contact Center via the `webex` command-line tool. Use for listing resources, checking configurations, debugging API calls, and administering Webex environments."
+description: "Webex CLI: query and manage Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging APIs via the `webex` command-line tool. Use for listing resources, checking configurations, debugging API calls, and administering Webex environments."
 argument-hint: "[command or resource-name]"
 allowed-tools: Bash, Read, Grep, Glob
 user-invocable: true
@@ -8,7 +8,7 @@ user-invocable: true
 
 # Webex CLI Skill
 
-This skill uses the `webex` CLI tool to interact with Webex Calling and Contact Center APIs.
+This skill uses the `webex` CLI tool to interact with Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.
 
 **Setup:** Install the CLI via `curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh`, or set the path to your local build below.
 
@@ -34,9 +34,15 @@ If not logged in, use `--token <TOKEN>` or set `$WEBEX_TOKEN`.
 ## Command Structure
 
 ```
-webex calling <resource> <action> [flags]     # Webex Calling APIs
-webex cc <resource> <action> [flags]          # Contact Center APIs
+webex admin <resource> <action> [flags]      # Admin APIs (people, orgs, licenses, roles)
+webex calling <resource> <action> [flags]    # Webex Calling APIs
+webex cc <resource> <action> [flags]         # Contact Center APIs
+webex device <resource> <action> [flags]     # Device APIs (devices, workspaces, xAPI)
+webex meetings <resource> <action> [flags]   # Meetings APIs (scheduling, recordings)
+webex messaging <resource> <action> [flags]  # Messaging APIs (rooms, messages, teams)
 ```
+
+Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`, `contact-center` for `cc`.
 
 ### Global Flags
 - `--token <token>` — Override authentication
@@ -86,12 +92,45 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 4. **Check `--help` before guessing** subcommand names:
    ```bash
-   webex cc <resource> --help
+   webex <api> <resource> --help
    ```
+
+## Admin API Examples
+
+Admin commands manage people, organizations, licenses, roles, and other administrative resources:
+
+```bash
+# List people in the org
+webex admin people list --max 10
+
+# Get a specific person
+webex admin people get-person --person-id "PERSON_ID"
+
+# Get my own details
+webex admin people get-my-own
+
+# List organizations
+webex admin organizations list
+
+# List licenses
+webex admin licenses list
+
+# List roles
+webex admin roles list
+
+# List events
+webex admin events list
+
+# List reports
+webex admin reports list
+
+# List recordings
+webex admin recordings list
+```
 
 ## Calling API Examples
 
-Calling commands are simpler — no orgid required (it's inferred from the token):
+Calling commands — no orgid required (it's inferred from the token):
 
 ```bash
 # List people
@@ -173,7 +212,103 @@ webex cc holiday-list list
 webex cc outdial-ani list
 ```
 
-## Filtering and Pagination (CC)
+## Device API Examples
+
+Device commands manage Webex devices, workspaces, and configurations:
+
+```bash
+# List devices
+webex device devices list
+
+# Get a specific device
+webex device devices get --device-id "DEVICE_ID"
+
+# List workspaces
+webex device workspaces list
+
+# Get workspace details
+webex device workspaces get --workspace-id "WORKSPACE_ID"
+
+# List device configurations
+webex device device-configurations list --device-id "DEVICE_ID"
+
+# List workspace locations
+webex device workspace-locations list
+
+# Execute xAPI command
+webex device xapi execute-command --device-id "DEVICE_ID" --body '{"command":"..."}'
+
+# Query xAPI status
+webex device xapi query-status --device-id "DEVICE_ID"
+```
+
+## Meetings API Examples
+
+Meetings commands manage meeting scheduling, recordings, participants, and more:
+
+```bash
+# List meetings
+webex meetings meetings list
+
+# Get a specific meeting
+webex meetings meetings get --meeting-id "MEETING_ID"
+
+# Create a meeting
+webex meetings meetings create --body '{"title":"Stand-up","start":"...","end":"..."}'
+
+# List meeting participants
+webex meetings participants list --meeting-id "MEETING_ID"
+
+# List recordings
+webex meetings recordings list
+
+# List transcripts
+webex meetings transcripts list
+
+# List meeting preferences
+webex meetings preferences list-sites
+
+# List session types
+webex meetings session-types list --site-url "SITE_URL"
+
+# List tracking codes
+webex meetings meetings list-tracking-codes --site-url "SITE_URL"
+```
+
+## Messaging API Examples
+
+Messaging commands manage rooms, messages, teams, and webhooks:
+
+```bash
+# List rooms
+webex messaging rooms list --max 10
+
+# Get room details
+webex messaging rooms get --room-id "ROOM_ID"
+
+# Create a room
+webex messaging rooms create --body '{"title":"My Room"}'
+
+# List messages in a room
+webex messaging messages list --room-id "ROOM_ID"
+
+# Send a message
+webex messaging messages create --body '{"roomId":"ROOM_ID","text":"Hello!"}'
+
+# List teams
+webex messaging teams list
+
+# List team memberships
+webex messaging team-memberships list --team-id "TEAM_ID"
+
+# List webhooks
+webex messaging webhooks list
+
+# List room memberships
+webex messaging memberships list --room-id "ROOM_ID"
+```
+
+## Filtering and Pagination
 
 CC list endpoints support RSQL filtering:
 ```bash
@@ -184,28 +319,36 @@ webex cc team list --search="Sales"
 Use `--paginate` to auto-paginate and get all results:
 ```bash
 webex cc entry-point list --paginate
+webex admin people list --paginate
+webex meetings recordings list --paginate
 ```
 
-Or paginate manually:
+Or paginate manually (CC):
 ```bash
 webex cc entry-point list --page=0 --page-size=100
 webex cc entry-point list --page=1 --page-size=100
+```
+
+Or paginate manually (Calling/Admin/Device/Meetings/Messaging — offset/max style):
+```bash
+webex admin people list --max=100
+webex messaging rooms list --max=100
 ```
 
 ## Output Handling
 
 ```bash
 # Pretty JSON (default)
-webex cc site list
+webex admin people list
 
 # Table format
-webex cc site list --output=table
+webex admin people list --output=table
 
 # Raw JSON (no formatting)
-webex cc site list --output=raw
+webex admin people list --output=raw
 
 # Save to file for processing
-webex cc site list > /tmp/sites.json
+webex admin people list > /tmp/people.json
 ```
 
 ## When Answering Questions

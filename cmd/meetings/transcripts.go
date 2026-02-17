@@ -1,0 +1,283 @@
+package meetings
+
+import (
+	"fmt"
+
+	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/client"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/spf13/cobra"
+)
+
+// Ensure imports are used.
+var _ = fmt.Sprintf
+var _ = config.Token
+var _ = output.Print
+
+var transcriptsCmd = &cobra.Command{
+	Use:   "transcripts",
+	Short: "Transcripts commands",
+}
+
+func init() {
+	cmd.MeetingsCmd.AddCommand(transcriptsCmd)
+
+	{ // list-meeting
+		var max string
+		var from string
+		var to string
+		var meetingId string
+		var hostEmail string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "list-meeting",
+			Short: "List Meeting Transcripts",
+			Long:  "Lists available transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances).\n\nUse this operation to list transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) when they are ready. Please note that only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts")
+				req.QueryParam("max", max)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("meetingId", meetingId)
+				req.QueryParam("hostEmail", hostEmail)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Maximum number of transcripts to return in a single page. `max` must be equal to or greater than `1` and equal to or less than `100`.")
+		cmd.Flags().StringVar(&from, "from", "", "Starting date and time (inclusive) for transcripts to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
+		cmd.Flags().StringVar(&to, "to", "", "Ending date and time (exclusive) for List transcripts to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`.")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcript belongs. Please note that currently the meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API. If `meetingId` is not specified, the operation returns an array of transcripts for all meetings of the current user.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the `admin-level` scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user. If `meetingId` is not specified, it can not support `hostEmail`.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site from which the API lists transcripts. If not specified, the API lists transcripts from user's preferred site. All available Webex sites and the preferred site of the user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // list-meeting-compliance-officer
+		var from string
+		var to string
+		var max string
+		var siteUrl string
+		cmd := &cobra.Command{
+			Use:   "list-meeting-compliance-officer",
+			Short: "List Meeting Transcripts For Compliance Officer",
+			Long:  "Lists available or deleted transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) for a specific site.\n\nThe returned list is sorted in descending order by the date and time that the transcript was created.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meetingTranscripts")
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				req.QueryParam("max", max)
+				req.QueryParam("siteUrl", siteUrl)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&from, "from", "", "Starting date and time (inclusive) for transcripts to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
+		cmd.Flags().StringVar(&to, "to", "", "Ending date and time (exclusive) for List transcripts to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`.")
+		cmd.Flags().StringVar(&max, "max", "", "Maximum number of transcripts to return in a single page. `max` must be equal to or greater than `1` and equal to or less than `100`.")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site from which the API lists transcripts.")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // download-meeting
+		var transcriptId string
+		var format string
+		var hostEmail string
+		cmd := &cobra.Command{
+			Use:   "download-meeting",
+			Short: "Download a Meeting Transcript",
+			Long:  "Download a meeting transcript from the meeting transcript specified by `transcriptId`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts/{transcriptId}/download")
+				req.PathParam("transcriptId", transcriptId)
+				req.QueryParam("format", format)
+				req.QueryParam("hostEmail", hostEmail)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&transcriptId, "transcript-id", "", "Unique identifier for the meeting transcript.")
+		cmd.MarkFlagRequired("transcript-id")
+		cmd.Flags().StringVar(&format, "format", "", "Format for the downloaded meeting transcript.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the `admin-level` scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user.")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // list-snippets-meeting
+		var transcriptId string
+		var max string
+		cmd := &cobra.Command{
+			Use:   "list-snippets-meeting",
+			Short: "List Snippets of a Meeting Transcript",
+			Long:  "Lists snippets of a meeting transcript specified by `transcriptId`.\n\nUse this operation to list snippets of a meeting transcript when they are ready.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts/{transcriptId}/snippets")
+				req.PathParam("transcriptId", transcriptId)
+				req.QueryParam("max", max)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&transcriptId, "transcript-id", "", "Unique identifier for the meeting transcript to which the snippets belong.")
+		cmd.MarkFlagRequired("transcript-id")
+		cmd.Flags().StringVar(&max, "max", "", "Maximum snippet items to be returned for this query, to support pagination.")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // get-snippet
+		var transcriptId string
+		var snippetId string
+		cmd := &cobra.Command{
+			Use:   "get-snippet",
+			Short: "Get a Transcript Snippet",
+			Long:  "Retrieves details for a transcript snippet specified by `snippetId` from the meeting transcript specified by `transcriptId`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts/{transcriptId}/snippets/{snippetId}")
+				req.PathParam("transcriptId", transcriptId)
+				req.PathParam("snippetId", snippetId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&transcriptId, "transcript-id", "", "Unique identifier for the meeting transcript to which the requested snippet belongs.")
+		cmd.MarkFlagRequired("transcript-id")
+		cmd.Flags().StringVar(&snippetId, "snippet-id", "", "Unique identifier for the snippet being requested.")
+		cmd.MarkFlagRequired("snippet-id")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // update-snippet
+		var transcriptId string
+		var snippetId string
+		var text string
+		var reason string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-snippet",
+			Short: "Update a Transcript Snippet",
+			Long:  "Updates details for a transcript snippet specified by `snippetId` from the meeting transcript specified by `transcriptId`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetingTranscripts/{transcriptId}/snippets/{snippetId}")
+				req.PathParam("transcriptId", transcriptId)
+				req.PathParam("snippetId", snippetId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("text", text)
+					req.BodyString("reason", reason)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&transcriptId, "transcript-id", "", "Unique identifier for the meeting transcript to which the snippet to be updated belongs.")
+		cmd.MarkFlagRequired("transcript-id")
+		cmd.Flags().StringVar(&snippetId, "snippet-id", "", "Unique identifier for the snippet being updated.")
+		cmd.MarkFlagRequired("snippet-id")
+		cmd.Flags().StringVar(&text, "text", "", "")
+		cmd.Flags().StringVar(&reason, "reason", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+	{ // delete
+		var transcriptId string
+		var reason string
+		var comment string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "delete",
+			Short: "Delete a Transcript",
+			Long:  `Removes a transcript with a specified transcript ID. The deleted transcript cannot be recovered. If a Compliance Officer deletes another user's transcript, the transcript will be inaccessible to regular users (host, attendees), but will be still available to the Compliance Officer.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/meetingTranscripts/{transcriptId}")
+				req.PathParam("transcriptId", transcriptId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("reason", reason)
+					req.BodyString("comment", comment)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&transcriptId, "transcript-id", "", "Unique identifier for the meeting transcript.")
+		cmd.MarkFlagRequired("transcript-id")
+		cmd.Flags().StringVar(&reason, "reason", "", "")
+		cmd.Flags().StringVar(&comment, "comment", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		transcriptsCmd.AddCommand(cmd)
+	}
+
+}
