@@ -130,7 +130,7 @@ func skipAuth(cmd *cobra.Command) bool {
 	// Check the command itself and all parents
 	for c := cmd; c != nil; c = c.Parent() {
 		switch c.Name() {
-		case "login", "logout", "auth", "config", "version", "help", "webex":
+		case "login", "logout", "auth", "config", "version", "update", "help", "webex":
 			// "webex" is the root — only skip if it's the actual command being run (bare `webex`)
 			if c.Name() == "webex" {
 				continue

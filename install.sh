@@ -6,7 +6,7 @@ set -e
 
 REPO="Cloverhound/webex-cli"
 BINARY="webex"
-INSTALL_DIR="/usr/local/bin"
+INSTALL_DIR="${HOME}/.local/bin"
 
 # Detect OS
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -47,17 +47,32 @@ curl -fsSL "$URL" -o "${TMPDIR}/${TARBALL}"
 tar -xzf "${TMPDIR}/${TARBALL}" -C "$TMPDIR"
 
 # Install
-if [ -w "$INSTALL_DIR" ]; then
-  mv "${TMPDIR}/${BINARY}" "${INSTALL_DIR}/${BINARY}"
-else
-  echo "Installing to ${INSTALL_DIR} (requires sudo)..."
-  sudo mv "${TMPDIR}/${BINARY}" "${INSTALL_DIR}/${BINARY}"
-fi
-
+mkdir -p "$INSTALL_DIR"
+mv "${TMPDIR}/${BINARY}" "${INSTALL_DIR}/${BINARY}"
 chmod +x "${INSTALL_DIR}/${BINARY}"
 
 echo "Installed ${BINARY} v${VERSION} to ${INSTALL_DIR}/${BINARY}"
 echo ""
+
+# Warn if INSTALL_DIR is not on PATH
+case ":${PATH}:" in
+  *":${INSTALL_DIR}:"*) ;;
+  *)
+    # Detect shell config file
+    SHELL_NAME=$(basename "${SHELL:-/bin/sh}")
+    case "$SHELL_NAME" in
+      zsh)  RC_FILE=~/.zshrc ;;
+      bash) RC_FILE=~/.bashrc ;;
+      *)    RC_FILE=~/.profile ;;
+    esac
+
+    echo "Note: ${INSTALL_DIR} is not in your PATH. Run:"
+    echo ""
+    echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ${RC_FILE} && source ${RC_FILE}"
+    echo ""
+    ;;
+esac
+
 echo "Get started:"
 echo "  webex config set client-id <your-client-id>      # if not using built-in defaults"
 echo "  webex config set client-secret <your-client-secret>"
