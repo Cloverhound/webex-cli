@@ -2,7 +2,7 @@
 set -e
 
 # Webex CLI installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/ed/webex-cli/main/install.sh | sh
+# Usage: curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh
 
 REPO="Cloverhound/webex-cli"
 BINARY="webex"
