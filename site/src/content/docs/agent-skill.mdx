@@ -1,0 +1,54 @@
+---
+title: Coding Agent Skill
+description: Use the Webex CLI with AI coding agents.
+---
+
+The Webex CLI includes a [skill](https://agentskills.io) that enables AI coding agents to query and manage your Webex environment. It works with any agent that supports the skills standard — [Claude Code](https://claude.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Cursor](https://cursor.com), and others.
+
+## Setup
+
+1. Install the Webex CLI (see [Installation](/webex-cli/installation/))
+2. Login: `webex login`
+3. In a coding agent session, ask it to install the skill:
+
+```
+Fetch https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md
+and save it as a "webex-cli" skill in your global skills folder.
+```
+
+4. If the `webex` binary is not in your `$PATH`, ask your coding agent to update the binary path in the skill file.
+
+## What the Skill Can Do
+
+Once configured, you can ask your coding agent to:
+
+- **List resources**: "List all CC sites", "Show me the call queues"
+- **Inspect configuration**: "What teams are on the Cloverhound WxCC site?"
+- **Debug issues**: "Why can't agents log in?", "Check the business hours schedule"
+- **Analyze the environment**: "Give me an overview of the contact center setup"
+- **Run commands**: "Get the details for entry point X"
+
+## Example Prompts
+
+```
+/webex-cli list all CC entry points and show which ones are chat vs voice
+
+/webex-cli how many agents are assigned to each team?
+
+/webex-cli check auth status and list sites
+```
+
+## Customization
+
+The skill can be customized — just ask your coding agent to modify it. For example:
+
+- "Add our site names and team structures to the webex-cli skill"
+- "Update the skill to only use read-only commands"
+- "Add a workflow example for checking agent availability"
+
+## Skills Documentation
+
+- [Agent Skills standard](https://agentskills.io)
+- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [OpenAI Codex skills](https://developers.openai.com/codex/skills/)
+- [Cursor skills](https://cursor.com/docs/context/skills)

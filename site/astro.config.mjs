@@ -24,7 +24,7 @@ export default defineConfig({
 					{ label: 'Messaging Commands', slug: 'messaging' },
 				]},
 				{ label: 'Integrations', items: [
-					{ label: 'Claude Code Skill', slug: 'claude-skill' },
+					{ label: 'Coding Agent Skill', slug: 'agent-skill' },
 				]},
 			],
 		}),
