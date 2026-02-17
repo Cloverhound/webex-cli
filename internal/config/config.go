@@ -9,7 +9,8 @@ var (
 	token          string
 	debug          bool
 	paginate       bool
-	orgID          string
+	orgID          string // UUID format
+	orgIDBase64    string // base64 Webex format
 	TokenRefresher func() (string, error)
 )
 
@@ -22,9 +23,21 @@ func Debug() bool     { return debug }
 func SetPaginate(p bool) { paginate = p }
 func Paginate() bool     { return paginate }
 
-// SetOrgID stores the org ID, auto-decoding base64 Webex IDs to UUID.
-func SetOrgID(id string) { orgID = DecodeOrgID(id) }
+// SetOrgID stores the org ID in both UUID and base64 formats.
+// Accepts either format as input and derives the other.
+func SetOrgID(id string) {
+	if id == "" {
+		orgID = ""
+		orgIDBase64 = ""
+		return
+	}
+	uuid := DecodeOrgID(id)
+	orgID = uuid
+	orgIDBase64 = EncodeOrgID(uuid)
+}
+
 func OrgID() string      { return orgID }
+func OrgIDBase64() string { return orgIDBase64 }
 
 const (
 	CallingBaseURL = "https://webexapis.com/v1"
@@ -68,5 +81,21 @@ func DecodeOrgID(id string) string {
 		}
 	}
 
+	return id
+}
+
+// EncodeOrgID converts a UUID to the base64-encoded Webex org ID format:
+// base64("ciscospark://us/ORGANIZATION/<uuid>").
+// If the input is empty, returns empty. If the input is already base64-encoded, returns as-is.
+func EncodeOrgID(id string) string {
+	if id == "" {
+		return ""
+	}
+	// If it looks like a UUID, encode it
+	if strings.Count(id, "-") == 4 && len(id) == 36 {
+		uri := "ciscospark://us/ORGANIZATION/" + id
+		return base64.StdEncoding.EncodeToString([]byte(uri))
+	}
+	// Already base64 or unknown format — return as-is
 	return id
 }

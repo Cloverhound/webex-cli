@@ -59,7 +59,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Organization: --organization flag > resolved user's org > default user's org from config.
-		// SetOrgID auto-decodes base64 Webex IDs to UUID.
+		// SetOrgID stores both UUID and base64 formats for downstream use.
 		orgFlag, _ := cmd.Flags().GetString("organization")
 		if orgFlag != "" {
 			config.SetOrgID(orgFlag)
@@ -73,16 +73,28 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Auto-populate --orgid on CC commands from the resolved org.
-		// Also auto-decode any user-provided --orgid base64 value.
+		// CC API uses UUID format, so decode any base64 values.
 		if f := cmd.Flags().Lookup("orgid"); f != nil {
 			if f.Value.String() == "" {
-				// Not set by user — fill from resolved org
 				if config.OrgID() != "" {
 					cmd.Flags().Set("orgid", config.OrgID())
 				}
 			} else {
-				// User provided a value — decode it in case it's base64
 				cmd.Flags().Set("orgid", config.DecodeOrgID(f.Value.String()))
+			}
+		}
+
+		// Auto-populate --org-id on non-CC commands from base64 org ID.
+		// These APIs require base64 format, so convert if needed.
+		if f := cmd.Flags().Lookup("org-id"); f != nil {
+			if f.Value.String() == "" {
+				if config.OrgIDBase64() != "" {
+					cmd.Flags().Set("org-id", config.OrgIDBase64())
+				}
+			} else {
+				// User passed --org-id directly; normalize to base64
+				decoded := config.DecodeOrgID(f.Value.String())
+				cmd.Flags().Set("org-id", config.EncodeOrgID(decoded))
 			}
 		}
 
@@ -91,25 +103,39 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() error {
-	// Remove "required" from --orgid flags on all CC subcommands.
-	// This allows PersistentPreRunE to auto-populate orgid from config/login.
+	// Remove "required" from --orgid/--org-id flags on all subcommands.
+	// This allows PersistentPreRunE to auto-populate from config/login.
 	stripRequiredOrgID(rootCmd)
+	// Hide per-command org flags so only --organization is visible in help.
+	hideOrgFlags(rootCmd)
 	return rootCmd.Execute()
 }
 
-// stripRequiredOrgID recursively removes the "required" annotation from --orgid flags.
+// stripRequiredOrgID recursively removes the "required" annotation from --orgid and --org-id flags.
 func stripRequiredOrgID(cmd *cobra.Command) {
-	if f := cmd.Flags().Lookup("orgid"); f != nil {
-		cmd.Flags().SetAnnotation("orgid", cobra.BashCompOneRequiredFlag, []string{"false"})
-		// Clear the required flag by re-marking it as not required
-		// Cobra stores required flags in annotations
-		annotations := f.Annotations
-		if annotations != nil {
-			delete(annotations, cobra.BashCompOneRequiredFlag)
+	for _, name := range []string{"orgid", "org-id"} {
+		if f := cmd.Flags().Lookup(name); f != nil {
+			cmd.Flags().SetAnnotation(name, cobra.BashCompOneRequiredFlag, []string{"false"})
+			annotations := f.Annotations
+			if annotations != nil {
+				delete(annotations, cobra.BashCompOneRequiredFlag)
+			}
 		}
 	}
 	for _, child := range cmd.Commands() {
 		stripRequiredOrgID(child)
+	}
+}
+
+// hideOrgFlags recursively hides --orgid and --org-id flags so only --organization is visible.
+func hideOrgFlags(cmd *cobra.Command) {
+	for _, name := range []string{"orgid", "org-id"} {
+		if f := cmd.Flags().Lookup(name); f != nil {
+			f.Hidden = true
+		}
+	}
+	for _, child := range cmd.Commands() {
+		hideOrgFlags(child)
 	}
 }
 
