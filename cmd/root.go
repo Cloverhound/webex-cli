@@ -15,6 +15,7 @@ var rootCmd = &cobra.Command{
 	Use:   "webex",
 	Short: "Webex CLI — manage Webex APIs",
 	Long:  `A command-line interface for Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.`,
+	SilenceUsage: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		// Debug mode (set early so auth debug works)
 		debug, _ := cmd.Flags().GetBool("debug")
@@ -87,7 +88,6 @@ var rootCmd = &cobra.Command{
 
 		return nil
 	},
-	SilenceUsage: true,
 }
 
 func Execute() error {
@@ -120,6 +120,15 @@ func init() {
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
+
+	// On flag errors (unknown flag, bad value), print usage with valid flags.
+	// SilenceUsage suppresses Cobra's automatic usage, so we print it ourselves.
+	rootCmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
+		cmd.PrintErrf("Error: %s\n\n", err)
+		cmd.PrintErr(cmd.UsageString())
+		cmd.Root().SilenceErrors = true
+		return err
+	})
 }
 
 // skipAuth returns true for commands that don't need authentication.
