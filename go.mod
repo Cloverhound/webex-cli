@@ -1,6 +1,6 @@
 module github.com/Cloverhound/webex-cli
 
-go 1.23
+go 1.26
 
 require (
 	github.com/olekukonko/tablewriter v0.0.5

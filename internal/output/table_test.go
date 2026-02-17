@@ -63,22 +63,22 @@ func TestClassifyValue(t *testing.T) {
 		t.Errorf("nil: got %q %v", text, kind)
 	}
 
-	text, kind = classifyValue([]interface{}{"a", "b", "c"})
+	text, kind = classifyValue([]any{"a", "b", "c"})
 	if kind != kindSimpleArray || text != "a, b, c" {
 		t.Errorf("string array: got %q %v", text, kind)
 	}
 
-	text, kind = classifyValue([]interface{}{float64(1), float64(2)})
+	text, kind = classifyValue([]any{float64(1), float64(2)})
 	if kind != kindSimpleArray || text != "1, 2" {
 		t.Errorf("number array: got %q %v", text, kind)
 	}
 
-	_, kind = classifyValue(map[string]interface{}{"key": "val"})
+	_, kind = classifyValue(map[string]any{"key": "val"})
 	if kind != kindComplex {
 		t.Errorf("object: got kind %v, want kindComplex", kind)
 	}
 
-	_, kind = classifyValue([]interface{}{map[string]interface{}{"key": "val"}})
+	_, kind = classifyValue([]any{map[string]any{"key": "val"}})
 	if kind != kindComplex {
 		t.Errorf("array of objects: got kind %v, want kindComplex", kind)
 	}
