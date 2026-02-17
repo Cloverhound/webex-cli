@@ -92,9 +92,32 @@ webex logout                   # Remove stored tokens
 webex auth status              # Show current user and token status
 webex auth list                # List all authenticated users
 webex auth switch <email>      # Switch default user
+webex auth set-org <org-id>    # Set a persistent org override
+webex auth clear-org           # Clear the org override
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
+
+### Organization Override
+
+Partner admins managing customer orgs can set a persistent default org so they don't need `--organization` on every command:
+
+```bash
+# Set a default org (accepts UUID or base64 ID, validates via API)
+webex auth set-org <org-id>
+
+# All subsequent commands use the override org
+webex calling devices list
+webex cc site list
+
+# The --organization flag still takes priority for one-off commands
+webex calling people list --organization <other-org-id>
+
+# Clear the override to revert to your home org
+webex auth clear-org
+```
+
+Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
 ## Output Formats
 
