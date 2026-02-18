@@ -25,11 +25,15 @@ The CLI supports OAuth login with tokens stored in the OS keyring.
 webex auth status          # Show current user, org, token expiry
 webex auth list            # List all stored users
 webex auth switch <email>  # Change default user
+webex auth set-org <orgId> # Set a persistent org override (partner admins)
+webex auth clear-org       # Clear the org override
 webex login                # OAuth login (opens browser)
 webex logout [email]       # Remove stored credentials
 ```
 
 If not logged in, use `--token <TOKEN>` or set `$WEBEX_TOKEN`.
+
+Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
 ## Command Structure
 
@@ -48,7 +52,7 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--token <token>` — Override authentication
 - `--user <email>` — Use a specific authenticated user
 - `--organization <orgId>` — Override org ID for this command
-- `--output json|table|raw` — Output format (default: json)
+- `--output json|table|csv|raw` — Output format (default: json)
 - `--debug` — Show HTTP request/response details
 - `--paginate` — Auto-paginate list results
 
