@@ -91,7 +91,7 @@ func isNewer(latest, current string) bool {
 		return parts
 	}
 	l, c := parse(latest), parse(current)
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		if l[i] > c[i] {
 			return true
 		}

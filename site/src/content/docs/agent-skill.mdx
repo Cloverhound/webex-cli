@@ -9,12 +9,59 @@ The Webex CLI includes a [skill](https://agentskills.io) that enables AI coding 
 
 1. Install the Webex CLI (see [Installation](/webex-cli/installation/))
 2. Login: `webex login`
-3. In a coding agent session, ask it to install the skill:
+3. Download the skill into the correct folder for your coding agent (you can also just paste these instructions into your coding agent):
 
+### Claude Code
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.claude/skills/webex-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
+  -o ~/.claude/skills/webex-cli/SKILL.md
 ```
-Fetch https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md
-and save it as a "webex-cli" skill in your global skills folder.
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\webex-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.claude\skills\webex-cli\SKILL.md"
 ```
+
+### OpenAI Codex
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.agents/skills/webex-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
+  -o ~/.agents/skills/webex-cli/SKILL.md
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills\webex-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.agents\skills\webex-cli\SKILL.md"
+```
+
+### Cursor
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.cursor/skills/webex-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
+  -o ~/.cursor/skills/webex-cli/SKILL.md
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\skills\webex-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.cursor\skills\webex-cli\SKILL.md"
+```
+
+:::note
+These commands install the skill globally (user-level). You can also install per-project by placing the `webex-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.agents/skills/`, or `.cursor/skills/` directory instead.
+:::
 
 4. If the `webex` binary is not in your `$PATH`, ask your coding agent to update the binary path in the skill file.
 

@@ -14,7 +14,7 @@ type Request struct {
 	pathParams  map[string]string
 	queryParams map[string]string
 	headers     map[string]string
-	bodyJSON    map[string]interface{}
+	bodyJSON    map[string]any
 	bodyRaw     string
 }
 
@@ -27,7 +27,7 @@ func NewRequest(baseURL, method, path string) *Request {
 		pathParams:  make(map[string]string),
 		queryParams: make(map[string]string),
 		headers:     make(map[string]string),
-		bodyJSON:    make(map[string]interface{}),
+		bodyJSON:    make(map[string]any),
 	}
 }
 

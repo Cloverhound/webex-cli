@@ -68,7 +68,7 @@ const (
 )
 
 // classifyValue returns a formatted string and a kind for a JSON value.
-func classifyValue(v interface{}) (string, valueKind) {
+func classifyValue(v any) (string, valueKind) {
 	switch val := v.(type) {
 	case string:
 		return val, kindScalar
@@ -84,7 +84,7 @@ func classifyValue(v interface{}) (string, valueKind) {
 		return "false", kindScalar
 	case nil:
 		return "", kindScalar
-	case []interface{}:
+	case []any:
 		if len(val) == 0 {
 			return "", kindScalar
 		}
@@ -173,12 +173,12 @@ var preferredArrayKeys = []string{"items", "data"}
 // Complex columns are excluded. Empty results return nil headers/rows with no error.
 // Returns a special empty sentinel when the input contains an empty array.
 func extractRows(data []byte) ([]string, [][]string, bool, error) {
-	var items []map[string]interface{}
+	var items []map[string]any
 
 	// Try to parse as array of objects directly
 	if err := json.Unmarshal(data, &items); err != nil {
 		// Try as single object
-		var obj map[string]interface{}
+		var obj map[string]any
 		if err2 := json.Unmarshal(data, &obj); err2 != nil {
 			return nil, nil, false, fmt.Errorf("not tabular JSON")
 		}
@@ -189,7 +189,7 @@ func extractRows(data []byte) ([]string, [][]string, bool, error) {
 		for _, key := range preferredArrayKeys {
 			if v, ok := obj[key]; ok {
 				if raw, err3 := json.Marshal(v); err3 == nil {
-					var arr []map[string]interface{}
+					var arr []map[string]any
 					if err3 = json.Unmarshal(raw, &arr); err3 == nil {
 						items = arr
 						found = true
@@ -213,7 +213,7 @@ func extractRows(data []byte) ([]string, [][]string, bool, error) {
 			for _, k := range sortedKeys {
 				v := obj[k]
 				if raw, err3 := json.Marshal(v); err3 == nil {
-					var arr []map[string]interface{}
+					var arr []map[string]any
 					if err3 = json.Unmarshal(raw, &arr); err3 == nil {
 						items = arr
 						found = true
@@ -233,7 +233,7 @@ func extractRows(data []byte) ([]string, [][]string, bool, error) {
 
 		// If no array found at all, treat the single object as a one-row table
 		if !found {
-			items = []map[string]interface{}{obj}
+			items = []map[string]any{obj}
 		}
 	}
 
@@ -340,14 +340,8 @@ func printTable(data []byte) error {
 	// Truncate wide cells to keep table within terminal width
 	// Account for borders: | col | col | = len(cols)+1 pipe chars + 2*len(cols) spaces
 	borderOverhead := len(headers) + 1 + 2*len(headers)
-	availWidth := termWidth - borderOverhead
-	if availWidth < len(headers)*4 {
-		availWidth = len(headers) * 4
-	}
-	maxColWidth := availWidth / len(headers)
-	if maxColWidth < 4 {
-		maxColWidth = 4
-	}
+	availWidth := max(termWidth-borderOverhead, len(headers)*4)
+	maxColWidth := max(availWidth/len(headers), 4)
 
 	for i, row := range rows {
 		for j, cell := range row {
