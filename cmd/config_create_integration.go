@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/spf13/cobra"
@@ -151,10 +152,10 @@ var (
 		"identity:people_rw",
 		"identity:groups_rw",
 		"identity:organizations_rw",
-		"Identity:contact",
+		"identity:contact",
 		"identity:tokens_write",
 		"identity:placeonetimepassword_create",
-		"Identity:one_time_password",
+		"identity:one_time_password",
 		"cjp:config",
 		"cjp:config_write",
 		"cjp:user",
@@ -170,6 +171,15 @@ var (
 )
 
 const defaultRedirectURI = "http://localhost:8085/callback"
+
+var integrationHTTPClient = &http.Client{Timeout: 30 * time.Second}
+
+func maskSecret(s string) string {
+	if len(s) <= 8 {
+		return strings.Repeat("*", len(s))
+	}
+	return s[:4] + strings.Repeat("*", len(s)-8) + s[len(s)-4:]
+}
 
 var configCreateIntegrationCmd = &cobra.Command{
 	Use:   "create-integration",
@@ -257,7 +267,7 @@ func runCreateIntegration(cmd *cobra.Command, args []string) error {
 	fmt.Println("Integration created successfully!")
 	fmt.Printf("  ID:            %s\n", integrationID)
 	fmt.Printf("  Client ID:     %s\n", clientID)
-	fmt.Printf("  Client Secret: %s\n", clientSecret)
+	fmt.Printf("  Client Secret: %s\n", maskSecret(clientSecret))
 	fmt.Println()
 
 	cfg, err := appconfig.Load()
@@ -322,7 +332,7 @@ func fetchAndConfirmOrg(token string, reader *bufio.Reader, nonInteractive bool)
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := integrationHTTPClient.Do(req)
 	if err != nil {
 		return "", "", fmt.Errorf("fetching user info: %w", err)
 	}
@@ -345,7 +355,7 @@ func fetchAndConfirmOrg(token string, reader *bufio.Reader, nonInteractive bool)
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
 
-	resp, err = http.DefaultClient.Do(req)
+	resp, err = integrationHTTPClient.Do(req)
 	if err != nil {
 		return "", "", fmt.Errorf("fetching org info: %w", err)
 	}
@@ -576,7 +586,7 @@ func createIntegration(token, orgID, name, description, contactEmail, companyNam
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := integrationHTTPClient.Do(req)
 	if err != nil {
 		return "", "", "", fmt.Errorf("creating integration: %w", err)
 	}
@@ -593,8 +603,8 @@ func createIntegration(token, orgID, name, description, contactEmail, companyNam
 		return "", "", "", fmt.Errorf("parsing response: %w", err)
 	}
 
-	if result.ClientID == "" || result.ClientSecret == "" {
-		return "", "", "", fmt.Errorf("unexpected response: missing clientId or clientSecret\n%s", string(respBody))
+	if result.ID == "" || result.ClientID == "" || result.ClientSecret == "" {
+		return "", "", "", fmt.Errorf("unexpected response: missing id, clientId, or clientSecret\n%s", string(respBody))
 	}
 
 	return result.ClientID, result.ClientSecret, result.ID, nil
