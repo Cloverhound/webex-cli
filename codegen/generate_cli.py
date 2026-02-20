@@ -161,10 +161,16 @@ def generate_command(ep, group_var, base_url_const, is_calling):
 
     # Normalize orgId → orgid for CC commands so auto-populate in root.go works
     # consistently (CC APIs use UUID format via the --orgid flag path).
+    # For path params, rename both the flag and the param key (path uses {orgid}).
+    # For query params, only rename the flag; keep the original API key (orgId).
     if not is_calling:
         path = path.replace('{orgId}', '{orgid}')
         for p in path_params:
             if p['name'] == 'orgId':
+                p['name'] = 'orgid'
+        for p in query_params:
+            if p['name'] == 'orgId':
+                p['_api_name'] = 'orgId'  # preserve original for API call
                 p['name'] = 'orgid'
 
     # Block scope
@@ -267,7 +273,8 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     # Query params
     for p in query_params:
         var = kebab_to_go_var(camel_to_kebab(p['name']))
-        lines.append(f'{indent3}req.QueryParam("{p["name"]}", {var})')
+        api_name = p.get('_api_name', p['name'])
+        lines.append(f'{indent3}req.QueryParam("{api_name}", {var})')
 
     # Extra headers
     for h in extra_headers:

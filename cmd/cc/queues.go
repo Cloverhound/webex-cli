@@ -30,7 +30,7 @@ func init() {
 		var to string
 		var interval string
 		var queueIds string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get-statistics",
@@ -52,7 +52,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("interval", interval)
 				req.QueryParam("queueIds", queueIds)
 				req.QueryParam("queueIds", queueIds)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -72,7 +72,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&to, "to", "", "End time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:55 will be rounded down to 12:45.  The difference between to and from time must be less than 24 hours (86400000 milliseconds).")
 		cmd.Flags().StringVar(&interval, "interval", "", "Time interval (in minutes) to chunk statistics by i.e. break up the entire from-to timeframe by this interval amount so that statistics can be viewed incrementally. Supported values are 15, 30, or 60.")
 		cmd.Flags().StringVar(&queueIds, "queue-ids", "", "Comma-separated list of queue IDs. A maximum of 100 values is permitted. If values are not provided, all queues for an organization are returned.")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		queuesCmd.AddCommand(cmd)
 	}

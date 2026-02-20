@@ -28,7 +28,7 @@ func init() {
 	cmd.CcCmd.AddCommand(subscriptionsCmd)
 
 	{ // list-v1
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "list-v1",
@@ -36,7 +36,7 @@ func init() {
 			Long:  "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V1 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/subscriptions")
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -52,13 +52,13 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
 
 	{ // list-v2
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "list-v2",
@@ -66,7 +66,7 @@ func init() {
 			Long:  "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V2 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/subscriptions")
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -82,7 +82,7 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
@@ -192,7 +192,7 @@ func init() {
 
 	{ // get-v1
 		var id string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get-v1",
@@ -201,7 +201,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/subscriptions/{id}")
 				req.PathParam("id", id)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -219,14 +219,14 @@ func init() {
 		}
 		cmd.Flags().StringVar(&id, "id", "", "")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
 
 	{ // get-v2
 		var id string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get-v2",
@@ -235,7 +235,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/subscriptions/{id}")
 				req.PathParam("id", id)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -253,14 +253,14 @@ func init() {
 		}
 		cmd.Flags().StringVar(&id, "id", "", "")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
 
 	{ // delete-v1
 		var id string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "delete-v1",
@@ -269,7 +269,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/subscriptions/{id}")
 				req.PathParam("id", id)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -280,14 +280,14 @@ func init() {
 		}
 		cmd.Flags().StringVar(&id, "id", "", "")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
 
 	{ // delete-v2
 		var id string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "delete-v2",
@@ -296,7 +296,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v2/subscriptions/{id}")
 				req.PathParam("id", id)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -307,7 +307,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&id, "id", "", "")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
@@ -424,7 +424,7 @@ func init() {
 	}
 
 	{ // list-event-types-v1
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "list-event-types-v1",
@@ -432,7 +432,7 @@ func init() {
 			Long:  "Retrieve all available event types for an organization. Requires `cjp:config_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/event-types")
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -448,13 +448,13 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}
 
 	{ // list-event-types-v2
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "list-event-types-v2",
@@ -462,7 +462,7 @@ func init() {
 			Long:  "Retrieve all available event types for an organization along with information about the currently supported resource versions. Requires `cjp:config_read` scope. ",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v2/event-types")
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -478,7 +478,7 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you.")
 		subscriptionsCmd.AddCommand(cmd)
 	}

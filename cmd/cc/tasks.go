@@ -58,7 +58,7 @@ func init() {
 		var from string
 		var to string
 		var pageSize string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get",
@@ -74,7 +74,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("pageSize", pageSize)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -94,7 +94,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&from, "from", "", "Filters tasks created after the given epoch timestamp (in milliseconds).")
 		cmd.Flags().StringVar(&to, "to", "", "Filters tasks created before the given epoch timestamp (in milliseconds); queries up to the present if timestamp is not specified.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Maximum page size in the response. Maximum allowed value is 1000. Defaults to 100 items per page.")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		tasksCmd.AddCommand(cmd)
 	}

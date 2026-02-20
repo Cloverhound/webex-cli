@@ -30,7 +30,7 @@ func init() {
 		var lookbackMinutes string
 		var maxCv string
 		var minValidSamples string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get",
@@ -43,7 +43,7 @@ func init() {
 				req.QueryParam("lookbackMinutes", lookbackMinutes)
 				req.QueryParam("maxCV", maxCv)
 				req.QueryParam("minValidSamples", minValidSamples)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -63,7 +63,7 @@ func init() {
 		cmd.Flags().StringVar(&lookbackMinutes, "lookback-minutes", "", "Integer between 5 and 240 (4 hours) signifying how long back to look at the data points to determine EWT for this queue")
 		cmd.Flags().StringVar(&maxCv, "max-cv", "", "This an optional parameter. Maximum value of Coefficient of Variance in a subset of samples (wait times for tasks that got connected to agent in one minute interval) to determine whether the average of such values should be treated as a valid sample for EWT computation. If its not passed it takes the default value of 40 %")
 		cmd.Flags().StringVar(&minValidSamples, "min-valid-samples", "", "This an optional parameter. Minimum value of percentage of valid samples (with respect to total number of samples) in the specified lookbackMinutes minutes. If its not passed it takes the default value of 40 %")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		estimatedWaitTimeCmd.AddCommand(cmd)
 	}

@@ -216,7 +216,7 @@ func init() {
 		var to string
 		var pageSize string
 		var page string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get-activities",
@@ -274,7 +274,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("to", to)
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("page", page)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -297,7 +297,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&to, "to", "", "Filter agent activities created before given epoch timestamp in UTC (in milliseconds). If unspecified, queries up to the present.  The difference between to and from timestamps must be less than 24 hours (86400000 milli seconds)")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Maximum page size in response. Maximum allowed value is 1000. Defaults to 100 items per page.")
 		cmd.Flags().StringVar(&page, "page", "", "Page number to be passed. Maximum number of records that can be fetched for the given from and to is 10,000. So maximum page number allowed is based on it. Defaults to 0.")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		agentsCmd.AddCommand(cmd)
 	}
@@ -307,7 +307,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		var to string
 		var interval string
 		var agentIds string
-		var orgId string
+		var orgid string
 		var trackingId string
 		cmd := &cobra.Command{
 			Use:   "get-statistics",
@@ -341,7 +341,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("agentIds", agentIds)
 				req.QueryParam("agentIds", agentIds)
 				req.QueryParam("agentIds", agentIds)
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -361,7 +361,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&to, "to", "", "End time for the query (in epoch milliseconds). Any epoch time can be passed in the input, from date will be rounded down to nearest 15 minute window. For example, epoch time of 12:55 will be rounded down to 12:45.  The difference between to and from time must be less than 24 hours (86400000 milliseconds).")
 		cmd.Flags().StringVar(&interval, "interval", "", "Time interval (in minutes) to chunk statistics by i.e. break up the entire from-to timeframe by this interval amount so that statistics can be viewed incrementally. Supported values are 15, 30, or 60.")
 		cmd.Flags().StringVar(&agentIds, "agent-ids", "", "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned.")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		agentsCmd.AddCommand(cmd)
 	}

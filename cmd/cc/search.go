@@ -26,7 +26,7 @@ func init() {
 	cmd.CcCmd.AddCommand(searchCmd)
 
 	{ // search-tasks
-		var orgId string
+		var orgid string
 		var trackingId string
 		var bodyRaw string
 		var bodyFile string
@@ -40,7 +40,7 @@ Mandatory parameters are FROM and TO, which accept datetime in epoch format. The
 Response Compression: For this API, response compression using gzip can be enabled by including the 'Accept-Encoding' header in the request with its value as 'gzip'. The response will be compressed only if its size exceeds 1 MB. If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma-separated encodings), then the API response will not be compressed, impacting latency as observed from clients.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/search")
-				req.QueryParam("orgId", orgId)
+				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
@@ -56,7 +56,7 @@ Response Compression: For this API, response compression using gzip can be enabl
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
