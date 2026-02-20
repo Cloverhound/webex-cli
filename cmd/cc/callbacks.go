@@ -26,7 +26,7 @@ func init() {
 	cmd.CcCmd.AddCommand(callbacksCmd)
 
 	{ // schedule
-		var orgId string
+		var orgid string
 		var customerName string
 		var callbackNumber string
 		var timezone string
@@ -44,8 +44,8 @@ func init() {
 			Short: "Schedule a Callback",
 			Long:  `Creates a new callback request for a customer. Authorization requires the cjp:user scope. The callback default endpoint (EP) and default ANI must be configured as mandatory settings to successfully make API calls.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/callbacks/organization/{orgId}/scheduled-callback")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/callbacks/organization/{orgid}/scheduled-callback")
+				req.PathParam("orgid", orgid)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -71,8 +71,8 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
-		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&customerName, "customer-name", "", "")
 		cmd.Flags().StringVar(&callbackNumber, "callback-number", "", "")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "")
@@ -89,7 +89,7 @@ func init() {
 	}
 
 	{ // get-scheduled
-		var orgId string
+		var orgid string
 		var callbackNumber string
 		var assigneeAgent string
 		var page string
@@ -101,8 +101,8 @@ func init() {
 			Short: "Get scheduled callbacks",
 			Long:  `Allows the user to list scheduled callbacks for a given customer number or assignee agent, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/callbacks/organization/{orgId}/scheduled-callback")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/callbacks/organization/{orgid}/scheduled-callback")
+				req.PathParam("orgid", orgid)
 				req.QueryParam("callbackNumber", callbackNumber)
 				req.QueryParam("assigneeAgent", assigneeAgent)
 				req.QueryParam("page", page)
@@ -123,8 +123,8 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
-		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&callbackNumber, "callback-number", "", "The callback customer number to filter the scheduled callbacks. Only an exact match will yield the result. Allows an optional country code followed by digits (0-9) and the special characters: space, hyphen -, parentheses ( and ), and period ., ensuring the total length is between 7 and 15 characters.")
 		cmd.Flags().StringVar(&assigneeAgent, "assignee-agent", "", "The unique identifier of the agent assigned to handle the callback. Must be in UUID format. This parameter is optional, but at least one of assigneeAgent or callbackNumber must be provided.")
 		cmd.Flags().StringVar(&page, "page", "", "The page number to retrieve.")
@@ -135,15 +135,15 @@ func init() {
 	}
 
 	{ // get-scheduled-id
-		var orgId string
+		var orgid string
 		var id string
 		cmd := &cobra.Command{
 			Use:   "get-scheduled-id",
 			Short: "Get scheduled callback by Id",
 			Long:  `Retrieve an existing scheduled callback by Id, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}")
+				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -159,15 +159,15 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
-		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "The id with which the Scheduled Callback has been created.")
 		cmd.MarkFlagRequired("id")
 		callbacksCmd.AddCommand(cmd)
 	}
 
 	{ // update-scheduled-id
-		var orgId string
+		var orgid string
 		var id string
 		var customerName string
 		var callbackNumber string
@@ -186,8 +186,8 @@ func init() {
 			Short: "Update scheduled callback by Id",
 			Long:  `Update an existing scheduled callback by Id,those whose scheduled trigger time has already passed cannot be updated. Requires 'cjp:user' scope for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "PUT", "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.CcBaseURL, "PUT", "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}")
+				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
@@ -215,8 +215,8 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
-		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "The id with which the Scheduled Callback has been created.")
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&customerName, "customer-name", "", "")
@@ -235,15 +235,15 @@ func init() {
 	}
 
 	{ // delete-scheduled-id
-		var orgId string
+		var orgid string
 		var id string
 		cmd := &cobra.Command{
 			Use:   "delete-scheduled-id",
 			Short: "Delete scheduled callback by Id",
 			Long:  `Delete an existing scheduled callback by Id, those whose scheduled trigger time has already passed cannot be deleted. Requires 'cjp:user' scope for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}")
+				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -252,8 +252,8 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
-		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which the callback is being scheduled. This should be a valid UUID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "The id with which the Scheduled Callback has been created.")
 		cmd.MarkFlagRequired("id")
 		callbacksCmd.AddCommand(cmd)

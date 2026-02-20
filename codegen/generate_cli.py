@@ -26,6 +26,12 @@ COLLECTIONS = {
 }
 
 
+# Path params that are always the same value — hardcode instead of generating a flag.
+HARDCODED_PATH_PARAMS = {
+    "projectId": "5e5c9ad6d61f870d6d778c1b",
+}
+
+
 def camel_to_kebab(name):
     """Convert camelCase to kebab-case."""
     s = re.sub(r'([a-z0-9])([A-Z])', r'\1-\2', name)
@@ -153,6 +159,14 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     extra_headers = ep.get('extra_headers', [])
     original_name = ep.get('original_name', cmd_name)
 
+    # Normalize orgId → orgid for CC commands so auto-populate in root.go works
+    # consistently (CC APIs use UUID format via the --orgid flag path).
+    if not is_calling:
+        path = path.replace('{orgId}', '{orgid}')
+        for p in path_params:
+            if p['name'] == 'orgId':
+                p['name'] = 'orgid'
+
     # Block scope
     lines.append(f'{indent}{{ // {cmd_name}')
     indent2 = indent + '\t'
@@ -165,6 +179,8 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     all_flags = []
 
     for p in path_params:
+        if p['name'] in HARDCODED_PATH_PARAMS:
+            continue  # hardcoded — no flag needed
         var = kebab_to_go_var(camel_to_kebab(p['name']))
         flag = camel_to_kebab(p['name'])
         if var not in declared_vars:
@@ -241,8 +257,12 @@ def generate_command(ep, group_var, base_url_const, is_calling):
 
     # Path params
     for p in path_params:
-        var = kebab_to_go_var(camel_to_kebab(p['name']))
-        lines.append(f'{indent3}req.PathParam("{p["name"]}", {var})')
+        if p['name'] in HARDCODED_PATH_PARAMS:
+            val = HARDCODED_PATH_PARAMS[p['name']]
+            lines.append(f'{indent3}req.PathParam("{p["name"]}", "{val}")')
+        else:
+            var = kebab_to_go_var(camel_to_kebab(p['name']))
+            lines.append(f'{indent3}req.PathParam("{p["name"]}", {var})')
 
     # Query params
     for p in query_params:

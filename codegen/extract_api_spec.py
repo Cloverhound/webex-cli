@@ -116,11 +116,21 @@ def normalize_url_path(path_segments):
     """Convert Postman path segments to a clean URL path.
 
     :var → {var} style path parameters.
+    {{var}} → {var} (Postman env variables used as path params).
+    {{var}}:action → {var}:action (preserves action suffixes like :export).
     Strips {{baseUrl}} prefix.
     """
     parts = []
     for seg in path_segments:
-        if seg.startswith('{{') or not seg:
+        if not seg:
+            continue
+        if seg == '{{baseUrl}}':
+            continue
+        if seg.startswith('{{'):
+            # {{var}} or {{var}}:action → {var} or {var}:action
+            m = re.match(r'^\{\{(\w+)\}\}(.*)$', seg)
+            if m:
+                parts.append('{' + m.group(1) + '}' + m.group(2))
             continue
         if seg.startswith(':'):
             parts.append('{' + seg[1:] + '}')
@@ -168,6 +178,16 @@ def extract_endpoint(item):
             'name': var.get('key', ''),
             'description': var.get('description', ''),
         })
+
+    # Also extract {{var}} path params not listed in url.variable
+    # (Postman sometimes uses env variable syntax for path params like {{flowId}})
+    existing_param_names = {p['name'] for p in path_params}
+    for seg in path_segments:
+        if seg.startswith('{{') and seg != '{{baseUrl}}':
+            m = re.match(r'^\{\{(\w+)\}\}', seg)
+            if m and m.group(1) not in existing_param_names:
+                path_params.append({'name': m.group(1), 'description': ''})
+                existing_param_names.add(m.group(1))
 
     # Query params
     query_params = []

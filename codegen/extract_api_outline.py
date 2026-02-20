@@ -220,6 +220,9 @@ def normalize_endpoint(name, group=''):
     # Collapse "Get/Read/Fetch [the/a] List [of]" → "List"
     s = re.sub(r'^(?:Get|Read|Fetch|Retrieve)\s+(?:the\s+|a\s+)?List\s+(?:of\s+)?', 'List ', s, flags=re.IGNORECASE)
 
+    # Strip "or Subflow(s)" — redundant with "Flow" in the flow group
+    s = re.sub(r'\s+or\s+Subflows?', '', s, flags=re.IGNORECASE)
+
     # Strip trailing scope qualifiers (query param context, not resource identity)
     # "for an organization", "for a location", "at organization level", etc.
     s = re.sub(r'\s+(?:for|at|in)\s+(?:an?|the)\s+(?:organization|org)(?:\s+level)?$', '', s, flags=re.IGNORECASE)

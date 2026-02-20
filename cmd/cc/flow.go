@@ -27,18 +27,67 @@ var flowCmd = &cobra.Command{
 func init() {
 	cmd.CcCmd.AddCommand(flowCmd)
 
-	{ // export-subflow
-		var orgId string
-		var projectId string
+	{ // list
+		var orgid string
+		var flowType string
+		var ids string
+		var page string
+		var partialNameSearch string
+		var size string
+		var includePagination string
+		cmd := &cobra.Command{
+			Use:   "list",
+			Short: "List Flows or Subflows",
+			Long:  "Returns a list of flows in response.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgid}/project/{projectId}/flows")
+				req.PathParam("orgid", orgid)
+				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
+				req.QueryParam("flowType", flowType)
+				req.QueryParam("ids", ids)
+				req.QueryParam("ids", ids)
+				req.QueryParam("page", page)
+				req.QueryParam("partialNameSearch", partialNameSearch)
+				req.QueryParam("size", size)
+				req.QueryParam("includePagination", includePagination)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&flowType, "flow-type", "", "Either of 'FLOW' or 'SUBFLOW'.")
+		cmd.Flags().StringVar(&ids, "ids", "", "Filters results based on a comma-separated list of flow IDs. If provided, only flows with those IDs will be fetched in the response.")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of the displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&partialNameSearch, "partial-name-search", "", "Performs a partial string match on the name of the flow. If the flow name contains the given string it will be fetched in the response.")
+		cmd.Flags().StringVar(&size, "size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		cmd.Flags().StringVar(&includePagination, "include-pagination", "", "If set to to true then a different paginated response object containing the page metadata (currentPage, totalRecords, pageSize, totalPages) will be returned. The flow objects will be in an array named \"data\".")
+		flowCmd.AddCommand(cmd)
+	}
+
+	{ // export
+		var orgid string
+		var flowId string
 		var version string
 		cmd := &cobra.Command{
-			Use:   "export-subflow",
+			Use:   "export",
 			Short: "Export a Flow or Subflow",
 			Long:  "Returns the exported flow/subflow in response.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgId}/project/{projectId}/flows")
-				req.PathParam("orgId", orgId)
-				req.PathParam("projectId", projectId)
+				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgid}/project/{projectId}/flows/{flowId}:export")
+				req.PathParam("orgid", orgid)
+				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
+				req.PathParam("flowId", flowId)
 				req.QueryParam("version", version)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
@@ -54,30 +103,31 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID.")
-		cmd.MarkFlagRequired("org-id")
-		cmd.Flags().StringVar(&projectId, "project-id", "", "Project ID. System generated value which is the same across orgs and environments. Always use: 5e5c9ad6d61f870d6d778c1b.")
-		cmd.MarkFlagRequired("project-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&flowId, "flow-id", "", "")
+		cmd.MarkFlagRequired("flow-id")
 		cmd.Flags().StringVar(&version, "version", "", "Version ID. Possible values are 'draft', 'latest' or version ID like '64b92c004ccd9f3d1c680709'. Defaulted to 'latest'.")
 		flowCmd.AddCommand(cmd)
 	}
 
-	{ // publish-subflow
-		var orgId string
-		var projectId string
+	{ // publish
+		var orgid string
+		var flowId string
 		var trackingId string
 		var comment string
 		var tagIds []string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "publish-subflow",
+			Use:   "publish",
 			Short: "Publish a Flow or Subflow",
 			Long:  "Returns the published flow in response.\n\nThe Publish API validates the basic structure of the flows. We recommend manually verifying the published flows before proceeding with live traffic.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "POST", "/flow-store/{orgId}/project/{projectId}/flows")
-				req.PathParam("orgId", orgId)
-				req.PathParam("projectId", projectId)
+				req := client.NewRequest(config.CcBaseURL, "POST", "/flow-store/{orgid}/project/{projectId}/flows/{flowId}:publish")
+				req.PathParam("orgid", orgid)
+				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
+				req.PathParam("flowId", flowId)
 				req.Header("TrackingId", trackingId)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
@@ -96,10 +146,10 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID.")
-		cmd.MarkFlagRequired("org-id")
-		cmd.Flags().StringVar(&projectId, "project-id", "", "Project ID. System generated value which is the same across orgs and environments. Always use: 5e5c9ad6d61f870d6d778c1b.")
-		cmd.MarkFlagRequired("project-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&flowId, "flow-id", "", "")
+		cmd.MarkFlagRequired("flow-id")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "ID for tracking.")
 		cmd.Flags().StringVar(&comment, "comment", "", "")
 		cmd.Flags().StringSliceVar(&tagIds, "tag-ids", nil, "")
@@ -108,20 +158,19 @@ func init() {
 		flowCmd.AddCommand(cmd)
 	}
 
-	{ // import-subflow
-		var orgId string
-		var projectId string
+	{ // import
+		var orgid string
 		var overwrite string
 		var flowType string
 		var contentLength string
 		cmd := &cobra.Command{
-			Use:   "import-subflow",
+			Use:   "import",
 			Short: "Import a Flow or Subflow",
 			Long:  "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "POST", "/flow-store/{orgId}/project/{projectId}/flows:import")
-				req.PathParam("orgId", orgId)
-				req.PathParam("projectId", projectId)
+				req := client.NewRequest(config.CcBaseURL, "POST", "/flow-store/{orgid}/project/{projectId}/flows:import")
+				req.PathParam("orgid", orgid)
+				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				req.QueryParam("overwrite", overwrite)
 				req.QueryParam("flowType", flowType)
 				req.Header("Content-Length", contentLength)
@@ -132,10 +181,8 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID.")
-		cmd.MarkFlagRequired("org-id")
-		cmd.Flags().StringVar(&projectId, "project-id", "", "Project ID. System generated value which is the same across orgs and environments. Always use: 5e5c9ad6d61f870d6d778c1b.")
-		cmd.MarkFlagRequired("project-id")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
+		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&overwrite, "overwrite", "", "Determines whether to overwrite the existing flow or not. Possible values: yes/no.")
 		cmd.Flags().StringVar(&flowType, "flow-type", "", "Either of 'FLOW' or 'SUBFLOW'.")
 		cmd.Flags().StringVar(&contentLength, "content-length", "", "Content length value in number of bytes.")
