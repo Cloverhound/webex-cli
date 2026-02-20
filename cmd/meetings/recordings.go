@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strings.Join
+var _ = timeutil.ParseLastISO
 
 var recordingsCmd = &cobra.Command{
 	Use:   "recordings",
@@ -40,12 +42,20 @@ func init() {
 		var serviceType string
 		var status string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Recordings",
 			Long:  "Lists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/recordings")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -84,6 +94,7 @@ func init() {
 		cmd.Flags().StringVar(&serviceType, "service-type", "", "The service type for recordings. If this item is specified, the API filters recordings by service-type.")
 		cmd.Flags().StringVar(&status, "status", "", "Recording's status. If not specified or `available`, retrieves recordings that are available. Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin. The `purged` status only applies if the user calling the API is a Compliance Officer and `meetingId` is specified.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		recordingsCmd.AddCommand(cmd)
 	}
 
@@ -99,12 +110,20 @@ func init() {
 		var serviceType string
 		var status string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-admin-compliance-officer",
 			Short: "List Recordings For an Admin or Compliance Officer",
 			Long:  "List recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/recordings")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -141,6 +160,7 @@ func init() {
 		cmd.Flags().StringVar(&serviceType, "service-type", "", "The service type for recordings. If specified, the API filters recordings by service type.")
 		cmd.Flags().StringVar(&status, "status", "", "Recording's status. If not specified or `available`, retrieves recordings that are available. If specified as `deleted`, retrieves recordings that have been moved to the recycle bin. Otherwise, if specified as `purged`, retrieves recordings that have been purged from the recycle bin.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		recordingsCmd.AddCommand(cmd)
 	}
 
@@ -421,12 +441,20 @@ func init() {
 		var serviceType string
 		var timezone string
 		var hostEmail string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-group",
 			Short: "List Group Recordings",
 			Long:  "List group recordings for a service app which has group recording access. You can specify a date range, the maximum number of recordings to return, and `personId` or `hostEmail` of whom the recordings will be retrieved.\n\n* The list returned is sorted in descending order by the date and time that the recordings were created.\n\n* Only recordings which are in the `available` status and not shared by others can be listed. Those in the `deleted` or `purged` status or shared by others can't be listed.\n\n* Long result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the API lists group recordings on the specified site; otherwise, the API lists group recordings on all the sites managed by the service app. All the sites managed by a service app can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only recordings of meetings hosted by the person of `personId` or `hostEmail` will be returned.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.\n\n* `hostEmail`: Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/group/recordings")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("personId", personId)
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
@@ -463,6 +491,7 @@ func init() {
 		cmd.Flags().StringVar(&serviceType, "service-type", "", "The service type for recordings. If specified, the API filters recordings by service type.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
 		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		recordingsCmd.AddCommand(cmd)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var analyticsCmd = &cobra.Command{
 	Use:   "analytics",
@@ -28,6 +30,7 @@ func init() {
 	{ // historical-data-related-messaging
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "historical-data-related-messaging",
 			Short: "Historical Data related to Messaging",
@@ -36,6 +39,13 @@ func init() {
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/messagingMetrics/dailyTotals")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
@@ -54,12 +64,14 @@ func init() {
 		}
 		cmd.Flags().StringVar(&from, "from", "", "UTC date starting from which the data needs to be returned.")
 		cmd.Flags().StringVar(&to, "to", "", "UTC date up to which the data needs to be returned")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		analyticsCmd.AddCommand(cmd)
 	}
 
 	{ // historical-data-related-room-devices
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "historical-data-related-room-devices",
 			Short: "Historical Data related to Room Devices",
@@ -68,6 +80,13 @@ func init() {
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/roomDeviceMetrics/dailyTotals")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
@@ -86,6 +105,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&from, "from", "", "Starting UTC Date from which historical data should be returned.")
 		cmd.Flags().StringVar(&to, "to", "", "Ending UTC Date for which data should be returned.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		analyticsCmd.AddCommand(cmd)
 	}
 
@@ -93,6 +113,7 @@ func init() {
 		var siteUrl string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "historical-data-related-meetings",
 			Short: "Historical Data related to Meetings",
@@ -101,6 +122,13 @@ func init() {
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature.</Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/meetingsMetrics/aggregates")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -121,6 +149,7 @@ func init() {
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site for which historical data is requested.")
 		cmd.Flags().StringVar(&from, "from", "", "UTC Date starting from which the data needs to be returned")
 		cmd.Flags().StringVar(&to, "to", "", "UTC Date up to which the data needs to be returned")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		analyticsCmd.AddCommand(cmd)
 	}
 

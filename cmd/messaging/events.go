@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var eventsCmd = &cobra.Command{
 	Use:   "events",
@@ -32,6 +34,7 @@ func init() {
 		var from string
 		var to string
 		var max string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Events",
@@ -40,6 +43,13 @@ func init() {
 Long result sets will be split into [pages](/docs/basics#pagination).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/events")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("resource", resource)
 				req.QueryParam("type", typeVal)
 				req.QueryParam("actorId", actorId)
@@ -66,6 +76,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 		cmd.Flags().StringVar(&from, "from", "", "List events which occurred after a specific date and time.")
 		cmd.Flags().StringVar(&to, "to", "", "List events that occurred before a specific date and time. If not specified, events up to the present time will be listed. Cannot be set to a future date relative to the current time.")
 		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		eventsCmd.AddCommand(cmd)
 	}
 

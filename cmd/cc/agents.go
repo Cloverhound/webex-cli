@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strings.Join
+var _ = timeutil.ParseLastISO
 
 var agentsCmd = &cobra.Command{
 	Use:   "agents",
@@ -218,6 +220,7 @@ func init() {
 		var page string
 		var orgid string
 		var trackingId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-activities",
 			Short: "Get Agent Activities",
@@ -228,6 +231,13 @@ The response will be compressed only if its size exceeds 1 MB.
 If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/agents/activities")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastEpochMs(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("agentIds", agentIds)
 				req.QueryParam("agentIds", agentIds)
 				req.QueryParam("agentIds", agentIds)
@@ -299,6 +309,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&page, "page", "", "Page number to be passed. Maximum number of records that can be fetched for the given from and to is 10,000. So maximum page number allowed is based on it. Defaults to 0.")
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		agentsCmd.AddCommand(cmd)
 	}
 
@@ -309,6 +320,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		var agentIds string
 		var orgid string
 		var trackingId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-statistics",
 			Short: "Get Agent Statistics",
@@ -318,6 +330,13 @@ The response will be compressed only if its size exceeds 1 MB.
 If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/agents/statistics")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastEpochMs(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("interval", interval)
@@ -363,6 +382,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&agentIds, "agent-ids", "", "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned.")
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		agentsCmd.AddCommand(cmd)
 	}
 

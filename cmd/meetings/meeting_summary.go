@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var meetingSummaryCmd = &cobra.Command{
 	Use:   "meeting-summary",
@@ -32,12 +34,20 @@ func init() {
 		var to string
 		var max string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-usage-reports",
 			Short: "List Meeting Usage Reports",
 			Long:  "List meeting usage reports of all the users on the specified site by an admin. You can specify a date range and the maximum number of meeting usage reports to return.\n\nThe list returned is sorted in descending order by the date and time the meetings were started.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* `siteUrl` is required, and the meeting usage reports of the specified site are listed. All available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default timezone is `UTC` if not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingReports/usage")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("serviceType", serviceType)
 				req.QueryParam("from", from)
@@ -64,6 +74,7 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "Ending date and time for meeting usage reports to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`. The interval between `to` and `from` cannot exceed 30 days.")
 		cmd.Flags().StringVar(&max, "max", "", "Maximum number of meetings to include in the meetings usage report in a single page. `max` must be greater than 0 and equal to or less than `1000`.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. Asia/Shanghai")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		meetingSummaryCmd.AddCommand(cmd)
 	}
 
@@ -76,12 +87,20 @@ func init() {
 		var meetingNumber string
 		var meetingTitle string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-attendee-reports",
 			Short: "List Meeting Attendee Reports",
 			Long:  "Lists of meeting attendee reports by a date range, the maximum number of meeting attendee reports, a meeting ID, a meeting number or a meeting title.\n\nIf the requesting user is an admin, the API returns meeting attendee reports of the meetings hosted by all the users on the specified site filtered by meeting ID, meeting number or meeting title.\n\nIf it's a normal meeting host, the API returns meeting attendee reports of the meetings hosted by the user himself on the specified site filtered by meeting ID, meeting number or meeting title.\n\nThe list returned is grouped by meeting instances. Both the groups and items of each group are sorted in descending order of `joinedTime`. For example, if `meetingId` is specified and it's a meeting series ID, the returned list is grouped by meeting instances of that series. The groups are sorted in descending order of `joinedTime`, and within each group the items are also sorted in descending order of `joinedTime`. Please refer to [Meetings Overview](/docs/meetings) for details of meeting series, scheduled meeting and meeting instance.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* `siteUrl` is required, and the meeting attendee reports of the specified site are listed. All available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* `meetingId`, `meetingNumber` and `meetingTitle` are optional parameters to query the meeting attendee reports, but at least one of them should be specified. If more than one parameter in the sequence of `meetingId`, `meetingNumber`, and `meetingTitle` are specified, the first one in the sequence is used. Currently, only ended meeting instance IDs and meeting series IDs are supported for `meetingId`. IDs of scheduled meetings or personal room meetings are not supported.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default timezone is `UTC` if not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingReports/attendees")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -112,6 +131,7 @@ func init() {
 		cmd.Flags().StringVar(&meetingNumber, "meeting-number", "", "Meeting number for the meeting attendee reports to return. If specified, return meeting attendee reports of the specified meeting; otherwise, return meeting attendee reports of all meetings.")
 		cmd.Flags().StringVar(&meetingTitle, "meeting-title", "", "Meeting title for the meeting attendee reports to return. If specified, return meeting attendee reports of the specified meeting; otherwise, return meeting attendee reports of all meetings.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. Asia/Shanghai")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		meetingSummaryCmd.AddCommand(cmd)
 	}
 

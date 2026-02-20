@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strconv.Itoa
+var _ = timeutil.ParseLastISO
 
 var partnerReportsTemplatesCmd = &cobra.Command{
 	Use:   "partner-reports-templates",
@@ -34,12 +36,20 @@ func init() {
 		var to string
 		var regionId string
 		var onBehalfOfSubPartnerOrgId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Reports",
 			Long:  "Lists all reports previously generated from a given region. Use query parameters to filter the response. The parameters are optional.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` scopes.\n\n<div><Callout type=\"info\">CSV reports for Webex suite services are only supported for organizations based in one region per API request. Organizations based in a different region will require a separate request with region specified.</Callout></div>\n\n<div><Callout type=\"info\">When no region is specified, the request defaults to Partner organization's home region.</Callout></div>\n\n<div><Callout type=\"info\">Reports are usually provided in zip format. A content-header application/zip or application/octet-stream does indicate the zip format. There is usually no .zip file extension.</Callout></div>",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/reports")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("service", service)
 				req.QueryParam("templateId", templateId)
 				req.QueryParam("from", from)
@@ -66,6 +76,7 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "List reports that were created before this date.")
 		cmd.Flags().StringVar(&regionId, "region-id", "", "Data in the report will be from organizations in this region, for example, US, CA, or EU.")
 		cmd.Flags().StringVar(&onBehalfOfSubPartnerOrgId, "on-behalf-of-sub-partner-org-id", "", "The encoded organization ID for the sub partner.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		partnerReportsTemplatesCmd.AddCommand(cmd)
 	}
 

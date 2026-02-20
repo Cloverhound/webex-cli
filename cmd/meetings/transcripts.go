@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var transcriptsCmd = &cobra.Command{
 	Use:   "transcripts",
@@ -32,12 +34,20 @@ func init() {
 		var meetingId string
 		var hostEmail string
 		var siteUrl string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-meeting",
 			Short: "List Meeting Transcripts",
 			Long:  "Lists available transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances).\n\nUse this operation to list transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) when they are ready. Please note that only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -64,6 +74,7 @@ func init() {
 		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcript belongs. Please note that currently the meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API. If `meetingId` is not specified, the operation returns an array of transcripts for all meetings of the current user.")
 		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the `admin-level` scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user. If `meetingId` is not specified, it can not support `hostEmail`.")
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site from which the API lists transcripts. If not specified, the API lists transcripts from user's preferred site. All available Webex sites and the preferred site of the user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		transcriptsCmd.AddCommand(cmd)
 	}
 
@@ -72,12 +83,20 @@ func init() {
 		var to string
 		var max string
 		var siteUrl string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-meeting-compliance-officer",
 			Short: "List Meeting Transcripts For Compliance Officer",
 			Long:  "Lists available or deleted transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) for a specific site.\n\nThe returned list is sorted in descending order by the date and time that the transcript was created.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meetingTranscripts")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("max", max)
@@ -100,6 +119,7 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "Ending date and time (exclusive) for List transcripts to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`.")
 		cmd.Flags().StringVar(&max, "max", "", "Maximum number of transcripts to return in a single page. `max` must be equal to or greater than `1` and equal to or less than `100`.")
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site from which the API lists transcripts.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		transcriptsCmd.AddCommand(cmd)
 	}
 

@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var recordingReportCmd = &cobra.Command{
 	Use:   "recording-report",
@@ -32,12 +34,20 @@ func init() {
 		var hostEmail string
 		var siteUrl string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-audit-summaries",
 			Short: "List of Recording Audit Report Summaries",
 			Long:  "Lists of recording audit report summaries. You can specify a date range and the maximum number of recording audit report summaries to return.\n\nOnly recording audit report summaries of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the recording audit report summaries of the specified site will be listed; otherwise, recording audit report summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/recordingReport/accessSummary")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -64,6 +74,7 @@ func init() {
 		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site they manage and the API will return recording audit report summaries of that user. If a special value of `all` is set for `hostEmail`, the admin can list recording audit report summaries of all users on the target site, not of a single user.")
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site which the API lists recording audit report summaries from. If not specified, the API lists summary audit report for recordings from the user's preferred site. All available Webex sites and the preferred site of the user can be retrieved by `Get Site List` API.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		recordingReportCmd.AddCommand(cmd)
 	}
 
@@ -109,12 +120,20 @@ func init() {
 		var to string
 		var siteUrl string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-meeting-archive-summaries",
 			Short: "List Meeting Archive Summaries",
 			Long:  "Lists of meeting archive summaries. You can specify a date range and the maximum number of meeting archive summaries to return.\n\nMeeting archive summaries are only available to full administrators, not even the meeting host.\n\nThe list returned is sorted in descending order by the date and time that the archives were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the meeting archive summaries of the specified site will be listed; otherwise, meeting archive summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/recordingReport/meetingArchiveSummaries")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -139,6 +158,7 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "Ending date and time (exclusive) for meeting archive summaries to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`. Please note that the interval between `to` and `from` cannot exceed 30 days.")
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site which the API lists meeting archive summaries from. If not specified, the API lists meeting archive summaries for recordings from the user's preferred site. All available Webex sites and the preferred site of the user can be retrieved by `Get Site List` API.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		recordingReportCmd.AddCommand(cmd)
 	}
 

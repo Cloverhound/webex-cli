@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strings.Join
+var _ = timeutil.ParseLastISO
 
 var convergedRecordingsCmd = &cobra.Command{
 	Use:   "converged-recordings",
@@ -39,12 +41,20 @@ func init() {
 		var locationId string
 		var topic string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Recordings",
 			Long:  "List recordings. You can specify a date range, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\nList recordings requires the `spark:recordings_read` scope.\n\nPlease use `List Recordings for Admin or Compliance Officer` API to list all recordings for a user with the role Compliance officer or Admin\n\nRequest Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/convergedRecordings")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -81,6 +91,7 @@ func init() {
 		cmd.Flags().StringVar(&locationId, "location-id", "", "Fetch recordings for users in a particular Webex Calling location (as configured in Control Hub).")
 		cmd.Flags().StringVar(&topic, "topic", "", "Recording's topic. If specified, the API filters recordings by topic in a case-insensitive manner.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		convergedRecordingsCmd.AddCommand(cmd)
 	}
 
@@ -98,12 +109,20 @@ func init() {
 		var locationId string
 		var topic string
 		var timezone string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-admin-compliance-officer",
 			Short: "List Recordings for Admin or Compliance officer",
 			Long:  "List recordings for an admin or compliance officer. You can specify a date range, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\nList recordings requires the `spark-compliance:recordings_read` scope for compliance officer and `spark-admin:recordings_read` scope for admin.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/convergedRecordings")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("max", max)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -144,6 +163,7 @@ func init() {
 		cmd.Flags().StringVar(&locationId, "location-id", "", "Fetch recordings for users in a particular Webex Calling location (as configured in Control Hub).")
 		cmd.Flags().StringVar(&topic, "topic", "", "Recording's topic. If specified, the API filters recordings by topic in a case-insensitive manner.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		convergedRecordingsCmd.AddCommand(cmd)
 	}
 

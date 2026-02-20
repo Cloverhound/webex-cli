@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strings.Join
+var _ = timeutil.ParseLastISO
 
 var videoMeshCmd = &cobra.Command{
 	Use:   "video-mesh",
@@ -31,12 +33,20 @@ func init() {
 		var from string
 		var to string
 		var orgId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-clusters-availability",
 			Short: "List Clusters Availability",
 			Long:  `Returns the availability details for all Video Mesh clusters in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters/availability")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
@@ -57,6 +67,7 @@ func init() {
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique ID for the organization.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -64,12 +75,20 @@ func init() {
 		var clusterId string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-cluster-availability",
 			Short: "Get Cluster Availability",
 			Long:  `Returns the availability details of a single Video Mesh cluster in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters/availability/{clusterId}")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.PathParam("clusterId", clusterId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -91,6 +110,7 @@ func init() {
 		cmd.MarkFlagRequired("cluster-id")
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -98,12 +118,20 @@ func init() {
 		var from string
 		var to string
 		var clusterId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-node-availability",
 			Short: "List Node Availability",
 			Long:  `Returns the availability details of all nodes in a Video Mesh cluster.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/nodes/availability")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
@@ -124,6 +152,7 @@ func init() {
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "The unique Video Mesh cluster ID.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -131,12 +160,20 @@ func init() {
 		var nodeId string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-node-availability",
 			Short: "Get Node Availability",
 			Long:  `Returns the availability details of a single node in a Video Mesh cluster.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/nodes/availability/{nodeId}")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.PathParam("nodeId", nodeId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -158,6 +195,7 @@ func init() {
 		cmd.MarkFlagRequired("node-id")
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -166,6 +204,7 @@ func init() {
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-media-health-monitoring-tool-test-results-v2",
 			Short: "List Media Health Monitoring Tool Test results V2",
@@ -180,6 +219,13 @@ Changes in V2:
 On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/mediaHealthMonitorTest")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -202,6 +248,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -210,6 +257,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-media-health-monitoring-tool-test-results-clusters-v2",
 			Short: "Get Media Health Monitoring Tool Test results for clusters V2",
@@ -224,6 +272,13 @@ Changes in V2:
 On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/mediaHealthMonitorTest/clusters")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("clusterId", clusterId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -246,6 +301,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -254,6 +310,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-media-health-monitoring-tool-test-results-node-v2",
 			Short: "Get Media Health Monitoring Tool Test results for node V2",
@@ -268,6 +325,13 @@ Changes in V2:
 On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/mediaHealthMonitorTest/nodes")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("nodeId", nodeId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -290,6 +354,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -297,12 +362,20 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var from string
 		var to string
 		var orgId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-overflow-cloud",
 			Short: "List Overflow to Cloud details",
 			Long:  `Returns details of overflows to the cloud in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/cloudOverflow")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
@@ -323,6 +396,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique Video Mesh organization ID.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -330,12 +404,20 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var from string
 		var to string
 		var orgId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-cluster-redirect",
 			Short: "List Cluster Redirect details",
 			Long:  `Returns the redirect details of all Video Mesh clusters in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/callRedirects")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
@@ -356,6 +438,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique Video Mesh organization ID.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -363,12 +446,20 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var from string
 		var to string
 		var clusterId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-cluster-redirect",
 			Short: "Get Cluster Redirect details",
 			Long:  `Returns details of cluster redirects for a single Video Mesh cluster.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters/callRedirects")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
@@ -389,6 +480,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "The unique Video Mesh Cluster ID.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -396,12 +488,20 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var from string
 		var to string
 		var orgId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-clusters-utilization",
 			Short: "List Clusters Utilization",
 			Long:  `Returns the utilization details of all Video Mesh clusters in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/utilization")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
@@ -422,6 +522,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique ID for the organization.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -429,12 +530,20 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var from string
 		var to string
 		var clusterId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-cluster-utilization",
 			Short: "Get Cluster Utilization details",
 			Long:  `Returns the utilization details for a single Video Mesh cluster.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters/utilization")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
@@ -455,6 +564,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		cmd.Flags().StringVar(&from, "from", "", "The starting date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `from` cannot be after `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The ending date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "The unique Video Mesh Cluster ID.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -463,6 +573,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-reachability-test-results-v2",
 			Short: "List Reachability Test results V2",
@@ -481,6 +592,13 @@ Changes in V2:
 2. You can now view the destination IP address of the destination cluster in the JSON response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/reachabilityTest")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -503,6 +621,7 @@ Changes in V2:
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -511,6 +630,7 @@ Changes in V2:
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-reachability-test-results-cluster-v2",
 			Short: "Get Reachability Test results for cluster V2",
@@ -529,6 +649,13 @@ Changes in V2:
 2. You can now view the destination IP address of the destination cluster in the JSON response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/reachabilityTest/clusters")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("clusterId", clusterId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -551,6 +678,7 @@ Changes in V2:
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -559,6 +687,7 @@ Changes in V2:
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-reachability-test-results-node-v2",
 			Short: "Get Reachability Test results for node V2",
@@ -577,6 +706,13 @@ Changes in V2:
 2. You can now view the destination IP address of the destination cluster in the JSON response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/reachabilityTest/nodes")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("nodeId", nodeId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -599,6 +735,7 @@ Changes in V2:
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -793,6 +930,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-network-test-results",
 			Short: "List Network Test results",
@@ -804,6 +942,13 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/networkTest")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -826,6 +971,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -834,6 +980,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-network-test-results-cluster",
 			Short: "Get Network Test results for cluster",
@@ -845,6 +992,13 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/networkTest/clusters")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("clusterId", clusterId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -867,6 +1021,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -875,6 +1030,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		var triggerType string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-network-test-results-node",
 			Short: "Get Network Test results for node",
@@ -886,6 +1042,13 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults/networkTest/nodes")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("nodeId", nodeId)
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
@@ -908,6 +1071,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		cmd.Flags().StringVar(&triggerType, "trigger-type", "", "Trigger type.")
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -916,12 +1080,20 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		var from string
 		var to string
 		var deviceType string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-cluster-client-type-distribution",
 			Short: "List Cluster Client Type Distribution details",
 			Long:  `Returns the client type distribution details for all Video Mesh clusters in an organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clientTypeDistribution")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -944,6 +1116,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&deviceType, "device-type", "", "Device type(s).  - Possible values:  `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 
@@ -952,12 +1125,20 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		var from string
 		var to string
 		var deviceType string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-cluster-client-type-distribution",
 			Short: "Get Cluster Client Type Distribution details",
 			Long:  `Returns the client type distribution details for a single Video Mesh cluster.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clientTypeDistribution/clusters")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("clusterId", clusterId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -980,6 +1161,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The `from` parameter cannot have date and time values that exceed `to`.")
 		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
 		cmd.Flags().StringVar(&deviceType, "device-type", "", "Device type(s).  - Possible values:     `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		videoMeshCmd.AddCommand(cmd)
 	}
 

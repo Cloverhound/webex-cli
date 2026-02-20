@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var adminAuditCmd = &cobra.Command{
 	Use:   "admin-audit",
@@ -33,6 +35,7 @@ func init() {
 		var max string
 		var offset string
 		var eventCategories string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list-events",
 			Short: "List Admin Audit Events",
@@ -43,6 +46,13 @@ Long result sets will be split into [pages](/docs/basics#pagination).
 **NOTE**: A maximum of one year of audit events can be returned per request.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/adminAudit/events")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
@@ -72,6 +82,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).
 		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. The maximum value is `200`.")
 		cmd.Flags().StringVar(&offset, "offset", "", "Offset from the first result that you want to fetch.")
 		cmd.Flags().StringVar(&eventCategories, "event-categories", "", "List events, by event categories.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		adminAuditCmd.AddCommand(cmd)
 	}
 

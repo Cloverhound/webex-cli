@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var queuesCmd = &cobra.Command{
 	Use:   "queues",
@@ -32,6 +34,7 @@ func init() {
 		var queueIds string
 		var orgid string
 		var trackingId string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "get-statistics",
 			Short: "Get Queue Statistics",
@@ -47,6 +50,13 @@ If the header is not present in the request or if gzip is not listed as one of t
 `,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/queues/statistics")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastEpochMs(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("interval", interval)
@@ -74,6 +84,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.Flags().StringVar(&queueIds, "queue-ids", "", "Comma-separated list of queue IDs. A maximum of 100 values is permitted. If values are not provided, all queues for an organization are returned.")
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. ")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		queuesCmd.AddCommand(cmd)
 	}
 

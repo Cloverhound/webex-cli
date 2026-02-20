@@ -74,6 +74,15 @@ def escape_go_double_quoted(s):
     return json.dumps(s)
 
 
+# CC API paths where --from/--to expect epoch milliseconds (not ISO 8601).
+EPOCH_MS_PATHS = {
+    "/v1/queues/statistics",
+    "/v1/agents/statistics",
+    "/v1/agents/activities",
+    "/v1/tasks",
+}
+
+
 def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_calling):
     """Generate Go source for one group's commands."""
     group_var = kebab_to_camel(group) + "Cmd"
@@ -90,14 +99,15 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     # Check if we need strconv
     needs_strconv = False
     needs_strings = False
+    needs_timeutil = False
     for ep in endpoints:
         for f in ep.get('body_fields', []):
             if f['type'] in ('int64', 'float64'):
                 needs_strconv = True
             if f['type'] == '[]string':
                 needs_strings = True
-        for p in ep.get('query_params', []):
-            pass  # query params are always strings
+        if any(p['name'] == 'from' for p in ep.get('query_params', [])):
+            needs_timeutil = True
 
     if needs_strconv:
         lines.append('\t"strconv"')
@@ -109,6 +119,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/client"')
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/config"')
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/output"')
+    if needs_timeutil:
+        lines.append('\t"github.com/Cloverhound/webex-cli/internal/timeutil"')
     lines.append('\t"github.com/spf13/cobra"')
     lines.append(')')
     lines.append('')
@@ -122,6 +134,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
         lines.append('var _ = strconv.Itoa')
     if needs_strings:
         lines.append('var _ = strings.Join')
+    if needs_timeutil:
+        lines.append('var _ = timeutil.ParseLastISO')
     lines.append('')
 
     lines.append(f'var {group_var} = &cobra.Command{{')
@@ -158,6 +172,7 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     description = ep.get('description', '')
     extra_headers = ep.get('extra_headers', [])
     original_name = ep.get('original_name', cmd_name)
+    has_from = any(p['name'] == 'from' for p in query_params)
 
     # Normalize orgId → orgid for CC commands so auto-populate in root.go works
     # consistently (CC APIs use UUID format via the --orgid flag path).
@@ -243,6 +258,10 @@ def generate_command(ep, group_var, base_url_const, is_calling):
             elif go_type == '[]string':
                 lines.append(f'{indent2}var {var} []string')
 
+    # --last convenience flag for endpoints with a 'from' query param
+    if has_from:
+        lines.append(f'{indent2}var last string')
+
     # --body and --body-file for POST/PUT/PATCH or complex bodies
     if has_body:
         lines.append(f'{indent2}var bodyRaw string')
@@ -260,6 +279,17 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     indent3 = indent2 + '\t\t'
 
     lines.append(f'{indent3}req := client.NewRequest({base_url_const}, "{method}", {escape_go_double_quoted(path)})')
+
+    # --last → from/to conversion
+    if has_from:
+        parse_func = 'timeutil.ParseLastEpochMs' if path in EPOCH_MS_PATHS else 'timeutil.ParseLastISO'
+        lines.append(f'{indent3}if last != "" {{')
+        lines.append(f'{indent3}\tvar err error')
+        lines.append(f'{indent3}\tfrom, to, err = {parse_func}(last)')
+        lines.append(f'{indent3}\tif err != nil {{')
+        lines.append(f'{indent3}\t\treturn err')
+        lines.append(f'{indent3}\t}}')
+        lines.append(f'{indent3}}}')
 
     # Path params
     for p in path_params:
@@ -355,6 +385,10 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     if has_body:
         lines.append(f'{indent2}cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")')
         lines.append(f'{indent2}cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")')
+
+    # --last convenience flag
+    if has_from:
+        lines.append(f'{indent2}cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")')
 
     lines.append(f'{indent2}{group_var}.AddCommand(cmd)')
     lines.append(f'{indent}}}')

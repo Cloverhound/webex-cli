@@ -10,6 +10,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
 var _ = strconv.Itoa
+var _ = timeutil.ParseLastISO
 
 var reportsCmd = &cobra.Command{
 	Use:   "reports",
@@ -33,12 +35,20 @@ func init() {
 		var templateId string
 		var from string
 		var to string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Reports",
 			Long:  "Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from` and `to` parameters should be provided together.\n\n**Notes**:\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.\n\nReports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream` does indicate the zip format. There is usually no .zip file extension.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/reports")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("reportId", reportId)
 				req.QueryParam("service", service)
 				req.QueryParam("templateId", templateId)
@@ -63,6 +73,7 @@ func init() {
 		cmd.Flags().StringVar(&templateId, "template-id", "", "List reports with this report template ID.")
 		cmd.Flags().StringVar(&from, "from", "", "List reports that were created on or after this date.")
 		cmd.Flags().StringVar(&to, "to", "", "List reports that were created before this date.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		reportsCmd.AddCommand(cmd)
 	}
 

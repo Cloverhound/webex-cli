@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var roomsCmd = &cobra.Command{
 	Use:   "rooms",
@@ -33,12 +35,20 @@ func init() {
 		var to string
 		var sortBy string
 		var max string
+		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Rooms",
 			Long:  "List rooms to which the authenticated user belongs to.\n\nThe `title` of the room for 1:1 rooms will be the display name of the other person. Please use the [memberships API](https://developer.webex.com/docs/api/v1/memberships) to list the people in the space.\n\nLong result sets will be split into [pages](/docs/basics#pagination).\n\nKnown Limitations:\nThe underlying database does not support natural sorting by `lastactivity` and will only sort on limited set of results, which are pulled from the database in order of `roomId`. For users or bots in more than 3000 spaces this can result in anomalies such as spaces that have had recent activity not being returned in the results when sorting by `lastacivity`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/rooms")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
 				req.QueryParam("teamId", teamId)
 				req.QueryParam("type", typeVal)
 				req.QueryParam("orgPublicSpaces", orgPublicSpaces)
@@ -67,6 +77,7 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "Filters rooms, that were made public before this time. See `maePublic` timestamp")
 		cmd.Flags().StringVar(&sortBy, "sort-by", "", "Sort results. Cannot be set in combination with `orgPublicSpaces`.")
 		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of rooms in the response. Value must be between 1 and 1000, inclusive.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		roomsCmd.AddCommand(cmd)
 	}
 
