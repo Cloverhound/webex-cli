@@ -31,6 +31,11 @@ HARDCODED_PATH_PARAMS = {
     "projectId": "5e5c9ad6d61f870d6d778c1b",
 }
 
+# Groups to skip during codegen — hand-written replacements exist (custom_*.go).
+SKIP_GROUPS = {
+    "Webex Contact Center": {"search"},
+}
+
 
 def camel_to_kebab(name):
     """Convert camelCase to kebab-case."""
@@ -409,9 +414,9 @@ def main():
         out_dir = os.path.join(CLI_DIR, "cmd", pkg)
         os.makedirs(out_dir, exist_ok=True)
 
-        # Clean existing generated files
+        # Clean existing generated files (preserve hand-written custom_*.go)
         for f in os.listdir(out_dir):
-            if f.endswith('.go'):
+            if f.endswith('.go') and not f.startswith('custom_'):
                 os.remove(os.path.join(out_dir, f))
 
         file_count = 0
@@ -420,6 +425,11 @@ def main():
             group = group_data['group']
             endpoints = group_data['endpoints']
             if not endpoints:
+                continue
+
+            skip_set = SKIP_GROUPS.get(collection_name, set())
+            if group in skip_set:
+                print(f"  Skipping group '{group}' (hand-written override)")
                 continue
 
             source = generate_group_file(
