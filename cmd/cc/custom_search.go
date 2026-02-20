@@ -164,6 +164,15 @@ func buildAndExecute(f *searchFlags, queryType search.QueryType) error {
 		Timezone:       f.timezone,
 	}
 
+	// Auto-paginate if --paginate is set
+	if config.Paginate() {
+		resp, statusCode, err := search.PaginateGraphQL(queryType, params, f.orgID, f.trackingID)
+		if err != nil {
+			return err
+		}
+		return output.Print(resp, statusCode)
+	}
+
 	body, err := search.BuildQuery(queryType, params)
 	if err != nil {
 		return err

@@ -42,8 +42,9 @@ type Params struct {
 	TimeComparator string
 	Filter         string // pre-built GraphQL filter string (from BuildFilter)
 	Fields         string // raw GraphQL field selection (overrides default)
-	Cursor         string
-	PageSize       int
+	Cursor      string
+	PageSize    int
+	CurrentPage int
 	Aggregations   []Aggregation
 	Interval       string
 	Timezone       string
@@ -74,8 +75,11 @@ func BuildQuery(queryType QueryType, params Params) (string, error) {
 	// Optional: pagination
 	if queryType == QueryFlowInteractions || queryType == QueryFlowTraceEvents {
 		if params.PageSize > 0 {
-			qb.WriteString(fmt.Sprintf(", pagination: { pageSize: %d", params.PageSize))
-			qb.WriteString(", currentPage: 1 }")
+			page := params.CurrentPage
+			if page < 1 {
+				page = 1
+			}
+			qb.WriteString(fmt.Sprintf(", pagination: { pageSize: %d, currentPage: %d }", params.PageSize, page))
 		}
 	} else if params.Cursor != "" {
 		qb.WriteString(fmt.Sprintf(`, pagination: { cursor: "%s" }`, params.Cursor))
