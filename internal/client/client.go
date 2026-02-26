@@ -1,6 +1,7 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
+
+// ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
+var ErrDryRun = errors.New("dry run: no changes made")
 
 // Do executes an HTTP request. On a 401, it attempts to refresh the token and retry once.
 func Do(req *Request) ([]byte, int, error) {
@@ -83,6 +87,20 @@ func doOnce(req *Request) ([]byte, int, error) {
 		}
 	}
 
+	// Dry-run: intercept write operations before making the HTTP call
+	if config.DryRun() && isWriteMethod(req.method) {
+		fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", req.method, url)
+		for k, v := range httpReq.Header {
+			if k != "Authorization" {
+				fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, strings.Join(v, ", "))
+			}
+		}
+		if req.bodyRaw != "" {
+			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", req.bodyRaw)
+		}
+		return nil, 0, ErrDryRun
+	}
+
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
 		return nil, 0, fmt.Errorf("executing request: %w", err)
@@ -110,4 +128,13 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n] + "..."
+}
+
+// isWriteMethod returns true for HTTP methods that modify data.
+func isWriteMethod(method string) bool {
+	switch method {
+	case http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch:
+		return true
+	}
+	return false
 }

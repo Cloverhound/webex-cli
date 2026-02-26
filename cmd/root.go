@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/auth"
+	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/spf13/cobra"
@@ -20,6 +22,10 @@ var rootCmd = &cobra.Command{
 		// Debug mode (set early so auth debug works)
 		debug, _ := cmd.Flags().GetBool("debug")
 		config.SetDebug(debug)
+
+		// Dry-run mode
+		dryRun, _ := cmd.Flags().GetBool("dry-run")
+		config.SetDryRun(dryRun)
 
 		// Output format
 		format, _ := cmd.Flags().GetString("output")
@@ -110,7 +116,11 @@ func Execute() error {
 	stripRequiredOrgID(rootCmd)
 	// Hide per-command org flags so only --organization is visible in help.
 	hideOrgFlags(rootCmd)
-	return rootCmd.Execute()
+	err := rootCmd.Execute()
+	if errors.Is(err, client.ErrDryRun) {
+		return nil
+	}
+	return err
 }
 
 // stripRequiredOrgID recursively removes the "required" annotation from --orgid and --org-id flags.
@@ -146,6 +156,7 @@ func init() {
 	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, csv, raw")
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
+	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 

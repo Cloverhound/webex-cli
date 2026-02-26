@@ -55,6 +55,7 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--output json|table|csv|raw` — Output format (default: json)
 - `--debug` — Show HTTP request/response details
 - `--paginate` — Auto-paginate list results
+- `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
 
 ## Contact Center `--orgid` Handling
 

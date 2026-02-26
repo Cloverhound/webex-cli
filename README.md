@@ -145,6 +145,7 @@ webex cc agents list --output csv > agents.csv
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results |
+| `--dry-run` | Print write requests without executing them |
 
 ## Configuration
 

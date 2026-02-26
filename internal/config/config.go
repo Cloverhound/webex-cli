@@ -9,6 +9,7 @@ var (
 	token          string
 	debug          bool
 	paginate       bool
+	dryRun         bool
 	orgID          string // UUID format
 	orgIDBase64    string // base64 Webex format
 	TokenRefresher func() (string, error)
@@ -22,6 +23,9 @@ func Debug() bool     { return debug }
 
 func SetPaginate(p bool) { paginate = p }
 func Paginate() bool     { return paginate }
+
+func SetDryRun(d bool) { dryRun = d }
+func DryRun() bool     { return dryRun }
 
 // SetOrgID stores the org ID in both UUID and base64 formats.
 // Accepts either format as input and derives the other.
