@@ -27,6 +27,7 @@ func init() {
 
 	{ // list
 		var orgId string
+		var interactionId string
 		var searchType string
 		var bodyRaw string
 		var bodyFile string
@@ -44,6 +45,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("orgId", orgId)
+					req.BodyString("interactionId", interactionId)
 					req.BodyString("searchType", searchType)
 				}
 				resp, statusCode, err := req.Do()
@@ -54,6 +56,45 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&interactionId, "interaction-id", "", "")
+		cmd.Flags().StringVar(&searchType, "search-type", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		agentSummariesCmd.AddCommand(cmd)
+	}
+
+	{ // list-2
+		var orgId string
+		var interactionId string
+		var searchType string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "list-2",
+			Short: "List summaries",
+			Long:  `Lists summaries based on the requested search type.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/generated-summaries/search")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("orgId", orgId)
+					req.BodyString("interactionId", interactionId)
+					req.BodyString("searchType", searchType)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&interactionId, "interaction-id", "", "")
 		cmd.Flags().StringVar(&searchType, "search-type", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")

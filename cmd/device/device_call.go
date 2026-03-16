@@ -1509,6 +1509,100 @@ func init() {
 		deviceCallCmd.AddCommand(cmd)
 	}
 
+	{ // get-count-members
+		var deviceId string
+		var orgId string
+		var memberName string
+		var phoneNumber string
+		var locationId string
+		var extension string
+		var usageType string
+		cmd := &cobra.Command{
+			Use:   "get-count-members",
+			Short: "Get Count of Members",
+			Long:  "Get the count of members that can be assigned to the device.\n\nA device member can be either a person or a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/availableMembers/count")
+				req.PathParam("deviceId", deviceId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("memberName", memberName)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("extension", extension)
+				req.QueryParam("usageType", usageType)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "Unique identifier for the device.")
+		cmd.MarkFlagRequired("device-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the count of available members on the device in this organization.")
+		cmd.Flags().StringVar(&memberName, "member-name", "", "Search (Contains) numbers based on member name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search (Contains) based on number.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Search (Contains) based on extension.")
+		cmd.Flags().StringVar(&usageType, "usage-type", "", "Search for members eligible to become the owner of the device, or share line on the device.  * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.  * `SHARED_LINE` - Search for members eligible to share line on the device.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-count-available-members
+		var orgId string
+		var memberName string
+		var phoneNumber string
+		var locationId string
+		var extension string
+		var usageType string
+		var excludeVirtualLine string
+		var deviceLocationId string
+		cmd := &cobra.Command{
+			Use:   "get-count-available-members",
+			Short: "Get Count of Available Members",
+			Long:  "Get the count of members that can be assigned to devices.\n\nA device member can be either a person or a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/availableMembers/count")
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("memberName", memberName)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("extension", extension)
+				req.QueryParam("usageType", usageType)
+				req.QueryParam("excludeVirtualLine", excludeVirtualLine)
+				req.QueryParam("deviceLocationId", deviceLocationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the count of available members in this organization.")
+		cmd.Flags().StringVar(&memberName, "member-name", "", "Search (Contains) numbers based on member name.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search (Contains) based on number.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Unique identifier for the location.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Search (Contains) based on extension.")
+		cmd.Flags().StringVar(&usageType, "usage-type", "", "Search for members eligible to become the owner of the device, or share line on the device.  * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.  * `SHARED_LINE` - Search for members eligible to share line on the device.")
+		cmd.Flags().StringVar(&excludeVirtualLine, "exclude-virtual-line", "", "If true, filters out virtual lines from the available members list.")
+		cmd.Flags().StringVar(&deviceLocationId, "device-location-id", "", "Unique identifier for the device's location. When specified, filters available members to those in the same location as the device.")
+		deviceCallCmd.AddCommand(cmd)
+	}
+
 	{ // list-supported-2
 		var orgId string
 		var allowConfigureLayoutEnabled string

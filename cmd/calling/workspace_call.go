@@ -272,7 +272,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-monitoring-settings",
 			Short: "Modify Monitoring Settings for a Workspace",
-			Long:  "Modify Monitoring settings for a Workspace.\n\nAllow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
+			Long:  "Modify Monitoring settings for a Workspace.\n\nAllow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.\n\nThe number of monitored elements is limited to 50.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/monitoring")
 				req.PathParam("workspaceId", workspaceId)

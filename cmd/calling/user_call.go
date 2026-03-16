@@ -882,7 +882,7 @@ This API requires a full or user administrator or location administrator auth to
 		cmd := &cobra.Command{
 			Use:   "update-person-monitoring-settings",
 			Short: "Modify a person's Monitoring Settings",
-			Long:  "Modifies the monitoring settings of the person.\nMonitors the line status of specified people, places, virtual lines or call park extension. The line status indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope.",
+			Long:  "Modifies the monitoring settings of the person.\nMonitors the line status of specified people, places, virtual lines or call park extension. The line status indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.\n\nThe number of monitored elements is limited to 50.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/people/{personId}/features/monitoring")
 				req.PathParam("personId", personId)
@@ -2853,12 +2853,14 @@ This API requires a full or user administrator or location administrator auth to
 	}
 
 	{ // list-messages
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "list-messages",
 			Short: "List Messages",
 			Long:  `Get the list of all voicemail messages for the user.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/voiceMessages")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -2873,6 +2875,7 @@ This API requires a full or user administrator or location administrator auth to
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		userCallCmd.AddCommand(cmd)
 	}
 
@@ -2899,6 +2902,7 @@ This API requires a full or user administrator or location administrator auth to
 
 	{ // mark-read
 		var messageId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -2915,6 +2919,7 @@ This API requires a full or user administrator or location administrator auth to
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("messageId", messageId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -2924,6 +2929,7 @@ This API requires a full or user administrator or location administrator auth to
 			},
 		}
 		cmd.Flags().StringVar(&messageId, "message-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		userCallCmd.AddCommand(cmd)
@@ -2931,6 +2937,7 @@ This API requires a full or user administrator or location administrator auth to
 
 	{ // mark-unread
 		var messageId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -2947,6 +2954,7 @@ This API requires a full or user administrator or location administrator auth to
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("messageId", messageId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -2956,6 +2964,7 @@ This API requires a full or user administrator or location administrator auth to
 			},
 		}
 		cmd.Flags().StringVar(&messageId, "message-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		userCallCmd.AddCommand(cmd)
@@ -5238,6 +5247,49 @@ This API requires a full or user administrator or location administrator auth to
 		cmd.Flags().BoolVar(&alertSharedCallAppearanceLocationEnabled, "alert-shared-call-appearance-location-enabled", false, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		userCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-count-shared-line-appearance-members
+		var personId string
+		var orgId string
+		var locationId string
+		var memberName string
+		var phoneNumber string
+		var extension string
+		cmd := &cobra.Command{
+			Use:   "get-count-shared-line-appearance-members",
+			Short: "Get Count of Shared-Line Appearance Members",
+			Long:  "Get the count of members available for shared-line assignment to Webex Calling Apps.\n\nShared-line appearance allows multiple devices or applications to share a single line for call handling.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:telephony_config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/applications/availableMembers/count")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				req.QueryParam("locationId", locationId)
+				req.QueryParam("memberName", memberName)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("extension", extension)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "A unique identifier for the person.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID for the person.")
+		cmd.Flags().StringVar(&locationId, "location-id", "", "Location ID for the person.")
+		cmd.Flags().StringVar(&memberName, "member-name", "", "Search for people with names that match the query.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search for people with numbers that match the query.")
+		cmd.Flags().StringVar(&extension, "extension", "", "Search for people with extensions that match the query.")
 		userCallCmd.AddCommand(cmd)
 	}
 

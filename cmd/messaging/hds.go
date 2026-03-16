@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
+	"github.com/Cloverhound/webex-cli/internal/timeutil"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = timeutil.ParseLastISO
 
 var hdsCmd = &cobra.Command{
 	Use:   "hds",
@@ -32,6 +34,7 @@ func init() {
 			Use:   "get-test-results-node",
 			Short: "Get test results for HDS node",
 			Long: `Get the latest results of the network tests triggered for a single HDS node. The test results are generated as part of the Network Test execution on the node. The network tests include the Bandwidth Test, DNS Resolution Test, and HTTPS Connectivity Test.
+ The results from the latest test run are provided, covering up to the past 90 days if available.
 To obtain the Node ID needed for this API, use the [Get cluster details API](</docs/api/v1/hds/get-cluster-details>)`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/testResults/nodes/{nodeId}/networkTest")
@@ -199,6 +202,50 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 		}
 		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
 		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-availability-cluster
+		var clusterId string
+		var from string
+		var to string
+		var last string
+		cmd := &cobra.Command{
+			Use:   "get-availability-cluster",
+			Short: "Get availability details for HDS cluster",
+			Long: `Get the availability details for an HDS cluster, where each segment specifies the start and end times, as well as the number of online, offline, and total nodes within that segment.
+To obtain the Cluster ID needed for this API, use the [Get organization details API](</docs/api/v1/hds/get-organization-details>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}/availability")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
+				req.PathParam("clusterId", clusterId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "Unique ID of the HDS cluster.")
+		cmd.MarkFlagRequired("cluster-id")
+		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. The 'from' value cannot be later than the 'to' value, and it cannot be more than 1 day older than the current date and time.")
+		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		hdsCmd.AddCommand(cmd)
 	}
 

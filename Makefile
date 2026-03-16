@@ -1,0 +1,20 @@
+.PHONY: build download codegen refresh check clean
+
+build:
+	go build -o webex .
+
+download:
+	cd codegen && python3 download_collections.py
+
+codegen:
+	cd codegen && python3 extract_api_spec.py
+	cd codegen && python3 generate_cli.py
+
+refresh: download codegen build
+
+check: build
+	go vet ./...
+
+clean:
+	rm -f webex webex-cli
+	rm -f codegen/api_spec.json codegen/api_outline.json

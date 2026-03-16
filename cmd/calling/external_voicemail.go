@@ -28,6 +28,7 @@ func init() {
 	{ // dial
 		var destination string
 		var endpointId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -45,6 +46,7 @@ func init() {
 				} else {
 					req.BodyString("destination", destination)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -55,6 +57,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -63,6 +66,7 @@ func init() {
 	{ // answer
 		var callId string
 		var endpointId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -80,6 +84,7 @@ func init() {
 				} else {
 					req.BodyString("callId", callId)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -90,6 +95,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -98,6 +104,7 @@ func init() {
 	{ // reject
 		var callId string
 		var action string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -115,6 +122,7 @@ func init() {
 				} else {
 					req.BodyString("callId", callId)
 					req.BodyString("action", action)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -125,6 +133,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
 		cmd.Flags().StringVar(&action, "action", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -132,6 +141,7 @@ func init() {
 
 	{ // hangup
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -148,6 +158,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -157,6 +168,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -164,6 +176,7 @@ func init() {
 
 	{ // hold
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -180,6 +193,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -189,6 +203,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -196,6 +211,7 @@ func init() {
 
 	{ // resume
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -212,6 +228,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -221,6 +238,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -228,6 +246,7 @@ func init() {
 
 	{ // mute
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -244,6 +263,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -253,6 +273,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -260,6 +281,7 @@ func init() {
 
 	{ // unmute
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -276,6 +298,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -285,6 +308,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -294,6 +318,7 @@ func init() {
 		var callId string
 		var destination string
 		var toVoicemail bool
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -312,6 +337,7 @@ func init() {
 					req.BodyString("callId", callId)
 					req.BodyString("destination", destination)
 					req.BodyBool("toVoicemail", toVoicemail, cmd.Flags().Changed("to-voicemail"))
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -323,6 +349,7 @@ func init() {
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().BoolVar(&toVoicemail, "to-voicemail", false, "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -332,6 +359,7 @@ func init() {
 		var callId1 string
 		var callId2 string
 		var destination string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -350,6 +378,7 @@ func init() {
 					req.BodyString("callId1", callId1)
 					req.BodyString("callId2", callId2)
 					req.BodyString("destination", destination)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -361,6 +390,7 @@ func init() {
 		cmd.Flags().StringVar(&callId1, "call-id1", "", "")
 		cmd.Flags().StringVar(&callId2, "call-id2", "", "")
 		cmd.Flags().StringVar(&destination, "destination", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -370,6 +400,7 @@ func init() {
 		var callId string
 		var destination string
 		var isGroupPark bool
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -388,6 +419,7 @@ func init() {
 					req.BodyString("callId", callId)
 					req.BodyString("destination", destination)
 					req.BodyBool("isGroupPark", isGroupPark, cmd.Flags().Changed("is-group-park"))
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -399,6 +431,7 @@ func init() {
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().BoolVar(&isGroupPark, "is-group-park", false, "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -407,6 +440,7 @@ func init() {
 	{ // get
 		var destination string
 		var endpointId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -424,6 +458,7 @@ func init() {
 				} else {
 					req.BodyString("destination", destination)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -434,6 +469,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -441,6 +477,7 @@ func init() {
 
 	{ // start-recording
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -457,6 +494,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -466,6 +504,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -473,6 +512,7 @@ func init() {
 
 	{ // stop-recording
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -489,6 +529,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -498,6 +539,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -505,6 +547,7 @@ func init() {
 
 	{ // pause-recording
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -521,6 +564,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -530,6 +574,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -537,6 +582,7 @@ func init() {
 
 	{ // resume-recording
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -553,6 +599,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -562,6 +609,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -570,6 +618,7 @@ func init() {
 	{ // transmit-dtmf
 		var callId string
 		var dtmf string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -587,6 +636,7 @@ func init() {
 				} else {
 					req.BodyString("callId", callId)
 					req.BodyString("dtmf", dtmf)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -597,6 +647,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
 		cmd.Flags().StringVar(&dtmf, "dtmf", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -604,6 +655,7 @@ func init() {
 
 	{ // push
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -620,6 +672,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -629,6 +682,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -637,6 +691,7 @@ func init() {
 	{ // pickup
 		var target string
 		var endpointId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -654,6 +709,7 @@ func init() {
 				} else {
 					req.BodyString("target", target)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -664,6 +720,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&target, "target", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
@@ -672,6 +729,7 @@ func init() {
 	{ // barge
 		var target string
 		var endpointId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -689,6 +747,7 @@ func init() {
 				} else {
 					req.BodyString("target", target)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -699,18 +758,21 @@ func init() {
 		}
 		cmd.Flags().StringVar(&target, "target", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)
 	}
 
 	{ // list-calls
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "list-calls",
 			Short: "List Calls",
 			Long:  `Get the list of details for all active calls associated with the user.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -725,11 +787,13 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		externalVoicemailCmd.AddCommand(cmd)
 	}
 
 	{ // get-call
 		var callId string
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "get-call",
 			Short: "Get Call Details",
@@ -737,6 +801,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/{callId}")
 				req.PathParam("callId", callId)
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -753,6 +818,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "The call identifier of the call.")
 		cmd.MarkFlagRequired("call-id")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		externalVoicemailCmd.AddCommand(cmd)
 	}
 
@@ -816,6 +882,41 @@ func init() {
 		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the user or workspace.")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Id of the organization to which the user or workspace belongs. If not provided, the orgId of the Service App is used. If provided, the organization must be the same as or managed by the Service App's organization.")
 		cmd.Flags().StringVar(&action, "action", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		externalVoicemailCmd.AddCommand(cmd)
+	}
+
+	{ // pull
+		var endpointId string
+		var lineOwnerId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "pull",
+			Short: "Pull",
+			Long:  `Pull a call from one device to another. A temporary new call is initiated to perform the call pull in a similar manner to the dial command. When a user answers an alerting device, the device is connected to the pulled call and the new call created for the call pull is released.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/calls/pull")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		externalVoicemailCmd.AddCommand(cmd)

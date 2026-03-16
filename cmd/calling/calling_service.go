@@ -307,4 +307,31 @@ func init() {
 		callingServiceCmd.AddCommand(cmd)
 	}
 
+	{ // get-large-org-status
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-large-org-status",
+			Short: "Get Large Organization Status",
+			Long:  "Get the large organization status for a customer.\n\nLarge organization status indicates whether an organization is categorized as a large organization based on the threshold percentage.\n\nThis API requires a full or read-only administrator auth token with the `spark-admin:telephony_config_read` scope.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/largeOrgStatus")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves large organization status for this organization.")
+		callingServiceCmd.AddCommand(cmd)
+	}
+
 }

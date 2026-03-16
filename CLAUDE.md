@@ -13,15 +13,21 @@ A CLI tool for Webex Calling and Contact Center APIs.
 
 The files in `cmd/calling/` and `cmd/cc/` are **generated** — do not edit them by hand.
 
-To regenerate after modifying codegen scripts or Postman collections:
+A `Makefile` orchestrates the pipeline. Key targets:
 
 ```bash
-cd codegen
-python3 extract_api_spec.py    # reads postman/*.json → api_spec.json
-python3 generate_cli.py        # reads api_spec.json → writes cmd/calling/*.go + cmd/cc/*.go
-cd ..
-go build -o webex .
+# Full pipeline (download + generate + build):
+make refresh
+
+# Regenerate from existing committed collections:
+make codegen && make build
+
+# Download collections only:
+make download
 ```
+
+No API key is required — collections are fetched from the Webex Public Workspace
+via Postman's public gateway.
 
 ## Build
 

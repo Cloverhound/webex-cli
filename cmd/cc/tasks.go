@@ -336,7 +336,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd := &cobra.Command{
 			Use:   "pause-recording",
 			Short: "Pause Recording Task",
-			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might want to pause the recording and later on resume recording. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.`,
+			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might want to pause the recording and later on resume recording. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires OAuth scope cjp:user. The authenticated user must have a UserProfile of type Agent to access this API.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/record/pause")
 				req.PathParam("taskId", taskId)
@@ -360,7 +360,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd := &cobra.Command{
 			Use:   "resume-recording",
 			Short: "Resume Recording Task",
-			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might resume the recording after the pause. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.`,
+			Long:  `When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might resume the recording after the pause. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires OAuth scope cjp:user. The authenticated user must have a UserProfile of type Agent to access this API.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/record/resume")
 				req.PathParam("taskId", taskId)

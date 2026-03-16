@@ -58,6 +58,7 @@ FOLDER_MERGES = {
     'device-call': 'device-call',
     'call-for-me': 'call-for-me',
     'call-queue-with-playlist': 'call-queue',
+    'call-settings-for-me': 'call-settings-for-me',
     'settings-features-for-barge-in': 'call-settings-for-me',
     # Admin
     'bulk-manage-scim-2-users-and-groups': 'scim-2-bulk',

@@ -29,6 +29,7 @@ func init() {
 
 	{ // start
 		var callIds []string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -46,6 +47,7 @@ and a participant to be added to the conference.`,
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyStringSlice("callIds", callIds)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -55,18 +57,21 @@ and a participant to be added to the conference.`,
 			},
 		}
 		cmd.Flags().StringSliceVar(&callIds, "call-ids", nil, "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		conferenceControlsCmd.AddCommand(cmd)
 	}
 
 	{ // release
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "release",
 			Short: "Release Conference",
 			Long:  `Release the conference (the host and all participants). Note that for a 3WC (three-way call) the [Transfer API](/docs/api/v1/call-controls/transfer) can be used to perform an attended transfer so that the participants remain connected.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/conference")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -74,16 +79,19 @@ and a participant to be added to the conference.`,
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		conferenceControlsCmd.AddCommand(cmd)
 	}
 
 	{ // get
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get Conference Details",
 			Long:  `Get the details of the conference.  An empty JSON object body is returned if there is no conference.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/conference")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -98,11 +106,13 @@ and a participant to be added to the conference.`,
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		conferenceControlsCmd.AddCommand(cmd)
 	}
 
 	{ // create-participant
 		var callId string
+		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -119,6 +129,7 @@ and a participant to be added to the conference.`,
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -128,6 +139,7 @@ and a participant to be added to the conference.`,
 			},
 		}
 		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		conferenceControlsCmd.AddCommand(cmd)
@@ -264,12 +276,14 @@ The request body contains the call ID of the participant to undeafen.`,
 	}
 
 	{ // hold
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "hold",
 			Short: "Hold",
 			Long:  `Hold the conference host.  There is no request body.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/conference/hold")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -277,16 +291,19 @@ The request body contains the call ID of the participant to undeafen.`,
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		conferenceControlsCmd.AddCommand(cmd)
 	}
 
 	{ // resume
+		var lineOwnerId string
 		cmd := &cobra.Command{
 			Use:   "resume",
 			Short: "Resume",
 			Long:  `Resumes the held conference host.  There is no request body.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/conference/resume")
+				req.QueryParam("lineOwnerId", lineOwnerId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -294,6 +311,7 @@ The request body contains the call ID of the participant to undeafen.`,
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
 		conferenceControlsCmd.AddCommand(cmd)
 	}
 

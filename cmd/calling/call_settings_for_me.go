@@ -4108,4 +4108,2055 @@ func init() {
 		callSettingsForMeCmd.AddCommand(cmd)
 	}
 
+	{ // get-priority-alert-2
+		cmd := &cobra.Command{
+			Use:   "get-priority-alert-2",
+			Short: "Get Priority Alert Settings",
+			Long:  "Get Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-priority-alert-user-2
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-priority-alert-user-2",
+			Short: "Modify Priority Alert Settings for User",
+			Long:  "Update Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/priorityAlert")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-priority-alert-2
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var notificationEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-priority-alert-2",
+			Short: "Add a Priority Alert Criteria",
+			Long:  "Create a Priority Alert Criteria for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/priorityAlert/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-priority-alert-2-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-priority-alert-2-2",
+			Short: "Get Priority Alert Criteria Settings",
+			Long:  "Get Priority Alert Criteria Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the priority alert criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-priority-alert-2
+		var id string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var notificationEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-priority-alert-2",
+			Short: "Modify Settings for a Priority Alert Criteria",
+			Long:  "Modify Priority Alert Criteria Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/priorityAlert/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the priority alert criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-priority-alert-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-priority-alert-2",
+			Short: "Delete a Priority Alert Criteria",
+			Long:  "Delete a Priority Alert criteria for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/priorityAlert/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the priority alert criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-user-schedules-2
+		cmd := &cobra.Command{
+			Use:   "get-user-schedules-2",
+			Short: "Get User (and Location) Schedules",
+			Long:  "Get Schedules for Call Settings for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-user-schedule-2
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-user-schedule-2",
+			Short: "Add a User level Schedule for Call Settings",
+			Long:  "Create a new Schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/schedules")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-user-schedule-2
+		var scheduleType string
+		var scheduleId string
+		cmd := &cobra.Command{
+			Use:   "get-user-schedule-2",
+			Short: "Get User Schedule",
+			Long:  "Get a Schedule details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Retrieve the schedule with the matching ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-user-schedule-2
+		var scheduleType string
+		var scheduleId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-user-schedule-2",
+			Short: "Modify User Schedule",
+			Long:  "Modify a Schedule details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Update the schedule with the matching ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-user-schedule-2
+		var scheduleType string
+		var scheduleId string
+		cmd := &cobra.Command{
+			Use:   "delete-user-schedule-2",
+			Short: "Delete a User Schedule",
+			Long:  "Delete a specific schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Delete the schedule with the matching ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-event-user-schedule-2
+		var scheduleType string
+		var scheduleId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-event-user-schedule-2",
+			Short: "Add an event for a User Schedule",
+			Long:  "Create a new Event for for the authenticated user's specified schedule.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "add an event for the specified schedule ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-user-schedule-event-2
+		var scheduleType string
+		var scheduleId string
+		var eventId string
+		cmd := &cobra.Command{
+			Use:   "get-user-schedule-event-2",
+			Short: "Get User Schedule Event",
+			Long:  "Get a Schedule Event details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				req.PathParam("eventId", eventId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Retrieve the schedule with the matching ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		cmd.Flags().StringVar(&eventId, "event-id", "", "Retrieve the event with the matching ID.")
+		cmd.MarkFlagRequired("event-id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-user-schedule-event-2
+		var scheduleType string
+		var scheduleId string
+		var eventId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-user-schedule-event-2",
+			Short: "Modify User Schedule Event",
+			Long:  "Modify a Schedule event details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				req.PathParam("eventId", eventId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Update an event for the specified schedule ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		cmd.Flags().StringVar(&eventId, "event-id", "", "Update the event with the matching ID.")
+		cmd.MarkFlagRequired("event-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-user-schedule-event-2
+		var scheduleType string
+		var scheduleId string
+		var eventId string
+		cmd := &cobra.Command{
+			Use:   "delete-user-schedule-event-2",
+			Short: "Delete User a Schedule Event",
+			Long:  "Delete a specific schedule event for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				req.PathParam("eventId", eventId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Delete an event for the specified schedule ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		cmd.Flags().StringVar(&eventId, "event-id", "", "Delete the event with the matching ID.")
+		cmd.MarkFlagRequired("event-id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-user-location-schedule-2
+		var scheduleType string
+		var scheduleId string
+		cmd := &cobra.Command{
+			Use:   "get-user-location-schedule-2",
+			Short: "Get User's Location Level Schedule",
+			Long:  "Get Location Schedule for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}")
+				req.PathParam("scheduleType", scheduleType)
+				req.PathParam("scheduleId", scheduleId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "Type of the schedule.  * `businessHours` - Business hours schedule type.  * `holidays` - Holidays schedule type. ")
+		cmd.MarkFlagRequired("schedule-type")
+		cmd.Flags().StringVar(&scheduleId, "schedule-id", "", "Retrieve the schedule with the matching ID.")
+		cmd.MarkFlagRequired("schedule-id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-notify-user-2
+		cmd := &cobra.Command{
+			Use:   "get-notify-user-2",
+			Short: "Get Call Notify Settings for User",
+			Long:  "Get Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-notify-user-2
+		var enabled bool
+		var emailAddress string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-notify-user-2",
+			Short: "Modify Call Notify Settings for User",
+			Long:  "Update Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/callNotify")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyString("emailAddress", emailAddress)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&emailAddress, "email-address", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-notify-2
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var notificationEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-notify-2",
+			Short: "Add a Call Notify Criteria",
+			Long:  "Create a Call Notify Criteria for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/callNotify/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-notify-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-notify-2",
+			Short: "Get Call Notify Criteria Settings",
+			Long:  "Get Call Notify Criteria Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the call notify criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-notify-2
+		var id string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var notificationEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-notify-2",
+			Short: "Modify a Call Notify Criteria",
+			Long:  "Modify Call Notify Criteria Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/callNotify/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("notificationEnabled", notificationEnabled, cmd.Flags().Changed("notification-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the call notify criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&notificationEnabled, "notification-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-notify-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-notify-2",
+			Short: "Delete a Call Notify Criteria",
+			Long:  "Delete a Call Notify criteria for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/callNotify/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the call notify criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-accept-user-2
+		cmd := &cobra.Command{
+			Use:   "get-selective-accept-user-2",
+			Short: "Get Selective Call Accept Settings for User",
+			Long:  "Get Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-accept-user-2
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-accept-user-2",
+			Short: "Modify Selective Call Accept Settings for User",
+			Long:  "Update Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveAccept")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-user-selective-accept-2
+		var callsFrom string
+		var acceptEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-user-selective-accept-2",
+			Short: "Add User Selective Call Accept Criteria",
+			Long:  "Create a new Selective Call Accept Criteria for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/selectiveAccept/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("acceptEnabled", acceptEnabled, cmd.Flags().Changed("accept-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&acceptEnabled, "accept-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-accept-user-2-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-selective-accept-user-2-2",
+			Short: "Get Selective Call Accept Criteria Settings for User",
+			Long:  "Get Selective Call Accept Criteria Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call accept criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-accept-2
+		var id string
+		var callsFrom string
+		var acceptEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-accept-2",
+			Short: "Modify a Selective Call Accept Criteria",
+			Long:  "Modify Selective Call Accept Criteria Settings for the authenticated user.\n\n\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("acceptEnabled", acceptEnabled, cmd.Flags().Changed("accept-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call accept. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&acceptEnabled, "accept-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-accept-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-accept-2",
+			Short: "Delete a Selective Call Accept Criteria",
+			Long:  "Delete a Selective Call Accept Criteria for the authenticated user.\n\n\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call accept criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-numbers-user-location-2
+		var max string
+		var start string
+		var name string
+		var phoneNumber string
+		var extension string
+		var order string
+		cmd := &cobra.Command{
+			Use:   "get-available-numbers-user-location-2",
+			Short: "Get Available Numbers for User's Location",
+			Long:  "Get Available Numbers for User's Location.\n\nFetch all the numbers available in User's location.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/location/assignedNumbers")
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("name", name)
+				req.QueryParam("phoneNumber", phoneNumber)
+				req.QueryParam("extension", extension)
+				req.QueryParam("order", order)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of numbers in the response.")
+		cmd.Flags().StringVar(&start, "start", "", "Specify the offset from the first result that you want to fetch.")
+		cmd.Flags().StringVar(&name, "name", "", "List numbers whose owner name contains this string.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "List numbers whose phoneNumber contains this string.")
+		cmd.Flags().StringVar(&extension, "extension", "", "List numbers whose extension contains this string.")
+		cmd.Flags().StringVar(&order, "order", "", "Sort the list of numbers based on `lastName`, `dn`, `extension` either asc or desc.")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-selective-forward-2
+		var forwardToPhoneNumber string
+		var destinationVoicemailEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var forwardEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-selective-forward-2",
+			Short: "Add a Selective Call Forwarding Criteria",
+			Long:  "Create a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller\u2019s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/selectiveForward/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("forwardToPhoneNumber", forwardToPhoneNumber)
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("forwardEnabled", forwardEnabled, cmd.Flags().Changed("forward-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&forwardToPhoneNumber, "forward-to-phone-number", "", "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&forwardEnabled, "forward-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-forward-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-selective-forward-2",
+			Short: "Get Settings for a Selective Call Forwarding Criteria",
+			Long:  "Get settings for a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller\u2019s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call forwarding criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-forward-2
+		var id string
+		var forwardToPhoneNumber string
+		var destinationVoicemailEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var forwardEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-forward-2",
+			Short: "Modify Settings for a Selective Call Forwarding Criteria",
+			Long:  "Modify settings for a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller\u2019s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveForward/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("forwardToPhoneNumber", forwardToPhoneNumber)
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("forwardEnabled", forwardEnabled, cmd.Flags().Changed("forward-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call forwarding criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&forwardToPhoneNumber, "forward-to-phone-number", "", "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&forwardEnabled, "forward-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-forward-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-forward-2",
+			Short: "Delete a Selective Call Forwarding Criteria",
+			Long:  "Delete a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective call forwarding allows you to define rules that automatically forward incoming calls based on specific criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/selectiveForward/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call forwarding criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-forward-user-2
+		cmd := &cobra.Command{
+			Use:   "get-selective-forward-user-2",
+			Short: "Get Selective Call Forward Settings for User",
+			Long:  "Get Selective Call Forward Settings for the authenticated user.\n\nSelective Call Forward allows you to create customized rules to forward specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-forward-user-2
+		var enabled bool
+		var defaultPhoneNumberToForward string
+		var ringReminderEnabled bool
+		var destinationVoicemailEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-forward-user-2",
+			Short: "Modify Selective Call Forward Settings for User",
+			Long:  "Update the Selective Call Forward Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number, identity, and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveForward")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyString("defaultPhoneNumberToForward", defaultPhoneNumberToForward)
+					req.BodyBool("ringReminderEnabled", ringReminderEnabled, cmd.Flags().Changed("ring-reminder-enabled"))
+					req.BodyBool("destinationVoicemailEnabled", destinationVoicemailEnabled, cmd.Flags().Changed("destination-voicemail-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&defaultPhoneNumberToForward, "default-phone-number-to-forward", "", "")
+		cmd.Flags().BoolVar(&ringReminderEnabled, "ring-reminder-enabled", false, "")
+		cmd.Flags().BoolVar(&destinationVoicemailEnabled, "destination-voicemail-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-reject-user-2
+		cmd := &cobra.Command{
+			Use:   "get-selective-reject-user-2",
+			Short: "Get Selective Call Reject Settings for User",
+			Long:  "Get Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-reject-user-2
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-reject-user-2",
+			Short: "Modify Selective Call Reject Settings for User",
+			Long:  "Update Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveReject")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-user-selective-reject-2
+		var callsFrom string
+		var rejectEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-user-selective-reject-2",
+			Short: "Add User Selective Call Reject Criteria",
+			Long:  "Create a new Selective Call Reject Criteria for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/selectiveReject/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("rejectEnabled", rejectEnabled, cmd.Flags().Changed("reject-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&rejectEnabled, "reject-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-anonymous-rejection-user-2
+		cmd := &cobra.Command{
+			Use:   "get-anonymous-rejection-user-2",
+			Short: "Get Anonymous Call Rejection Settings for User",
+			Long:  "Get Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/anonymousCallReject")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-anonymous-rejection-user-2
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-anonymous-rejection-user-2",
+			Short: "Modify Anonymous Call Rejection Settings for User",
+			Long:  "Update Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/anonymousCallReject")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-selective-reject-user-2-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-selective-reject-user-2-2",
+			Short: "Get Selective Call Reject Criteria Settings for User",
+			Long:  "Get Selective Call Reject Criteria Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call reject criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-selective-reject-2
+		var id string
+		var callsFrom string
+		var rejectEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-selective-reject-2",
+			Short: "Modify a Selective Call Reject Criteria",
+			Long:  "Modify Selective Call Reject Criteria Settings for the authenticated user.\n\n\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/selectiveReject/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("rejectEnabled", rejectEnabled, cmd.Flags().Changed("reject-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call reject. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&rejectEnabled, "reject-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-selective-reject-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-selective-reject-2",
+			Short: "Delete a Selective Call Reject Criteria",
+			Long:  "Delete a Selective Call Reject Criteria for the authenticated user.\n\n\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/selectiveReject/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the selective call reject criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-waiting-user-2
+		cmd := &cobra.Command{
+			Use:   "get-waiting-user-2",
+			Short: "Get Call Waiting Settings for User",
+			Long:  "Get Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callWaiting")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-waiting-user-2
+		var enabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-waiting-user-2",
+			Short: "Modify Call Waiting Settings for User",
+			Long:  "Update Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/callWaiting")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-sequential-ring-user-2
+		cmd := &cobra.Command{
+			Use:   "get-sequential-ring-user-2",
+			Short: "Get Sequential Ring Settings for User",
+			Long:  "Get Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-sequential-ring-user-2
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-sequential-ring-user-2",
+			Short: "Modify Sequential Ring Settings for User",
+			Long:  "Update Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/sequentialRing")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-user-sequential-ring-2
+		var callsFrom string
+		var ringEnabled bool
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-user-sequential-ring-2",
+			Short: "Add User Sequential Ring Criteria",
+			Long:  "Create a new Sequential Ring Criteria for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/sequentialRing/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-sequential-ring-user-2-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-sequential-ring-user-2-2",
+			Short: "Get Sequential Ring Criteria Settings for User",
+			Long:  "Get Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the sequential ring criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-sequential-ring-user-2-2
+		var id string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var ringEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-sequential-ring-user-2-2",
+			Short: "Modify Sequential Ring Criteria Settings for User",
+			Long:  "Update Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/sequentialRing/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the sequential ring criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-sequential-ring-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-sequential-ring-2",
+			Short: "Delete Sequential Ring Criteria",
+			Long:  "Delete a Sequential Ring Criteria for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/sequentialRing/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "The `id` parameter specifies the unique identifier for the sequential ring criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // upload-voicemail-busy-greeting
+		cmd := &cobra.Command{
+			Use:   "upload-voicemail-busy-greeting",
+			Short: "Upload Voicemail Busy Greeting",
+			Long:  "Uploads a new busy greeting audio file for the authenticated user's voicemail.\n\nThis endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV format and not exceed 5000 kilobytes.\n\nRequires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may upload greetings for their own voicemail.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/voicemail/actions/busyGreetingUpload/invoke")
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // upload-voicemail-no-answer-greeting
+		cmd := &cobra.Command{
+			Use:   "upload-voicemail-no-answer-greeting",
+			Short: "Upload Voicemail No Answer Greeting",
+			Long:  "Uploads a new no answer greeting audio file for the authenticated user's voicemail.\n\nThis endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV format and not exceed 5000 kilobytes.\n\nRequires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may upload greetings for their own voicemail.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/voicemail/actions/noAnswerGreetingUpload/invoke")
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-my-simultaneous-ring
+		cmd := &cobra.Command{
+			Use:   "get-my-simultaneous-ring",
+			Short: "Retrieve My Simultaneous Ring Settings",
+			Long:  "Retrieve simultaneous ring settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Schedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nRetrieving settings requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/simultaneousRing")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-my-simultaneous-ring
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-my-simultaneous-ring",
+			Short: "Modify My Simultaneous Ring Settings",
+			Long:  "Modify simultaneous ring settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Schedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nModifying settings requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/simultaneousRing")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-my-simultaneous-ring-2
+		var id string
+		cmd := &cobra.Command{
+			Use:   "get-my-simultaneous-ring-2",
+			Short: "Retrieve My Simultaneous Ring Criteria",
+			Long:  "Retrieve simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nRetrieving criteria requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}")
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-my-simultaneous-ring-2
+		var id string
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var ringEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-my-simultaneous-ring-2",
+			Short: "Modify My Simultaneous Ring Criteria",
+			Long:  "Modify simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nModifying criteria requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}")
+				req.PathParam("id", id)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // delete-my-simultaneous-ring
+		var id string
+		cmd := &cobra.Command{
+			Use:   "delete-my-simultaneous-ring",
+			Short: "Delete My Simultaneous Ring Criteria",
+			Long:  "Delete simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nDeleting criteria requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}")
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&id, "id", "", "Unique identifier for the criteria.")
+		cmd.MarkFlagRequired("id")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // create-my-simultaneous-ring
+		var scheduleName string
+		var scheduleType string
+		var scheduleLevel string
+		var callsFrom string
+		var ringEnabled bool
+		var anonymousCallersEnabled bool
+		var unavailableCallersEnabled bool
+		var phoneNumbers []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "create-my-simultaneous-ring",
+			Short: "Create My Simultaneous Ring Criteria",
+			Long:  "Create simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nCreating criteria requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/simultaneousRing/criteria")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("scheduleName", scheduleName)
+					req.BodyString("scheduleType", scheduleType)
+					req.BodyString("scheduleLevel", scheduleLevel)
+					req.BodyString("callsFrom", callsFrom)
+					req.BodyBool("ringEnabled", ringEnabled, cmd.Flags().Changed("ring-enabled"))
+					req.BodyBool("anonymousCallersEnabled", anonymousCallersEnabled, cmd.Flags().Changed("anonymous-callers-enabled"))
+					req.BodyBool("unavailableCallersEnabled", unavailableCallersEnabled, cmd.Flags().Changed("unavailable-callers-enabled"))
+					req.BodyStringSlice("phoneNumbers", phoneNumbers)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&scheduleName, "schedule-name", "", "")
+		cmd.Flags().StringVar(&scheduleType, "schedule-type", "", "")
+		cmd.Flags().StringVar(&scheduleLevel, "schedule-level", "", "")
+		cmd.Flags().StringVar(&callsFrom, "calls-from", "", "")
+		cmd.Flags().BoolVar(&ringEnabled, "ring-enabled", false, "")
+		cmd.Flags().BoolVar(&anonymousCallersEnabled, "anonymous-callers-enabled", false, "")
+		cmd.Flags().BoolVar(&unavailableCallersEnabled, "unavailable-callers-enabled", false, "")
+		cmd.Flags().StringSliceVar(&phoneNumbers, "phone-numbers", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-my-guest-calling-numbers
+		cmd := &cobra.Command{
+			Use:   "get-my-guest-calling-numbers",
+			Short: "Retrieve My Guest Calling Numbers",
+			Long:  "Retrieve available guest calling numbers for the authenticated user.\n\nThis API returns a list of phone numbers that can be used for guest calling purposes.\n\nRetrieving guest calling numbers requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/guestCalling/numbers")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
 }
