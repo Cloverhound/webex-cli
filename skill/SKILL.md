@@ -152,6 +152,21 @@ webex calling devices list
 
 # Get my own details
 webex calling people get-my-own
+
+# Download a converged recording (call recording)
+webex calling converged-recordings download --recording-id <id> --output call.mp3
+webex calling converged-recordings download --recording-id <id> --output call.vtt --type transcript
+
+# Upload announcement greetings
+webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting"
+webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby" --location-id <id>
+webex calling announcement-repository update-binary-greeting --file updated.wav --name "Updated" --announcement-id <id>
+
+# Upload voicemail greetings (person, virtual line, workspace, or self)
+webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
+webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
+webex calling virtual-line-call update-busy-voicemail-greeting --virtual-line-id <id> --file greeting.wav
+webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id <id> --file greeting.wav
 ```
 
 ## Contact Center API Examples
@@ -159,6 +174,14 @@ webex calling people get-my-own
 When logged in, `--orgid` is auto-populated so you can omit it:
 
 ```bash
+# Download/upload audio files
+webex cc audio-files download --id <audio-file-id> --output prompt.wav
+webex cc audio-files upload --file prompt.wav --name "Main Greeting"
+
+# Download/upload agent personal greetings
+webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
+webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
+
 # List sites
 webex cc site list
 
@@ -267,6 +290,11 @@ webex meetings participants list --meeting-id "MEETING_ID"
 # List recordings
 webex meetings recordings list
 
+# Download a recording (audio, video, or transcript)
+webex meetings recordings download --recording-id <id> --output meeting.mp3
+webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
+webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
+
 # List transcripts
 webex meetings transcripts list
 
@@ -354,6 +382,26 @@ webex admin people list --output=raw
 
 # Save to file for processing
 webex admin people list > /tmp/people.json
+```
+
+## Converged Recordings: Admin vs Non-Admin Endpoints
+
+The converged recordings API has two list endpoints with different access:
+
+- **`list`** (`GET /convergedRecordings`) — Returns only the calling user's own recordings.
+- **`list-admin-compliance-officer`** (`GET /admin/convergedRecordings`) — Returns recordings across the entire org. Requires `spark-admin:recordings_read` scope. Max 30-day time range.
+
+The single-recording GET (`GET /convergedRecordings/{id}`) returns metadata for any recording the token can access. The `temporaryDirectDownloadLinks` field (needed for binary download) is included in the response only when the token has sufficient authorization — a user integration token may not receive download links for recordings owned by other users, while a service app token typically does.
+
+```bash
+# List recordings across the org (admin, max 30 days)
+webex calling converged-recordings list-admin-compliance-officer --last 720h
+
+# List only your own recordings
+webex calling converged-recordings list --last 720h
+
+# Download (requires temporaryDirectDownloadLinks in GET response)
+webex calling converged-recordings download --recording-id <id> --output call.mp3
 ```
 
 ## When Answering Questions

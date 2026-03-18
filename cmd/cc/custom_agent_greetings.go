@@ -15,29 +15,29 @@ import (
 )
 
 func init() {
-	registerAudioFileDownload()
-	registerAudioFileUpload()
+	registerAgentGreetingDownload()
+	registerAgentGreetingUpload()
 }
 
-func registerAudioFileDownload() {
+func registerAgentGreetingDownload() {
 	var orgid string
 	var id string
 	var outputPath string
 
 	cmd := &cobra.Command{
 		Use:   "download",
-		Short: "Download an audio file to disk",
-		Long: `Download a Contact Center audio file binary to a local file.
+		Short: "Download an agent personal greeting file to disk",
+		Long: `Download a Contact Center agent personal greeting file to a local file.
 
-Fetches the audio file metadata (with download URL), then downloads the
+Fetches the greeting file metadata (with download URL), then downloads the
 binary content and writes it to the specified output path.
 
 Examples:
-  webex cc audio-files download --id <audio-file-id> --output prompt.wav
-  webex cc audio-files download --id <audio-file-id> --output /tmp/greeting.wav --debug`,
+  webex cc agent-personal-greeting-files download --orgid <org-id> --id <greeting-id> --output greeting.wav
+  webex cc agent-personal-greeting-files download --orgid <org-id> --id <greeting-id> --output /tmp/greeting.wav --debug`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET metadata with includeUrl=true
-			req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/audio-file/{id}")
+			req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 			req.PathParam("orgid", orgid)
 			req.PathParam("id", id)
 			req.QueryParam("includeUrl", "true")
@@ -50,7 +50,7 @@ Examples:
 			// Step 2: Extract download URL from response
 			var meta map[string]any
 			if err := json.Unmarshal(resp, &meta); err != nil {
-				return fmt.Errorf("parsing audio file metadata: %w", err)
+				return fmt.Errorf("parsing greeting metadata: %w", err)
 			}
 
 			dlURL, ok := meta["url"].(string)
@@ -70,34 +70,34 @@ Examples:
 
 	cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID")
 	cmd.MarkFlagRequired("orgid")
-	cmd.Flags().StringVar(&id, "id", "", "Audio file resource ID")
+	cmd.Flags().StringVar(&id, "id", "", "Agent personal greeting file ID")
 	cmd.MarkFlagRequired("id")
-	cmd.Flags().StringVar(&outputPath, "output", "", "File path to write audio to")
+	cmd.Flags().StringVar(&outputPath, "output", "", "File path to write greeting to")
 	cmd.MarkFlagRequired("output")
 
-	audioFilesCmd.AddCommand(cmd)
+	agentPersonalGreetingFilesCmd.AddCommand(cmd)
 }
 
-func registerAudioFileUpload() {
+func registerAgentGreetingUpload() {
 	var orgid string
 	var filePath string
 	var name string
-	var description string
+	var agentID string
+	var greetingPurposeID string
 
 	cmd := &cobra.Command{
 		Use:   "upload",
-		Short: "Upload a WAV file as a new audio file",
-		Long: `Upload an audio file (WAV) to Contact Center using multipart/form-data.
+		Short: "Upload a WAV file as a new agent personal greeting",
+		Long: `Upload an agent personal greeting file (WAV) to Contact Center using multipart/form-data.
 
-The upload sends two parts: audioFileInfo (JSON metadata) and audioFile (binary).
+The upload sends two parts: agentPersonalGreetingInfo (JSON metadata) and audioFile (binary).
 If --name is omitted, the filename (with .wav extension) is used.
 
 Examples:
-  webex cc audio-files upload --file prompt.wav
-  webex cc audio-files upload --file prompt.wav --name "Main Greeting"
-  webex cc audio-files upload --file prompt.wav --name "Main Greeting" --description "IVR main menu"
-  webex cc audio-files upload --file prompt.wav --dry-run
-  webex cc audio-files upload --file prompt.wav --debug`,
+  webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
+  webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --name "Personal Greeting"
+  webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
+  webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
 			f, err := os.Open(filePath)
 			if err != nil {
@@ -113,21 +113,21 @@ Examples:
 				name += ".wav"
 			}
 
-			url := config.CcBaseURL + "/organization/" + orgid + "/audio-file"
+			url := config.CcBaseURL + "/organization/" + orgid + "/v2/agent-personal-greeting"
 
 			info := map[string]any{
-				"name":          name,
-				"contentType":   "AUDIO_WAV",
-				"systemDefault": false,
+				"agentId":     agentID,
+				"name":        name,
+				"contentType": "AUDIO_WAV",
 			}
-			if description != "" {
-				info["description"] = description
+			if greetingPurposeID != "" {
+				info["greetingPurposeId"] = greetingPurposeID
 			}
 			infoJSON, _ := json.Marshal(info)
 
 			parts := []audio.MultipartPart{
 				{
-					FieldName:   "audioFileInfo",
+					FieldName:   "agentPersonalGreetingInfo",
 					ContentType: "application/json",
 					Data:        strings.NewReader(string(infoJSON)),
 				},
@@ -152,8 +152,10 @@ Examples:
 	cmd.MarkFlagRequired("orgid")
 	cmd.Flags().StringVar(&filePath, "file", "", "Path to WAV file to upload")
 	cmd.MarkFlagRequired("file")
-	cmd.Flags().StringVar(&name, "name", "", "Audio file name (defaults to filename without extension)")
-	cmd.Flags().StringVar(&description, "description", "", "Audio file description")
+	cmd.Flags().StringVar(&agentID, "agent-id", "", "Agent ID (WxCC agent resource ID)")
+	cmd.MarkFlagRequired("agent-id")
+	cmd.Flags().StringVar(&name, "name", "", "Greeting name (defaults to filename)")
+	cmd.Flags().StringVar(&greetingPurposeID, "greeting-purpose-id", "", "Greeting purpose ID")
 
-	audioFilesCmd.AddCommand(cmd)
+	agentPersonalGreetingFilesCmd.AddCommand(cmd)
 }

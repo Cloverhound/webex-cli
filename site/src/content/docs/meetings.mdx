@@ -72,3 +72,23 @@ webex meetings summaries list
 # Manage webhooks
 webex meetings webhooks list
 ```
+
+## Recording Downloads
+
+The `recordings download` command fetches a meeting recording binary (audio, video, or transcript) to a local file. It retrieves the recording metadata to obtain a temporary download link, then downloads the file.
+
+```bash
+# Download audio (MP3) — default
+webex meetings recordings download --recording-id <id> --output meeting.mp3
+
+# Download full video recording (MP4)
+webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
+
+# Download transcript (VTT)
+webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
+
+# Access another user's recording (admin)
+webex meetings recordings download --recording-id <id> --output meeting.mp3 --host-email user@example.com
+```
+
+The `--type` flag selects which `temporaryDirectDownloadLinks` field to use: `audioDownloadLink` (default), `recordingDownloadLink`, or `transcriptDownloadLink`.

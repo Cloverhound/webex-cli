@@ -1112,30 +1112,6 @@ func init() {
 		workspaceCallCmd.AddCommand(cmd)
 	}
 
-	{ // upload-intercept-announcement-file
-		var workspaceId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "upload-intercept-announcement-file",
-			Short: "Upload Call Intercept Announcement file for a Workspace",
-			Long:  "Upload call intercept announcement file for a workspace.\n\nThe upload announcement feature for a call intercept is used to play custom announcements for a workspace.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full, device or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/features/intercept/actions/announcementUpload/invoke")
-				req.PathParam("workspaceId", workspaceId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
-		cmd.MarkFlagRequired("workspace-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "Create an announcement in this organization.")
-		workspaceCallCmd.AddCommand(cmd)
-	}
-
 	{ // get-recording
 		var workspaceId string
 		var orgId string
@@ -2126,54 +2102,6 @@ func init() {
 		cmd.Flags().StringVar(&connectedLineIdPrivacyOnRedirectedCalls, "connected-line-id-privacy-on-redirected-calls", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		workspaceCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-busy-voicemail-greeting-place
-		var workspaceId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-busy-voicemail-greeting-place",
-			Short: "Configure Busy Voicemail Greeting for a Place",
-			Long:  "Configure a workspace's Busy Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadBusyGreeting/invoke")
-				req.PathParam("workspaceId", workspaceId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
-		cmd.MarkFlagRequired("workspace-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
-		workspaceCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-no-answer-voicemail-greeting-place
-		var workspaceId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-no-answer-voicemail-greeting-place",
-			Short: "Configure No Answer Voicemail Greeting for a Place",
-			Long:  "Configure a workspace's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope can be used to update workspace settings.\n\n**NOTE**: This API is only available for professional licensed workspaces.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadNoAnswerGreeting/invoke")
-				req.PathParam("workspaceId", workspaceId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&workspaceId, "workspace-id", "", "Unique identifier for the workspace.")
-		cmd.MarkFlagRequired("workspace-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API.")
 		workspaceCallCmd.AddCommand(cmd)
 	}
 

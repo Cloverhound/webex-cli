@@ -53,6 +53,40 @@ webex messaging rooms list
 webex messaging messages list --room-id <id>
 ```
 
+## Audio File & Recording Downloads
+
+Several commands provide streamlined binary download and multipart upload for audio files and recordings:
+
+```bash
+# Download a meeting recording (audio, video, or transcript)
+webex meetings recordings download --recording-id <id> --output meeting.mp3
+webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
+webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
+
+# Download a converged recording (Webex Calling call recording)
+webex calling converged-recordings download --recording-id <id> --output call.mp3
+
+# Upload/download Contact Center audio files
+webex cc audio-files download --id <id> --output prompt.wav
+webex cc audio-files upload --file prompt.wav --name "Main Greeting"
+
+# Upload/download CC agent personal greetings
+webex cc agent-personal-greeting-files download --id <id> --output greeting.wav
+webex cc agent-personal-greeting-files upload --agent-id <id> --file greeting.wav
+
+# Upload announcement greetings (org or location level)
+webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Greeting"
+webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Greeting" --location-id <id>
+
+# Upload voicemail/intercept greetings (person, virtual line, workspace, or self)
+webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
+webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
+webex calling virtual-line-call update-busy-voicemail-greeting --virtual-line-id <id> --file greeting.wav
+webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id <id> --file greeting.wav
+```
+
+All upload commands support `--dry-run` to preview the request without sending it.
+
 ## API Coverage
 
 ### Calling (`webex calling`)

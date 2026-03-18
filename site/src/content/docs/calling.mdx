@@ -98,3 +98,72 @@ webex calling reports-detailed-call-history list --start-time "2024-01-01T00:00:
 # List devices
 webex calling devices list --paginate
 ```
+
+## Converged Recording Downloads
+
+The `converged-recordings download` command downloads Webex Calling call recordings to a local file. It fetches recording metadata (which includes `temporaryDirectDownloadLinks`), then downloads the binary.
+
+```bash
+# Download audio (MP3) — default
+webex calling converged-recordings download --recording-id <id> --output call.mp3
+
+# Download full recording
+webex calling converged-recordings download --recording-id <id> --output call.mp4 --type recording
+
+# Download transcript
+webex calling converged-recordings download --recording-id <id> --output call.vtt --type transcript
+```
+
+**Note:** To list converged recordings as an admin, use the admin endpoint:
+```bash
+# Admin/compliance officer listing (max 30-day range)
+webex calling converged-recordings list-admin-compliance-officer --last 720h
+
+# User's own recordings
+webex calling converged-recordings list --last 720h
+```
+
+The non-admin `list` endpoint (`GET /convergedRecordings`) requires the caller to be the recording owner. The admin endpoint (`GET /admin/convergedRecordings`) returns recordings across the org and requires `spark-admin:recordings_read`.
+
+## Announcement Uploads
+
+Upload announcement greetings at the organization or location level. These replace the generated commands which could not handle multipart/form-data file uploads.
+
+```bash
+# Upload org-level announcement
+webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting"
+
+# Upload location-level announcement
+webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby" --location-id <id>
+
+# Update existing announcement
+webex calling announcement-repository update-binary-greeting --file updated.wav --name "Updated" --announcement-id <id>
+
+# Update location-level announcement
+webex calling announcement-repository update-binary-greeting-2 --file updated.wav --name "Updated" --location-id <id> --announcement-id <id>
+```
+
+## Voicemail & Intercept Greeting Uploads
+
+Upload voicemail and call intercept greetings for people, virtual lines, workspaces, or yourself. All commands accept `--file` (WAV, max 5MB) and support `--dry-run`.
+
+```bash
+# Person greetings
+webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
+webex calling user-call update-no-answer-voicemail-greeting-person --person-id <id> --file greeting.wav
+webex calling user-call update-intercept-greeting-person --person-id <id> --file greeting.wav
+
+# Your own greetings
+webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
+webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file greeting.wav
+
+# Virtual line greetings
+webex calling virtual-line-call update-busy-voicemail-greeting --virtual-line-id <id> --file greeting.wav
+webex calling virtual-line-call update-no-answer-voicemail-greeting --virtual-line-id <id> --file greeting.wav
+webex calling virtual-line-call update-intercept-greeting --virtual-line-id <id> --file greeting.wav
+
+# Workspace greetings
+webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id <id> --file greeting.wav
+webex calling workspace-call update-no-answer-voicemail-greeting-place --workspace-id <id> --file greeting.wav
+webex calling workspace-call upload-intercept-announcement-file --workspace-id <id> --file greeting.wav
+```

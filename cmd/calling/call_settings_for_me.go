@@ -5890,40 +5890,6 @@ func init() {
 		callSettingsForMeCmd.AddCommand(cmd)
 	}
 
-	{ // upload-voicemail-busy-greeting
-		cmd := &cobra.Command{
-			Use:   "upload-voicemail-busy-greeting",
-			Short: "Upload Voicemail Busy Greeting",
-			Long:  "Uploads a new busy greeting audio file for the authenticated user's voicemail.\n\nThis endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV format and not exceed 5000 kilobytes.\n\nRequires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may upload greetings for their own voicemail.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/voicemail/actions/busyGreetingUpload/invoke")
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		callSettingsForMeCmd.AddCommand(cmd)
-	}
-
-	{ // upload-voicemail-no-answer-greeting
-		cmd := &cobra.Command{
-			Use:   "upload-voicemail-no-answer-greeting",
-			Short: "Upload Voicemail No Answer Greeting",
-			Long:  "Uploads a new no answer greeting audio file for the authenticated user's voicemail.\n\nThis endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV format and not exceed 5000 kilobytes.\n\nRequires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may upload greetings for their own voicemail.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/people/me/settings/voicemail/actions/noAnswerGreetingUpload/invoke")
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		callSettingsForMeCmd.AddCommand(cmd)
-	}
-
 	{ // get-my-simultaneous-ring
 		cmd := &cobra.Command{
 			Use:   "get-my-simultaneous-ring",

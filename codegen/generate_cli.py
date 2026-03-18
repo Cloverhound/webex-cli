@@ -36,6 +36,45 @@ SKIP_GROUPS = {
     "Webex Contact Center": {"search"},
 }
 
+# Per-command skip list, keyed by collection → group → set of command names.
+# These require multipart/form-data file uploads that the generator cannot produce
+# (it emits empty POST/PUT bodies). Each is replaced by a hand-written custom_*.go
+# implementation in the same package.
+SKIP_COMMANDS = {
+    "Webex Cloud Calling": {
+        # Replaced by: cmd/calling/custom_announcements.go
+        "announcement-repository": {
+            "upload-binary-greeting",       # POST org-level announcement (create)
+            "upload-binary-greeting-2",     # POST location-level announcement (create)
+            "update-binary-greeting",       # PUT org-level announcement (update)
+            "update-binary-greeting-2",     # PUT location-level announcement (update)
+        },
+        # Replaced by: cmd/calling/custom_voicemail_greetings.go
+        "user-call": {
+            "update-intercept-greeting-person",           # call intercept announcement
+            "update-busy-voicemail-greeting-person",      # busy voicemail greeting
+            "update-no-answer-voicemail-greeting-person",  # no-answer voicemail greeting
+        },
+        # Replaced by: cmd/calling/custom_voicemail_greetings.go
+        "call-settings-for-me": {
+            "upload-voicemail-busy-greeting",      # self busy voicemail greeting
+            "upload-voicemail-no-answer-greeting",  # self no-answer voicemail greeting
+        },
+        # Replaced by: cmd/calling/custom_voicemail_greetings.go
+        "virtual-line-call": {
+            "update-intercept-greeting",          # call intercept announcement
+            "update-busy-voicemail-greeting",     # busy voicemail greeting
+            "update-no-answer-voicemail-greeting",  # no-answer voicemail greeting
+        },
+        # Replaced by: cmd/calling/custom_voicemail_greetings.go
+        "workspace-call": {
+            "upload-intercept-announcement-file",     # call intercept announcement
+            "update-busy-voicemail-greeting-place",   # busy voicemail greeting
+            "update-no-answer-voicemail-greeting-place",  # no-answer voicemail greeting
+        },
+    },
+}
+
 
 def camel_to_kebab(name):
     """Convert camelCase to kebab-case."""
@@ -88,7 +127,7 @@ EPOCH_MS_PATHS = {
 }
 
 
-def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_calling):
+def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_calling, collection_name=""):
     """Generate Go source for one group's commands."""
     group_var = kebab_to_camel(group) + "Cmd"
     group_pascal = kebab_to_pascal(group)
@@ -152,7 +191,11 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     lines.append(f'\t{parent_var}.AddCommand({group_var})')
     lines.append('')
 
+    skip_cmds = SKIP_COMMANDS.get(collection_name, {}).get(group, set())
     for ep in endpoints:
+        if ep['command'] in skip_cmds:
+            print(f"    Skipping command '{ep['command']}' (custom override)")
+            continue
         lines.extend(generate_command(ep, group_var, base_url_const, is_calling))
         lines.append('')
 
@@ -433,7 +476,8 @@ def main():
                 continue
 
             source = generate_group_file(
-                group, endpoints, pkg, parent_var, base_url_const, is_calling
+                group, endpoints, pkg, parent_var, base_url_const, is_calling,
+                collection_name=collection_name
             )
 
             filename = group.replace('-', '_') + '.go'

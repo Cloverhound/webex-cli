@@ -326,30 +326,6 @@ This API requires a full or user administrator or location administrator auth to
 		userCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-intercept-greeting-person
-		var personId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-intercept-greeting-person",
-			Short: "Configure Call Intercept Greeting for a Person",
-			Long:  "Configure a person's Call Intercept Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator auth token with the `spark-admin:people_write` scope or a user auth token with `spark:people_write` scope can be used by a person to update their settings.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/people/{personId}/features/intercept/actions/announcementUpload/invoke")
-				req.PathParam("personId", personId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&personId, "person-id", "", "Unique identifier for the person.")
-		cmd.MarkFlagRequired("person-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
-		userCallCmd.AddCommand(cmd)
-	}
-
 	{ // get-recording-person
 		var personId string
 		var orgId string
@@ -1759,54 +1735,6 @@ This API requires a full or user administrator or location administrator auth to
 		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		userCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-busy-voicemail-greeting-person
-		var personId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-busy-voicemail-greeting-person",
-			Short: "Configure Busy Voicemail Greeting for a Person",
-			Long:  "Configure a person's Busy Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope or a user auth token with `spark:people_write` scope can be used by a person to update their settings.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/people/{personId}/features/voicemail/actions/uploadBusyGreeting/invoke")
-				req.PathParam("personId", personId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&personId, "person-id", "", "Unique identifier for the person.")
-		cmd.MarkFlagRequired("person-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
-		userCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-no-answer-voicemail-greeting-person
-		var personId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-no-answer-voicemail-greeting-person",
-			Short: "Configure No Answer Voicemail Greeting for a Person",
-			Long:  "Configure a person's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope or a user auth token with `spark:people_write` scope can be used by a person to update their settings.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/people/{personId}/features/voicemail/actions/uploadNoAnswerGreeting/invoke")
-				req.PathParam("personId", personId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&personId, "person-id", "", "Unique identifier for the person.")
-		cmd.MarkFlagRequired("person-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
 		userCallCmd.AddCommand(cmd)
 	}
 

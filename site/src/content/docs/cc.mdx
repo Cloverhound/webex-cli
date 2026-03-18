@@ -108,6 +108,33 @@ webex cc entry-point list --page=0 --page-size=100
 webex cc entry-point list --page=1 --page-size=100
 ```
 
+## Audio File Operations
+
+The CLI provides streamlined download and upload commands for CC audio files and agent personal greetings. These use multipart/form-data uploads and binary downloads — the generated CRUD commands only handle metadata.
+
+### Audio Files
+
+```bash
+# Download an audio file to disk
+webex cc audio-files download --id <audio-file-id> --output prompt.wav
+
+# Upload a new audio file
+webex cc audio-files upload --file prompt.wav --name "Main Greeting"
+webex cc audio-files upload --file prompt.wav --name "Main Greeting" --description "IVR main menu"
+webex cc audio-files upload --file prompt.wav --dry-run
+```
+
+### Agent Personal Greetings
+
+```bash
+# Download an agent greeting
+webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
+
+# Upload a new agent greeting
+webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
+webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
+```
+
 ## Exceptions
 
 Most resources use `list` as the list subcommand. One exception:

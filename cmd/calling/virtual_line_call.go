@@ -1364,30 +1364,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
-	{ // update-intercept-greeting
-		var virtualLineId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-intercept-greeting",
-			Short: "Configure Call Intercept Greeting for a Virtual Line",
-			Long:  "Configure a virtual line's Call Intercept Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the intercept greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/virtualLines/{virtualLineId}/intercept/actions/announcementUpload/invoke")
-				req.PathParam("virtualLineId", virtualLineId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&virtualLineId, "virtual-line-id", "", "Update settings for a virtual line with the matching ID.")
-		cmd.MarkFlagRequired("virtual-line-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
-		virtualLineCallCmd.AddCommand(cmd)
-	}
-
 	{ // get-agent-list-available-caller-ids
 		var virtualLineId string
 		var orgId string
@@ -1546,54 +1522,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		virtualLineCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-busy-voicemail-greeting
-		var virtualLineId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-busy-voicemail-greeting",
-			Short: "Configure Busy Voicemail Greeting for a Virtual Line",
-			Long:  "Configure a virtual line's Busy Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the voicemail busy greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/virtualLines/{virtualLineId}/voicemail/actions/uploadBusyGreeting/invoke")
-				req.PathParam("virtualLineId", virtualLineId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&virtualLineId, "virtual-line-id", "", "Retrieve settings for a virtual line with the matching ID.")
-		cmd.MarkFlagRequired("virtual-line-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
-		virtualLineCallCmd.AddCommand(cmd)
-	}
-
-	{ // update-no-answer-voicemail-greeting
-		var virtualLineId string
-		var orgId string
-		cmd := &cobra.Command{
-			Use:   "update-no-answer-voicemail-greeting",
-			Short: "Configure No Answer Voicemail Greeting for a Virtual Line",
-			Long:  "Configure a virtual line's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, `.wav`, encoded audio file.\n\nYour request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav` Content-Type.\n\nUploading the voicemail no answer greeting announcement for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/virtualLines/{virtualLineId}/voicemail/actions/uploadNoAnswerGreeting/invoke")
-				req.PathParam("virtualLineId", virtualLineId)
-				req.QueryParam("orgId", orgId)
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&virtualLineId, "virtual-line-id", "", "Retrieve settings for a virtual line with the matching ID.")
-		cmd.MarkFlagRequired("virtual-line-id")
-		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
 		virtualLineCallCmd.AddCommand(cmd)
 	}
 
