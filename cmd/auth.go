@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/auth"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/localconfig"
 	"github.com/spf13/cobra"
 )
 
@@ -71,6 +74,13 @@ var authStatusCmd = &cobra.Command{
 		} else {
 			remaining := time.Until(tok.ExpiresAt).Round(time.Second)
 			fmt.Printf("Token:   valid (expires in %s)\n", remaining)
+		}
+
+		// Show folder default if set
+		if cwd, err := os.Getwd(); err == nil {
+			if lcfg, err := localconfig.Load(cwd); err == nil && lcfg != nil && lcfg.User != "" {
+				fmt.Printf("Folder:  %s (for this directory)\n", lcfg.User)
+			}
 		}
 
 		// Live check
@@ -253,12 +263,73 @@ var authClearOrgCmd = &cobra.Command{
 	},
 }
 
+var authSetFolderDefaultCmd = &cobra.Command{
+	Use:   "set-folder-default <email>",
+	Short: "Set the default user for the current folder",
+	Long:  "Associates a Webex user with the current working directory. When running commands from this folder, this user's credentials will be used automatically.",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		email := args[0]
+
+		cfg, err := appconfig.Load()
+		if err != nil {
+			return fmt.Errorf("loading config: %w", err)
+		}
+
+		if _, ok := cfg.Users[email]; !ok {
+			return fmt.Errorf("user %s not found — run: webex login", email)
+		}
+
+		cwd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("getting current directory: %w", err)
+		}
+
+		if err := localconfig.Save(cwd, email); err != nil {
+			return fmt.Errorf("saving folder default: %w", err)
+		}
+
+		fmt.Printf("Set folder default to %s for %s\n", email, cwd)
+		return nil
+	},
+}
+
+var authClearFolderDefaultCmd = &cobra.Command{
+	Use:   "clear-folder-default",
+	Short: "Remove the folder default user for the current directory",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("getting current directory: %w", err)
+		}
+
+		lcfg, err := localconfig.Load(cwd)
+		if err != nil || lcfg == nil {
+			fmt.Println("No folder default set for this directory.")
+			return nil
+		}
+
+		configPath := filepath.Join(cwd, ".webex-cli", "config.json")
+		if err := os.Remove(configPath); err != nil && !os.IsNotExist(err) {
+			return fmt.Errorf("removing folder config: %w", err)
+		}
+
+		configDir := filepath.Join(cwd, ".webex-cli")
+		os.Remove(configDir) // ignore error — dir may not be empty
+
+		fmt.Printf("Cleared folder default (was %s)\n", lcfg.User)
+		return nil
+	},
+}
+
 func init() {
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authListCmd)
 	authCmd.AddCommand(authSwitchCmd)
 	authCmd.AddCommand(authSetOrgCmd)
 	authCmd.AddCommand(authClearOrgCmd)
+	authCmd.AddCommand(authSetFolderDefaultCmd)
+	authCmd.AddCommand(authClearFolderDefaultCmd)
 	rootCmd.AddCommand(authCmd)
 }
 

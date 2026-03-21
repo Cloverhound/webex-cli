@@ -9,6 +9,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/auth"
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/localconfig"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/spf13/cobra"
 )
@@ -51,6 +52,15 @@ var rootCmd = &cobra.Command{
 		envToken := os.Getenv("WEBEX_TOKEN")
 		userFlag, _ := cmd.Flags().GetString("user")
 		envUser := os.Getenv("WEBEX_USER")
+
+		// Check local folder config before falling back to global default
+		if userFlag == "" && envUser == "" {
+			if cwd, err := os.Getwd(); err == nil {
+				if lcfg, err := localconfig.Load(cwd); err == nil && lcfg != nil && lcfg.User != "" {
+					envUser = lcfg.User
+				}
+			}
+		}
 
 		result, err := auth.ResolveToken(flagToken, envToken, userFlag, envUser, cfg)
 		if err != nil {
@@ -178,7 +188,7 @@ func skipAuth(cmd *cobra.Command) bool {
 	// Check the command itself and all parents
 	for c := cmd; c != nil; c = c.Parent() {
 		switch c.Name() {
-		case "login", "logout", "auth", "config", "version", "update", "help", "webex":
+		case "login", "logout", "auth", "config", "version", "update", "post-install", "help", "webex":
 			// "webex" is the root — only skip if it's the actual command being run (bare `webex`)
 			if c.Name() == "webex" {
 				continue
