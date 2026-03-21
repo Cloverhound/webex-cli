@@ -22,16 +22,22 @@ webex
 The CLI supports OAuth login with tokens stored in the OS keyring.
 
 ```bash
-webex auth status          # Show current user, org, token expiry
-webex auth list            # List all stored users
-webex auth switch <email>  # Change default user
-webex auth set-org <orgId> # Set a persistent org override (partner admins)
-webex auth clear-org       # Clear the org override
-webex login                # OAuth login (opens browser)
-webex logout [email]       # Remove stored credentials
+webex auth status                        # Show current user, org, token expiry
+webex auth list                          # List all stored users
+webex auth switch <email>                # Change default user
+webex auth set-folder-default <email>    # Set default user for current folder
+webex auth clear-folder-default          # Remove folder default
+webex auth set-org <orgId>               # Set a persistent org override (partner admins)
+webex auth clear-org                     # Clear the org override
+webex login                              # OAuth login (opens browser)
+webex logout [email]                     # Remove stored credentials
 ```
 
 If not logged in, use `--token <TOKEN>` or set `$WEBEX_TOKEN`.
+
+**Per-folder defaults:** Different folders can be associated with different Webex users via `auth set-folder-default`. When a folder default is set, that user's credentials are used automatically when running commands from that directory. This is useful when different project folders connect to different Webex orgs.
+
+Token resolution order: `--token` flag > `WEBEX_TOKEN` env var > `--user` flag > `WEBEX_USER` env var > folder default (`.webex-cli/config.json`) > global default > OS keyring.
 
 Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
