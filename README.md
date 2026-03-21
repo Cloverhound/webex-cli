@@ -192,9 +192,13 @@ webex config get client-id               # View current value
 
 Config is stored in `~/.webex-cli/config.json`.
 
-## Claude Code Integration
+## Coding Agent Skill
 
-A sample Claude Code skill is included in `skill/SKILL.md`. See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for setup instructions.
+A skill file is included in `skill/SKILL.md` that enables AI coding agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) to query and manage your Webex environment.
+
+The installer and `webex post-install` command will offer to install the skill automatically. Skills are also kept up to date when you run `webex update`.
+
+See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
 ## Development
 

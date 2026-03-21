@@ -54,25 +54,10 @@ chmod +x "${INSTALL_DIR}/${BINARY}"
 echo "Installed ${BINARY} v${VERSION} to ${INSTALL_DIR}/${BINARY}"
 echo ""
 
-# Warn if INSTALL_DIR is not on PATH
-case ":${PATH}:" in
-  *":${INSTALL_DIR}:"*) ;;
-  *)
-    # Detect shell config file
-    SHELL_NAME=$(basename "${SHELL:-/bin/sh}")
-    case "$SHELL_NAME" in
-      zsh)  RC_FILE=~/.zshrc ;;
-      bash) RC_FILE=~/.bashrc ;;
-      *)    RC_FILE=~/.profile ;;
-    esac
+# Run post-install setup (PATH configuration, agent skills)
+"${INSTALL_DIR}/${BINARY}" post-install < /dev/tty
 
-    echo "Note: ${INSTALL_DIR} is not in your PATH. Run:"
-    echo ""
-    echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ${RC_FILE} && source ${RC_FILE}"
-    echo ""
-    ;;
-esac
-
+echo ""
 echo "Get started:"
 echo "  webex config set client-id <your-client-id>      # if not using built-in defaults"
 echo "  webex config set client-secret <your-client-secret>"

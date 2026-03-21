@@ -5,65 +5,52 @@ description: Use the Webex CLI with AI coding agents.
 
 The Webex CLI includes a [skill](https://agentskills.io) that enables AI coding agents to query and manage your Webex environment. It works with any agent that supports the skills standard — [Claude Code](https://claude.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Cursor](https://cursor.com), and others.
 
-## Setup
+## Automatic Setup
 
-1. Install the Webex CLI (see [Installation](/webex-cli/installation/))
-2. Login: `webex login`
-3. Download the skill into the correct folder for your coding agent (you can also just paste these instructions into your coding agent):
+The installer and `webex post-install` command will offer to install the skill for detected agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) via an interactive menu. Skills are also kept up to date when you run `webex update`.
+
+## Manual Setup
+
+If you prefer to install manually, download the skill into the correct folder for your coding agent:
 
 ### Claude Code
 
-**macOS / Linux:**
 ```bash
 mkdir -p ~/.claude/skills/webex-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
   -o ~/.claude/skills/webex-cli/SKILL.md
 ```
 
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\webex-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.claude\skills\webex-cli\SKILL.md"
-```
-
 ### OpenAI Codex
 
-**macOS / Linux:**
 ```bash
-mkdir -p ~/.agents/skills/webex-cli
+mkdir -p ~/.codex/skills/webex-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
-  -o ~/.agents/skills/webex-cli/SKILL.md
-```
-
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills\webex-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.agents\skills\webex-cli\SKILL.md"
+  -o ~/.codex/skills/webex-cli/SKILL.md
 ```
 
 ### Cursor
 
-**macOS / Linux:**
 ```bash
 mkdir -p ~/.cursor/skills/webex-cli
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md \
   -o ~/.cursor/skills/webex-cli/SKILL.md
 ```
 
-**Windows (PowerShell):**
-```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\skills\webex-cli"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.cursor\skills\webex-cli\SKILL.md"
+### Claude Cowork
+
+Cowork requires uploading a ZIP file through the Claude Desktop app. Run `webex post-install` to generate the ZIP, or create it manually:
+
+```bash
+mkdir -p /tmp/webex-cli && cp ~/.claude/skills/webex-cli/SKILL.md /tmp/webex-cli/
+cd /tmp && zip -r ~/Downloads/webex-cli-skill.zip webex-cli/
 ```
 
-:::note
-These commands install the skill globally (user-level). You can also install per-project by placing the `webex-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.agents/skills/`, or `.cursor/skills/` directory instead.
-:::
+Then upload at: Claude Desktop → Cowork tab → Customize → Skills → + → Upload a skill.
 
-4. If the `webex` binary is not in your `$PATH`, ask your coding agent to update the binary path in the skill file.
+:::note
+These commands install the skill globally (user-level). You can also install per-project by placing the `webex-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.codex/skills/`, or `.cursor/skills/` directory instead.
+:::
 
 ## What the Skill Can Do
 

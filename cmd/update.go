@@ -55,6 +55,12 @@ func runUpdate() error {
 	}
 
 	fmt.Printf("Updated to v%s\n", latest)
+
+	// Check for skill updates
+	if err := checkSkillUpdates(); err != nil {
+		fmt.Printf("Warning: skill update check failed: %v\n", err)
+	}
+
 	return nil
 }
 
