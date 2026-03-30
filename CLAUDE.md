@@ -35,9 +35,18 @@ via Postman's public gateway.
 go build -o webex .
 ```
 
-For release builds with embedded credentials (via goreleaser):
+## Releasing
+
+Releases are handled by a GitHub Actions workflow triggered by pushing a tag.
+Do **not** run `goreleaser` locally — it requires secrets (e.g. `WEBEX_CLIENT_ID`)
+that are only available in CI.
+
 ```bash
-goreleaser release --snapshot --clean
+git tag v0.X.0
+git push origin v0.X.0
+# Then set the release notes via gh:
+gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
+* ..."
 ```
 
 ## Module Path

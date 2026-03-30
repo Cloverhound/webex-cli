@@ -2,6 +2,7 @@ package calling
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -165,9 +166,9 @@ func registerGreetingUpload(parentCmd *cobra.Command, use, short, long string,
 			if entityFlag != "" {
 				path = replaceEntityID(path, entityID)
 			}
-			url := config.CallingBaseURL + path
+			u := config.CallingBaseURL + path
 			if orgID != "" {
-				url += "?orgId=" + orgID
+				u += "?orgId=" + url.QueryEscape(orgID)
 			}
 
 			parts := []audio.MultipartPart{
@@ -179,7 +180,7 @@ func registerGreetingUpload(parentCmd *cobra.Command, use, short, long string,
 				},
 			}
 
-			body, statusCode, err := audio.UploadMultipart("POST", url, parts)
+			body, statusCode, err := audio.UploadMultipart("POST", u, parts)
 			if err != nil {
 				return err
 			}
@@ -205,7 +206,7 @@ func replaceEntityID(path, id string) string {
 	result := path
 	for _, placeholder := range []string{"{entityId}"} {
 		if idx := len(result); idx > 0 {
-			result = replaceFirst(result, placeholder, id)
+			result = replaceFirst(result, placeholder, url.PathEscape(id))
 		}
 	}
 	return result

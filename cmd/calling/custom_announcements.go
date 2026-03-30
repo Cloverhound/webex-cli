@@ -2,6 +2,7 @@ package calling
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -96,11 +97,11 @@ Examples:
   webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting" --dry-run`,
 		"POST",
 		func(orgID, _, _ string) string {
-			url := config.CallingBaseURL + "/telephony/config/announcements"
+			u := config.CallingBaseURL + "/telephony/config/announcements"
 			if orgID != "" {
-				url += "?orgId=" + orgID
+				u += "?orgId=" + url.QueryEscape(orgID)
 			}
-			return url
+			return u
 		},
 		false, false,
 	)
@@ -119,11 +120,11 @@ Examples:
   webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby Greeting" --location-id <loc-id> --dry-run`,
 		"POST",
 		func(orgID, locationID, _ string) string {
-			url := config.CallingBaseURL + "/telephony/config/locations/" + locationID + "/announcements"
+			u := config.CallingBaseURL + "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements"
 			if orgID != "" {
-				url += "?orgId=" + orgID
+				u += "?orgId=" + url.QueryEscape(orgID)
 			}
-			return url
+			return u
 		},
 		true, false,
 	)
@@ -142,11 +143,11 @@ Examples:
   webex calling announcement-repository update-binary-greeting --file greeting.wav --name "Updated Greeting" --announcement-id <ann-id> --dry-run`,
 		"PUT",
 		func(orgID, _, announcementID string) string {
-			url := config.CallingBaseURL + "/telephony/config/announcements/" + announcementID
+			u := config.CallingBaseURL + "/telephony/config/announcements/" + url.PathEscape(announcementID)
 			if orgID != "" {
-				url += "?orgId=" + orgID
+				u += "?orgId=" + url.QueryEscape(orgID)
 			}
-			return url
+			return u
 		},
 		false, true,
 	)
@@ -164,11 +165,11 @@ Examples:
   webex calling announcement-repository update-binary-greeting-2 --file greeting.wav --name "Updated Greeting" --location-id <loc-id> --announcement-id <ann-id>`,
 		"PUT",
 		func(orgID, locationID, announcementID string) string {
-			url := config.CallingBaseURL + "/telephony/config/locations/" + locationID + "/announcements/" + announcementID
+			u := config.CallingBaseURL + "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements/" + url.PathEscape(announcementID)
 			if orgID != "" {
-				url += "?orgId=" + orgID
+				u += "?orgId=" + url.QueryEscape(orgID)
 			}
-			return url
+			return u
 		},
 		true, true,
 	)

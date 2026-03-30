@@ -3,6 +3,7 @@ package cc
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -113,7 +114,7 @@ Examples:
 				name += ".wav"
 			}
 
-			url := config.CcBaseURL + "/organization/" + orgid + "/v2/agent-personal-greeting"
+			u := config.CcBaseURL + "/organization/" + url.PathEscape(orgid) + "/v2/agent-personal-greeting"
 
 			info := map[string]any{
 				"agentId":     agentID,
@@ -139,7 +140,7 @@ Examples:
 				},
 			}
 
-			body, statusCode, err := audio.UploadMultipart("POST", url, parts)
+			body, statusCode, err := audio.UploadMultipart("POST", u, parts)
 			if err != nil {
 				return err
 			}

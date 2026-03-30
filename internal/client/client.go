@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	urlpkg "net/url"
 	"os"
 	"strings"
 
@@ -33,19 +34,19 @@ func doOnce(req *Request) ([]byte, int, error) {
 	// Build URL
 	url := req.baseURL + req.path
 	for k, v := range req.pathParams {
-		url = strings.ReplaceAll(url, "{"+k+"}", v)
+		url = strings.ReplaceAll(url, "{"+k+"}", urlpkg.PathEscape(v))
 	}
 
 	// Add query params
 	if len(req.queryParams) > 0 {
-		parts := make([]string, 0, len(req.queryParams))
+		params := urlpkg.Values{}
 		for k, v := range req.queryParams {
 			if v != "" {
-				parts = append(parts, fmt.Sprintf("%s=%s", k, v))
+				params.Set(k, v)
 			}
 		}
-		if len(parts) > 0 {
-			url += "?" + strings.Join(parts, "&")
+		if encoded := params.Encode(); encoded != "" {
+			url += "?" + encoded
 		}
 	}
 

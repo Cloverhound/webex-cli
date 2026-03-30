@@ -260,7 +260,7 @@ func fetchIdentity(accessToken string) (*identityInfo, error) {
 }
 
 func FetchOrgName(accessToken, orgID string) (string, error) {
-	req, _ := http.NewRequest("GET", "https://webexapis.com/v1/organizations/"+orgID, nil)
+	req, _ := http.NewRequest("GET", "https://webexapis.com/v1/organizations/"+url.PathEscape(orgID), nil)
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	resp, err := http.DefaultClient.Do(req)
