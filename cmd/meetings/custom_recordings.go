@@ -30,15 +30,15 @@ Fetches the recording metadata to obtain the temporary download link,
 then downloads the binary content and writes it to the specified output path.
 
 The --type flag selects which download link to use:
-  audio      - MP3 audio track (default)
-  recording  - Full video recording (MP4)
+  video      - Full video recording (MP4, default)
+  audio      - MP3 audio track
   transcript - VTT transcript file
 
 Examples:
-  webex meetings recordings download --recording-id <id> --output meeting.mp3
-  webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
+  webex meetings recordings download --recording-id <id> --output meeting.mp4
+  webex meetings recordings download --recording-id <id> --output meeting.mp3 --type audio
   webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
-  webex meetings recordings download --recording-id <id> --output meeting.mp3 --host-email admin@example.com`,
+  webex meetings recordings download --recording-id <id> --output meeting.mp4 --host-email admin@example.com`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET recording metadata
 			req := client.NewRequest(config.CallingBaseURL, "GET", "/recordings/{recordingId}")
@@ -61,9 +61,11 @@ Examples:
 				return fmt.Errorf("no temporaryDirectDownloadLinks in response (status %d)", statusCode)
 			}
 
-			linkKey := "audioDownloadLink"
+			linkKey := "recordingDownloadLink"
 			switch dlType {
-			case "recording":
+			case "audio":
+				linkKey = "audioDownloadLink"
+			case "recording", "video":
 				linkKey = "recordingDownloadLink"
 			case "transcript":
 				linkKey = "transcriptDownloadLink"
@@ -88,7 +90,7 @@ Examples:
 	cmd.MarkFlagRequired("recording-id")
 	cmd.Flags().StringVar(&outputPath, "output", "", "File path to write recording to")
 	cmd.MarkFlagRequired("output")
-	cmd.Flags().StringVar(&dlType, "type", "audio", "Download type: audio, recording, or transcript")
+	cmd.Flags().StringVar(&dlType, "type", "video", "Download type: video, audio, or transcript (default: video)")
 	cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email of the recording host (admin access to other users' recordings)")
 
 	recordingsCmd.AddCommand(cmd)
