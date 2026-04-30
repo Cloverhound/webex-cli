@@ -255,3 +255,349 @@ webex admin service-apps get --service-app-id <id>
 5. **License assignment** — `licenses assign-users` uses SKU names (not license IDs). Get the exact SKU name from `licenses list`.
 
 6. **Partner admins** — use `--organization <orgId>` global flag to manage a customer org. The org ID can be base64 or UUID format; the CLI auto-decodes.
+
+<!-- codegen:start -->
+## Command Reference
+
+> Auto-generated from Postman collections. Run `make codegen` to update.
+
+### admin-audit
+
+| Command | Flags |
+|---|---|
+| `list-events` | `--org-id`, `--from`, `--to`, `--actor-id`, `--max`, `--offset`, `--event-categories`, `--last` |
+| `list-event-categories` | — |
+
+### authorizations
+
+| Command | Flags |
+|---|---|
+| `list-user` | `--person-id`, `--person-email` |
+| `get-expiration-status-token` | — |
+| `delete-org-client-id` | `--client-id`, `--org-id` |
+| `delete` | `--authorization-id` *(required)* |
+
+### classifications
+
+| Command | Flags |
+|---|---|
+| `list` | — |
+
+### data-sources
+
+| Command | Flags |
+|---|---|
+| `get-all` | — |
+| `get-schemas` | — |
+| `get-schema` | `--schema-id` *(required)* |
+| `get` | `--data-source-id` *(required)* |
+| `register` | `--audience`, `--nonce`, `--schema-id`, `--subject`, `--token-lifetime-minutes`, `--url`, `--body`, `--body-file` |
+| `update` | `--data-source-id` *(required)*, `--audience`, `--error-message`, `--nonce`, `--schema-id`, `--status`, `--subject`, `--token-lifetime-minutes`, `--url`, `--body`, `--body-file` |
+| `delete` | `--data-source-id` *(required)* |
+
+### domain-management
+
+| Command | Flags |
+|---|---|
+| `get-verification-token` | `--org-id` *(required)*, `--domain`, `--body`, `--body-file` |
+| `verify` | `--org-id` *(required)*, `--domain`, `--claim-domain`, `--reserve-domain`, `--body`, `--body-file` |
+| `claim` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `unverify` | `--org-id` *(required)*, `--domain`, `--remove-pending`, `--body`, `--body-file` |
+| `unclaim` | `--org-id` *(required)*, `--domain`, `--body`, `--body-file` |
+
+### identity-org
+
+| Command | Flags |
+|---|---|
+| `get` | `--org-id` *(required)* |
+| `generate-otp` | `--org-id` *(required)*, `--user-id` *(required)* |
+| `update` | `--org-id` *(required)*, `--schemas`, `--display-name`, `--preferred-language`, `--body`, `--body-file` |
+
+### events
+
+| Command | Flags |
+|---|---|
+| `list` | `--resource`, `--type`, `--actor-id`, `--from`, `--to`, `--max`, `--service-type`, `--last` |
+| `get` | `--event-id` *(required)* |
+
+### groups
+
+| Command | Flags |
+|---|---|
+| `list-search` | `--org-id`, `--filter`, `--attributes`, `--sort-by`, `--sort-order`, `--include-members`, `--start-index`, `--count` |
+| `get` | `--group-id` *(required)*, `--include-members` |
+| `get-members` | `--group-id` *(required)*, `--start-index`, `--count` |
+| `create` | `--body`, `--body-file` |
+| `update` | `--group-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--group-id` *(required)* |
+
+### guest-management
+
+| Command | Flags |
+|---|---|
+| `get-count` | — |
+| `create` | `--subject`, `--display-name`, `--body`, `--body-file` |
+
+### analytics
+
+| Command | Flags |
+|---|---|
+| `historical-data-related-messaging` | `--from`, `--to`, `--last` |
+| `historical-data-related-room-devices` | `--from`, `--to`, `--last` |
+| `historical-data-related-meetings` | `--site-url`, `--from`, `--to`, `--last` |
+
+### hybrid-clusters
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id` |
+| `get` | `--hybrid-cluster-id` *(required)*, `--org-id` |
+
+### hybrid-connectors
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id` |
+| `get` | `--connector-id` *(required)* |
+
+### licenses
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id` |
+| `get-license` | `--license-id` *(required)*, `--include-assigned-to`, `--next`, `--limit` |
+| `assign-users` | `--body`, `--body-file` |
+
+### meeting-qualities
+
+| Command | Flags |
+|---|---|
+| `get` | `--meeting-id`, `--max`, `--offset` |
+
+### org-contacts
+
+| Command | Flags |
+|---|---|
+| `get` | `--org-id` *(required)*, `--contact-id` *(required)* |
+| `list` | `--org-id` *(required)*, `--keyword`, `--source`, `--limit`, `--group-ids` |
+| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `bulk-create-update` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `bulk-delete` | `--org-id` *(required)*, `--schemas`, `--object-ids`, `--body`, `--body-file` |
+| `update` | `--org-id` *(required)*, `--contact-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--org-id` *(required)*, `--contact-id` *(required)* |
+
+### organizations
+
+| Command | Flags |
+|---|---|
+| `list` | — |
+| `get` | `--org-id` *(required)* |
+| `delete` | `--org-id` *(required)* |
+
+### partner-administrators
+
+| Command | Flags |
+|---|---|
+| `get-all-customers-managed-admin` | `--managed-by` |
+| `get-all-admins-assigned-customer` | `--org-id` *(required)* |
+| `assign-admin-customer` | `--org-id` *(required)*, `--person-id` *(required)* |
+| `unassign-admin-customer` | `--org-id` *(required)*, `--person-id` *(required)* |
+| `revoke-all-admin-roles-person-id` | `--person-id` *(required)* |
+
+### partner-reports-templates
+
+| Command | Flags |
+|---|---|
+| `list` | `--service`, `--template-id`, `--from`, `--to`, `--region-id`, `--on-behalf-of-sub-partner-org-id`, `--last` |
+| `get` | `--report-id` *(required)*, `--on-behalf-of-sub-partner-org-id` |
+| `list-2` | `--on-behalf-of-sub-partner-org-id` |
+| `create` | `--on-behalf-of-sub-partner-org-id`, `--template-id`, `--start-date`, `--end-date`, `--region-id`, `--body`, `--body-file` |
+| `delete` | `--report-id` *(required)*, `--on-behalf-of-sub-partner-org-id` |
+
+### people
+
+| Command | Flags |
+|---|---|
+| `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
+| `get-person` | `--person-id` *(required)*, `--calling-data` |
+| `get-my-own` | `--calling-data` |
+| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `delete-person` | `--person-id` *(required)* |
+
+### recording-report
+
+| Command | Flags |
+|---|---|
+| `list-audit-summaries` | `--max`, `--from`, `--to`, `--host-email`, `--site-url`, `--last` |
+| `get-audit` | `--recording-id`, `--host-email`, `--max` |
+| `list-meeting-archive-summaries` | `--max`, `--from`, `--to`, `--site-url`, `--last` |
+| `get-meeting-archive` | `--archive-id` *(required)* |
+
+### recordings
+
+| Command | Flags |
+|---|---|
+| `list` | `--max`, `--from`, `--to`, `--meeting-id`, `--host-email`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
+| `list-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
+| `get` | `--recording-id` *(required)*, `--host-email` |
+| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--last` |
+| `get-group` | `--recording-id` *(required)*, `--person-id` |
+| `move-recycle-bin` | `--host-email`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `restore-recycle-bin` | `--host-email`, `--restore-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `purge-recycle-bin` | `--host-email`, `--purge-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `share` | `--recording-id` *(required)*, `--host-email`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `share-link` | `--host-email`, `--web-share-link`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `delete-admin` | `--recording-id` *(required)* |
+| `delete` | `--recording-id` *(required)*, `--host-email`, `--reason`, `--comment`, `--body`, `--body-file` |
+
+### report-templates
+
+| Command | Flags |
+|---|---|
+| `list` | — |
+
+### reports
+
+| Command | Flags |
+|---|---|
+| `list` | `--report-id`, `--service`, `--template-id`, `--from`, `--to`, `--last` |
+| `get` | `--report-id` *(required)* |
+| `create` | `--template-id`, `--start-date`, `--end-date`, `--site-list`, `--body`, `--body-file` |
+| `delete` | `--report-id` *(required)* |
+
+### resource-memberships
+
+| Command | Flags |
+|---|---|
+| `list-group` | `--license-id`, `--person-id`, `--person-org-id`, `--status`, `--max` |
+| `get-group` | `--resource-group-membership-id` *(required)* |
+| `list-group-v2` | `--license-id`, `--id`, `--org-id`, `--status`, `--type`, `--max` |
+| `update-group` | `--resource-group-membership-id` *(required)*, `--resource-group-id`, `--license-id`, `--person-id`, `--person-org-id`, `--status`, `--body`, `--body-file` |
+
+### resource-groups
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id` |
+| `get` | `--resource-group-id` *(required)* |
+
+### roles
+
+| Command | Flags |
+|---|---|
+| `list` | — |
+| `get` | `--role-id` *(required)* |
+
+### scim-2-bulk
+
+| Command | Flags |
+|---|---|
+| `user-api` | `--org-id` *(required)*, `--body`, `--body-file` |
+
+### scim-2-groups
+
+| Command | Flags |
+|---|---|
+| `search` | `--org-id` *(required)*, `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--include-members`, `--member-type` |
+| `get` | `--org-id` *(required)*, `--group-id` *(required)*, `--excluded-attributes` |
+| `get-members` | `--org-id` *(required)*, `--group-id` *(required)*, `--start-index`, `--count`, `--member-type` |
+| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `update-put` | `--org-id` *(required)*, `--group-id` *(required)*, `--body`, `--body-file` |
+| `update-patch` | `--org-id` *(required)*, `--group-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--org-id` *(required)*, `--group-id` *(required)* |
+
+### scim-2-users
+
+| Command | Flags |
+|---|---|
+| `search` | `--org-id` *(required)*, `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--return-groups`, `--include-group-details`, `--group-usage-types` |
+| `get` | `--org-id` *(required)*, `--user-id` *(required)* |
+| `get-me` | — |
+| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `update-put` | `--org-id` *(required)*, `--user-id` *(required)*, `--body`, `--body-file` |
+| `update-patch` | `--org-id` *(required)*, `--user-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--org-id` *(required)*, `--user-id` *(required)* |
+
+### security-audit
+
+| Command | Flags |
+|---|---|
+| `list-events` | `--org-id`, `--start-time`, `--end-time`, `--actor-id`, `--max`, `--event-categories` |
+
+### settings
+
+| Command | Flags |
+|---|---|
+| `get-org` | `--org-id` *(required)*, `--setting-key` *(required)* |
+| `create-update-org` | `--org-id` *(required)*, `--key`, `--value`, `--body`, `--body-file` |
+
+### partner-tags
+
+| Command | Flags |
+|---|---|
+| `get-all-customer` | `--type` |
+| `get-customer-org` | `--org-id` *(required)* |
+| `get-all-customers-set` | `--tags`, `--max` |
+| `subscription-list-name-set` | `--tags`, `--max` |
+| `get-subscription` | `--org-id` *(required)*, `--subscription-id` *(required)* |
+| `create-replace-customer-provided-ones` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `create-replace-subscription-provided-ones` | `--org-id` *(required)*, `--subscription-id` *(required)*, `--body`, `--body-file` |
+
+### workspace-locations
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id`, `--display-name`, `--address`, `--country-code`, `--city-name` |
+| `get` | `--location-id` *(required)* |
+| `list-floors` | `--location-id` *(required)* |
+| `get-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+| `create` | `--display-name`, `--address`, `--country-code`, `--latitude`, `--longitude`, `--city-name`, `--notes`, `--body`, `--body-file` |
+| `create-floor` | `--location-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--display-name`, `--address`, `--country-code`, `--latitude`, `--longitude`, `--id`, `--city-name`, `--notes`, `--body`, `--body-file` |
+| `update-floor` | `--location-id` *(required)*, `--floor-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `delete` | `--location-id` *(required)* |
+| `delete-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+
+### workspace-metrics
+
+| Command | Flags |
+|---|---|
+| `workspace-metrics` | `--workspace-id`, `--metric-name`, `--aggregation`, `--from`, `--to`, `--unit`, `--sort-by`, `--last` |
+| `duration` | `--workspace-id`, `--aggregation`, `--measurement`, `--from`, `--to`, `--last` |
+
+### scim-2-schemas
+
+| Command | Flags |
+|---|---|
+| `get-group` | — |
+| `get-user` | — |
+| `get-group-id` | `--schema-id` *(required)* |
+
+### send-activation-email
+
+| Command | Flags |
+|---|---|
+| `get-bulk-resend-job-status` | `--org-id` *(required)*, `--job-id` *(required)* |
+| `get-bulk-resend-job-errors` | `--org-id` *(required)*, `--job-id` *(required)*, `--max` |
+| `initiate-bulk-resend-job` | `--org-id` *(required)* |
+
+### service-apps
+
+| Command | Flags |
+|---|---|
+| `create-access-token` | `--application-id` *(required)*, `--client-id`, `--client-secret`, `--target-org-id`, `--body`, `--body-file` |
+
+### live-monitoring
+
+| Command | Flags |
+|---|---|
+| `get-meeting-metrics-categorized-country` | `--site-ids`, `--site-url`, `--body`, `--body-file` |
+
+### archive-users
+
+| Command | Flags |
+|---|---|
+| `get` | `--org-id` *(required)*, `--useruuid` *(required)* |
+
+<!-- codegen:end -->

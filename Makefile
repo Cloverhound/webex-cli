@@ -9,6 +9,7 @@ download:
 codegen:
 	cd codegen && python3 extract_api_spec.py
 	cd codegen && python3 generate_cli.py
+	cd codegen && python3 generate_skills.py
 
 refresh: download codegen build
 

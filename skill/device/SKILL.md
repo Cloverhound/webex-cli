@@ -192,3 +192,173 @@ webex device hot-desk delete-session --session-id <id>
 4. **`create-activation-code` vs `create-mac-address`** — activation codes are used for zero-touch provisioning (device calls home and registers). MAC address creation is for adding a known device by hardware address.
 
 5. **`workspaces get` vs `get-2`** — `get-2` uses a different API path that may return additional attributes. Both accept `--workspace-id`.
+
+<!-- codegen:start -->
+## Command Reference
+
+> Auto-generated from Postman collections. Run `make codegen` to update.
+
+### device-call
+
+| Command | Flags |
+|---|---|
+| `get-members` | `--device-id` *(required)*, `--org-id` |
+| `search-members` | `--device-id` *(required)*, `--org-id`, `--start`, `--max`, `--member-name`, `--phone-number`, `--location-id`, `--extension`, `--usage-type`, `--order` |
+| `get-settings` | `--device-id` *(required)*, `--org-id`, `--device-model` |
+| `get-location-settings` | `--location-id` *(required)*, `--org-id` |
+| `get-webex-calling` | `--device-id` *(required)*, `--org-id` |
+| `get-person` | `--person-id` *(required)*, `--org-id` |
+| `get-workspace` | `--workspace-id` *(required)*, `--org-id` |
+| `list-supported` | `--org-id`, `--allow-configure-layout-enabled`, `--type` |
+| `get-override-settings` | `--org-id` |
+| `list-line-key-templates` | `--org-id` |
+| `get-line-key-template` | `--template-id` *(required)*, `--org-id` |
+| `list-apply-line-key-template-jobs` | `--org-id` |
+| `get-job-status-apply-line-key-template-job` | `--job-id` *(required)*, `--org-id` |
+| `get-job-errors-apply-line-key-template-job` | `--job-id` *(required)*, `--org-id` |
+| `get-dect-type-list-deprecated` | `--org-id` |
+| `get-dect-type-list` | `--org-id` |
+| `list-change-settings-jobs` | `--org-id`, `--start`, `--max` |
+| `get-change-settings-job-status` | `--job-id` *(required)* |
+| `list-change-settings-job-errors` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
+| `get-layout-id` | `--device-id` *(required)*, `--org-id` |
+| `list-rebuild-phones-jobs` | `--org-id` |
+| `get-job-status-rebuild-phones-job` | `--job-id` *(required)*, `--org-id` |
+| `get-job-errors-rebuild-phones-job` | `--job-id` *(required)*, `--org-id` |
+| `get-settings-person` | `--person-id` *(required)*, `--org-id` |
+| `get-settings-workspace` | `--workspace-id` *(required)*, `--org-id` |
+| `list-background-images` | `--org-id` |
+| `get-user-count` | `--person-id` *(required)*, `--org-id` |
+| `get-count-members` | `--device-id` *(required)*, `--org-id`, `--member-name`, `--phone-number`, `--location-id`, `--extension`, `--usage-type` |
+| `get-count-available-members` | `--org-id`, `--member-name`, `--phone-number`, `--location-id`, `--extension`, `--usage-type`, `--exclude-virtual-line`, `--device-location-id` |
+| `list-supported-2` | `--org-id`, `--allow-configure-layout-enabled`, `--type` |
+| `get-validation-schema` | `--org-id`, `--family-or-model-display-name` |
+| `get-settings-groups` | `--org-id`, `--family-or-model-display-name`, `--include-settings-type` |
+| `list-dynamic-settings-jobs` | `--org-id`, `--start`, `--max` |
+| `get-dynamic-settings-job-status` | `--job-id` *(required)* |
+| `list-dynamic-settings-job-errors` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
+| `list-supported-3` | `--org-id`, `--allow-configure-layout-enabled`, `--type` |
+| `get-settings-groups-2` | `--org-id`, `--family-or-model-display-name`, `--include-settings-type` |
+| `list-dynamic-settings-jobs-2` | `--org-id`, `--start`, `--max` |
+| `get-dynamic-settings-job-status-2` | `--job-id` *(required)* |
+| `list-dynamic-settings-job-errors-2` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
+| `apply-changes` | `--device-id` *(required)*, `--org-id` |
+| `create-line-key-template` | `--org-id`, `--body`, `--body-file` |
+| `preview-apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
+| `apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
+| `validate-list-mac-address` | `--org-id`, `--macs`, `--body`, `--body-file` |
+| `update-settings-across-org-location-job` | `--org-id`, `--body`, `--body-file` |
+| `rebuild-phones-configuration` | `--org-id`, `--location-id`, `--body`, `--body-file` |
+| `upload-background-image` | `--device-id` *(required)*, `--org-id` |
+| `get-customer-dynamic-settings` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
+| `get-location-dynamic-settings` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
+| `get-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
+| `updates-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
+| `get-customer-dynamic-settings-2` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
+| `get-location-dynamic-settings-2` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
+| `get-dynamic-settings-2` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
+| `update-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
+| `update-members` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-settings` | `--device-id` *(required)*, `--org-id`, `--device-model`, `--body`, `--body-file` |
+| `update-third-party` | `--device-id` *(required)*, `--org-id`, `--sip-password`, `--body`, `--body-file` |
+| `update-hoteling-settings-person-primary` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-workspace` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--limit-guest-use`, `--guest-hours-limit`, `--body`, `--body-file` |
+| `update-line-key-template` | `--template-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-layout-id` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-settings-person` | `--person-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
+| `update-settings-workspace` | `--workspace-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
+| `update-specified-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `delete-line-key-template` | `--template-id` *(required)*, `--org-id` |
+| `delete-background-images` | `--org-id`, `--body`, `--body-file` |
+
+### device-configurations
+
+| Command | Flags |
+|---|---|
+| `list` | `--device-id`, `--key` |
+| `update` | `--device-id`, `--op`, `--path`, `--body`, `--body-file` |
+
+### devices
+
+| Command | Flags |
+|---|---|
+| `list` | `--max`, `--start`, `--display-name`, `--person-id`, `--workspace-id`, `--org-id`, `--connection-status`, `--product`, `--type`, `--serial`, `--tag`, `--software`, `--upgrade-channel`, `--error-code`, `--capability`, `--permission`, `--location-id`, `--workspace-location-id`, `--mac`, `--device-platform`, `--planned-maintenance` |
+| `get` | `--device-id` *(required)*, `--org-id` |
+| `create-mac-address` | `--org-id`, `--mac`, `--model`, `--workspace-id`, `--person-id`, `--password`, `--body`, `--body-file` |
+| `create-activation-code` | `--org-id`, `--workspace-id`, `--person-id`, `--model`, `--body`, `--body-file` |
+| `update-tags` | `--device-id` *(required)*, `--org-id`, `--op`, `--path`, `--value`, `--body`, `--body-file` |
+| `delete` | `--device-id` *(required)*, `--org-id` |
+
+### hot-desk
+
+| Command | Flags |
+|---|---|
+| `list-sessions` | `--org-id`, `--person-id`, `--workspace-id` |
+| `delete-session` | `--session-id` *(required)* |
+
+### workspace-locations
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id`, `--display-name`, `--address`, `--country-code`, `--city-name` |
+| `get` | `--location-id` *(required)* |
+| `list-floors` | `--location-id` *(required)* |
+| `get-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+| `create` | `--display-name`, `--address`, `--country-code`, `--latitude`, `--longitude`, `--city-name`, `--notes`, `--body`, `--body-file` |
+| `create-floor` | `--location-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--display-name`, `--address`, `--country-code`, `--latitude`, `--longitude`, `--id`, `--city-name`, `--notes`, `--body`, `--body-file` |
+| `update-floor` | `--location-id` *(required)*, `--floor-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `delete` | `--location-id` *(required)* |
+| `delete-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+
+### workspace-metrics
+
+| Command | Flags |
+|---|---|
+| `workspace-metrics` | `--workspace-id`, `--metric-name`, `--aggregation`, `--from`, `--to`, `--unit`, `--sort-by`, `--last` |
+| `duration` | `--workspace-id`, `--aggregation`, `--measurement`, `--from`, `--to`, `--last` |
+
+### workspace-personalization
+
+| Command | Flags |
+|---|---|
+| `get-task` | `--workspace-id` *(required)* |
+| `personalize` | `--workspace-id` *(required)*, `--email`, `--body`, `--body-file` |
+
+### workspaces
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id`, `--location-id`, `--workspace-location-id`, `--floor-id`, `--display-name`, `--capacity`, `--type`, `--start`, `--max`, `--calling`, `--supported-devices`, `--calendar`, `--device-hosted-meetings-enabled`, `--device-platform`, `--health-level`, `--include-devices`, `--include-capabilities`, `--planned-maintenance`, `--custom-attribute` |
+| `get` | `--workspace-id` *(required)*, `--include-devices` |
+| `get-capabilities` | `--workspace-id` *(required)* |
+| `get-2` | `--workspace-id` *(required)*, `--include-devices`, `--include-capabilities` |
+| `create` | `--body`, `--body-file` |
+| `update` | `--workspace-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--workspace-id` *(required)* |
+
+### xapi
+
+| Command | Flags |
+|---|---|
+| `query-status` | `--device-id`, `--name` |
+| `query-schema` | `--device-id`, `--status`, `--command` |
+| `execute-command` | `--command-name` *(required)*, `--body`, `--body-file` |
+
+### locations
+
+| Command | Flags |
+|---|---|
+| `list` | `--name`, `--id`, `--org-id`, `--max` |
+| `get` | `--location-id` *(required)*, `--org-id` |
+| `list-floors` | `--location-id` *(required)* |
+| `get-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+| `create` | `--org-id`, `--body`, `--body-file` |
+| `create-floor` | `--location-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-floor` | `--location-id` *(required)*, `--floor-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
+| `delete` | `--location-id` *(required)*, `--org-id` |
+| `delete-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
+
+<!-- codegen:end -->

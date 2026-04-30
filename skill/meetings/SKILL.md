@@ -229,3 +229,293 @@ webex meetings meeting-polls list --meeting-id <id>
 6. **Personal Room meetings** — the meeting ID of a scheduled personal room meeting is not supported by the Transcripts or Participants APIs.
 
 7. **Admin scope for list** — `list-admin-compliance-officer` (recordings and transcripts) requires `spark-admin:meetings_read` or compliance officer scope. `--host-email` on `participants list-meeting` also requires admin scope.
+
+<!-- codegen:start -->
+## Command Reference
+
+> Auto-generated from Postman collections. Run `make codegen` to update.
+
+### chats
+
+| Command | Flags |
+|---|---|
+| `list-meeting` | `--meeting-id`, `--max`, `--offset` |
+| `delete-meeting` | `--meeting-id` |
+
+### closed-captions
+
+| Command | Flags |
+|---|---|
+| `list-meeting` | `--meeting-id` |
+| `list-meeting-snippets` | `--closed-caption-id` *(required)*, `--meeting-id` |
+| `download-meeting-snippets` | `--closed-caption-id` *(required)*, `--format`, `--meeting-id` |
+
+### invitees
+
+| Command | Flags |
+|---|---|
+| `list-meeting` | `--meeting-id`, `--max`, `--host-email`, `--panelist` |
+| `get-meeting` | `--meeting-invitee-id` *(required)*, `--host-email` |
+| `create-meeting` | `--meeting-id`, `--email`, `--display-name`, `--co-host`, `--host-email`, `--send-email`, `--panelist`, `--body`, `--body-file` |
+| `create-meeting-2` | `--body`, `--body-file` |
+| `update-meeting` | `--meeting-invitee-id` *(required)*, `--email`, `--display-name`, `--co-host`, `--host-email`, `--send-email`, `--panelist`, `--body`, `--body-file` |
+| `delete-meeting` | `--meeting-invitee-id` *(required)*, `--host-email`, `--send-email` |
+
+### messages
+
+| Command | Flags |
+|---|---|
+| `delete-meeting` | `--meeting-message-id` *(required)* |
+
+### participants
+
+| Command | Flags |
+|---|---|
+| `list-meeting` | `--max`, `--meeting-id`, `--breakout-session-id`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--host-email`, `--join-time-from`, `--join-time-to` |
+| `get-meeting` | `--participant-id` *(required)*, `--host-email` |
+| `query-meeting-email` | `--meeting-id`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--host-email`, `--emails`, `--join-time-from`, `--join-time-to`, `--body`, `--body-file` |
+| `admit` | `--body`, `--body-file` |
+| `call-out-sip` | `--address`, `--display-name`, `--meeting-id`, `--meeting-number`, `--address-type`, `--invitation-correlation-id`, `--body`, `--body-file` |
+| `cancel-calling-out-sip` | `--participant-id`, `--body`, `--body-file` |
+| `update` | `--participant-id` *(required)*, `--muted`, `--admit`, `--expel`, `--body`, `--body-file` |
+
+### meeting-polls
+
+| Command | Flags |
+|---|---|
+| `list` | `--meeting-id` |
+| `get-pollresults` | `--meeting-id`, `--max` |
+| `list-respondents-question` | `--poll-id` *(required)*, `--question-id` *(required)*, `--meeting-id`, `--max` |
+
+### preferences
+
+| Command | Flags |
+|---|---|
+| `get-meeting` | `--user-email`, `--site-url` |
+| `get-personal-meeting-room-options` | `--user-email`, `--site-url` |
+| `get-audio-options` | `--user-email`, `--site-url` |
+| `get-video-options` | `--user-email`, `--site-url` |
+| `get-scheduling-options` | `--user-email`, `--site-url` |
+| `get-site-list` | `--user-email`, `--site-url` |
+| `insert-delegate-emails` | `--user-email`, `--site-url`, `--emails`, `--body`, `--body-file` |
+| `delete-delegate-emails` | `--user-email`, `--site-url`, `--emails`, `--body`, `--body-file` |
+| `batch-refresh-personal-meeting-room-id` | `--body`, `--body-file` |
+| `update-personal-meeting-room-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
+| `update-audio-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
+| `update-video-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
+| `update-scheduling-options` | `--user-email`, `--site-url`, `--enabled-join-before-host`, `--join-before-host-minutes`, `--enabled-auto-share-recording`, `--enabled-webex-assistant-by-default`, `--delegate-emails`, `--body`, `--body-file` |
+| `update-default-site` | `--default-site`, `--user-email`, `--site-url`, `--body`, `--body-file` |
+
+### meeting-qa
+
+| Command | Flags |
+|---|---|
+| `list-q` | `--meeting-id`, `--max` |
+| `list-answers-question` | `--question-id` *(required)*, `--meeting-id`, `--max` |
+
+### meeting-qualities
+
+| Command | Flags |
+|---|---|
+| `get` | `--meeting-id`, `--max`, `--offset` |
+
+### session-types
+
+| Command | Flags |
+|---|---|
+| `list-site` | `--site-url` |
+| `list-user` | `--site-url`, `--person-id` |
+| `update-user` | `--site-url`, `--session-type-ids`, `--person-id`, `--email`, `--body`, `--body-file` |
+
+### transcripts
+
+| Command | Flags |
+|---|---|
+| `list-meeting` | `--max`, `--from`, `--to`, `--meeting-id`, `--host-email`, `--site-url`, `--last` |
+| `list-meeting-compliance-officer` | `--from`, `--to`, `--max`, `--site-url`, `--last` |
+| `download-meeting` | `--transcript-id` *(required)*, `--format`, `--host-email` |
+| `list-snippets-meeting` | `--transcript-id` *(required)*, `--max` |
+| `get-snippet` | `--transcript-id` *(required)*, `--snippet-id` *(required)* |
+| `update-snippet` | `--transcript-id` *(required)*, `--snippet-id` *(required)*, `--text`, `--reason`, `--body`, `--body-file` |
+| `delete` | `--transcript-id` *(required)*, `--reason`, `--comment`, `--body`, `--body-file` |
+
+### meeting-summary
+
+| Command | Flags |
+|---|---|
+| `list-usage-reports` | `--site-url`, `--service-type`, `--from`, `--to`, `--max`, `--last` |
+| `list-attendee-reports` | `--site-url`, `--from`, `--to`, `--max`, `--meeting-id`, `--meeting-number`, `--meeting-title`, `--last` |
+
+### meetings
+
+| Command | Flags |
+|---|---|
+| `get-admin` | `--meeting-id` *(required)*, `--current` |
+| `list-admin` | `--meeting-number`, `--web-link`, `--current` |
+| `list` | `--meeting-number`, `--web-link`, `--room-id`, `--meeting-series-id`, `--max`, `--from`, `--to`, `--meeting-type`, `--state`, `--scheduled-type`, `--is-modified`, `--has-chat`, `--has-recording`, `--has-transcription`, `--has-summary`, `--has-closed-caption`, `--has-polls`, `--has-qa`, `--has-slido`, `--current`, `--host-email`, `--site-url`, `--integration-tag`, `--last` |
+| `get` | `--meeting-id` *(required)*, `--current`, `--host-email` |
+| `list-templates` | `--template-type`, `--locale`, `--is-default`, `--is-standard`, `--host-email`, `--site-url` |
+| `get-template` | `--template-id` *(required)*, `--host-email` |
+| `get-control-status` | `--meeting-id` |
+| `list-session-types` | `--host-email`, `--site-url` |
+| `get-session-type` | `--session-type-id` *(required)*, `--host-email`, `--site-url` |
+| `get-registration-form` | `--meeting-id` *(required)*, `--current`, `--host-email` |
+| `list-registrants` | `--meeting-id` *(required)*, `--max`, `--host-email`, `--current`, `--email`, `--registration-time-from`, `--registration-time-to` |
+| `get-detailed-information-registrant` | `--meeting-id` *(required)*, `--registrant-id` *(required)*, `--current`, `--host-email` |
+| `list-interpreters` | `--meeting-id` *(required)*, `--host-email` |
+| `get-interpreter` | `--meeting-id` *(required)*, `--interpreter-id` *(required)*, `--host-email` |
+| `list-breakout-sessions` | `--meeting-id` *(required)* |
+| `get-survey` | `--meeting-id` *(required)* |
+| `list-survey-results` | `--meeting-id` *(required)*, `--meeting-start-time-from`, `--meeting-start-time-to`, `--max` |
+| `list-invitation-sources` | `--meeting-id` *(required)* |
+| `list-tracking-codes` | `--site-url`, `--service`, `--host-email` |
+| `create` | `--body`, `--body-file` |
+| `join` | `--meeting-id`, `--meeting-number`, `--web-link`, `--join-directly`, `--email`, `--display-name`, `--password`, `--expiration-minutes`, `--registration-id`, `--host-email`, `--create-join-link-as-web-link`, `--create-start-link-as-web-link`, `--body`, `--body-file` |
+| `register-registrant` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-register-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `query-registrants` | `--meeting-id` *(required)*, `--max`, `--current`, `--host-email`, `--emails`, `--status`, `--order-type`, `--order-by`, `--body`, `--body-file` |
+| `batch-update-registrants-status` | `--meeting-id` *(required)*, `--status-op-type` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `create-interpreter` | `--meeting-id` *(required)*, `--language-code1`, `--language-code2`, `--email`, `--display-name`, `--host-email`, `--send-email`, `--body`, `--body-file` |
+| `get-survey-links` | `--meeting-id` *(required)*, `--host-email`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--emails`, `--body`, `--body-file` |
+| `create-invitation-sources` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `reassign-host` | `--host-email`, `--meeting-ids`, `--body`, `--body-file` |
+| `end` | `--meeting-id` *(required)*, `--reason`, `--body`, `--body-file` |
+| `batch-approve-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-reject-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-cancel-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-delete-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `update` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `update-control-status` | `--meeting-id`, `--recording-started`, `--recording-paused`, `--locked`, `--body`, `--body-file` |
+| `update-registration-form` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `update-simultaneous-interpretation` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `update-interpreter` | `--meeting-id` *(required)*, `--interpreter-id` *(required)*, `--language-code1`, `--language-code2`, `--email`, `--display-name`, `--host-email`, `--send-email`, `--body`, `--body-file` |
+| `update-breakout-sessions` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `patch` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--meeting-id` *(required)*, `--host-email`, `--send-email` |
+| `delete-registration-form` | `--meeting-id` *(required)* |
+| `delete-registrant` | `--meeting-id` *(required)*, `--registrant-id` *(required)*, `--current`, `--host-email` |
+| `delete-interpreter` | `--meeting-id` *(required)*, `--interpreter-id` *(required)*, `--host-email`, `--send-email` |
+| `delete-breakout-sessions` | `--meeting-id` *(required)*, `--send-email` |
+
+### tracking-codes
+
+| Command | Flags |
+|---|---|
+| `list` | `--site-url` |
+| `get` | `--tracking-code-id` *(required)*, `--site-url` |
+| `get-user` | `--site-url`, `--person-id` |
+| `create` | `--body`, `--body-file` |
+| `update` | `--tracking-code-id` *(required)*, `--body`, `--body-file` |
+| `update-user` | `--body`, `--body-file` |
+| `delete` | `--tracking-code-id` *(required)*, `--site-url` |
+
+### people
+
+| Command | Flags |
+|---|---|
+| `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
+| `get-person` | `--person-id` *(required)*, `--calling-data` |
+| `get-my-own` | `--calling-data` |
+| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `delete-person` | `--person-id` *(required)* |
+
+### recording-report
+
+| Command | Flags |
+|---|---|
+| `list-audit-summaries` | `--max`, `--from`, `--to`, `--host-email`, `--site-url`, `--last` |
+| `get-audit` | `--recording-id`, `--host-email`, `--max` |
+| `list-meeting-archive-summaries` | `--max`, `--from`, `--to`, `--site-url`, `--last` |
+| `get-meeting-archive` | `--archive-id` *(required)* |
+
+### recordings
+
+| Command | Flags |
+|---|---|
+| `list` | `--max`, `--from`, `--to`, `--meeting-id`, `--host-email`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
+| `list-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
+| `get` | `--recording-id` *(required)*, `--host-email` |
+| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--last` |
+| `get-group` | `--recording-id` *(required)*, `--person-id` |
+| `move-recycle-bin` | `--host-email`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `restore-recycle-bin` | `--host-email`, `--restore-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `purge-recycle-bin` | `--host-email`, `--purge-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
+| `share` | `--recording-id` *(required)*, `--host-email`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `share-link` | `--host-email`, `--web-share-link`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `delete-admin` | `--recording-id` *(required)* |
+| `delete` | `--recording-id` *(required)*, `--host-email`, `--reason`, `--comment`, `--body`, `--body-file` |
+
+### site
+
+| Command | Flags |
+|---|---|
+| `get-meeting-common-settings-configuration` | `--site-url` |
+| `update-meeting-common-settings-configuration` | `--body`, `--body-file` |
+
+### slido
+
+| Command | Flags |
+|---|---|
+| `list-compliance-events` | `--session-org-id`, `--session-id`, `--start` |
+
+### video-mesh
+
+| Command | Flags |
+|---|---|
+| `list-clusters-availability` | `--from`, `--to`, `--org-id`, `--last` |
+| `get-cluster-availability` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
+| `list-node-availability` | `--from`, `--to`, `--cluster-id`, `--last` |
+| `get-node-availability` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
+| `list-media-health-monitoring-tool-test-results-v2` | `--org-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-media-health-monitoring-tool-test-results-clusters-v2` | `--cluster-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-media-health-monitoring-tool-test-results-node-v2` | `--node-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `list-overflow-cloud` | `--from`, `--to`, `--org-id`, `--last` |
+| `list-cluster-redirect` | `--from`, `--to`, `--org-id`, `--last` |
+| `get-cluster-redirect` | `--from`, `--to`, `--cluster-id`, `--last` |
+| `list-clusters-utilization` | `--from`, `--to`, `--org-id`, `--last` |
+| `get-cluster-utilization` | `--from`, `--to`, `--cluster-id`, `--last` |
+| `list-reachability-test-results-v2` | `--org-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-reachability-test-results-cluster-v2` | `--cluster-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-reachability-test-results-node-v2` | `--node-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `list-cluster` | `--org-id` |
+| `get-cluster` | `--cluster-id` *(required)* |
+| `get-triggered-test-status` | `--command-id` |
+| `get-triggered-test-results` | `--command-id` |
+| `list-network-test-results` | `--org-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-network-test-results-cluster` | `--cluster-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `get-network-test-results-node` | `--node-id`, `--trigger-type`, `--from`, `--to`, `--last` |
+| `list-cluster-client-type-distribution` | `--org-id`, `--from`, `--to`, `--device-type`, `--last` |
+| `get-cluster-client-type-distribution` | `--cluster-id`, `--from`, `--to`, `--device-type`, `--last` |
+| `list-event-threshold-configuration` | `--event-name`, `--cluster-id`, `--org-id`, `--event-scope` |
+| `get-event-threshold-configuration` | `--event-threshold-id` *(required)* |
+| `trigger-on-demand-test-cluster` | `--cluster-id` *(required)*, `--type`, `--nodes`, `--body`, `--body-file` |
+| `trigger-on-demand-test-node` | `--node-id` *(required)*, `--type`, `--body`, `--body-file` |
+| `reset-event-threshold-configuration` | `--event-threshold-ids`, `--body`, `--body-file` |
+| `update-event-threshold-configuration` | `--body`, `--body-file` |
+
+### webhooks
+
+| Command | Flags |
+|---|---|
+| `list` | `--max`, `--owned-by` |
+| `get` | `--webhook-id` *(required)* |
+| `create` | `--name`, `--target-url`, `--resource`, `--event`, `--filter`, `--secret`, `--owned-by`, `--body`, `--body-file` |
+| `update` | `--webhook-id` *(required)*, `--name`, `--target-url`, `--secret`, `--owned-by`, `--status`, `--body`, `--body-file` |
+| `delete` | `--webhook-id` *(required)* |
+
+### summaries
+
+| Command | Flags |
+|---|---|
+| `get-meeting-id` | `--meeting-id` |
+| `get-compliance-officer` | `--meeting-id` |
+| `delete` | `--summary-id` *(required)* |
+
+### slidosecurepremium
+
+| Command | Flags |
+|---|---|
+| `list-compliance-events` | `--session-org-id`, `--session-id`, `--start` |
+
+<!-- codegen:end -->

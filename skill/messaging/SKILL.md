@@ -233,3 +233,131 @@ webex messaging events list --resource messages --type created
 5. **1:1 rooms** — `rooms list --type direct` returns 1:1 spaces. The room `title` is the other person's display name. Send a message with `toPersonEmail` to start a new 1:1 — Webex creates the room automatically.
 
 6. **Compliance officer memberships** — query all rooms a person belongs to org-wide via `memberships list --person-email <email>` (no `--room-id`). Requires compliance officer scope.
+
+<!-- codegen:start -->
+## Command Reference
+
+> Auto-generated from Postman collections. Run `make codegen` to update.
+
+### attachment-actions
+
+| Command | Flags |
+|---|---|
+| `get` | `--id` *(required)* |
+| `create` | `--body`, `--body-file` |
+
+### ecm-folder-linking
+
+| Command | Flags |
+|---|---|
+| `list` | `--room-id` |
+| `get` | `--id` *(required)* |
+| `create-configuration` | `--room-id`, `--content-url`, `--display-name`, `--drive-id`, `--item-id`, `--default-folder`, `--body`, `--body-file` |
+| `update-linked` | `--id` *(required)*, `--room-id`, `--content-url`, `--display-name`, `--drive-id`, `--item-id`, `--default-folder`, `--body`, `--body-file` |
+| `unlink-linked` | `--id` *(required)* |
+
+### events
+
+| Command | Flags |
+|---|---|
+| `list` | `--resource`, `--type`, `--actor-id`, `--from`, `--to`, `--max`, `--service-type`, `--last` |
+| `get` | `--event-id` *(required)* |
+
+### memberships
+
+| Command | Flags |
+|---|---|
+| `list` | `--room-id`, `--person-id`, `--person-email`, `--max` |
+| `get` | `--membership-id` *(required)* |
+| `create` | `--room-id`, `--person-id`, `--person-email`, `--is-moderator`, `--body`, `--body-file` |
+| `update` | `--membership-id` *(required)*, `--is-moderator`, `--is-room-hidden`, `--body`, `--body-file` |
+| `delete` | `--membership-id` *(required)* |
+
+### messages
+
+| Command | Flags |
+|---|---|
+| `list` | `--room-id`, `--parent-id`, `--mentioned-people`, `--before`, `--before-message`, `--max` |
+| `list-direct` | `--parent-id`, `--person-id`, `--person-email` |
+| `get` | `--message-id` *(required)* |
+| `create` | `--body`, `--body-file` |
+| `edit` | `--message-id` *(required)*, `--room-id`, `--text`, `--markdown`, `--body`, `--body-file` |
+| `delete` | `--message-id` *(required)* |
+
+### people
+
+| Command | Flags |
+|---|---|
+| `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
+| `get-person` | `--person-id` *(required)*, `--calling-data` |
+| `get-my-own` | `--calling-data` |
+| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `delete-person` | `--person-id` *(required)* |
+
+### room-tabs
+
+| Command | Flags |
+|---|---|
+| `list` | `--room-id` |
+| `get` | `--id` *(required)* |
+| `create` | `--room-id`, `--content-url`, `--display-name`, `--body`, `--body-file` |
+| `update` | `--id` *(required)*, `--room-id`, `--content-url`, `--display-name`, `--body`, `--body-file` |
+| `delete` | `--id` *(required)* |
+
+### rooms
+
+| Command | Flags |
+|---|---|
+| `list` | `--team-id`, `--type`, `--org-public-spaces`, `--from`, `--to`, `--sort-by`, `--max`, `--last` |
+| `get` | `--room-id` *(required)* |
+| `get-meeting` | `--room-id` *(required)* |
+| `create` | `--title`, `--team-id`, `--classification-id`, `--is-locked`, `--is-public`, `--description`, `--is-announcement-only`, `--body`, `--body-file` |
+| `update` | `--room-id` *(required)*, `--title`, `--classification-id`, `--team-id`, `--is-locked`, `--is-public`, `--description`, `--is-announcement-only`, `--is-read-only`, `--body`, `--body-file` |
+| `delete` | `--room-id` *(required)* |
+
+### team-memberships
+
+| Command | Flags |
+|---|---|
+| `list` | `--team-id`, `--max` |
+| `get` | `--membership-id` *(required)* |
+| `create` | `--team-id`, `--person-id`, `--person-email`, `--is-moderator`, `--body`, `--body-file` |
+| `update` | `--membership-id` *(required)*, `--is-moderator`, `--body`, `--body-file` |
+| `delete` | `--membership-id` *(required)* |
+
+### teams
+
+| Command | Flags |
+|---|---|
+| `list` | `--max` |
+| `get` | `--team-id` *(required)*, `--description` |
+| `create` | `--name`, `--description`, `--body`, `--body-file` |
+| `update` | `--team-id` *(required)*, `--name`, `--description`, `--body`, `--body-file` |
+| `delete` | `--team-id` *(required)* |
+
+### webhooks
+
+| Command | Flags |
+|---|---|
+| `list` | `--max`, `--owned-by` |
+| `get` | `--webhook-id` *(required)* |
+| `create` | `--name`, `--target-url`, `--resource`, `--event`, `--filter`, `--secret`, `--owned-by`, `--body`, `--body-file` |
+| `update` | `--webhook-id` *(required)*, `--name`, `--target-url`, `--secret`, `--owned-by`, `--status`, `--body`, `--body-file` |
+| `delete` | `--webhook-id` *(required)* |
+
+### hds
+
+| Command | Flags |
+|---|---|
+| `get-test-results-node` | `--node-id` *(required)*, `--trigger-type` |
+| `get-cluster` | `--cluster-id` *(required)* |
+| `get-org` | `--organization-id` *(required)* |
+| `get-node` | `--node-id` *(required)* |
+| `get-database-org` | `--organization-id` *(required)* |
+| `get-multi-tenant-org` | `--organization-id` *(required)* |
+| `get-availability-cluster` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
+| `get-database-org-2` | `--organization-id` *(required)* |
+| `get-multi-tenant-org-2` | `--organization-id` *(required)* |
+
+<!-- codegen:end -->
