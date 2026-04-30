@@ -39,7 +39,7 @@ func init() {
 			Use:   "list",
 			Short: "List Skill(s)",
 			Long: `Retrieve a list of Skill(s) in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/skill")
 				req.PathParam("orgid", orgid)
@@ -65,8 +65,8 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, enumSkillValues, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported except (enumSkillValues)")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, enumSkillValues, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (enumSkillValues)")
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
@@ -76,6 +76,18 @@ func init() {
 
 	{ // create
 		var orgid string
+		var active string
+		var name string
+		var serviceLevelThreshold string
+		var skillType string
+		var organizationId string
+		var id string
+		var version string
+		var description string
+		var enumSkillValues string
+		var dynamicSkill string
+		var createdTime string
+		var lastUpdatedTime string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -85,6 +97,18 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill")
 				req.PathParam("orgid", orgid)
+				req.QueryParam("active", active)
+				req.QueryParam("name", name)
+				req.QueryParam("serviceLevelThreshold", serviceLevelThreshold)
+				req.QueryParam("skillType", skillType)
+				req.QueryParam("organizationId", organizationId)
+				req.QueryParam("id", id)
+				req.QueryParam("version", version)
+				req.QueryParam("description", description)
+				req.QueryParam("enumSkillValues", enumSkillValues)
+				req.QueryParam("dynamicSkill", dynamicSkill)
+				req.QueryParam("createdTime", createdTime)
+				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -101,6 +125,18 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&active, "active", "", "Skill configuration data")
+		cmd.Flags().StringVar(&name, "name", "", "Skill configuration data")
+		cmd.Flags().StringVar(&serviceLevelThreshold, "service-level-threshold", "", "Skill configuration data")
+		cmd.Flags().StringVar(&skillType, "skill-type", "", "Skill configuration data")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Skill configuration data")
+		cmd.Flags().StringVar(&id, "id", "", "Skill configuration data")
+		cmd.Flags().StringVar(&version, "version", "", "Skill configuration data")
+		cmd.Flags().StringVar(&description, "description", "", "Skill configuration data")
+		cmd.Flags().StringVar(&enumSkillValues, "enum-skill-values", "", "Skill configuration data")
+		cmd.Flags().StringVar(&dynamicSkill, "dynamic-skill", "", "Skill configuration data")
+		cmd.Flags().StringVar(&createdTime, "created-time", "", "Skill configuration data")
+		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Skill configuration data")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		skillCmd.AddCommand(cmd)
@@ -231,6 +267,17 @@ func init() {
 	{ // update-id
 		var orgid string
 		var id string
+		var active string
+		var name string
+		var serviceLevelThreshold string
+		var skillType string
+		var organizationId string
+		var version string
+		var description string
+		var enumSkillValues string
+		var dynamicSkill string
+		var createdTime string
+		var lastUpdatedTime string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -241,6 +288,18 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/skill/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
+				req.QueryParam("active", active)
+				req.QueryParam("name", name)
+				req.QueryParam("serviceLevelThreshold", serviceLevelThreshold)
+				req.QueryParam("skillType", skillType)
+				req.QueryParam("organizationId", organizationId)
+				req.QueryParam("id", id)
+				req.QueryParam("version", version)
+				req.QueryParam("description", description)
+				req.QueryParam("enumSkillValues", enumSkillValues)
+				req.QueryParam("dynamicSkill", dynamicSkill)
+				req.QueryParam("createdTime", createdTime)
+				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -259,6 +318,17 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Skill.")
 		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&active, "active", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&name, "name", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&serviceLevelThreshold, "service-level-threshold", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&skillType, "skill-type", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&version, "version", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&description, "description", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&enumSkillValues, "enum-skill-values", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&dynamicSkill, "dynamic-skill", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&createdTime, "created-time", "", "Skill configuration data for update")
+		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Skill configuration data for update")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		skillCmd.AddCommand(cmd)
@@ -327,6 +397,30 @@ func init() {
 		cmd.Flags().StringVar(&typeVal, "type", "", "Entity type of the other entity that has a reference to this specific entity.")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		skillCmd.AddCommand(cmd)
+	}
+
+	{ // populate-json-attributes-field-skill-id-org
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "populate-json-attributes-field-skill-id-org",
+			Short: "Populate json-attributes field for a given skill-id of an organization",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill/populate-json-attr/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "")
+		cmd.MarkFlagRequired("id")
 		skillCmd.AddCommand(cmd)
 	}
 

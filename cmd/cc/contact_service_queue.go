@@ -71,13 +71,13 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, queueSkillRequirements, xspVersion, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported except (callDistributionGroups,queueSkillRequirements,links)")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, queueSkillRequirements, xspVersion, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (callDistributionGroups,queueSkillRequirements,links)")
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, description)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"description\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&desktopProfileFilter, "desktop-profile-filter", "", "If set to true, the API will return only the data that the user has access to according to its Desktop Profile. If set to false, the API will not check for Desktop Profile level access.")
-		cmd.Flags().StringVar(&provisioningView, "provisioning-view", "", "If set to true, the API will only return data that user has access to, according to User Profile. If set to false and desktopProfileFilter query parameter is not specified, the API will add user associated data, based on desktop. ")
+		cmd.Flags().StringVar(&desktopProfileFilter, "desktop-profile-filter", "", "If set to true, the API will return only the data that the user has access to according to its Desktop Profile. If unspecified, the default value is false.")
+		cmd.Flags().StringVar(&provisioningView, "provisioning-view", "", "If set to true, the API will only return data that user has access to, according to User Profile. This query parameter is applicable only when desktopProfileFilter query parameter is false.")
 		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
@@ -215,13 +215,13 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // get-skill-profile-id
+	{ // list-skill-csqs-skill-profile
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-skill-profile-id",
-			Short: "Get specific By skill profile ID",
-			Long:  `Retrieve an existing Contact Service Queue by skill profile ID in a given organization.`,
+			Use:   "list-skill-csqs-skill-profile",
+			Short: "List Skill CSQs by Skill Profile",
+			Long:  `Retrieve skill-based Contact Service Queues by skill profile ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}")
 				req.PathParam("orgid", orgid)
@@ -247,14 +247,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // delete-references
+	{ // delete-csq-references
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "delete-references",
-			Short: "Delete References",
-			Long:  `Delete References for existing Contact Service Queue in a given organization.`,
+			Use:   "delete-csq-references",
+			Short: "Delete CSQ References",
+			Long:  `Delete references for Contact Service Queues in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/delete-reference")
 				req.PathParam("orgid", orgid)
@@ -272,22 +272,23 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&orgid, "orgid", "", "")
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // get-manually-assignable
+	{ // list-manually-assignable-csqs
 		var orgid string
 		var agentId string
 		var teamId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "get-manually-assignable",
-			Short: "Fetch manually assignable Queues",
+			Use:   "list-manually-assignable-csqs",
+			Short: "List Manually Assignable CSQs",
+			Long:  `Retrieve manually assignable Contact Service Queues in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-manually-assignable-queues")
 				req.PathParam("orgid", orgid)
@@ -347,7 +348,7 @@ func init() {
 		var agentsUpdatedInfo string
 		cmd := &cobra.Command{
 			Use:   "get-id",
-			Short: "Get specific Contact Service Queue by Id",
+			Short: "Get specific Contact Service Queue by ID",
 			Long:  `Retrieve an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/contact-service-queue/{id}")
@@ -437,15 +438,15 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-references
+	{ // list-csq-references-id
 		var orgid string
 		var id string
 		var typeVal string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-references",
-			Short: "List references for a specific Contact Service Queue",
+			Use:   "list-csq-references-id",
+			Short: "List CSQ References by ID",
 			Long:  `Retrieve a list of all entities that have reference to an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/{id}/incoming-references")
@@ -487,7 +488,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-agent-based",
 			Short: "List agent based Contact Service Queue(s)by user ID",
-			Long:  `Retrieve a list of agent based Contact Service Queue(s) by user id in a given organization.`,
+			Long:  `Retrieve a list of agent based Contact Service Queue(s) by user iD in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/agent-based-queues")
 				req.PathParam("orgid", orgid)
@@ -528,7 +529,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-skill-based",
 			Short: "List skill based Contact Service Queue(s)by user ID",
-			Long:  `Retrieve a list of skill based Contact Service Queue(s) by user id in a given organization.`,
+			Long:  `Retrieve a list of skill based Contact Service Queue(s) by user ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/skill-based-queues")
 				req.PathParam("orgid", orgid)
@@ -568,8 +569,8 @@ func init() {
 		var pageSize string
 		cmd := &cobra.Command{
 			Use:   "list-team-based",
-			Short: "List Team based Contact Service Queue(s)by user id",
-			Long:  `Retrieve a list of team based Contact Service Queue(s) by user id in a given organization.`,
+			Short: "List team based Contact Service Queue(s)by user ID",
+			Long:  `Retrieve a list of team based Contact Service Queue(s) by user ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/team-based-queues")
 				req.PathParam("orgid", orgid)
@@ -641,6 +642,240 @@ func init() {
 		cmd.Flags().StringSliceVar(&remove, "remove", nil, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-mapping-summary-grouped-assistant-skill
+		var orgid string
+		var page string
+		var pageSize string
+		var assistantSkillIds []string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "list-mapping-summary-grouped-assistant-skill",
+			Short: "List queue mapping summary grouped by Assistant Skill",
+			Long:  `Retrieve a list of queue mapping summary for a specified list of Assistant Skills specified in a given organization. The summary currently includes mapped queue count, and the last assigned time of queue mapping.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v2/contact-service-queue/fetch-by-grouped-assistant-skill")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("assistantSkillIds", assistantSkillIds)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
+		cmd.Flags().StringSliceVar(&assistantSkillIds, "assistant-skill-ids", nil, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-internal-skill-csqs-profile
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "list-internal-skill-csqs-profile",
+			Short: "List Internal Skill CSQs by Profile",
+			Long:  `Retrieve skill-based Contact Service Queues by skill profile ID for internal use in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}/internal")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "ID of this contact center resource.")
+		cmd.MarkFlagRequired("id")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-team-csqs-team-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "list-team-csqs-team-id",
+			Short: "List Team CSQs by Team ID",
+			Long:  `Retrieve team-based Contact Service Queues by team ID for internal use in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/by-team-id/{id}/internal")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "ID of this contact center resource.")
+		cmd.MarkFlagRequired("id")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-agent-csqs-ci-user-id
+		var orgid string
+		var ciUserId string
+		cmd := &cobra.Command{
+			Use:   "list-agent-csqs-ci-user-id",
+			Short: "List Agent CSQs by CI User ID",
+			Long:  `Retrieve agent-based Contact Service Queues by CI user ID for internal use in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/by-user-ci-id/{ciUserId}/internal")
+				req.PathParam("orgid", orgid)
+				req.PathParam("ciUserId", ciUserId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&ciUserId, "ci-user-id", "", "ciUserId")
+		cmd.MarkFlagRequired("ci-user-id")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-csqs-skills-profile
+		var orgid string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "list-csqs-skills-profile",
+			Short: "List CSQs by Skills and Profile",
+			Long:  `Retrieve skill-based Contact Service Queues by dynamic skills and skill profile in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-by-dynamic-skills-and-skillProfile")
+				req.PathParam("orgid", orgid)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-csqs-user-profile
+		var orgid string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "list-csqs-user-profile",
+			Short: "List CSQs by User and Profile",
+			Long:  `Retrieve skill-based Contact Service Queues by user ID and skill profile ID in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-by-userId-skillProfileId")
+				req.PathParam("orgid", orgid)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		contactServiceQueueCmd.AddCommand(cmd)
+	}
+
+	{ // list-skill-csqs-ci-user-id
+		var orgid string
+		var id string
+		cmd := &cobra.Command{
+			Use:   "list-skill-csqs-ci-user-id",
+			Short: "List Skill CSQs by CI User ID",
+			Long:  `Retrieve skill-based Contact Service Queues by CI user ID for internal use in a given organization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/skill-based-queues/by-ci-user-id/{id}/internal")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "ID of this contact center resource.")
+		cmd.MarkFlagRequired("id")
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 

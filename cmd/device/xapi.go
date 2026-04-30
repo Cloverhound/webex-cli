@@ -88,4 +88,40 @@ func init() {
 		xapiCmd.AddCommand(cmd)
 	}
 
+	{ // query-schema
+		var deviceId string
+		var status string
+		var command string
+		cmd := &cobra.Command{
+			Use:   "query-schema",
+			Short: "Query Schema",
+			Long:  "Query the schema for statuses and commands of Webex RoomOS Devices. You specify the target devices in the `deviceId` parameter in the URI. Querying command schemas requires the `spark:xapi_commands` scope and querying status schemas requires the `spark:xapi_statuses` scope.\n\nIf no `status` or `command` expressions are specified, the full schema is returned, including both status and command schemas. If you specify any expression, the response is limited to only the types you queried for. For example, if you provide a `status` expression but no `command` expression, only status schemas will be included in the result.\n\nSee the [xAPI section of the Device Developers Guide](/docs/api/guides/device-developers-guide#xapi) or the [xAPI Command Reference](https://roomos.cisco.com/xapi) for a description of status and command expressions.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/xapi/schema")
+				req.QueryParam("deviceId", deviceId)
+				req.QueryParam("deviceId", deviceId)
+				req.QueryParam("status", status)
+				req.QueryParam("status", status)
+				req.QueryParam("command", command)
+				req.QueryParam("command", command)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&deviceId, "device-id", "", "A list of device IDs to query schemas from. A request can contain at most 5 device IDs.")
+		cmd.Flags().StringVar(&status, "status", "", "A list of status key expressions to query schemas for. Supports patterns. Requires the `spark:xapi_statuses` scope.")
+		cmd.Flags().StringVar(&command, "command", "", "A list of command key expressions to query schemas for. Supports patterns. Requires the `spark:xapi_commands` scope.")
+		xapiCmd.AddCommand(cmd)
+	}
+
 }

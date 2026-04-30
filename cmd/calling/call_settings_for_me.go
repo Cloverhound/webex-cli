@@ -6125,4 +6125,235 @@ func init() {
 		callSettingsForMeCmd.AddCommand(cmd)
 	}
 
+	{ // get-personal-assistant
+		cmd := &cobra.Command{
+			Use:   "get-personal-assistant",
+			Short: "Get Personal Assistant Settings",
+			Long:  "Retrieve personal assistant settings for a person. The personal assistant feature allows users to configure an automated attendant that can handle incoming calls when they are unavailable, including presence-based routing and call transfer options.\n\nPersonal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's availability status.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/personalAssistant")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-personal-assistant
+		var enabled bool
+		var presence string
+		var untilDateTime string
+		var transferEnabled bool
+		var transferNumber string
+		var alerting string
+		var alertMeFirstNumberOfRings int64
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-personal-assistant",
+			Short: "Update Personal Assistant Settings",
+			Long:  "Update personal assistant settings for a person. Allows configuring the personal assistant feature including enabling/disabling it, setting presence status, configuring call transfer options, and alerting preferences.\n\nPersonal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's availability status.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/personalAssistant")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyString("presence", presence)
+					req.BodyString("untilDateTime", untilDateTime)
+					req.BodyBool("transferEnabled", transferEnabled, cmd.Flags().Changed("transfer-enabled"))
+					req.BodyString("transferNumber", transferNumber)
+					req.BodyString("alerting", alerting)
+					req.BodyInt("alertMeFirstNumberOfRings", alertMeFirstNumberOfRings, cmd.Flags().Changed("alert-me-first-number-of-rings"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().StringVar(&presence, "presence", "", "")
+		cmd.Flags().StringVar(&untilDateTime, "until-date-time", "", "")
+		cmd.Flags().BoolVar(&transferEnabled, "transfer-enabled", false, "")
+		cmd.Flags().StringVar(&transferNumber, "transfer-number", "", "")
+		cmd.Flags().StringVar(&alerting, "alerting", "", "")
+		cmd.Flags().Int64Var(&alertMeFirstNumberOfRings, "alert-me-first-number-of-rings", 0, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-person-voicemail-rules
+		cmd := &cobra.Command{
+			Use:   "get-person-voicemail-rules",
+			Short: "Get Person's Voicemail Rules",
+			Long:  "Get person's voicemail passcode rules. Voicemail rules specify the default passcode requirements. They are provided for informational purposes only and cannot be modified.\n\nThe voicemail feature allows users to manage their voicemail settings as part of Webex Calling. Voicemail rules help ensure secure access to voice messages by defining passcode complexity requirements.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/voicemail/rules")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-voicemail-pin
+		var passcode string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-voicemail-pin",
+			Short: "Update Voicemail PIN",
+			Long:  "Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with the passcode rules defined for the organization.\n\nThe voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The PIN is required to retrieve voice messages via phone.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/voicemail/pin")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("passcode", passcode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&passcode, "passcode", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-hoteling-guest
+		cmd := &cobra.Command{
+			Use:   "get-hoteling-guest",
+			Short: "Get Hoteling Guest Settings",
+			Long:  "Retrieve hoteling guest settings for a person. Hoteling allows a person to temporarily use a device as a guest, associating their extension and configuration with that device for a limited time. This API returns the current hoteling guest configuration including any active host association details.\n\nHoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into shared devices.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/hoteling/guest")
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // update-hoteling-guest
+		var enabled bool
+		var associationLimitEnabled bool
+		var associationLimitHours int64
+		var hostId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-hoteling-guest",
+			Short: "Update Hoteling Guest Settings",
+			Long:  "Update hoteling guest settings for a person. Allows enabling or disabling the ability to use hoteling as a guest, configuring whether an association will be removed automatically after a specified time period, and associating with a hoteling host.\n\nHoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into shared devices.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/me/settings/hoteling/guest")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyBool("enabled", enabled, cmd.Flags().Changed("enabled"))
+					req.BodyBool("associationLimitEnabled", associationLimitEnabled, cmd.Flags().Changed("association-limit-enabled"))
+					req.BodyInt("associationLimitHours", associationLimitHours, cmd.Flags().Changed("association-limit-hours"))
+					req.BodyString("hostId", hostId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().BoolVar(&enabled, "enabled", false, "")
+		cmd.Flags().BoolVar(&associationLimitEnabled, "association-limit-enabled", false, "")
+		cmd.Flags().Int64Var(&associationLimitHours, "association-limit-hours", 0, "")
+		cmd.Flags().StringVar(&hostId, "host-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
+	{ // get-available-hoteling-hosts
+		var max string
+		var start string
+		var name string
+		var phoneNumber string
+		cmd := &cobra.Command{
+			Use:   "get-available-hoteling-hosts",
+			Short: "Get Available Hoteling Hosts",
+			Long:  "Retrieve a list of available hoteling hosts that a person can associate with as a guest. Returns hosts that have hoteling enabled on their devices and are available for guest associations. The list can be filtered by name or phone number and supports pagination.\n\nHoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into shared devices.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/hoteling/availableHosts")
+				req.QueryParam("max", max)
+				req.QueryParam("start", start)
+				req.QueryParam("name", name)
+				req.QueryParam("phoneNumber", phoneNumber)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of hosts in the response. Default is 100.")
+		cmd.Flags().StringVar(&start, "start", "", "Start index for pagination. Default is 0.")
+		cmd.Flags().StringVar(&name, "name", "", "Filter hosts by name (first name or last name). Partial match is supported.")
+		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Filter hosts by phone number. Partial match is supported.")
+		callSettingsForMeCmd.AddCommand(cmd)
+	}
+
 }

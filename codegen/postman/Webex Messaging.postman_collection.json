@@ -4239,9 +4239,14 @@
                   "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                   "key": "max",
                   "value": "100"
+                },
+                {
+                  "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                  "key": "serviceType",
+                  "value": "calling"
                 }
               ],
-              "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+              "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
             }
           },
           "response": [
@@ -4292,9 +4297,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Unauthorized"
@@ -4346,9 +4356,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Too Many Requests"
@@ -4400,9 +4415,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Bad Request"
@@ -4454,9 +4474,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Gateway Timeout"
@@ -4508,9 +4533,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Forbidden"
@@ -4562,9 +4592,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Precondition Required"
@@ -4616,9 +4651,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Service Unavailable"
@@ -4670,9 +4710,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Not Found"
@@ -4724,9 +4769,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Unsupported Media Type"
@@ -4778,9 +4828,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Conflict"
@@ -4832,9 +4887,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Internal Server Error"
@@ -4905,9 +4965,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "OK"
@@ -4959,9 +5024,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Method Not Allowed"
@@ -5013,9 +5083,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Gone"
@@ -5067,9 +5142,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Locked (WebDAV) (RFC 4918)"
@@ -5121,9 +5201,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=messages&type=created&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Bad Gateway"
@@ -12849,7 +12934,7 @@
         {
           "name": "List People",
           "request": {
-            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
+            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
             "header": [
               {
                 "key": "Accept",
@@ -37892,6 +37977,1118 @@
                 }
               },
               "status": "Gone"
+            }
+          ]
+        },
+        {
+          "name": "Get database details for the HDS organization",
+          "request": {
+            "description": "Retrieve details of database information for an HDS organization, such as database type and version used.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hds",
+                "organizations",
+                ":organizationId",
+                "database"
+              ],
+              "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+              "variable": [
+                {
+                  "description": "Unique ID of the HDS organization",
+                  "key": "organizationId",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 429,
+              "cookie": [],
+              "header": [],
+              "name": "Too Many Requests: Too many requests have been sent in a given period of time and the request has been rate limited. A Retry-After header should be present that specifies how many seconds you need to wait before a successful request can be made.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Too Many Requests"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 428,
+              "cookie": [],
+              "header": [],
+              "name": "Precondition Required: The file(s) cannot be scanned for malware and must be force-downloaded.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Precondition Required"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 503,
+              "cookie": [],
+              "header": [],
+              "name": "Service Unavailable: Server is overloaded with requests. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Service Unavailable"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 403,
+              "cookie": [],
+              "header": [],
+              "name": "Forbidden: The request was understood, but it has been refused or access is not allowed.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"context\": {\n    \"orgId\": \"<string>\"\n  },\n  \"databaseType\": \"<string>\",\n  \"databaseVersion\": \"<string>\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "name": "OK",
+              "originalRequest": {
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 423,
+              "cookie": [],
+              "header": [],
+              "name": "Locked: The requested resource is temporarily unavailable. A Retry-After header may be present to indicate how many seconds you should wait before attempting the request again.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Locked (WebDAV) (RFC 4918)"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 415,
+              "cookie": [],
+              "header": [],
+              "name": "Unsupported Media Type: The request was made to a resource without specifying a media type, or with a media type that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unsupported Media Type"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 405,
+              "cookie": [],
+              "header": [],
+              "name": "Method Not Allowed: The request was made to a resource using an HTTP method that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Method Not Allowed"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 410,
+              "cookie": [],
+              "header": [],
+              "name": "Gone: The requested resource is no longer available.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Gone"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 404,
+              "cookie": [],
+              "header": [],
+              "name": "Not Found: The requested URI is invalid, or the resource requested (such as a user) does not exist. This response is also returned when the requested format is not supported by the requested method.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 401,
+              "cookie": [],
+              "header": [],
+              "name": "Unauthorized: Authentication credentials were missing or incorrect.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 500,
+              "cookie": [],
+              "header": [],
+              "name": "Internal Server Error: Something went wrong on the server. If the issue persists, please contact the [Webex Developer Support team](/explore/support).",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Internal Server Error"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 400,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Request: The request was invalid or could not be otherwise processed. An accompanying error message will provide more details.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 502,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Gateway: The server received an invalid response from an upstream server while processing the request. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Gateway"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 409,
+              "cookie": [],
+              "header": [],
+              "name": "Conflict: The request could not be processed because it conflicts with some established rule of the system. For example, a person may not be added to a room more than once.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Conflict"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 504,
+              "cookie": [],
+              "header": [],
+              "name": "Gateway Timeout: An upstream server failed to respond in time. If your query uses the max parameter, please try reducing its value.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "database"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/database",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Gateway Timeout"
+            }
+          ]
+        },
+        {
+          "name": "Get Multi-Tenant HDS organization details",
+          "request": {
+            "description": "Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hds",
+                "organizations",
+                ":organizationId",
+                "tenants"
+              ],
+              "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+              "variable": [
+                {
+                  "description": "Unique ID of the HDS organization.",
+                  "key": "organizationId",
+                  "value": "<string>"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 409,
+              "cookie": [],
+              "header": [],
+              "name": "Conflict: The request could not be processed because it conflicts with some established rule of the system. For example, a person may not be added to a room more than once.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Conflict"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 415,
+              "cookie": [],
+              "header": [],
+              "name": "Unsupported Media Type: The request was made to a resource without specifying a media type, or with a media type that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unsupported Media Type"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"context\": {\n    \"partnerOrgId\": \"<string>\"\n  },\n  \"tenants\": [\n    {\n      \"tenantOrgId\": \"<string>\",\n      \"tenantName\": \"<string>\",\n      \"cmkState\": \"<string>\",\n      \"tenantOrgState\": \"<string>\"\n    },\n    {\n      \"tenantOrgId\": \"<string>\",\n      \"tenantName\": \"<string>\",\n      \"cmkState\": \"<string>\",\n      \"tenantOrgState\": \"<string>\"\n    }\n  ]\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "name": "Ok",
+              "originalRequest": {
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 404,
+              "cookie": [],
+              "header": [],
+              "name": "Not Found: The requested URI is invalid, or the resource requested (such as a user) does not exist. This response is also returned when the requested format is not supported by the requested method.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 400,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Request: The request was invalid or could not be otherwise processed. An accompanying error message will provide more details.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 423,
+              "cookie": [],
+              "header": [],
+              "name": "Locked: The requested resource is temporarily unavailable. A Retry-After header may be present to indicate how many seconds you should wait before attempting the request again.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Locked (WebDAV) (RFC 4918)"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 429,
+              "cookie": [],
+              "header": [],
+              "name": "Too Many Requests: Too many requests have been sent in a given period of time and the request has been rate limited. A Retry-After header should be present that specifies how many seconds you need to wait before a successful request can be made.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Too Many Requests"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 410,
+              "cookie": [],
+              "header": [],
+              "name": "Gone: The requested resource is no longer available.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Gone"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 405,
+              "cookie": [],
+              "header": [],
+              "name": "Method Not Allowed: The request was made to a resource using an HTTP method that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Method Not Allowed"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 403,
+              "cookie": [],
+              "header": [],
+              "name": "Forbidden: The request was understood, but it has been refused or access is not allowed.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 504,
+              "cookie": [],
+              "header": [],
+              "name": "Gateway Timeout: An upstream server failed to respond in time. If your query uses the max parameter, please try reducing its value.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Gateway Timeout"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 500,
+              "cookie": [],
+              "header": [],
+              "name": "Internal Server Error: Something went wrong on the server. If the issue persists, please contact the [Webex Developer Support team](/explore/support).",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Internal Server Error"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 401,
+              "cookie": [],
+              "header": [],
+              "name": "Unauthorized: Authentication credentials were missing or incorrect.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 503,
+              "cookie": [],
+              "header": [],
+              "name": "Service Unavailable: Server is overloaded with requests. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Service Unavailable"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 428,
+              "cookie": [],
+              "header": [],
+              "name": "Precondition Required: The file(s) cannot be scanned for malware and must be force-downloaded.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Precondition Required"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 502,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Gateway: The server received an invalid response from an upstream server while processing the request. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hds",
+                    "organizations",
+                    ":organizationId",
+                    "tenants"
+                  ],
+                  "raw": "{{baseUrl}}/hds/organizations/:organizationId/tenants",
+                  "variable": [
+                    {
+                      "description": "Unique ID of the HDS organization.",
+                      "key": "organizationId",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Gateway"
             }
           ]
         }

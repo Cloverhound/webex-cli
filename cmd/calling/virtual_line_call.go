@@ -477,7 +477,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-caller-id",
 			Short: "Read Caller ID Settings for a Virtual Line",
-			Long:  "Retrieve a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nRetrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nRetrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callerId")
 				req.PathParam("virtualLineId", virtualLineId)
@@ -510,7 +510,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-caller-id",
 			Short: "Configure Caller ID Settings for a Virtual Line",
-			Long:  "Configure a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nUpdating the caller ID settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Configure a virtual line's Caller ID settings.\n\nCaller ID settings control how a virtual line's information is displayed when making outgoing calls.\n\nUpdating the caller ID settings for a virtual line requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/virtualLines/{virtualLineId}/callerId")
 				req.PathParam("virtualLineId", virtualLineId)

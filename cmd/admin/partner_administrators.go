@@ -30,7 +30,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-all-customers-managed-admin",
 			Short: "Get all customers managed by a partner admin",
-			Long:  "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
+			Long:  "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default. This does not include customers managed through Customer Groups.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/organizations")
 				req.QueryParam("managedBy", managedBy)
@@ -57,7 +57,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-all-admins-assigned-customer",
 			Short: "Get all partner admins assigned to a customer",
-			Long:  "For a given customer, get all the partner admins with their role details.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
+			Long:  "For a given customer, get all the partner admins with their role details. This does not include partner admins who have access through Customer Groups.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/organizations/{orgId}/partnerAdmins")
 				req.PathParam("orgId", orgId)
@@ -111,7 +111,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "unassign-admin-customer",
 			Short: "Unassign partner admin from a customer",
-			Long:  "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
+			Long:  "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user. If a partner admin is also managing the customer organization through a Customer Group, they will continue to have access.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/partner/organizations/{orgId}/partnerAdmin/{personId}/unassign")
 				req.PathParam("orgId", orgId)

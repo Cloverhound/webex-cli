@@ -661,6 +661,8 @@ func init() {
 		var orgId string
 		var selected string
 		var locationMemberId string
+		var elinEnabled bool
+		var elinForWebexAppEnabled bool
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -680,6 +682,8 @@ func init() {
 				} else {
 					req.BodyString("selected", selected)
 					req.BodyString("locationMemberId", locationMemberId)
+					req.BodyBool("elinEnabled", elinEnabled, cmd.Flags().Changed("elin-enabled"))
+					req.BodyBool("elinForWebexAppEnabled", elinForWebexAppEnabled, cmd.Flags().Changed("elin-for-webex-app-enabled"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -693,6 +697,8 @@ func init() {
 		cmd.Flags().StringVar(&orgId, "org-id", "", "ID of the organization within which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.")
 		cmd.Flags().StringVar(&selected, "selected", "", "")
 		cmd.Flags().StringVar(&locationMemberId, "location-member-id", "", "")
+		cmd.Flags().BoolVar(&elinEnabled, "elin-enabled", false, "")
+		cmd.Flags().BoolVar(&elinForWebexAppEnabled, "elin-for-webex-app-enabled", false, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		emergencyServicesCmd.AddCommand(cmd)
@@ -765,6 +771,7 @@ func init() {
 		var orgId string
 		var selected string
 		var locationMemberId string
+		var elinEnabled bool
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -784,6 +791,7 @@ func init() {
 				} else {
 					req.BodyString("selected", selected)
 					req.BodyString("locationMemberId", locationMemberId)
+					req.BodyBool("elinEnabled", elinEnabled, cmd.Flags().Changed("elin-enabled"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -797,6 +805,7 @@ func init() {
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Updating Emergency Callback Number attributes for this organization.")
 		cmd.Flags().StringVar(&selected, "selected", "", "")
 		cmd.Flags().StringVar(&locationMemberId, "location-member-id", "", "")
+		cmd.Flags().BoolVar(&elinEnabled, "elin-enabled", false, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		emergencyServicesCmd.AddCommand(cmd)

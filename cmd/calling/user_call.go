@@ -468,7 +468,7 @@ This API requires a full or user administrator or location administrator auth to
 		cmd := &cobra.Command{
 			Use:   "get-caller-id-person",
 			Short: "Read Caller ID Settings for a Person",
-			Long:  "Retrieve a person's Caller ID settings.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\n\nThis API requires a full, user, or read-only administrator or location administrator auth token with a scope of `spark-admin:people_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve a person's Caller ID settings.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\n\nThis API requires a full, user, or read-only administrator or location administrator auth token with a scope of `spark-admin:people_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callerId")
 				req.PathParam("personId", personId)
@@ -501,7 +501,7 @@ This API requires a full or user administrator or location administrator auth to
 		cmd := &cobra.Command{
 			Use:   "update-caller-id-person",
 			Short: "Configure Caller ID Settings for a Person",
-			Long:  "Configure a person's Caller ID settings.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Configure a person's Caller ID settings.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/people/{personId}/features/callerId")
 				req.PathParam("personId", personId)
@@ -5218,6 +5218,110 @@ This API requires a full or user administrator or location administrator auth to
 		cmd.Flags().StringVar(&memberName, "member-name", "", "Search for people with names that match the query.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Search for people with numbers that match the query.")
 		cmd.Flags().StringVar(&extension, "extension", "", "Search for people with extensions that match the query.")
+		userCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-timezone-announcement-language-settings-person
+		var personId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-timezone-announcement-language-settings-person",
+			Short: "Get Timezone and Announcement Language Settings of a Person",
+			Long:  "Retrieve a person's timezone and announcement language settings.\n\nWebex Calling supports configuring timezone and announcement language preferences, allowing personalized call experience based on their location and language preferences.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Retrieve timezone and announcement language settings of this person.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID. If not specified, uses the organization from the OAuth token.")
+		userCallCmd.AddCommand(cmd)
+	}
+
+	{ // update-timezone-announcement-language-settings-person
+		var personId string
+		var orgId string
+		var announcementLanguage string
+		var timeZone string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-timezone-announcement-language-settings-person",
+			Short: "Update Timezone and Announcement Language Settings of a Person",
+			Long:  "Modify a person's timezone and announcement language settings.\n\nWebex Calling supports configuring timezone and announcement language preferences, allowing personalized call experience based on their location and language preferences.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/people/{personId}")
+				req.PathParam("personId", personId)
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("announcementLanguage", announcementLanguage)
+					req.BodyString("timeZone", timeZone)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Modify timezone and announcement language settings of this person.")
+		cmd.MarkFlagRequired("person-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID. If not specified, uses the organization from the OAuth token.")
+		cmd.Flags().StringVar(&announcementLanguage, "announcement-language", "", "")
+		cmd.Flags().StringVar(&timeZone, "time-zone", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		userCallCmd.AddCommand(cmd)
+	}
+
+	{ // get-country-calling-configuration
+		var countryCode string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-country-calling-configuration",
+			Short: "Get Country Calling Configuration",
+			Long:  "Retrieve country-specific configuration details including state requirements, zip code requirements, available states, and supported time zones.\n\nThis information helps administrators configure user settings with valid timezone and location data for a specific country.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/countries/{countryCode}")
+				req.PathParam("countryCode", countryCode)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&countryCode, "country-code", "", "The ISO country code to retrieve configuration for.")
+		cmd.MarkFlagRequired("country-code")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Organization ID. If not specified, uses the organization from the OAuth token.")
 		userCallCmd.AddCommand(cmd)
 	}
 

@@ -39311,7 +39311,7 @@
             },
             {
               "_postman_previewlanguage": "json",
-              "body": "{\n  \"id\": \"<string>\",\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"meetingType\": \"meetingSeries\",\n  \"state\": \"ended\",\n  \"timezone\": \"<string>\",\n  \"start\": \"<string>\",\n  \"end\": \"<string>\",\n  \"hostUserId\": \"<string>\",\n  \"hostDisplayName\": \"<string>\",\n  \"hostEmail\": \"<string>\",\n  \"hostKey\": \"<string>\",\n  \"siteUrl\": \"<string>\",\n  \"webLink\": \"<string>\",\n  \"telephony\": {\n    \"accessCode\": \"<string>\",\n    \"callInNumbers\": [\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"tollFree\"\n      },\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"toll\"\n      }\n    ],\n    \"links\": {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  },\n  \"enabledBreakoutSessions\": \"<boolean>\",\n  \"meetingNumber\": \"<string>\",\n  \"agenda\": \"<string>\",\n  \"phoneAndVideoSystemPassword\": \"<string>\",\n  \"hostDidJoin\": \"<boolean>\",\n  \"attendeeDidJoin\": \"<boolean>\",\n  \"recurrence\": \"<string>\",\n  \"sipAddress\": \"<string>\",\n  \"dialInIpAddress\": \"<string>\",\n  \"roomId\": \"<string>\",\n  \"enabledAutoRecordMeeting\": \"<boolean>\",\n  \"allowAnyUserToBeCoHost\": \"<boolean>\",\n  \"enabledJoinBeforeHost\": \"<boolean>\",\n  \"enableConnectAudioBeforeHost\": \"<boolean>\",\n  \"joinBeforeHostMinutes\": \"<number>\",\n  \"excludePassword\": \"<boolean>\",\n  \"publicMeeting\": \"<boolean>\",\n  \"reminderTime\": \"<number>\",\n  \"unlockedMeetingJoinSecurity\": \"blockFromJoin\",\n  \"sessionTypeId\": \"<number>\",\n  \"scheduledType\": \"meeting\",\n  \"enabledWebcastView\": \"<boolean>\",\n  \"panelistPassword\": \"<string>\",\n  \"phoneAndVideoSystemPanelistPassword\": \"<string>\",\n  \"enableAutomaticLock\": \"<boolean>\",\n  \"automaticLockMinutes\": \"<number>\",\n  \"allowFirstUserToBeCoHost\": \"<boolean>\",\n  \"allowAuthenticatedDevices\": \"<boolean>\",\n  \"meetingOptions\": {\n    \"enabledChat\": \"<boolean>\",\n    \"enabledVideo\": \"<boolean>\",\n    \"enabledPolling\": \"<boolean>\",\n    \"enabledNote\": \"<boolean>\",\n    \"noteType\": \"allowAll\",\n    \"enabledFileTransfer\": \"<boolean>\",\n    \"enabledUCFRichMedia\": \"<boolean>\"\n  },\n  \"attendeePrivileges\": {\n    \"enabledShareContent\": \"<boolean>\",\n    \"enabledSaveDocument\": \"<boolean>\",\n    \"enabledPrintDocument\": \"<boolean>\",\n    \"enabledAnnotate\": \"<boolean>\",\n    \"enabledViewParticipantList\": \"<boolean>\",\n    \"enabledViewThumbnails\": \"<boolean>\",\n    \"enabledRemoteControl\": \"<boolean>\",\n    \"enabledViewAnyDocument\": \"<boolean>\",\n    \"enabledViewAnyPage\": \"<boolean>\",\n    \"enabledContactOperatorPrivately\": \"<boolean>\",\n    \"enabledChatHost\": \"<boolean>\",\n    \"enabledChatPresenter\": \"<boolean>\",\n    \"enabledChatOtherParticipants\": \"<boolean>\"\n  },\n  \"registration\": {\n    \"autoAcceptRequest\": \"<boolean>\",\n    \"requireFirstName\": \"<boolean>\",\n    \"requireLastName\": \"<boolean>\",\n    \"requireEmail\": \"<boolean>\",\n    \"requireJobTitle\": \"<boolean>\",\n    \"requireCompanyName\": \"<boolean>\",\n    \"requireAddress1\": \"<boolean>\",\n    \"requireAddress2\": \"<boolean>\",\n    \"requireCity\": \"<boolean>\",\n    \"requireState\": \"<boolean>\",\n    \"requireZipCode\": \"<boolean>\",\n    \"requireCountryRegion\": \"<boolean>\",\n    \"requireWorkPhone\": \"<boolean>\",\n    \"requireFax\": \"<boolean>\",\n    \"maxRegisterNum\": \"<number>\",\n    \"customizedQuestions\": [\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"notEquals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      },\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"endsWith\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      }\n    ],\n    \"rules\": [\n      {\n        \"question\": \"lastName\",\n        \"condition\": \"contains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      },\n      {\n        \"question\": \"companyName\",\n        \"condition\": \"notContains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      }\n    ]\n  },\n  \"integrationTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"simultaneousInterpretation\": {\n    \"enabled\": \"<boolean>\",\n    \"interpreters\": [\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      }\n    ]\n  },\n  \"links\": [\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    },\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  ],\n  \"trackingCodes\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"enabledAudioWatermark\": \"<boolean>\",\n  \"enabledVisualWatermark\": \"<boolean>\",\n  \"visualWatermarkOpacity\": \"<number>\",\n  \"audioConnectionOptions\": {\n    \"audioConnectionType\": \"VoIP\",\n    \"enabledTollFreeCallIn\": \"<boolean>\",\n    \"enabledGlobalCallIn\": \"<boolean>\",\n    \"enabledAudienceCallBack\": \"<boolean>\",\n    \"entryAndExitTone\": \"announceName\",\n    \"allowHostToUnmuteParticipants\": \"<boolean>\",\n    \"allowAttendeeToUnmuteSelf\": \"<boolean>\",\n    \"muteAttendeeUponEntry\": \"<boolean>\"\n  },\n  \"requireAttendeeLogin\": \"<boolean>\",\n  \"restrictToInvitees\": \"<boolean>\",\n  \"enabledLiveStream\": \"<boolean>\",\n  \"liveStream\": {\n    \"destination\": \"<string>\",\n    \"rtmpUrl\": \"<string>\",\n    \"streamUrl\": \"<string>\",\n    \"layoutWithoutSharedContent\": \"focus\",\n    \"layoutWithSharedContent\": \"stack\",\n    \"allowChangeLayoutInMeeting\": \"<boolean>\",\n    \"followStageLayoutWhenSynced\": \"<boolean>\",\n    \"resolution\": \"<string>\"\n  }\n}",
+              "body": "{\n  \"id\": \"<string>\",\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"meetingType\": \"meetingSeries\",\n  \"state\": \"ended\",\n  \"timezone\": \"<string>\",\n  \"start\": \"<string>\",\n  \"end\": \"<string>\",\n  \"hostUserId\": \"<string>\",\n  \"hostDisplayName\": \"<string>\",\n  \"hostEmail\": \"<string>\",\n  \"hostKey\": \"<string>\",\n  \"siteUrl\": \"<string>\",\n  \"webLink\": \"<string>\",\n  \"telephony\": {\n    \"accessCode\": \"<string>\",\n    \"callInNumbers\": [\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"tollFree\"\n      },\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"toll\"\n      }\n    ],\n    \"links\": {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  },\n  \"enabledBreakoutSessions\": \"<boolean>\",\n  \"meetingNumber\": \"<string>\",\n  \"agenda\": \"<string>\",\n  \"phoneAndVideoSystemPassword\": \"<string>\",\n  \"hostDidJoin\": \"<boolean>\",\n  \"attendeeDidJoin\": \"<boolean>\",\n  \"recurrence\": \"<string>\",\n  \"registerLink\": \"<string>\",\n  \"sipAddress\": \"<string>\",\n  \"dialInIpAddress\": \"<string>\",\n  \"roomId\": \"<string>\",\n  \"enabledAutoRecordMeeting\": \"<boolean>\",\n  \"allowAnyUserToBeCoHost\": \"<boolean>\",\n  \"enabledJoinBeforeHost\": \"<boolean>\",\n  \"enableConnectAudioBeforeHost\": \"<boolean>\",\n  \"joinBeforeHostMinutes\": \"<number>\",\n  \"excludePassword\": \"<boolean>\",\n  \"publicMeeting\": \"<boolean>\",\n  \"reminderTime\": \"<number>\",\n  \"unlockedMeetingJoinSecurity\": \"blockFromJoin\",\n  \"sessionTypeId\": \"<number>\",\n  \"scheduledType\": \"meeting\",\n  \"enabledWebcastView\": \"<boolean>\",\n  \"panelistPassword\": \"<string>\",\n  \"phoneAndVideoSystemPanelistPassword\": \"<string>\",\n  \"enableAutomaticLock\": \"<boolean>\",\n  \"automaticLockMinutes\": \"<number>\",\n  \"allowFirstUserToBeCoHost\": \"<boolean>\",\n  \"allowAuthenticatedDevices\": \"<boolean>\",\n  \"meetingOptions\": {\n    \"enabledChat\": \"<boolean>\",\n    \"enabledVideo\": \"<boolean>\",\n    \"enabledPolling\": \"<boolean>\",\n    \"enabledNote\": \"<boolean>\",\n    \"noteType\": \"allowAll\",\n    \"enabledFileTransfer\": \"<boolean>\",\n    \"enabledUCFRichMedia\": \"<boolean>\"\n  },\n  \"attendeePrivileges\": {\n    \"enabledShareContent\": \"<boolean>\",\n    \"enabledSaveDocument\": \"<boolean>\",\n    \"enabledPrintDocument\": \"<boolean>\",\n    \"enabledAnnotate\": \"<boolean>\",\n    \"enabledViewParticipantList\": \"<boolean>\",\n    \"enabledViewThumbnails\": \"<boolean>\",\n    \"enabledRemoteControl\": \"<boolean>\",\n    \"enabledViewAnyDocument\": \"<boolean>\",\n    \"enabledViewAnyPage\": \"<boolean>\",\n    \"enabledContactOperatorPrivately\": \"<boolean>\",\n    \"enabledChatHost\": \"<boolean>\",\n    \"enabledChatPresenter\": \"<boolean>\",\n    \"enabledChatOtherParticipants\": \"<boolean>\"\n  },\n  \"registration\": {\n    \"autoAcceptRequest\": \"<boolean>\",\n    \"requireFirstName\": \"<boolean>\",\n    \"requireLastName\": \"<boolean>\",\n    \"requireEmail\": \"<boolean>\",\n    \"requireJobTitle\": \"<boolean>\",\n    \"requireCompanyName\": \"<boolean>\",\n    \"requireAddress1\": \"<boolean>\",\n    \"requireAddress2\": \"<boolean>\",\n    \"requireCity\": \"<boolean>\",\n    \"requireState\": \"<boolean>\",\n    \"requireZipCode\": \"<boolean>\",\n    \"requireCountryRegion\": \"<boolean>\",\n    \"requireWorkPhone\": \"<boolean>\",\n    \"requireFax\": \"<boolean>\",\n    \"maxRegisterNum\": \"<number>\",\n    \"customizedQuestions\": [\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"notEquals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      },\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"endsWith\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      }\n    ],\n    \"rules\": [\n      {\n        \"question\": \"lastName\",\n        \"condition\": \"contains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      },\n      {\n        \"question\": \"companyName\",\n        \"condition\": \"notContains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      }\n    ]\n  },\n  \"integrationTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"simultaneousInterpretation\": {\n    \"enabled\": \"<boolean>\",\n    \"interpreters\": [\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      }\n    ]\n  },\n  \"links\": [\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    },\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  ],\n  \"trackingCodes\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"enabledAudioWatermark\": \"<boolean>\",\n  \"enabledVisualWatermark\": \"<boolean>\",\n  \"visualWatermarkOpacity\": \"<number>\",\n  \"audioConnectionOptions\": {\n    \"audioConnectionType\": \"VoIP\",\n    \"enabledTollFreeCallIn\": \"<boolean>\",\n    \"enabledGlobalCallIn\": \"<boolean>\",\n    \"enabledAudienceCallBack\": \"<boolean>\",\n    \"entryAndExitTone\": \"announceName\",\n    \"allowHostToUnmuteParticipants\": \"<boolean>\",\n    \"allowAttendeeToUnmuteSelf\": \"<boolean>\",\n    \"muteAttendeeUponEntry\": \"<boolean>\"\n  },\n  \"requireAttendeeLogin\": \"<boolean>\",\n  \"restrictToInvitees\": \"<boolean>\",\n  \"enabledLiveStream\": \"<boolean>\",\n  \"liveStream\": {\n    \"destination\": \"<string>\",\n    \"rtmpUrl\": \"<string>\",\n    \"streamUrl\": \"<string>\",\n    \"layoutWithoutSharedContent\": \"focus\",\n    \"layoutWithSharedContent\": \"stack\",\n    \"allowChangeLayoutInMeeting\": \"<boolean>\",\n    \"followStageLayoutWhenSynced\": \"<boolean>\",\n    \"resolution\": \"<string>\"\n  }\n}",
               "code": 200,
               "cookie": [],
               "header": [
@@ -42998,7 +42998,7 @@
             },
             {
               "_postman_previewlanguage": "json",
-              "body": "{\n  \"id\": \"<string>\",\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"meetingType\": \"meetingSeries\",\n  \"state\": \"ended\",\n  \"timezone\": \"<string>\",\n  \"start\": \"<string>\",\n  \"end\": \"<string>\",\n  \"hostUserId\": \"<string>\",\n  \"hostDisplayName\": \"<string>\",\n  \"hostEmail\": \"<string>\",\n  \"hostKey\": \"<string>\",\n  \"siteUrl\": \"<string>\",\n  \"webLink\": \"<string>\",\n  \"telephony\": {\n    \"accessCode\": \"<string>\",\n    \"callInNumbers\": [\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"tollFree\"\n      },\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"toll\"\n      }\n    ],\n    \"links\": {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  },\n  \"enabledBreakoutSessions\": \"<boolean>\",\n  \"meetingNumber\": \"<string>\",\n  \"agenda\": \"<string>\",\n  \"phoneAndVideoSystemPassword\": \"<string>\",\n  \"hostDidJoin\": \"<boolean>\",\n  \"attendeeDidJoin\": \"<boolean>\",\n  \"recurrence\": \"<string>\",\n  \"sipAddress\": \"<string>\",\n  \"dialInIpAddress\": \"<string>\",\n  \"roomId\": \"<string>\",\n  \"enabledAutoRecordMeeting\": \"<boolean>\",\n  \"allowAnyUserToBeCoHost\": \"<boolean>\",\n  \"enabledJoinBeforeHost\": \"<boolean>\",\n  \"enableConnectAudioBeforeHost\": \"<boolean>\",\n  \"joinBeforeHostMinutes\": \"<number>\",\n  \"excludePassword\": \"<boolean>\",\n  \"publicMeeting\": \"<boolean>\",\n  \"reminderTime\": \"<number>\",\n  \"unlockedMeetingJoinSecurity\": \"blockFromJoin\",\n  \"sessionTypeId\": \"<number>\",\n  \"scheduledType\": \"meeting\",\n  \"enabledWebcastView\": \"<boolean>\",\n  \"panelistPassword\": \"<string>\",\n  \"phoneAndVideoSystemPanelistPassword\": \"<string>\",\n  \"enableAutomaticLock\": \"<boolean>\",\n  \"automaticLockMinutes\": \"<number>\",\n  \"allowFirstUserToBeCoHost\": \"<boolean>\",\n  \"allowAuthenticatedDevices\": \"<boolean>\",\n  \"meetingOptions\": {\n    \"enabledChat\": \"<boolean>\",\n    \"enabledVideo\": \"<boolean>\",\n    \"enabledPolling\": \"<boolean>\",\n    \"enabledNote\": \"<boolean>\",\n    \"noteType\": \"allowAll\",\n    \"enabledFileTransfer\": \"<boolean>\",\n    \"enabledUCFRichMedia\": \"<boolean>\"\n  },\n  \"attendeePrivileges\": {\n    \"enabledShareContent\": \"<boolean>\",\n    \"enabledSaveDocument\": \"<boolean>\",\n    \"enabledPrintDocument\": \"<boolean>\",\n    \"enabledAnnotate\": \"<boolean>\",\n    \"enabledViewParticipantList\": \"<boolean>\",\n    \"enabledViewThumbnails\": \"<boolean>\",\n    \"enabledRemoteControl\": \"<boolean>\",\n    \"enabledViewAnyDocument\": \"<boolean>\",\n    \"enabledViewAnyPage\": \"<boolean>\",\n    \"enabledContactOperatorPrivately\": \"<boolean>\",\n    \"enabledChatHost\": \"<boolean>\",\n    \"enabledChatPresenter\": \"<boolean>\",\n    \"enabledChatOtherParticipants\": \"<boolean>\"\n  },\n  \"registration\": {\n    \"autoAcceptRequest\": \"<boolean>\",\n    \"requireFirstName\": \"<boolean>\",\n    \"requireLastName\": \"<boolean>\",\n    \"requireEmail\": \"<boolean>\",\n    \"requireJobTitle\": \"<boolean>\",\n    \"requireCompanyName\": \"<boolean>\",\n    \"requireAddress1\": \"<boolean>\",\n    \"requireAddress2\": \"<boolean>\",\n    \"requireCity\": \"<boolean>\",\n    \"requireState\": \"<boolean>\",\n    \"requireZipCode\": \"<boolean>\",\n    \"requireCountryRegion\": \"<boolean>\",\n    \"requireWorkPhone\": \"<boolean>\",\n    \"requireFax\": \"<boolean>\",\n    \"maxRegisterNum\": \"<number>\",\n    \"customizedQuestions\": [\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"notEquals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      },\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"endsWith\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      }\n    ],\n    \"rules\": [\n      {\n        \"question\": \"lastName\",\n        \"condition\": \"contains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      },\n      {\n        \"question\": \"companyName\",\n        \"condition\": \"notContains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      }\n    ]\n  },\n  \"integrationTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"simultaneousInterpretation\": {\n    \"enabled\": \"<boolean>\",\n    \"interpreters\": [\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      }\n    ]\n  },\n  \"links\": [\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    },\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  ],\n  \"trackingCodes\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"enabledAudioWatermark\": \"<boolean>\",\n  \"enabledVisualWatermark\": \"<boolean>\",\n  \"visualWatermarkOpacity\": \"<number>\",\n  \"audioConnectionOptions\": {\n    \"audioConnectionType\": \"VoIP\",\n    \"enabledTollFreeCallIn\": \"<boolean>\",\n    \"enabledGlobalCallIn\": \"<boolean>\",\n    \"enabledAudienceCallBack\": \"<boolean>\",\n    \"entryAndExitTone\": \"announceName\",\n    \"allowHostToUnmuteParticipants\": \"<boolean>\",\n    \"allowAttendeeToUnmuteSelf\": \"<boolean>\",\n    \"muteAttendeeUponEntry\": \"<boolean>\"\n  },\n  \"requireAttendeeLogin\": \"<boolean>\",\n  \"restrictToInvitees\": \"<boolean>\",\n  \"enabledLiveStream\": \"<boolean>\",\n  \"liveStream\": {\n    \"destination\": \"<string>\",\n    \"rtmpUrl\": \"<string>\",\n    \"streamUrl\": \"<string>\",\n    \"layoutWithoutSharedContent\": \"focus\",\n    \"layoutWithSharedContent\": \"stack\",\n    \"allowChangeLayoutInMeeting\": \"<boolean>\",\n    \"followStageLayoutWhenSynced\": \"<boolean>\",\n    \"resolution\": \"<string>\"\n  }\n}",
+              "body": "{\n  \"id\": \"<string>\",\n  \"title\": \"<string>\",\n  \"password\": \"<string>\",\n  \"meetingType\": \"meetingSeries\",\n  \"state\": \"ended\",\n  \"timezone\": \"<string>\",\n  \"start\": \"<string>\",\n  \"end\": \"<string>\",\n  \"hostUserId\": \"<string>\",\n  \"hostDisplayName\": \"<string>\",\n  \"hostEmail\": \"<string>\",\n  \"hostKey\": \"<string>\",\n  \"siteUrl\": \"<string>\",\n  \"webLink\": \"<string>\",\n  \"telephony\": {\n    \"accessCode\": \"<string>\",\n    \"callInNumbers\": [\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"tollFree\"\n      },\n      {\n        \"label\": \"<string>\",\n        \"callInNumber\": \"<string>\",\n        \"tollType\": \"toll\"\n      }\n    ],\n    \"links\": {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  },\n  \"enabledBreakoutSessions\": \"<boolean>\",\n  \"meetingNumber\": \"<string>\",\n  \"agenda\": \"<string>\",\n  \"phoneAndVideoSystemPassword\": \"<string>\",\n  \"hostDidJoin\": \"<boolean>\",\n  \"attendeeDidJoin\": \"<boolean>\",\n  \"recurrence\": \"<string>\",\n  \"registerLink\": \"<string>\",\n  \"sipAddress\": \"<string>\",\n  \"dialInIpAddress\": \"<string>\",\n  \"roomId\": \"<string>\",\n  \"enabledAutoRecordMeeting\": \"<boolean>\",\n  \"allowAnyUserToBeCoHost\": \"<boolean>\",\n  \"enabledJoinBeforeHost\": \"<boolean>\",\n  \"enableConnectAudioBeforeHost\": \"<boolean>\",\n  \"joinBeforeHostMinutes\": \"<number>\",\n  \"excludePassword\": \"<boolean>\",\n  \"publicMeeting\": \"<boolean>\",\n  \"reminderTime\": \"<number>\",\n  \"unlockedMeetingJoinSecurity\": \"blockFromJoin\",\n  \"sessionTypeId\": \"<number>\",\n  \"scheduledType\": \"meeting\",\n  \"enabledWebcastView\": \"<boolean>\",\n  \"panelistPassword\": \"<string>\",\n  \"phoneAndVideoSystemPanelistPassword\": \"<string>\",\n  \"enableAutomaticLock\": \"<boolean>\",\n  \"automaticLockMinutes\": \"<number>\",\n  \"allowFirstUserToBeCoHost\": \"<boolean>\",\n  \"allowAuthenticatedDevices\": \"<boolean>\",\n  \"meetingOptions\": {\n    \"enabledChat\": \"<boolean>\",\n    \"enabledVideo\": \"<boolean>\",\n    \"enabledPolling\": \"<boolean>\",\n    \"enabledNote\": \"<boolean>\",\n    \"noteType\": \"allowAll\",\n    \"enabledFileTransfer\": \"<boolean>\",\n    \"enabledUCFRichMedia\": \"<boolean>\"\n  },\n  \"attendeePrivileges\": {\n    \"enabledShareContent\": \"<boolean>\",\n    \"enabledSaveDocument\": \"<boolean>\",\n    \"enabledPrintDocument\": \"<boolean>\",\n    \"enabledAnnotate\": \"<boolean>\",\n    \"enabledViewParticipantList\": \"<boolean>\",\n    \"enabledViewThumbnails\": \"<boolean>\",\n    \"enabledRemoteControl\": \"<boolean>\",\n    \"enabledViewAnyDocument\": \"<boolean>\",\n    \"enabledViewAnyPage\": \"<boolean>\",\n    \"enabledContactOperatorPrivately\": \"<boolean>\",\n    \"enabledChatHost\": \"<boolean>\",\n    \"enabledChatPresenter\": \"<boolean>\",\n    \"enabledChatOtherParticipants\": \"<boolean>\"\n  },\n  \"registration\": {\n    \"autoAcceptRequest\": \"<boolean>\",\n    \"requireFirstName\": \"<boolean>\",\n    \"requireLastName\": \"<boolean>\",\n    \"requireEmail\": \"<boolean>\",\n    \"requireJobTitle\": \"<boolean>\",\n    \"requireCompanyName\": \"<boolean>\",\n    \"requireAddress1\": \"<boolean>\",\n    \"requireAddress2\": \"<boolean>\",\n    \"requireCity\": \"<boolean>\",\n    \"requireState\": \"<boolean>\",\n    \"requireZipCode\": \"<boolean>\",\n    \"requireCountryRegion\": \"<boolean>\",\n    \"requireWorkPhone\": \"<boolean>\",\n    \"requireFax\": \"<boolean>\",\n    \"maxRegisterNum\": \"<number>\",\n    \"customizedQuestions\": [\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"notEquals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      },\n      {\n        \"id\": \"<number>\",\n        \"question\": \"<string>\",\n        \"type\": \"dropdownList\",\n        \"required\": \"<boolean>\",\n        \"maxLength\": \"<number>\",\n        \"options\": [\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          },\n          {\n            \"id\": \"<number>\",\n            \"value\": \"<string>\"\n          }\n        ],\n        \"rules\": [\n          {\n            \"condition\": \"equals\",\n            \"value\": \"<string>\",\n            \"result\": \"approve\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          },\n          {\n            \"condition\": \"endsWith\",\n            \"value\": \"<string>\",\n            \"result\": \"reject\",\n            \"order\": \"<number>\",\n            \"matchCase\": \"<boolean>\"\n          }\n        ]\n      }\n    ],\n    \"rules\": [\n      {\n        \"question\": \"lastName\",\n        \"condition\": \"contains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      },\n      {\n        \"question\": \"companyName\",\n        \"condition\": \"notContains\",\n        \"value\": \"<string>\",\n        \"result\": \"reject\",\n        \"order\": \"<number>\",\n        \"matchCase\": \"<boolean>\"\n      }\n    ]\n  },\n  \"integrationTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"simultaneousInterpretation\": {\n    \"enabled\": \"<boolean>\",\n    \"interpreters\": [\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"languageCode1\": \"<string>\",\n        \"languageCode2\": \"<string>\",\n        \"email\": \"<string>\",\n        \"displayName\": \"<string>\"\n      }\n    ]\n  },\n  \"links\": [\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    },\n    {\n      \"rel\": \"<string>\",\n      \"href\": \"<string>\",\n      \"method\": \"<string>\"\n    }\n  ],\n  \"trackingCodes\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"enabledAudioWatermark\": \"<boolean>\",\n  \"enabledVisualWatermark\": \"<boolean>\",\n  \"visualWatermarkOpacity\": \"<number>\",\n  \"audioConnectionOptions\": {\n    \"audioConnectionType\": \"VoIP\",\n    \"enabledTollFreeCallIn\": \"<boolean>\",\n    \"enabledGlobalCallIn\": \"<boolean>\",\n    \"enabledAudienceCallBack\": \"<boolean>\",\n    \"entryAndExitTone\": \"announceName\",\n    \"allowHostToUnmuteParticipants\": \"<boolean>\",\n    \"allowAttendeeToUnmuteSelf\": \"<boolean>\",\n    \"muteAttendeeUponEntry\": \"<boolean>\"\n  },\n  \"requireAttendeeLogin\": \"<boolean>\",\n  \"restrictToInvitees\": \"<boolean>\",\n  \"enabledLiveStream\": \"<boolean>\",\n  \"liveStream\": {\n    \"destination\": \"<string>\",\n    \"rtmpUrl\": \"<string>\",\n    \"streamUrl\": \"<string>\",\n    \"layoutWithoutSharedContent\": \"focus\",\n    \"layoutWithSharedContent\": \"stack\",\n    \"allowChangeLayoutInMeeting\": \"<boolean>\",\n    \"followStageLayoutWhenSynced\": \"<boolean>\",\n    \"resolution\": \"<string>\"\n  }\n}",
               "code": 200,
               "cookie": [],
               "header": [
@@ -80962,7 +80962,7 @@
         {
           "name": "List People",
           "request": {
-            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
+            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
             "header": [
               {
                 "key": "Accept",
@@ -128050,6 +128050,721 @@
         }
       ],
       "name": "Summaries"
+    },
+    {
+      "description": "APIs for Slido Secure Premium integration with Webex Meetings.",
+      "item": [
+        {
+          "name": "List Compliance Events",
+          "request": {
+            "description": "Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)\n\nEvents capture who performed the action and on what resource.\n\nThe events are paginated by the server into pages of max 256 items per page without any order.\n\nThe events are available within 15 minutes after they happened.\n\nEvery resource has properties:\n* type - event type\n\n* ... event specific ids\n\n* ... event specific properties\n",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "url": {
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "slido",
+                "compliance",
+                "events"
+              ],
+              "query": [
+                {
+                  "description": "Webex organization UUID.",
+                  "key": "sessionOrgId",
+                  "value": "bno5krg"
+                },
+                {
+                  "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                  "key": "sessionId",
+                  "value": "xzt2f8lw"
+                },
+                {
+                  "description": "Pagination token. Returned in the response body as the `next` property.",
+                  "key": "start",
+                  "value": "<string>"
+                }
+              ],
+              "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+            }
+          },
+          "response": [
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 410,
+              "cookie": [],
+              "header": [],
+              "name": "Gone: The requested resource is no longer available.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Gone"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 403,
+              "cookie": [],
+              "header": [],
+              "name": "Forbidden: The request is understood, but it has been refused or access is not allowed.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Forbidden"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 423,
+              "cookie": [],
+              "header": [],
+              "name": "Locked: The requested resource is temporarily unavailable. A Retry-After header may be present that specifies how many seconds you need to wait before attempting the request again.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Locked (WebDAV) (RFC 4918)"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 428,
+              "cookie": [],
+              "header": [],
+              "name": "Precondition Required: File(s) cannot be scanned for malware and need to be force downloaded.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Precondition Required"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 415,
+              "cookie": [],
+              "header": [],
+              "name": "Unsupported Media Type: The request was made to a resource without specifying a media type or used a media type that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Unsupported Media Type"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 503,
+              "cookie": [],
+              "header": [],
+              "name": "Service Unavailable: Server is overloaded with requests. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Service Unavailable"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 429,
+              "cookie": [],
+              "header": [],
+              "name": "Too Many Requests: Too many requests have been sent in a given amount of time and the request has been rate limited. A Retry-After header should be present that specifies how many seconds you need to wait before a successful request can be made.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Too Many Requests"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 500,
+              "cookie": [],
+              "header": [],
+              "name": "Internal Server Error: Something went wrong on the server. If the issue persists, feel free to contact the [Webex Developer Support team](/explore/support).",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Internal Server Error"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 504,
+              "cookie": [],
+              "header": [],
+              "name": "Gateway Timeout: An upstream server failed to respond on time. If your query uses max parameter, please try to reduce it.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Gateway Timeout"
+            },
+            {
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"items\": [\n    {\n      \"createdAtMs\": \"<number>\",\n      \"sessionId\": \"a84g\",\n      \"sessionOrgId\": \"8g8zsv3v\",\n      \"userId\": \"luwhrd\",\n      \"data\": {\n        \"type\": \"session\",\n        \"sessionId\": \"r\",\n        \"createdAtMs\": \"<number>\",\n        \"modifiedAtMs\": \"<number>\",\n        \"isDeleted\": \"<boolean>\",\n        \"anonymityEnabled\": \"<boolean>\"\n      }\n    },\n    {\n      \"createdAtMs\": \"<number>\",\n      \"sessionId\": \"k84nde\",\n      \"sessionOrgId\": \"r80eh79u\",\n      \"userId\": \"vdqg\",\n      \"data\": {\n        \"type\": \"session\",\n        \"sessionId\": \"nxjm\",\n        \"createdAtMs\": \"<number>\",\n        \"modifiedAtMs\": \"<number>\",\n        \"isDeleted\": \"<boolean>\",\n        \"anonymityEnabled\": \"<boolean>\"\n      }\n    }\n  ],\n  \"next\": \"<string>\"\n}",
+              "code": 200,
+              "cookie": [],
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "name": "Default Response",
+              "originalRequest": {
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "OK"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 404,
+              "cookie": [],
+              "header": [],
+              "name": "Not Found: The URI requested is invalid or the resource requested, such as a user, does not exist. Also returned when the requested format is not supported by the requested method.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Not Found"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 405,
+              "cookie": [],
+              "header": [],
+              "name": "Method Not Allowed: The request was made to a resource using an HTTP request method that is not supported.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Method Not Allowed"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 502,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Gateway: The server received an invalid response from an upstream server while processing the request. Try again later.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Bad Gateway"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 409,
+              "cookie": [],
+              "header": [],
+              "name": "Conflict: The request could not be processed because it conflicts with some established rule of the system. For example, a person may not be added to a room more than once.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Conflict"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 400,
+              "cookie": [],
+              "header": [],
+              "name": "Bad Request: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Bad Request"
+            },
+            {
+              "_postman_previewlanguage": "text",
+              "body": null,
+              "code": 401,
+              "cookie": [],
+              "header": [],
+              "name": "Unauthorized: Authentication credentials were missing or incorrect.",
+              "originalRequest": {
+                "header": [],
+                "method": "GET",
+                "url": {
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "slido",
+                    "compliance",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "description": "Webex organization UUID.",
+                      "key": "sessionOrgId",
+                      "value": "bno5krg"
+                    },
+                    {
+                      "description": "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`).",
+                      "key": "sessionId",
+                      "value": "xzt2f8lw"
+                    },
+                    {
+                      "description": "Pagination token. Returned in the response body as the `next` property.",
+                      "key": "start",
+                      "value": "<string>"
+                    }
+                  ],
+                  "raw": "{{baseUrl}}/slido/compliance/events?sessionOrgId=bno5krg&sessionId=xzt2f8lw&start=<string>"
+                }
+              },
+              "status": "Unauthorized"
+            }
+          ]
+        }
+      ],
+      "name": "slidoSecurePremium"
     }
   ],
   "variable": [

@@ -74,7 +74,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get Details for an Auto Attendant",
-			Long:  "Retrieve an Auto Attendant details.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nRetrieving an auto attendant details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve an Auto Attendant details.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nRetrieving an auto attendant details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}")
 				req.PathParam("locationId", locationId)
@@ -111,7 +111,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update an Auto Attendant",
-			Long:  "Update the designated Auto Attendant.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nUpdating an auto attendant requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Update the designated Auto Attendant.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nUpdating an auto attendant requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}")
 				req.PathParam("locationId", locationId)
@@ -177,7 +177,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create an Auto Attendant",
-			Long:  "Create new Auto Attendant for the given location.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nCreating an auto attendant requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Create new Auto Attendant for the given location.\n\nAuto attendants play customized prompts and provide callers with menu options for routing their calls through your system.\n\nCreating an auto attendant requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/autoAttendants")
 				req.PathParam("locationId", locationId)
@@ -577,7 +577,7 @@ Retrieving a selective call forwarding rule's settings for an auto attendant req
 		cmd := &cobra.Command{
 			Use:   "switch-mode-call-forward",
 			Short: "Switch Mode for Call Forwarding Settings for an Auto Attendant",
-			Long:  "Switches the current operating mode of the `Auto Attendant` to the mode as per normal operations.\n\nSwitching operating mode for an `auto attendant` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			Long:  "Switches the current operating mode of the `Auto Attendant` to the mode as per normal operations.\n\nOperating modes allow call forwarding to be configured based on predefined schedules, enabling different routing behaviors during business hours, after hours, or holidays.\n\nSwitching operating mode for an `auto attendant` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/actions/switchMode/invoke")
 				req.PathParam("locationId", locationId)

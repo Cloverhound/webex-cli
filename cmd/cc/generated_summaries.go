@@ -33,7 +33,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-id",
 			Short: "Get specific Generated Summaries resource by ID",
-			Long:  `Retrieve an existing Generated Summaries resource by ID in a given organization.`,
+			Long:  `Retrieve an existing Generated Summaries resource by ID in a given organization. Deprecated. Use GET /ai-feature/generated-summaries/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/generated-summaries/{id}")
 				req.PathParam("orgid", orgid)
@@ -68,12 +68,14 @@ func init() {
 		var virtualAgentTransferSummariesEnabled bool
 		var consultTransferSummariesEnabled bool
 		var agentInclusionType string
+		var createdTime int64
+		var lastUpdatedTime int64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "update-id",
 			Short: "Update specific Generated Summaries resource by ID",
-			Long:  `Update an existing Generated Summaries resource by ID in a given organization.`,
+			Long:  `Update an existing Generated Summaries resource by ID in a given organization. Deprecated. Use PUT /ai-feature/generated-summaries/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/generated-summaries/{id}")
 				req.PathParam("orgid", orgid)
@@ -92,6 +94,8 @@ func init() {
 					req.BodyBool("virtualAgentTransferSummariesEnabled", virtualAgentTransferSummariesEnabled, cmd.Flags().Changed("virtual-agent-transfer-summaries-enabled"))
 					req.BodyBool("consultTransferSummariesEnabled", consultTransferSummariesEnabled, cmd.Flags().Changed("consult-transfer-summaries-enabled"))
 					req.BodyString("agentInclusionType", agentInclusionType)
+					req.BodyInt("createdTime", createdTime, cmd.Flags().Changed("created-time"))
+					req.BodyInt("lastUpdatedTime", lastUpdatedTime, cmd.Flags().Changed("last-updated-time"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -110,6 +114,8 @@ func init() {
 		cmd.Flags().BoolVar(&virtualAgentTransferSummariesEnabled, "virtual-agent-transfer-summaries-enabled", false, "")
 		cmd.Flags().BoolVar(&consultTransferSummariesEnabled, "consult-transfer-summaries-enabled", false, "")
 		cmd.Flags().StringVar(&agentInclusionType, "agent-inclusion-type", "", "")
+		cmd.Flags().Int64Var(&createdTime, "created-time", 0, "")
+		cmd.Flags().Int64Var(&lastUpdatedTime, "last-updated-time", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		generatedSummariesCmd.AddCommand(cmd)
@@ -124,7 +130,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Generated Summaries resource(s)",
-			Long:  `Retrieve a list of Generated Summaries resource(s) in a given organization.Only one entry per organization can exist for Generated Summaries resource.`,
+			Long:  `Retrieve a list of Generated Summaries resource(s) in a given organization.Only one entry per organization can exist for Generated Summaries resource. Deprecated. Use GET /v2/ai-feature/generated-summaries instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/generated-summaries")
 				req.PathParam("orgid", orgid)
@@ -148,8 +154,8 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		generatedSummariesCmd.AddCommand(cmd)

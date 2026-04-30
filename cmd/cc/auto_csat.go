@@ -35,12 +35,14 @@ func init() {
 		var organizationId string
 		var id string
 		var version int64
+		var createdTime int64
+		var lastUpdatedTime int64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "create-mapped-question",
 			Short: "Create a new Auto CSAT mapped Question",
-			Long:  `Create a new Auto CSAT mapped Question in a given organization.`,
+			Long:  `Create a new Auto CSAT mapped Question in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/auto-csat/{autoCsatId}/question")
 				req.PathParam("orgid", orgid)
@@ -57,6 +59,8 @@ func init() {
 					req.BodyString("organizationId", organizationId)
 					req.BodyString("id", id)
 					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+					req.BodyInt("createdTime", createdTime, cmd.Flags().Changed("created-time"))
+					req.BodyInt("lastUpdatedTime", lastUpdatedTime, cmd.Flags().Changed("last-updated-time"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -74,6 +78,8 @@ func init() {
 		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
 		cmd.Flags().StringVar(&id, "id", "", "")
 		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().Int64Var(&createdTime, "created-time", 0, "")
+		cmd.Flags().Int64Var(&lastUpdatedTime, "last-updated-time", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		autoCsatCmd.AddCommand(cmd)
@@ -87,7 +93,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "bulk-save-mapped-question",
 			Short: "Bulk save Auto CSAT mapped Question(s)",
-			Long:  `Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization.`,
+			Long:  `Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question/bulk instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/auto-csat/{autoCsatId}/question/bulk")
 				req.PathParam("orgid", orgid)
@@ -122,7 +128,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-mapped-question-id",
 			Short: "Get specific Auto CSAT mapped Question by ID",
-			Long:  `Retrieve an existing Auto CSAT mapped Question by ID in a given organization.`,
+			Long:  `Retrieve an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/question/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}")
 				req.PathParam("orgid", orgid)
@@ -158,7 +164,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete-mapped-question-id",
 			Short: "Delete specific Auto CSAT mapped Question by ID",
-			Long:  `Delete an existing Auto CSAT mapped Question by ID in a given organization.`,
+			Long:  `Delete an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use DELETE /ai-feature/auto-csat/question/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}")
 				req.PathParam("orgid", orgid)
@@ -186,7 +192,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-id",
 			Short: "Get specific Auto CSAT resource by ID",
-			Long:  `Retrieve an existing Auto CSAT resource by ID in a given organization.`,
+			Long:  `Retrieve an existing Auto CSAT resource by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/auto-csat/{id}")
 				req.PathParam("orgid", orgid)
@@ -221,12 +227,14 @@ func init() {
 		var surveyDataSource string
 		var organizationId string
 		var version int64
+		var createdTime int64
+		var lastUpdatedTime int64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "update-id",
 			Short: "Update specific Auto CSAT resource by ID",
-			Long:  `Update an existing Auto CSAT resource by ID in a given organization.`,
+			Long:  `Update an existing Auto CSAT resource by ID in a given organization. Deprecated. Use PUT /ai-feature/auto-csat/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/auto-csat/{id}")
 				req.PathParam("orgid", orgid)
@@ -245,6 +253,8 @@ func init() {
 					req.BodyString("organizationId", organizationId)
 					req.BodyString("id", id)
 					req.BodyInt("version", version, cmd.Flags().Changed("version"))
+					req.BodyInt("createdTime", createdTime, cmd.Flags().Changed("created-time"))
+					req.BodyInt("lastUpdatedTime", lastUpdatedTime, cmd.Flags().Changed("last-updated-time"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -263,6 +273,8 @@ func init() {
 		cmd.Flags().StringVar(&surveyDataSource, "survey-data-source", "", "")
 		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
 		cmd.Flags().Int64Var(&version, "version", 0, "")
+		cmd.Flags().Int64Var(&createdTime, "created-time", 0, "")
+		cmd.Flags().Int64Var(&lastUpdatedTime, "last-updated-time", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		autoCsatCmd.AddCommand(cmd)
@@ -277,7 +289,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Auto CSAT resource(s)",
-			Long:  `Retrieve a list of Auto CSAT resource(s) in a given organization.Only one entry per organization can exist for Auto CSAT resource.`,
+			Long:  `Retrieve a list of Auto CSAT resource(s) in a given organization.Only one entry per organization can exist for Auto CSAT resource. Deprecated. Use GET /v2/ai-feature/auto-csat instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/auto-csat")
 				req.PathParam("orgid", orgid)
@@ -301,8 +313,8 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		autoCsatCmd.AddCommand(cmd)
@@ -318,7 +330,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-mapped-question",
 			Short: "List Auto CSAT mapped Question(s)",
-			Long:  `Retrieve a list of Auto CSAT mapped Question(s) in a given organization.`,
+			Long:  `Retrieve a list of Auto CSAT mapped Question(s) in a given organization. Deprecated. Use GET /v2/ai-feature/auto-csat/question instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/auto-csat/{autoCsatId}/question")
 				req.PathParam("orgid", orgid)
@@ -345,8 +357,8 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&autoCsatId, "auto-csat-id", "", "Resource ID of the Auto CSAT resource")
 		cmd.MarkFlagRequired("auto-csat-id")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported(id, questionId, questionnaireId)")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.(id, questionId, questionnaireId)")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		autoCsatCmd.AddCommand(cmd)

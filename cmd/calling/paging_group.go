@@ -77,7 +77,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create a new Paging Group",
-			Long:  "Create a new Paging Group for the given location.\n\nGroup Paging allows a one-way call or group page to up to 75 people, workspaces and virtual lines by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nCreating a paging group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Create a new Paging Group for the given location.\n\nGroup Paging allows a one-way call or group page to up to 75 people, workspaces and virtual lines by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nCreating a paging group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/paging")
 				req.PathParam("locationId", locationId)
@@ -139,7 +139,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get Details for a Paging Group",
-			Long:  "Retrieve Paging Group details.\n\nGroup Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or workspaces and/or virtual line by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nRetrieving paging group details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve Paging Group details.\n\nGroup Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or workspaces and/or virtual line by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nRetrieving paging group details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/paging/{pagingId}")
 				req.PathParam("locationId", locationId)
@@ -176,7 +176,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update a Paging Group",
-			Long:  "Update the designated Paging Group.\n\nGroup Paging allows a person to place a one-way call or group page to up to 75 people, workspaces and virtual lines by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nUpdating a paging group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Update the designated Paging Group.\n\nGroup Paging allows a person to place a one-way call or group page to up to 75 people, workspaces and virtual lines by\ndialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.\n\nUpdating a paging group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/paging/{pagingId}")
 				req.PathParam("locationId", locationId)

@@ -4,6 +4,7 @@ package cc
 
 import (
 	"fmt"
+	"strconv"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
 	"github.com/Cloverhound/webex-cli/internal/client"
@@ -17,6 +18,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = strconv.Itoa
 var _ = timeutil.ParseLastISO
 
 var tasksCmd = &cobra.Command{
@@ -33,9 +35,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create Task",
-			Long:  `This API is to create a task for work or handling assignments. Represents both inbound tasks (originating from customer-facing channels) and outbound tasks (originating from contact center to customer-facing channel). Requires 'cjp:user' scope for authorization. For a list of possible response messages, see the Call Control API Guide.`,
+			Long:  "Creates a Work Item task. Requires `CJP_User` scope for authorization.",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks")
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/tasks")
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -721,6 +723,38 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd.MarkFlagRequired("campaign-id")
 		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
 		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // update-2
+		var taskId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-2",
+			Short: "Update Task",
+			Long:  "Appends a Work Item message to an existing task. This is an asynchronous operation. Requires `CJP_User` scope for authorization.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/tasks/{taskId}/messages")
+				req.PathParam("taskId", taskId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID of the Work Item task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		tasksCmd.AddCommand(cmd)
 	}
 
