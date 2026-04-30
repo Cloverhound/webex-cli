@@ -204,22 +204,38 @@ claude mcp add webex -- webex mcp serve
 claude mcp add webex -- /path/to/webex mcp serve
 ```
 
-The server exposes 10 tools:
+The server exposes 3 tools:
 
 | Tool | Description |
 |---|---|
-| `webex_list_spaces` | List spaces/rooms with optional keyword and type filters |
-| `webex_get_messages` | Retrieve recent messages from a space by ID or name |
-| `webex_search_messages` | Fan-out keyword search across recently-active spaces |
-| `webex_send_message` | Send a message to a space or person (the only write tool) |
-| `webex_list_direct_messages` | List DM conversations with a last-message preview |
-| `webex_get_person` | Look up a user by email or display name |
-| `webex_list_meetings` | List upcoming and recent meetings by date range |
-| `webex_get_meeting_transcript` | Retrieve the transcript for a completed meeting |
-| `webex_get_meeting_summary` | Retrieve the AI-generated summary for a completed meeting |
-| `webex_list_teams` | List teams the authenticated user belongs to |
+| `webex_run` | Execute any CLI command and return JSON output |
+| `webex_help` | Get help text for any command or command group |
+| `webex_usage` | Query the MCP usage log (recent commands, timing, status) |
+
+And 2 MCP resources:
+
+| Resource | Description |
+|---|---|
+| `webex://commands` | JSON array of all available CLI commands with short descriptions |
+| `webex://usage` | Last 50 raw lines of the usage log |
+
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_run` — the command tree expands automatically as new commands are added.
 
 Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
+
+### Usage Log
+
+All `webex_run` invocations are logged to `~/.webex-mcp/usage.log` (JSONL). Configure with serve flags:
+
+```bash
+webex mcp serve --log-path /tmp/webex.log --log-max-size 10485760 --log-max-files 5
+```
+
+| Flag | Default | Description |
+|---|---|---|
+| `--log-path` | `~/.webex-mcp/usage.log` | Log file path |
+| `--log-max-size` | `5242880` (5 MB) | Max file size before rotation |
+| `--log-max-files` | `3` | Number of rotated files to keep |
 
 ## Coding Agent Skill
 

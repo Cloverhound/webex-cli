@@ -120,6 +120,9 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// RootCommand returns the root cobra command for external introspection.
+func RootCommand() *cobra.Command { return rootCmd }
+
 func Execute() error {
 	// Remove "required" from --orgid/--org-id flags on all subcommands.
 	// This allows PersistentPreRunE to auto-populate from config/login.
