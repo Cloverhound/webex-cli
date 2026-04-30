@@ -16,7 +16,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const skillURL = "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/SKILL.md"
+const skillBaseURL = "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/"
+
+var skillSubPaths = []string{
+	"SKILL.md",
+	"admin/SKILL.md",
+	"calling/SKILL.md",
+	"cc/SKILL.md",
+	"device/SKILL.md",
+	"meetings/SKILL.md",
+	"messaging/SKILL.md",
+}
 
 const coworkName = "Claude Cowork"
 
@@ -192,7 +202,7 @@ func setupAgentSkills() error {
 	}
 
 	fmt.Print("Downloading Webex skill...")
-	skillContent, err := downloadSkill()
+	skillFiles, err := downloadSkillFiles()
 	if err != nil {
 		fmt.Println(" failed")
 		return fmt.Errorf("downloading skill: %w", err)
@@ -206,18 +216,25 @@ func setupAgentSkills() error {
 			}
 			if p.Name == coworkName {
 				zipPath := filepath.Join(home, "Downloads", "webex-cli-skill.zip")
-				if err := buildSkillZip(zipPath, "webex-cli", skillContent); err != nil {
+				if err := buildSkillZip(zipPath, "webex-cli", skillFiles); err != nil {
 					fmt.Printf("  %s: failed (%v)\n", p.Name, err)
 				} else {
 					fmt.Printf("  %s: saved to %s\n", p.Name, zipPath)
 					printCoworkInstructions(zipPath)
 				}
 			} else {
-				dest := filepath.Join(home, p.SkillDir, "SKILL.md")
-				if err := installSkill(dest, skillContent); err != nil {
-					fmt.Printf("  %s: failed (%v)\n", p.Name, err)
-				} else {
-					fmt.Printf("  %s: installed to %s\n", p.Name, dest)
+				skillDir := filepath.Join(home, p.SkillDir)
+				failed := false
+				for subPath, content := range skillFiles {
+					dest := filepath.Join(skillDir, filepath.FromSlash(subPath))
+					if err := installSkill(dest, content); err != nil {
+						fmt.Printf("  %s: failed installing %s (%v)\n", p.Name, subPath, err)
+						failed = true
+						break
+					}
+				}
+				if !failed {
+					fmt.Printf("  %s: installed to %s\n", p.Name, skillDir)
 				}
 			}
 		}
@@ -243,18 +260,24 @@ func agentDetected(home string, p agentPlatform) bool {
 	return err == nil && info.IsDir()
 }
 
-func downloadSkill() ([]byte, error) {
-	resp, err := http.Get(skillURL)
-	if err != nil {
-		return nil, err
+func downloadSkillFiles() (map[string][]byte, error) {
+	files := make(map[string][]byte)
+	for _, subPath := range skillSubPaths {
+		resp, err := http.Get(skillBaseURL + subPath)
+		if err != nil {
+			return nil, fmt.Errorf("downloading %s: %w", subPath, err)
+		}
+		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if err != nil {
+			return nil, fmt.Errorf("reading %s: %w", subPath, err)
+		}
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("%s: HTTP %d", subPath, resp.StatusCode)
+		}
+		files[subPath] = body
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP %d", resp.StatusCode)
-	}
-
-	return io.ReadAll(resp.Body)
+	return files, nil
 }
 
 func printCoworkInstructions(zipPath string) {
@@ -284,17 +307,20 @@ func printCoworkInstructions(zipPath string) {
 	fmt.Println(box.Render(content))
 }
 
-func buildSkillZip(dest, skillName string, skillContent []byte) error {
+func buildSkillZip(dest, skillName string, files map[string][]byte) error {
 	var buf bytes.Buffer
 	w := zip.NewWriter(&buf)
 
-	f, err := w.Create(skillName + "/SKILL.md")
-	if err != nil {
-		return fmt.Errorf("creating zip entry: %w", err)
+	for subPath, content := range files {
+		f, err := w.Create(skillName + "/" + subPath)
+		if err != nil {
+			return fmt.Errorf("creating zip entry %s: %w", subPath, err)
+		}
+		if _, err := f.Write(content); err != nil {
+			return fmt.Errorf("writing zip entry %s: %w", subPath, err)
+		}
 	}
-	if _, err := f.Write(skillContent); err != nil {
-		return fmt.Errorf("writing zip entry: %w", err)
-	}
+
 	if err := w.Close(); err != nil {
 		return fmt.Errorf("closing zip: %w", err)
 	}

@@ -106,245 +106,59 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
    webex <api> <resource> --help
    ```
 
-## Admin API Examples
+## Sub-Skills
 
-Admin commands manage people, organizations, licenses, roles, and other administrative resources:
+For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area:
+
+| Area | Installed path |
+|---|---|
+| Admin | `~/.claude/skills/webex-cli/admin/SKILL.md` |
+| Calling | `~/.claude/skills/webex-cli/calling/SKILL.md` |
+| Contact Center | `~/.claude/skills/webex-cli/cc/SKILL.md` |
+| Devices | `~/.claude/skills/webex-cli/device/SKILL.md` |
+| Meetings | `~/.claude/skills/webex-cli/meetings/SKILL.md` |
+| Messaging | `~/.claude/skills/webex-cli/messaging/SKILL.md` |
+
+## Quick Reference
 
 ```bash
-# List people in the org
+# Admin — people, orgs, licenses
 webex admin people list --max 10
-
-# Get a specific person
-webex admin people get-person --person-id "PERSON_ID"
-
-# Get my own details
 webex admin people get-my-own
-
-# List organizations
+webex admin licenses list
 webex admin organizations list
 
-# List licenses
-webex admin licenses list
-
-# List roles
-webex admin roles list
-
-# List events
-webex admin events list
-
-# List reports
-webex admin reports list
-
-# List recordings
-webex admin recordings list
-```
-
-## Calling API Examples
-
-Calling commands — no orgid required (it's inferred from the token):
-
-```bash
-# List people
-webex calling people list --max 10
-
-# Get a specific person
-webex calling people get-person --person-id "PERSON_ID"
-
-# List locations
+# Calling — locations, devices, queues, recordings
 webex calling locations list
-
-# List devices
 webex calling devices list
-
-# Get my own details
-webex calling people get-my-own
-
-# Download a converged recording (call recording)
+webex calling call-queue list
+webex calling converged-recordings list --last 720h
 webex calling converged-recordings download --recording-id <id> --output call.mp3
-webex calling converged-recordings download --recording-id <id> --output call.vtt --type transcript
 
-# Upload announcement greetings
-webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting"
-webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby" --location-id <id>
-webex calling announcement-repository update-binary-greeting --file updated.wav --name "Updated" --announcement-id <id>
-
-# Upload voicemail greetings (person, virtual line, workspace, or self)
-webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
-webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
-webex calling virtual-line-call update-busy-voicemail-greeting --virtual-line-id <id> --file greeting.wav
-webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id <id> --file greeting.wav
-```
-
-## Contact Center API Examples
-
-When logged in, `--orgid` is auto-populated so you can omit it:
-
-```bash
-# Download/upload audio files
-webex cc audio-files download --id <audio-file-id> --output prompt.wav
+# Contact Center — sites, queues, entry points, flows
+webex cc site list
+webex cc contact-service-queue list
+webex cc entry-point list
+webex cc flow export --id <id> --output flow.json
+webex cc audio-files download --id <id> --output prompt.wav
 webex cc audio-files upload --file prompt.wav --name "Main Greeting"
 
-# Download/upload agent personal greetings
-webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
-webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
-
-# List sites
-webex cc site list
-
-# List queues
-webex cc contact-service-queue list
-
-# List entry points
-webex cc entry-point list
-
-# List teams
-webex cc team list
-
-# List users
-webex cc users list
-
-# List global variables
-webex cc global-variables list
-
-# List business hours
-webex cc business-hour list
-
-# List dial number mappings (exception: uses list-dialed-mapping)
-webex cc dial-number list-dialed-mapping
-
-# List skills
-webex cc skill list
-
-# List skill profiles
-webex cc skill-profile list
-
-# List desktop profiles
-webex cc desktop-profile list
-
-# List desktop layouts
-webex cc desktop-layout list
-
-# List auxiliary codes (idle + wrap-up)
-webex cc auxiliary-code list
-
-# List multimedia profiles
-webex cc multimedia-profile list
-
-# List dial plans
-webex cc dial-plan list
-
-# List user profiles
-webex cc user-profiles list
-
-# List address books
-webex cc address-book list
-
-# List holiday lists
-webex cc holiday-list list
-
-# List outdial ANIs
-webex cc outdial-ani list
-```
-
-## Device API Examples
-
-Device commands manage Webex devices, workspaces, and configurations:
-
-```bash
-# List devices
+# Device — devices, workspaces, xAPI
 webex device devices list
-
-# Get a specific device
-webex device devices get --device-id "DEVICE_ID"
-
-# List workspaces
 webex device workspaces list
+webex device xapi execute-command --device-id <id> --body '{"command":"..."}'
 
-# Get workspace details
-webex device workspaces get --workspace-id "WORKSPACE_ID"
-
-# List device configurations
-webex device device-configurations list --device-id "DEVICE_ID"
-
-# List workspace locations
-webex device workspace-locations list
-
-# Execute xAPI command
-webex device xapi execute-command --device-id "DEVICE_ID" --body '{"command":"..."}'
-
-# Query xAPI status
-webex device xapi query-status --device-id "DEVICE_ID"
-```
-
-## Meetings API Examples
-
-Meetings commands manage meeting scheduling, recordings, participants, and more:
-
-```bash
-# List meetings
+# Meetings — schedule, recordings, transcripts
 webex meetings meetings list
-
-# Get a specific meeting
-webex meetings meetings get --meeting-id "MEETING_ID"
-
-# Create a meeting
-webex meetings meetings create --body '{"title":"Stand-up","start":"...","end":"..."}'
-
-# List meeting participants
-webex meetings participants list --meeting-id "MEETING_ID"
-
-# List recordings
 webex meetings recordings list
-
-# Download a recording (audio, video, or transcript)
-webex meetings recordings download --recording-id <id> --output meeting.mp3
 webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
 webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
-
-# List transcripts
 webex meetings transcripts list
 
-# List meeting preferences
-webex meetings preferences list-sites
-
-# List session types
-webex meetings session-types list --site-url "SITE_URL"
-
-# List tracking codes
-webex meetings meetings list-tracking-codes --site-url "SITE_URL"
-```
-
-## Messaging API Examples
-
-Messaging commands manage rooms, messages, teams, and webhooks:
-
-```bash
-# List rooms
-webex messaging rooms list --max 10
-
-# Get room details
-webex messaging rooms get --room-id "ROOM_ID"
-
-# Create a room
-webex messaging rooms create --body '{"title":"My Room"}'
-
-# List messages in a room
-webex messaging messages list --room-id "ROOM_ID"
-
-# Send a message
-webex messaging messages create --body '{"roomId":"ROOM_ID","text":"Hello!"}'
-
-# List teams
-webex messaging teams list
-
-# List team memberships
-webex messaging team-memberships list --team-id "TEAM_ID"
-
-# List webhooks
-webex messaging webhooks list
-
-# List room memberships
-webex messaging memberships list --room-id "ROOM_ID"
+# Messaging — see sub-skill for full reference
+webex messaging rooms list --type group --last 24h
+webex messaging messages list --room-id <roomId>
+webex messaging messages create --body '{"roomId":"<roomId>","text":"Hello!"}'
 ```
 
 ## Filtering and Pagination

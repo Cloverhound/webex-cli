@@ -22,7 +22,7 @@ func checkSkillUpdates() error {
 	}
 
 	fmt.Print("Checking for skill updates...")
-	latest, err := downloadSkill()
+	latest, err := downloadSkillFiles()
 	if err != nil {
 		fmt.Println(" failed")
 		return err
@@ -34,14 +34,27 @@ func checkSkillUpdates() error {
 		if p.SkillDir == "" {
 			continue // skip Cowork (no filesystem path)
 		}
-		path := filepath.Join(home, p.SkillDir, "SKILL.md")
-		current, err := os.ReadFile(path)
+		skillDir := filepath.Join(home, p.SkillDir)
+		rootPath := filepath.Join(skillDir, "SKILL.md")
+		current, err := os.ReadFile(rootPath)
 		if err == nil {
-			if !bytes.Equal(current, latest) {
-				actions = append(actions, skillAction{p, path, "outdated"})
+			outdated := !bytes.Equal(current, latest["SKILL.md"])
+			if !outdated {
+				for subPath := range latest {
+					if subPath == "SKILL.md" {
+						continue
+					}
+					if _, serr := os.Stat(filepath.Join(skillDir, filepath.FromSlash(subPath))); serr != nil {
+						outdated = true
+						break
+					}
+				}
+			}
+			if outdated {
+				actions = append(actions, skillAction{p, skillDir, "outdated"})
 			}
 		} else if agentDetected(home, p) {
-			actions = append(actions, skillAction{p, path, "new"})
+			actions = append(actions, skillAction{p, skillDir, "new"})
 		}
 	}
 
@@ -101,12 +114,21 @@ func checkSkillUpdates() error {
 	for _, name := range selected {
 		for _, a := range actions {
 			if a.Platform.Name == name {
-				if err := installSkill(a.Path, latest); err != nil {
-					fmt.Printf("  %s: failed (%v)\n", a.Platform.Name, err)
-				} else if a.Status == "outdated" {
-					fmt.Printf("  %s: updated %s\n", a.Platform.Name, a.Path)
-				} else {
-					fmt.Printf("  %s: installed to %s\n", a.Platform.Name, a.Path)
+				failed := false
+				for subPath, content := range latest {
+					dest := filepath.Join(a.Path, filepath.FromSlash(subPath))
+					if err := installSkill(dest, content); err != nil {
+						fmt.Printf("  %s: failed installing %s (%v)\n", a.Platform.Name, subPath, err)
+						failed = true
+						break
+					}
+				}
+				if !failed {
+					if a.Status == "outdated" {
+						fmt.Printf("  %s: updated %s\n", a.Platform.Name, a.Path)
+					} else {
+						fmt.Printf("  %s: installed to %s\n", a.Platform.Name, a.Path)
+					}
 				}
 			}
 		}
