@@ -1,0 +1,18 @@
+{
+  "_readme": "Merge the 'mcpServers' block into your Claude Desktop config at: ~/Library/Application Support/Claude/claude_desktop_config.json",
+  "_prereq": "Run 'webex login' first to authenticate. The MCP server shares credentials with the CLI.",
+  "mcpServers": {
+    "webex": {
+      "command": "webex",
+      "args": ["mcp", "serve"],
+      "env": {
+        "_note": "Optional: set WEBEX_TOKEN here to bypass keyring auth",
+        "WEBEX_TOKEN": ""
+      },
+      "alwaysAllow": [
+        "webex_help",
+        "webex_usage"
+      ]
+    }
+  }
+}
