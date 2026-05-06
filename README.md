@@ -194,6 +194,9 @@ Config is stored in `~/.webex-cli/config.json`.
 
 ## MCP Server
 
+> **Claude Desktop users:** see [CLAUDE_DESKTOP.md](CLAUDE_DESKTOP.md) for installation, DXT extension setup, and skill configuration specific to Claude Desktop.
+
+
 `webex mcp serve` starts a [Model Context Protocol](https://modelcontextprotocol.io/) server over stdio, letting AI clients query and manage your Webex environment directly.
 
 ```bash
