@@ -23,12 +23,10 @@ extension: build
 skill:
 	@python3 -c "\
 import zipfile; \
-parts = ['skill/SKILL.md','skill/admin/SKILL.md','skill/calling/SKILL.md', \
-         'skill/cc/SKILL.md','skill/device/SKILL.md','skill/meetings/SKILL.md', \
-         'skill/messaging/SKILL.md']; \
-combined = '\n\n'.join(open(p).read().strip() for p in parts); \
 z = zipfile.ZipFile('webex.skill', 'w', zipfile.ZIP_DEFLATED); \
-z.writestr('webex-cli/SKILL.md', combined); \
+z.write('skill/SKILL.md', 'webex-cli/SKILL.md'); \
+resources = ['admin','calling','cc','device','meetings','messaging']; \
+[z.write(f'skill/{r}/SKILL.md', f'webex-cli/resources/{r}.md') for r in resources]; \
 z.close()"
 	@echo "Built webex.skill"
 
