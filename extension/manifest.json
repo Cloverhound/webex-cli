@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "webex-mcp",
   "display_name": "Webex",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Query and manage Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging via natural language.",
   "long_description": "Requires the Webex CLI to be installed and authenticated (webex login). Install via: curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh",
   "author": {
