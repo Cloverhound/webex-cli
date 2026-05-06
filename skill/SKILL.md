@@ -106,6 +106,31 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
    webex <api> <resource> --help
    ```
 
+## Using as an MCP Server
+
+The CLI includes a built-in MCP server exposing `webex_run`, `webex_help`, and `webex_usage` tools.
+
+**Claude Code / stdio clients** — no server process needed:
+```bash
+claude mcp add webex -- webex mcp serve
+```
+
+**Claude Desktop / HTTP clients** — start the server first, then point the config at it:
+```bash
+# Start server (loopback only, port 47890)
+webex mcp serve --http
+```
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "webex": { "url": "http://localhost:47890/mcp" }
+  }
+}
+```
+Restart Claude Desktop. Use `--http-addr 127.0.0.1:<port>` to change the port.
+Only loopback addresses (127.x.x.x / ::1) are accepted — the server cannot bind to public interfaces.
+
 ## Sub-Skills
 
 For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area:

@@ -237,6 +237,20 @@ webex mcp serve --log-path /tmp/webex.log --log-max-size 10485760 --log-max-file
 | `--log-max-size` | `5242880` (5 MB) | Max file size before rotation |
 | `--log-max-files` | `3` | Number of rotated files to keep |
 
+### Team Distribution via Claude Admin Portal
+
+Package the extension once and upload it to the Claude admin console — Claude Desktop installs it automatically for all team members. Each user's local `webex` installation and credentials are used; no shared server is needed.
+
+```bash
+make extension   # produces webex-mcp.dxt
+```
+
+1. Upload `webex-mcp.dxt` to the Claude admin portal under **Extensions**
+2. Enable it for your team or org
+3. Team members must have `webex` installed and authenticated (`webex login`)
+
+Alternatively, team members can install the extension locally by double-clicking `webex-mcp.dxt` in Finder.
+
 ## Coding Agent Skill
 
 A set of skill files in `skill/` enables AI coding agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) to use the CLI via natural language. The root skill (`skill/SKILL.md`) covers auth, command structure, and global flags. Six per-area sub-skills provide comprehensive flag and body-schema documentation for each CLI area:

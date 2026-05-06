@@ -3,6 +3,7 @@ webex
 webex-cli
 *.exe
 dist/
+webex-mcp.dxt
 
 # Codegen intermediates
 codegen/api_outline.json

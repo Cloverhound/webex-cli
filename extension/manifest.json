@@ -1,0 +1,40 @@
+{
+  "manifest_version": "0.3",
+  "name": "webex-mcp",
+  "display_name": "Webex",
+  "version": "2.0.0",
+  "description": "Query and manage Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging via natural language.",
+  "author": {
+    "name": "Cloverhound",
+    "url": "https://github.com/Cloverhound/webex-cli"
+  },
+  "server": {
+    "type": "binary",
+    "mcp_config": {
+      "command": "webex",
+      "args": ["mcp", "serve"]
+    }
+  },
+  "tools": [
+    {
+      "name": "webex_run",
+      "description": "Execute any Webex CLI command and return JSON output"
+    },
+    {
+      "name": "webex_help",
+      "description": "Get help text for any Webex CLI command or command group"
+    },
+    {
+      "name": "webex_usage",
+      "description": "Query recent MCP command history"
+    }
+  ],
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "linux", "win32"]
+  },
+  "long_description": "Requires the Webex CLI to be installed and authenticated (`webex login`). Install via: curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh",
+  "icon": "icon.png",
+  "license": "MIT",
+  "repository": "https://github.com/Cloverhound/webex-cli"
+}
