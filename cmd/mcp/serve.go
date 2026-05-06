@@ -41,7 +41,8 @@ Authentication is shared with the CLI — run 'webex login' once and the server
 uses the same stored credentials with automatic token refresh.
 
 Tools:
-  webex_run    Execute any CLI command and return JSON output
+  webex_read   Execute a read-only CLI command (list, get, download, export)
+  webex_write  Execute a command that creates, updates, or deletes a resource
   webex_help   Get help text for any command or command group
   webex_usage  Query the MCP usage log (recent commands, timing)
 
