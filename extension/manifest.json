@@ -36,5 +36,8 @@
   "long_description": "Requires the Webex CLI to be installed and authenticated (`webex login`). Install via: curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh",
   "icon": "icon.png",
   "license": "MIT",
-  "repository": "https://github.com/Cloverhound/webex-cli"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cloverhound/webex-cli"
+  }
 }
