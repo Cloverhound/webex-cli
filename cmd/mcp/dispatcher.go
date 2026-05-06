@@ -30,24 +30,60 @@ var blockedPrefixes = []string{
 // exec.Command does not shell-eval, but these characters indicate misuse.
 var dangerousChars = []string{"$", "`", "|", ";", "&&"}
 
+// readPrefixes are action verbs (and their hyphenated variants) that map to GET API calls.
+var readPrefixes = []string{
+	"list",
+	"get",
+	"download",
+	"export",
+	"search",
+	"status",
+	"describe",
+	"query",
+	"show",
+	"fetch",
+}
+
 func registerTools(s *server.MCPServer, lg *usageLogger) {
 	s.AddTool(
-		mcplib.NewTool("webex_run",
+		mcplib.NewTool("webex_read",
 			mcplib.WithDescription(
-				"Execute any Webex CLI command and return JSON output. "+
+				"Execute a read-only Webex CLI command (list, get, download, export, search, status). "+
+					"Maps to GET API calls — safe to auto-approve. "+
 					"Provide the command without the 'webex' prefix "+
-					"(e.g. 'calling people list' runs 'webex calling people list --output json'). "+
-					"Use webex_help to discover valid commands and flags before calling this tool.",
+					"(e.g. 'calling people list' runs 'webex calling people list'). "+
+					"Use webex_write for create/update/delete operations. "+
+					"Use webex_help to discover valid commands and flags.",
 			),
 			mcplib.WithString("command",
 				mcplib.Required(),
-				mcplib.Description("CLI command to run, space-separated, without 'webex' prefix (e.g. 'calling people list', 'cc site list')"),
+				mcplib.Description("Read-only CLI command without 'webex' prefix (e.g. 'calling people list', 'cc site list', 'admin people get-my-own')"),
 			),
 			mcplib.WithString("flags",
-				mcplib.Description(`Optional flags as a JSON object string (e.g. {"max": "10", "output": "table"}). Keys are flag names without '--'.`),
+				mcplib.Description(`Optional flags as a JSON object string (e.g. {"max": "10", "paginate": "true"}). Keys are flag names without '--'.`),
 			),
 		),
-		makeRunHandler(lg),
+		makeDispatchHandler(lg, true),
+	)
+
+	s.AddTool(
+		mcplib.NewTool("webex_write",
+			mcplib.WithDescription(
+				"Execute a Webex CLI command that creates, updates, or deletes a resource. "+
+					"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
+					"Provide the command without the 'webex' prefix "+
+					"(e.g. 'messaging messages create'). "+
+					"Use webex_read for list/get/download/export operations.",
+			),
+			mcplib.WithString("command",
+				mcplib.Required(),
+				mcplib.Description("Write CLI command without 'webex' prefix (e.g. 'messaging messages create', 'cc team update', 'admin people delete')"),
+			),
+			mcplib.WithString("flags",
+				mcplib.Description(`Optional flags as a JSON object string (e.g. {"room-id": "xxx", "text": "Hello"}). Keys are flag names without '--'.`),
+			),
+		),
+		makeDispatchHandler(lg, false),
 	)
 
 	s.AddTool(
@@ -55,7 +91,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger) {
 			mcplib.WithDescription(
 				"Get help text for any Webex CLI command or command group. "+
 					"Returns usage, available flags, and subcommand descriptions. "+
-					"Use this to explore what commands exist before calling webex_run.",
+					"Use this to explore what commands exist before calling webex_read or webex_write.",
 			),
 			mcplib.WithString("command",
 				mcplib.Description("Command path to get help for (e.g. 'calling people', 'cc site'). Omit for top-level CLI help."),
@@ -67,8 +103,8 @@ func registerTools(s *server.MCPServer, lg *usageLogger) {
 	s.AddTool(
 		mcplib.NewTool("webex_usage",
 			mcplib.WithDescription(
-				"Query the MCP usage log to see recent commands executed via webex_run. "+
-					"Returns command name, flags, status (ok/error), and elapsed time for each entry.",
+				"Query the MCP usage log to see recent commands executed via webex_read or webex_write. "+
+					"Returns tool name, command, flags, status (ok/error), and elapsed time for each entry.",
 			),
 			mcplib.WithNumber("limit",
 				mcplib.Description("Max log entries to return (1–100, default 20)"),
@@ -81,7 +117,13 @@ func registerTools(s *server.MCPServer, lg *usageLogger) {
 	)
 }
 
-func makeRunHandler(lg *usageLogger) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+// makeDispatchHandler returns a handler for either webex_read (readOnly=true) or webex_write (readOnly=false).
+func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+	toolName := "webex_write"
+	if readOnly {
+		toolName = "webex_read"
+	}
+
 	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 		command := strings.TrimSpace(req.GetString("command", ""))
 		if command == "" {
@@ -111,7 +153,17 @@ func makeRunHandler(lg *usageLogger) func(context.Context, mcplib.CallToolReques
 			}
 		}
 
-		// Force JSON output (can be overridden by flags below).
+		// Read-only enforcement for webex_read.
+		if readOnly {
+			action := actionToken(args)
+			if action != "" && !isReadAction(action) {
+				return mcplib.NewToolResultText(fmt.Sprintf(
+					"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
+				)), nil
+			}
+		}
+
+		// Force JSON output.
 		args = append(args, "--output=json")
 
 		// Parse and append optional flags.
@@ -158,6 +210,7 @@ func makeRunHandler(lg *usageLogger) func(context.Context, mcplib.CallToolReques
 
 		_ = lg.Write(usageEntry{
 			Time:    time.Now().UTC().Format(time.RFC3339),
+			Tool:    toolName,
 			Command: command,
 			Flags:   flagsStr,
 			Status:  status,
@@ -175,6 +228,38 @@ func makeRunHandler(lg *usageLogger) func(context.Context, mcplib.CallToolReques
 		}
 		return mcplib.NewToolResultText(strings.TrimSpace(stdout.String())), nil
 	}
+}
+
+// actionToken returns the action verb from the command args.
+// For "calling people list", it returns "list" (positional index 2).
+// For two-token commands like "auth status", it returns "status" (positional index 1).
+func actionToken(args []string) string {
+	var positional []string
+	for _, a := range args {
+		if !strings.HasPrefix(a, "-") {
+			positional = append(positional, a)
+		}
+	}
+	switch {
+	case len(positional) >= 3:
+		return strings.ToLower(positional[2])
+	case len(positional) == 2:
+		return strings.ToLower(positional[1])
+	case len(positional) == 1:
+		return strings.ToLower(positional[0])
+	default:
+		return ""
+	}
+}
+
+// isReadAction returns true if the verb maps to a GET API call.
+func isReadAction(action string) bool {
+	for _, p := range readPrefixes {
+		if action == p || strings.HasPrefix(action, p+"-") {
+			return true
+		}
+	}
+	return false
 }
 
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {

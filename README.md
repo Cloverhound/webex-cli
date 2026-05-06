@@ -204,13 +204,16 @@ claude mcp add webex -- webex mcp serve
 claude mcp add webex -- /path/to/webex mcp serve
 ```
 
-The server exposes 3 tools:
+The server exposes 4 tools:
 
-| Tool | Description |
-|---|---|
-| `webex_run` | Execute any CLI command and return JSON output |
-| `webex_help` | Get help text for any command or command group |
-| `webex_usage` | Query the MCP usage log (recent commands, timing, status) |
+| Tool | API methods | Description |
+|---|---|---|
+| `webex_read` | GET | Execute a read-only CLI command (list, get, download, export, search) |
+| `webex_write` | POST / PUT / PATCH / DELETE | Execute a command that creates, updates, or deletes a resource |
+| `webex_help` | — | Get help text for any command or command group |
+| `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
+
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation.
 
 And 2 MCP resources:
 

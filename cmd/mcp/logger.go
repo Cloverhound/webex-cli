@@ -14,6 +14,7 @@ import (
 
 type usageEntry struct {
 	Time    string `json:"time"`
+	Tool    string `json:"tool"`
 	Command string `json:"command"`
 	Flags   string `json:"flags"`
 	Status  string `json:"status"`

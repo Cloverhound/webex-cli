@@ -24,8 +24,12 @@
   },
   "tools": [
     {
-      "name": "webex_run",
-      "description": "Execute any Webex CLI command and return JSON output"
+      "name": "webex_read",
+      "description": "Execute a read-only Webex CLI command (list, get, download, export) — maps to GET API calls"
+    },
+    {
+      "name": "webex_write",
+      "description": "Execute a Webex CLI command that creates, updates, or deletes a resource — maps to POST/PUT/PATCH/DELETE"
     },
     {
       "name": "webex_help",

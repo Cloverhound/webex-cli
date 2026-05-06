@@ -108,7 +108,14 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 ## Using as an MCP Server
 
-The CLI includes a built-in MCP server exposing `webex_run`, `webex_help`, and `webex_usage` tools.
+The CLI includes a built-in MCP server exposing four tools:
+
+| Tool | API methods | When to use |
+|---|---|---|
+| `webex_read` | GET | List, get, download, export — auto-approvable |
+| `webex_write` | POST / PUT / PATCH / DELETE | Create, update, delete — prompts for confirmation |
+| `webex_help` | — | Discover commands and flags |
+| `webex_usage` | — | View recent MCP command history |
 
 **Claude Code / stdio clients** — no server process needed:
 ```bash
