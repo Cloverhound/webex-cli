@@ -94,12 +94,17 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 1. **Always redirect stderr separately** when capturing JSON output:
    ```bash
-   webex cc site list --orgid="$ORG" > /tmp/result.json 2>/tmp/error.log
+   # Mac/Linux/WSL — $TMPDIR is set on macOS; falls back to /tmp on Linux
+   webex cc site list --orgid="$ORG" > "${TMPDIR:-/tmp}/result.json" 2>"${TMPDIR:-/tmp}/error.log"
+   # Windows PowerShell
+   # webex cc site list --orgid="$ORG" > "$env:TEMP\result.json" 2> "$env:TEMP\error.log"
    ```
 
 2. **Use `--orgid=VALUE` syntax** (with `=`) for CC commands to avoid shell quoting issues. Do NOT use `--orgid "$VAR"` with a space — use `--orgid="$VAR"`.
 
 3. **Write output to temp files first**, then read/analyze. Do NOT pipe webex output directly into python or jq in a single shell command — complex pipes can cause issues with the binary output.
+   - Mac/Linux/WSL: use `"${TMPDIR:-/tmp}/filename.json"`
+   - Windows PowerShell: use `"$env:TEMP\filename.json"`
 
 4. **Check `--help` before guessing** subcommand names:
    ```bash
@@ -127,7 +132,14 @@ claude mcp add webex -- webex mcp serve
 # Start server (loopback only, port 47890)
 webex mcp serve --http
 ```
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Add to your Claude Desktop config file, then restart Claude Desktop:
+
+| Platform | Config path |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
 ```json
 {
   "mcpServers": {
@@ -135,21 +147,28 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
   }
 }
 ```
-Restart Claude Desktop. Use `--http-addr 127.0.0.1:<port>` to change the port.
+Use `--http-addr 127.0.0.1:<port>` to change the port.
 Only loopback addresses (127.x.x.x / ::1) are accepted — the server cannot bind to public interfaces.
 
 ## Sub-Skills
 
-For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area:
+For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area.
 
-| Area | Installed path |
+Sub-skills are installed alongside this file. Resolve the base path for your platform:
+
+| Platform | Skills base path |
 |---|---|
-| Admin | `~/.claude/skills/webex-cli/admin/SKILL.md` |
-| Calling | `~/.claude/skills/webex-cli/calling/SKILL.md` |
-| Contact Center | `~/.claude/skills/webex-cli/cc/SKILL.md` |
-| Devices | `~/.claude/skills/webex-cli/device/SKILL.md` |
-| Meetings | `~/.claude/skills/webex-cli/meetings/SKILL.md` |
-| Messaging | `~/.claude/skills/webex-cli/messaging/SKILL.md` |
+| macOS / Linux | `~/.claude/skills/webex-cli/` |
+| Windows | `%USERPROFILE%\.claude\skills\webex-cli\` |
+
+| Area | Sub-path |
+|---|---|
+| Admin | `admin/SKILL.md` |
+| Calling | `calling/SKILL.md` |
+| Contact Center | `cc/SKILL.md` |
+| Devices | `device/SKILL.md` |
+| Meetings | `meetings/SKILL.md` |
+| Messaging | `messaging/SKILL.md` |
 
 ## Quick Reference
 
@@ -232,8 +251,8 @@ webex admin people list --output=table
 # Raw JSON (no formatting)
 webex admin people list --output=raw
 
-# Save to file for processing
-webex admin people list > /tmp/people.json
+# Save to file for processing (Mac/Linux/WSL)
+webex admin people list > "${TMPDIR:-/tmp}/people.json"
 ```
 
 ## Converged Recordings: Admin vs Non-Admin Endpoints
