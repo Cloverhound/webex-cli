@@ -94,12 +94,17 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 1. **Always redirect stderr separately** when capturing JSON output:
    ```bash
-   webex cc site list --orgid="$ORG" > /tmp/result.json 2>/tmp/error.log
+   # Mac/Linux/WSL — $TMPDIR is set on macOS; falls back to /tmp on Linux
+   webex cc site list --orgid="$ORG" > "${TMPDIR:-/tmp}/result.json" 2>"${TMPDIR:-/tmp}/error.log"
+   # Windows PowerShell
+   # webex cc site list --orgid="$ORG" > "$env:TEMP\result.json" 2> "$env:TEMP\error.log"
    ```
 
 2. **Use `--orgid=VALUE` syntax** (with `=`) for CC commands to avoid shell quoting issues. Do NOT use `--orgid "$VAR"` with a space — use `--orgid="$VAR"`.
 
 3. **Write output to temp files first**, then read/analyze. Do NOT pipe webex output directly into python or jq in a single shell command — complex pipes can cause issues with the binary output.
+   - Mac/Linux/WSL: use `"${TMPDIR:-/tmp}/filename.json"`
+   - Windows PowerShell: use `"$env:TEMP\filename.json"`
 
 4. **Check `--help` before guessing** subcommand names:
    ```bash
@@ -108,7 +113,64 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 ## Admin API Examples
 
-Admin commands manage people, organizations, licenses, roles, and other administrative resources:
+The CLI includes a built-in MCP server exposing four tools:
+
+| Tool | API methods | When to use |
+|---|---|---|
+| `webex_read` | GET | List, get, download, export — auto-approvable |
+| `webex_write` | POST / PUT / PATCH / DELETE | Create, update, delete — prompts for confirmation |
+| `webex_help` | — | Discover commands and flags |
+| `webex_usage` | — | View recent MCP command history |
+
+**Claude Code / stdio clients** — no server process needed:
+```bash
+claude mcp add webex -- webex mcp serve
+```
+
+**Claude Desktop / HTTP clients** — start the server first, then point the config at it:
+```bash
+# Start server (loopback only, port 47890)
+webex mcp serve --http
+```
+Add to your Claude Desktop config file, then restart Claude Desktop:
+
+| Platform | Config path |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+```json
+{
+  "mcpServers": {
+    "webex": { "url": "http://localhost:47890/mcp" }
+  }
+}
+```
+Use `--http-addr 127.0.0.1:<port>` to change the port.
+Only loopback addresses (127.x.x.x / ::1) are accepted — the server cannot bind to public interfaces.
+
+## Sub-Skills
+
+For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area.
+
+Sub-skills are installed alongside this file. Resolve the base path for your platform:
+
+| Platform | Skills base path |
+|---|---|
+| macOS / Linux | `~/.claude/skills/webex-cli/` |
+| Windows | `%USERPROFILE%\.claude\skills\webex-cli\` |
+
+| Area | Sub-path |
+|---|---|
+| Admin | `admin/SKILL.md` |
+| Calling | `calling/SKILL.md` |
+| Contact Center | `cc/SKILL.md` |
+| Devices | `device/SKILL.md` |
+| Meetings | `meetings/SKILL.md` |
+| Messaging | `messaging/SKILL.md` |
+
+## Quick Reference
 
 ```bash
 # List people in the org
@@ -386,8 +448,8 @@ webex admin people list --output=table
 # Raw JSON (no formatting)
 webex admin people list --output=raw
 
-# Save to file for processing
-webex admin people list > /tmp/people.json
+# Save to file for processing (Mac/Linux/WSL)
+webex admin people list > "${TMPDIR:-/tmp}/people.json"
 ```
 
 ## Converged Recordings: Admin vs Non-Admin Endpoints
