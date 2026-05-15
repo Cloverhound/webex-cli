@@ -28,6 +28,7 @@ func init() {
 	{ // dial
 		var destination string
 		var endpointId string
+		var singleNumberReachPhoneNumber string
 		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
@@ -46,6 +47,7 @@ func init() {
 				} else {
 					req.BodyString("destination", destination)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("singleNumberReachPhoneNumber", singleNumberReachPhoneNumber)
 					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
@@ -57,6 +59,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&singleNumberReachPhoneNumber, "single-number-reach-phone-number", "", "")
 		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
@@ -440,6 +443,7 @@ func init() {
 	{ // get
 		var destination string
 		var endpointId string
+		var singleNumberReachPhoneNumber string
 		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
@@ -458,6 +462,7 @@ func init() {
 				} else {
 					req.BodyString("destination", destination)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("singleNumberReachPhoneNumber", singleNumberReachPhoneNumber)
 					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
@@ -469,6 +474,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&destination, "destination", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&singleNumberReachPhoneNumber, "single-number-reach-phone-number", "", "")
 		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
@@ -691,6 +697,7 @@ func init() {
 	{ // pickup
 		var target string
 		var endpointId string
+		var singleNumberReachPhoneNumber string
 		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
@@ -709,6 +716,7 @@ func init() {
 				} else {
 					req.BodyString("target", target)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("singleNumberReachPhoneNumber", singleNumberReachPhoneNumber)
 					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
@@ -720,6 +728,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&target, "target", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&singleNumberReachPhoneNumber, "single-number-reach-phone-number", "", "")
 		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
@@ -729,6 +738,7 @@ func init() {
 	{ // barge
 		var target string
 		var endpointId string
+		var singleNumberReachPhoneNumber string
 		var lineOwnerId string
 		var bodyRaw string
 		var bodyFile string
@@ -747,6 +757,7 @@ func init() {
 				} else {
 					req.BodyString("target", target)
 					req.BodyString("endpointId", endpointId)
+					req.BodyString("singleNumberReachPhoneNumber", singleNumberReachPhoneNumber)
 					req.BodyString("lineOwnerId", lineOwnerId)
 				}
 				resp, statusCode, err := req.Do()
@@ -758,6 +769,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&target, "target", "", "")
 		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&singleNumberReachPhoneNumber, "single-number-reach-phone-number", "", "")
 		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")

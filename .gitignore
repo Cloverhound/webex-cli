@@ -3,6 +3,8 @@ webex
 webex-cli
 *.exe
 dist/
+webex-mcp.dxt
+webex.skill
 
 # Codegen intermediates
 codegen/api_outline.json
@@ -24,3 +26,4 @@ Thumbs.db
 *.swp
 *.swo
 /docs/wxcc-search
+.webex-cli/

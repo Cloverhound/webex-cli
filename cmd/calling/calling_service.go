@@ -28,12 +28,14 @@ func init() {
 	cmd.CallingCmd.AddCommand(callingServiceCmd)
 
 	{ // list-announcement-languages
+		var ttsLanguage string
 		cmd := &cobra.Command{
 			Use:   "list-announcement-languages",
 			Short: "Read the List of Announcement Languages",
 			Long:  "List all languages supported by Webex Calling for announcements and voice prompts.\n\nRetrieving announcement languages requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcementLanguages")
+				req.QueryParam("ttsLanguage", ttsLanguage)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -48,6 +50,7 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
+		cmd.Flags().StringVar(&ttsLanguage, "tts-language", "", "Filter languages by TTS support.")
 		callingServiceCmd.AddCommand(cmd)
 	}
 

@@ -27,12 +27,12 @@ webex login
 # Webex Calling
 webex calling people list --max 10
 webex calling locations list
-webex calling call-queue list
+webex calling call-queue list-cxe
 
 # Contact Center
 webex cc site list
 webex cc team list
-webex cc agents list
+webex cc contact-service-queue list
 webex cc entry-point list
 
 # Admin
@@ -91,11 +91,11 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ### Calling (`webex calling`)
 
-45 resource groups including auto-attendants, call queues, hunt groups, call controls, call routing (dial plans, route groups, trunks), DECT devices, emergency services, locations, numbers, paging groups, people, workspaces, voicemail, recordings, and more.
+47 resource groups including auto-attendants, call queues (CxE), hunt groups, call controls, call routing (dial plans, route groups, trunks), DECT devices, emergency services, locations, numbers, paging groups, people, workspaces, voicemail, converged recordings, and more.
 
 ### Contact Center (`webex cc`)
 
-54 resource groups including agents, queues, entry points, flows, skills, desktop layouts, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
+54 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
 
 ### Admin (`webex admin`)
 
@@ -103,11 +103,11 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ### Devices (`webex device`)
 
-9 resource groups including devices, device configurations, workspaces, workspace locations/metrics/personalization, hot-desking, and xAPI (execute commands, query status).
+10 resource groups including devices, device configurations, workspaces, workspace locations/metrics/personalization, hot-desking, and xAPI (execute commands, query status).
 
 ### Meetings (`webex meetings`)
 
-22 resource groups including meetings, participants, recordings, transcripts, summaries, polls, Q&A, chats, invitees, preferences, session types, tracking codes, video mesh, and more.
+23 resource groups including meetings, participants, recordings, transcripts, summaries, polls, Q&A, chats, invitees, preferences, session types, tracking codes, video mesh, and more.
 
 ### Messaging (`webex messaging`)
 
@@ -166,7 +166,7 @@ Control output with `--output`:
 
 ```bash
 webex calling people list --output table
-webex cc agents list --output csv > agents.csv
+webex cc users list --output csv > users.csv
 ```
 
 ## Global Flags
@@ -192,11 +192,87 @@ webex config get client-id               # View current value
 
 Config is stored in `~/.webex-cli/config.json`.
 
+## MCP Server
+
+> **Claude Desktop users:** see [CLAUDE_DESKTOP.md](CLAUDE_DESKTOP.md) for installation, DXT extension setup, and skill configuration specific to Claude Desktop.
+
+
+`webex mcp serve` starts a [Model Context Protocol](https://modelcontextprotocol.io/) server over stdio, letting AI clients query and manage your Webex environment directly.
+
+```bash
+# Register with Claude Code
+claude mcp add webex -- webex mcp serve
+
+# Or register with a specific binary path
+claude mcp add webex -- /path/to/webex mcp serve
+```
+
+The server exposes 4 tools:
+
+| Tool | API methods | Description |
+|---|---|---|
+| `webex_read` | GET | Execute a read-only CLI command (list, get, download, export, search) |
+| `webex_write` | POST / PUT / PATCH / DELETE | Execute a command that creates, updates, or deletes a resource |
+| `webex_help` | — | Get help text for any command or command group |
+| `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
+
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation.
+
+And 2 MCP resources:
+
+| Resource | Description |
+|---|---|
+| `webex://commands` | JSON array of all available CLI commands with short descriptions |
+| `webex://usage` | Last 50 raw lines of the usage log |
+
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_run` — the command tree expands automatically as new commands are added.
+
+Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
+
+### Usage Log
+
+All `webex_run` invocations are logged to `~/.webex-mcp/usage.log` (JSONL). Configure with serve flags:
+
+```bash
+webex mcp serve --log-path /tmp/webex.log --log-max-size 10485760 --log-max-files 5
+```
+
+| Flag | Default | Description |
+|---|---|---|
+| `--log-path` | `~/.webex-mcp/usage.log` | Log file path |
+| `--log-max-size` | `5242880` (5 MB) | Max file size before rotation |
+| `--log-max-files` | `3` | Number of rotated files to keep |
+
+### Team Distribution via Claude Admin Portal
+
+Package the extension once and upload it to the Claude admin console — Claude Desktop installs it automatically for all team members. Each user's local `webex` installation and credentials are used; no shared server is needed.
+
+```bash
+make extension   # produces webex-mcp.dxt
+```
+
+1. Upload `webex-mcp.dxt` to the Claude admin portal under **Extensions**
+2. Enable it for your team or org
+3. Team members must have `webex` installed and authenticated (`webex login`)
+
+Alternatively, team members can install the extension locally by double-clicking `webex-mcp.dxt` in Finder.
+
 ## Coding Agent Skill
 
-A skill file is included in `skill/SKILL.md` that enables AI coding agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) to query and manage your Webex environment.
+A set of skill files in `skill/` enables AI coding agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) to use the CLI via natural language. The root skill (`skill/SKILL.md`) covers auth, command structure, and global flags. Six per-area sub-skills provide comprehensive flag and body-schema documentation for each CLI area:
 
-The installer and `webex post-install` command will offer to install the skill automatically. Skills are also kept up to date when you run `webex update`.
+| Area | Sub-skill |
+|---|---|
+| Admin | `skill/admin/SKILL.md` |
+| Calling | `skill/calling/SKILL.md` |
+| Contact Center | `skill/cc/SKILL.md` |
+| Devices | `skill/device/SKILL.md` |
+| Meetings | `skill/meetings/SKILL.md` |
+| Messaging | `skill/messaging/SKILL.md` |
+
+Each sub-skill also contains an auto-generated **Command Reference** section (updated by `make codegen`) that lists every command and its flags, keeping documentation in sync with the API as Postman collections change.
+
+`webex post-install` offers to install all skill files automatically. They are also updated by `webex update`.
 
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
@@ -204,7 +280,7 @@ See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual 
 
 See [CLAUDE.md](CLAUDE.md) for project structure and development workflow.
 
-Commands in `cmd/calling/` and `cmd/cc/` are **generated** from Postman collections — do not edit by hand. See the [code generation pipeline](CLAUDE.md#code-generation-pipeline) for details.
+Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](CLAUDE.md#code-generation-pipeline) for details.
 
 ## License
 

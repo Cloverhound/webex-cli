@@ -75,7 +75,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create a Hunt Group",
-			Long:  "Create new Hunt Groups for the given location.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nCreating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Create new Hunt Groups for the given location.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nCreating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/huntGroups")
 				req.PathParam("locationId", locationId)
@@ -137,7 +137,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get Details for a Hunt Group",
-			Long:  "Retrieve Hunt Group details.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nRetrieving hunt group details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve Hunt Group details.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nRetrieving hunt group details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
 				req.PathParam("locationId", locationId)
@@ -174,7 +174,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update a Hunt Group",
-			Long:  "Update the designated Hunt Group.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nUpdating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Update the designated Hunt Group.\n\nHunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.\n\nUpdating a hunt group requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
 				req.PathParam("locationId", locationId)
@@ -569,7 +569,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "switch-mode-call-forward",
 			Short: "Switch Mode for Call Forwarding Settings for a Hunt Group",
-			Long:  "Switches the current operating mode of the `Hunt Group` to the mode as per normal operations.\n\nSwitching operating mode for a `hunt group` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			Long:  "Switches the current operating mode of the `Hunt Group` to the mode as per normal operations.\n\nOperating modes allow call forwarding to be configured based on predefined schedules, enabling different routing behaviors during business hours, after hours, or holidays.\n\nSwitching operating mode for a `hunt group` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/actions/switchMode/invoke")
 				req.PathParam("locationId", locationId)

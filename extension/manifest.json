@@ -1,0 +1,47 @@
+{
+  "manifest_version": "0.3",
+  "name": "webex-mcp",
+  "display_name": "Webex",
+  "version": "2.2.0",
+  "description": "Query and manage Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging via natural language.",
+  "long_description": "Requires the Webex CLI to be installed and authenticated (webex login). Install via: curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh",
+  "author": {
+    "name": "Cloverhound"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cloverhound/webex-cli"
+  },
+  "icon": "icon.png",
+  "license": "MIT",
+  "server": {
+    "type": "binary",
+    "entry_point": "webex",
+    "mcp_config": {
+      "command": "webex",
+      "args": ["mcp", "serve"]
+    }
+  },
+  "tools": [
+    {
+      "name": "webex_read",
+      "description": "Execute a read-only Webex CLI command (list, get, download, export) — maps to GET API calls"
+    },
+    {
+      "name": "webex_write",
+      "description": "Execute a Webex CLI command that creates, updates, or deletes a resource — maps to POST/PUT/PATCH/DELETE"
+    },
+    {
+      "name": "webex_help",
+      "description": "Get help text for any Webex CLI command or command group"
+    },
+    {
+      "name": "webex_usage",
+      "description": "Query recent MCP command history"
+    }
+  ],
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "linux", "win32"]
+  }
+}

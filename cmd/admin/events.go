@@ -34,6 +34,7 @@ func init() {
 		var from string
 		var to string
 		var max string
+		var serviceType string
 		var last string
 		cmd := &cobra.Command{
 			Use:   "list",
@@ -56,6 +57,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("max", max)
+				req.QueryParam("serviceType", serviceType)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
@@ -76,6 +78,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 		cmd.Flags().StringVar(&from, "from", "", "List events which occurred after a specific date and time.")
 		cmd.Flags().StringVar(&to, "to", "", "List events that occurred before a specific date and time. If not specified, events up to the present time will be listed. Cannot be set to a future date relative to the current time.")
 		cmd.Flags().StringVar(&max, "max", "", "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.")
+		cmd.Flags().StringVar(&serviceType, "service-type", "", "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.")
 		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		eventsCmd.AddCommand(cmd)
 	}

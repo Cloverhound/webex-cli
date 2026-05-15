@@ -4,6 +4,7 @@ package calling
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
@@ -17,6 +18,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = strconv.Itoa
 var _ = strings.Join
 
 var locationCallCmd = &cobra.Command{
@@ -380,6 +382,7 @@ Searching and viewing locations in your organization requires an administrator a
 		var orgId string
 		var selected string
 		var locationMemberId string
+		var elinExpiryTimeMinutes int64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -399,6 +402,7 @@ Searching and viewing locations in your organization requires an administrator a
 				} else {
 					req.BodyString("selected", selected)
 					req.BodyString("locationMemberId", locationMemberId)
+					req.BodyInt("elinExpiryTimeMinutes", elinExpiryTimeMinutes, cmd.Flags().Changed("elin-expiry-time-minutes"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -412,6 +416,7 @@ Searching and viewing locations in your organization requires an administrator a
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Update location attributes for this organization.")
 		cmd.Flags().StringVar(&selected, "selected", "", "")
 		cmd.Flags().StringVar(&locationMemberId, "location-member-id", "", "")
+		cmd.Flags().Int64Var(&elinExpiryTimeMinutes, "elin-expiry-time-minutes", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		locationCallCmd.AddCommand(cmd)

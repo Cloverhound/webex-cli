@@ -103,7 +103,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-voiceportal",
 			Short: "Get VoicePortal",
-			Long:  "Retrieve Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant announcements.\n\nRetrieving voice portal information for an organization requires a full read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant announcements.\n\nRetrieving voice portal information for an organization requires a full read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicePortal")
 				req.PathParam("locationId", locationId)
@@ -136,7 +136,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-voiceportal",
 			Short: "Update VoicePortal",
-			Long:  "Update Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant anouncements.\n\nUpdating voice portal information for an organization and/or rules requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Update Voice portal information for the location.\n\nVoice portals provide an interactive voice response (IVR)\nsystem so administrators can manage auto attendant anouncements.\n\nUpdating voice portal information for an organization and/or rules requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/voicePortal")
 				req.PathParam("locationId", locationId)
@@ -243,7 +243,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-group",
 			Short: "Get Location Voicemail Group",
-			Long:  "Retrieve voicemail group details for a location.\n\nManage your voicemail group settings for a specific location, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nRetrieving voicemail group details requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve voicemail group details for a location.\n\nManage your voicemail group settings for a specific location, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nRetrieving voicemail group details requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}")
 				req.PathParam("locationId", locationId)
@@ -280,7 +280,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-group",
 			Short: "Modify Location Voicemail Group",
-			Long:  "Modifies the voicemail group location details for a particular location for a customer.\n\nManage your voicemail settings, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nModifying the voicemail group location details requires a full, user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Modifies the voicemail group location details for a particular location for a customer.\n\nManage your voicemail settings, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.\n\nModifying the voicemail group location details requires a full, user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}")
 				req.PathParam("locationId", locationId)
@@ -346,7 +346,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create-group",
 			Short: "Create a new Voicemail Group for a Location",
-			Long:  "Create a new voicemail group for the given location for a customer.\n\nA voicemail group can be created for given location for a customer.\n\nCreating a voicemail group for the given location requires a full or user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Create a new voicemail group for the given location for a customer.\n\nA voicemail group can be created for given location for a customer.\n\nCreating a voicemail group for the given location requires a full or user administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/voicemailGroups")
 				req.PathParam("locationId", locationId)

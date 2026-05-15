@@ -249,4 +249,62 @@ To obtain the Cluster ID needed for this API, use the [Get organization details 
 		hdsCmd.AddCommand(cmd)
 	}
 
+	{ // get-database-org-2
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "get-database-org-2",
+			Short: "Get database details for the HDS organization",
+			Long: `Retrieve details of database information for an HDS organization, such as database type and version used.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/database")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-multi-tenant-org-2
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "get-multi-tenant-org-2",
+			Short: "Get Multi-Tenant HDS organization details",
+			Long: `Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/tenants")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
 }

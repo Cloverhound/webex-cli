@@ -171,7 +171,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-caller-id",
 			Short: "Read Caller ID Settings for a Workspace",
-			Long:  "Retrieve a workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Retrieve a workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/features/callerId")
 				req.PathParam("workspaceId", workspaceId)
@@ -204,7 +204,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-caller-id",
 			Short: "Configure Caller ID Settings for a Workspace",
-			Long:  "Configure workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Configure workspace's Caller ID settings.\n\nCaller ID settings control how a workspace's information is displayed when making outgoing calls.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to update workspace settings.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/workspaces/{workspaceId}/features/callerId")
 				req.PathParam("workspaceId", workspaceId)

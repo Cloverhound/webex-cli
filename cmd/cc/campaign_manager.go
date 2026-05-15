@@ -35,7 +35,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "start-request",
 			Short: "Start Campaign Request",
-			Long:  `A start campaign API allows businesses to programmatically start outbound campaigns using their own software applications. This type of API typically allows businesses to set up the parameters for a campaign, such as the list of phone numbers to call, the message or script to deliver, and the time of day or day of the week to call. Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization`,
+			Long:  `A start campaign API allows businesses to programmatically start outbound campaigns using their own software applications. This type of API typically allows businesses to set up the parameters for a campaign, such as the list of phone numbers to call, the message or script to deliver, and the time of day or day of the week to call. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/dialer/campaign")
 				if bodyFile != "" {
@@ -75,7 +75,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-request",
 			Short: "Update Campaign Request",
-			Long:  `By using an update campaign API, businesses can automate the process of modifying and managing outbound campaigns, and integrate campaign updates into their existing workflows or applications. This can help to improve efficiency and reduce errors, as well as allow for greater flexibility and control over outbound campaigns.  Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization.`,
+			Long:  `By using an update campaign API, businesses can automate the process of modifying and managing outbound campaigns, and integrate campaign updates into their existing workflows or applications. This can help to improve efficiency and reduce errors, as well as allow for greater flexibility and control over outbound campaigns. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/v1/dialer/campaign/{campaignId}")
 				req.PathParam("campaignId", campaignId)
@@ -128,7 +128,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "stop-request",
 			Short: "Stop Campaign Request",
-			Long:  `The stop campaign API enables businesses to automate the process of managing outbound campaigns and integrate campaign deletion into their existing workflows or applications. Requires one of the following scopes 'cjp:user' or 'cjp.config_write' for authorization.`,
+			Long:  `The stop campaign API enables businesses to automate the process of managing outbound campaigns and integrate campaign deletion into their existing workflows or applications. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/dialer/campaign/{campaignId}")
 				req.PathParam("campaignId", campaignId)

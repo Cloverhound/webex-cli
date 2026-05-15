@@ -252,4 +252,130 @@ func init() {
 		announcementRepositoryCmd.AddCommand(cmd)
 	}
 
+	{ // generate-text-to-speech-prompt
+		var orgId string
+		var voice string
+		var text string
+		var languageCode string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "generate-text-to-speech-prompt",
+			Short: "Generate a Text-to-Speech Prompt",
+			Long:  "Generate a text-to-speech prompt from the provided text, voice, and language.\n\nText-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file, eliminating the need for manual recording.\n\nThis API requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/textToSpeech/actions/generate/invoke")
+				req.QueryParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("voice", voice)
+					req.BodyString("text", text)
+					req.BodyString("languageCode", languageCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Generate text-to-speech for this organization.")
+		cmd.Flags().StringVar(&voice, "voice", "", "")
+		cmd.Flags().StringVar(&text, "text", "", "")
+		cmd.Flags().StringVar(&languageCode, "language-code", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-text-to-speech-usage
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-text-to-speech-usage",
+			Short: "Get Text-to-Speech Usage",
+			Long:  "Retrieve text-to-speech usage information, including the number of API calls made, the maximum allowed within the time window, and the timestamp indicating when the usage will reset.\n\nText-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file, eliminating the need for manual recording.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/textToSpeech/usage")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get text-to-speech usage for this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // get-text-to-speech-generation-status
+		var ttsId string
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "get-text-to-speech-generation-status",
+			Short: "Get Text-to-Speech Generation Status",
+			Long:  "Get the status of a text-to-speech generation request by its ID. If the status is SUCCESS, the response includes `promptUrl`, `kmsKeyUri`, and `fileUri` to preview or use the audio prompt.\n\nTo preview the audio prompt:\n\n1. Download the KMS key - use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.\n\n2. Download the encrypted audio - The encrypted audio file content is stored in cloud and can be retrieved using `promptURL`.\n\n3. Decrypt the audio content - Use the jose library to decrypt the content downloaded from `promptUrl` using the downloaded key.\n\nText-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file, eliminating the need for manual recording.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/textToSpeech/{ttsId}")
+				req.PathParam("ttsId", ttsId)
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&ttsId, "tts-id", "", "Unique identifier of the text-to-speech generation request.")
+		cmd.MarkFlagRequired("tts-id")
+		cmd.Flags().StringVar(&orgId, "org-id", "", "Get text-to-speech status for this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
+	{ // list-text-to-speech-voices
+		var orgId string
+		cmd := &cobra.Command{
+			Use:   "list-text-to-speech-voices",
+			Short: "List Text-to-Speech Voices",
+			Long:  "Fetch a list of available text-to-speech voices. Use the returned voice ID in the generation request.\n\nText-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file, eliminating the need for manual recording.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/textToSpeech/voices")
+				req.QueryParam("orgId", orgId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "List text-to-speech voices supported for this organization.")
+		announcementRepositoryCmd.AddCommand(cmd)
+	}
+
 }

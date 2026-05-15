@@ -1,0 +1,16 @@
+{
+  "_readme": "Choose ONE mcpServers entry and merge it into your Claude config file.",
+  "mcpServers": {
+    "webex-stdio": {
+      "_note": "Claude Code / apps that support stdio transport. No server process needed.",
+      "command": "webex",
+      "args": ["mcp", "serve"],
+      "alwaysAllow": ["webex_read", "webex_help", "webex_usage"]
+    },
+    "webex-http": {
+      "_note": "Claude Desktop / apps that require HTTP transport. First run: webex mcp serve --http",
+      "url": "http://localhost:47890/mcp",
+      "alwaysAllow": ["webex_read", "webex_help", "webex_usage"]
+    }
+  }
+}

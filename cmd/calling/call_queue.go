@@ -27,7 +27,7 @@ var callQueueCmd = &cobra.Command{
 func init() {
 	cmd.CallingCmd.AddCommand(callQueueCmd)
 
-	{ // list-cxe
+	{ // list-customer-assist
 		var orgId string
 		var locationId string
 		var max string
@@ -38,8 +38,8 @@ func init() {
 		var departmentName string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "list-cxe",
-			Short: "Read the List of Call Queues with Customer Experience Essentials",
+			Use:   "list-customer-assist",
+			Short: "Read the List of Call Queues with Customer Assist",
 			Long:  "List all Call Queues for the organization.\n\nCall queues temporarily hold calls in the cloud, when all agents\nassigned to receive calls from the queue are unavailable. Queued calls are routed to \nan available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone\nnumber that external callers can dial to reach the users assigned to the call queue.\nCall queues are also assigned an internal extension, which can be dialed\ninternally to reach the users assigned to the call queue.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/queues")
@@ -74,20 +74,20 @@ func init() {
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Returns only the call queues matching the given primary phone number or extension.")
 		cmd.Flags().StringVar(&departmentId, "department-id", "", "Returns only call queues matching the given department ID.")
 		cmd.Flags().StringVar(&departmentName, "department-name", "", "Returns only call queues matching the given department name.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of call queues with Customer Experience Essentials license when `true`, otherwise returns the list of Customer Experience Basic call queues.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of call queues with Customer Assist license when `true`, otherwise returns the list of Customer Experience Basic call queues.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // create-cxe
+	{ // create-customer-assist
 		var locationId string
 		var orgId string
 		var hasCxEssentials string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-cxe",
-			Short: "Create a Call Queue with Customer Experience Essentials",
-			Long:  "Create new Call Queues for the given location.\n\nCall queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are unavailable.\nQueued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone\nnumber that external callers can dial to reach the users assigned to the call queue. Call queues are also assigned an internal extension,\nwhich can be dialed internally to reach the users assigned to the call queue.\n\nCreating a call queue requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Use:   "create-customer-assist",
+			Short: "Create a Call Queue with Customer Assist",
+			Long:  "Create new Call Queues for the given location.\n\nCall queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are unavailable.\nQueued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone\nnumber that external callers can dial to reach the users assigned to the call queue. Call queues are also assigned an internal extension,\nwhich can be dialed internally to reach the users assigned to the call queue.\n\nCreating a call queue requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/queues")
 				req.PathParam("locationId", locationId)
@@ -110,7 +110,7 @@ func init() {
 		cmd.Flags().StringVar(&locationId, "location-id", "", "The location ID where the call queue needs to be created.")
 		cmd.MarkFlagRequired("location-id")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID where the call queue needs to be created.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Creates a Customer Experience Essentials call queue, when `true`. This requires Customer Experience Essentials licensed agents.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Creates a Customer Assist call queue, when `true`. This requires Customer Assist licensed agents.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		callQueueCmd.AddCommand(cmd)
@@ -144,15 +144,15 @@ func init() {
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // get-cxe
+	{ // get-customer-assist
 		var locationId string
 		var queueId string
 		var orgId string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "get-cxe",
-			Short: "Get Details for a Call Queue with Customer Experience Essentials",
-			Long:  "Retrieve Call Queue details.\n\nCall queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are unavailable.\nQueued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone\nnumber that external callers can dial to reach the users assigned to the call queue. Call queues are also assigned an internal extension,\nwhich can be dialed internally to reach the users assigned to the call queue.\n\nRetrieving call queue details requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Use:   "get-customer-assist",
+			Short: "Get Details for a Call Queue with Customer Assist",
+			Long:  "Retrieve Call Queue details.\n\nCall queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are unavailable.\nQueued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone\nnumber that external callers can dial to reach the users assigned to the call queue. Call queues are also assigned an internal extension,\nwhich can be dialed internally to reach the users assigned to the call queue.\n\nRetrieving call queue details requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/queues/{queueId}")
 				req.PathParam("locationId", locationId)
@@ -178,7 +178,7 @@ func init() {
 		cmd.Flags().StringVar(&queueId, "queue-id", "", "Retrieves the details of call queue with this identifier.")
 		cmd.MarkFlagRequired("queue-id")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieves the details of a call queue in this organization.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true`, to view the details of a call queue with Customer Experience Essentials license. This can otherwise be ommited or set to `false`.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true`, to view the details of a call queue with Customer Assist license. This can otherwise be ommited or set to `false`.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
@@ -191,7 +191,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update a Call Queue",
-			Long:  "Update the designated Call Queue.\n\nCall queues temporarily hold calls in the cloud when all agents, which\ncan be users or agents, assigned to receive calls from the queue are\nunavailable. Queued calls are routed to an available agent when not on an\nactive call. Each call queue is assigned a Lead Number, which is a telephone\nnumber outside callers can dial to reach users assigned to the call queue.\nCall queues are also assigned an internal extension, which can be dialed\ninternally to reach users assigned to the call queue.\n\nUpdating a call queue requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type=\"warning\">The fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name settings.</Callout></div>",
+			Long:  "Update the designated Call Queue.\n\nCall queues temporarily hold calls in the cloud when all agents, which\ncan be users or agents, assigned to receive calls from the queue are\nunavailable. Queued calls are routed to an available agent when not on an\nactive call. Each call queue is assigned a Lead Number, which is a telephone\nnumber outside callers can dial to reach users assigned to the call queue.\nCall queues are also assigned an internal extension, which can be dialed\ninternally to reach users assigned to the call queue.\n\nUpdating a call queue requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/queues/{queueId}")
 				req.PathParam("locationId", locationId)
@@ -706,7 +706,7 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "update-forced-forward-service",
-			Short: "Update a Call Queue Forced Forward service",
+			Short: "Update a Call Queue Forced Forward Service",
 			Long:  "Update the designated Forced Forward Service.\n\nIf the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls that are already in the queue remain queued.\nThe policy can be configured to play an announcement prior to proceeding with the forward.\n\nUpdating a call queue Forced Forward service requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward")
@@ -780,7 +780,7 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "update-stranded-service",
-			Short: "Update a Call Queue Stranded Calls service",
+			Short: "Update a Call Queue Stranded Calls Service",
 			Long:  "Update the designated Call Stranded Calls Service.\n\nAllow admin to modify configured Stranded Calls settings.\n\nUpdating a call queue stranded calls requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls")
@@ -985,7 +985,7 @@ func init() {
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-supervisors-cxe
+	{ // list-supervisors-customer-assist
 		var orgId string
 		var max string
 		var start string
@@ -994,8 +994,8 @@ func init() {
 		var order string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "list-supervisors-cxe",
-			Short: "Get List of Supervisors with Customer Experience Essentials",
+			Use:   "list-supervisors-customer-assist",
+			Short: "Get List of Supervisors with Customer Assist",
 			Long:  "Get list of supervisors for an organization.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nRequires a full, location, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supervisors")
@@ -1026,18 +1026,18 @@ func init() {
 		cmd.Flags().StringVar(&name, "name", "", "Only return the supervisors that match the given name.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Only return the supervisors that match the given phone number, extension, or ESN.")
 		cmd.Flags().StringVar(&order, "order", "", "Sort results alphabetically by supervisor name, in ascending or descending order.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of supervisors with Customer Experience Essentials license, when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of supervisors with Customer Assist license, when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // create-supervisor-cxe
+	{ // create-supervisor-customer-assist
 		var orgId string
 		var hasCxEssentials string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-supervisor-cxe",
-			Short: "Create a Supervisor with Customer Experience Essentials",
+			Use:   "create-supervisor-customer-assist",
+			Short: "Create a Supervisor with Customer Assist",
 			Long:  "Create a new supervisor. The supervisor must be created with at least one agent.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nThis operation requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/supervisors")
@@ -1058,7 +1058,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&orgId, "org-id", "", "The organization ID where the supervisor needs to be created.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Creates a Customer Experience Essentials queue supervisor, when `true`. Customer Experience Essentials queue supervisors must have a Customer Experience Essentials license.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Creates a Customer Assist queue supervisor, when `true`. Customer Assist queue supervisors must have a Customer Assist license.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		callQueueCmd.AddCommand(cmd)
@@ -1072,7 +1072,7 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "delete-bulk-supervisors",
-			Short: "Delete Bulk supervisors",
+			Short: "Delete Bulk Supervisors",
 			Long:  "Deletes supervisors in bulk from an organization.\n\nSupervisors are users who manage agents and who perform functions including monitoring, coaching, and more.\n\nRequires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/supervisors")
@@ -1107,7 +1107,7 @@ func init() {
 		var orgId string
 		cmd := &cobra.Command{
 			Use:   "delete-supervisor",
-			Short: "Delete A Supervisor",
+			Short: "Delete a Supervisor",
 			Long:  "Deletes the supervisor from an organization.\n\nSupervisors are users who manage agents and who perform functions including monitoring, coaching, and more.\n\nRequires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/telephony/config/supervisors/{supervisorId}")
@@ -1126,7 +1126,7 @@ func init() {
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // supervisor-detail-cxe
+	{ // get-supervisor-detail-customer-assist
 		var supervisorId string
 		var orgId string
 		var max string
@@ -1136,8 +1136,8 @@ func init() {
 		var order string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "supervisor-detail-cxe",
-			Short: "GET Supervisor Detail with Customer Experience Essentials",
+			Use:   "get-supervisor-detail-customer-assist",
+			Short: "Get Supervisor Detail with Customer Assist",
 			Long:  "Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an organization.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nThis operation requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supervisors/{supervisorId}")
@@ -1171,19 +1171,19 @@ func init() {
 		cmd.Flags().StringVar(&name, "name", "", "Only return the agents that match the given name.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Only return agents that match the given phone number, extension, or ESN.")
 		cmd.Flags().StringVar(&order, "order", "", "Sort results alphabetically by supervisor name, in ascending or descending order.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true`, to view the details of a supervisor with Customer Experience Essentials license. This can otherwise be ommited or set to `false`.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true`, to view the details of a supervisor with Customer Assist license. This can otherwise be ommited or set to `false`.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // assign-unassign-agents-supervisor-cxe
+	{ // assign-unassign-agents-supervisor-customer-assist
 		var supervisorId string
 		var orgId string
 		var hasCxEssentials string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "assign-unassign-agents-supervisor-cxe",
-			Short: "Assign or Unassign Agents to Supervisor with Customer Experience Essentials",
+			Use:   "assign-unassign-agents-supervisor-customer-assist",
+			Short: "Assign or Unassign Agents to Supervisor with Customer Assist",
 			Long:  "Assign or unassign agents to the supervisor for an organization.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nThis operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/supervisors/{supervisorId}")
@@ -1207,13 +1207,13 @@ func init() {
 		cmd.Flags().StringVar(&supervisorId, "supervisor-id", "", "Identifier of the supervisor to be updated.")
 		cmd.MarkFlagRequired("supervisor-id")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Assign or unassign agents to a supervisor in this organization.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to modify a supervisor with Customer Experience Essentials license. This can otherwise be ommited or set to `false`.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to modify a supervisor with Customer Assist license. This can otherwise be ommited or set to `false`.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-available-supervisors-cxe
+	{ // list-available-supervisors-customer-assist
 		var orgId string
 		var max string
 		var start string
@@ -1222,8 +1222,8 @@ func init() {
 		var order string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "list-available-supervisors-cxe",
-			Short: "List Available Supervisors with Customer Experience Essentials",
+			Use:   "list-available-supervisors-customer-assist",
+			Short: "List Available Supervisors with Customer Assist",
 			Long:  "Get list of available supervisors for an organization.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nThis operation requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supervisors/availableSupervisors")
@@ -1254,11 +1254,11 @@ func init() {
 		cmd.Flags().StringVar(&name, "name", "", "Only return the supervisors that match the given name.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Only return the supervisors that match the given phone number, extension, or ESN.")
 		cmd.Flags().StringVar(&order, "order", "", "Sort results alphabetically by supervisor name, in ascending or descending order.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of available supervisors with Customer Experience Essentials license, when `true`. When ommited or set to 'false', will return the list of available supervisors with Customer Experience Basic license.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of available supervisors with Customer Assist license, when `true`. When ommited or set to 'false', will return the list of available supervisors with Customer Experience Basic license.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-available-agents-cxe
+	{ // list-available-agents-customer-assist
 		var orgId string
 		var max string
 		var start string
@@ -1267,8 +1267,8 @@ func init() {
 		var order string
 		var hasCxEssentials string
 		cmd := &cobra.Command{
-			Use:   "list-available-agents-cxe",
-			Short: "List Available Agents with Customer Experience Essentials",
+			Use:   "list-available-agents-customer-assist",
+			Short: "List Available Agents with Customer Assist",
 			Long:  "Get list of available agents for an organization.\n\nAgents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take over calls that their assigned agents are currently handling.\n\nThis operation requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/supervisors/availableAgents")
@@ -1299,11 +1299,11 @@ func init() {
 		cmd.Flags().StringVar(&name, "name", "", "Returns only the agents that match the given name.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Returns only the agents that match the phone number, extension, or ESN.")
 		cmd.Flags().StringVar(&order, "order", "", "Sort results alphabetically by supervisor name, in ascending or descending order.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of available agents with Customer Experience Essentials license, when `true`. When ommited or set to `false`, will return the list of available agents with Customer Experience Basic license.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of available agents with Customer Assist license, when `true`. When ommited or set to `false`, will return the list of available agents with Customer Experience Basic license.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-agents-cxe
+	{ // list-agents-customer-assist
 		var orgId string
 		var locationId string
 		var queueId string
@@ -1315,8 +1315,8 @@ func init() {
 		var hasCxEssentials string
 		var order string
 		cmd := &cobra.Command{
-			Use:   "list-agents-cxe",
-			Short: "Read the List of Call Queue Agents with Customer Experience Essentials",
+			Use:   "list-agents-customer-assist",
+			Short: "Read the List of Call Queue Agents with Customer Assist",
 			Long:  "List all Call Queues Agents for the organization.\n\nAgents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed to agents based on configuration. \nAn agent can be assigned to one or more call queues and can be managed by supervisors.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**Note**: The decoded value of the agent's `id`, and the `type` returned in the response, are always returned as `PEOPLE`, even when the agent is a workspace or virtual line. This will be addressed in a future release.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/queues/agents")
@@ -1352,20 +1352,20 @@ func init() {
 		cmd.Flags().StringVar(&name, "name", "", "Returns only the list of call queue agents that match the given name.")
 		cmd.Flags().StringVar(&phoneNumber, "phone-number", "", "Returns only the list of call queue agents that match the given phone number or extension.")
 		cmd.Flags().StringVar(&joinEnabled, "join-enabled", "", "Returns only the list of call queue agents that match the given `joinEnabled` value.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of call queues with Customer Experience Essentials license when `true`, otherwise returns the list of Customer Experience Basic call queues.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Returns only the list of call queues with Customer Assist license when `true`, otherwise returns the list of Customer Experience Basic call queues.")
 		cmd.Flags().StringVar(&order, "order", "", "Sort results alphabetically by call queue agent's name, in ascending or descending order.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // get-agent-cxe
+	{ // get-agent-customer-assist
 		var id string
 		var orgId string
 		var hasCxEssentials string
 		var max string
 		var start string
 		cmd := &cobra.Command{
-			Use:   "get-agent-cxe",
-			Short: "Get Details for a Call Queue Agent with Customer Experience Essentials",
+			Use:   "get-agent-customer-assist",
+			Short: "Get Details for a Call Queue Agent with Customer Assist",
 			Long:  "Retrieve details of a particular Call queue agent based on the agent ID.\n\nAgents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed to agents based on configuration. \nAn agent can be assigned to one or more call queues and can be managed by supervisors.\n\nRetrieving a call queue agent's details require a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**Note**: The agent's `type` returned in the response and in the decoded value of the agent's `id`, is always of type `PEOPLE`, even if the agent is a workspace or virtual line. This` will be corrected in a future release.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/queues/agents/{id}")
@@ -1391,21 +1391,21 @@ func init() {
 		cmd.Flags().StringVar(&id, "id", "", "Retrieve call queue agents with this identifier.")
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Retrieve call queue agents from this organization.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to view the details of an agent with Customer Experience Essentials license. This can otherwise be ommited or set to `false`.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to view the details of an agent with Customer Assist license. This can otherwise be ommited or set to `false`.")
 		cmd.Flags().StringVar(&max, "max", "", "Limit the number of objects returned to this maximum count.")
 		cmd.Flags().StringVar(&start, "start", "", "Start at the zero-based offset in the list of matching objects.")
 		callQueueCmd.AddCommand(cmd)
 	}
 
-	{ // update-agent-settings-one-more-cxe
+	{ // update-agent-settings-one-more-customer-assist
 		var id string
 		var orgId string
 		var hasCxEssentials string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-agent-settings-one-more-cxe",
-			Short: "Update an Agent's Settings of One or More Call Queues with Customer Experience Essentials",
+			Use:   "update-agent-settings-one-more-customer-assist",
+			Short: "Update an Agent's Settings of One or More Call Queues with Customer Assist",
 			Long:  "Modify an agent's call queue settings for an organization.\n\nCalls from the call queue are routed to agents based on configuration. \nAn agent can be assigned to one or more call queues and can be managed by supervisors.\n\nThis operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/queues/agents/{id}/settings")
@@ -1429,7 +1429,7 @@ func init() {
 		cmd.Flags().StringVar(&id, "id", "", "Identifier of the agent to be updated.")
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&orgId, "org-id", "", "Update the settings of an agent in this organization.")
-		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to modify an agent that has Customer Experience Essentials license. This can otherwise be ommited or set to `false`.")
+		cmd.Flags().StringVar(&hasCxEssentials, "has-cx-essentials", "", "Must be set to `true` to modify an agent that has Customer Assist license. This can otherwise be ommited or set to `false`.")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		callQueueCmd.AddCommand(cmd)
@@ -1444,7 +1444,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "switch-mode-forward",
 			Short: "Switch Mode for Call Forwarding Settings for a Call Queue",
-			Long:  "Switches the current operating mode of the `Call Queue` to the mode as per normal operations.\n\nSwitching operating mode for a `call queue` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			Long:  "Switches the current operating mode of the `Call Queue` to the mode as per normal operations.\n\nOperating modes allow call forwarding to be configured based on predefined schedules, enabling different routing behaviors during business hours, after hours, or holidays.\n\nSwitching operating mode for a `call queue` requires a full, or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/actions/switchMode/invoke")
 				req.PathParam("locationId", locationId)

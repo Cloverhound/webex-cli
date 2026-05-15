@@ -13683,9 +13683,14 @@
                   "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                   "key": "max",
                   "value": "100"
+                },
+                {
+                  "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                  "key": "serviceType",
+                  "value": "calling"
                 }
               ],
-              "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+              "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
             }
           },
           "response": [
@@ -13736,9 +13741,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Not Found"
@@ -13790,9 +13800,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Gone"
@@ -13844,9 +13859,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Service Unavailable"
@@ -13898,9 +13918,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Gateway Timeout"
@@ -13952,9 +13977,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Locked (WebDAV) (RFC 4918)"
@@ -14006,9 +14036,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Internal Server Error"
@@ -14060,9 +14095,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Precondition Required"
@@ -14133,9 +14173,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "OK"
@@ -14187,9 +14232,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Conflict"
@@ -14241,9 +14291,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Too Many Requests"
@@ -14295,9 +14350,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Method Not Allowed"
@@ -14349,9 +14409,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Bad Gateway"
@@ -14403,9 +14468,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Forbidden"
@@ -14457,9 +14527,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Bad Request"
@@ -14511,9 +14586,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Unsupported Media Type"
@@ -14565,9 +14645,14 @@
                       "description": "Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.",
                       "key": "max",
                       "value": "100"
+                    },
+                    {
+                      "description": "List events for a specific service type. This parameter is only applicable and mandatory when resource is set to `convergedRecordings`.",
+                      "key": "serviceType",
+                      "value": "calling"
                     }
                   ],
-                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100"
+                  "raw": "{{baseUrl}}/events?resource=rooms&type=deleted&actorId=<string>&from=<string>&to=<string>&max=100&serviceType=calling"
                 }
               },
               "status": "Unauthorized"
@@ -34324,7 +34409,7 @@
         {
           "name": "Get all customers managed by a partner admin",
           "request": {
-            "description": "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
+            "description": "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default. This does not include customers managed through Customer Groups.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
             "header": [
               {
                 "key": "Accept",
@@ -34846,7 +34931,7 @@
         {
           "name": "Get all partner admins assigned to a customer",
           "request": {
-            "description": "For a given customer, get all the partner admins with their role details.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
+            "description": "For a given customer, get all the partner admins with their role details. This does not include partner admins who have access through Customer Groups.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
             "header": [
               {
                 "key": "Accept",
@@ -36014,7 +36099,7 @@
         {
           "name": "Unassign partner admin from a customer",
           "request": {
-            "description": "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
+            "description": "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user. If a partner admin is also managing the customer organization through a Customer Group, they will continue to have access.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
             "header": [],
             "method": "DELETE",
             "url": {
@@ -40707,7 +40792,7 @@
         {
           "name": "List People",
           "request": {
-            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
+            "description": "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
             "header": [
               {
                 "key": "Accept",
@@ -74843,7 +74928,7 @@
               },
               "raw": "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"userName\": \"<string>\",\n  \"userType\": \"room\",\n  \"title\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"roles\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    }\n  ],\n  \"preferredLanguage\": \"<string>\",\n  \"locale\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"profileUrl\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"name\": {\n    \"givenName\": \"<string>\",\n    \"familyName\": \"<string>\",\n    \"middleName\": \"<string>\",\n    \"honorificPrefix\": \"<string>\",\n    \"honorificSuffix\": \"<string>\"\n  },\n  \"phoneNumbers\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"other\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"home\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"photos\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"resizable\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"thumbnail\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    }\n  ],\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"home\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"room\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"costCenter\": \"<string>\",\n    \"organization\": \"<string>\",\n    \"division\": \"<string>\",\n    \"department\": \"<string>\",\n    \"employeeNumber\": \"<string>\",\n    \"manager\": {\n      \"value\": \"<string>\"\n    }\n  },\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\": {\n    \"accountStatus\": \"transient\",\n    \"sipAddresses\": [\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      },\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      }\n    ],\n    \"managedOrgs\": [\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"managedGroups\": [\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"extensionAttribute*\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"externalAttribute*\": [\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ]\n  }\n}"
             },
-            "description": "The SCIM 2 /Users API provides a programmatic way to manage users in Webex Identity using The Internet Engineering Task Force standard SCIM 2.0 standard as specified by [RFC 7643 SCIM 2.0 Core Schema ](https://datatracker.ietf.org/doc/html/rfc7643) and [RFC 7644 SCIM 2.0 Core Protocol](https://datatracker.ietf.org/doc/html/rfc7644).  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:\n\n\u2022 urn:ietf:params:scim:schemas:core:2.0:User\n\n\u2022 urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\n\n\u2022 urn:scim:schemas:extension:cisco:webexidentity:2.0:User\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:ietf:params:scim:schemas:core:2.0:User\".\n\n2. Support 3 schemas :\n    - \"urn:ietf:params:scim:schemas:core:2.0:User\"\n    - \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n    - \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\"\n\n3. Unrecognized schemas (ID/section) are ignored.\n\n4. Read-only attributes provided as input values are ignored.",
+            "description": "The SCIM 2 /Users API provides a programmatic way to manage users in Webex Identity using The Internet Engineering Task Force standard SCIM 2.0 standard as specified by [RFC 7643 SCIM 2.0 Core Schema ](https://datatracker.ietf.org/doc/html/rfc7643) and [RFC 7644 SCIM 2.0 Core Protocol](https://datatracker.ietf.org/doc/html/rfc7644).  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:\n\n\u2022 urn:ietf:params:scim:schemas:core:2.0:User\n\n\u2022 urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\n\n\u2022 urn:scim:schemas:extension:cisco:webexidentity:2.0:User\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:ietf:params:scim:schemas:core:2.0:User\".\n\n2. Support 3 schemas :\n    - \"urn:ietf:params:scim:schemas:core:2.0:User\"\n    - \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n    - \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\"\n\n3. Unrecognized schemas (ID/section) are ignored.\n\n4. Read-only attributes provided as input values are ignored.\n\n The following roles cannot be assigned to a user:\n\n1. Location Admin\n\n2. Webex Site Admin",
             "header": [
               {
                 "key": "Content-Type",
@@ -78633,7 +78718,7 @@
               },
               "raw": "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"replace\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"remove\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"
             },
-            "description": "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. The PATCH API replaces individual attributes and roles of the user's data in the request body.\n   The PATCH API supports `add`, `remove`, and `replace` operations on any individual\n   attribute or role allowing only specific attributes of the user's object to be modified.\n\n2. Each operation against an attribute must be compatible with the attribute's mutability.\n\n3. Each PATCH operation represents a single action to be applied to the\n   same SCIM resource specified by the request URI.  Operations are\n   applied sequentially in the order they appear in the array.  Each\n   operation in the sequence is applied to the target resource; the\n   resulting resource becomes the target of the next operation.\n   Evaluation continues until all operations are successfully applied or\n   until an error condition is encountered.\n\n<br/>\n\n**Add operations**:\n\nThe `add` operation adds a new attribute value to an existing resource.\nThe operation must contain a `value` member whose content specifies the value to be added.\nThe value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`.\nThe result of the add operation depends upon the target `path` reference locations:\n\n<br/>\n\n- If omitted, the target location is assumed to be the resource itself.  The `value` parameter contains a set of attributes to be added to the resource.\n\n- If the target location does not exist, the attribute and value are added.\n\n- If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the `value` parameter.\n\n- If the target location specifies a multi-valued attribute, a new value is added to the attribute.\n\n- If the target location specifies a single-valued attribute, the existing value is replaced.\n\n- If the target location specifies an attribute that does not exist (has no value), the attribute is added with the new value.\n\n- If the target location exists, the value is replaced.\n\n- If the target location already contains the value specified, no changes should be made to the resource.\n\n<br/>\n\n**Replace operations**:\n\nThe `replace` operation replaces the value at the target location specified by the `path`.\nThe operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If the `path` parameter is omitted, the target is assumed to be the resource itself.  In this case, the `value` attribute shall contain a list of one or more attributes to be replaced.\n\n- If the target location is a single-value attribute, the value of the attribute is replaced.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are replaced.\n\n- If the target location path specifies an attribute that does not exist, the service provider shall treat the operation as an \"add\".\n\n- If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.  Sub-attributes not specified in the `value` parameters are left unchanged.\n\n- If the target location is a multi-valued attribute and a value selection (\"valuePath\") filter is specified that matches one or more values of the multi-valued attribute, then all matching record values will be replaced.\n\n- If the target location is a complex multi-valued attribute with a value selection filter (\"valuePath\") and a specific sub-attribute (e.g., \"addresses[type eq \"work\"].streetAddress\"), the matching sub-attribute of all matching records is replaced.\n\n- If the target location is a multi-valued attribute for which a value selection filter (\"valuePath\") has been supplied and no record match was made, the service provider will return failure as HTTP status code 400 and a `scimType` error code of \"noTarget\".\n\n<br/>\n\n**Remove operations**:\n\nThe `remove` operation removes the value at the target location specified by the required attribute `path`.  The operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If `path` is unspecified, the operation fails with HTTP status code 400 and a \"scimType\" error code of \"noTarget\".\n\n- If the target location is a single-value attribute, the attribute and its associated value is removed, and the attribute will be considered unassigned.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are removed, and the attribute SHALL be considered unassigned.\n\n- If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the values matched by the filter are removed.  If no other values remain after the removal of the selected values, the multi-valued attribute will be considered unassigned.\n\n- If the target location is a complex multi-valued attribute and a complex filter is specified based on the attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute will be considered unassigned.",
+            "description": "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. The PATCH API replaces individual attributes and roles of the user's data in the request body.\n   The PATCH API supports `add`, `remove`, and `replace` operations on any individual\n   attribute or role allowing only specific attributes of the user's object to be modified.\n\n2. Each operation against an attribute must be compatible with the attribute's mutability.\n\n3. Each PATCH operation represents a single action to be applied to the\n   same SCIM resource specified by the request URI.  Operations are\n   applied sequentially in the order they appear in the array.  Each\n   operation in the sequence is applied to the target resource; the\n   resulting resource becomes the target of the next operation.\n   Evaluation continues until all operations are successfully applied or\n   until an error condition is encountered.\n\n<br/>\n\n**Add operations**:\n\nThe `add` operation adds a new attribute value to an existing resource.\nThe operation must contain a `value` member whose content specifies the value to be added.\nThe value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`.\nThe result of the add operation depends upon the target `path` reference locations:\n\n<br/>\n\n- If omitted, the target location is assumed to be the resource itself.  The `value` parameter contains a set of attributes to be added to the resource.\n\n- If the target location does not exist, the attribute and value are added.\n\n- If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the `value` parameter.\n\n- If the target location specifies a multi-valued attribute, a new value is added to the attribute.\n\n- If the target location specifies a single-valued attribute, the existing value is replaced.\n\n- If the target location specifies an attribute that does not exist (has no value), the attribute is added with the new value.\n\n- If the target location exists, the value is replaced.\n\n- If the target location already contains the value specified, no changes should be made to the resource.\n\n<br/>\n\n**Replace operations**:\n\nThe `replace` operation replaces the value at the target location specified by the `path`.\nThe operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If the `path` parameter is omitted, the target is assumed to be the resource itself.  In this case, the `value` attribute shall contain a list of one or more attributes to be replaced.\n\n- If the target location is a single-value attribute, the value of the attribute is replaced.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are replaced.\n\n- If the target location path specifies an attribute that does not exist, the service provider shall treat the operation as an \"add\".\n\n- If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.  Sub-attributes not specified in the `value` parameters are left unchanged.\n\n- If the target location is a multi-valued attribute and a value selection (\"valuePath\") filter is specified that matches one or more values of the multi-valued attribute, then all matching record values will be replaced.\n\n- If the target location is a complex multi-valued attribute with a value selection filter (\"valuePath\") and a specific sub-attribute (e.g., \"addresses[type eq \"work\"].streetAddress\"), the matching sub-attribute of all matching records is replaced.\n\n- If the target location is a multi-valued attribute for which a value selection filter (\"valuePath\") has been supplied and no record match was made, the service provider will return failure as HTTP status code 400 and a `scimType` error code of \"noTarget\".\n\n<br/>\n\n**Remove operations**:\n\nThe `remove` operation removes the value at the target location specified by the required attribute `path`.  The operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If `path` is unspecified, the operation fails with HTTP status code 400 and a \"scimType\" error code of \"noTarget\".\n\n- If the target location is a single-value attribute, the attribute and its associated value is removed, and the attribute will be considered unassigned.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are removed, and the attribute SHALL be considered unassigned.\n\n- If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the values matched by the filter are removed.  If no other values remain after the removal of the selected values, the multi-valued attribute will be considered unassigned.\n\n- If the target location is a complex multi-valued attribute and a complex filter is specified based on the attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute will be considered unassigned.\n\n The following roles cannot be assigned to a user:\n\n1. Location Admin\n\n2. Webex Site Admin",
             "header": [
               {
                 "key": "Content-Type",

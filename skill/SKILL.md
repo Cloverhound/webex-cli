@@ -94,257 +94,122 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
 
 1. **Always redirect stderr separately** when capturing JSON output:
    ```bash
-   webex cc site list --orgid="$ORG" > /tmp/result.json 2>/tmp/error.log
+   # Mac/Linux/WSL — $TMPDIR is set on macOS; falls back to /tmp on Linux
+   webex cc site list --orgid="$ORG" > "${TMPDIR:-/tmp}/result.json" 2>"${TMPDIR:-/tmp}/error.log"
+   # Windows PowerShell
+   # webex cc site list --orgid="$ORG" > "$env:TEMP\result.json" 2> "$env:TEMP\error.log"
    ```
 
 2. **Use `--orgid=VALUE` syntax** (with `=`) for CC commands to avoid shell quoting issues. Do NOT use `--orgid "$VAR"` with a space — use `--orgid="$VAR"`.
 
 3. **Write output to temp files first**, then read/analyze. Do NOT pipe webex output directly into python or jq in a single shell command — complex pipes can cause issues with the binary output.
+   - Mac/Linux/WSL: use `"${TMPDIR:-/tmp}/filename.json"`
+   - Windows PowerShell: use `"$env:TEMP\filename.json"`
 
 4. **Check `--help` before guessing** subcommand names:
    ```bash
    webex <api> <resource> --help
    ```
 
-## Admin API Examples
+## Using as an MCP Server
 
-Admin commands manage people, organizations, licenses, roles, and other administrative resources:
+The CLI includes a built-in MCP server exposing four tools:
+
+| Tool | API methods | When to use |
+|---|---|---|
+| `webex_read` | GET | List, get, download, export — auto-approvable |
+| `webex_write` | POST / PUT / PATCH / DELETE | Create, update, delete — prompts for confirmation |
+| `webex_help` | — | Discover commands and flags |
+| `webex_usage` | — | View recent MCP command history |
+
+**Claude Code / stdio clients** — no server process needed:
+```bash
+claude mcp add webex -- webex mcp serve
+```
+
+**Claude Desktop / HTTP clients** — start the server first, then point the config at it:
+```bash
+# Start server (loopback only, port 47890)
+webex mcp serve --http
+```
+Add to your Claude Desktop config file, then restart Claude Desktop:
+
+| Platform | Config path |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+```json
+{
+  "mcpServers": {
+    "webex": { "url": "http://localhost:47890/mcp" }
+  }
+}
+```
+Use `--http-addr 127.0.0.1:<port>` to change the port.
+Only loopback addresses (127.x.x.x / ::1) are accepted — the server cannot bind to public interfaces.
+
+## Sub-Skills
+
+For detailed flags, body schemas, and usage examples, Read the sub-skill file before working in that area.
+
+Sub-skills are installed alongside this file. Resolve the base path for your platform:
+
+| Platform | Skills base path |
+|---|---|
+| macOS / Linux | `~/.claude/skills/webex-cli/` |
+| Windows | `%USERPROFILE%\.claude\skills\webex-cli\` |
+
+| Area | Sub-path |
+|---|---|
+| Admin | `admin/SKILL.md` |
+| Calling | `calling/SKILL.md` |
+| Contact Center | `cc/SKILL.md` |
+| Devices | `device/SKILL.md` |
+| Meetings | `meetings/SKILL.md` |
+| Messaging | `messaging/SKILL.md` |
+
+## Quick Reference
 
 ```bash
-# List people in the org
+# Admin — people, orgs, licenses
 webex admin people list --max 10
-
-# Get a specific person
-webex admin people get-person --person-id "PERSON_ID"
-
-# Get my own details
 webex admin people get-my-own
-
-# List organizations
+webex admin licenses list
 webex admin organizations list
 
-# List licenses
-webex admin licenses list
-
-# List roles
-webex admin roles list
-
-# List events
-webex admin events list
-
-# List reports
-webex admin reports list
-
-# List recordings
-webex admin recordings list
-```
-
-## Calling API Examples
-
-Calling commands — no orgid required (it's inferred from the token):
-
-```bash
-# List people
-webex calling people list --max 10
-
-# Get a specific person
-webex calling people get-person --person-id "PERSON_ID"
-
-# List locations
+# Calling — locations, devices, queues, recordings
 webex calling locations list
-
-# List devices
 webex calling devices list
-
-# Get my own details
-webex calling people get-my-own
-
-# Download a converged recording (call recording)
+webex calling call-queue list
+webex calling converged-recordings list --last 720h
 webex calling converged-recordings download --recording-id <id> --output call.mp3
-webex calling converged-recordings download --recording-id <id> --output call.vtt --type transcript
 
-# Upload announcement greetings
-webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting"
-webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby" --location-id <id>
-webex calling announcement-repository update-binary-greeting --file updated.wav --name "Updated" --announcement-id <id>
-
-# Upload voicemail greetings (person, virtual line, workspace, or self)
-webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
-webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
-webex calling virtual-line-call update-busy-voicemail-greeting --virtual-line-id <id> --file greeting.wav
-webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id <id> --file greeting.wav
-```
-
-## Contact Center API Examples
-
-When logged in, `--orgid` is auto-populated so you can omit it:
-
-```bash
-# Download/upload audio files
-webex cc audio-files download --id <audio-file-id> --output prompt.wav
+# Contact Center — sites, queues, entry points, flows
+webex cc site list
+webex cc contact-service-queue list
+webex cc entry-point list
+webex cc flow export --id <id> --output flow.json
+webex cc audio-files download --id <id> --output prompt.wav
 webex cc audio-files upload --file prompt.wav --name "Main Greeting"
 
-# Download/upload agent personal greetings
-webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
-webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
-
-# List sites
-webex cc site list
-
-# List queues
-webex cc contact-service-queue list
-
-# List entry points
-webex cc entry-point list
-
-# List teams
-webex cc team list
-
-# List users
-webex cc users list
-
-# List global variables
-webex cc global-variables list
-
-# List business hours
-webex cc business-hour list
-
-# List dial number mappings (exception: uses list-dialed-mapping)
-webex cc dial-number list-dialed-mapping
-
-# List skills
-webex cc skill list
-
-# List skill profiles
-webex cc skill-profile list
-
-# List desktop profiles
-webex cc desktop-profile list
-
-# List desktop layouts
-webex cc desktop-layout list
-
-# List auxiliary codes (idle + wrap-up)
-webex cc auxiliary-code list
-
-# List multimedia profiles
-webex cc multimedia-profile list
-
-# List dial plans
-webex cc dial-plan list
-
-# List user profiles
-webex cc user-profiles list
-
-# List address books
-webex cc address-book list
-
-# List holiday lists
-webex cc holiday-list list
-
-# List outdial ANIs
-webex cc outdial-ani list
-```
-
-## Device API Examples
-
-Device commands manage Webex devices, workspaces, and configurations:
-
-```bash
-# List devices
+# Device — devices, workspaces, xAPI
 webex device devices list
-
-# Get a specific device
-webex device devices get --device-id "DEVICE_ID"
-
-# List workspaces
 webex device workspaces list
+webex device xapi execute-command --device-id <id> --body '{"command":"..."}'
 
-# Get workspace details
-webex device workspaces get --workspace-id "WORKSPACE_ID"
-
-# List device configurations
-webex device device-configurations list --device-id "DEVICE_ID"
-
-# List workspace locations
-webex device workspace-locations list
-
-# Execute xAPI command
-webex device xapi execute-command --device-id "DEVICE_ID" --body '{"command":"..."}'
-
-# Query xAPI status
-webex device xapi query-status --device-id "DEVICE_ID"
-```
-
-## Meetings API Examples
-
-Meetings commands manage meeting scheduling, recordings, participants, and more:
-
-```bash
-# List meetings
+# Meetings — schedule, recordings, transcripts
 webex meetings meetings list
-
-# Get a specific meeting
-webex meetings meetings get --meeting-id "MEETING_ID"
-
-# Create a meeting
-webex meetings meetings create --body '{"title":"Stand-up","start":"...","end":"..."}'
-
-# List meeting participants
-webex meetings participants list --meeting-id "MEETING_ID"
-
-# List recordings
 webex meetings recordings list
-
-# Download a recording (audio, video, or transcript)
-webex meetings recordings download --recording-id <id> --output meeting.mp3
 webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
 webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
-
-# List transcripts
 webex meetings transcripts list
 
-# List meeting preferences
-webex meetings preferences list-sites
-
-# List session types
-webex meetings session-types list --site-url "SITE_URL"
-
-# List tracking codes
-webex meetings meetings list-tracking-codes --site-url "SITE_URL"
-```
-
-## Messaging API Examples
-
-Messaging commands manage rooms, messages, teams, and webhooks:
-
-```bash
-# List rooms
-webex messaging rooms list --max 10
-
-# Get room details
-webex messaging rooms get --room-id "ROOM_ID"
-
-# Create a room
-webex messaging rooms create --body '{"title":"My Room"}'
-
-# List messages in a room
-webex messaging messages list --room-id "ROOM_ID"
-
-# Send a message
-webex messaging messages create --body '{"roomId":"ROOM_ID","text":"Hello!"}'
-
-# List teams
-webex messaging teams list
-
-# List team memberships
-webex messaging team-memberships list --team-id "TEAM_ID"
-
-# List webhooks
-webex messaging webhooks list
-
-# List room memberships
-webex messaging memberships list --room-id "ROOM_ID"
+# Messaging — see sub-skill for full reference
+webex messaging rooms list --type group --last 24h
+webex messaging messages list --room-id <roomId>
+webex messaging messages create --body '{"roomId":"<roomId>","text":"Hello!"}'
 ```
 
 ## Filtering and Pagination
@@ -386,8 +251,8 @@ webex admin people list --output=table
 # Raw JSON (no formatting)
 webex admin people list --output=raw
 
-# Save to file for processing
-webex admin people list > /tmp/people.json
+# Save to file for processing (Mac/Linux/WSL)
+webex admin people list > "${TMPDIR:-/tmp}/people.json"
 ```
 
 ## Converged Recordings: Admin vs Non-Admin Endpoints
