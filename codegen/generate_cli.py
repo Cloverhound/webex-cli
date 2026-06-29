@@ -222,11 +222,14 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     original_name = ep.get('original_name', cmd_name)
     has_from = any(p['name'] == 'from' for p in query_params)
 
-    # Normalize orgId → orgid for CC commands so auto-populate in root.go works
-    # consistently (CC APIs use UUID format via the --orgid flag path).
+    # Normalize orgId → orgid so auto-populate in root.go resolves to UUID format.
+    # Applies to CC commands (is_calling=False) and to any endpoint under
+    # /contacts/organizations/ which explicitly requires UUID despite being in a
+    # non-CC collection (Postman note: "orgId used in path are the org UUIDs").
     # For path params, rename both the flag and the param key (path uses {orgid}).
     # For query params, only rename the flag; keep the original API key (orgId).
-    if not is_calling:
+    needs_uuid_orgid = not is_calling or '/contacts/organizations/' in path
+    if needs_uuid_orgid:
         path = path.replace('{orgId}', '{orgid}')
         for p in path_params:
             if p['name'] == 'orgId':
