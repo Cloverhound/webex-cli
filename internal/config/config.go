@@ -13,10 +13,19 @@ var (
 	orgID          string // UUID format
 	orgIDBase64    string // base64 Webex format
 	TokenRefresher func() (string, error)
+
+	maxRetry      int // max number of 429 retries (0 = no retries)
+	maxRetryTimer int // max total seconds allowed across all 429 waits (0 = unlimited)
 )
 
 func SetToken(t string) { token = t }
 func Token() string      { return token }
+
+func SetMaxRetry(n int)  { maxRetry = n }
+func MaxRetry() int      { return maxRetry }
+
+func SetMaxRetryTimer(secs int) { maxRetryTimer = secs }
+func MaxRetryTimer() int        { return maxRetryTimer }
 
 func SetDebug(d bool) { debug = d }
 func Debug() bool     { return debug }

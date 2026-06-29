@@ -36,6 +36,12 @@ var rootCmd = &cobra.Command{
 		paginate, _ := cmd.Flags().GetBool("paginate")
 		config.SetPaginate(paginate)
 
+		// Rate-limit retry controls
+		maxRetry, _ := cmd.Flags().GetInt("max-retry")
+		config.SetMaxRetry(maxRetry)
+		maxRetryTimer, _ := cmd.Flags().GetInt("max-retry-timer")
+		config.SetMaxRetryTimer(maxRetryTimer)
+
 		// Load app config early (safe local file read, needed by skipAuth-exempt commands like set-org)
 		cfg, err := appconfig.Load()
 		if err != nil {
@@ -172,6 +178,8 @@ func init() {
 	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
+	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
+	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 
 	// On flag errors (unknown flag, bad value), print usage with valid flags.
 	// SilenceUsage suppresses Cobra's automatic usage, so we print it ourselves.

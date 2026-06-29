@@ -32,10 +32,22 @@ func Do(req *Request) ([]byte, int, error) {
 		body, status, headers, err = doOnce(req)
 	}
 
-	for retries := 0; status == 429 && retries < 3; retries++ {
+	var cumulativeWait time.Duration
+	for retries := 0; status == 429; retries++ {
+		maxRetry := config.MaxRetry()
+		maxTimer := time.Duration(config.MaxRetryTimer()) * time.Second
 		wait := retryAfterDuration(headers.Get("Retry-After"))
-		fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s...\n", wait.Round(time.Second))
+
+		if retries >= maxRetry {
+			return body, status, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
+		}
+		if maxTimer > 0 && cumulativeWait+wait > maxTimer {
+			return body, status, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s", (cumulativeWait + wait).Round(time.Second), maxTimer.Round(time.Second), wait.Round(time.Second))
+		}
+
+		fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), retries+1, maxRetry)
 		time.Sleep(wait)
+		cumulativeWait += wait
 		body, status, headers, err = doOnce(req)
 	}
 
