@@ -31,6 +31,12 @@ var loginCmd = &cobra.Command{
 			return err
 		}
 
+		// Offer to store OAuth credentials with this user account before saving the token.
+		// This allows each user to have independent client credentials for token refresh.
+		if clientID != "" {
+			promptStoreCredentials(&result.Token, clientID, clientSecret)
+		}
+
 		// Store token in keyring
 		if err := auth.SaveToken(result.Email, &result.Token); err != nil {
 			return fmt.Errorf("saving token: %w", err)
@@ -56,6 +62,34 @@ var loginCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+func promptStoreCredentials(tok *auth.StoredToken, clientID, clientSecret string) {
+	var choice string
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Title("Save OAuth credentials with this account?").
+				Description(
+					"Storing credentials per-account lets each user refresh tokens independently,\n" +
+						"even when multiple accounts are configured with different OAuth apps.",
+				).
+				Options(
+					huh.NewOption("Yes — save with this account (recommended for multiple users)", "yes"),
+					huh.NewOption("No — use global credentials only", "no"),
+				).
+				Value(&choice),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return
+	}
+
+	if choice == "yes" {
+		tok.ClientID = clientID
+		tok.ClientSecret = clientSecret
+	}
 }
 
 func promptFolderAssociation(email, dir string) {

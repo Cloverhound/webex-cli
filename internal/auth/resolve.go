@@ -71,12 +71,14 @@ func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.
 
 	// Auto-refresh if expired
 	if tok.IsExpired() {
-		clientID := cfg.EffectiveClientID()
-		clientSecret := cfg.EffectiveClientSecret()
+		clientID, clientSecret := effectiveCredentials(tok, cfg)
 		refreshed, err := RefreshAccessToken(clientID, clientSecret, tok)
 		if err != nil {
 			return nil, fmt.Errorf("token expired for %s and refresh failed: %w\nRun: webex login", email, err)
 		}
+		// Carry per-token credentials forward into the refreshed token
+		refreshed.ClientID = tok.ClientID
+		refreshed.ClientSecret = tok.ClientSecret
 		tok = refreshed
 		// Persist the refreshed token
 		if saveErr := SaveToken(email, tok); saveErr != nil {
@@ -105,13 +107,25 @@ func MakeRefresher(email string, cfg *appconfig.Config) func() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		refreshed, err := RefreshAccessToken(cfg.EffectiveClientID(), cfg.EffectiveClientSecret(), tok)
+		clientID, clientSecret := effectiveCredentials(tok, cfg)
+		refreshed, err := RefreshAccessToken(clientID, clientSecret, tok)
 		if err != nil {
 			return "", err
 		}
+		refreshed.ClientID = tok.ClientID
+		refreshed.ClientSecret = tok.ClientSecret
 		if saveErr := SaveToken(email, refreshed); saveErr != nil {
 			fmt.Printf("Warning: could not save refreshed token: %v\n", saveErr)
 		}
 		return refreshed.AccessToken, nil
 	}
+}
+
+// effectiveCredentials returns the client ID and secret to use for token refresh.
+// Per-token credentials (stored with the user account) take priority over global config.
+func effectiveCredentials(tok *StoredToken, cfg *appconfig.Config) (clientID, clientSecret string) {
+	if tok.ClientID != "" {
+		return tok.ClientID, tok.ClientSecret
+	}
+	return cfg.EffectiveClientID(), cfg.EffectiveClientSecret()
 }
