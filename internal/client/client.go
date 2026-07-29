@@ -7,7 +7,9 @@ import (
 	"net/http"
 	urlpkg "net/url"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
@@ -15,22 +17,55 @@ import (
 // ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
 var ErrDryRun = errors.New("dry run: no changes made")
 
-// Do executes an HTTP request. On a 401, it attempts to refresh the token and retry once.
+// Do executes an HTTP request.
+// On a 401 it refreshes the token and retries once.
+// On a 429 it reads Retry-After and retries up to 3 times.
 func Do(req *Request) ([]byte, int, error) {
-	body, status, err := doOnce(req)
+	body, status, headers, err := doOnce(req)
+
 	if status == 401 && config.TokenRefresher != nil {
 		newToken, refreshErr := config.TokenRefresher()
 		if refreshErr != nil {
 			return body, status, err
 		}
 		config.SetToken(newToken)
-		return doOnce(req)
+		body, status, headers, err = doOnce(req)
 	}
+
+	var cumulativeWait time.Duration
+	for retries := 0; status == 429; retries++ {
+		maxRetry := config.MaxRetry()
+		maxTimer := time.Duration(config.MaxRetryTimer()) * time.Second
+		wait := retryAfterDuration(headers.Get("Retry-After"))
+
+		if retries >= maxRetry {
+			return body, status, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
+		}
+		if maxTimer > 0 && cumulativeWait+wait > maxTimer {
+			return body, status, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s", (cumulativeWait + wait).Round(time.Second), maxTimer.Round(time.Second), wait.Round(time.Second))
+		}
+
+		fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), retries+1, maxRetry)
+		time.Sleep(wait)
+		cumulativeWait += wait
+		body, status, headers, err = doOnce(req)
+	}
+
 	return body, status, err
 }
 
+// retryAfterDuration parses the Retry-After header value (seconds integer) and
+// returns the duration to wait. Defaults to 5 seconds if the header is absent
+// or unparseable.
+func retryAfterDuration(header string) time.Duration {
+	if secs, err := strconv.Atoi(strings.TrimSpace(header)); err == nil && secs > 0 {
+		return time.Duration(secs) * time.Second
+	}
+	return 5 * time.Second
+}
+
 // doOnce executes a single HTTP request without retry.
-func doOnce(req *Request) ([]byte, int, error) {
+func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	// Build URL
 	url := req.baseURL + req.path
 	for k, v := range req.pathParams {
@@ -58,7 +93,7 @@ func doOnce(req *Request) ([]byte, int, error) {
 
 	httpReq, err := http.NewRequest(req.method, url, bodyReader)
 	if err != nil {
-		return nil, 0, fmt.Errorf("building request: %w", err)
+		return nil, 0, nil, fmt.Errorf("building request: %w", err)
 	}
 
 	// Auth
@@ -99,18 +134,18 @@ func doOnce(req *Request) ([]byte, int, error) {
 		if req.bodyRaw != "" {
 			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", req.bodyRaw)
 		}
-		return nil, 0, ErrDryRun
+		return nil, 0, nil, ErrDryRun
 	}
 
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
-		return nil, 0, fmt.Errorf("executing request: %w", err)
+		return nil, 0, nil, fmt.Errorf("executing request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, resp.StatusCode, fmt.Errorf("reading response: %w", err)
+		return nil, resp.StatusCode, resp.Header, fmt.Errorf("reading response: %w", err)
 	}
 
 	if config.Debug() {
@@ -118,10 +153,10 @@ func doOnce(req *Request) ([]byte, int, error) {
 	}
 
 	if resp.StatusCode >= 400 {
-		return body, resp.StatusCode, fmt.Errorf("API error %d: %s", resp.StatusCode, truncate(string(body), 500))
+		return body, resp.StatusCode, resp.Header, fmt.Errorf("API error %d: %s", resp.StatusCode, truncate(string(body), 500))
 	}
 
-	return body, resp.StatusCode, nil
+	return body, resp.StatusCode, resp.Header, nil
 }
 
 func truncate(s string, n int) string {

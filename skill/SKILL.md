@@ -76,6 +76,20 @@ webex cc site list --orgid="Y2lzY29zcGFyazovL3Vz..."  # Base64 — auto-decoded
 
 If you need to override the org, use `--organization <orgId>` (global flag) which feeds into `--orgid` automatically. Both base64 and UUID formats are accepted.
 
+## OrgID Format Troubleshooting
+
+**General rule:** CC commands (`webex cc ...`) use UUID format; all other commands (`webex admin`, `webex calling`, etc.) use base64 format. The CLI normalizes automatically, but if an API call returns a 400 or 404 with an org-related error, the format passed may be wrong for that endpoint.
+
+**If you get an org ID error, try the other format:**
+```bash
+# Got a 400 on a CC command? Make sure the value decodes to a plain UUID:
+webex cc site list --orgid="4ebc486d-ff5f-4abc-9d44-1234567890ab"   # UUID
+# Got a 400 on an admin/calling command? Make sure it's base64:
+webex admin people list --organization="Y2lzY29zcGFyazovL3Vz..."    # Base64
+```
+
+You can inspect what the CLI resolved to by running `webex auth status` — the org ID shown there is the base64 form. Strip the trailing `=` padding issues or swap formats if calls are failing with 400/404 on org-scoped endpoints.
+
 ## CC Subcommand Names
 
 Most CC resources use a consistent `list` subcommand. A few exceptions remain:
