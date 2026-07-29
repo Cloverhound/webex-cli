@@ -55,7 +55,43 @@ func OrgIDBase64() string { return orgIDBase64 }
 const (
 	CallingBaseURL = "https://webexapis.com/v1"
 	CcBaseURL      = "https://api.wxcc-us1.cisco.com"
+
+	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
+	// endpoints already carry their own /v1 segment.
+	AnalyticsBaseURL = "https://analytics.webexapis.com"
 )
+
+// analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.
+// Calls to the default host are routed to the nearest region; if that region does
+// not hold the org's data the API returns HTTP 451 with the correct endpoint.
+var analyticsCallingHosts = map[string]string{
+	"us":  "https://analytics-calling.webexapis.com",
+	"ca":  "https://analytics-calling.webexapis.com",
+	"eu":  "https://analytics-calling-eu.webexapis.com",
+	"eun": "https://analytics-calling-eu.webexapis.com",
+	"in":  "https://analytics-calling-in.webexapis.com",
+	"au":  "https://analytics-calling-au.webexapis.com",
+}
+
+// Regions lists the supported --region values.
+var Regions = []string{"us", "ca", "eu", "eun", "in", "au"}
+
+var region string
+
+// SetRegion stores the org's data region (us, ca, eu, eun, in, au).
+// Empty means "use the default host and let Webex route by geography".
+func SetRegion(r string) { region = strings.ToLower(strings.TrimSpace(r)) }
+func Region() string     { return region }
+
+// AnalyticsCallingBaseURL returns the Detailed Call History base URL for the
+// configured region, falling back to the US/Canada host.
+func AnalyticsCallingBaseURL() string {
+	host, ok := analyticsCallingHosts[region]
+	if !ok {
+		host = analyticsCallingHosts["us"]
+	}
+	return host + "/v1"
+}
 
 // DecodeOrgID converts a base64-encoded Webex org ID (ciscospark://us/ORGANIZATION/<uuid>)
 // to the raw UUID. If the input is already a UUID or unrecognized, it is returned as-is.

@@ -35,7 +35,7 @@ func init() {
 			Short: "Get Detailed Call History",
 			Long:  "Provides Webex Calling Detailed Call History data for your organization.\n\nResults can be filtered with the `startTime`, `endTime` and `locations` request parameters. The `startTime` and `endTime` parameters specify the start and end of the time period for the Detailed Call History reports you wish to collect. The API will return all reports that were created between `startTime` and `endTime`.\n\n<br/><br/>\nResponse entries may be added as more information is made available for the reports.\nValues in response items may be extended as more capabilities are added to Webex Calling.",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/cdr_feed")
+				req := client.NewRequest(config.AnalyticsCallingBaseURL(), "GET", "/cdr_feed")
 				req.QueryParam("startTime", startTime)
 				req.QueryParam("endTime", endTime)
 				req.QueryParam("locations", locations)
@@ -71,7 +71,7 @@ func init() {
 			Short: "Get Live Stream Detailed Call History",
 			Long:  "Provides Webex Calling Detailed Call History data for your organization.\n\nResults can be filtered with the `startTime`, `endTime` and `locations` request parameters. The `startTime` and `endTime` parameters specify the time window during which Detailed Call History data was inserted into the Webex Calling cloud. The API will return all reports whose insertion time into the Webex Calling cloud falls between `startTime` and `endTime`.\n\n<br/><br/>\nResponse entries may be added as more information is made available for the reports.\nValues in response items may be extended as more capabilities are added to Webex Calling.",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/cdr_stream")
+				req := client.NewRequest(config.AnalyticsCallingBaseURL(), "GET", "/cdr_stream")
 				req.QueryParam("startTime", startTime)
 				req.QueryParam("endTime", endTime)
 				req.QueryParam("locations", locations)

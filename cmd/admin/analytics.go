@@ -38,7 +38,7 @@ func init() {
 
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/messagingMetrics/dailyTotals")
+				req := client.NewRequest(config.AnalyticsBaseURL, "GET", "/v1/analytics/messagingMetrics/dailyTotals")
 				if last != "" {
 					var err error
 					from, to, err = timeutil.ParseLastISO(last)
@@ -79,7 +79,7 @@ func init() {
 
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/roomDeviceMetrics/dailyTotals")
+				req := client.NewRequest(config.AnalyticsBaseURL, "GET", "/v1/analytics/roomDeviceMetrics/dailyTotals")
 				if last != "" {
 					var err error
 					from, to, err = timeutil.ParseLastISO(last)
@@ -121,7 +121,7 @@ func init() {
 
 <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature.</Callout></div>`,
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/v1/analytics/meetingsMetrics/aggregates")
+				req := client.NewRequest(config.AnalyticsBaseURL, "GET", "/v1/analytics/meetingsMetrics/aggregates")
 				if last != "" {
 					var err error
 					from, to, err = timeutil.ParseLastISO(last)

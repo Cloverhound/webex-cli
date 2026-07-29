@@ -7,6 +7,7 @@ import (
 	"net/http"
 	urlpkg "net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -51,7 +52,32 @@ func Do(req *Request) ([]byte, int, error) {
 		body, status, headers, err = doOnce(req)
 	}
 
+	if status == 451 {
+		return body, status, wrongRegionError(body)
+	}
+
 	return body, status, err
+}
+
+// endpointURLPattern finds the regional endpoint Webex returns in a 451 body.
+var endpointURLPattern = regexp.MustCompile(`https?://[a-zA-Z0-9.\-]+`)
+
+// wrongRegionError turns an HTTP 451 (org data lives in another region) into an
+// actionable message naming the endpoint the API pointed us at.
+func wrongRegionError(body []byte) error {
+	msg := fmt.Sprintf("wrong data region (451): this organization's data is not hosted in region %q", regionLabel())
+	if m := endpointURLPattern.Find(body); m != nil {
+		msg += fmt.Sprintf("; Webex says to use %s", m)
+	}
+	return fmt.Errorf("%s — rerun with --region <%s> (or: webex config set region <region>)",
+		msg, strings.Join(config.Regions, "|"))
+}
+
+func regionLabel() string {
+	if r := config.Region(); r != "" {
+		return r
+	}
+	return "us (default)"
 }
 
 // retryAfterDuration parses the Retry-After header value (seconds integer) and

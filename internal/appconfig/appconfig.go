@@ -28,6 +28,7 @@ type Config struct {
 	Scopes         string              `json:"scopes,omitempty"`
 	DefaultOrgID   string              `json:"default_org_id,omitempty"`
 	DefaultOrgName string              `json:"default_org_name,omitempty"`
+	Region         string              `json:"region,omitempty"`
 
 	path string // file path, not serialized
 }
