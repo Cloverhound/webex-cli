@@ -26,6 +26,34 @@ COLLECTIONS = {
 }
 
 
+# Endpoints served from a different host than the rest of their collection.
+# The Postman collections use "{{baseUrl}}" for every request, so the real host
+# is not in the source data and has to be recorded here.
+# Collection name → URL path prefix → Go expression for the base URL.
+BASE_URL_OVERRIDES = {
+    "Webex Cloud Calling": {
+        # Detailed Call History (CDR) — region-specific analytics FQDN.
+        "/cdr_feed": "config.AnalyticsCallingBaseURL()",
+        "/cdr_stream": "config.AnalyticsCallingBaseURL()",
+    },
+    "Webex Admin": {
+        # Analytics reports. These paths already include /v1, so the base URL
+        # deliberately has no version segment.
+        "/v1/analytics/": "config.AnalyticsBaseURL",
+    },
+}
+
+
+def resolve_base_url(collection_name, path, default):
+    """Return the base URL expression for an endpoint (longest prefix wins)."""
+    overrides = BASE_URL_OVERRIDES.get(collection_name, {})
+    match = ""
+    for prefix in overrides:
+        if path.startswith(prefix) and len(prefix) > len(match):
+            match = prefix
+    return overrides[match] if match else default
+
+
 # Path params that are always the same value — hardcode instead of generating a flag.
 HARDCODED_PATH_PARAMS = {
     "projectId": "5e5c9ad6d61f870d6d778c1b",
@@ -196,7 +224,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
         if ep['command'] in skip_cmds:
             print(f"    Skipping command '{ep['command']}' (custom override)")
             continue
-        lines.extend(generate_command(ep, group_var, base_url_const, is_calling))
+        ep_base_url = resolve_base_url(collection_name, ep['path'], base_url_const)
+        lines.extend(generate_command(ep, group_var, ep_base_url, is_calling))
         lines.append('')
 
     lines.append('}')
@@ -204,7 +233,7 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     return '\n'.join(lines) + '\n'
 
 
-def generate_command(ep, group_var, base_url_const, is_calling):
+def generate_command(ep, group_var, base_url_expr, is_calling):
     """Generate Go source for one command within a group's init()."""
     lines = []
     indent = '\t'
@@ -329,7 +358,7 @@ def generate_command(ep, group_var, base_url_const, is_calling):
     lines.append(f'{indent2}\tRunE: func(cmd *cobra.Command, args []string) error {{')
     indent3 = indent2 + '\t\t'
 
-    lines.append(f'{indent3}req := client.NewRequest({base_url_const}, "{method}", {escape_go_double_quoted(path)})')
+    lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
 
     # --last → from/to conversion
     if has_from:

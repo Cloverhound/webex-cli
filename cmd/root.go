@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
+	"strings"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/auth"
@@ -46,6 +48,19 @@ var rootCmd = &cobra.Command{
 		cfg, err := appconfig.Load()
 		if err != nil {
 			return fmt.Errorf("loading config: %w", err)
+		}
+
+		// Data region for region-specific hosts (Detailed Call History):
+		// --region flag > WEBEX_REGION env > config file.
+		regionFlag, _ := cmd.Flags().GetString("region")
+		if regionFlag == "" {
+			regionFlag = os.Getenv("WEBEX_REGION")
+		}
+		if regionFlag == "" {
+			regionFlag = cfg.Region
+		}
+		if err := setRegion(regionFlag); err != nil {
+			return err
 		}
 
 		// Skip auth for certain commands
@@ -126,6 +141,20 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// setRegion validates a region value and stores it for region-specific hosts.
+func setRegion(region string) error {
+	if region == "" {
+		config.SetRegion("")
+		return nil
+	}
+	normalized := strings.ToLower(strings.TrimSpace(region))
+	if !slices.Contains(config.Regions, normalized) {
+		return fmt.Errorf("unknown region %q (valid: %s)", region, strings.Join(config.Regions, ", "))
+	}
+	config.SetRegion(normalized)
+	return nil
+}
+
 // RootCommand returns the root cobra command for external introspection.
 func RootCommand() *cobra.Command { return rootCmd }
 
@@ -178,6 +207,7 @@ func init() {
 	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
+	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")
 	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
 	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 
