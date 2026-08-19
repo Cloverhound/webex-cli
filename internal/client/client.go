@@ -90,6 +90,18 @@ func retryAfterDuration(header string) time.Duration {
 	return 5 * time.Second
 }
 
+// redactHeader replaces a credential value with its length, which is enough to
+// tell a missing or truncated token from a present one without printing it.
+func redactHeader(key, value string) string {
+	if !strings.EqualFold(key, "Authorization") {
+		return value
+	}
+	if scheme, cred, ok := strings.Cut(value, " "); ok {
+		return fmt.Sprintf("%s <%d chars>", scheme, len(cred))
+	}
+	return fmt.Sprintf("<%d chars>", len(value))
+}
+
 // doOnce executes a single HTTP request without retry.
 func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	// Build URL
@@ -140,9 +152,7 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	if config.Debug() {
 		fmt.Fprintf(os.Stderr, "DEBUG: %s %s\n", req.method, url)
 		for k, v := range httpReq.Header {
-			if k != "Authorization" {
-				fmt.Fprintf(os.Stderr, "DEBUG:   %s: %s\n", k, strings.Join(v, ", "))
-			}
+			fmt.Fprintf(os.Stderr, "DEBUG:   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
 		}
 		if req.bodyRaw != "" {
 			fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(req.bodyRaw, 500))
@@ -153,9 +163,7 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	if config.DryRun() && isWriteMethod(req.method) {
 		fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", req.method, url)
 		for k, v := range httpReq.Header {
-			if k != "Authorization" {
-				fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, strings.Join(v, ", "))
-			}
+			fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
 		}
 		if req.bodyRaw != "" {
 			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", req.bodyRaw)
