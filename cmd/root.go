@@ -221,30 +221,29 @@ func init() {
 	})
 }
 
-// skipAuth returns true for commands that don't need authentication.
+// skipAuth returns true for commands that don't need authentication. Only the
+// top-level name is matched: generated API subcommands reuse names from the
+// exempt list ("update", "login", "logout") and do need a token.
 func skipAuth(cmd *cobra.Command) bool {
-	// Walk up to find the root-level command name
-	name := cmd.Name()
-
-	// Check the command itself and all parents
-	for c := cmd; c != nil; c = c.Parent() {
-		switch c.Name() {
-		case "login", "logout", "auth", "config", "version", "update", "post-install", "help", "webex":
-			// "webex" is the root — only skip if it's the actual command being run (bare `webex`)
-			if c.Name() == "webex" {
-				continue
-			}
-			// set-org needs a token to validate the org, so don't skip auth
-			if c.Name() == "auth" && cmd.Name() == "set-org" {
-				continue
-			}
-			return true
-		}
+	if !cmd.HasParent() {
+		return true
+	}
+	switch cmd.Name() {
+	case "help", "completion", cobra.ShellCompRequestCmd, cobra.ShellCompNoDescRequestCmd:
+		return true
 	}
 
-	// Also skip bare root command and help
-	if name == "help" || name == "webex" {
+	top := cmd
+	for top.Parent().HasParent() {
+		top = top.Parent()
+	}
+
+	switch top.Name() {
+	case "login", "logout", "config", "version", "update", "post-install", "help", "completion":
 		return true
+	case "auth":
+		// set-org validates the org against the API; token prints it.
+		return cmd.Name() != "set-org" && cmd.Name() != "token"
 	}
 
 	return false
