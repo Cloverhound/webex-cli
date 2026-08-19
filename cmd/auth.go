@@ -21,6 +21,20 @@ var authCmd = &cobra.Command{
 	Long:  "View and manage authenticated users, check token status, and switch between users.",
 }
 
+var authTokenCmd = &cobra.Command{
+	Use:   "token",
+	Short: "Print the current access token",
+	Long:  "Print the access token for the active user, refreshing it if expired. Useful for making manual API calls with curl.",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		tok := config.Token()
+		if tok == "" {
+			return fmt.Errorf("no access token available; run: webex login")
+		}
+		fmt.Println(tok)
+		return nil
+	},
+}
+
 var authStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Show current authentication status",
@@ -323,6 +337,7 @@ var authClearFolderDefaultCmd = &cobra.Command{
 }
 
 func init() {
+	authCmd.AddCommand(authTokenCmd)
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authListCmd)
 	authCmd.AddCommand(authSwitchCmd)
