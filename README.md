@@ -278,9 +278,9 @@ See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual 
 
 ## Development
 
-See [CLAUDE.md](CLAUDE.md) for project structure and development workflow.
+See [AGENTS.md](AGENTS.md) for project structure and development workflow.
 
-Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](CLAUDE.md#code-generation-pipeline) for details.
+Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
 
 ## License
 
