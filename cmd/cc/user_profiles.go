@@ -40,7 +40,7 @@ func init() {
 			Use:   "list",
 			Short: "List user profiles",
 			Long: `Retrieve a list of user profiles in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v3/user-profile")
 				req.PathParam("orgid", orgid)

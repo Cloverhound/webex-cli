@@ -369,6 +369,7 @@ webex meetings meeting-polls list --meeting-id <id>
 | `list-survey-results` | `--meeting-id` *(required)*, `--meeting-start-time-from`, `--meeting-start-time-to`, `--max` |
 | `list-invitation-sources` | `--meeting-id` *(required)* |
 | `list-tracking-codes` | `--site-url`, `--service`, `--host-email` |
+| `list-group` | `--person-id`, `--meeting-number`, `--web-link`, `--current` |
 | `create` | `--body`, `--body-file` |
 | `join` | `--meeting-id`, `--meeting-number`, `--web-link`, `--join-directly`, `--email`, `--display-name`, `--password`, `--expiration-minutes`, `--registration-id`, `--host-email`, `--create-join-link-as-web-link`, `--create-start-link-as-web-link`, `--body`, `--body-file` |
 | `register-registrant` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
@@ -384,6 +385,7 @@ webex meetings meeting-polls list --meeting-id <id>
 | `batch-reject-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
 | `batch-cancel-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
 | `batch-delete-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `update-group-control-status` | `--person-id`, `--meeting-id`, `--action`, `--body`, `--body-file` |
 | `update` | `--meeting-id` *(required)*, `--body`, `--body-file` |
 | `update-control-status` | `--meeting-id`, `--recording-started`, `--recording-paused`, `--locked`, `--body`, `--body-file` |
 | `update-registration-form` | `--meeting-id` *(required)*, `--body`, `--body-file` |
@@ -391,6 +393,7 @@ webex meetings meeting-polls list --meeting-id <id>
 | `update-interpreter` | `--meeting-id` *(required)*, `--interpreter-id` *(required)*, `--language-code1`, `--language-code2`, `--email`, `--display-name`, `--host-email`, `--send-email`, `--body`, `--body-file` |
 | `update-breakout-sessions` | `--meeting-id` *(required)*, `--body`, `--body-file` |
 | `patch` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `patch-group` | `--meeting-id` *(required)*, `--person-id`, `--body`, `--body-file` |
 | `delete` | `--meeting-id` *(required)*, `--host-email`, `--send-email` |
 | `delete-registration-form` | `--meeting-id` *(required)* |
 | `delete-registrant` | `--meeting-id` *(required)*, `--registrant-id` *(required)*, `--current`, `--host-email` |
@@ -436,13 +439,15 @@ webex meetings meeting-polls list --meeting-id <id>
 | `list` | `--max`, `--from`, `--to`, `--meeting-id`, `--host-email`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
 | `list-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
 | `get` | `--recording-id` *(required)*, `--host-email` |
-| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--last` |
+| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--format`, `--service-type`, `--last` |
 | `get-group` | `--recording-id` *(required)*, `--person-id` |
 | `move-recycle-bin` | `--host-email`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `restore-recycle-bin` | `--host-email`, `--restore-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `purge-recycle-bin` | `--host-email`, `--purge-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `share` | `--recording-id` *(required)*, `--host-email`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
 | `share-link` | `--host-email`, `--web-share-link`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `query` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--host-email`, `--topic`, `--format`, `--service-type`, `--status`, `--body`, `--body-file` |
+| `query-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--timezone`, `--body`, `--body-file` |
 | `delete-admin` | `--recording-id` *(required)* |
 | `delete` | `--recording-id` *(required)*, `--host-email`, `--reason`, `--comment`, `--body`, `--body-file` |
 

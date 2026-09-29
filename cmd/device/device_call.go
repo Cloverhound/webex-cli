@@ -1072,7 +1072,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-layout-id",
 			Short: "Get Device Layout by Device ID",
-			Long:  "Get layout information of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
+			Long:  "Get layout information of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\n**Note:** When `layoutMode` is DEFAULT, the response includes only `layoutMode` and `userReorderEnabled`. The `lineKeys` field is omitted as the device uses system-assigned default line-key assignments. When `layoutMode` is CUSTOM, the response includes the `lineKeys` array with the custom line-key configuration.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/layout")
 				req.PathParam("deviceId", deviceId)
@@ -1105,7 +1105,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-layout-id",
 			Short: "Modify Device Layout by Device ID",
-			Long:  "Modify the layout of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
+			Long:  "Modify the layout of a device by device ID in an organization.\n\nDevice layout customizes a user\u2019s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user\u2019s monitoring list.\n\n**Note:** When setting `layoutMode` to DEFAULT, do not include the `lineKeys` field in the request body. The device will use system-assigned default line-key assignments. When setting `layoutMode` to CUSTOM, you must include the `lineKeys` array to specify the custom line-key configuration.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/devices/{deviceId}/layout")
 				req.PathParam("deviceId", deviceId)

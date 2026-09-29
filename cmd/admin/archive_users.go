@@ -57,4 +57,35 @@ func init() {
 		archiveUsersCmd.AddCommand(cmd)
 	}
 
+	{ // query
+		var orgId string
+		var filter string
+		cmd := &cobra.Command{
+			Use:   "query",
+			Short: "Query Archive User",
+			Long:  "Retrieves archived user information for the specified organization. Supported attributes are `id`, which is the unique identifier of a user in the system, and `username`. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser")
+				req.PathParam("orgId", orgId)
+				req.QueryParam("filter", filter)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "The unique identifier for the organization.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringVar(&filter, "filter", "", "A SCIM-style filter expression used to search archived users. Supported attributes are `username` and `id`, and only the `eq` operator is supported.  Examples:  - `username eq \"test_user_1@example.com\"` - `id eq \"40929cc6-2df2-4ab5-871c-ec8e38f07b93\"`")
+		archiveUsersCmd.AddCommand(cmd)
+	}
+
 }

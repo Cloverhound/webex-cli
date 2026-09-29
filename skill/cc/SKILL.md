@@ -373,25 +373,25 @@ webex cc address-book delete-entry-id --id <entryId>
 |---|---|
 | `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--desktop-profile-filter`, `--provisioning-view`, `--single-object-response` |
 | `bulk-export` | `--orgid` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-skill-csqs-skill-profile` | `--orgid` *(required)*, `--id` *(required)* |
+| `list-skill-based-skill-profile-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--agents-updated-info` |
-| `list-csq-references-id` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-agent-based` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
-| `list-skill-based` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
-| `list-team-based` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
+| `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
+| `list-agent-based-user-id` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
+| `list-skill-based-user-id` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
+| `list-team-based-user-id` | `--orgid` *(required)*, `--userid` *(required)*, `--search`, `--page`, `--page-size` |
 | `list-internal-skill-csqs-profile` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-team-csqs-team-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-agent-csqs-ci-user-id` | `--orgid` *(required)*, `--ci-user-id` *(required)* |
 | `list-skill-csqs-ci-user-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `create` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `delete-csq-references` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `list-manually-assignable-csqs` | `--orgid` *(required)*, `--agent-id`, `--team-id`, `--body`, `--body-file` |
+| `delete-references` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `list-manually-assignable` | `--orgid` *(required)*, `--agent-id`, `--team-id`, `--body`, `--body-file` |
 | `purge-inactive` | `--orgid` *(required)*, `--next-start-id` |
 | `create-remove-agents-users-agent` | `--orgid` *(required)*, `--id` *(required)*, `--add`, `--remove`, `--body`, `--body-file` |
 | `list-mapping-summary-grouped-assistant-skill` | `--orgid` *(required)*, `--page`, `--page-size`, `--assistant-skill-ids`, `--body`, `--body-file` |
-| `list-csqs-skills-profile` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `list-csqs-user-profile` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `list-skill-based-dynamic-skills-skill-profile` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `list-skill-based-skill-profile-id-user-id` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
 | `bulk-partial-update` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
@@ -414,14 +414,14 @@ webex cc address-book delete-entry-id --id <entryId>
 
 | Command | Flags |
 |---|---|
-| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--single-object-response` |
+| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--single-object-response`, `--provisioning-view` |
 | `bulk-export` | `--orgid` *(required)*, `--page`, `--page-size` |
 | `get-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `create` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `create` | `--orgid` *(required)*, `--access-buddy-team`, `--access-entry-point`, `--access-idle-code`, `--access-queue`, `--access-wrap-up-code`, `--active`, `--agent-dnvalidation`, `--name`, `--parent-type`, `--viewable-statistics`, `--organization-id`, `--id`, `--version`, `--description`, `--site-id`, `--screen-popup`, `--last-agent-routing`, `--schedule-and-manage-call-back`, `--auto-wrap-up`, `--auto-answer`, `--agent-personal-greeting`, `--auto-wrap-after-seconds`, `--agent-available-after-outdial`, `--allow-auto-wrap-up-extension`, `--wrap-up-codes`, `--idle-codes`, `--queues`, `--entry-points`, `--buddy-teams`, `--consult-to-queue`, `--outdial-enabled`, `--outdial-entry-point-id`, `--outdial-aniid`, `--address-book-id`, `--dial-plan-enabled`, `--dial-plans`, `--agent-dnvalidation-criteria`, `--agent-dnvalidation-criterions`, `--login-voice-options`, `--threshold-rules`, `--timeout-desktop-inactivity-custom-enabled`, `--show-user-details-ms`, `--state-synchronization-ms`, `--show-user-details-webex`, `--state-synchronization-webex`, `--manage-channel-availability`, `--timeout-desktop-inactivity-mins`, `--system-default`, `--created-time`, `--last-updated-time`, `--auto-accept-digital-interactions`, `--body`, `--body-file` |
 | `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `purge-inactive` | `--orgid` *(required)*, `--next-start-id` |
-| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--access-buddy-team`, `--access-entry-point`, `--access-idle-code`, `--access-queue`, `--access-wrap-up-code`, `--active`, `--agent-dnvalidation`, `--name`, `--parent-type`, `--viewable-statistics`, `--organization-id`, `--version`, `--description`, `--site-id`, `--screen-popup`, `--last-agent-routing`, `--schedule-and-manage-call-back`, `--auto-wrap-up`, `--auto-answer`, `--agent-personal-greeting`, `--auto-wrap-after-seconds`, `--agent-available-after-outdial`, `--allow-auto-wrap-up-extension`, `--wrap-up-codes`, `--idle-codes`, `--queues`, `--entry-points`, `--buddy-teams`, `--consult-to-queue`, `--outdial-enabled`, `--outdial-entry-point-id`, `--outdial-aniid`, `--address-book-id`, `--dial-plan-enabled`, `--dial-plans`, `--agent-dnvalidation-criteria`, `--agent-dnvalidation-criterions`, `--login-voice-options`, `--threshold-rules`, `--timeout-desktop-inactivity-custom-enabled`, `--show-user-details-ms`, `--state-synchronization-ms`, `--show-user-details-webex`, `--state-synchronization-webex`, `--manage-channel-availability`, `--timeout-desktop-inactivity-mins`, `--system-default`, `--created-time`, `--last-updated-time`, `--auto-accept-digital-interactions`, `--body`, `--body-file` |
 | `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
 
 ### dial-number
@@ -447,9 +447,9 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--orgid` *(required)*, `--page`, `--page-size` |
 | `get-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `create` | `--orgid` *(required)*, `--active`, `--name`, `--regular-expression`, `--organization-id`, `--id`, `--version`, `--description`, `--prefix`, `--stripped-chars`, `--system-default`, `--body`, `--body-file` |
+| `create` | `--orgid` *(required)*, `--active`, `--name`, `--regular-expression`, `--organization-id`, `--id`, `--version`, `--description`, `--prefix`, `--stripped-chars`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 | `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--active`, `--name`, `--regular-expression`, `--organization-id`, `--version`, `--description`, `--prefix`, `--stripped-chars`, `--system-default`, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--active`, `--name`, `--regular-expression`, `--organization-id`, `--version`, `--description`, `--prefix`, `--stripped-chars`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 | `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
 
 ### entry-point
@@ -501,15 +501,15 @@ webex cc address-book delete-entry-id --id <entryId>
 |---|---|
 | `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--single-object-response` |
 | `bulk-export` | `--orgid` *(required)*, `--page`, `--page-size` |
-| `list-entry` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
+| `list-entries` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
 | `get-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
 | `get-entry-id` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--id` *(required)* |
-| `list-entry-2` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
+| `list-entries-2` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
 | `create` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `create-entry` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--name`, `--number`, `--organization-id`, `--id`, `--version`, `--default-anientry`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
-| `bulk-save-entry` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--body`, `--body-file` |
+| `bulk-save-entries` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--body`, `--body-file` |
 | `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
 | `update-entry-id` | `--orgid` *(required)*, `--out-dial-ani-id` *(required)*, `--id` *(required)*, `--name`, `--number`, `--organization-id`, `--version`, `--default-anientry`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 | `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
@@ -533,15 +533,15 @@ webex cc address-book delete-entry-id --id <entryId>
 
 | Command | Flags |
 |---|---|
-| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--single-object-response` |
+| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--single-object-response`, `--include` |
 | `bulk-export` | `--orgid` *(required)*, `--page`, `--page-size` |
 | `get-id` | `--orgid` *(required)*, `--id` *(required)* |
 | `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `create` | `--orgid` *(required)*, `--active`, `--name`, `--service-level-threshold`, `--skill-type`, `--organization-id`, `--id`, `--version`, `--description`, `--enum-skill-values`, `--dynamic-skill`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
+| `create` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `purge-inactive` | `--orgid` *(required)*, `--next-start-id` |
 | `populate-json-attributes-field-skill-id-org` | `--orgid` *(required)*, `--id` *(required)* |
-| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--active`, `--name`, `--service-level-threshold`, `--skill-type`, `--organization-id`, `--version`, `--description`, `--enum-skill-values`, `--dynamic-skill`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
 | `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
 
 ### skill-profile
@@ -592,18 +592,19 @@ webex cc address-book delete-entry-id --id <entryId>
 |---|---|
 | `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--supervisor-managed-agents-only`, `--single-object-response`, `--buddy-team-agents-only`, `--user-in-queue`, `--queue-id`, `--include-aimapping-count`, `--include-dynamic-skills-limit-reached` |
 | `bulk-export` | `--orgid` *(required)*, `--page`, `--page-size` |
-| `get-ci-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-user-profile`, `--include-names` |
+| `get-ci-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-user-profile`, `--include-names`, `--include-skill-details` |
 | `list-along-profile` | `--orgid` *(required)* |
 | `get-along-profile-id` | `--orgid` *(required)*, `--id` *(required)* |
-| `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-count`, `--include-user-profile-type`, `--include-skill-profile-audit`, `--include-reskill-audit-info`, `--include-skill-details` |
+| `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-count`, `--include-user-profile-type`, `--include-skill-profile-audit`, `--include-reskill-audit-info`, `--include-skill-details`, `--check-if-user-has-dynamic-skill`, `--dynamic-skill-id` |
 | `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
 | `get-dynamic-skill-id` | `--orgid` *(required)*, `--skill-id` *(required)*, `--search`, `--page`, `--page-size` |
-| `get-agents-matching-skill-requirements` | `--orgid` *(required)*, `--search`, `--page`, `--page-size`, `--condition`, `--skill-id`, `--skill-value`, `--organization-id`, `--id`, `--version`, `--skill-name`, `--skill-type`, `--weight`, `--dynamic-skill`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
-| `get-ids` | `--orgid` *(required)*, `--page`, `--page-size`, `--user-ids`, `--search`, `--queue-id`, `--body`, `--body-file` |
+| `list-call-monitoring-id` | `--orgid` *(required)*, `--id` *(required)*, `--page`, `--page-size` |
+| `get-agents-matching-skill-requirements` | `--orgid` *(required)*, `--search`, `--page`, `--page-size`, `--body`, `--body-file` |
+| `list-2` | `--orgid` *(required)*, `--page`, `--page-size`, `--user-ids`, `--search`, `--queue-id`, `--body`, `--body-file` |
 | `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
 | `bulk-partial-update` | `--orgid` *(required)*, `--body`, `--body-file` |
 | `patch-id` | `--orgid` *(required)*, `--id` *(required)*, `--value-type`, `--body`, `--body-file` |
-| `bulk-update-dynamic-skills` | `--orgid` *(required)*, `--skill-id` *(required)*, `--body`, `--body-file` |
+| `bulk-partial-update-dynamic-skills` | `--orgid` *(required)*, `--skill-id` *(required)*, `--body`, `--body-file` |
 | `reskill-agents` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
 
 ### work-types
@@ -695,6 +696,7 @@ webex cc address-book delete-entry-id --id <entryId>
 | `end-request` | `--task-id` *(required)* |
 | `hold-request` | `--task-id` *(required)* |
 | `unhold-request` | `--task-id` *(required)* |
+| `whisper-coach-request` | `--interaction-id` *(required)* |
 | `delete-request` | `--request-id` *(required)* |
 
 ### tasks
@@ -707,7 +709,7 @@ webex cc address-book delete-entry-id --id <entryId>
 | `end` | `--task-id` *(required)* |
 | `wrap-up` | `--task-id` *(required)*, `--wrap-up-reason`, `--aux-code-id`, `--body`, `--body-file` |
 | `hold` | `--task-id` *(required)*, `--media-resource-id`, `--body`, `--body-file` |
-| `resume` | `--task-id` *(required)*, `--media-resource-id`, `--body`, `--body-file` |
+| `unhold` | `--task-id` *(required)*, `--media-resource-id`, `--body`, `--body-file` |
 | `reject` | `--task-id` *(required)*, `--media-resource-id`, `--body`, `--body-file` |
 | `pause-recording` | `--task-id` *(required)* |
 | `resume-recording` | `--task-id` *(required)*, `--auto-resumed`, `--body`, `--body-file` |
@@ -722,7 +724,10 @@ webex cc address-book delete-entry-id --id <entryId>
 | `accept-preview` | `--campaign-id` *(required)*, `--task-id` *(required)* |
 | `skip-preview` | `--campaign-id` *(required)*, `--task-id` *(required)* |
 | `delete-preview` | `--campaign-id` *(required)*, `--task-id` *(required)* |
-| `update-2` | `--task-id` *(required)*, `--body`, `--body-file` |
+| `append-message` | `--task-id` *(required)*, `--body`, `--body-file` |
+| `drop-participant-conference` | `--task-id` *(required)*, `--participant-id` *(required)* |
+| `pause` | `--task-id` *(required)* |
+| `resume` | `--task-id` *(required)* |
 | `update` | `--task-id` *(required)*, `--body`, `--body-file` |
 
 ### journey
@@ -773,8 +778,9 @@ webex cc address-book delete-entry-id --id <entryId>
 
 | Command | Flags |
 |---|---|
+| `get-valid-times` | `--org-id` *(required)*, `--campaign-id`, `--interaction-id`, `--agent-id`, `--tracking-id` |
 | `start-request` | `--body`, `--body-file` |
-| `update-request` | `--campaign-id` *(required)*, `--dialing-rate`, `--dialing-list-fetch-url`, `--outdial-ani`, `--campaign-name`, `--auth-token`, `--no-answer-ring-limit`, `--max-dialing-rate`, `--reservation-percentage`, `--preview-offer-timeout`, `--preview-offer-timeout-auto-action`, `--preview-actions-disabled`, `--body`, `--body-file` |
+| `update-request` | `--campaign-id` *(required)*, `--body`, `--body-file` |
 | `stop-request` | `--campaign-id` *(required)* |
 
 ### captures
@@ -819,13 +825,13 @@ webex cc address-book delete-entry-id --id <entryId>
 
 | Command | Flags |
 |---|---|
-| `get-id-v2-api` | `--orgid` *(required)*, `--id` *(required)*, `--include-url` |
+| `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-url` |
 | `list` | `--orgid` *(required)*, `--filter`, `--search`, `--attributes`, `--page`, `--page-size`, `--include-agent-details` |
-| `create-v2-api` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `delete-references-1` | `--orgid` *(required)*, `--body`, `--body-file` |
-| `update-id-v2-api` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
-| `patch-id-v2-api` | `--orgid` *(required)*, `--id` *(required)*, `--attribute-tag`, `--greeting-purpose-id`, `--body`, `--body-file` |
-| `delete-id-v2-api` | `--orgid` *(required)*, `--id` *(required)* |
+| `create` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `delete-references` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
+| `patch-id` | `--orgid` *(required)*, `--id` *(required)*, `--attribute-tag`, `--greeting-purpose-id`, `--body`, `--body-file` |
+| `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
 
 ### journey-customer-identification
 
@@ -926,18 +932,154 @@ webex cc address-book delete-entry-id --id <entryId>
 | `create-within` | `--campaign-id` *(required)*, `--contact-list-id` *(required)*, `--body`, `--body-file` |
 | `update-status-within` | `--campaign-id` *(required)*, `--contact-list-id` *(required)*, `--contact-id` *(required)*, `--contact-status`, `--body`, `--body-file` |
 | `update-status` | `--campaign-id` *(required)*, `--contact-list-id` *(required)*, `--contact-list-status`, `--body`, `--body-file` |
+| `update-status-across-campaign-chain` | `--campaign-id` *(required)*, `--contact-id` *(required)*, `--contact-list-id`, `--fields`, `--contact-status`, `--search-across-the-campaign-chain`, `--body`, `--body-file` |
 
 ### agent-summaries
 
 | Command | Flags |
 |---|---|
 | `list` | `--org-id`, `--interaction-id`, `--search-type`, `--body`, `--body-file` |
-| `list-2` | `--org-id`, `--agent-ci-user-id`, `--search-type`, `--body`, `--body-file` |
+| `list-2` | `--org-id`, `--search-type`, `--body`, `--body-file` |
 
 ### ai-assistant
 
 | Command | Flags |
 |---|---|
 | `get-suggestions` | `--body`, `--body-file` |
+
+### activities
+
+| Command | Flags |
+|---|---|
+| `list-definitions` | `--org-id` *(required)*, `--project-id` *(required)* |
+| `describe` | `--org-id` *(required)*, `--project-id` *(required)*, `--activity-name` *(required)* |
+| `get-input-choices` | `--org-id` *(required)*, `--project-id` *(required)*, `--activity-name` *(required)*, `--input-name` *(required)*, `--mode`, `--query`, `--value`, `--parent_inputs` |
+| `list-definitions-2` | `--org-id` *(required)*, `--project-id` *(required)* |
+| `describe-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--activity-name` *(required)* |
+| `get-input-choices-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--activity-name` *(required)*, `--input-name` *(required)*, `--search`, `--validate`, `--parent-value`, `--parent-input-name` |
+
+### events
+
+| Command | Flags |
+|---|---|
+| `list-specifications` | `--org-id` *(required)*, `--project-id` *(required)* |
+| `list-specifications-2` | `--org-id` *(required)*, `--project-id` *(required)* |
+
+### flows
+
+| Command | Flags |
+|---|---|
+| `list` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-type`, `--ids`, `--page`, `--partial-name-search`, `--search-by`, `--size`, `--include-pagination`, `--is-validation` |
+| `get` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `validate-draft` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--version-id`, `--flow-type` |
+| `export` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--version`, `--flow-type` |
+| `list-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-type`, `--ids`, `--page`, `--partial-name-search`, `--search-by`, `--size`, `--include-pagination`, `--is-validation` |
+| `get-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `validate-draft-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--version-id`, `--flow-type` |
+| `export-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--version`, `--flow-type` |
+| `search` | `--org-id` *(required)*, `--project-id` *(required)*, `--query`, `--flow-type`, `--page`, `--size`, `--key-value-filter` |
+| `publish` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--skip-validation`, `--flow-type`, `--comment`, `--tag-ids`, `--body`, `--body-file` |
+| `lock` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `unlock` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `validate` | `--org-id` *(required)*, `--project-id` *(required)*, `--body`, `--body-file` |
+| `import` | `--org-id` *(required)*, `--project-id` *(required)*, `--overwrite`, `--flow-type`, `--body`, `--body-file` |
+| `save-draft` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--expected-version`, `--flow-type`, `--body`, `--body-file` |
+| `publish-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--skip-validation`, `--flow-type`, `--comment`, `--tag-ids`, `--body`, `--body-file` |
+| `lock-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `unlock-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--flow-type` |
+| `validate-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--body`, `--body-file` |
+| `import-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--overwrite`, `--flow-type`, `--body`, `--body-file` |
+| `save-draft-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--expected-version`, `--flow-type`, `--body`, `--body-file` |
+| `patch-draft` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--expected-version`, `--flow-type`, `--body`, `--body-file` |
+| `patch-draft-2` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--expected-version`, `--flow-type`, `--body`, `--body-file` |
+| `delete` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--force`, `--skip-rs-epcheck`, `--flow-type` |
+
+### functions
+
+| Command | Flags |
+|---|---|
+| `list-custom` | `--org-id` *(required)*, `--is-partial-match`, `--is-case-sensitive`, `--name`, `--language`, `--status`, `--sort-by`, `--page`, `--size`, `--ids`, `--fields`, `--is-validation` |
+| `get-custom` | `--org-id` *(required)*, `--id` *(required)*, `--version-or-tag`, `--meta-data-only` |
+| `list-options` | `--org-id` *(required)*, `--language`, `--runtime` |
+| `create-custom` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `import-custom` | `--org-id` *(required)*, `--overwrite`, `--associated-rcs` |
+| `unlock-custom` | `--org-id` *(required)*, `--id` *(required)* |
+| `lock-custom` | `--org-id` *(required)*, `--id` *(required)* |
+| `test-custom` | `--org-id` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
+| `publish-custom` | `--org-id` *(required)*, `--id` *(required)*, `--tags`, `--comment`, `--key_0`, `--key_1`, `--key_2`, `--key_3`, `--body`, `--body-file` |
+| `export-custom` | `--org-id` *(required)*, `--id` *(required)*, `--version-or-tag` |
+| `update-custom` | `--org-id` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
+| `delete-custom` | `--org-id` *(required)*, `--id` *(required)*, `--is-force-deletion` |
+
+### legacy-flows
+
+| Command | Flags |
+|---|---|
+| `export` | `--org-id` *(required)*, `--project-id` *(required)*, `--flow-id` *(required)*, `--version`, `--flow-type` |
+| `import` | `--org-id` *(required)*, `--project-id` *(required)*, `--overwrite`, `--flow-type` |
+
+### templates
+
+| Command | Flags |
+|---|---|
+| `list-flow` | `--org-id` *(required)*, `--project-id` *(required)*, `--type` |
+| `get-flow` | `--org-id` *(required)*, `--project-id` *(required)*, `--id` *(required)* |
+| `list-flow-2` | `--type` |
+| `get-flow-2` | `--id` *(required)* |
+
+### campaign-group
+
+| Command | Flags |
+|---|---|
+| `list` | `--campaign-group-name` *(required)*, `--page`, `--page-size`, `--campaign-status` |
+
+### search-metadata
+
+| Command | Flags |
+|---|---|
+| `get` | — |
+
+### asset
+
+| Command | Flags |
+|---|---|
+| `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-channel-name` |
+| `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
+| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--sort`, `--include-count`, `--single-object-response`, `--include-channel-name`, `--exclude-epassociated` |
+| `create` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)*, `--body`, `--body-file` |
+| `patch-id` | `--orgid` *(required)*, `--id` *(required)*, `--value-type`, `--body`, `--body-file` |
+| `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
+
+### channel
+
+| Command | Flags |
+|---|---|
+| `get-id` | `--orgid` *(required)*, `--id` *(required)*, `--include-logo-url-versioned` |
+| `list-references` | `--orgid` *(required)*, `--id` *(required)*, `--type`, `--page`, `--page-size` |
+| `list` | `--orgid` *(required)*, `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--sort`, `--include-count`, `--single-object-response`, `--include-logo-url-versioned` |
+| `create` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `bulk-save` | `--orgid` *(required)*, `--body`, `--body-file` |
+| `update-id` | `--orgid` *(required)*, `--id` *(required)* |
+| `patch-id` | `--orgid` *(required)*, `--id` *(required)*, `--description`, `--logo-type`, `--logo-icon-name`, `--body`, `--body-file` |
+| `delete-id` | `--orgid` *(required)*, `--id` *(required)* |
+
+### usage-reports
+
+| Command | Flags |
+|---|---|
+| `get-available-types` | — |
+| `list` | `--resource-type`, `--created-after`, `--created-before` |
+| `get` | `--report-id` *(required)* |
+| `download-file` | `--file-id` *(required)* |
+| `create` | `--resource-type`, `--start-date`, `--end-date`, `--body`, `--body-file` |
+| `delete` | `--report-id` *(required)* |
+
+### external-data-updates
+
+| Command | Flags |
+|---|---|
+| `update-task-global-variables` | `--body`, `--body-file` |
 
 <!-- codegen:end -->

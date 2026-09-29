@@ -1088,4 +1088,176 @@ func init() {
 		callControlsCmd.AddCommand(cmd)
 	}
 
+	{ // dial-2
+		var destination string
+		var endpointId string
+		var singleNumberReachPhoneNumber string
+		var lineOwnerId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "dial-2",
+			Short: "Dial",
+			Long:  `Initiate an outbound call to a specified destination. This is also commonly referred to as Click to Call or Click to Dial. Alerts occur on all the devices belonging to a user unless an optional endpointId is specified in which case only the device or application identified by the endpointId is alerted. When a user answers an alerting device, an outbound call is placed from that device to the destination.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/calls/members/me/dial")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("destination", destination)
+					req.BodyString("endpointId", endpointId)
+					req.BodyString("singleNumberReachPhoneNumber", singleNumberReachPhoneNumber)
+					req.BodyString("lineOwnerId", lineOwnerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&destination, "destination", "", "")
+		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&singleNumberReachPhoneNumber, "single-number-reach-phone-number", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callControlsCmd.AddCommand(cmd)
+	}
+
+	{ // answer-2
+		var callId string
+		var endpointId string
+		var lineOwnerId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "answer-2",
+			Short: "Answer",
+			Long:  `Answer an incoming call. When no endpointId is specified, the call is answered on the user's primary device. When an endpointId is specified, the call is answered on the device or application identified by the endpointId. The answer API is rejected if the device is not alerting for the call or the device does not support answer via API.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/calls/members/me/answer")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callId", callId)
+					req.BodyString("endpointId", endpointId)
+					req.BodyString("lineOwnerId", lineOwnerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&endpointId, "endpoint-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callControlsCmd.AddCommand(cmd)
+	}
+
+	{ // hangup-2
+		var callId string
+		var lineOwnerId string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "hangup-2",
+			Short: "Hangup",
+			Long:  `Hangup a call. If used on an unanswered incoming call, the call is rejected and sent to busy.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/telephony/calls/members/me/hangup")
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("callId", callId)
+					req.BodyString("lineOwnerId", lineOwnerId)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callId, "call-id", "", "")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		callControlsCmd.AddCommand(cmd)
+	}
+
+	{ // list-2
+		var lineOwnerId string
+		cmd := &cobra.Command{
+			Use:   "list-2",
+			Short: "List Calls",
+			Long:  `Get the list of details for all active calls associated with the user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/members/me/calls")
+				req.QueryParam("lineOwnerId", lineOwnerId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
+		callControlsCmd.AddCommand(cmd)
+	}
+
+	{ // get-3
+		var callId string
+		var lineOwnerId string
+		cmd := &cobra.Command{
+			Use:   "get-3",
+			Short: "Get Call Details",
+			Long:  `Get the details of the specified active call for the user.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/members/me/calls/{callId}")
+				req.PathParam("callId", callId)
+				req.QueryParam("lineOwnerId", lineOwnerId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&callId, "call-id", "", "The call identifier of the call.")
+		cmd.MarkFlagRequired("call-id")
+		cmd.Flags().StringVar(&lineOwnerId, "line-owner-id", "", "The ID of a user, workspace, or virtual line for which there is a secondary line on a device owned by the user invoking the API.")
+		callControlsCmd.AddCommand(cmd)
+	}
+
 }

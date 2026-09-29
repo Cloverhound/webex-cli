@@ -270,6 +270,8 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 | `list-history` | `--type` |
 | `list-member-id` | `--member-id` *(required)*, `--org-id` |
 | `get-member-id` | `--member-id` *(required)*, `--call-id` *(required)*, `--org-id` |
+| `list-2` | `--line-owner-id` |
+| `get-3` | `--call-id` *(required)*, `--line-owner-id` |
 | `dial` | `--destination`, `--endpoint-id`, `--single-number-reach-phone-number`, `--line-owner-id`, `--body`, `--body-file` |
 | `answer` | `--call-id`, `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
 | `reject` | `--call-id`, `--action`, `--line-owner-id`, `--body`, `--body-file` |
@@ -294,6 +296,9 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 | `answer-member-id` | `--member-id` *(required)*, `--org-id`, `--call-id`, `--endpoint-id`, `--body`, `--body-file` |
 | `hangup-member-id` | `--member-id` *(required)*, `--org-id`, `--call-id`, `--body`, `--body-file` |
 | `pull` | `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
+| `dial-2` | `--destination`, `--endpoint-id`, `--single-number-reach-phone-number`, `--line-owner-id`, `--body`, `--body-file` |
+| `answer-2` | `--call-id`, `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
+| `hangup-2` | `--call-id`, `--line-owner-id`, `--body`, `--body-file` |
 
 ### call-routing
 

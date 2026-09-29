@@ -37,11 +37,12 @@ func init() {
 		var page string
 		var pageSize string
 		var singleObjectResponse string
+		var provisioningView string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Desktop Profile(s)",
-			Long: `Retrieve a list of Desktop Profile(s) in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+			Short: "List Desktop Profiles",
+			Long: `Retrieve a list of Desktop Profiles in a given organization.
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-profile")
 				req.PathParam("orgid", orgid)
@@ -51,6 +52,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("singleObjectResponse", singleObjectResponse)
+				req.QueryParam("provisioningView", provisioningView)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
@@ -67,17 +69,69 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, autoWrapAfterSeconds, wrapUpCodes, idleCodes, queues, entryPoints, buddyTeams, dialPlans, agentDNValidationCriteria, agentDNValidationCriterions, loginVoiceOptions, viewableStatistics, thresholdRules, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter. ")
-		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported except ( wrapUpCodes,queues, idleCodes,entryPoints, buddyTeams, dialPlans, loginVoiceOptions, viewableStatistics, thresholdRules,agentDNValidationCriterions ) ")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, autoWrapAfterSeconds, wrapUpCodes, idleCodes, queues, entryPoints, buddyTeams, dialPlans, agentDNValidationCriteria, agentDNValidationCriterions, loginVoiceOptions, viewableStatistics, thresholdRules, createdTime, lastUpdatedTime   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except ( wrapUpCodes,queues, idleCodes,entryPoints, buddyTeams, dialPlans, loginVoiceOptions, viewableStatistics, thresholdRules,agentDNValidationCriterions ) ")
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, description)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"description\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
+		cmd.Flags().StringVar(&provisioningView, "provisioning-view", "", "If set to true, the API will only return data that the user has access to, according to the User Profile.")
 		desktopProfileCmd.AddCommand(cmd)
 	}
 
 	{ // create
 		var orgid string
+		var accessBuddyTeam string
+		var accessEntryPoint string
+		var accessIdleCode string
+		var accessQueue string
+		var accessWrapUpCode string
+		var active string
+		var agentDnvalidation string
+		var name string
+		var parentType string
+		var viewableStatistics string
+		var organizationId string
+		var id string
+		var version string
+		var description string
+		var siteId string
+		var screenPopup string
+		var lastAgentRouting string
+		var scheduleAndManageCallBack string
+		var autoWrapUp string
+		var autoAnswer string
+		var agentPersonalGreeting string
+		var autoWrapAfterSeconds string
+		var agentAvailableAfterOutdial string
+		var allowAutoWrapUpExtension string
+		var wrapUpCodes string
+		var idleCodes string
+		var queues string
+		var entryPoints string
+		var buddyTeams string
+		var consultToQueue string
+		var outdialEnabled string
+		var outdialEntryPointId string
+		var outdialAniid string
+		var addressBookId string
+		var dialPlanEnabled string
+		var dialPlans string
+		var agentDnvalidationCriteria string
+		var agentDnvalidationCriterions string
+		var loginVoiceOptions string
+		var thresholdRules string
+		var timeoutDesktopInactivityCustomEnabled string
+		var showUserDetailsMs string
+		var stateSynchronizationMs string
+		var showUserDetailsWebex string
+		var stateSynchronizationWebex string
+		var manageChannelAvailability string
+		var timeoutDesktopInactivityMins string
+		var systemDefault string
+		var createdTime string
+		var lastUpdatedTime string
+		var autoAcceptDigitalInteractions string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -87,6 +141,57 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/agent-profile")
 				req.PathParam("orgid", orgid)
+				req.QueryParam("accessBuddyTeam", accessBuddyTeam)
+				req.QueryParam("accessEntryPoint", accessEntryPoint)
+				req.QueryParam("accessIdleCode", accessIdleCode)
+				req.QueryParam("accessQueue", accessQueue)
+				req.QueryParam("accessWrapUpCode", accessWrapUpCode)
+				req.QueryParam("active", active)
+				req.QueryParam("agentDNValidation", agentDnvalidation)
+				req.QueryParam("name", name)
+				req.QueryParam("parentType", parentType)
+				req.QueryParam("viewableStatistics", viewableStatistics)
+				req.QueryParam("organizationId", organizationId)
+				req.QueryParam("id", id)
+				req.QueryParam("version", version)
+				req.QueryParam("description", description)
+				req.QueryParam("siteId", siteId)
+				req.QueryParam("screenPopup", screenPopup)
+				req.QueryParam("lastAgentRouting", lastAgentRouting)
+				req.QueryParam("scheduleAndManageCallBack", scheduleAndManageCallBack)
+				req.QueryParam("autoWrapUp", autoWrapUp)
+				req.QueryParam("autoAnswer", autoAnswer)
+				req.QueryParam("agentPersonalGreeting", agentPersonalGreeting)
+				req.QueryParam("autoWrapAfterSeconds", autoWrapAfterSeconds)
+				req.QueryParam("agentAvailableAfterOutdial", agentAvailableAfterOutdial)
+				req.QueryParam("allowAutoWrapUpExtension", allowAutoWrapUpExtension)
+				req.QueryParam("wrapUpCodes", wrapUpCodes)
+				req.QueryParam("idleCodes", idleCodes)
+				req.QueryParam("queues", queues)
+				req.QueryParam("entryPoints", entryPoints)
+				req.QueryParam("buddyTeams", buddyTeams)
+				req.QueryParam("consultToQueue", consultToQueue)
+				req.QueryParam("outdialEnabled", outdialEnabled)
+				req.QueryParam("outdialEntryPointId", outdialEntryPointId)
+				req.QueryParam("outdialANIId", outdialAniid)
+				req.QueryParam("addressBookId", addressBookId)
+				req.QueryParam("dialPlanEnabled", dialPlanEnabled)
+				req.QueryParam("dialPlans", dialPlans)
+				req.QueryParam("agentDNValidationCriteria", agentDnvalidationCriteria)
+				req.QueryParam("agentDNValidationCriterions", agentDnvalidationCriterions)
+				req.QueryParam("loginVoiceOptions", loginVoiceOptions)
+				req.QueryParam("thresholdRules", thresholdRules)
+				req.QueryParam("timeoutDesktopInactivityCustomEnabled", timeoutDesktopInactivityCustomEnabled)
+				req.QueryParam("showUserDetailsMS", showUserDetailsMs)
+				req.QueryParam("stateSynchronizationMS", stateSynchronizationMs)
+				req.QueryParam("showUserDetailsWebex", showUserDetailsWebex)
+				req.QueryParam("stateSynchronizationWebex", stateSynchronizationWebex)
+				req.QueryParam("manageChannelAvailability", manageChannelAvailability)
+				req.QueryParam("timeoutDesktopInactivityMins", timeoutDesktopInactivityMins)
+				req.QueryParam("systemDefault", systemDefault)
+				req.QueryParam("createdTime", createdTime)
+				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
+				req.QueryParam("autoAcceptDigitalInteractions", autoAcceptDigitalInteractions)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -103,6 +208,57 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&accessBuddyTeam, "access-buddy-team", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&accessEntryPoint, "access-entry-point", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&accessIdleCode, "access-idle-code", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&accessQueue, "access-queue", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&accessWrapUpCode, "access-wrap-up-code", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&active, "active", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&agentDnvalidation, "agent-dnvalidation", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&name, "name", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&parentType, "parent-type", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&viewableStatistics, "viewable-statistics", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&id, "id", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&version, "version", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&description, "description", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&siteId, "site-id", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&screenPopup, "screen-popup", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&lastAgentRouting, "last-agent-routing", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&scheduleAndManageCallBack, "schedule-and-manage-call-back", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&autoWrapUp, "auto-wrap-up", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&autoAnswer, "auto-answer", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&agentPersonalGreeting, "agent-personal-greeting", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&autoWrapAfterSeconds, "auto-wrap-after-seconds", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&agentAvailableAfterOutdial, "agent-available-after-outdial", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&allowAutoWrapUpExtension, "allow-auto-wrap-up-extension", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&wrapUpCodes, "wrap-up-codes", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&idleCodes, "idle-codes", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&queues, "queues", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&entryPoints, "entry-points", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&buddyTeams, "buddy-teams", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&consultToQueue, "consult-to-queue", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&outdialEnabled, "outdial-enabled", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&outdialEntryPointId, "outdial-entry-point-id", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&outdialAniid, "outdial-aniid", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&dialPlanEnabled, "dial-plan-enabled", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&dialPlans, "dial-plans", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&agentDnvalidationCriteria, "agent-dnvalidation-criteria", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&agentDnvalidationCriterions, "agent-dnvalidation-criterions", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&loginVoiceOptions, "login-voice-options", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&thresholdRules, "threshold-rules", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&timeoutDesktopInactivityCustomEnabled, "timeout-desktop-inactivity-custom-enabled", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&showUserDetailsMs, "show-user-details-ms", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&stateSynchronizationMs, "state-synchronization-ms", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&showUserDetailsWebex, "show-user-details-webex", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&stateSynchronizationWebex, "state-synchronization-webex", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&manageChannelAvailability, "manage-channel-availability", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&timeoutDesktopInactivityMins, "timeout-desktop-inactivity-mins", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&systemDefault, "system-default", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&createdTime, "created-time", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Agent profile configuration data")
+		cmd.Flags().StringVar(&autoAcceptDigitalInteractions, "auto-accept-digital-interactions", "", "Agent profile configuration data")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		desktopProfileCmd.AddCommand(cmd)
@@ -114,8 +270,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Desktop Profile(s)",
-			Long:  `Create, Update or delete Desktop Profile(s) in bulk in a given organization.`,
+			Short: "Bulk save Desktop Profiles",
+			Long:  `Create, Update or delete Desktop Profiles in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/agent-profile/bulk")
 				req.PathParam("orgid", orgid)
@@ -179,8 +335,8 @@ func init() {
 		var nextStartId string
 		cmd := &cobra.Command{
 			Use:   "purge-inactive",
-			Short: "Purge inactive Desktop Profile(s)",
-			Long:  `Purge inactive Desktop Profile(s) older than the configured interval for a given organization.`,
+			Short: "Purge inactive Desktop Profiles",
+			Long:  `Purge inactive Desktop Profiles older than the configured interval for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/agent-profile/purge-inactive-entities")
 				req.PathParam("orgid", orgid)
@@ -194,7 +350,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch with be selected.")
+		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch will be selected.")
 		desktopProfileCmd.AddCommand(cmd)
 	}
 
@@ -233,6 +389,56 @@ func init() {
 	{ // update-id
 		var orgid string
 		var id string
+		var accessBuddyTeam string
+		var accessEntryPoint string
+		var accessIdleCode string
+		var accessQueue string
+		var accessWrapUpCode string
+		var active string
+		var agentDnvalidation string
+		var name string
+		var parentType string
+		var viewableStatistics string
+		var organizationId string
+		var version string
+		var description string
+		var siteId string
+		var screenPopup string
+		var lastAgentRouting string
+		var scheduleAndManageCallBack string
+		var autoWrapUp string
+		var autoAnswer string
+		var agentPersonalGreeting string
+		var autoWrapAfterSeconds string
+		var agentAvailableAfterOutdial string
+		var allowAutoWrapUpExtension string
+		var wrapUpCodes string
+		var idleCodes string
+		var queues string
+		var entryPoints string
+		var buddyTeams string
+		var consultToQueue string
+		var outdialEnabled string
+		var outdialEntryPointId string
+		var outdialAniid string
+		var addressBookId string
+		var dialPlanEnabled string
+		var dialPlans string
+		var agentDnvalidationCriteria string
+		var agentDnvalidationCriterions string
+		var loginVoiceOptions string
+		var thresholdRules string
+		var timeoutDesktopInactivityCustomEnabled string
+		var showUserDetailsMs string
+		var stateSynchronizationMs string
+		var showUserDetailsWebex string
+		var stateSynchronizationWebex string
+		var manageChannelAvailability string
+		var timeoutDesktopInactivityMins string
+		var systemDefault string
+		var createdTime string
+		var lastUpdatedTime string
+		var autoAcceptDigitalInteractions string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -243,6 +449,57 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/agent-profile/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
+				req.QueryParam("accessBuddyTeam", accessBuddyTeam)
+				req.QueryParam("accessEntryPoint", accessEntryPoint)
+				req.QueryParam("accessIdleCode", accessIdleCode)
+				req.QueryParam("accessQueue", accessQueue)
+				req.QueryParam("accessWrapUpCode", accessWrapUpCode)
+				req.QueryParam("active", active)
+				req.QueryParam("agentDNValidation", agentDnvalidation)
+				req.QueryParam("name", name)
+				req.QueryParam("parentType", parentType)
+				req.QueryParam("viewableStatistics", viewableStatistics)
+				req.QueryParam("organizationId", organizationId)
+				req.QueryParam("id", id)
+				req.QueryParam("version", version)
+				req.QueryParam("description", description)
+				req.QueryParam("siteId", siteId)
+				req.QueryParam("screenPopup", screenPopup)
+				req.QueryParam("lastAgentRouting", lastAgentRouting)
+				req.QueryParam("scheduleAndManageCallBack", scheduleAndManageCallBack)
+				req.QueryParam("autoWrapUp", autoWrapUp)
+				req.QueryParam("autoAnswer", autoAnswer)
+				req.QueryParam("agentPersonalGreeting", agentPersonalGreeting)
+				req.QueryParam("autoWrapAfterSeconds", autoWrapAfterSeconds)
+				req.QueryParam("agentAvailableAfterOutdial", agentAvailableAfterOutdial)
+				req.QueryParam("allowAutoWrapUpExtension", allowAutoWrapUpExtension)
+				req.QueryParam("wrapUpCodes", wrapUpCodes)
+				req.QueryParam("idleCodes", idleCodes)
+				req.QueryParam("queues", queues)
+				req.QueryParam("entryPoints", entryPoints)
+				req.QueryParam("buddyTeams", buddyTeams)
+				req.QueryParam("consultToQueue", consultToQueue)
+				req.QueryParam("outdialEnabled", outdialEnabled)
+				req.QueryParam("outdialEntryPointId", outdialEntryPointId)
+				req.QueryParam("outdialANIId", outdialAniid)
+				req.QueryParam("addressBookId", addressBookId)
+				req.QueryParam("dialPlanEnabled", dialPlanEnabled)
+				req.QueryParam("dialPlans", dialPlans)
+				req.QueryParam("agentDNValidationCriteria", agentDnvalidationCriteria)
+				req.QueryParam("agentDNValidationCriterions", agentDnvalidationCriterions)
+				req.QueryParam("loginVoiceOptions", loginVoiceOptions)
+				req.QueryParam("thresholdRules", thresholdRules)
+				req.QueryParam("timeoutDesktopInactivityCustomEnabled", timeoutDesktopInactivityCustomEnabled)
+				req.QueryParam("showUserDetailsMS", showUserDetailsMs)
+				req.QueryParam("stateSynchronizationMS", stateSynchronizationMs)
+				req.QueryParam("showUserDetailsWebex", showUserDetailsWebex)
+				req.QueryParam("stateSynchronizationWebex", stateSynchronizationWebex)
+				req.QueryParam("manageChannelAvailability", manageChannelAvailability)
+				req.QueryParam("timeoutDesktopInactivityMins", timeoutDesktopInactivityMins)
+				req.QueryParam("systemDefault", systemDefault)
+				req.QueryParam("createdTime", createdTime)
+				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
+				req.QueryParam("autoAcceptDigitalInteractions", autoAcceptDigitalInteractions)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -261,6 +518,56 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Desktop Profile.")
 		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&accessBuddyTeam, "access-buddy-team", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&accessEntryPoint, "access-entry-point", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&accessIdleCode, "access-idle-code", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&accessQueue, "access-queue", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&accessWrapUpCode, "access-wrap-up-code", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&active, "active", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&agentDnvalidation, "agent-dnvalidation", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&name, "name", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&parentType, "parent-type", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&viewableStatistics, "viewable-statistics", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&version, "version", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&description, "description", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&siteId, "site-id", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&screenPopup, "screen-popup", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&lastAgentRouting, "last-agent-routing", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&scheduleAndManageCallBack, "schedule-and-manage-call-back", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&autoWrapUp, "auto-wrap-up", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&autoAnswer, "auto-answer", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&agentPersonalGreeting, "agent-personal-greeting", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&autoWrapAfterSeconds, "auto-wrap-after-seconds", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&agentAvailableAfterOutdial, "agent-available-after-outdial", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&allowAutoWrapUpExtension, "allow-auto-wrap-up-extension", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&wrapUpCodes, "wrap-up-codes", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&idleCodes, "idle-codes", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&queues, "queues", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&entryPoints, "entry-points", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&buddyTeams, "buddy-teams", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&consultToQueue, "consult-to-queue", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&outdialEnabled, "outdial-enabled", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&outdialEntryPointId, "outdial-entry-point-id", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&outdialAniid, "outdial-aniid", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&addressBookId, "address-book-id", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&dialPlanEnabled, "dial-plan-enabled", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&dialPlans, "dial-plans", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&agentDnvalidationCriteria, "agent-dnvalidation-criteria", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&agentDnvalidationCriterions, "agent-dnvalidation-criterions", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&loginVoiceOptions, "login-voice-options", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&thresholdRules, "threshold-rules", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&timeoutDesktopInactivityCustomEnabled, "timeout-desktop-inactivity-custom-enabled", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&showUserDetailsMs, "show-user-details-ms", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&stateSynchronizationMs, "state-synchronization-ms", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&showUserDetailsWebex, "show-user-details-webex", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&stateSynchronizationWebex, "state-synchronization-webex", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&manageChannelAvailability, "manage-channel-availability", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&timeoutDesktopInactivityMins, "timeout-desktop-inactivity-mins", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&systemDefault, "system-default", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&createdTime, "created-time", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Agent profile configuration data for update")
+		cmd.Flags().StringVar(&autoAcceptDigitalInteractions, "auto-accept-digital-interactions", "", "Agent profile configuration data for update")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		desktopProfileCmd.AddCommand(cmd)

@@ -359,5 +359,25 @@ webex messaging events list --resource messages --type created
 | `get-availability-cluster` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
 | `get-database-org-2` | `--organization-id` *(required)* |
 | `get-multi-tenant-org-2` | `--organization-id` *(required)* |
+| `list-nodes-cluster` | `--cluster-id` *(required)* |
+| `list-clusters-org` | `--organization-id` *(required)* |
+| `get-alarms-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
+| `get-usage-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
+
+### hybrid-data-security
+
+| Command | Flags |
+|---|---|
+| `get-org` | `--organization-id` *(required)* |
+| `list-clusters-org` | `--organization-id` *(required)* |
+| `get-cluster` | `--cluster-id` *(required)* |
+| `list-nodes-cluster` | `--cluster-id` *(required)* |
+| `get-node` | `--node-id` *(required)* |
+| `get-database-org` | `--organization-id` *(required)* |
+| `get-multi-tenant-org` | `--organization-id` *(required)* |
+| `get-alarms-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
+| `get-test-results-node` | `--node-id` *(required)*, `--trigger-type` |
+| `get-usage-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
+| `get-availability-cluster` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
 
 <!-- codegen:end -->
