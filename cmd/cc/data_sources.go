@@ -39,7 +39,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "register",
 			Short: "Register a Data Source",
-			Long:  "Register your data source to the Webex BYODS system. Authentication must happen via a Service App with the scope `spark-admin:datasource_write`.\nThe schema IDs determine what data types are sent from Webex to the DAP and the expected responses. The schemas can be inspected on developer.webex.com.",
+			Long:  "Register a data source with the Webex BYODS system. Authenticate using a Service App with the `spark-admin:datasource_write` scope.\nSchema IDs determine the types of data Webex sends to the DAP and the expected responses. Use the Data Source Schemas endpoints to inspect the available schemas.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/dataSources")
 				if bodyFile != "" {
@@ -78,7 +78,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-all",
 			Short: "Retrieve All Data Sources",
-			Long:  "Show all data sources registered for this Service App with the scope `spark-admin:datasource_read`.",
+			Long:  "Lists all data sources registered by the Service App. Requires the `spark-admin:datasource_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources")
 				if config.Paginate() {
@@ -102,7 +102,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-schemas",
 			Short: "Retrieve Data Source Schemas",
-			Long:  `Show available schemas. No specific scope is needed to retrieve the dataSource schemas, but a valid API token should be presented.`,
+			Long:  `Lists the available data source schemas. A valid API access token is required, but no specific scope is needed.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/schemas")
 				if config.Paginate() {
@@ -127,7 +127,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-schema",
 			Short: "Retrieve Details of a Specific Data Source Schema",
-			Long:  `Retrieve details of a specific data source schema by schema id. No specific scope is needed to retrieve the dataSource schemas, but a valid API token should be presented.`,
+			Long:  `Retrieves details for a specific data source schema by schema ID. A valid API access token is required, but no specific scope is needed.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/schemas/{schemaId}")
 				req.PathParam("schemaId", schemaId)
@@ -155,7 +155,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete",
 			Short: "Delete a Data Source",
-			Long:  "Delete a Data Source, by Data Source ID.\n\nSpecify the Data Source ID in the `dataSourceId` parameter in the URI.",
+			Long:  "Deletes a data source by ID.\n\nSpecify the data source ID in the `dataSourceId` URI parameter.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/dataSources/{dataSourceId}")
 				req.PathParam("dataSourceId", dataSourceId)
@@ -166,7 +166,7 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the dataSource.")
+		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the data source.")
 		cmd.MarkFlagRequired("data-source-id")
 		dataSourcesCmd.AddCommand(cmd)
 	}
@@ -176,7 +176,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Retrieve Data Source Details",
-			Long:  "Show details for a data source, by dataSource id.\nTo see details for a data source, use the Service App token with the `spark-admin:datasource_read` scope.",
+			Long:  "Retrieves details for a data source by ID. Use a Service App token with the `spark-admin:datasource_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/dataSources/{dataSourceId}")
 				req.PathParam("dataSourceId", dataSourceId)
@@ -194,7 +194,7 @@ func init() {
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the dataSource.")
+		cmd.Flags().StringVar(&dataSourceId, "data-source-id", "", "The unique identifier for the data source.")
 		cmd.MarkFlagRequired("data-source-id")
 		dataSourcesCmd.AddCommand(cmd)
 	}
@@ -214,7 +214,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update a Data Source",
-			Long:  "Updates a Data Source. The updateable fields are the `audience,` `subject,` `nonce,` `url` and `tokenLifetimeMinutes.`\nYou can update the `status` from `active` to `disabled` only when providing an `errorMessage` that may be shown to the customer admin in Control Hub. \nTokens must be regularly updated before their expiration to maintain system uptime.",
+			Long:  "Updates a data source. The fields you can update are `audience`, `subject`, `nonce`, `url`, and `tokenLifetimeMinutes`.\nYou can set `status` from `active` to `disabled` only if you provide an `errorMessage`, which may be shown to the customer administrator in Control Hub.\nUpdate tokens before they expire to prevent service interruption.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/dataSources/{dataSourceId}")
 				req.PathParam("dataSourceId", dataSourceId)

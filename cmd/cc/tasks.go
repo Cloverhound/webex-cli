@@ -4,7 +4,6 @@ package cc
 
 import (
 	"fmt"
-	"strconv"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
 	"github.com/Cloverhound/webex-cli/internal/client"
@@ -18,7 +17,6 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
-var _ = strconv.Itoa
 var _ = timeutil.ParseLastISO
 
 var tasksCmd = &cobra.Command{
@@ -35,7 +33,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create Task",
-			Long:  "Creates a Work Item task. Requires `CJP_User` scope for authorization.",
+			Long:  "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nCreates a new contact center task using the v2 task contract. The request body must include a `channelType` discriminator to select the task variant \u2014 `workItem` for structured form tasks, `customMessaging` for conversational messaging tasks, or `telephony` for voice tasks.\n\nOn success, returns a `201` response containing the task ID, which can be used to track the task lifecycle.\n\nRequires `cjp:task_write` OAuth scope. For partner-initiated inbound tasks (`workItem`, `customMessaging`), the `cjp:task_write` scope must be present in the partner application's access token. When an authenticated agent initiates an outdial (`telephony`) task, ensure the `cjp:task_write` scope is included in the agent's access token.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/tasks")
 				if bodyFile != "" {
@@ -261,14 +259,14 @@ If the header is not present in the request or if gzip is not listed as one of t
 		tasksCmd.AddCommand(cmd)
 	}
 
-	{ // resume
+	{ // unhold
 		var taskId string
 		var mediaResourceId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "resume",
-			Short: "Resume Task",
+			Use:   "unhold",
+			Short: "Unhold Task",
 			Long:  `Access this endpoint when the user has to resume a call from hold. When an user is done consulting, the previously held interaction with the customer should be resumed. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/unhold")
@@ -726,14 +724,14 @@ If the header is not present in the request or if gzip is not listed as one of t
 		tasksCmd.AddCommand(cmd)
 	}
 
-	{ // update-2
+	{ // append-message
 		var taskId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-2",
-			Short: "Update Task",
-			Long:  "Appends a Work Item message to an existing task. This is an asynchronous operation. Requires `CJP_User` scope for authorization.",
+			Use:   "append-message",
+			Short: "Append Task Message",
+			Long:  "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nAppends an inbound message to an existing `workItem` or `customMessaging` task. Use this API after the initial task has been created through Create Task. Requires `cjp:task_write` OAuth scope. For partner-initiated inbound message appends, the `cjp:task_write` scope must be present in the partner application's access token.\n\nOn success, returns a `202` response containing the append event identifier as `data.id`. Partners can use this identifier to correlate subsequent webhook delivery for the appended message.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/tasks/{taskId}/messages")
 				req.PathParam("taskId", taskId)
@@ -751,10 +749,77 @@ If the header is not present in the request or if gzip is not listed as one of t
 				return output.Print(resp, statusCode)
 			},
 		}
-		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID of the Work Item task.")
+		cmd.Flags().StringVar(&taskId, "task-id", "", "UUID of the existing task to which the message will be appended.")
 		cmd.MarkFlagRequired("task-id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // drop-participant-conference
+		var taskId string
+		var participantId string
+		cmd := &cobra.Command{
+			Use:   "drop-participant-conference",
+			Short: "Drop Participant From Conference",
+			Long:  "Access this endpoint when the user needs to drop a specific participant from an active conference associated with a task. This operation removes only the targeted participant while keeping the remaining parties in the conference. Requires `cjp:user` scope for  authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis)",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/conference/participants/{participantId}/drop")
+				req.PathParam("taskId", taskId)
+				req.PathParam("participantId", participantId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The taskId represents the task that the user is currently working on. It will be generated automatically during the creation of a new task.")
+		cmd.MarkFlagRequired("task-id")
+		cmd.Flags().StringVar(&participantId, "participant-id", "", "The ID of the participant ( Agent / DN / Entry Point DN / Customer) to be dropped from the conference, maximum length 36 characters.")
+		cmd.MarkFlagRequired("participant-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // pause
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "pause",
+			Short: "Pause Task",
+			Long:  "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to pause a task that cannot be handled immediately. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/pause")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the interaction or task that the user wants to pause.")
+		cmd.MarkFlagRequired("task-id")
+		tasksCmd.AddCommand(cmd)
+	}
+
+	{ // resume
+		var taskId string
+		cmd := &cobra.Command{
+			Use:   "resume",
+			Short: "Resume Task",
+			Long:  "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to resume a previously paused task. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/resume")
+				req.PathParam("taskId", taskId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&taskId, "task-id", "", "The unique ID represents the interaction or task that the user wants to resume.")
+		cmd.MarkFlagRequired("task-id")
 		tasksCmd.AddCommand(cmd)
 	}
 

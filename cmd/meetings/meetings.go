@@ -284,7 +284,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "patch",
 			Short: "Patch a Meeting",
-			Long:  "Updates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the string \"null\".\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting in the API that was created via a calendar connector is not allowed. The meeting may be updated in Webex, but the calendar event may not be updated, resulting in duplicate entries. This action is therefore blocked. In case you must overwrite this behavior, please contact devsupport@webex.com.",
+			Long:  "<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be patched during this time. If the meeting is started by the host or cohost and then ended normally, it can be patched immediately after it ends.</Callout>\n</div>\n\nUpdates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the string \"null\".\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting in the API that was created via a calendar connector is not allowed. The meeting may be updated in Webex, but the calendar event may not be updated, resulting in duplicate entries. This action is therefore blocked. In case you must overwrite this behavior, please contact devsupport@webex.com.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/meetings/{meetingId}")
 				req.PathParam("meetingId", meetingId)
@@ -316,7 +316,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update a Meeting",
-			Long:  "<div>\n<Callout type=\"warning\">The PUT method is still supported and behaves the same as before, will be deprecated in the future. Use the PATCH method instead.</Callout>\n</div>\n\nUpdates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting created using the API via a calendar connector is not supported. While the meeting may be updated in Webex, the calendar event may not be updated resulting in duplicate entries. If you need to override this behavior, contact devsupport@webex.com.",
+			Long:  "<div>\n<Callout type=\"warning\">The PUT method is still supported and behaves the same as before, will be deprecated in the future. Use the PATCH method instead.</Callout>\n</div>\n\n<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be updated during this time. If the meeting is started by the host or cohost and then ended normally, it can be updated immediately after it ends.</Callout>\n</div>\n\nUpdates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting created using the API via a calendar connector is not supported. While the meeting may be updated in Webex, the calendar event may not be updated resulting in duplicate entries. If you need to override this behavior, contact devsupport@webex.com.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "PUT", "/meetings/{meetingId}")
 				req.PathParam("meetingId", meetingId)
@@ -348,7 +348,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete",
 			Short: "Delete a Meeting",
-			Long:  "Deletes a meeting with a specified meeting ID. The deleted meeting cannot be recovered. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be deleted.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation deletes that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation deletes the entire meeting series.",
+			Long:  "<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be deleted during this time. If the meeting is started by the host or cohost and then ended normally, it can be deleted immediately after it ends.</Callout>\n</div>\n\nDeletes a meeting with a specified meeting ID. The deleted meeting cannot be recovered. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be deleted.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation deletes that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation deletes the entire meeting series.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "DELETE", "/meetings/{meetingId}")
 				req.PathParam("meetingId", meetingId)
@@ -1785,6 +1785,127 @@ func init() {
 		cmd.MarkFlagRequired("meeting-id")
 		cmd.Flags().StringVar(&current, "current", "", "Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the meeting ready to join or start or the upcoming meeting of the meeting series. If it's `true`, return details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start or the upcoming scheduled meeting of the meeting series. If it's `false` or not specified, return details for the entire meeting series. This parameter only applies to meeting series.     + Default: `false` ")
 		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		meetingsCmd.AddCommand(cmd)
+	}
+
+	{ // list-group
+		var personId string
+		var meetingNumber string
+		var webLink string
+		var current string
+		var timezone string
+		var hostEmail string
+		cmd := &cobra.Command{
+			Use:   "list-group",
+			Short: "List Group Meetings",
+			Long:  "List group meetings with a specified meeting number or web link by a service app which has group meeting access. You can specify the `personId` parameter or `hostEmail` header of whom the meetings will be retrieved. Please note that there are various products in the [Webex Suite](https://www.webex.com/collaboration-suite.html) such as `Meetings` and `Events`. Currently, only meetings of the `Meetings` product are supported by this API, meetings of others in the suite are not supported. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` will not be listed.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only meetings hosted by the person of `personId` or `hostEmail` will be listed.\n\n* `meetingNumber` and `webLink` are mutually exclusive and they cannot be specified simultaneously, but one of them must be specified. The operation returns an array of meeting objects specified by the `meetingNumber` or `webLink`.\n\n* Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`. If it's `false`, the `start` and `end` attributes are for the first scheduled meeting of that series. If it's `true` or not specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or the upcoming scheduled meeting of that series.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.\n\n* `hostEmail`: Email of the user whose meetings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/group/meetings")
+				req.QueryParam("personId", personId)
+				req.QueryParam("meetingNumber", meetingNumber)
+				req.QueryParam("webLink", webLink)
+				req.QueryParam("current", current)
+				req.Header("timezone", timezone)
+				req.Header("hostEmail", hostEmail)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID of the user whose meetings will be retrieved. The person ID can be retrieved from the [People APIs](/docs/api/v1/people), e.g. [Lit People](/docs/api/v1/people/list-people). Note that a person ID retrieved from the People APIs is a Base64-encoded string, e.g. `Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNDdiMmU3ZC01ZTBmLTRmNjktYWVmNC1lNGZmOTBhZWE3Yzk`. The person ID in the raw UUID format which is the last part of the Base64-decoded string, e.g. `d47b2e7d-5e0f-4f69-aef4-e4ff90aea7c9`, is also supported. The `personId` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&meetingNumber, "meeting-number", "", "Meeting number for the meeting objects being requested. `meetingNumber` and `webLink` are mutually exclusive. If it's an exceptional meeting from a meeting series, the exceptional meeting instead of the primary meeting series is returned.")
+		cmd.Flags().StringVar(&webLink, "web-link", "", "URL encoded link to information page for the meeting objects being requested. `meetingNumber` and `webLink` are mutually exclusive.")
+		cmd.Flags().StringVar(&current, "current", "", "Flag identifying to retrieve the current scheduled meeting of the meeting series or the entire meeting series. This parameter only applies to scenarios where the meeting is not an exceptional meeting from a meeting series. If it's `true`, return the scheduled meeting of the meeting series which is ready to join or start or the upcoming scheduled meeting of the meeting series; if it's `false`, return the entire meeting series. The default value is `true`.")
+		cmd.Flags().StringVar(&timezone, "timezone", "", "[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email of the user whose meetings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		meetingsCmd.AddCommand(cmd)
+	}
+
+	{ // patch-group
+		var meetingId string
+		var personId string
+		var hostEmail string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "patch-group",
+			Short: "Patch a Group Meeting",
+			Long:  "Patches details for a group meeting with a specified meeting ID by a service app which has group meeting access. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only meetings hosted by the person of `personId` or `hostEmail` will be patch.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the string \"null\".\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting in the API that was created via a calendar connector is not allowed. The meeting may be updated in Webex, but the calendar event may not be updated, resulting in duplicate entries. This action is therefore blocked. In case you must overwrite this behavior, please contact devsupport@webex.com.\n\n#### Request Header\n\n* `hostEmail`: Email of the user whose meeting will be patched. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/group/meetings/{meetingId}")
+				req.PathParam("meetingId", meetingId)
+				req.QueryParam("personId", personId)
+				req.Header("hostEmail", hostEmail)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "Unique identifier for the meeting to be updated. This parameter applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API.")
+		cmd.MarkFlagRequired("meeting-id")
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID of the user whose meeting will be patched. The person ID can be retrieved from the [People APIs](/docs/api/v1/people), e.g. [Lit People](/docs/api/v1/people/list-people). Note that a person ID retrieved from the People APIs is a Base64-encoded string, e.g. `Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNDdiMmU3ZC01ZTBmLTRmNjktYWVmNC1lNGZmOTBhZWE3Yzk`. The person ID in the raw UUID format which is the last part of the Base64-decoded string, e.g. `d47b2e7d-5e0f-4f69-aef4-e4ff90aea7c9`, is also supported. The `personId` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email of the user whose meetings will be patched. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		meetingsCmd.AddCommand(cmd)
+	}
+
+	{ // update-group-control-status
+		var personId string
+		var hostEmail string
+		var meetingId string
+		var action string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-group-control-status",
+			Short: "Update Group Meeting Control Status",
+			Long:  "Update meeting recording control status by a service app which has group meeting access. The service app can use this API to start, stop, pause, or resume meeting recording by providing an `action` value. The `personId` parameter or `hostEmail` header of the person to whom the meeting belongs must be specified. The service app which invokes the API manages one or more groups, and it also manages one or more sites. The user specified by `hostEmail` or `personId` must be in a group that is managed by the service app. The meeting specified by `meetingId` must be on a site that is managed by the service app. Please note that once the meeting recording has been controlled by a person in the meeting, the recording control of this meeting can no longer be controlled by the service app via the API.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/group/meetings/controls")
+				req.QueryParam("personId", personId)
+				req.Header("hostEmail", hostEmail)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("meetingId", meetingId)
+					req.BodyString("action", action)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&personId, "person-id", "", "Person ID of the user whose meeting control will be updated. The person ID can be retrieved from the [People APIs](/docs/api/v1/people), e.g. [Lit People](/docs/api/v1/people/list-people). Note that a person ID retrieved from the People APIs is a Base64-encoded string, e.g. `Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNDdiMmU3ZC01ZTBmLTRmNjktYWVmNC1lNGZmOTBhZWE3Yzk`. The person ID in the raw UUID format which is the last part of the Base64-decoded string, e.g. `d47b2e7d-5e0f-4f69-aef4-e4ff90aea7c9`, is also supported. The `personId` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "Email of the user whose meeting control will be updated. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "")
+		cmd.Flags().StringVar(&action, "action", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		meetingsCmd.AddCommand(cmd)

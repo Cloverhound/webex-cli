@@ -45,8 +45,8 @@ func init() {
 		var includeDynamicSkillsLimitReached string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List User(s)",
-			Long:  `Retrieve a list of User(s) in a given organization.`,
+			Short: "List Users",
+			Long:  `Retrieve a list of Users in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/user")
 				req.PathParam("orgid", orgid)
@@ -84,11 +84,11 @@ func init() {
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		cmd.Flags().StringVar(&supervisorManagedAgentsOnly, "supervisor-managed-agents-only", "", "If set to true, the API will return contact center enabled users based on the invoking supervisor user's user profile access rights to sites and teams.")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
 		cmd.Flags().StringVar(&buddyTeamAgentsOnly, "buddy-team-agents-only", "", "If set to true, returns only users who are part of buddy teams without PBAC check.")
 		cmd.Flags().StringVar(&userInQueue, "user-in-queue", "", "Can be either assigned or unassigned. If passed, returns the users who are assigned or not assigned to an agent based queue managed by the supervisor.")
-		cmd.Flags().StringVar(&queueId, "queue-id", "", "Contact Service Queue Id for which the list of assigned/unassigned agents needs to be fetched.")
-		cmd.Flags().StringVar(&includeAimappingCount, "include-aimapping-count", "", "If set to true, the API response will include the count of each AI features mapped to the entity.")
+		cmd.Flags().StringVar(&queueId, "queue-id", "", "Contact Service Queue ID for which the list of assigned or unassigned agents must be fetched.")
+		cmd.Flags().StringVar(&includeAimappingCount, "include-aimapping-count", "", "If set to true, the API response will include the count of each AI feature mapped to the entity.")
 		cmd.Flags().StringVar(&includeDynamicSkillsLimitReached, "include-dynamic-skills-limit-reached", "", "If true, includes whether each user has reached the dynamic skills assignment limit.")
 		usersCmd.AddCommand(cmd)
 	}
@@ -164,6 +164,7 @@ func init() {
 		var id string
 		var includeUserProfile string
 		var includeNames string
+		var includeSkillDetails string
 		cmd := &cobra.Command{
 			Use:   "get-ci-id",
 			Short: "Get specific User by CI User ID",
@@ -174,6 +175,7 @@ func init() {
 				req.PathParam("id", id)
 				req.QueryParam("includeUserProfile", includeUserProfile)
 				req.QueryParam("includeNames", includeNames)
+				req.QueryParam("includeSkillDetails", includeSkillDetails)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
@@ -194,6 +196,7 @@ func init() {
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&includeUserProfile, "include-user-profile", "", "Specifiy whether to include user profile data")
 		cmd.Flags().StringVar(&includeNames, "include-names", "", "Specifiy whether to include resource collection names")
+		cmd.Flags().StringVar(&includeSkillDetails, "include-skill-details", "", "If set to true, the response includes skill information for each dynamic skill assignment.")
 		usersCmd.AddCommand(cmd)
 	}
 
@@ -202,18 +205,6 @@ func init() {
 		var search string
 		var page string
 		var pageSize string
-		var condition string
-		var skillId string
-		var skillValue string
-		var organizationId string
-		var id string
-		var version int64
-		var skillName string
-		var skillType string
-		var weight int64
-		var dynamicSkill bool
-		var createdTime int64
-		var lastUpdatedTime int64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -232,19 +223,6 @@ func init() {
 					}
 				} else if bodyRaw != "" {
 					req.SetBodyRaw(bodyRaw)
-				} else {
-					req.BodyString("condition", condition)
-					req.BodyString("skillId", skillId)
-					req.BodyString("skillValue", skillValue)
-					req.BodyString("organizationId", organizationId)
-					req.BodyString("id", id)
-					req.BodyInt("version", version, cmd.Flags().Changed("version"))
-					req.BodyString("skillName", skillName)
-					req.BodyString("skillType", skillType)
-					req.BodyInt("weight", weight, cmd.Flags().Changed("weight"))
-					req.BodyBool("dynamicSkill", dynamicSkill, cmd.Flags().Changed("dynamic-skill"))
-					req.BodyInt("createdTime", createdTime, cmd.Flags().Changed("created-time"))
-					req.BodyInt("lastUpdatedTime", lastUpdatedTime, cmd.Flags().Changed("last-updated-time"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -258,24 +236,12 @@ func init() {
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)  The examples below show some search queries - \"Cisco\" - field==\"firstName\";value==\"Cisco\" - fields=in=(\"firstName\",\"lastName\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&condition, "condition", "", "")
-		cmd.Flags().StringVar(&skillId, "skill-id", "", "")
-		cmd.Flags().StringVar(&skillValue, "skill-value", "", "")
-		cmd.Flags().StringVar(&organizationId, "organization-id", "", "")
-		cmd.Flags().StringVar(&id, "id", "", "")
-		cmd.Flags().Int64Var(&version, "version", 0, "")
-		cmd.Flags().StringVar(&skillName, "skill-name", "", "")
-		cmd.Flags().StringVar(&skillType, "skill-type", "", "")
-		cmd.Flags().Int64Var(&weight, "weight", 0, "")
-		cmd.Flags().BoolVar(&dynamicSkill, "dynamic-skill", false, "")
-		cmd.Flags().Int64Var(&createdTime, "created-time", 0, "")
-		cmd.Flags().Int64Var(&lastUpdatedTime, "last-updated-time", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // get-ids
+	{ // list-2
 		var orgid string
 		var page string
 		var pageSize string
@@ -285,8 +251,8 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "get-ids",
-			Short: "Fetch User details by IDs",
+			Use:   "list-2",
+			Short: "List Users with details",
 			Long:  `Retrieve an existing User's first name, last name and email by list of IDs in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/user/fetch-user-details-by-ids")
@@ -328,7 +294,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-along-profile",
 			Short: "List Users along with profile",
-			Long:  `Retrieve a list of User(s) along with their UserProfiles in a given organization.`,
+			Long:  `Retrieve a list of Users along with their User Profiles in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/with-user-profile")
 				req.PathParam("orgid", orgid)
@@ -357,7 +323,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-along-profile-id",
 			Short: "Get specific User along with profile by ID",
-			Long:  `Retrieve an existing User along with the corresponding UserProfile by ID in a given organization.`,
+			Long:  `Retrieve an existing User along with the corresponding User Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/with-user-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -391,6 +357,8 @@ func init() {
 		var includeSkillProfileAudit string
 		var includeReskillAuditInfo string
 		var includeSkillDetails string
+		var checkIfUserHasDynamicSkill string
+		var dynamicSkillId string
 		cmd := &cobra.Command{
 			Use:   "get-id",
 			Short: "Get specific User by ID",
@@ -404,6 +372,8 @@ func init() {
 				req.QueryParam("includeSkillProfileAudit", includeSkillProfileAudit)
 				req.QueryParam("includeReskillAuditInfo", includeReskillAuditInfo)
 				req.QueryParam("includeSkillDetails", includeSkillDetails)
+				req.QueryParam("checkIfUserHasDynamicSkill", checkIfUserHasDynamicSkill)
+				req.QueryParam("dynamicSkillId", dynamicSkillId)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
@@ -422,11 +392,13 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the User.")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&includeCount, "include-count", "", "If set to true, the API response will include the count of each type of Contact Service Queues that the user is assigned to")
-		cmd.Flags().StringVar(&includeUserProfileType, "include-user-profile-type", "", "If set to true, the API response will include the user profile")
+		cmd.Flags().StringVar(&includeCount, "include-count", "", "If set to true, the API response will include the count of each type of Contact Service Queue to which the user is assigned.")
+		cmd.Flags().StringVar(&includeUserProfileType, "include-user-profile-type", "", "If set to true, the API response includes the User Profile.")
 		cmd.Flags().StringVar(&includeSkillProfileAudit, "include-skill-profile-audit", "", "If set to true gives skill profile modification info.")
 		cmd.Flags().StringVar(&includeReskillAuditInfo, "include-reskill-audit-info", "", "If set to true gives skill profile and dynamic skill modification info.")
-		cmd.Flags().StringVar(&includeSkillDetails, "include-skill-details", "", "If set to true,the response includes skill information for each dynamic skill assignment")
+		cmd.Flags().StringVar(&includeSkillDetails, "include-skill-details", "", "If set to true, the response includes skill information for each dynamic skill assignment.")
+		cmd.Flags().StringVar(&checkIfUserHasDynamicSkill, "check-if-user-has-dynamic-skill", "", "If set to true, checks if user has the specified dynamic skill")
+		cmd.Flags().StringVar(&dynamicSkillId, "dynamic-skill-id", "", "Dynamic skill ID to check if user has it assigned (required when checkIfUserHasDynamicSkill is true)")
 		usersCmd.AddCommand(cmd)
 	}
 
@@ -547,14 +519,14 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // bulk-update-dynamic-skills
+	{ // bulk-partial-update-dynamic-skills
 		var orgid string
 		var skillId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "bulk-update-dynamic-skills",
-			Short: "Bulk update User dynamic skills",
+			Use:   "bulk-partial-update-dynamic-skills",
+			Short: "Bulk partial update Users with dynamic skills",
 			Long:  `Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/user/bulk/update-dynamic-skill/{skillId}")
@@ -576,7 +548,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&skillId, "skill-id", "", "The unique identifier of the skill.")
+		cmd.Flags().StringVar(&skillId, "skill-id", "", "Dynamic skill ID used for bulk update")
 		cmd.MarkFlagRequired("skill-id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
@@ -657,6 +629,44 @@ func init() {
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		usersCmd.AddCommand(cmd)
+	}
+
+	{ // list-call-monitoring-id
+		var orgid string
+		var id string
+		var page string
+		var pageSize string
+		cmd := &cobra.Command{
+			Use:   "list-call-monitoring-id",
+			Short: "List users by call monitoring id",
+			Long:  `Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/by-call-monitoring-id/{id}")
+				req.PathParam("orgid", orgid)
+				req.PathParam("id", id)
+				req.QueryParam("page", page)
+				req.QueryParam("pageSize", pageSize)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the call monitoring.")
+		cmd.MarkFlagRequired("id")
+		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
+		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		usersCmd.AddCommand(cmd)
 	}
 

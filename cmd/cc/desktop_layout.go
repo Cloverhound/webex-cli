@@ -412,7 +412,7 @@ func init() {
 			Use:   "list",
 			Short: "List Desktop Layout(s)",
 			Long: `Retrieve a list of Desktop Layout(s) in a given organization. Json file content field won't be avalible in get all even though it is showing in sample response structure. and it will be avialable only in get by id.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/desktop-layout")
 				req.PathParam("orgid", orgid)

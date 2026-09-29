@@ -39,9 +39,9 @@ func init() {
 		var singleObjectResponse string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Holiday List(s)",
-			Long: `Retrieve a list of Holiday List(s) in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+			Short: "List Holiday Lists",
+			Long: `Retrieve a list of Holiday Lists in a given organization.
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/holiday-list")
 				req.PathParam("orgid", orgid)
@@ -75,8 +75,8 @@ func init() {
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		cmd.Flags().StringVar(&sort, "sort", "", "Sorting criteria in the format: property(, asc | desc). Default sort order is ascending. Supported sortable fields (name, createdTime, lastUpdatedTime).    The examples below show some sort queries - name,asc - createdTime,desc ")
-		cmd.Flags().StringVar(&includeCount, "include-count", "", "Enable the flag to get the count of holidays")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&includeCount, "include-count", "", "Enable this flag to get the count of holidays.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
 		holidayListCmd.AddCommand(cmd)
 	}
 
@@ -118,8 +118,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Holiday List(s)",
-			Long:  `Create, Update or delete Holiday List(s) in bulk in a given organization.`,
+			Short: "Bulk save Holiday Lists",
+			Long:  `Create, Update or delete Holiday Lists in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/holiday-list/bulk")
 				req.PathParam("orgid", orgid)

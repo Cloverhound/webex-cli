@@ -59,17 +59,6 @@ func init() {
 
 	{ // update-request
 		var campaignId string
-		var dialingRate float64
-		var dialingListFetchUrl string
-		var outdialAni string
-		var campaignName string
-		var authToken string
-		var noAnswerRingLimit int64
-		var maxDialingRate float64
-		var reservationPercentage int64
-		var previewOfferTimeout int64
-		var previewOfferTimeoutAutoAction string
-		var previewActionsDisabled []string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -85,18 +74,6 @@ func init() {
 					}
 				} else if bodyRaw != "" {
 					req.SetBodyRaw(bodyRaw)
-				} else {
-					req.BodyFloat("dialingRate", dialingRate, cmd.Flags().Changed("dialing-rate"))
-					req.BodyString("dialingListFetchURL", dialingListFetchUrl)
-					req.BodyString("outdialANI", outdialAni)
-					req.BodyString("campaignName", campaignName)
-					req.BodyString("authToken", authToken)
-					req.BodyInt("noAnswerRingLimit", noAnswerRingLimit, cmd.Flags().Changed("no-answer-ring-limit"))
-					req.BodyFloat("maxDialingRate", maxDialingRate, cmd.Flags().Changed("max-dialing-rate"))
-					req.BodyInt("reservationPercentage", reservationPercentage, cmd.Flags().Changed("reservation-percentage"))
-					req.BodyInt("previewOfferTimeout", previewOfferTimeout, cmd.Flags().Changed("preview-offer-timeout"))
-					req.BodyString("previewOfferTimeoutAutoAction", previewOfferTimeoutAutoAction)
-					req.BodyStringSlice("previewActionsDisabled", previewActionsDisabled)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -107,17 +84,6 @@ func init() {
 		}
 		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique request id of the campaign that needs to be updated")
 		cmd.MarkFlagRequired("campaign-id")
-		cmd.Flags().Float64Var(&dialingRate, "dialing-rate", 0, "")
-		cmd.Flags().StringVar(&dialingListFetchUrl, "dialing-list-fetch-url", "", "")
-		cmd.Flags().StringVar(&outdialAni, "outdial-ani", "", "")
-		cmd.Flags().StringVar(&campaignName, "campaign-name", "", "")
-		cmd.Flags().StringVar(&authToken, "auth-token", "", "")
-		cmd.Flags().Int64Var(&noAnswerRingLimit, "no-answer-ring-limit", 0, "")
-		cmd.Flags().Float64Var(&maxDialingRate, "max-dialing-rate", 0, "")
-		cmd.Flags().Int64Var(&reservationPercentage, "reservation-percentage", 0, "")
-		cmd.Flags().Int64Var(&previewOfferTimeout, "preview-offer-timeout", 0, "")
-		cmd.Flags().StringVar(&previewOfferTimeoutAutoAction, "preview-offer-timeout-auto-action", "", "")
-		cmd.Flags().StringSliceVar(&previewActionsDisabled, "preview-actions-disabled", nil, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		campaignManagerCmd.AddCommand(cmd)
@@ -141,6 +107,46 @@ func init() {
 		}
 		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The unique request id of the campaign that needs to be stopped")
 		cmd.MarkFlagRequired("campaign-id")
+		campaignManagerCmd.AddCommand(cmd)
+	}
+
+	{ // get-valid-times
+		var orgid string
+		var campaignId string
+		var interactionId string
+		var agentId string
+		var trackingId string
+		cmd := &cobra.Command{
+			Use:   "get-valid-times",
+			Short: "Get Valid Campaign Times",
+			Long:  `Gets valid campaign times for a campaign and agent. This request is accepted for asynchronous processing. Requires 'cjp:user','cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/organization/{orgid}/getValidCampaignTimes")
+				req.PathParam("orgid", orgid)
+				req.QueryParam("campaignId", campaignId)
+				req.QueryParam("interactionId", interactionId)
+				req.QueryParam("agentId", agentId)
+				req.QueryParam("trackingId", trackingId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(false)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgid, "orgid", "", "The organization ID for which valid campaign times are being requested.")
+		cmd.MarkFlagRequired("orgid")
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "The campaign ID for which valid campaign times are being requested.")
+		cmd.Flags().StringVar(&interactionId, "interaction-id", "", "The unique identifier of the interaction associated with this request.")
+		cmd.Flags().StringVar(&agentId, "agent-id", "", "The agent ID for whom valid campaign times are being requested.")
+		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "Optional tracking identifier for request tracing.")
 		campaignManagerCmd.AddCommand(cmd)
 	}
 

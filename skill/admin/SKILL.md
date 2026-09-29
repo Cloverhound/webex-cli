@@ -312,6 +312,8 @@ webex admin service-apps get --service-app-id <id>
 | `get` | `--org-id` *(required)* |
 | `generate-otp` | `--org-id` *(required)*, `--user-id` *(required)* |
 | `update` | `--org-id` *(required)*, `--schemas`, `--display-name`, `--preferred-language`, `--body`, `--body-file` |
+| `update-authentication-configuration-settings` | `--org-id` *(required)*, `--schemas`, `--remember-my-login-id`, `--remember-my-login-id-duration`, `--mfa-enabled`, `--body`, `--body-file` |
+| `update-password-policy` | `--org-id` *(required)*, `--schemas`, `--minimum-numeric`, `--minimum-cap-alpha`, `--minimum-low-alpha`, `--minimum-special`, `--minimum-length`, `--history-count`, `--max-password-age`, `--not-acceptable-strings`, `--body`, `--body-file` |
 
 ### events
 
@@ -441,13 +443,15 @@ webex admin service-apps get --service-app-id <id>
 | `list` | `--max`, `--from`, `--to`, `--meeting-id`, `--host-email`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
 | `list-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--last` |
 | `get` | `--recording-id` *(required)*, `--host-email` |
-| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--last` |
+| `list-group` | `--person-id`, `--max`, `--from`, `--to`, `--site-url`, `--integration-tag`, `--format`, `--service-type`, `--last` |
 | `get-group` | `--recording-id` *(required)*, `--person-id` |
 | `move-recycle-bin` | `--host-email`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `restore-recycle-bin` | `--host-email`, `--restore-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `purge-recycle-bin` | `--host-email`, `--purge-all`, `--recording-ids`, `--site-url`, `--body`, `--body-file` |
 | `share` | `--recording-id` *(required)*, `--host-email`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
 | `share-link` | `--host-email`, `--web-share-link`, `--add-emails`, `--remove-emails`, `--send-email`, `--body`, `--body-file` |
+| `query` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--host-email`, `--topic`, `--format`, `--service-type`, `--status`, `--body`, `--body-file` |
+| `query-admin-compliance-officer` | `--max`, `--from`, `--to`, `--meeting-id`, `--site-url`, `--integration-tag`, `--topic`, `--format`, `--service-type`, `--status`, `--timezone`, `--body`, `--body-file` |
 | `delete-admin` | `--recording-id` *(required)* |
 | `delete` | `--recording-id` *(required)*, `--host-email`, `--reason`, `--comment`, `--body`, `--body-file` |
 
@@ -463,7 +467,7 @@ webex admin service-apps get --service-app-id <id>
 |---|---|
 | `list` | `--report-id`, `--service`, `--template-id`, `--from`, `--to`, `--last` |
 | `get` | `--report-id` *(required)* |
-| `create` | `--template-id`, `--start-date`, `--end-date`, `--site-list`, `--body`, `--body-file` |
+| `create` | `--template-id`, `--start-date`, `--end-date`, `--site-list`, `--time-zone`, `--body`, `--body-file` |
 | `delete` | `--report-id` *(required)* |
 
 ### resource-memberships
@@ -599,5 +603,12 @@ webex admin service-apps get --service-app-id <id>
 | Command | Flags |
 |---|---|
 | `get` | `--org-id` *(required)*, `--useruuid` *(required)* |
+| `query` | `--org-id` *(required)*, `--filter` |
+
+### calling-metrics
+
+| Command | Flags |
+|---|---|
+| `webex-call-quality-stats` | `--from`, `--to`, `--location`, `--last` |
 
 <!-- codegen:end -->

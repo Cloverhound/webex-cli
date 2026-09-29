@@ -143,7 +143,7 @@ func init() {
 		cmd.MarkFlagRequired("campaign-id")
 		cmd.Flags().StringVar(&contactListId, "contact-list-id", "", "Contact List ID (as a number string).")
 		cmd.MarkFlagRequired("contact-list-id")
-		cmd.Flags().StringVar(&contactId, "contact-id", "", "Contact Unique ID (Customer Unique ID or Account Unique ID or Contact_Phone)")
+		cmd.Flags().StringVar(&contactId, "contact-id", "", "Contact Unique ID (Contact Phone or Customer Unique ID or Account Unique ID)")
 		cmd.MarkFlagRequired("contact-id")
 		cmd.Flags().StringVar(&contactStatus, "contact-status", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
@@ -198,9 +198,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-within-campaign",
 			Short: "Get Contact Lists within a Campaign",
-			Long:  `Retrieves all contact lists within a campaign, with optional filters for status and source.`,
+			Long:  "Retrieves all contact lists within a campaign. Use the optional `status` and `source` query parameters to filter results.\n\nEach contact list in the response includes the source file name, the time contact counts were last updated, and a breakdown of contact counts by processing and dialer status (for example, processed, invalid, valid, eligible, fresh, open, closed, and ready for dialer).\n\nResponses may reflect the same data for up to 30 seconds when the same campaign and filters are requested repeatedly.",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/v3/campaign-management/campaigns/{campaignId}/contact-lists")
+				req := client.NewRequest(config.CcBaseURL, "GET", "/v4/campaign-management/campaigns/{campaignId}/contact-lists")
 				req.PathParam("campaignId", campaignId)
 				req.QueryParam("status", status)
 				req.QueryParam("source", source)
@@ -221,7 +221,56 @@ func init() {
 		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID.")
 		cmd.MarkFlagRequired("campaign-id")
 		cmd.Flags().StringVar(&status, "status", "", "Contact List Status filter (Active, Expired, UploadFailed, etc.)")
-		cmd.Flags().StringVar(&source, "source", "", "Contact List Source filter (API, SFTP, ManualFile, GlobalUpload, GlobalSFTP)")
+		cmd.Flags().StringVar(&source, "source", "", "Contact List Source filter (API, SFTP, ManualFile)")
+		contactListManagementCmd.AddCommand(cmd)
+	}
+
+	{ // update-status-across-campaign-chain
+		var campaignId string
+		var contactId string
+		var contactListId string
+		var fields string
+		var contactStatus string
+		var searchAcrossTheCampaignChain string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-status-across-campaign-chain",
+			Short: "Update contact status across the campaign chain",
+			Long:  "Synchronously closes the specified contacts and returns the outcome in the same response. Contacts are identified using the same unique identifiers configured in your campaign field mappings, such as Contact Phone (format as per the associated field mapping) or Customer Unique ID or Account Unique ID (For more info, please refer to the [global variables help documentation](https://docs-campaign-for-contact-centers.webexcampaign.com/docs/global-variables)).\n\n By default, the API searches the specified campaign and any of its downstream target campaigns in the chain (across all active contact-lists associated with these campaigns), and closes the contact wherever it is found in a closeable state. Set `searchAcrossTheCampaignChain` to `no` to close the contact only in the campaign specified in the request path.\n\n**Optional query parameters**\n\n- `contactListId` - Search only the specific contact-list within the campaign specified in the request path. If `searchAcrossTheCampaignChain` is set to `yes` then all active contact-lists in the other downstream target campaigns in the chain are also searched.\n- `fields` - Return specified contact field values in the response for the matching contact records (for example: FirstName, LastName, AmountDue).",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "PATCH", "/v3/campaign-management/campaigns/{campaignId}/contacts/{contactId}")
+				req.PathParam("campaignId", campaignId)
+				req.PathParam("contactId", contactId)
+				req.QueryParam("contactListId", contactListId)
+				req.QueryParam("fields", fields)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyString("contactStatus", contactStatus)
+					req.BodyString("searchAcrossTheCampaignChain", searchAcrossTheCampaignChain)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&campaignId, "campaign-id", "", "Campaign ID (as a string). All downstream target campaigns in the chain are included in the search.")
+		cmd.MarkFlagRequired("campaign-id")
+		cmd.Flags().StringVar(&contactId, "contact-id", "", "Contact Unique ID (Contact Phone or Customer Unique ID or Account Unique ID)")
+		cmd.MarkFlagRequired("contact-id")
+		cmd.Flags().StringVar(&contactListId, "contact-list-id", "", "Optional. Search only the specific contact-list within the campaign specified in the request path. If `searchAcrossTheCampaignChain` is set to `yes`, then all active contact-lists in the other downstream target campaigns in the chain are also searched. When omitted, all active contact lists in that campaign are searched.")
+		cmd.Flags().StringVar(&fields, "fields", "", "Optional. Contact field names to include in the response (comma-separated names).")
+		cmd.Flags().StringVar(&contactStatus, "contact-status", "", "")
+		cmd.Flags().StringVar(&searchAcrossTheCampaignChain, "search-across-the-campaign-chain", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		contactListManagementCmd.AddCommand(cmd)
 	}
 
