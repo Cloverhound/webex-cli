@@ -2,6 +2,10 @@
 
 Compared with PR base `85b6a523894c82bb6b8440a103b6f05d39762312`. Added names include renamed/moved operations, not only new Cisco APIs. See [NAMING.md](NAMING.md) for migration details and live route checks.
 
+## Change classification
+
+**178 added**, **82 modified**, **97 renamed**, **0 deleted**. Added counts include renamed commands. Renamed entries retain aliases; deleted entries would mean the CLI spelling is no longer available. This refresh has no deleted spellings after compatibility aliases are accounted for. Modified entries include method, route, parameters, body, headers, and documentation changes.
+
 ## Coverage
 
 | Area | Groups | Spec operations |
@@ -26,6 +30,24 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex admin identity-org update-password-policy` | `PATCH /identity/organizations/{orgId}/passwordPolicy` | Update Organization Password Policy, by organizationID. |
 | `webex admin recordings query` | `POST /recordings/query` | Queries recordings with filters in the request body |
 | `webex admin recordings query-admin-compliance-officer` | `POST /admin/recordings/query` | Queries recordings for an admin or compliance officer with filters in the request body |
+
+### Modified commands
+
+- **Modified** `webex admin data-sources delete` — path parameters: updated `dataSourceId`; help/description updated
+- **Modified** `webex admin data-sources get` — path parameters: updated `dataSourceId`; help/description updated
+- **Modified** `webex admin data-sources get-all` — help/description updated
+- **Modified** `webex admin data-sources get-schema` — help/description updated
+- **Modified** `webex admin data-sources get-schemas` — help/description updated
+- **Modified** `webex admin data-sources register` — help/description updated
+- **Modified** `webex admin data-sources update` — help/description updated
+- **Modified** `webex admin people update-person` — help/description updated
+- **Modified** `webex admin recordings list` — help/description updated
+- **Modified** `webex admin recordings list-admin-compliance-officer` — help/description updated
+- **Modified** `webex admin recordings list-group` — query parameters: removed `topic`
+- **Modified** `webex admin reports create` — body fields: added `timeZone`
+- **Modified** `webex admin scim-2-users update-patch` — help/description updated
+- **Modified** `webex admin scim-2-users update-put` — help/description updated
+
 
 ## calling
 
@@ -203,17 +225,7 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc work-types get` | `GET /organization/{orgid}/work-type/{id}` | Retrieve an existing Work Type by ID in a given organization. |
 | `webex cc work-types update` | `PUT /organization/{orgid}/work-type/{id}` | Update an existing Work Type by ID in a given organization. |
 
-### Existing names with changed routes
-
-| Full command | Previous route | Current route |
-| --- | --- | --- |
-| `webex cc contact-list-management get-within-campaign` | `GET /v3/campaign-management/campaigns/{campaignId}/contact-lists` | `GET /v4/campaign-management/campaigns/{campaignId}/contact-lists` |
-| `webex cc flow export` | `GET /flow-store/{orgId}/project/{projectId}/flows/{flowId}:export` | `GET /{orgId}/project/{projectId}/v2/flows/{flowId}:export` |
-| `webex cc flow import` | `POST /flow-store/{orgId}/project/{projectId}/flows:import` | `POST /{orgId}/project/{projectId}/v2/flows:import` |
-| `webex cc flow list` | `GET /flow-store/{orgId}/project/{projectId}/flows` | `GET /{orgId}/project/{projectId}/flows` |
-| `webex cc flow publish` | `POST /flow-store/{orgId}/project/{projectId}/flows/{flowId}:publish` | `POST /{orgId}/project/{projectId}/flows/{flowId}:publish` |
-
-### Previous canonical names
+### Renamed or deleted canonical names
 
 | Previous command | Status |
 | --- | --- |
@@ -313,6 +325,67 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc work-types get-id` | Alias for `webex cc work-types get` |
 | `webex cc work-types update-id` | Alias for `webex cc work-types update` |
 
+### Modified commands
+
+- **Modified** `webex cc agent-personal-greeting-files list` — query parameters: updated `filter`, `includeAgentDetails`; help/description updated
+- **Modified** `webex cc agent-summaries list-2` — body fields: removed `agentCiUserId`
+- **Modified** `webex cc business-hour bulk-save` — help/description updated
+- **Modified** `webex cc business-hour list` — query parameters: updated `includeCount`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc campaign-manager update-request` — JSON body handling changed
+- **Modified** `webex cc captures list` — help/description updated
+- **Modified** `webex cc contact-list-management get-within-campaign` — path: `/v3/campaign-management/campaigns/{campaignId}/contact-lists` → `/v4/campaign-management/campaigns/{campaignId}/contact-lists`; query parameters: updated `source`; help/description updated
+- **Modified** `webex cc contact-list-management update-status-within` — path parameters: updated `contactId`
+- **Modified** `webex cc contact-service-queue bulk-partial-update` — help/description updated
+- **Modified** `webex cc contact-service-queue bulk-save` — help/description updated
+- **Modified** `webex cc contact-service-queue create-remove-agents-users-agent` — help/description updated
+- **Modified** `webex cc contact-service-queue list` — query parameters: updated `provisioningView`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc contact-service-queue list-agent-based` — help/description updated
+- **Modified** `webex cc contact-service-queue list-skill-based` — help/description updated
+- **Modified** `webex cc contact-service-queue list-team-based` — help/description updated
+- **Modified** `webex cc contact-service-queue purge-inactive` — query parameters: updated `nextStartId`; help/description updated
+- **Modified** `webex cc data-sources delete` — path parameters: updated `dataSourceId`; help/description updated
+- **Modified** `webex cc data-sources get` — path parameters: updated `dataSourceId`; help/description updated
+- **Modified** `webex cc data-sources get-all` — help/description updated
+- **Modified** `webex cc data-sources get-schema` — help/description updated
+- **Modified** `webex cc data-sources get-schemas` — help/description updated
+- **Modified** `webex cc data-sources register` — help/description updated
+- **Modified** `webex cc data-sources update` — help/description updated
+- **Modified** `webex cc desktop-layout list` — help/description updated
+- **Modified** `webex cc desktop-profile bulk-save` — help/description updated
+- **Modified** `webex cc desktop-profile create` — query parameters: added `accessBuddyTeam`, `accessEntryPoint`, `accessIdleCode`, `accessQueue`, `accessWrapUpCode`, `active`, `addressBookId`, `agentAvailableAfterOutdial`, `agentDNValidation`, `agentDNValidationCriteria`, `agentDNValidationCriterions`, `agentPersonalGreeting`, `allowAutoWrapUpExtension`, `autoAcceptDigitalInteractions`, `autoAnswer`, `autoWrapAfterSeconds`, `autoWrapUp`, `buddyTeams`, `consultToQueue`, `createdTime`, `description`, `dialPlanEnabled`, `dialPlans`, `entryPoints`, `id`, `idleCodes`, `lastAgentRouting`, `lastUpdatedTime`, `loginVoiceOptions`, `manageChannelAvailability`, `name`, `organizationId`, `outdialANIId`, `outdialEnabled`, `outdialEntryPointId`, `parentType`, `queues`, `scheduleAndManageCallBack`, `screenPopup`, `showUserDetailsMS`, `showUserDetailsWebex`, `siteId`, `stateSynchronizationMS`, `stateSynchronizationWebex`, `systemDefault`, `thresholdRules`, `timeoutDesktopInactivityCustomEnabled`, `timeoutDesktopInactivityMins`, `version`, `viewableStatistics`, `wrapUpCodes`
+- **Modified** `webex cc desktop-profile list` — query parameters: added `provisioningView`; updated `attributes`, `filter`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc desktop-profile purge-inactive` — query parameters: updated `nextStartId`; help/description updated
+- **Modified** `webex cc dial-plan bulk-save` — help/description updated
+- **Modified** `webex cc dial-plan create` — body fields: added `createdTime`, `lastUpdatedTime`; help/description updated
+- **Modified** `webex cc dial-plan list` — query parameters: updated `attributes`, `filter`; help/description updated
+- **Modified** `webex cc dial-plan list-references` — help/description updated
+- **Modified** `webex cc flow export` — path: `/flow-store/{orgId}/project/{projectId}/flows/{flowId}:export` → `/{orgId}/project/{projectId}/v2/flows/{flowId}:export`; query parameters: added `flowType`; updated `version`; documented response code changed; help/description updated
+- **Modified** `webex cc flow import` — path: `/flow-store/{orgId}/project/{projectId}/flows:import` → `/{orgId}/project/{projectId}/v2/flows:import`; query parameters: updated `overwrite`; body fields: added `contactType`, `description`, `flowName`, `flowType`, `status`, `version`; headers: removed `Content-Length`; request body support changed; JSON body handling changed; documented response code changed; help/description updated
+- **Modified** `webex cc flow list` — path: `/flow-store/{orgId}/project/{projectId}/flows` → `/{orgId}/project/{projectId}/flows`; query parameters: added `isValidation`, `searchBy`; updated `includePagination`; documented response code changed; help/description updated
+- **Modified** `webex cc flow publish` — path: `/flow-store/{orgId}/project/{projectId}/flows/{flowId}:publish` → `/{orgId}/project/{projectId}/flows/{flowId}:publish`; query parameters: added `flowType`, `skipValidation`; documented response code changed; help/description updated
+- **Modified** `webex cc holiday-list bulk-save` — help/description updated
+- **Modified** `webex cc holiday-list list` — query parameters: updated `includeCount`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc notification subscribe` — help/description updated
+- **Modified** `webex cc outdial-ani bulk-save` — help/description updated
+- **Modified** `webex cc outdial-ani list` — query parameters: updated `singleObjectResponse`; help/description updated
+- **Modified** `webex cc overrides list` — help/description updated
+- **Modified** `webex cc realtime subscribe-notification` — help/description updated
+- **Modified** `webex cc skill bulk-save` — help/description updated
+- **Modified** `webex cc skill create` — query parameters: removed `active`, `createdTime`, `description`, `dynamicSkill`, `enumSkillValues`, `id`, `lastUpdatedTime`, `name`, `organizationId`, `serviceLevelThreshold`, `skillType`, `version`; body fields: added `systemDefault`
+- **Modified** `webex cc skill list` — query parameters: added `include`; updated `singleObjectResponse`; help/description updated
+- **Modified** `webex cc skill purge-inactive` — query parameters: updated `nextStartId`; help/description updated
+- **Modified** `webex cc tasks create` — body fields: added `channelType`; removed `eventTime`, `mediaMgr`, `mediaType`, `orgId`, `trackingId`; help/description updated
+- **Modified** `webex cc team bulk-save` — help/description updated
+- **Modified** `webex cc team list` — query parameters: updated `filter`, `provisioningView`, `singleObjectResponse`, `supervisorView`; help/description updated
+- **Modified** `webex cc team purge-inactive` — query parameters: updated `nextStartId`; help/description updated
+- **Modified** `webex cc user-profiles list` — help/description updated
+- **Modified** `webex cc users get-agents-matching-skill-requirements` — body fields: removed `condition`, `createdTime`, `dynamicSkill`, `id`, `lastUpdatedTime`, `organizationId`, `skillId`, `skillName`, `skillType`, `skillValue`, `version`, `weight`; JSON body handling changed
+- **Modified** `webex cc users get-along-profile-id` — help/description updated
+- **Modified** `webex cc users get-ci-id` — query parameters: added `includeSkillDetails`
+- **Modified** `webex cc users list` — query parameters: updated `includeAIMappingCount`, `queueId`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc users list-along-profile` — help/description updated
+
+
 ## meetings
 
 ### Added canonical names
@@ -324,6 +397,17 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex meetings meetings update-group-control-status` | `POST /group/meetings/controls` | Update meeting recording control status by a service app which has group meeting access |
 | `webex meetings recordings query` | `POST /recordings/query` | Queries recordings with filters in the request body |
 | `webex meetings recordings query-admin-compliance-officer` | `POST /admin/recordings/query` | Queries recordings for an admin or compliance officer with filters in the request body |
+
+### Modified commands
+
+- **Modified** `webex meetings meetings delete` — help/description updated
+- **Modified** `webex meetings meetings patch` — help/description updated
+- **Modified** `webex meetings meetings update` — help/description updated
+- **Modified** `webex meetings people update-person` — help/description updated
+- **Modified** `webex meetings recordings list` — help/description updated
+- **Modified** `webex meetings recordings list-admin-compliance-officer` — help/description updated
+- **Modified** `webex meetings recordings list-group` — query parameters: removed `topic`
+
 
 ## messaging
 
@@ -338,12 +422,25 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex messaging hds list-nodes-cluster` | `GET /hds/clusters/{clusterId}/nodes` | Retrieve a list of all nodes for a specific HDS cluster, including availability, proxy details, deployment type, and release version. |
 | `webex messaging hds list-tenants-org` | `GET /hds/organizations/{organizationId}/tenants` | Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations. |
 
-### Previous canonical names
+### Renamed or deleted canonical names
 
 | Previous command | Status |
 | --- | --- |
 | `webex messaging hds get-database-org-2` | Alias for `webex messaging hds get-database-config-org` |
 | `webex messaging hds get-multi-tenant-org-2` | Alias for `webex messaging hds list-tenants-org` |
+
+### Modified commands
+
+- **Modified** `webex messaging hds get-org` — help/description updated
+- **Modified** `webex messaging people update-person` — help/description updated
+
+
+## device
+
+### Modified commands
+
+- **Modified** `webex device device-call get-layout-id` — help/description updated
+- **Modified** `webex device device-call update-layout-id` — help/description updated
 
 ## Limitations
 
