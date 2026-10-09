@@ -7,13 +7,11 @@ on:
 
 permissions:
   contents: write
-  id-token: write # npm provenance
+  id-token: write # npm trusted publishing and provenance
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,16 +31,17 @@ jobs:
           WEBEX_CLIENT_SECRET: ${{ secrets.WEBEX_CLIENT_SECRET }}
           WEBEX_SCOPES: ${{ secrets.WEBEX_SCOPES }}
 
-      # Skipped until the NPM_TOKEN secret exists.
       - uses: actions/setup-node@v4
-        if: env.NPM_TOKEN != ''
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
+      # npm uses trusted publishing (OIDC) when the packages are configured for
+      # it, and falls back to NPM_TOKEN otherwise. The first publish needs the
+      # token, because trusted publishing can only be set up on existing packages.
       - name: Publish npm packages
-        if: env.NPM_TOKEN != ''
         run: |
+          npm install -g npm@11.6.2
           node npm/stage.mjs --dist dist --out npm/build
           sh npm/publish.sh npm/build
         env:

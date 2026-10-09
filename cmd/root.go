@@ -248,6 +248,10 @@ func skipAuth(cmd *cobra.Command) bool {
 	switch top.Name() {
 	case "login", "logout", "config", "version", "update", "post-install", "help", "completion":
 		return true
+	case "mcp":
+		// Each tool call runs the CLI in a child process that resolves its own
+		// token, so the server can start before anyone has logged in.
+		return true
 	case "auth":
 		// set-org validates the org against the API; token prints it.
 		return cmd.Name() != "set-org" && cmd.Name() != "token"
