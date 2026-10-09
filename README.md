@@ -16,7 +16,14 @@ curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.
 irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | iex
 ```
 
+**npm (any platform with Node.js 18+):**
+```bash
+npm install -g @cloverhound/webex-cli    # or: npx -y @cloverhound/webex-cli <command>
+```
+
 Or download from [Releases](https://github.com/Cloverhound/webex-cli/releases).
+
+The npm package installs only the prebuilt binary for your platform, with no install script and no GitHub download, so it works in sandboxes that allow only package registries. Update it with npm rather than `webex update`.
 
 The installers verify the download against the release's `checksums.txt` and find the latest version without the GitHub API. For CI or sandboxed agents:
 

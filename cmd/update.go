@@ -50,6 +50,10 @@ var (
 var lookupClient = &http.Client{Timeout: 30 * time.Second}
 
 func runUpdate() error {
+	if binPath, err := executablePath(); err == nil && installedByNPM(binPath) {
+		return fmt.Errorf("this webex was installed with npm; update it with: npm install -g @cloverhound/webex-cli@latest (npx fetches the latest version on its own)")
+	}
+
 	current := Version
 	latest := strings.TrimPrefix(os.Getenv(versionPinEnv), "v")
 	if latest != "" {
@@ -250,6 +254,12 @@ func isNewer(latest, current string) bool {
 		}
 	}
 	return false
+}
+
+// installedByNPM reports whether binPath lives in an npm package. Replacing it
+// in place would leave npm's records out of step with the file on disk.
+func installedByNPM(binPath string) bool {
+	return strings.Contains(strings.ReplaceAll(binPath, `\`, "/"), "/node_modules/@cloverhound/webex-cli-")
 }
 
 // executablePath returns the resolved path to the running binary.

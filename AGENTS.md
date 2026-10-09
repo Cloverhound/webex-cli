@@ -56,6 +56,13 @@ Releases are handled by a GitHub Actions workflow triggered by pushing a tag.
 Do **not** run `goreleaser` locally — it requires secrets (e.g. `WEBEX_CLIENT_ID`)
 that are only available in CI. Version and OAuth defaults are injected via ldflags.
 
+When the `NPM_TOKEN` secret is set, the same workflow publishes the npm packages:
+`npm/stage.mjs` turns goreleaser's `dist/` into `@cloverhound/webex-cli` plus one
+`@cloverhound/webex-cli-<os>-<cpu>` package per binary, and `npm/publish.sh`
+publishes them with provenance. To check the packaging without secrets, run
+`goreleaser build --snapshot --clean` with dummy `WEBEX_CLIENT_*` values, then
+`node npm/stage.mjs` and `npm pack` the folders in `npm/build/`.
+
 ```bash
 git tag v0.X.0
 git push origin v0.X.0

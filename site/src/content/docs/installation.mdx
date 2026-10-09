@@ -19,6 +19,15 @@ irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | i
 
 This downloads the latest release, verifies it, installs it to `%LOCALAPPDATA%\webex-cli\webex.exe`, and adds it to your user PATH.
 
+**npm (any platform with Node.js 18+):**
+```bash
+npm install -g @cloverhound/webex-cli
+# or run without installing
+npx -y @cloverhound/webex-cli --version
+```
+
+npm installs only the prebuilt binary for your platform (macOS, Linux, or Windows on x64 or arm64), through an optional dependency. No install script runs and nothing is downloaded from GitHub, so this works in sandboxes that allow the npm registry but block other hosts. Update an npm install with npm, not `webex update`.
+
 ## How the installer works
 
 The installers and `webex update` find the latest version in this order, so they work where `api.github.com` is blocked or rate-limited:
@@ -37,6 +46,8 @@ Every download is checked against the release's SHA-256 `checksums.txt`. On a mi
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh \
   | WEBEX_CLI_VERSION=0.16.0 INSTALL_DIR=/usr/local/bin sh
 ```
+
+Where only package registries are reachable, use npm instead. To run the MCP server from an agent's MCP configuration without installing anything first, use `npx -y @cloverhound/webex-cli@<version> mcp serve` as the command. Pin the version so the server matches the skill you installed.
 
 When there is no terminal, the installer does not prompt. `webex post-install` prints the PATH line to add and installs the agent skill for detected agents (Claude Code, Codex, Cursor). You can also run it yourself:
 

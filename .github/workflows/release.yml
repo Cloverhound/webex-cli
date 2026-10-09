@@ -7,10 +7,13 @@ on:
 
 permissions:
   contents: write
+  id-token: write # npm provenance
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,3 +33,18 @@ jobs:
           WEBEX_CLIENT_SECRET: ${{ secrets.WEBEX_CLIENT_SECRET }}
           WEBEX_SCOPES: ${{ secrets.WEBEX_SCOPES }}
           WEBEX_READ_ONLY_SCOPES: ${{ secrets.WEBEX_READ_ONLY_SCOPES }}
+
+      # Skipped until the NPM_TOKEN secret exists.
+      - uses: actions/setup-node@v4
+        if: env.NPM_TOKEN != ''
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish npm packages
+        if: env.NPM_TOKEN != ''
+        run: |
+          node npm/stage.mjs --dist dist --out npm/build
+          sh npm/publish.sh npm/build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
