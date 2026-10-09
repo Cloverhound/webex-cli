@@ -1,6 +1,6 @@
 module github.com/Cloverhound/webex-cli
 
-go 1.26
+go 1.26.0
 
 require (
 	github.com/charmbracelet/huh v1.0.0
@@ -11,6 +11,7 @@ require (
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/spf13/cobra v1.10.2
 	github.com/zalando/go-keyring v0.2.6
+	golang.org/x/crypto/x509roots/fallback v0.0.0-20260721213823-31914c699bfc
 	golang.org/x/sys v0.33.0
 	golang.org/x/term v0.25.0
 )
