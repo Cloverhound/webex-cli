@@ -123,7 +123,7 @@ Resource operations use `get`, `delete`, `patch`, and `update` with `--id`; prev
 - `cc tasks resume` still means voice unhold. Digital tasks use `pause-digital`/`resume-digital`.
 - Messaging consolidates HDS operations under `hds`, with `hybrid-data-security` as an alias. Admin and Meetings add body-based recording searches; Meetings also adds group service-app operations.
 
-See the [full refresh inventory](codegen/INVENTORY.md), [every renamed command](codegen/NAMING.md), and [Contact Center skill](skill/cc/SKILL.md) for migration details and examples. Upstream collections remain unchanged; overrides control names, routes, and product placement.
+See the [full refresh inventory](docs/command-inventory.md), [every renamed command](docs/command-migration.md), and [Contact Center skill](skill/cc/SKILL.md) for migration details and examples. Upstream collections remain unchanged; overrides control names, routes, and product placement.
 
 ## Authentication
 

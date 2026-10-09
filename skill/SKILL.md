@@ -246,9 +246,9 @@ webex cc templates list-flow
 
 Bodies must be supplied with `--body` or `--body-file`; these generated commands do not read stdin. The CLI uses the fixed project ID internally. `--organization` overrides the login organization.
 
-Cloverhound checks verified reads and an unpublished disposable draft's import, lock/unlock, patch, save, export, and deletion across both URL forms. The draft was deleted and both routes returned 404 afterward. Publish was not live-tested. Templates use `/templates`; the scoped prefixed template list returned 404.
+Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
-**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented. Current `flow import --body-file` was live-tested successfully.
+**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
 
 
 ## Filtering and Pagination

@@ -147,6 +147,6 @@ Use `webex auth set-org <orgId>` to set a persistent org override, or pass `--or
 
 ## Updated command references
 
-Use the repository skill files from the same revision as your CLI. The Postman refresh adds Calling metrics/personal controls, Contact Center flow authoring and functions, usage reports, and HDS monitoring. See the [refresh inventory](codegen/INVENTORY.md) and [command migration map](codegen/NAMING.md).
+Use the repository skill files from the same revision as your CLI. The Postman refresh adds Calling metrics/personal controls, Contact Center flow authoring and functions, usage reports, and HDS monitoring. See the [refresh inventory](docs/command-inventory.md) and [command migration map](docs/command-migration.md).
 
 `cc flow import`/`export` now use current-format flow JSON; `export-legacy` retains raw FDL. Legacy flow import and custom-function import still lack their upload implementations. `cc tasks resume` remains a voice-unhold alias; digital tasks use `resume-digital`. Refresh previously installed skill copies after upgrading the CLI.

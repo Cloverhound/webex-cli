@@ -8,4 +8,4 @@ npm run dev
 npm run build
 ```
 
-Build output is `dist/`. The repository Pages workflow publishes the site. The Postman refresh inventory and command migration map are maintained in `../codegen/INVENTORY.md` and `../codegen/NAMING.md`.
+Build output is `dist/`. The repository Pages workflow publishes the site. The Postman refresh inventory and command migration map are maintained in `../docs/command-inventory.md` and `../docs/command-migration.md`.

@@ -1,6 +1,6 @@
 # Postman refresh inventory
 
-Compared with PR base `85b6a523894c82bb6b8440a103b6f05d39762312`. Added names include renamed/moved operations, not only new Cisco APIs. See [NAMING.md](NAMING.md) for migration details and live route checks.
+Changes introduced by the Postman collection refresh. Added names include renamed/moved operations, not only new Cisco APIs. See [command-migration.md](command-migration.md) for migration details.
 
 ## Change classification
 
@@ -444,4 +444,4 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 
 ## Limitations
 
-`cc functions import` lacks multipart upload handling. `cc flow import-legacy` lacks legacy upload body handling. Current-format flow import was live-tested; publish was not. Usage report types, report creation/status/download/deletion, call-quality metrics, and additional refreshed reads were tenant-tested on Cloverhound; see [LIVE_TESTS.md](LIVE_TESTS.md). Completed-task variable updates were dry-run checked only. Self-service call controls returned 403, archived-user query returned a gateway 404, and HDS confirmed the organization has no clusters.
+`cc functions import` lacks multipart upload handling. `cc flow import-legacy` lacks legacy upload body handling. Use current-format `flow import --body-file` for typed flow documents; legacy imports require an upload implementation.

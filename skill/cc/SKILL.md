@@ -157,9 +157,9 @@ webex cc templates list-flow
 
 Bodies must be supplied with `--body` or `--body-file`; these generated commands do not read stdin. The CLI uses the fixed project ID internally. `--organization` overrides the login organization.
 
-Cloverhound checks verified reads and an unpublished disposable draft's import, lock/unlock, patch, save, export, and deletion across both URL forms. The draft was deleted and both routes returned 404 afterward. Publish was not live-tested. Templates use `/templates`; the scoped prefixed template list returned 404.
+Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
-**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented. Current `flow import --body-file` was live-tested successfully.
+**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
 
 ## Other refreshed Contact Center APIs
 
@@ -181,9 +181,7 @@ webex cc usage-reports download-file --file-id <file-id> --output raw > report.b
 webex cc external-data-updates update-task-global-variables --body-file task-update.json
 ```
 
-Discover report types before creating a report; the collection does not enumerate the types or CSV columns. Download with `fileId`, not `reportId`. Reports can span available data up to 36 months, may split into monthly files, and expire seven days after completion. Only one report processes per organization at a time.
-
-Cloverhound live tests returned `AgentActivityRecord`, `AgentSessionRecord`, `ContactActivityRecord`, `ContactSessionRecord`, and `ContactLegRecord`. A single-day Contact Session Record report completed and downloaded as gzip-compressed CSV; check the downloaded format before parsing it. Use `--output raw` to preserve file bytes. Report deletion accepts the service's non-JSON acknowledgement; cleanup returned 204 and subsequent retrieval returned 404. Completed-task variable updates have only been dry-run checked.
+Discover report types before creating a report; the collection does not enumerate the types or CSV columns. Download with `fileId`, not `reportId`. Reports can span available data up to 36 months, may split into monthly files, and expire seven days after completion. Only one report processes per organization at a time. Downloads may be gzip-compressed CSV; check the format before parsing and use `--output raw` to preserve file bytes.
 
 For task controls, `unhold` (alias `resume`) resumes a held voice call; `pause-digital` and `resume-digital` handle paused non-real-time digital tasks. `append-message` retains `update-2` as an alias. Queue lookups use `list-agent-based`, `list-skill-based`, `list-team-based`, `list-by-skill-profile`, `list-by-dynamic-skills`, and `list-by-user-skill-profile`; pass IDs as flags. Whisper coaching is beta. The refresh also adds conference-participant removal, campaign-time lookup, and contact closure across a campaign chain.
 

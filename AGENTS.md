@@ -32,8 +32,8 @@ make download
 `make codegen` runs `extract_api_spec.py`, `generate_cli.py`, and `generate_skills.py`.
 
 For command naming exceptions, edit `codegen/naming_overrides.py`; see
-`codegen/NAMING.md` for naming and compatibility conventions, and
-`codegen/INVENTORY.md` for the reviewed refresh inventory. These route-based
+`docs/command-migration.md` for naming and compatibility conventions, and
+`docs/command-inventory.md` for the reviewed refresh inventory. These route-based
 overrides feed both generated commands and skill references. Use `custom_*.go`
 and the generator skip lists when the request itself needs handwritten handling.
 
@@ -85,4 +85,4 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 
 ## Documentation checks
 
-Update README, the site area pages, and handwritten skill guidance alongside API changes. Run `make codegen` for all six generated skill references, `python3 -m unittest discover -s codegen -p 'test_*.py'` for naming checks, and `npm run build` in `site/` for documentation validation. Preserve the live-test evidence and known import limitations in the naming reference.
+Update README, the site area pages, and handwritten skill guidance alongside API changes. Run `make codegen` for all six generated skill references, `python3 -m unittest discover -s codegen -p 'test_*.py'` for naming checks, and `npm run build` in `site/` for documentation validation. Keep command documentation focused on behavior, compatibility, and known limitations. Put PR validation and work-session results in the PR, not repository documentation; do not include personal identities or tenant test data.
