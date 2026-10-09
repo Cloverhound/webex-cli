@@ -6,8 +6,9 @@ import (
 	"strings"
 )
 
-// DefaultScopes are requested by `webex login --read-only`. Every entry must be
-// registered on the OAuth integration, or Webex rejects the login with invalid_scope.
+// DefaultScopes are requested by `webex login --read-only` when the build does
+// not inject appconfig.DefaultReadOnlyScopes. Every entry must be registered on
+// the OAuth integration, or Webex rejects the login with invalid_scope.
 var DefaultScopes = strings.Join([]string{
 	"spark:kms",
 	"spark:xapi_statuses",

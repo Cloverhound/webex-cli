@@ -14,6 +14,10 @@ var (
 	DefaultClientID     = ""
 	DefaultClientSecret = ""
 	DefaultScopes       = "spark:all spark-admin:all"
+
+	// DefaultReadOnlyScopes is injected by release builds to match the OAuth
+	// integration's registered scopes. Empty means readonly.DefaultScopes.
+	DefaultReadOnlyScopes = ""
 )
 
 type UserInfo struct {
@@ -115,6 +119,9 @@ func (c *Config) EffectiveScopes() string {
 func (c *Config) EffectiveReadOnlyScopes() string {
 	if c.ReadOnlyScopes != "" {
 		return c.ReadOnlyScopes
+	}
+	if DefaultReadOnlyScopes != "" {
+		return DefaultReadOnlyScopes
 	}
 	return readonly.DefaultScopes
 }

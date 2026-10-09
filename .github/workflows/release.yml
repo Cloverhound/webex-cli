@@ -29,3 +29,4 @@ jobs:
           WEBEX_CLIENT_ID: ${{ secrets.WEBEX_CLIENT_ID }}
           WEBEX_CLIENT_SECRET: ${{ secrets.WEBEX_CLIENT_SECRET }}
           WEBEX_SCOPES: ${{ secrets.WEBEX_SCOPES }}
+          WEBEX_READ_ONLY_SCOPES: ${{ secrets.WEBEX_READ_ONLY_SCOPES }}
