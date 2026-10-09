@@ -230,10 +230,17 @@ webex meetings meeting-polls list --meeting-id <id>
 
 7. **Admin scope for list** — `list-admin-compliance-officer` (recordings and transcripts) requires `spark-admin:meetings_read` or compliance officer scope. `--host-email` on `participants list-meeting` also requires admin scope.
 
+## Group meetings and recording queries
+
+Service apps with group meeting access can use `meetings list-group`, `meetings patch-group`, and `meetings update-group-control-status` to find/update meetings and control recording. The caller must satisfy the API's group/site access requirements.
+
+`recordings query` and `recordings query-admin-compliance-officer` search recordings using filters in a JSON request body. These searches use POST and therefore the MCP `webex_write` dispatcher.
+
 <!-- codegen:start -->
 ## Command Reference
 
 > Auto-generated from Postman collections. Run `make codegen` to update.
+> Organization defaults to the authenticated account; use `--organization` to override.
 
 ### chats
 

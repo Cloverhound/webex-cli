@@ -234,10 +234,24 @@ webex messaging events list --resource messages --type created
 
 6. **Compliance officer memberships** — query all rooms a person belongs to org-wide via `memberships list --person-email <email>` (no `--room-id`). Requires compliance officer scope.
 
+## Hybrid Data Security
+
+Use `webex messaging hds` (`hybrid-data-security` is a group alias) to inspect organizations, clusters, nodes, network-test results, alarms, and resource usage. The overlapping upstream groups are consolidated.
+
+```bash
+webex messaging hds list-clusters-org --organization-id <id>
+webex messaging hds list-nodes-cluster --cluster-id <id>
+webex messaging hds get-alarms-node --node-id <id>
+webex messaging hds get-usage-node --node-id <id>
+```
+
+Distinct older routes remain separate: `get-database-org` versus `get-database-config-org`, and `get-multi-tenant-org` versus `list-tenants-org`. Existing numeric spellings remain aliases for the latter two operations.
+
 <!-- codegen:start -->
 ## Command Reference
 
 > Auto-generated from Postman collections. Run `make codegen` to update.
+> Organization defaults to the authenticated account; use `--organization` to override.
 
 ### attachment-actions
 
@@ -348,6 +362,8 @@ webex messaging events list --resource messages --type created
 
 ### hds
 
+Group aliases: `hybrid-data-security`.
+
 | Command | Flags |
 |---|---|
 | `get-test-results-node` | `--node-id` *(required)*, `--trigger-type` |
@@ -357,27 +373,11 @@ webex messaging events list --resource messages --type created
 | `get-database-org` | `--organization-id` *(required)* |
 | `get-multi-tenant-org` | `--organization-id` *(required)* |
 | `get-availability-cluster` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
-| `get-database-org-2` | `--organization-id` *(required)* |
-| `get-multi-tenant-org-2` | `--organization-id` *(required)* |
+| `get-database-config-org` (aliases: `get-database-org-2`) | `--organization-id` *(required)* |
+| `list-tenants-org` (aliases: `get-multi-tenant-org-2`) | `--organization-id` *(required)* |
 | `list-nodes-cluster` | `--cluster-id` *(required)* |
 | `list-clusters-org` | `--organization-id` *(required)* |
 | `get-alarms-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
 | `get-usage-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
-
-### hybrid-data-security
-
-| Command | Flags |
-|---|---|
-| `get-org` | `--organization-id` *(required)* |
-| `list-clusters-org` | `--organization-id` *(required)* |
-| `get-cluster` | `--cluster-id` *(required)* |
-| `list-nodes-cluster` | `--cluster-id` *(required)* |
-| `get-node` | `--node-id` *(required)* |
-| `get-database-org` | `--organization-id` *(required)* |
-| `get-multi-tenant-org` | `--organization-id` *(required)* |
-| `get-alarms-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
-| `get-test-results-node` | `--node-id` *(required)*, `--trigger-type` |
-| `get-usage-node` | `--node-id` *(required)*, `--from`, `--to`, `--last` |
-| `get-availability-cluster` | `--cluster-id` *(required)*, `--from`, `--to`, `--last` |
 
 <!-- codegen:end -->

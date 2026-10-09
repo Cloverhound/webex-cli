@@ -29,7 +29,7 @@ var functionsCmd = &cobra.Command{
 func init() {
 	cmd.CcCmd.AddCommand(functionsCmd)
 
-	{ // list-custom
+	{ // list
 		var orgid string
 		var isPartialMatch string
 		var isCaseSensitive string
@@ -43,7 +43,7 @@ func init() {
 		var fields string
 		var isValidation string
 		cmd := &cobra.Command{
-			Use:   "list-custom",
+			Use:   "list",
 			Short: "List Custom Functions",
 			Long:  "List or search custom functions in the organization. Without filters, returns all custom functions. Supports filtering by name, language, and status, plus sorting and pagination.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -90,12 +90,12 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // create-custom
+	{ // create
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-custom",
+			Use:   "create",
 			Short: "Create a Custom Function",
 			Long:  "Create a new custom function. The source code is provided as an escaped string and the runtime defaults to the highest supported runtime for the given language.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -122,13 +122,13 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // get-custom
+	{ // get
 		var orgid string
 		var id string
 		var versionOrTag string
 		var metaDataOnly string
 		cmd := &cobra.Command{
-			Use:   "get-custom",
+			Use:   "get",
 			Short: "Get a Custom Function",
 			Long:  "Retrieve a custom function by its ID. Use `versionOrTag` to fetch a specific published version, or omit it to get the draft.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -160,13 +160,13 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // update-custom
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-custom",
+			Use:   "update",
 			Short: "Update a Custom Function",
 			Long:  "Update an existing custom function by ID. Replaces the draft source code and metadata with the supplied body.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -196,12 +196,12 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // delete-custom
+	{ // delete
 		var orgid string
 		var id string
 		var isForceDeletion string
 		cmd := &cobra.Command{
-			Use:   "delete-custom",
+			Use:   "delete",
 			Short: "Delete a Custom Function",
 			Long:  "Delete a custom function by ID. Use `isForceDeletion=true` to delete even when the function is referenced by one or more flows.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -224,12 +224,12 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // import-custom
+	{ // import
 		var orgid string
 		var overwrite string
 		var associatedRcs string
 		cmd := &cobra.Command{
-			Use:   "import-custom",
+			Use:   "import",
 			Short: "Import a Custom Function",
 			Long:  "Import a custom function from a previously exported function-definition JSON file, uploaded as the multipart `file` part (not a zip or base64 envelope). Use `overwrite=true` to replace any existing function with the same name.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -252,11 +252,11 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // unlock-custom
+	{ // unlock
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "unlock-custom",
+			Use:   "unlock",
 			Short: "Unlock a Custom Function",
 			Long:  "Release the edit lock on a custom function so that other users can edit it.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -277,11 +277,11 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // lock-custom
+	{ // lock
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "lock-custom",
+			Use:   "lock",
 			Short: "Lock a Custom Function",
 			Long:  "Acquire an edit lock on a custom function to prevent concurrent writes by other users.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -302,13 +302,13 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // test-custom
+	{ // test
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "test-custom",
+			Use:   "test",
 			Short: "Test a Custom Function",
 			Long:  "Execute a custom function with a test payload. Implicitly publishes the latest draft first, so the run uses the most recent source code.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -338,7 +338,7 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // publish-custom
+	{ // publish
 		var orgid string
 		var id string
 		var tags []string
@@ -350,7 +350,7 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "publish-custom",
+			Use:   "publish",
 			Short: "Publish a Custom Function",
 			Long:  "Publish the latest draft of a custom function under one or more tags (`Dev`, `Test`, `Latest`, `Live`). Ensure the function has been created or updated before calling this API.\n\nScope: `cjp:config_write`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -393,12 +393,12 @@ func init() {
 		functionsCmd.AddCommand(cmd)
 	}
 
-	{ // export-custom
+	{ // export
 		var orgid string
 		var id string
 		var versionOrTag string
 		cmd := &cobra.Command{
-			Use:   "export-custom",
+			Use:   "export",
 			Short: "Export a Custom Function",
 			Long:  "Export a custom function for the given version or publish tag. Returns the plain function-definition JSON (name, language, runtime, description, source code, inputs, and outputs), suitable for re-importing via the import API.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {

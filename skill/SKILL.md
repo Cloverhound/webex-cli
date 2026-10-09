@@ -99,7 +99,7 @@ Most CC resources use a consistent `list` subcommand. A few exceptions remain:
 |---|---|---|
 | `dial-number` | `list-dialed-mapping` | Exception — descriptive name |
 | `agents` | (none) | Agent operations: login, logout, state-change, etc. |
-| `flow` | (none) | Only export/import/publish |
+| `flow` | `list` | Draft authoring, current-format import/export, explicit legacy commands |
 
 All other CC resources (site, team, users, global-variables, business-hour, audio-files, work-types, etc.) use `list`.
 
@@ -205,7 +205,7 @@ webex calling converged-recordings download --recording-id <id> --output call.mp
 webex cc site list
 webex cc contact-service-queue list
 webex cc entry-point list
-webex cc flow export --id <id> --output flow.json
+webex cc flow export --flow-id <id> --version draft > flow.json
 webex cc audio-files download --id <id> --output prompt.wav
 webex cc audio-files upload --file prompt.wav --name "Main Greeting"
 
@@ -226,6 +226,30 @@ webex messaging rooms list --type group --last 24h
 webex messaging messages list --room-id <roomId>
 webex messaging messages create --body '{"roomId":"<roomId>","text":"Hello!"}'
 ```
+
+## Flow authoring and migration
+
+Current flow commands use the unprefixed Contact Center routes. `flow` is the canonical group; `flows` is an alias. Import/export now use the typed FlowV2 JSON contract, not legacy FDL. Existing automation consuming raw FDL must use `export-legacy` instead.
+
+```bash
+webex cc flow list
+webex cc flow get --flow-id <id>
+webex cc flow export --flow-id <id> --version draft > flow.json
+webex cc flow validate --body-file flow.json
+webex cc flow import --body-file flow.json --overwrite false --flow-type FLOW
+webex cc flow patch-draft --flow-id <id> --body-file patch.json
+webex cc flow export-legacy --flow-id <id> > legacy-flow.json
+webex cc activities list-definitions
+webex cc events list-specifications
+webex cc templates list-flow
+```
+
+Bodies must be supplied with `--body` or `--body-file`; these generated commands do not read stdin. The CLI uses the fixed project ID internally. `--organization` overrides the login organization.
+
+Cloverhound checks verified reads and an unpublished disposable draft's import, lock/unlock, patch, save, export, and deletion across both URL forms. The draft was deleted and both routes returned 404 afterward. Publish was not live-tested. Templates use `/templates`; the scoped prefixed template list returned 404.
+
+**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented. Current `flow import --body-file` was live-tested successfully.
+
 
 ## Filtering and Pagination
 

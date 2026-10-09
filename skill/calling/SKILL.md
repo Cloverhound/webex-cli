@@ -228,10 +228,23 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 
 5. **`--paginate` on people list** — with `--calling-data=true`, max per page is capped at 100 by the API. Use `--paginate` to traverse large directories.
 
+## Personal call controls and quality metrics
+
+Use `webex calling call-controls-for-me` for `/members/me/` operations: `dial`, `answer`, `hangup`, `list`, and `get`. Existing `call-controls` operations retain their separate routes.
+
+```bash
+webex calling call-controls-for-me list
+webex calling call-controls-for-me get --call-id <id>
+webex calling metrics get-call-quality-stats --help
+```
+
+`metrics get-call-quality-stats` queries the analytics host for aggregated call/media quality. It requires Pro Pack, analytics permissions, and an administrator role. Each query covers up to seven days within the previous three weeks. This operation is grouped under Calling even though its upstream collection is Admin.
+
 <!-- codegen:start -->
 ## Command Reference
 
 > Auto-generated from Postman collections. Run `make codegen` to update.
+> Organization defaults to the authenticated account; use `--organization` to override.
 
 ### dect-devices
 
@@ -270,8 +283,6 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 | `list-history` | `--type` |
 | `list-member-id` | `--member-id` *(required)*, `--org-id` |
 | `get-member-id` | `--member-id` *(required)*, `--call-id` *(required)*, `--org-id` |
-| `list-2` | `--line-owner-id` |
-| `get-3` | `--call-id` *(required)*, `--line-owner-id` |
 | `dial` | `--destination`, `--endpoint-id`, `--single-number-reach-phone-number`, `--line-owner-id`, `--body`, `--body-file` |
 | `answer` | `--call-id`, `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
 | `reject` | `--call-id`, `--action`, `--line-owner-id`, `--body`, `--body-file` |
@@ -296,9 +307,16 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 | `answer-member-id` | `--member-id` *(required)*, `--org-id`, `--call-id`, `--endpoint-id`, `--body`, `--body-file` |
 | `hangup-member-id` | `--member-id` *(required)*, `--org-id`, `--call-id`, `--body`, `--body-file` |
 | `pull` | `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
-| `dial-2` | `--destination`, `--endpoint-id`, `--single-number-reach-phone-number`, `--line-owner-id`, `--body`, `--body-file` |
-| `answer-2` | `--call-id`, `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
-| `hangup-2` | `--call-id`, `--line-owner-id`, `--body`, `--body-file` |
+
+### call-controls-for-me
+
+| Command | Flags |
+|---|---|
+| `list` | `--line-owner-id` |
+| `get` | `--call-id` *(required)*, `--line-owner-id` |
+| `dial` | `--destination`, `--endpoint-id`, `--single-number-reach-phone-number`, `--line-owner-id`, `--body`, `--body-file` |
+| `answer` | `--call-id`, `--endpoint-id`, `--line-owner-id`, `--body`, `--body-file` |
+| `hangup` | `--call-id`, `--line-owner-id`, `--body`, `--body-file` |
 
 ### call-routing
 
@@ -1167,9 +1185,9 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 
 | Command | Flags |
 |---|---|
-| `get-bulk-resend-job-status` | `--org-id` *(required)*, `--job-id` *(required)* |
-| `get-bulk-resend-job-errors` | `--org-id` *(required)*, `--job-id` *(required)*, `--max` |
-| `initiate-bulk-resend-job` | `--org-id` *(required)* |
+| `get-bulk-resend-job-status` | `--job-id` *(required)* |
+| `get-bulk-resend-job-errors` | `--job-id` *(required)*, `--max` |
+| `initiate-bulk-resend-job` | — |
 
 ### user-call
 
@@ -1562,5 +1580,11 @@ webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file gr
 | `update-wrap-up-reason-settings` | `--location-id` *(required)*, `--queue-id` *(required)*, `--wrapup-reasons`, `--default-wrapup-reason-id`, `--wrapup-timer-enabled`, `--wrapup-timer`, `--body`, `--body-file` |
 | `update-screen-pop-configuration` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
 | `delete-wrap-up-reason` | `--wrapup-reason-id` *(required)* |
+
+### metrics
+
+| Command | Flags |
+|---|---|
+| `get-call-quality-stats` | `--from`, `--to`, `--location`, `--last` |
 
 <!-- codegen:end -->

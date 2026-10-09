@@ -215,13 +215,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-skill-based-skill-profile-id
+	{ // list-by-skill-profile
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "list-skill-based-skill-profile-id",
-			Short: "List skill-based Contact Service Queues by skill profile ID (public)",
-			Long:  `Retrieve a list of skill-based Contact Service Queues associated with a given skill profile ID, accessible to authorized clients in a given organization.`,
+			Use:     "list-by-skill-profile",
+			Aliases: []string{"list-skill-csqs-skill-profile"},
+			Short:   "List skill-based Contact Service Queues by skill profile ID (public)",
+			Long:    `Retrieve a list of skill-based Contact Service Queues associated with a given skill profile ID, accessible to authorized clients in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}")
 				req.PathParam("orgid", orgid)
@@ -252,9 +253,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "delete-references",
-			Short: "Delete references from Contact Service Queues",
-			Long:  `Removes the references to the specified entities (such as teams, sites, or agents) from Contact Service Queues for a given organization.`,
+			Use:     "delete-references",
+			Aliases: []string{"delete-csq-references"},
+			Short:   "Delete references from Contact Service Queues",
+			Long:    `Removes the references to the specified entities (such as teams, sites, or agents) from Contact Service Queues for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/delete-reference")
 				req.PathParam("orgid", orgid)
@@ -286,9 +288,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "list-manually-assignable",
-			Short: "List manually assignable Contact Service Queues",
-			Long:  `Retrieve a list of Contact Service Queues that are eligible for manual contact assignment based on the provided criteria in a given organization.`,
+			Use:     "list-manually-assignable",
+			Aliases: []string{"list-manually-assignable-csqs"},
+			Short:   "List manually assignable Contact Service Queues",
+			Long:    `Retrieve a list of Contact Service Queues that are eligible for manual contact assignment based on the provided criteria in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-manually-assignable-queues")
 				req.PathParam("orgid", orgid)
@@ -445,9 +448,10 @@ func init() {
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-references",
-			Short: "List references for a specific Contact Service Queue",
-			Long:  `Retrieve a list of all entities that have reference to an existing Contact Service Queue by ID in a given organization.`,
+			Use:     "list-references",
+			Aliases: []string{"list-csq-references-id"},
+			Short:   "List references for a specific Contact Service Queue",
+			Long:    `Retrieve a list of all entities that have reference to an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/contact-service-queue/{id}/incoming-references")
 				req.PathParam("orgid", orgid)
@@ -479,14 +483,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-agent-based-user-id
+	{ // list-agent-based
 		var orgid string
 		var userid string
 		var search string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-agent-based-user-id",
+			Use:   "list-agent-based",
 			Short: "List agent-based Contact Service Queues by user ID",
 			Long:  `Retrieve a list of agent-based Contact Service Queues by user ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -520,14 +524,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-skill-based-user-id
+	{ // list-skill-based
 		var orgid string
 		var userid string
 		var search string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-skill-based-user-id",
+			Use:   "list-skill-based",
 			Short: "List skill-based Contact Service Queues by user ID",
 			Long:  `Retrieve a list of skill-based Contact Service Queues by user ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -561,14 +565,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-team-based-user-id
+	{ // list-team-based
 		var orgid string
 		var userid string
 		var search string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-team-based-user-id",
+			Use:   "list-team-based",
 			Short: "List team-based Contact Service Queues by user ID",
 			Long:  `Retrieve a list of team-based Contact Service Queues by user ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -783,14 +787,15 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-skill-based-dynamic-skills-skill-profile
+	{ // list-by-dynamic-skills
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "list-skill-based-dynamic-skills-skill-profile",
-			Short: "List skill-based Contact Service Queues by dynamic skills and skill profile",
-			Long:  `Retrieve a list of skill-based Contact Service Queues that match the given dynamic skills and skill profile criteria in a given organization.`,
+			Use:     "list-by-dynamic-skills",
+			Aliases: []string{"list-csqs-skills-profile"},
+			Short:   "List skill-based Contact Service Queues by dynamic skills and skill profile",
+			Long:    `Retrieve a list of skill-based Contact Service Queues that match the given dynamic skills and skill profile criteria in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-by-dynamic-skills-and-skillProfile")
 				req.PathParam("orgid", orgid)
@@ -815,14 +820,15 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // list-skill-based-skill-profile-id-user-id
+	{ // list-by-user-skill-profile
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "list-skill-based-skill-profile-id-user-id",
-			Short: "List skill-based Contact Service Queues by skill profile ID and user ID",
-			Long:  `Retrieve a list of skill-based Contact Service Queues associated with the given skill profile ID and user ID combination in a given organization.`,
+			Use:     "list-by-user-skill-profile",
+			Aliases: []string{"list-csqs-user-profile"},
+			Short:   "List skill-based Contact Service Queues by skill profile ID and user ID",
+			Long:    `Retrieve a list of skill-based Contact Service Queues associated with the given skill profile ID and user ID combination in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/contact-service-queue/fetch-by-userId-skillProfileId")
 				req.PathParam("orgid", orgid)

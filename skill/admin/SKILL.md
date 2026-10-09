@@ -256,10 +256,17 @@ webex admin service-apps get --service-app-id <id>
 
 6. **Partner admins** — use `--organization <orgId>` global flag to manage a customer org. The org ID can be base64 or UUID format; the CLI auto-decodes.
 
+## Refreshed administration APIs
+
+`archive-users query` retrieves archived users. `identity-org update-authentication-configuration-settings` and `identity-org update-password-policy` update organization identity policies. Check each command's help for required schemas and authorization.
+
+`recordings query` and `recordings query-admin-compliance-officer` accept recording search filters in a JSON request body. These are POST requests, including when used through MCP. Calling quality statistics are available under `webex calling metrics get-call-quality-stats`.
+
 <!-- codegen:start -->
 ## Command Reference
 
 > Auto-generated from Postman collections. Run `make codegen` to update.
+> Organization defaults to the authenticated account; use `--organization` to override.
 
 ### admin-audit
 
@@ -299,21 +306,21 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `get-verification-token` | `--org-id` *(required)*, `--domain`, `--body`, `--body-file` |
-| `verify` | `--org-id` *(required)*, `--domain`, `--claim-domain`, `--reserve-domain`, `--body`, `--body-file` |
-| `claim` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `unverify` | `--org-id` *(required)*, `--domain`, `--remove-pending`, `--body`, `--body-file` |
-| `unclaim` | `--org-id` *(required)*, `--domain`, `--body`, `--body-file` |
+| `get-verification-token` | `--domain`, `--body`, `--body-file` |
+| `verify` | `--domain`, `--claim-domain`, `--reserve-domain`, `--body`, `--body-file` |
+| `claim` | `--body`, `--body-file` |
+| `unverify` | `--domain`, `--remove-pending`, `--body`, `--body-file` |
+| `unclaim` | `--domain`, `--body`, `--body-file` |
 
 ### identity-org
 
 | Command | Flags |
 |---|---|
-| `get` | `--org-id` *(required)* |
-| `generate-otp` | `--org-id` *(required)*, `--user-id` *(required)* |
-| `update` | `--org-id` *(required)*, `--schemas`, `--display-name`, `--preferred-language`, `--body`, `--body-file` |
-| `update-authentication-configuration-settings` | `--org-id` *(required)*, `--schemas`, `--remember-my-login-id`, `--remember-my-login-id-duration`, `--mfa-enabled`, `--body`, `--body-file` |
-| `update-password-policy` | `--org-id` *(required)*, `--schemas`, `--minimum-numeric`, `--minimum-cap-alpha`, `--minimum-low-alpha`, `--minimum-special`, `--minimum-length`, `--history-count`, `--max-password-age`, `--not-acceptable-strings`, `--body`, `--body-file` |
+| `get` | — |
+| `generate-otp` | `--user-id` *(required)* |
+| `update` | `--schemas`, `--display-name`, `--preferred-language`, `--body`, `--body-file` |
+| `update-authentication-configuration-settings` | `--schemas`, `--remember-my-login-id`, `--remember-my-login-id-duration`, `--mfa-enabled`, `--body`, `--body-file` |
+| `update-password-policy` | `--schemas`, `--minimum-numeric`, `--minimum-cap-alpha`, `--minimum-low-alpha`, `--minimum-special`, `--minimum-length`, `--history-count`, `--max-password-age`, `--not-acceptable-strings`, `--body`, `--body-file` |
 
 ### events
 
@@ -380,30 +387,30 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `get` | `--org-id` *(required)*, `--contact-id` *(required)* |
-| `list` | `--org-id` *(required)*, `--keyword`, `--source`, `--limit`, `--group-ids` |
-| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `bulk-create-update` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `bulk-delete` | `--org-id` *(required)*, `--schemas`, `--object-ids`, `--body`, `--body-file` |
-| `update` | `--org-id` *(required)*, `--contact-id` *(required)*, `--body`, `--body-file` |
-| `delete` | `--org-id` *(required)*, `--contact-id` *(required)* |
+| `get` | `--contact-id` *(required)* |
+| `list` | `--keyword`, `--source`, `--limit`, `--group-ids` |
+| `create` | `--body`, `--body-file` |
+| `bulk-create-update` | `--body`, `--body-file` |
+| `bulk-delete` | `--schemas`, `--object-ids`, `--body`, `--body-file` |
+| `update` | `--contact-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--contact-id` *(required)* |
 
 ### organizations
 
 | Command | Flags |
 |---|---|
 | `list` | — |
-| `get` | `--org-id` *(required)* |
-| `delete` | `--org-id` *(required)* |
+| `get` | — |
+| `delete` | — |
 
 ### partner-administrators
 
 | Command | Flags |
 |---|---|
 | `get-all-customers-managed-admin` | `--managed-by` |
-| `get-all-admins-assigned-customer` | `--org-id` *(required)* |
-| `assign-admin-customer` | `--org-id` *(required)*, `--person-id` *(required)* |
-| `unassign-admin-customer` | `--org-id` *(required)*, `--person-id` *(required)* |
+| `get-all-admins-assigned-customer` | — |
+| `assign-admin-customer` | `--person-id` *(required)* |
+| `unassign-admin-customer` | `--person-id` *(required)* |
 | `revoke-all-admin-roles-person-id` | `--person-id` *(required)* |
 
 ### partner-reports-templates
@@ -497,31 +504,31 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `user-api` | `--org-id` *(required)*, `--body`, `--body-file` |
+| `user-api` | `--body`, `--body-file` |
 
 ### scim-2-groups
 
 | Command | Flags |
 |---|---|
-| `search` | `--org-id` *(required)*, `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--include-members`, `--member-type` |
-| `get` | `--org-id` *(required)*, `--group-id` *(required)*, `--excluded-attributes` |
-| `get-members` | `--org-id` *(required)*, `--group-id` *(required)*, `--start-index`, `--count`, `--member-type` |
-| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `update-put` | `--org-id` *(required)*, `--group-id` *(required)*, `--body`, `--body-file` |
-| `update-patch` | `--org-id` *(required)*, `--group-id` *(required)*, `--body`, `--body-file` |
-| `delete` | `--org-id` *(required)*, `--group-id` *(required)* |
+| `search` | `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--include-members`, `--member-type` |
+| `get` | `--group-id` *(required)*, `--excluded-attributes` |
+| `get-members` | `--group-id` *(required)*, `--start-index`, `--count`, `--member-type` |
+| `create` | `--body`, `--body-file` |
+| `update-put` | `--group-id` *(required)*, `--body`, `--body-file` |
+| `update-patch` | `--group-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--group-id` *(required)* |
 
 ### scim-2-users
 
 | Command | Flags |
 |---|---|
-| `search` | `--org-id` *(required)*, `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--return-groups`, `--include-group-details`, `--group-usage-types` |
-| `get` | `--org-id` *(required)*, `--user-id` *(required)* |
+| `search` | `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--return-groups`, `--include-group-details`, `--group-usage-types` |
+| `get` | `--user-id` *(required)* |
 | `get-me` | — |
-| `create` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `update-put` | `--org-id` *(required)*, `--user-id` *(required)*, `--body`, `--body-file` |
-| `update-patch` | `--org-id` *(required)*, `--user-id` *(required)*, `--body`, `--body-file` |
-| `delete` | `--org-id` *(required)*, `--user-id` *(required)* |
+| `create` | `--body`, `--body-file` |
+| `update-put` | `--user-id` *(required)*, `--body`, `--body-file` |
+| `update-patch` | `--user-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--user-id` *(required)* |
 
 ### security-audit
 
@@ -533,20 +540,20 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `get-org` | `--org-id` *(required)*, `--setting-key` *(required)* |
-| `create-update-org` | `--org-id` *(required)*, `--key`, `--value`, `--body`, `--body-file` |
+| `get-org` | `--setting-key` *(required)* |
+| `create-update-org` | `--key`, `--value`, `--body`, `--body-file` |
 
 ### partner-tags
 
 | Command | Flags |
 |---|---|
 | `get-all-customer` | `--type` |
-| `get-customer-org` | `--org-id` *(required)* |
+| `get-customer-org` | — |
 | `get-all-customers-set` | `--tags`, `--max` |
 | `subscription-list-name-set` | `--tags`, `--max` |
-| `get-subscription` | `--org-id` *(required)*, `--subscription-id` *(required)* |
-| `create-replace-customer-provided-ones` | `--org-id` *(required)*, `--body`, `--body-file` |
-| `create-replace-subscription-provided-ones` | `--org-id` *(required)*, `--subscription-id` *(required)*, `--body`, `--body-file` |
+| `get-subscription` | `--subscription-id` *(required)* |
+| `create-replace-customer-provided-ones` | `--body`, `--body-file` |
+| `create-replace-subscription-provided-ones` | `--subscription-id` *(required)*, `--body`, `--body-file` |
 
 ### workspace-locations
 
@@ -582,9 +589,9 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `get-bulk-resend-job-status` | `--org-id` *(required)*, `--job-id` *(required)* |
-| `get-bulk-resend-job-errors` | `--org-id` *(required)*, `--job-id` *(required)*, `--max` |
-| `initiate-bulk-resend-job` | `--org-id` *(required)* |
+| `get-bulk-resend-job-status` | `--job-id` *(required)* |
+| `get-bulk-resend-job-errors` | `--job-id` *(required)*, `--max` |
+| `initiate-bulk-resend-job` | — |
 
 ### service-apps
 
@@ -602,13 +609,7 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `get` | `--org-id` *(required)*, `--useruuid` *(required)* |
-| `query` | `--org-id` *(required)*, `--filter` |
-
-### calling-metrics
-
-| Command | Flags |
-|---|---|
-| `webex-call-quality-stats` | `--from`, `--to`, `--location`, `--last` |
+| `get` | `--useruuid` *(required)* |
+| `query` | `--filter` |
 
 <!-- codegen:end -->

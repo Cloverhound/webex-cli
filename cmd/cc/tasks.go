@@ -265,9 +265,10 @@ If the header is not present in the request or if gzip is not listed as one of t
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "unhold",
-			Short: "Unhold Task",
-			Long:  `Access this endpoint when the user has to resume a call from hold. When an user is done consulting, the previously held interaction with the customer should be resumed. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
+			Use:     "unhold",
+			Aliases: []string{"resume"},
+			Short:   "Unhold Task",
+			Long:    `Access this endpoint when the user has to resume a call from hold. When an user is done consulting, the previously held interaction with the customer should be resumed. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/tasks/{taskId}/unhold")
 				req.PathParam("taskId", taskId)
@@ -729,9 +730,10 @@ If the header is not present in the request or if gzip is not listed as one of t
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "append-message",
-			Short: "Append Task Message",
-			Long:  "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nAppends an inbound message to an existing `workItem` or `customMessaging` task. Use this API after the initial task has been created through Create Task. Requires `cjp:task_write` OAuth scope. For partner-initiated inbound message appends, the `cjp:task_write` scope must be present in the partner application's access token.\n\nOn success, returns a `202` response containing the append event identifier as `data.id`. Partners can use this identifier to correlate subsequent webhook delivery for the appended message.",
+			Use:     "append-message",
+			Aliases: []string{"update-2"},
+			Short:   "Append Task Message",
+			Long:    "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nAppends an inbound message to an existing `workItem` or `customMessaging` task. Use this API after the initial task has been created through Create Task. Requires `cjp:task_write` OAuth scope. For partner-initiated inbound message appends, the `cjp:task_write` scope must be present in the partner application's access token.\n\nOn success, returns a `202` response containing the append event identifier as `data.id`. Partners can use this identifier to correlate subsequent webhook delivery for the appended message.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/tasks/{taskId}/messages")
 				req.PathParam("taskId", taskId)
@@ -781,10 +783,10 @@ If the header is not present in the request or if gzip is not listed as one of t
 		tasksCmd.AddCommand(cmd)
 	}
 
-	{ // pause
+	{ // pause-digital
 		var taskId string
 		cmd := &cobra.Command{
-			Use:   "pause",
+			Use:   "pause-digital",
 			Short: "Pause Task",
 			Long:  "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to pause a task that cannot be handled immediately. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -802,10 +804,10 @@ If the header is not present in the request or if gzip is not listed as one of t
 		tasksCmd.AddCommand(cmd)
 	}
 
-	{ // resume
+	{ // resume-digital
 		var taskId string
 		cmd := &cobra.Command{
-			Use:   "resume",
+			Use:   "resume-digital",
 			Short: "Resume Task",
 			Long:  "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to resume a previously paused task. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
 			RunE: func(cmd *cobra.Command, args []string) error {

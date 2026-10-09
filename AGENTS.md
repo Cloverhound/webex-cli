@@ -31,6 +31,12 @@ make download
 
 `make codegen` runs `extract_api_spec.py`, `generate_cli.py`, and `generate_skills.py`.
 
+For command naming exceptions, edit `codegen/naming_overrides.py`; see
+`codegen/NAMING.md` for naming and compatibility conventions, and
+`codegen/INVENTORY.md` for the reviewed refresh inventory. These route-based
+overrides feed both generated commands and skill references. Use `custom_*.go`
+and the generator skip lists when the request itself needs handwritten handling.
+
 No API key is required — collections are fetched from the Webex Public Workspace via Postman's public gateway (`codegen/download_collections.py`).
 
 A weekly GitHub Actions workflow (`.github/workflows/update-collections.yml`) downloads collections, regenerates commands and skills, and opens or updates a PR. It also has `workflow_dispatch`. If GitHub has disabled it for inactivity, re-enable it under Actions after merging workflow fixes.
@@ -76,3 +82,7 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `codegen/generate_cli.py` — API spec → Go cobra command files
 - `codegen/generate_skills.py` — API spec → Command Reference blocks in `skill/<area>/SKILL.md`
 - `codegen/diff_spec.py` — Changelog between two spec snapshots (used by the weekly workflow)
+
+## Documentation checks
+
+Update README, the site area pages, and handwritten skill guidance alongside API changes. Run `make codegen` for all six generated skill references, `python3 -m unittest discover -s codegen -p 'test_*.py'` for naming checks, and `npm run build` in `site/` for documentation validation. Preserve the live-test evidence and known import limitations in the naming reference.

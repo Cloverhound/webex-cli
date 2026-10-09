@@ -25,9 +25,9 @@ var usageReportsCmd = &cobra.Command{
 func init() {
 	cmd.CcCmd.AddCommand(usageReportsCmd)
 
-	{ // get-available-types
+	{ // list-resource-types
 		cmd := &cobra.Command{
-			Use:   "get-available-types",
+			Use:   "list-resource-types",
 			Short: "Get available resource types",
 			Long:  `Returns the list of available resource types that can be used for report generation, along with available data dates.`,
 			RunE: func(cmd *cobra.Command, args []string) error {

@@ -9,6 +9,16 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 
 | Resource | Description |
 |----------|-------------|
+| `activities` | Flow activity schemas and input choices |
+| `asset` | Work-item and custom-messaging assets |
+| `campaign-group` | Campaign group membership |
+| `channel` | Custom channel configuration |
+| `events` | Flow event specifications |
+| `external-data-updates` | Completed task numeric global-variable updates |
+| `functions` | Custom flow functions |
+| `search-metadata` | Search GraphQL schema discovery |
+| `templates` | Flow templates |
+| `usage-reports` | Asynchronous resource usage exports |
 | `address-book` | Address books |
 | `agent-personal-greeting-files` | Agent personal greeting file management |
 | `agent-summaries` | Agent summary reports |
@@ -35,7 +45,7 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 | `dnc-management` | Do-not-call list management |
 | `entry-point` | Inbound entry points (voice, chat, email, social) |
 | `estimated-wait-time` | Estimated wait time configuration |
-| `flow` | Flow export/import/publish |
+| `flow` | Draft authoring, validation, import/export, and publication |
 | `generated-summaries` | AI-generated summary management |
 | `global-variables` | Flow global variables |
 | `holiday-list` | Holiday lists |
@@ -144,3 +154,50 @@ Most resources use `list` as the list subcommand. One exception:
 | `dial-number` | `list-dialed-mapping` |
 
 Use `--help` on any resource to see its available subcommands.
+
+## Flow authoring and migration
+
+Current flow commands use the unprefixed Contact Center routes. `flow` is the canonical group; `flows` is an alias. Import/export now use the typed FlowV2 JSON contract, not legacy FDL. Existing automation consuming raw FDL must use `export-legacy` instead.
+
+```bash
+webex cc flow list
+webex cc flow get --flow-id <id>
+webex cc flow export --flow-id <id> --version draft > flow.json
+webex cc flow validate --body-file flow.json
+webex cc flow import --body-file flow.json --overwrite false --flow-type FLOW
+webex cc flow patch-draft --flow-id <id> --body-file patch.json
+webex cc flow export-legacy --flow-id <id> > legacy-flow.json
+webex cc activities list-definitions
+webex cc events list-specifications
+webex cc templates list-flow
+```
+
+Bodies must be supplied with `--body` or `--body-file`; these generated commands do not read stdin. The CLI uses the fixed project ID internally. `--organization` overrides the login organization.
+
+Cloverhound checks verified reads and an unpublished disposable draft's import, lock/unlock, patch, save, export, and deletion across both URL forms. The draft was deleted and both routes returned 404 afterward. Publish was not live-tested. Templates use `/templates`; the scoped prefixed template list returned 404.
+
+**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented. Current `flow import --body-file` was live-tested successfully.
+
+## Other refreshed Contact Center APIs
+
+| Group | Purpose |
+| --- | --- |
+| `activities`, `events`, `templates` | Discover activity schemas, event schemas, input choices, and starter flows. |
+| `functions` | Manage custom function source, drafts, locks, versions, and publish tags. `test` implicitly publishes the draft before execution. |
+| `asset`, `channel` | Configure work-item/custom-messaging resources and their references. |
+| `campaign-group` | List campaigns belonging to a campaign group. |
+| `search-metadata` | Discover supported Search GraphQL fields and operations. |
+| `usage-reports` | Discover resource types, request asynchronous CSV exports, inspect status, and download files. |
+| `external-data-updates` | Update numeric global-variable values on tasks completed within the preceding two days. |
+
+```bash
+webex cc usage-reports list-resource-types
+webex cc usage-reports create --body-file report-request.json
+webex cc usage-reports get --report-id <report-id>
+webex cc usage-reports download-file --file-id <file-id> --output raw > report.bin
+webex cc external-data-updates update-task-global-variables --body-file task-update.json
+```
+
+Discover report types before creating a report; the collection does not enumerate the types or CSV columns. Download with `fileId`, not `reportId`. Reports can span available data up to 36 months, may split into monthly files, and expire seven days after completion. Only one report processes per organization at a time.
+
+For task controls, `unhold` (alias `resume`) resumes a held voice call; `pause-digital` and `resume-digital` handle paused non-real-time digital tasks. `append-message` retains `update-2` as an alias. Queue lookups use `list-agent-based`, `list-skill-based`, `list-team-based`, `list-by-skill-profile`, `list-by-dynamic-skills`, and `list-by-user-skill-profile`; pass IDs as flags. Whisper coaching is beta. The refresh also adds conference-participant removal, campaign-time lookup, and contact closure across a campaign chain.

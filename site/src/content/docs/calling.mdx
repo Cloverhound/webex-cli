@@ -9,6 +9,10 @@ The `webex calling` subcommand provides access to the Webex Calling API. No `--o
 
 | Resource | Description |
 |----------|-------------|
+| `customer-assist` | Customer Assist configuration |
+| `mode-management` | Operating mode management |
+| `call-controls-for-me` | Authenticated user call controls |
+| `metrics` | Aggregated call and media-quality statistics |
 | `announcement-playlist` | Announcement playlist management |
 | `announcement-repository` | Announcement repository management |
 | `auto-attendant` | Auto attendant / IVR configuration |
@@ -167,3 +171,15 @@ webex calling workspace-call update-busy-voicemail-greeting-place --workspace-id
 webex calling workspace-call update-no-answer-voicemail-greeting-place --workspace-id <id> --file greeting.wav
 webex calling workspace-call upload-intercept-announcement-file --workspace-id <id> --file greeting.wav
 ```
+
+## Personal call controls and quality metrics
+
+Use `webex calling call-controls-for-me` for `/members/me/` operations: `dial`, `answer`, `hangup`, `list`, and `get`. Existing `call-controls` operations retain their separate routes.
+
+```bash
+webex calling call-controls-for-me list
+webex calling call-controls-for-me get --call-id <id>
+webex calling metrics get-call-quality-stats --help
+```
+
+`metrics get-call-quality-stats` queries the analytics host for aggregated call/media quality. It requires Pro Pack, analytics permissions, and an administrator role. Each query covers up to seven days within the previous three weeks. This operation is grouped under Calling even though its upstream collection is Admin.

@@ -180,9 +180,10 @@ func init() {
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-entries",
-			Short: "List Outdial ANI Entries",
-			Long:  `Retrieve a list of Outdial ANI Entries in a given organization.`,
+			Use:     "list-entries",
+			Aliases: []string{"list-entry"},
+			Short:   "List Outdial ANI Entries",
+			Long:    `Retrieve a list of Outdial ANI Entries in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/outdial-ani/entry")
 				req.PathParam("orgid", orgid)
@@ -416,9 +417,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "bulk-save-entries",
-			Short: "Bulk save Outdial ANI Entries",
-			Long:  `Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization.`,
+			Use:     "bulk-save-entries",
+			Aliases: []string{"bulk-save-entry"},
+			Short:   "Bulk save Outdial ANI Entries",
+			Long:    `Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/bulk")
 				req.PathParam("orgid", orgid)
@@ -574,7 +576,7 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // list-entries-2
+	{ // list-entries-for-ani
 		var orgid string
 		var outDialAniId string
 		var filter string
@@ -583,9 +585,10 @@ func init() {
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-entries-2",
-			Short: "List Outdial ANI Entries",
-			Long:  `Retrieve a list of Outdial ANI Entries in a given organization.`,
+			Use:     "list-entries-for-ani",
+			Aliases: []string{"list-entry-2"},
+			Short:   "List Outdial ANI Entries",
+			Long:    `Retrieve a list of Outdial ANI Entries in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/outdial-ani/{outDialAniId}/entry")
 				req.PathParam("orgid", orgid)

@@ -30,9 +30,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create",
-			Short: "Create a new Greeting File",
-			Long:  `Create a new Greeting File in a given organization.`,
+			Use:     "create",
+			Aliases: []string{"create-v2-api"},
+			Short:   "Create a new Greeting File",
+			Long:    `Create a new Greeting File in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v2/agent-personal-greeting")
 				req.PathParam("orgid", orgid)
@@ -62,9 +63,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "delete-references",
-			Short: "Delete references of an agent from greeting files",
-			Long:  `Removes all references of the specified agent (ciUserId) from greeting files in the given organization. Typically invoked when an agent is deleted or unassigned. in a given organization.`,
+			Use:     "delete-references",
+			Aliases: []string{"delete-references-1"},
+			Short:   "Delete references of an agent from greeting files",
+			Long:    `Removes all references of the specified agent (ciUserId) from greeting files in the given organization. Typically invoked when an agent is deleted or unassigned. in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/agent-personal-greeting/delete-reference")
 				req.PathParam("orgid", orgid)
@@ -94,9 +96,10 @@ func init() {
 		var id string
 		var includeUrl string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Greeting File by ID",
-			Long:  `Retrieve an existing Greeting File by ID in a given organization.`,
+			Use:     "get-id",
+			Aliases: []string{"get-id-v2-api"},
+			Short:   "Get specific Greeting File by ID",
+			Long:    `Retrieve an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -130,9 +133,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Greeting File by ID",
-			Long:  `Update an existing Greeting File by ID in a given organization.`,
+			Use:     "update-id",
+			Aliases: []string{"update-id-v2-api"},
+			Short:   "Update specific Greeting File by ID",
+			Long:    `Update an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -164,9 +168,10 @@ func init() {
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Greeting File by ID",
-			Long:  `Delete an existing Greeting File by ID in a given organization.`,
+			Use:     "delete-id",
+			Aliases: []string{"delete-id-v2-api"},
+			Short:   "Delete specific Greeting File by ID",
+			Long:    `Delete an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -193,9 +198,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update Greeting File by ID",
-			Long:  `Partially update Greeting File by ID in a given organization.`,
+			Use:     "patch-id",
+			Aliases: []string{"patch-id-v2-api"},
+			Short:   "Partially update Greeting File by ID",
+			Long:    `Partially update Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)

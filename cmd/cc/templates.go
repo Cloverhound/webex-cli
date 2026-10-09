@@ -26,74 +26,9 @@ func init() {
 	cmd.CcCmd.AddCommand(templatesCmd)
 
 	{ // list-flow
-		var orgid string
 		var typeVal string
 		cmd := &cobra.Command{
 			Use:   "list-flow",
-			Short: "List Flow Templates",
-			Long:  "List available flow templates that can be used to create new flows.\n\nScope: `cjp:config_read`",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgid}/project/{projectId}/v2/templates")
-				req.PathParam("orgid", orgid)
-				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
-				req.QueryParam("type", typeVal)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
-		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&typeVal, "type", "", "Filter by flow or subflow.")
-		templatesCmd.AddCommand(cmd)
-	}
-
-	{ // get-flow
-		var orgid string
-		var id string
-		cmd := &cobra.Command{
-			Use:   "get-flow",
-			Short: "Get a Flow Template",
-			Long:  "Retrieve a specific flow template by its ID. Use this to inspect a template's flow structure before creating a flow from it.\n\nScope: `cjp:config_read`",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgid}/project/{projectId}/v2/templates/{id}")
-				req.PathParam("orgid", orgid)
-				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
-				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
-		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&id, "id", "", "Template ID.")
-		cmd.MarkFlagRequired("id")
-		templatesCmd.AddCommand(cmd)
-	}
-
-	{ // list-flow-2
-		var typeVal string
-		cmd := &cobra.Command{
-			Use:   "list-flow-2",
 			Short: "List Flow Templates",
 			Long:  "List available flow templates that can be used to create new flows.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -117,10 +52,10 @@ func init() {
 		templatesCmd.AddCommand(cmd)
 	}
 
-	{ // get-flow-2
+	{ // get-flow
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-flow-2",
+			Use:   "get-flow",
 			Short: "Get a Flow Template",
 			Long:  "Retrieve a specific flow template by its ID. Use this to inspect a template's flow structure before creating a flow from it.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {

@@ -95,3 +95,9 @@ webex admin hybrid-clusters list
 # SCIM user provisioning
 webex admin scim-2-users list
 ```
+
+## Refreshed administration APIs
+
+`archive-users query` retrieves archived users. `identity-org update-authentication-configuration-settings` and `identity-org update-password-policy` update organization identity policies. Check each command's help for required schemas and authorization.
+
+`recordings query` and `recordings query-admin-compliance-officer` accept recording search filters in a JSON request body. These are POST requests, including when used through MCP. Calling quality statistics are available under `webex calling metrics get-call-quality-stats`.

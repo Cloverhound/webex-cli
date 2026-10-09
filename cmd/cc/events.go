@@ -32,35 +32,6 @@ func init() {
 			Short: "List Event Specifications",
 			Long:  "List the event types available for use in `event_flows[]`. Each entry describes the event name, payload schema, and any contextual metadata bound when the event fires.\n\nScope: `cjp:config_read`",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CcBaseURL, "GET", "/flow-store/{orgid}/project/{projectId}/v2/event-specifications")
-				req.PathParam("orgid", orgid)
-				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID.")
-		cmd.MarkFlagRequired("orgid")
-		eventsCmd.AddCommand(cmd)
-	}
-
-	{ // list-specifications-2
-		var orgid string
-		cmd := &cobra.Command{
-			Use:   "list-specifications-2",
-			Short: "List Event Specifications",
-			Long:  "List the event types available for use in `event_flows[]`. Each entry describes the event name, payload schema, and any contextual metadata bound when the event fires.\n\nScope: `cjp:config_read`",
-			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/{orgid}/project/{projectId}/v2/event-specifications")
 				req.PathParam("orgid", orgid)
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")

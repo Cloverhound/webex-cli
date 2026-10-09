@@ -62,3 +62,16 @@ webex messaging webhooks list
 # List room memberships
 webex messaging memberships list --room-id "ROOM_ID"
 ```
+
+## Hybrid Data Security
+
+Use `webex messaging hds` (`hybrid-data-security` is a group alias) to inspect organizations, clusters, nodes, network-test results, alarms, and resource usage. The overlapping upstream groups are consolidated.
+
+```bash
+webex messaging hds list-clusters-org --organization-id <id>
+webex messaging hds list-nodes-cluster --cluster-id <id>
+webex messaging hds get-alarms-node --node-id <id>
+webex messaging hds get-usage-node --node-id <id>
+```
+
+Distinct older routes remain separate: `get-database-org` versus `get-database-config-org`, and `get-multi-tenant-org` versus `list-tenants-org`. Existing numeric spellings remain aliases for the latter two operations.

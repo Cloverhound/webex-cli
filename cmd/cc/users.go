@@ -241,7 +241,7 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // list-2
+	{ // list-by-ids
 		var orgid string
 		var page string
 		var pageSize string
@@ -251,9 +251,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "list-2",
-			Short: "List Users with details",
-			Long:  `Retrieve an existing User's first name, last name and email by list of IDs in a given organization.`,
+			Use:     "list-by-ids",
+			Aliases: []string{"get-ids"},
+			Short:   "List Users with details",
+			Long:    `Retrieve an existing User's first name, last name and email by list of IDs in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/user/fetch-user-details-by-ids")
 				req.PathParam("orgid", orgid)
@@ -525,9 +526,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "bulk-partial-update-dynamic-skills",
-			Short: "Bulk partial update Users with dynamic skills",
-			Long:  `Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization.`,
+			Use:     "bulk-partial-update-dynamic-skills",
+			Aliases: []string{"bulk-update-dynamic-skills"},
+			Short:   "Bulk partial update Users with dynamic skills",
+			Long:    `Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/user/bulk/update-dynamic-skill/{skillId}")
 				req.PathParam("orgid", orgid)
