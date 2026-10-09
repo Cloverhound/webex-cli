@@ -18,6 +18,14 @@ import (
 // ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
 var ErrDryRun = errors.New("dry run: no changes made")
 
+// ErrReadOnly is returned when read-only mode blocks a request.
+var ErrReadOnly = errors.New("read-only mode")
+
+// ReadOnlyError reports a request blocked by read-only mode.
+func ReadOnlyError(method, url string) error {
+	return fmt.Errorf("%w: %s %s not sent — run 'webex login' to leave read-only mode", ErrReadOnly, method, url)
+}
+
 // Do executes an HTTP request.
 // On a 401 it refreshes the token and retries once.
 // On a 429 it reads Retry-After and retries up to 3 times.
@@ -157,6 +165,10 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 		if req.bodyRaw != "" {
 			fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(req.bodyRaw, 500))
 		}
+	}
+
+	if !config.ReadOnlyAllows(req.method) {
+		return nil, 0, nil, ReadOnlyError(req.method, url)
 	}
 
 	// Dry-run: intercept write operations before making the HTTP call

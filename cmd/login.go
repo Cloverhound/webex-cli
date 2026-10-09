@@ -8,6 +8,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/auth"
 	"github.com/Cloverhound/webex-cli/internal/localconfig"
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
 )
@@ -15,8 +16,15 @@ import (
 var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Log in to Webex via OAuth",
-	Long:  "Opens a browser for Webex OAuth login. Stores tokens in the OS keyring for the authenticated user.",
+	Long: `Opens a browser for Webex OAuth login. Stores tokens in the OS keyring for the authenticated user.
+
+With --read-only, the login requests only read scopes and turns on read-only
+mode: stored logins with write access are deleted from the keyring, write
+requests are refused, and only read-only logins can be used. Leaving read-only
+mode requires a plain 'webex login' from an interactive terminal.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		readOnlyLogin, _ := cmd.Flags().GetBool("read-only")
+
 		cfg, err := appconfig.Load()
 		if err != nil {
 			return fmt.Errorf("loading config: %w", err)
@@ -25,10 +33,27 @@ var loginCmd = &cobra.Command{
 		clientID := cfg.EffectiveClientID()
 		clientSecret := cfg.EffectiveClientSecret()
 		scopes := cfg.EffectiveScopes()
+		if readOnlyLogin {
+			scopes = cfg.EffectiveReadOnlyScopes()
+			if err := readonly.ValidateScopes(scopes); err != nil {
+				return fmt.Errorf("read-only-scopes config: %w", err)
+			}
+			fmt.Println("Read-only login: stored logins with write access will be removed.")
+		} else if readOnlyMode(cfg) {
+			if err := confirmLeaveReadOnly(); err != nil {
+				return err
+			}
+		}
 
 		result, err := auth.Login(clientID, clientSecret, scopes)
 		if err != nil {
 			return err
+		}
+		if readOnlyLogin {
+			if err := readonly.ValidateScopes(result.Token.Scopes); err != nil {
+				return fmt.Errorf("granted scopes include write access, token not saved: %w", err)
+			}
+			result.Token.ReadOnly = true
 		}
 
 		// Offer to store OAuth credentials with this user account before saving the token.
@@ -45,6 +70,12 @@ var loginCmd = &cobra.Command{
 		// Update config
 		cfg.AddUser(result.Email, result.DisplayName, result.OrgID, result.OrgName)
 		cfg.SetDefaultUser(result.Email)
+		cfg.ReadOnly = readOnlyLogin
+		var purged []string
+		var purgeErr error
+		if readOnlyLogin {
+			purged, purgeErr = auth.PurgeWriteTokens(cfg)
+		}
 		if err := cfg.Save(); err != nil {
 			return fmt.Errorf("saving config: %w", err)
 		}
@@ -53,7 +84,17 @@ var loginCmd = &cobra.Command{
 		if result.OrgName != "" {
 			orgInfo = fmt.Sprintf(" — %s", result.OrgName)
 		}
-		fmt.Printf("Logged in as %s (%s)%s\n\n", result.DisplayName, result.Email, orgInfo)
+		fmt.Printf("Logged in as %s (%s)%s\n", result.DisplayName, result.Email, orgInfo)
+		if readOnlyLogin {
+			fmt.Println("Read-only mode is on.")
+			for _, email := range purged {
+				fmt.Printf("Removed write-capable login: %s\n", email)
+			}
+			if purgeErr != nil {
+				return purgeErr
+			}
+		}
+		fmt.Println()
 
 		// Offer to associate this user with the current folder
 		if cwd, err := os.Getwd(); err == nil {
@@ -130,5 +171,6 @@ func promptFolderAssociation(email, dir string) {
 }
 
 func init() {
+	loginCmd.Flags().Bool("read-only", false, "Log in with read-only scopes and turn on read-only mode")
 	rootCmd.AddCommand(loginCmd)
 }

@@ -6,8 +6,11 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 	"github.com/spf13/cobra"
 )
+
+const configKeys = "client-id, client-secret, scopes, read-only-scopes, region"
 
 var configCmd = &cobra.Command{
 	Use:   "config",
@@ -27,7 +30,7 @@ To use your own Webex Integration instead of the built-in default:
 var configSetCmd = &cobra.Command{
 	Use:   "set <key> <value>",
 	Short: "Set a configuration value",
-	Long:  "Set a configuration value. Valid keys: client-id, client-secret, scopes, region",
+	Long:  "Set a configuration value. Valid keys: " + configKeys + ". read-only-scopes accepts only read scopes.",
 	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		key := args[0]
@@ -45,13 +48,18 @@ var configSetCmd = &cobra.Command{
 			cfg.ClientSecret = value
 		case "scopes":
 			cfg.Scopes = value
+		case "read-only-scopes":
+			if err := readonly.ValidateScopes(value); err != nil {
+				return err
+			}
+			cfg.ReadOnlyScopes = value
 		case "region":
 			if err := setRegion(value); err != nil {
 				return err
 			}
 			cfg.Region = config.Region()
 		default:
-			return fmt.Errorf("unknown config key: %s (valid: client-id, client-secret, scopes, region)", key)
+			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)
 		}
 
 		if err := cfg.Save(); err != nil {
@@ -66,7 +74,7 @@ var configSetCmd = &cobra.Command{
 var configGetCmd = &cobra.Command{
 	Use:   "get <key>",
 	Short: "Get a configuration value",
-	Long:  "Get a configuration value. Valid keys: client-id, client-secret, scopes, region",
+	Long:  "Get a configuration value. Valid keys: " + configKeys,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		key := args[0]
@@ -108,6 +116,13 @@ var configGetCmd = &cobra.Command{
 			} else {
 				fmt.Printf("%s (default)\n", value)
 			}
+		case "read-only-scopes":
+			value := cfg.EffectiveReadOnlyScopes()
+			if cfg.ReadOnlyScopes != "" {
+				fmt.Printf("%s (custom)\n", value)
+			} else {
+				fmt.Printf("%s (default)\n", value)
+			}
 		case "region":
 			if cfg.Region != "" {
 				fmt.Printf("%s (custom)\n", cfg.Region)
@@ -115,7 +130,7 @@ var configGetCmd = &cobra.Command{
 				fmt.Println("us (default)")
 			}
 		default:
-			return fmt.Errorf("unknown config key: %s (valid: client-id, client-secret, scopes, region)", key)
+			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)
 		}
 
 		return nil

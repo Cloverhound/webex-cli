@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -30,21 +31,7 @@ var blockedPrefixes = []string{
 // exec.Command does not shell-eval, but these characters indicate misuse.
 var dangerousChars = []string{"$", "`", "|", ";", "&&"}
 
-// readPrefixes are action verbs (and their hyphenated variants) that map to GET API calls.
-var readPrefixes = []string{
-	"list",
-	"get",
-	"download",
-	"export",
-	"search",
-	"status",
-	"describe",
-	"query",
-	"show",
-	"fetch",
-}
-
-func registerTools(s *server.MCPServer, lg *usageLogger) {
+func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 	s.AddTool(
 		mcplib.NewTool("webex_read",
 			mcplib.WithDescription(
@@ -66,25 +53,27 @@ func registerTools(s *server.MCPServer, lg *usageLogger) {
 		makeDispatchHandler(lg, true),
 	)
 
-	s.AddTool(
-		mcplib.NewTool("webex_write",
-			mcplib.WithDescription(
-				"Execute a Webex CLI command that creates, updates, or deletes a resource. "+
-					"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
-					"Provide the command without the 'webex' prefix "+
-					"(e.g. 'messaging messages create'). "+
-					"Use webex_read for list/get/download/export operations.",
+	if !readOnly {
+		s.AddTool(
+			mcplib.NewTool("webex_write",
+				mcplib.WithDescription(
+					"Execute a Webex CLI command that creates, updates, or deletes a resource. "+
+						"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
+						"Provide the command without the 'webex' prefix "+
+						"(e.g. 'messaging messages create'). "+
+						"Use webex_read for list/get/download/export operations.",
+				),
+				mcplib.WithString("command",
+					mcplib.Required(),
+					mcplib.Description("Write CLI command without 'webex' prefix (e.g. 'messaging messages create', 'cc team update', 'admin people delete')"),
+				),
+				mcplib.WithString("flags",
+					mcplib.Description(`Optional flags as a JSON object string (e.g. {"room-id": "xxx", "text": "Hello"}). Keys are flag names without '--'.`),
+				),
 			),
-			mcplib.WithString("command",
-				mcplib.Required(),
-				mcplib.Description("Write CLI command without 'webex' prefix (e.g. 'messaging messages create', 'cc team update', 'admin people delete')"),
-			),
-			mcplib.WithString("flags",
-				mcplib.Description(`Optional flags as a JSON object string (e.g. {"room-id": "xxx", "text": "Hello"}). Keys are flag names without '--'.`),
-			),
-		),
-		makeDispatchHandler(lg, false),
-	)
+			makeDispatchHandler(lg, false),
+		)
+	}
 
 	s.AddTool(
 		mcplib.NewTool("webex_help",
@@ -156,7 +145,7 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 		// Read-only enforcement for webex_read.
 		if readOnly {
 			action := actionToken(args)
-			if action != "" && !isReadAction(action) {
+			if action != "" && !readonly.IsReadAction(action) {
 				return mcplib.NewToolResultText(fmt.Sprintf(
 					"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
 				)), nil
@@ -250,16 +239,6 @@ func actionToken(args []string) string {
 	default:
 		return ""
 	}
-}
-
-// isReadAction returns true if the verb maps to a GET API call.
-func isReadAction(action string) bool {
-	for _, p := range readPrefixes {
-		if action == p || strings.HasPrefix(action, p+"-") {
-			return true
-		}
-	}
-	return false
 }
 
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {

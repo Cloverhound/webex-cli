@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 )
 
 // Compiled-in defaults (set via ldflags or hardcoded).
@@ -29,6 +31,8 @@ type Config struct {
 	DefaultOrgID   string              `json:"default_org_id,omitempty"`
 	DefaultOrgName string              `json:"default_org_name,omitempty"`
 	Region         string              `json:"region,omitempty"`
+	ReadOnly       bool                `json:"read_only,omitempty"`
+	ReadOnlyScopes string              `json:"read_only_scopes,omitempty"`
 
 	path string // file path, not serialized
 }
@@ -105,6 +109,14 @@ func (c *Config) EffectiveScopes() string {
 		return c.Scopes
 	}
 	return DefaultScopes
+}
+
+// EffectiveReadOnlyScopes returns the scopes requested by `webex login --read-only`.
+func (c *Config) EffectiveReadOnlyScopes() string {
+	if c.ReadOnlyScopes != "" {
+		return c.ReadOnlyScopes
+	}
+	return readonly.DefaultScopes
 }
 
 func (c *Config) SetDefaultUser(email string) {

@@ -27,6 +27,26 @@ You can also use a token directly:
 webex --token "$WEBEX_TOKEN" calling people list
 ```
 
+### Read-only mode
+
+Use read-only mode when an AI agent or script should be able to read your Webex data but not change it.
+
+```bash
+webex login --read-only
+```
+
+This login requests only read scopes (`webex config get read-only-scopes` lists them) and turns on read-only mode:
+
+- Stored logins with write access are deleted from the OS keyring. Other programs running as you can read the keyring, so leaving those logins there would let them bypass read-only mode.
+- `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for commands whose action reads data, such as `list`, `get`, `search`, and `query`. Webex also rejects writes because the token has no write scopes.
+- `--token` and `$WEBEX_TOKEN` are refused, because the CLI cannot check the scopes of a token it did not create.
+- `auth switch`, `--user`, and folder defaults work only for users who logged in with `--read-only`.
+- `webex mcp serve` does not register the `webex_write` tool.
+
+To leave read-only mode, run `webex login` from an interactive terminal and confirm the prompt. The command refuses to run without a terminal, so an agent running shell commands cannot leave read-only mode on its own. Setting `WEBEX_READ_ONLY=1` turns on the same checks for one process. It never turns them off.
+
+The OAuth integration must have every read-only scope registered. If login fails with `invalid_scope`, set a list that matches your integration with `webex config set read-only-scopes "<scopes>"`. Only read scopes are accepted.
+
 ## Command Structure
 
 ```

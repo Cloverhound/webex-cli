@@ -19,6 +19,8 @@ type StoredToken struct {
 	IssuedAt     time.Time `json:"issued_at"`
 	ClientID     string    `json:"client_id,omitempty"`
 	ClientSecret string    `json:"client_secret,omitempty"`
+	Scopes       string    `json:"scopes,omitempty"`
+	ReadOnly     bool      `json:"read_only,omitempty"`
 }
 
 // IsExpired returns true if the access token is expired or within 60s of expiry.
