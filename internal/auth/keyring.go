@@ -4,13 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/zalando/go-keyring"
 )
 
 const serviceName = "webex-cli"
 
-// StoredToken represents OAuth tokens persisted in the OS keyring.
+// StoredToken represents OAuth tokens persisted in the token store.
 type StoredToken struct {
 	AccessToken  string    `json:"access_token"`
 	RefreshToken string    `json:"refresh_token"`
@@ -33,33 +31,37 @@ func (t *StoredToken) IsRefreshExpired() bool {
 	return time.Now().After(t.IssuedAt.Add(90 * 24 * time.Hour))
 }
 
-// SaveToken stores a token in the OS keyring keyed by email.
+// SaveToken stores a token keyed by email, in the OS keyring when one is
+// available and in the credentials file otherwise.
 func SaveToken(email string, tok *StoredToken) error {
 	data, err := json.Marshal(tok)
 	if err != nil {
 		return fmt.Errorf("marshaling token: %w", err)
 	}
-	return keyring.Set(serviceName, email, string(data))
+	return storeSet(email, string(data))
 }
 
-// LoadToken retrieves a token from the OS keyring for the given email.
+// LoadToken retrieves the token stored for email.
 func LoadToken(email string) (*StoredToken, error) {
-	data, err := keyring.Get(serviceName, email)
+	tok, _, err := LoadTokenWithStore(email)
+	return tok, err
+}
+
+// LoadTokenWithStore retrieves the token stored for email and names the store
+// that held it ("keyring" or "file").
+func LoadTokenWithStore(email string) (*StoredToken, string, error) {
+	data, store, err := storeGet(email)
 	if err != nil {
-		return nil, fmt.Errorf("loading token for %s: %w", email, err)
+		return nil, "", fmt.Errorf("loading token for %s: %w", email, err)
 	}
 	var tok StoredToken
 	if err := json.Unmarshal([]byte(data), &tok); err != nil {
-		return nil, fmt.Errorf("parsing stored token: %w", err)
+		return nil, "", fmt.Errorf("parsing stored token: %w", err)
 	}
-	return &tok, nil
+	return &tok, store, nil
 }
 
-// DeleteToken removes a token from the OS keyring.
+// DeleteToken removes the token for email from every store that holds it.
 func DeleteToken(email string) error {
-	err := keyring.Delete(serviceName, email)
-	if err == keyring.ErrNotFound {
-		return nil
-	}
-	return err
+	return storeDelete(email)
 }

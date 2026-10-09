@@ -7,20 +7,36 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"github.com/pkg/browser"
 )
 
+// openBrowser is a var so tests can avoid launching a real browser.
+var openBrowser = func(u string) error {
+	// pkg/browser copies the launcher's output to ours, which would corrupt
+	// JSON on stdout.
+	browser.Stdout = io.Discard
+	browser.Stderr = io.Discard
+	return browser.OpenURL(u)
+}
+
 const (
 	AuthorizeURL = "https://webexapis.com/v1/authorize"
-	TokenURL     = "https://webexapis.com/v1/access_token"
 	RedirectURI  = "http://localhost:8085/callback"
+)
+
+// Vars rather than consts so tests can point them at a fake server.
+var (
+	TokenURL    = "https://webexapis.com/v1/access_token"
+	peopleMeURL = "https://webexapis.com/v1/people/me"
 )
 
 // LoginResult contains the token and identity info from a successful login.
@@ -32,8 +48,14 @@ type LoginResult struct {
 	OrgName     string
 }
 
+// ErrNoBrowser reports that the browser flow cannot run here: the callback
+// port is unavailable or no browser could be opened.
+var ErrNoBrowser = errors.New("browser login unavailable")
+
 // Login runs the OAuth PKCE flow: opens browser, waits for callback, exchanges code, fetches identity.
-func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
+// With failFast, it returns an error wrapping ErrNoBrowser instead of waiting
+// when the browser cannot be opened, so the caller can switch to device login.
+func Login(clientID, clientSecret, scopes string, failFast bool) (*LoginResult, error) {
 	if clientID == "" {
 		return nil, fmt.Errorf("client ID not configured — run: webex config set client-id <YOUR_CLIENT_ID>")
 	}
@@ -51,7 +73,7 @@ func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
 
 	listener, err := net.Listen("tcp", "127.0.0.1:8085")
 	if err != nil {
-		return nil, fmt.Errorf("starting callback server: %w", err)
+		return nil, fmt.Errorf("%w: starting callback server: %v", ErrNoBrowser, err)
 	}
 
 	mux := http.NewServeMux()
@@ -94,10 +116,18 @@ func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
 		url.QueryEscape(challenge),
 	)
 
-	fmt.Println("Opening browser for Webex login...")
-	fmt.Println("If browser doesn't open, visit:")
-	fmt.Println(authURL)
-	_ = browser.OpenURL(authURL)
+	if failFast {
+		if err := openBrowser(authURL); err != nil {
+			return nil, fmt.Errorf("%w: %v", ErrNoBrowser, err)
+		}
+		fmt.Fprintln(os.Stderr, "Opened browser for Webex login. If it didn't open, visit:")
+		fmt.Fprintln(os.Stderr, authURL)
+	} else {
+		fmt.Fprintln(os.Stderr, "Opening browser for Webex login...")
+		fmt.Fprintln(os.Stderr, "If browser doesn't open, visit:")
+		fmt.Fprintln(os.Stderr, authURL)
+		_ = openBrowser(authURL)
+	}
 
 	// Wait for callback
 	var code string
@@ -114,8 +144,11 @@ func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	return completeLogin(tok)
+}
 
-	// Fetch identity
+// completeLogin looks up the identity and org behind a newly issued token.
+func completeLogin(tok *StoredToken) (*LoginResult, error) {
 	identity, err := fetchIdentity(tok.AccessToken)
 	if err != nil {
 		return nil, fmt.Errorf("fetching identity: %w", err)
@@ -237,7 +270,7 @@ type identityInfo struct {
 }
 
 func fetchIdentity(accessToken string) (*identityInfo, error) {
-	req, _ := http.NewRequest("GET", "https://webexapis.com/v1/people/me", nil)
+	req, _ := http.NewRequest("GET", peopleMeURL, nil)
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	resp, err := http.DefaultClient.Do(req)

@@ -18,6 +18,12 @@ irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | i
 
 Or download from [Releases](https://github.com/Cloverhound/webex-cli/releases).
 
+The installers verify the download against the release's `checksums.txt` and find the latest version without the GitHub API. For CI or sandboxed agents:
+
+- Pin a version with `WEBEX_CLI_VERSION=0.16.0` (or `sh -s -- -v 0.16.0`); `webex update` honors it too.
+- Set `INSTALL_DIR` to install somewhere other than `~/.local/bin` (Windows: `%LOCALAPPDATA%\webex-cli`).
+- Without a terminal, the installer does not prompt: it prints the PATH line to add and installs the agent skill for detected agents. Run `webex post-install --yes` to accept the defaults (including editing your shell profile), `--no-skills` to skip skills, or set `WEBEX_CLI_NONINTERACTIVE=1` to turn prompts off.
+
 ## Quick Start
 
 ```bash
@@ -128,22 +134,38 @@ See the [full refresh inventory](docs/command-inventory.md), [every renamed comm
 ## Authentication
 
 - **OAuth PKCE flow** — `webex login` opens a browser, no client secret needed on the user side
-- **OS keyring storage** — tokens stored securely in macOS Keychain / Linux keyring / Windows Credential Manager
+- **Device login** — `webex login --device` prints a URL and code to approve from any browser; used automatically over SSH, in CI, on Linux without a display, or when no browser opens
+- **OS keyring storage** — tokens stored securely in macOS Keychain / Linux keyring / Windows Credential Manager, with a plain-text file fallback when no keyring is available
 - **Auto-refresh** — expired tokens are refreshed automatically
 - **Multi-user** — log in with multiple Webex accounts and switch between them
 
 ```bash
-webex login                    # Login (opens browser)
+webex login                    # Login (opens browser, or device login when headless)
+webex login --device           # Login by approving a code from any browser
+webex login --browser          # Force the browser flow
 webex login --read-only        # Login with read scopes only and turn on read-only mode
 webex logout                   # Remove stored tokens
-webex auth status              # Show current user and token status
+webex auth status              # Show current user, token status, and token store
 webex auth list                # List all authenticated users
 webex auth switch <email>      # Switch default user
 webex auth set-org <org-id>    # Set a persistent org override
 webex auth clear-org           # Clear the org override
+webex auth export              # Print the refresh token for $WEBEX_REFRESH_TOKEN
 ```
 
-Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
+Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
+
+### Headless and Unattended Use
+
+Device login needs no local browser: `webex login` shows `Open <url> and enter <code>` (and a QR code on a terminal), and you approve from a browser on any device. With `--output json`, the URL, code, and expiry are printed as JSON on stdout so an agent can relay them. `WEBEX_LOGIN_MODE=device|browser` picks the flow without a flag. A custom integration needs the redirect URIs `https://oauth-helper-{a,r,k,d}.wbx2.com/helperservice/v1/actions/device/callback` for device login.
+
+Without an OS keyring (containers, SSH sessions, CI), tokens are saved in plain text to `$XDG_CONFIG_HOME/webex-cli/credentials.json` (`~/.config/webex-cli/` by default, `%APPDATA%\webex-cli\` on Windows) with mode `0600`. `WEBEX_TOKEN_STORE=keyring|file` forces a store; `webex auth status` shows which one holds the token.
+
+For CI and unattended agents where nobody can approve a code:
+
+- `WEBEX_TOKEN` takes a personal access token (12 hours) for short jobs.
+- `WEBEX_REFRESH_TOKEN` takes a refresh token; the CLI mints access tokens from it as needed. Create one by logging in on your laptop and running `webex auth export`. Set `WEBEX_CLIENT_ID` and `WEBEX_CLIENT_SECRET` if the token came from your own integration. Webex refresh tokens last about 90 days from last use. The CLI caches the access token and any rotated refresh token in the credentials file when it is writable; otherwise each process mints a new access token.
+- For organization-level automation, prefer a [service app](https://developer.webex.com/docs/service-apps) or a bot token over a person's login.
 
 ### Read-only Mode
 
@@ -151,7 +173,7 @@ Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
 
 - Stored logins with write access are deleted from the keyring, because any program running as you can read it.
 - `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for read actions such as `list`, `get`, `search`, and `query`.
-- `--token` and `$WEBEX_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
+- `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.
 
 Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. If your OAuth integration lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`.
@@ -297,7 +319,7 @@ A set of skill files in `skill/` enables AI coding agents (Claude Code, Claude C
 
 Each sub-skill also contains an auto-generated **Command Reference** section (updated by `make codegen`) that lists every command and its flags, keeping documentation in sync with the API as Postman collections change.
 
-`webex post-install` offers to install all skill files automatically. They are also updated by `webex update`.
+The skill files are embedded in the binary, so the installed skill always matches the installed version. `webex post-install` offers to install them, and `webex update` updates installed copies to match the new binary.
 
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 

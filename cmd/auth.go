@@ -13,7 +13,9 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/auth"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/localconfig"
+	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 var authCmd = &cobra.Command{
@@ -51,11 +53,18 @@ var authStatusCmd = &cobra.Command{
 			return nil
 		}
 
+		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
+			if os.Getenv(env) != "" {
+				fmt.Printf("Env:     $%s is set and overrides the stored login below\n", env)
+				break
+			}
+		}
+
 		userInfo := cfg.Users[email]
-		tok, err := auth.LoadToken(email)
+		tok, store, err := auth.LoadTokenWithStore(email)
 		if err != nil {
 			fmt.Printf("User:   %s\n", email)
-			fmt.Println("Status: token not found in keyring")
+			fmt.Println("Status: token not found in the keyring or credentials file")
 			return nil
 		}
 
@@ -77,7 +86,11 @@ var authStatusCmd = &cobra.Command{
 			fmt.Printf("Org override: %s\n", cfg.DefaultOrgID)
 		}
 
-		fmt.Printf("Source:  keyring\n")
+		if store == auth.StoreFile {
+			fmt.Printf("Store:   file, plain text (%s)\n", auth.CredentialsPath())
+		} else {
+			fmt.Println("Store:   OS keyring")
+		}
 
 		switch {
 		case cfg.ReadOnly:
@@ -117,6 +130,71 @@ var authStatusCmd = &cobra.Command{
 			}
 		}
 
+		return nil
+	},
+}
+
+var authExportCmd = &cobra.Command{
+	Use:   "export [email]",
+	Short: "Print a stored refresh token for use as $WEBEX_REFRESH_TOKEN",
+	Long: `Prints the refresh token of a stored login (the default user unless an email is
+given) so a login made on one machine can seed a CI secret or an unattended
+agent through $WEBEX_REFRESH_TOKEN. Anyone holding the token can act as that
+user until it expires (about 90 days after its last use), so treat it as a password.
+
+The token is printed alone on stdout. Confirm at the prompt, or pass --yes
+when there is no terminal.`,
+	Args: cobra.MaximumNArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		yes, _ := cmd.Flags().GetBool("yes")
+
+		cfg, err := appconfig.Load()
+		if err != nil {
+			return fmt.Errorf("loading config: %w", err)
+		}
+		email := cfg.DefaultUser
+		if len(args) > 0 {
+			email = args[0]
+		}
+		if email == "" {
+			return fmt.Errorf("no authenticated user — run: webex login")
+		}
+		tok, err := auth.LoadToken(email)
+		if err != nil {
+			return fmt.Errorf("no stored login for %s — run: webex login", email)
+		}
+		if tok.RefreshToken == "" || tok.IsRefreshExpired() {
+			return fmt.Errorf("the stored login for %s has no usable refresh token — run: webex login", email)
+		}
+
+		if !yes {
+			if !term.IsTerminal(int(os.Stdin.Fd())) || !term.IsTerminal(int(os.Stderr.Fd())) {
+				return fmt.Errorf("refusing to print a refresh token without confirmation; pass --yes")
+			}
+			var ok bool
+			err := huh.NewForm(huh.NewGroup(
+				huh.NewConfirm().
+					Title(fmt.Sprintf("Print the refresh token for %s?", email)).
+					Description("Anyone with this token can act as you until it expires.").
+					Affirmative("Print it").
+					Negative("Cancel").
+					Value(&ok),
+			)).WithOutput(os.Stderr).Run()
+			if err != nil {
+				return err
+			}
+			if !ok {
+				return fmt.Errorf("cancelled")
+			}
+		}
+
+		if tok.ClientID != "" && tok.ClientID != appconfig.DefaultClientID {
+			fmt.Fprintf(os.Stderr, "This login uses its own OAuth integration; also set $%s and $%s.\n",
+				auth.ClientIDEnv, auth.ClientSecretEnv)
+		}
+		fmt.Fprintf(os.Stderr, "Webex may rotate refresh tokens on use. If this machine and the consumer of the export\n"+
+			"both refresh it, one of them can be signed out; prefer a separate login for each.\n")
+		fmt.Println(tok.RefreshToken)
 		return nil
 	},
 }
@@ -358,6 +436,8 @@ func init() {
 	authCmd.AddCommand(authTokenCmd)
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authListCmd)
+	authExportCmd.Flags().Bool("yes", false, "Print without asking for confirmation")
+	authCmd.AddCommand(authExportCmd)
 	authCmd.AddCommand(authSwitchCmd)
 	authCmd.AddCommand(authSetOrgCmd)
 	authCmd.AddCommand(authClearOrgCmd)
