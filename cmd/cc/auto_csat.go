@@ -186,13 +186,14 @@ func init() {
 		autoCsatCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Auto CSAT resource by ID",
-			Long:  `Retrieve an existing Auto CSAT resource by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/{id} instead.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Auto CSAT resource by ID",
+			Long:    `Retrieve an existing Auto CSAT resource by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/auto-csat/{id}")
 				req.PathParam("orgid", orgid)
@@ -218,7 +219,7 @@ func init() {
 		autoCsatCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var agentInclusionType string
@@ -232,9 +233,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Auto CSAT resource by ID",
-			Long:  `Update an existing Auto CSAT resource by ID in a given organization. Deprecated. Use PUT /ai-feature/auto-csat/{id} instead.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Auto CSAT resource by ID",
+			Long:    `Update an existing Auto CSAT resource by ID in a given organization. Deprecated. Use PUT /ai-feature/auto-csat/{id} instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/auto-csat/{id}")
 				req.PathParam("orgid", orgid)

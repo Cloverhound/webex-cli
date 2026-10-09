@@ -115,6 +115,8 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ## Postman refresh: command changes
 
+Resource operations use `get`, `delete`, `patch`, and `update` with `--id`; previous `get-id`, `delete-id`, `patch-id`, and `update-id` spellings remain aliases.
+
 - Calling adds `call-controls-for-me` and `metrics get-call-quality-stats`.
 - Contact Center adds flow activity/event/template discovery, custom functions, assets/channels, usage reports, campaign groups, search metadata, and completed-task variable updates.
 - `cc flow import`/`export` now use the current FlowV2 format. Use `export-legacy` for raw FDL; `import-legacy` upload handling remains incomplete. `functions import` also needs multipart upload handling.

@@ -91,13 +91,13 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeUrl string
 		cmd := &cobra.Command{
-			Use:     "get-id",
-			Aliases: []string{"get-id-v2-api"},
+			Use:     "get",
+			Aliases: []string{"get-id", "get-id-v2-api"},
 			Short:   "Get specific Greeting File by ID",
 			Long:    `Retrieve an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -127,14 +127,14 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:     "update-id",
-			Aliases: []string{"update-id-v2-api"},
+			Use:     "update",
+			Aliases: []string{"update-id", "update-id-v2-api"},
 			Short:   "Update specific Greeting File by ID",
 			Long:    `Update an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -164,12 +164,12 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:     "delete-id",
-			Aliases: []string{"delete-id-v2-api"},
+			Use:     "delete",
+			Aliases: []string{"delete-id", "delete-id-v2-api"},
 			Short:   "Delete specific Greeting File by ID",
 			Long:    `Delete an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -190,7 +190,7 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var attributeTag string
@@ -198,8 +198,8 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:     "patch-id",
-			Aliases: []string{"patch-id-v2-api"},
+			Use:     "patch",
+			Aliases: []string{"patch-id", "patch-id-v2-api"},
 			Short:   "Partially update Greeting File by ID",
 			Long:    `Partially update Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {

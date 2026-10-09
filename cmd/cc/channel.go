@@ -89,14 +89,15 @@ func init() {
 		channelCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeLogoUrlVersioned string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Channel by ID",
-			Long:  `Retrieve an existing Channel by ID in a given organization. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Channel by ID",
+			Long:    `Retrieve an existing Channel by ID in a given organization. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/channel/{id}")
 				req.PathParam("orgid", orgid)
@@ -124,13 +125,14 @@ func init() {
 		channelCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Channel by ID",
-			Long:  `Update an existing Channel by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Channel by ID",
+			Long:    `Update an existing Channel by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/channel/{id}")
 				req.PathParam("orgid", orgid)
@@ -149,13 +151,14 @@ func init() {
 		channelCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Channel by ID",
-			Long:  `Delete an existing Channel by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Channel by ID",
+			Long:    `Delete an existing Channel by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/channel/{id}")
 				req.PathParam("orgid", orgid)
@@ -174,7 +177,7 @@ func init() {
 		channelCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var description string
@@ -183,9 +186,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update Channel by ID",
-			Long:  `Partially update a channel by ID. Only the supplied fields are changed; absent fields retain their current values. Patchable fields: name, description, logoType (MOMENTUM only), logoIconName. logoUrl and logoUrlVersioned cannot be changed by using PATCH; use PUT to update the logo image. channelType cannot be changed after creation. in a given organization.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id"},
+			Short:   "Partially update Channel by ID",
+			Long:    `Partially update a channel by ID. Only the supplied fields are changed; absent fields retain their current values. Patchable fields: name, description, logoType (MOMENTUM only), logoIconName. logoUrl and logoUrlVersioned cannot be changed by using PATCH; use PUT to update the logo image. channelType cannot be changed after creation. in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/channel/{id}")
 				req.PathParam("orgid", orgid)

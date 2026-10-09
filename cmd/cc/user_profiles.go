@@ -163,14 +163,15 @@ func init() {
 		userProfilesCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeNames string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific User Profile by ID",
-			Long:  `Retrieve an existing user profile by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific User Profile by ID",
+			Long:    `Retrieve an existing user profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v3/user-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -198,15 +199,16 @@ func init() {
 		userProfilesCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific User Profile by ID",
-			Long:  `Update an existing user profile by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific User Profile by ID",
+			Long:    `Update an existing user profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/v3/user-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -234,13 +236,14 @@ func init() {
 		userProfilesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific User Profile by ID",
-			Long:  `Delete an existing user profile by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific User Profile by ID",
+			Long:    `Delete an existing user profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/v3/user-profile/{id}")
 				req.PathParam("orgid", orgid)

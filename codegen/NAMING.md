@@ -6,7 +6,7 @@ Every row gives the full previous command, its current canonical command, what t
 
 **Flow formats:** `flow import`/`export` use the current typed flow document; `import-legacy`/`export-legacy` use deprecated raw FDL. This intentionally changes the format of the pre-refresh unsuffixed commands. Current flow, activity, event, and template commands use unprefixed URLs. Duplicate prefixed commands and the temporary `-direct` names have been removed.
 
-This reference contains **94 previous-to-current mappings**. Commands whose names and groups did not change are omitted.
+The refresh tables below contain **94 previous-to-current mappings**, followed by **88 ID-suffix mappings**. Commands whose names and groups did not change are omitted.
 
 ## calling call-controls-for-me
 
@@ -38,10 +38,10 @@ This reference contains **94 previous-to-current mappings**. Commands whose name
 | --- | --- | --- | --- | --- |
 | `webex cc agent-personal-greeting-files create-v2-api` | Before refresh | `webex cc agent-personal-greeting-files create` | Create a new Greeting File in a given organization. | Yes — alias |
 | `webex cc agent-personal-greeting-files delete-references-1` | Before refresh | `webex cc agent-personal-greeting-files delete-references` | Removes all references of the specified agent (ciUserId) from greeting files in the given organization. | Yes — alias |
-| `webex cc agent-personal-greeting-files get-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files get-id` | Retrieve an existing Greeting File by ID in a given organization. | Yes — alias |
-| `webex cc agent-personal-greeting-files update-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files update-id` | Update an existing Greeting File by ID in a given organization. | Yes — alias |
-| `webex cc agent-personal-greeting-files delete-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files delete-id` | Delete an existing Greeting File by ID in a given organization. | Yes — alias |
-| `webex cc agent-personal-greeting-files patch-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files patch-id` | Partially update Greeting File by ID in a given organization. | Yes — alias |
+| `webex cc agent-personal-greeting-files get-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files get` | Retrieve an existing Greeting File by ID in a given organization. | Yes — alias |
+| `webex cc agent-personal-greeting-files update-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files update` | Update an existing Greeting File by ID in a given organization. | Yes — alias |
+| `webex cc agent-personal-greeting-files delete-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files delete` | Delete an existing Greeting File by ID in a given organization. | Yes — alias |
+| `webex cc agent-personal-greeting-files patch-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files patch` | Partially update Greeting File by ID in a given organization. | Yes — alias |
 
 ## cc contact-service-queue
 
@@ -208,8 +208,103 @@ Created draft `CLI_Route_Test_ce61ca68ca8b` (ID `6abc548b79b443250d35110c`) usin
 
 These checks establish that both URL forms act on the same flow and support the tested draft lifecycle in Cloverhound. The unprefixed URLs are sufficient for those current-format operations; separate prefixed command variants provide no demonstrated additional capability. Publish and legacy import/export were not exercised in this write test. Keep legacy-format commands distinct from current-format commands regardless of URL-prefix consolidation.
 
+## Redundant ID suffixes
+
+The ID remains a parameter: `get --id`, `delete --id`, `patch --id`, and `update --id`. All six API areas were checked; current matches are in Contact Center. The old names remain compatibility aliases, including earlier versioned aliases. Qualifiers such as `get-ci-id` remain because they distinguish another lookup.
+
+| Previous full command | Current full command | Purpose | Old name supported? |
+| --- | --- | --- | --- |
+| `webex cc auto-csat get-id` | `webex cc auto-csat get` | Retrieve an existing Auto CSAT resource by ID in a given organization | Yes |
+| `webex cc auto-csat update-id` | `webex cc auto-csat update` | Update an existing Auto CSAT resource by ID in a given organization | Yes |
+| `webex cc generated-summaries get-id` | `webex cc generated-summaries get` | Retrieve an existing Generated Summaries resource by ID in a given organization | Yes |
+| `webex cc generated-summaries update-id` | `webex cc generated-summaries update` | Update an existing Generated Summaries resource by ID in a given organization | Yes |
+| `webex cc business-hour get-id` | `webex cc business-hour get` | Retrieve an existing Business Hours resource by ID in a given organization. | Yes |
+| `webex cc business-hour update-id` | `webex cc business-hour update` | Update an existing Business Hours resource by ID in a given organization. | Yes |
+| `webex cc business-hour delete-id` | `webex cc business-hour delete` | Delete an existing Business Hours resource by ID in a given organization. | Yes |
+| `webex cc holiday-list get-id` | `webex cc holiday-list get` | Retrieve an existing Holiday List by ID in a given organization. | Yes |
+| `webex cc holiday-list update-id` | `webex cc holiday-list update` | Update an existing Holiday List by ID in a given organization. | Yes |
+| `webex cc holiday-list delete-id` | `webex cc holiday-list delete` | Delete an existing Holiday List by ID in a given organization. | Yes |
+| `webex cc overrides get-id` | `webex cc overrides get` | Retrieve an existing Overrides resource by ID in a given organization. | Yes |
+| `webex cc overrides update-id` | `webex cc overrides update` | Update an existing Overrides resource by ID in a given organization. | Yes |
+| `webex cc overrides delete-id` | `webex cc overrides delete` | Delete an existing Overrides resource by ID in a given organization. | Yes |
+| `webex cc address-book get-id` | `webex cc address-book get` | Retrieve an existing Address Book by ID in a given organization. | Yes |
+| `webex cc address-book update-id` | `webex cc address-book update` | Update an existing Address Book by ID in a given organization. | Yes |
+| `webex cc address-book delete-id` | `webex cc address-book delete` | Delete an existing Address Book by ID in a given organization. | Yes |
+| `webex cc audio-files get-id` | `webex cc audio-files get` | Retrieve an existing Audio File by ID in a given organization. | Yes |
+| `webex cc audio-files update-id` | `webex cc audio-files update` | Update an existing Audio File by ID in a given organization. | Yes |
+| `webex cc audio-files delete-id` | `webex cc audio-files delete` | Delete an existing Audio File by ID in a given organization. | Yes |
+| `webex cc audio-files patch-id` | `webex cc audio-files patch` | Partially update Audio File by ID in a given organization. | Yes |
+| `webex cc auxiliary-code get-id` | `webex cc auxiliary-code get` | Retrieve an existing Auxiliary Code by ID in a given organization. | Yes |
+| `webex cc auxiliary-code update-id` | `webex cc auxiliary-code update` | Update an existing Auxiliary Code by ID in a given organization. | Yes |
+| `webex cc auxiliary-code delete-id` | `webex cc auxiliary-code delete` | Delete an existing Auxiliary Code by ID in a given organization. | Yes |
+| `webex cc contact-number get-id` | `webex cc contact-number get` | Retrieve an existing Contact Number by ID in a given organization. | Yes |
+| `webex cc contact-number update-id` | `webex cc contact-number update` | Update an existing Contact Number by ID in a given organization. | Yes |
+| `webex cc contact-number delete-id` | `webex cc contact-number delete` | Delete an existing Contact Number by ID in a given organization. | Yes |
+| `webex cc contact-service-queue get-id` | `webex cc contact-service-queue get` | Retrieve an existing Contact Service Queue by ID in a given organization. | Yes |
+| `webex cc contact-service-queue update-id` | `webex cc contact-service-queue update` | Update an existing Contact Service Queue by ID in a given organization. | Yes |
+| `webex cc contact-service-queue delete-id` | `webex cc contact-service-queue delete` | Delete an existing Contact Service Queue by ID in a given organization. | Yes |
+| `webex cc desktop-layout get-id` | `webex cc desktop-layout get` | Retrieve an existing Desktop Layout by ID in a given organization. | Yes |
+| `webex cc desktop-layout update-id` | `webex cc desktop-layout update` | Update an existing Desktop Layout by ID in a given organization. | Yes |
+| `webex cc desktop-layout delete-id` | `webex cc desktop-layout delete` | Delete an existing Desktop Layout by ID in a given organization. | Yes |
+| `webex cc desktop-profile get-id` | `webex cc desktop-profile get` | Retrieve an existing Desktop Profile by ID in a given organization. | Yes |
+| `webex cc desktop-profile update-id` | `webex cc desktop-profile update` | Update an existing Desktop Profile by ID in a given organization. | Yes |
+| `webex cc desktop-profile delete-id` | `webex cc desktop-profile delete` | Delete an existing Desktop Profile by ID in a given organization. | Yes |
+| `webex cc dial-plan get-id` | `webex cc dial-plan get` | Retrieve an existing Dial Plan by ID in a given organization. | Yes |
+| `webex cc dial-plan update-id` | `webex cc dial-plan update` | Update an existing Dial Plan by ID in a given organization. | Yes |
+| `webex cc dial-plan delete-id` | `webex cc dial-plan delete` | Delete an existing Dial Plan by ID in a given organization. | Yes |
+| `webex cc entry-point get-id` | `webex cc entry-point get` | Retrieve an existing Entry Point by ID in a given organization. | Yes |
+| `webex cc entry-point update-id` | `webex cc entry-point update` | Update an existing Entry Point by ID in a given organization. | Yes |
+| `webex cc entry-point delete-id` | `webex cc entry-point delete` | Delete an existing Entry Point by ID in a given organization. | Yes |
+| `webex cc global-variables get-id` | `webex cc global-variables get` | Retrieve an existing Global Variable by ID in a given organization. | Yes |
+| `webex cc global-variables update-id` | `webex cc global-variables update` | Update an existing Global Variable by ID in a given organization | Yes |
+| `webex cc global-variables delete-id` | `webex cc global-variables delete` | Delete an existing Global Variable by ID in a given organization. | Yes |
+| `webex cc multimedia-profile get-id` | `webex cc multimedia-profile get` | Retrieve an existing Multimedia Profile by ID in a given organization. | Yes |
+| `webex cc multimedia-profile update-id` | `webex cc multimedia-profile update` | Update an existing Multimedia Profile by ID in a given organization. | Yes |
+| `webex cc multimedia-profile delete-id` | `webex cc multimedia-profile delete` | Delete an existing Multimedia Profile by ID in a given organization. | Yes |
+| `webex cc outdial-ani get-id` | `webex cc outdial-ani get` | Retrieve an existing Outdial ANI by ID in a given organization. | Yes |
+| `webex cc outdial-ani update-id` | `webex cc outdial-ani update` | Update an existing Outdial ANI by ID in a given organization. | Yes |
+| `webex cc outdial-ani delete-id` | `webex cc outdial-ani delete` | Delete an existing Outdial ANI by ID in a given organization. | Yes |
+| `webex cc site get-id` | `webex cc site get` | Retrieve an existing Site by ID in a given organization. | Yes |
+| `webex cc site update-id` | `webex cc site update` | Update an existing Site by ID in a given organization. | Yes |
+| `webex cc site delete-id` | `webex cc site delete` | Delete an existing Site by ID in a given organization. | Yes |
+| `webex cc skill get-id` | `webex cc skill get` | Retrieve an existing Skill by ID in a given organization. | Yes |
+| `webex cc skill update-id` | `webex cc skill update` | Update an existing Skill by ID in a given organization. | Yes |
+| `webex cc skill delete-id` | `webex cc skill delete` | Delete an existing Skill by ID in a given organization. | Yes |
+| `webex cc skill-profile get-id` | `webex cc skill-profile get` | Retrieve an existing Skill Profile by ID in a given organization. | Yes |
+| `webex cc skill-profile update-id` | `webex cc skill-profile update` | Update an existing Skill Profile by ID in a given organization. | Yes |
+| `webex cc skill-profile delete-id` | `webex cc skill-profile delete` | Delete an existing Skill Profile by ID in a given organization. | Yes |
+| `webex cc team get-id` | `webex cc team get` | Retrieve an existing Team by ID in a given organization. | Yes |
+| `webex cc team update-id` | `webex cc team update` | Update an existing Team by ID in a given organization. | Yes |
+| `webex cc team delete-id` | `webex cc team delete` | Delete an existing Team by ID in a given organization. | Yes |
+| `webex cc user-profiles get-id` | `webex cc user-profiles get` | Retrieve an existing user profile by ID in a given organization. | Yes |
+| `webex cc user-profiles update-id` | `webex cc user-profiles update` | Update an existing user profile by ID in a given organization. | Yes |
+| `webex cc user-profiles delete-id` | `webex cc user-profiles delete` | Delete an existing user profile by ID in a given organization. | Yes |
+| `webex cc users get-id` | `webex cc users get` | Retrieve an existing Users by ID in a given organization. | Yes |
+| `webex cc users update-id` | `webex cc users update` | Update an existing User by ID in a given organization. | Yes |
+| `webex cc users patch-id` | `webex cc users patch` | Partially update User by ID in a given organization. | Yes |
+| `webex cc work-types get-id` | `webex cc work-types get` | Retrieve an existing Work Type by ID in a given organization. | Yes |
+| `webex cc work-types update-id` | `webex cc work-types update` | Update an existing Work Type by ID in a given organization. | Yes |
+| `webex cc work-types delete-id` | `webex cc work-types delete` | Delete an existing Work Type by ID in a given organization. | Yes |
+| `webex cc ai-feature get-id` | `webex cc ai-feature get` | Retrieve an existing AI Feature resource by ID in a given organization. | Yes |
+| `webex cc ai-feature patch-id` | `webex cc ai-feature patch` | Partially update AI Feature resource by ID in a given organization. | Yes |
+| `webex cc agent-personal-greeting-files get-id` | `webex cc agent-personal-greeting-files get` | Retrieve an existing Greeting File by ID in a given organization. | Yes |
+| `webex cc agent-personal-greeting-files update-id` | `webex cc agent-personal-greeting-files update` | Update an existing Greeting File by ID in a given organization. | Yes |
+| `webex cc agent-personal-greeting-files delete-id` | `webex cc agent-personal-greeting-files delete` | Delete an existing Greeting File by ID in a given organization. | Yes |
+| `webex cc agent-personal-greeting-files patch-id` | `webex cc agent-personal-greeting-files patch` | Partially update Greeting File by ID in a given organization. | Yes |
+| `webex cc resource-collection get-id` | `webex cc resource-collection get` | Retrieve an existing Resource Collection by ID in a given organization. | Yes |
+| `webex cc resource-collection update-id` | `webex cc resource-collection update` | Update an existing resource collection by ID in a given organization. | Yes |
+| `webex cc resource-collection delete-id` | `webex cc resource-collection delete` | Delete an existing resource collection by ID in a given organization. | Yes |
+| `webex cc asset get-id` | `webex cc asset get` | Retrieve an existing Asset by ID in a given organization | Yes |
+| `webex cc asset update-id` | `webex cc asset update` | Update an existing Asset by ID in a given organization | Yes |
+| `webex cc asset delete-id` | `webex cc asset delete` | Delete an existing Asset by ID in a given organization | Yes |
+| `webex cc asset patch-id` | `webex cc asset patch` | Partially update Asset by ID in a given organization | Yes |
+| `webex cc channel get-id` | `webex cc channel get` | Retrieve an existing Channel by ID in a given organization | Yes |
+| `webex cc channel update-id` | `webex cc channel update` | Update an existing Channel by ID in a given organization. | Yes |
+| `webex cc channel delete-id` | `webex cc channel delete` | Delete an existing Channel by ID in a given organization. | Yes |
+| `webex cc channel patch-id` | `webex cc channel patch` | Partially update a channel by ID | Yes |
+
 ## Maintaining this reference
 
 Duplicate prefixed entries are excluded through `SUPERSEDED_ROUTES` in `codegen/naming_overrides.py`. Each exclusion identifies a required replacement request; extraction fails if it disappears. The generator keeps the replacement’s complete request contract. Legacy import/export retain their prefixed routes. Publish uses the unprefixed route but was not live-tested.
 
-Names and compatibility aliases are defined in `codegen/naming_overrides.py` and applied to the enriched spec before generating Go commands and skill references. Update the override table, run `make codegen`, and update this reference when changing a mapping. Handwritten request implementations continue to use `custom_*.go` and the generator skip lists.
+Exact `get-id`, `delete-id`, `patch-id`, and `update-id` names are shortened centrally by `apply_naming_overrides` in `codegen/extract_api_spec.py`, with collision checks and old-name aliases. Route-specific names and compatibility aliases are defined in `codegen/naming_overrides.py` and applied to the enriched spec before generating Go commands and skill references. Update the override table, run `make codegen`, and update this reference when changing a mapping. Handwritten request implementations continue to use `custom_*.go` and the generator skip lists.

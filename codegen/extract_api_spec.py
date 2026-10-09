@@ -368,6 +368,7 @@ def merge_folders(folders):
 def apply_naming_overrides(collection_name, folders):
     """Resolve explicit naming exceptions and identical routes across merged groups."""
     overrides = NAMING_OVERRIDES.get(collection_name, {})
+    shortened_groups = set()
     superseded = SUPERSEDED_ROUTES.get(collection_name, {})
     available = {(e['method'], e['path']) for f in folders for e in f['endpoints']}
     merged = {}
@@ -384,6 +385,10 @@ def apply_naming_overrides(collection_name, folders):
                 key, (source_group, ep['command'], ()))
             ep['command'] = command
             ep['aliases'] = list(aliases)
+            if command in ('get-id', 'delete-id', 'patch-id', 'update-id'):
+                ep['command'] = command[:-3]
+                ep['aliases'] = list(dict.fromkeys([command, *aliases]))
+                shortened_groups.add(group)
             target = merged.setdefault(group, {
                 'group': group, 'original_folders': [], 'endpoints': [],
                 'aliases': GROUP_ALIASES.get(collection_name, {}).get(group, []),
@@ -402,7 +407,7 @@ def apply_naming_overrides(collection_name, folders):
                             existing['aliases'].append(alias)
                     continue
             target['endpoints'].append(ep)
-    changed_groups = {value[0] for value in overrides.values()}
+    changed_groups = {value[0] for value in overrides.values()} | shortened_groups
     for group in merged.values():
         if group['group'] not in changed_groups:
             continue

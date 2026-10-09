@@ -81,16 +81,16 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 webex cc <resource> list
 
 # Get by ID
-webex cc <resource> get-id --orgid "..." --id "..."
+webex cc <resource> get --orgid "..." --id "..."
 
 # Create
 webex cc <resource> create --orgid "..." --body-file config.json
 
 # Update
-webex cc <resource> update-id --orgid "..." --id "..." --body-file updated.json
+webex cc <resource> update --orgid "..." --id "..." --body-file updated.json
 
 # Delete
-webex cc <resource> delete-id --orgid "..." --id "..."
+webex cc <resource> delete --orgid "..." --id "..."
 
 # List references (what depends on this resource)
 webex cc <resource> list-references --orgid "..." --id "..."

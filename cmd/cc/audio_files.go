@@ -57,14 +57,15 @@ func init() {
 		audioFilesCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeUrl string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Audio File by ID",
-			Long:  `Retrieve an existing Audio File by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Audio File by ID",
+			Long:    `Retrieve an existing Audio File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/audio-file/{id}")
 				req.PathParam("orgid", orgid)
@@ -92,15 +93,16 @@ func init() {
 		audioFilesCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Audio File by ID",
-			Long:  `Update an existing Audio File by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Audio File by ID",
+			Long:    `Update an existing Audio File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/audio-file/{id}")
 				req.PathParam("orgid", orgid)
@@ -128,13 +130,14 @@ func init() {
 		audioFilesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Audio File by ID",
-			Long:  `Delete an existing Audio File by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Audio File by ID",
+			Long:    `Delete an existing Audio File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/audio-file/{id}")
 				req.PathParam("orgid", orgid)
@@ -153,16 +156,17 @@ func init() {
 		audioFilesCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var description string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update Audio File by ID",
-			Long:  `Partially update Audio File by ID in a given organization.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id"},
+			Short:   "Partially update Audio File by ID",
+			Long:    `Partially update Audio File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/audio-file/{id}")
 				req.PathParam("orgid", orgid)

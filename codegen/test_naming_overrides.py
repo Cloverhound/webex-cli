@@ -47,6 +47,26 @@ class NamingOverridesTest(unittest.TestCase):
         self.assertEqual(self.command(area, 'tasks', 'resume-digital')['path'], '/v1/tasks/{taskId}/resume')
         self.assertEqual(self.command(area, 'tasks', 'resume-recording')['path'], '/v1/tasks/{taskId}/record/resume')
 
+    def test_redundant_id_names_are_aliases_in_every_area(self):
+        for area in self.raw:
+            for group in self.resolved(area):
+                for ep in group['endpoints']:
+                    self.assertNotIn(ep['command'], ('get-id', 'delete-id', 'patch-id', 'update-id'))
+            for group in self.raw[area]:
+                for ep in group['endpoints']:
+                    if ep['command'] in ('get-id', 'delete-id', 'patch-id', 'update-id'):
+                        result = self.command(area, group['group'], ep['command'])
+                        self.assertEqual(result['path'], ep['path'])
+                        self.assertEqual(result['command'], ep['command'][:-3])
+
+    def test_shortening_rejects_a_collision_instead_of_numbering(self):
+        folders = [{'group': 'example', 'original_folders': ['Example'], 'endpoints': [
+            {'command': 'get-id', 'method': 'GET', 'path': '/example/{id}'},
+            {'command': 'get', 'method': 'GET', 'path': '/different'},
+        ]}]
+        with self.assertRaisesRegex(ValueError, 'Duplicate command or alias'):
+            apply_naming_overrides('Webex Admin', folders)
+
     def test_flow_versions_and_routes_remain_distinct(self):
         area = 'Webex Contact Center'
         self.assertEqual(self.command(area, 'flow', 'import-legacy')['path'],

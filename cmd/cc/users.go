@@ -350,7 +350,7 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeCount string
@@ -361,9 +361,10 @@ func init() {
 		var checkIfUserHasDynamicSkill string
 		var dynamicSkillId string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific User by ID",
-			Long:  `Retrieve an existing Users by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific User by ID",
+			Long:    `Retrieve an existing Users by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/{id}")
 				req.PathParam("orgid", orgid)
@@ -403,15 +404,16 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific User by ID",
-			Long:  `Update an existing User by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific User by ID",
+			Long:    `Update an existing User by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/user/{id}")
 				req.PathParam("orgid", orgid)
@@ -439,16 +441,17 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var valueType string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update User by ID",
-			Long:  `Partially update User by ID in a given organization.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id"},
+			Short:   "Partially update User by ID",
+			Long:    `Partially update User by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/user/{id}")
 				req.PathParam("orgid", orgid)

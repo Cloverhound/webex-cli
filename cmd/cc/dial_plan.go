@@ -211,12 +211,13 @@ func init() {
 		dialPlanCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Dial Plan by ID",
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Dial Plan by ID",
 			Long: `Retrieve an existing Dial Plan by ID in a given organization.
 
 **Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.`,
@@ -245,7 +246,7 @@ func init() {
 		dialPlanCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var active bool
@@ -262,8 +263,9 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Dial Plan by ID",
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Dial Plan by ID",
 			Long: `Update an existing Dial Plan by ID in a given organization.
 
 **Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.`,
@@ -318,12 +320,13 @@ func init() {
 		dialPlanCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Dial Plan by ID",
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Dial Plan by ID",
 			Long: `Delete an existing Dial Plan by ID in a given organization.
 
 **Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.`,

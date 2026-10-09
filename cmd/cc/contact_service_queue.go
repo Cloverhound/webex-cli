@@ -345,14 +345,15 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var agentsUpdatedInfo string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Contact Service Queue by ID",
-			Long:  `Retrieve an existing Contact Service Queue by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Contact Service Queue by ID",
+			Long:    `Retrieve an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/contact-service-queue/{id}")
 				req.PathParam("orgid", orgid)
@@ -380,15 +381,16 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Contact Service Queue by ID",
-			Long:  `Update an existing Contact Service Queue by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Contact Service Queue by ID",
+			Long:    `Update an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/v2/contact-service-queue/{id}")
 				req.PathParam("orgid", orgid)
@@ -416,13 +418,14 @@ func init() {
 		contactServiceQueueCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Contact Service Queue by ID",
-			Long:  `Delete an existing Contact Service Queue by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Contact Service Queue by ID",
+			Long:    `Delete an existing Contact Service Queue by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/contact-service-queue/{id}")
 				req.PathParam("orgid", orgid)

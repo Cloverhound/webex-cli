@@ -354,13 +354,14 @@ func init() {
 		desktopProfileCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Desktop Profile by ID",
-			Long:  `Retrieve an existing Desktop Profile by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Desktop Profile by ID",
+			Long:    `Retrieve an existing Desktop Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/agent-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -386,7 +387,7 @@ func init() {
 		desktopProfileCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var accessBuddyTeam string
@@ -442,9 +443,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Desktop Profile by ID",
-			Long:  `Update an existing Desktop Profile by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Desktop Profile by ID",
+			Long:    `Update an existing Desktop Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/agent-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -573,13 +575,14 @@ func init() {
 		desktopProfileCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Desktop Profile by ID",
-			Long:  `Delete an existing Desktop Profile by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Desktop Profile by ID",
+			Long:    `Delete an existing Desktop Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/agent-profile/{id}")
 				req.PathParam("orgid", orgid)

@@ -91,14 +91,15 @@ func init() {
 		assetCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeChannelName string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Asset by ID",
-			Long:  `Retrieve an existing Asset by ID in a given organization. Set includeChannelName to true to include the channel name in the response.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Asset by ID",
+			Long:    `Retrieve an existing Asset by ID in a given organization. Set includeChannelName to true to include the channel name in the response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/asset/{id}")
 				req.PathParam("orgid", orgid)
@@ -126,15 +127,16 @@ func init() {
 		assetCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Asset by ID",
-			Long:  `Update an existing Asset by ID in a given organization. Supported for WORK_ITEM assets. For CUSTOM_MESSAGING assets, use PATCH instead.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Asset by ID",
+			Long:    `Update an existing Asset by ID in a given organization. Supported for WORK_ITEM assets. For CUSTOM_MESSAGING assets, use PATCH instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/asset/{id}")
 				req.PathParam("orgid", orgid)
@@ -162,13 +164,14 @@ func init() {
 		assetCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Asset by ID",
-			Long:  `Delete an existing Asset by ID in a given organization. Validates whether the asset is associated with any flow before deletion.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Asset by ID",
+			Long:    `Delete an existing Asset by ID in a given organization. Validates whether the asset is associated with any flow before deletion.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/asset/{id}")
 				req.PathParam("orgid", orgid)
@@ -187,16 +190,17 @@ func init() {
 		assetCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var valueType string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update Asset by ID",
-			Long:  `Partially update Asset by ID in a given organization. Supported only for CUSTOM_MESSAGING assets. Send only the fields to change; absent fields retain their current values. webhookConfig is optional; omit it to keep the existing credentials. For WORK_ITEM assets, use PUT instead.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id"},
+			Short:   "Partially update Asset by ID",
+			Long:    `Partially update Asset by ID in a given organization. Supported only for CUSTOM_MESSAGING assets. Send only the fields to change; absent fields retain their current values. webhookConfig is optional; omit it to keep the existing credentials. For WORK_ITEM assets, use PUT instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/asset/{id}")
 				req.PathParam("orgid", orgid)
