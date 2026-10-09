@@ -82,6 +82,7 @@ func init() {
 		var startDate string
 		var endDate string
 		var siteList string
+		var timeZone string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -101,6 +102,7 @@ func init() {
 					req.BodyString("startDate", startDate)
 					req.BodyString("endDate", endDate)
 					req.BodyString("siteList", siteList)
+					req.BodyString("timeZone", timeZone)
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -113,6 +115,7 @@ func init() {
 		cmd.Flags().StringVar(&startDate, "start-date", "", "")
 		cmd.Flags().StringVar(&endDate, "end-date", "", "")
 		cmd.Flags().StringVar(&siteList, "site-list", "", "")
+		cmd.Flags().StringVar(&timeZone, "time-zone", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		reportsCmd.AddCommand(cmd)

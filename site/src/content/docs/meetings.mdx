@@ -9,6 +9,7 @@ The `webex meetings` subcommand provides access to the Webex Meetings APIs for m
 
 | Resource | Description |
 |----------|-------------|
+| `slidosecurepremium` | Slido Secure Premium operations |
 | `chats` | Meeting chat management |
 | `closed-captions` | Closed caption management |
 | `invitees` | Meeting invitee management |
@@ -92,3 +93,9 @@ webex meetings recordings download --recording-id <id> --output meeting.mp3 --ho
 ```
 
 The `--type` flag selects which `temporaryDirectDownloadLinks` field to use: `audioDownloadLink` (default), `recordingDownloadLink`, or `transcriptDownloadLink`.
+
+## Group meetings and recording queries
+
+Service apps with group meeting access can use `meetings list-group`, `meetings patch-group`, and `meetings update-group-control-status` to find/update meetings and control recording. The caller must satisfy the API's group/site access requirements.
+
+`recordings query` and `recordings query-admin-compliance-officer` search recordings using filters in a JSON request body. These searches use POST and therefore the MCP `webex_write` dispatcher.

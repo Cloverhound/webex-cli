@@ -91,11 +91,11 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ### Calling (`webex calling`)
 
-47 resource groups including auto-attendants, call queues (CxE), hunt groups, call controls, call routing (dial plans, route groups, trunks), DECT devices, emergency services, locations, numbers, paging groups, people, workspaces, voicemail, converged recordings, and more.
+49 resource groups including auto-attendants, call queues (CxE), hunt groups, call controls, call routing (dial plans, route groups, trunks), DECT devices, emergency services, locations, numbers, paging groups, people, workspaces, voicemail, converged recordings, and more.
 
 ### Contact Center (`webex cc`)
 
-54 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
+64 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
 
 ### Admin (`webex admin`)
 
@@ -112,6 +112,18 @@ All upload commands support `--dry-run` to preview the request without sending i
 ### Messaging (`webex messaging`)
 
 12 resource groups including rooms, messages, memberships, teams, team memberships, webhooks, events, attachment actions, room tabs, and more.
+
+## Postman refresh: command changes
+
+Resource operations use `get`, `delete`, `patch`, and `update` with `--id`; previous `get-id`, `delete-id`, `patch-id`, and `update-id` spellings remain aliases.
+
+- Calling adds `call-controls-for-me` and `metrics get-call-quality-stats`.
+- Contact Center adds flow activity/event/template discovery, custom functions, assets/channels, usage reports, campaign groups, search metadata, and completed-task variable updates.
+- `cc flow import`/`export` now use the current FlowV2 format. Use `export-legacy` for raw FDL; `import-legacy` upload handling remains incomplete. `functions import` also needs multipart upload handling.
+- `cc tasks resume` still means voice unhold. Digital tasks use `pause-digital`/`resume-digital`.
+- Messaging consolidates HDS operations under `hds`, with `hybrid-data-security` as an alias. Admin and Meetings add body-based recording searches; Meetings also adds group service-app operations.
+
+See the [full refresh inventory](docs/command-inventory.md), [every renamed command](docs/command-migration.md), and [Contact Center skill](skill/cc/SKILL.md) for migration details and examples. Upstream collections remain unchanged; overrides control names, routes, and product placement.
 
 ## Authentication
 
@@ -225,13 +237,13 @@ And 2 MCP resources:
 | `webex://commands` | JSON array of all available CLI commands with short descriptions |
 | `webex://usage` | Last 50 raw lines of the usage log |
 
-Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_run` — the command tree expands automatically as new commands are added.
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added.
 
 Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
 
 ### Usage Log
 
-All `webex_run` invocations are logged to `~/.webex-mcp/usage.log` (JSONL). Configure with serve flags:
+All dispatcher invocations are logged to `~/.webex-mcp/usage.log` (JSONL). Configure with serve flags:
 
 ```bash
 webex mcp serve --log-path /tmp/webex.log --log-max-size 10485760 --log-max-files 5

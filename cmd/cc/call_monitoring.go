@@ -212,4 +212,27 @@ func init() {
 		callMonitoringCmd.AddCommand(cmd)
 	}
 
+	{ // whisper-coach-request
+		var interactionId string
+		cmd := &cobra.Command{
+			Use:   "whisper-coach-request",
+			Short: "Whisper Coach Request",
+			Long: `This feature is currently in Beta. Contact your Cisco team if you want access to this feature.
+
+Create a Whisper Coach request for the supervisor to coach the agent on a call that is being monitored already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{interactionId}/coach")
+				req.PathParam("interactionId", interactionId)
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&interactionId, "interaction-id", "", "The unique ID representing the monitored interaction that the supervisor needs to coach.")
+		cmd.MarkFlagRequired("interaction-id")
+		callMonitoringCmd.AddCommand(cmd)
+	}
+
 }

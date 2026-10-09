@@ -37,9 +37,9 @@ func init() {
 		var singleObjectResponse string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Outdial ANI(s)",
-			Long: `Retrieve a list of Outdial ANI(s) in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+			Short: "List Outdial ANIs",
+			Long: `Retrieve a list of Outdial ANIs in a given organization.
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/outdial-ani")
 				req.PathParam("orgid", orgid)
@@ -70,7 +70,7 @@ func init() {
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, description)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"description\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
 		outdialAniCmd.AddCommand(cmd)
 	}
 
@@ -112,8 +112,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Outdial ANI(s)",
-			Long:  `Create, Update or delete Outdial ANI(s) in bulk in a given organization.`,
+			Short: "Bulk save Outdial ANIs",
+			Long:  `Create, Update or delete Outdial ANIs in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/outdial-ani/bulk")
 				req.PathParam("orgid", orgid)
@@ -172,7 +172,7 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // list-entry
+	{ // list-entries
 		var orgid string
 		var filter string
 		var attributes string
@@ -180,9 +180,10 @@ func init() {
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-entry",
-			Short: "List Outdial ANI Entry(s)",
-			Long:  `Retrieve a list of Outdial ANI Entry(s) in a given organization.`,
+			Use:     "list-entries",
+			Aliases: []string{"list-entry"},
+			Short:   "List Outdial ANI Entries",
+			Long:    `Retrieve a list of Outdial ANI Entries in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/outdial-ani/entry")
 				req.PathParam("orgid", orgid)
@@ -215,13 +216,14 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Outdial ANI by ID",
-			Long:  `Retrieve an existing Outdial ANI by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Outdial ANI by ID",
+			Long:    `Retrieve an existing Outdial ANI by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/outdial-ani/{id}")
 				req.PathParam("orgid", orgid)
@@ -247,15 +249,16 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Outdial ANI by ID",
-			Long:  `Update an existing Outdial ANI by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Outdial ANI by ID",
+			Long:    `Update an existing Outdial ANI by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/outdial-ani/{id}")
 				req.PathParam("orgid", orgid)
@@ -283,13 +286,14 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Outdial ANI by ID",
-			Long:  `Delete an existing Outdial ANI by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Outdial ANI by ID",
+			Long:    `Delete an existing Outdial ANI by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/outdial-ani/{id}")
 				req.PathParam("orgid", orgid)
@@ -410,15 +414,16 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // bulk-save-entry
+	{ // bulk-save-entries
 		var orgid string
 		var outDialAniId string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "bulk-save-entry",
-			Short: "Bulk save Outdial ANI Entry(s)",
-			Long:  `Create, Update or delete Outdial ANI Entry(s) in bulk for an Address Book in a given organization.`,
+			Use:     "bulk-save-entries",
+			Aliases: []string{"bulk-save-entry"},
+			Short:   "Bulk save Outdial ANI Entries",
+			Long:    `Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/bulk")
 				req.PathParam("orgid", orgid)
@@ -574,7 +579,7 @@ func init() {
 		outdialAniCmd.AddCommand(cmd)
 	}
 
-	{ // list-entry-2
+	{ // list-entries-for-ani
 		var orgid string
 		var outDialAniId string
 		var filter string
@@ -583,9 +588,10 @@ func init() {
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-entry-2",
-			Short: "List Outdial ANI Entry(s)",
-			Long:  `Retrieve a list of Outdial ANI Entry(s) in a given organization.`,
+			Use:     "list-entries-for-ani",
+			Aliases: []string{"list-entry-2"},
+			Short:   "List Outdial ANI Entries",
+			Long:    `Retrieve a list of Outdial ANI Entries in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/outdial-ani/{outDialAniId}/entry")
 				req.PathParam("orgid", orgid)

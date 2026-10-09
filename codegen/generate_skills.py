@@ -82,6 +82,8 @@ def format_flags(ep):
     seen = set()
 
     for p in ep.get('path_params', []):
+        if p['name'] in ('projectId', 'orgId', 'orgid'):
+            continue  # Project is fixed; organization uses the global override.
         flag = camel_to_kebab(p['name'])
         if flag not in seen:
             seen.add(flag)
@@ -119,7 +121,10 @@ def generate_command_reference(area_cmd, groups, collection_name):
         "## Command Reference",
         "",
         "> Auto-generated from Postman collections. Run `make codegen` to update.",
+        "> Organization defaults to the authenticated account; use `--organization` to override.",
     ]
+    if area_cmd == 'cc':
+        lines.append('> The flow project ID is fixed internally; no project flag is needed.')
 
     for group_data in groups:
         group = group_data['group']
@@ -139,11 +144,18 @@ def generate_command_reference(area_cmd, groups, collection_name):
             "",
             f"### {group}",
             "",
+        ]
+        if group_data.get('aliases'):
+            lines += ['Group aliases: ' + ', '.join(f'`{a}`' for a in group_data['aliases']) + '.', '']
+        lines += [
             "| Command | Flags |",
             "|---|---|",
         ]
         for ep in visible:
-            lines.append(f"| `{ep['command']}` | {format_flags(ep)} |")
+            name = f"`{ep['command']}`"
+            if ep.get('aliases'):
+                name += ' (aliases: ' + ', '.join(f'`{a}`' for a in ep['aliases']) + ')'
+            lines.append(f"| {name} | {format_flags(ep)} |")
 
     return "\n".join(lines) + "\n"
 

@@ -4,6 +4,7 @@ package admin
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
@@ -18,6 +19,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = strconv.Itoa
 var _ = strings.Join
 var _ = timeutil.ParseLastISO
 
@@ -46,7 +48,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List Recordings",
-			Long:  "Lists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
+			Long:  "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings](/docs/api/v1/recordings/query-recordings) API instead.</Callout></div>\n\nLists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/recordings")
 				if last != "" {
@@ -114,7 +116,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-admin-compliance-officer",
 			Short: "List Recordings For an Admin or Compliance Officer",
-			Long:  "List recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
+			Long:  "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings For an Admin or Compliance Officer](/docs/api/v1/recordings/query-recordings-for-an-admin-or-compliance-officer) API instead.</Callout></div>\n\nList recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/recordings")
 				if last != "" {
@@ -436,7 +438,6 @@ func init() {
 		var to string
 		var siteUrl string
 		var integrationTag string
-		var topic string
 		var format string
 		var serviceType string
 		var timezone string
@@ -461,7 +462,6 @@ func init() {
 				req.QueryParam("to", to)
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("integrationTag", integrationTag)
-				req.QueryParam("topic", topic)
 				req.QueryParam("format", format)
 				req.QueryParam("serviceType", serviceType)
 				req.Header("timezone", timezone)
@@ -486,7 +486,6 @@ func init() {
 		cmd.Flags().StringVar(&to, "to", "", "Ending date and time (exclusive) for List recordings to return, in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.")
 		cmd.Flags().StringVar(&siteUrl, "site-url", "", "URL of the Webex site which the API lists recordings from. If not specified, the API lists recordings from user's preferred site. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.")
 		cmd.Flags().StringVar(&integrationTag, "integration-tag", "", "External key of the parent meeting created by an integration application. This parameter is used by the integration application to query recordings by a key in its own domain such as a Zendesk ticket ID, a Jira ID, a Salesforce Opportunity ID, etc. An integrationTag created by one client cannot be accessed or used as a filtering parameter by another client. For example, if a meeting has an `integrationTag` of \"Sales\" which is created by the client behind the developer portal, then this integrationTag can't be accessed on the meeting or its recordings by another client. Neither can it be used to filter meetings or recordings by a client other than the one that created the integrationTag of \"Sales\".")
-		cmd.Flags().StringVar(&topic, "topic", "", "Recording topic. If specified, the API filters recordings by topic in a case-insensitive manner.")
 		cmd.Flags().StringVar(&format, "format", "", "Recording's file format. If specified, the API filters recordings by format.")
 		cmd.Flags().StringVar(&serviceType, "service-type", "", "The service type for recordings. If specified, the API filters recordings by service type.")
 		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
@@ -571,6 +570,134 @@ func init() {
 		cmd.Flags().StringSliceVar(&addEmails, "add-emails", nil, "")
 		cmd.Flags().StringSliceVar(&removeEmails, "remove-emails", nil, "")
 		cmd.Flags().BoolVar(&sendEmail, "send-email", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		recordingsCmd.AddCommand(cmd)
+	}
+
+	{ // query
+		var timezone string
+		var max int64
+		var from string
+		var to string
+		var meetingId string
+		var siteUrl string
+		var integrationTag string
+		var hostEmail string
+		var topic string
+		var format string
+		var serviceType string
+		var status string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "query",
+			Short: "Query Recordings",
+			Long:  "Queries recordings with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, hostEmail, topic, format, serviceType, and status.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/recordings/query")
+				req.Header("timezone", timezone)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("max", max, cmd.Flags().Changed("max"))
+					req.BodyString("from", from)
+					req.BodyString("to", to)
+					req.BodyString("meetingId", meetingId)
+					req.BodyString("siteUrl", siteUrl)
+					req.BodyString("integrationTag", integrationTag)
+					req.BodyString("hostEmail", hostEmail)
+					req.BodyString("topic", topic)
+					req.BodyString("format", format)
+					req.BodyString("serviceType", serviceType)
+					req.BodyString("status", status)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().Int64Var(&max, "max", 0, "")
+		cmd.Flags().StringVar(&from, "from", "", "")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "")
+		cmd.Flags().StringVar(&integrationTag, "integration-tag", "", "")
+		cmd.Flags().StringVar(&hostEmail, "host-email", "", "")
+		cmd.Flags().StringVar(&topic, "topic", "", "")
+		cmd.Flags().StringVar(&format, "format", "", "")
+		cmd.Flags().StringVar(&serviceType, "service-type", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		recordingsCmd.AddCommand(cmd)
+	}
+
+	{ // query-admin-compliance-officer
+		var timezone string
+		var max int64
+		var from string
+		var to string
+		var meetingId string
+		var siteUrl string
+		var integrationTag string
+		var topic string
+		var format string
+		var serviceType string
+		var status string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "query-admin-compliance-officer",
+			Short: "Query Recordings For an Admin or Compliance Officer",
+			Long:  "Queries recordings for an admin or compliance officer with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, topic, format, serviceType, and status.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "POST", "/admin/recordings/query")
+				req.Header("timezone", timezone)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyInt("max", max, cmd.Flags().Changed("max"))
+					req.BodyString("from", from)
+					req.BodyString("to", to)
+					req.BodyString("meetingId", meetingId)
+					req.BodyString("siteUrl", siteUrl)
+					req.BodyString("integrationTag", integrationTag)
+					req.BodyString("topic", topic)
+					req.BodyString("format", format)
+					req.BodyString("serviceType", serviceType)
+					req.BodyString("status", status)
+					req.BodyString("timezone", timezone)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&timezone, "timezone", "", "e.g. UTC")
+		cmd.Flags().Int64Var(&max, "max", 0, "")
+		cmd.Flags().StringVar(&from, "from", "", "")
+		cmd.Flags().StringVar(&to, "to", "", "")
+		cmd.Flags().StringVar(&meetingId, "meeting-id", "", "")
+		cmd.Flags().StringVar(&siteUrl, "site-url", "", "")
+		cmd.Flags().StringVar(&integrationTag, "integration-tag", "", "")
+		cmd.Flags().StringVar(&topic, "topic", "", "")
+		cmd.Flags().StringVar(&format, "format", "", "")
+		cmd.Flags().StringVar(&serviceType, "service-type", "", "")
+		cmd.Flags().StringVar(&status, "status", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		recordingsCmd.AddCommand(cmd)

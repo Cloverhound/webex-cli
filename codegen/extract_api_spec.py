@@ -13,6 +13,7 @@ import json
 import glob
 import os
 import re
+from naming_overrides import NAMING_OVERRIDES, GROUP_ALIASES, COLLECTION_MOVES, SUPERSEDED_ROUTES
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -364,6 +365,61 @@ def merge_folders(folders):
     return [merged[g] for g in order]
 
 
+def apply_naming_overrides(collection_name, folders):
+    """Resolve explicit naming exceptions and identical routes across merged groups."""
+    overrides = NAMING_OVERRIDES.get(collection_name, {})
+    shortened_groups = set()
+    superseded = SUPERSEDED_ROUTES.get(collection_name, {})
+    available = {(e['method'], e['path']) for f in folders for e in f['endpoints']}
+    merged = {}
+    for folder in folders:
+        source_group = folder['group']
+        for endpoint in folder['endpoints']:
+            ep = dict(endpoint)
+            key = (source_group, ep['method'], ep['path'])
+            if key in superseded:
+                if superseded[key] not in available:
+                    raise ValueError(f"Missing replacement for {collection_name} {key}")
+                continue
+            group, command, aliases = overrides.get(
+                key, (source_group, ep['command'], ()))
+            ep['command'] = command
+            ep['aliases'] = list(aliases)
+            if command in ('get-id', 'delete-id', 'patch-id', 'update-id'):
+                ep['command'] = command[:-3]
+                ep['aliases'] = list(dict.fromkeys([command, *aliases]))
+                shortened_groups.add(group)
+            target = merged.setdefault(group, {
+                'group': group, 'original_folders': [], 'endpoints': [],
+                'aliases': GROUP_ALIASES.get(collection_name, {}).get(group, []),
+            })
+            for original in folder['original_folders']:
+                if original not in target['original_folders']:
+                    target['original_folders'].append(original)
+            # Only collapse identical routes when deliberately merging groups.
+            # Other collections may document distinct request contracts at one URL.
+            if group in GROUP_ALIASES.get(collection_name, {}):
+                existing = next((e for e in target['endpoints']
+                                 if (e['method'], e['path']) == (ep['method'], ep['path'])), None)
+                if existing is not None:
+                    for alias in [command, *aliases]:
+                        if alias != existing['command'] and alias not in existing['aliases']:
+                            existing['aliases'].append(alias)
+                    continue
+            target['endpoints'].append(ep)
+    changed_groups = {value[0] for value in overrides.values()} | shortened_groups
+    for group in merged.values():
+        if group['group'] not in changed_groups:
+            continue
+        names = set()
+        for ep in group['endpoints']:
+            for name in [ep['command'], *ep['aliases']]:
+                if name in names:
+                    raise ValueError(f"Duplicate command or alias: {collection_name} {group['group']} {name}")
+                names.add(name)
+    return list(merged.values())
+
+
 def main():
     pattern = os.path.join(SCRIPT_DIR, "postman", "*.postman_collection.json")
     files = sorted(glob.glob(pattern))
@@ -376,11 +432,19 @@ def main():
     for filepath in files:
         name, raw_folders = extract_collection(filepath)
         folders = merge_folders(raw_folders)
+        folders = apply_naming_overrides(name, folders)
         result[name] = folders
 
         total_groups = len(folders)
         total_eps = sum(len(f['endpoints']) for f in folders)
         print(f"{name}: {total_groups} groups, {total_eps} endpoints")
+
+    for (source, group), destination in COLLECTION_MOVES.items():
+        moved = [g for g in result[source] if g['group'] == group]
+        if any(g['group'] == group for g in result[destination]):
+            raise ValueError(f"Destination group already exists: {destination} {group}")
+        result[source] = [g for g in result[source] if g['group'] != group]
+        result[destination].extend(moved)
 
     output_path = os.path.join(SCRIPT_DIR, "api_spec.json")
     with open(output_path, "w") as f:

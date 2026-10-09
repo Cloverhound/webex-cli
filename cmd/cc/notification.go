@@ -35,7 +35,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "subscribe",
 			Short: "Subscribe Notification",
-			Long:  `Access this endpoint when the user has to register for a WebSocket Session. Requires 'cjp:user' scope or roles 'id_full_admin', 'id_readonly_admin', 'atlas-portal.partner.salesadmin', 'cjp.supervisor', 'cjp.admin', 'atlas-portal.partner.provision_admin', 'cloud-contact-center:pod_conv' for authorization`,
+			Long:  "Access this endpoint when the user has to register for a WebSocket Session. Requires one of the following accepted registration scopes: `cjp:user` or `cloud-contact-center:pod_conv`. The `cjp-hybrid-conn:read` scope is also accepted when CCE authentication is enabled. Tokens with only admin or partner roles and no accepted registration scope are rejected.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/notification/subscribe")
 				if bodyFile != "" {

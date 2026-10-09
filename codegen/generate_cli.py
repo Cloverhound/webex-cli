@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import textwrap
+from naming_overrides import GROUP_ALIASES
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
@@ -32,6 +33,7 @@ COLLECTIONS = {
 # Collection name → URL path prefix → Go expression for the base URL.
 BASE_URL_OVERRIDES = {
     "Webex Cloud Calling": {
+        "/v1/analytics/": "config.AnalyticsBaseURL",
         # Detailed Call History (CDR) — region-specific analytics FQDN.
         "/cdr_feed": "config.AnalyticsCallingBaseURL()",
         "/cdr_stream": "config.AnalyticsCallingBaseURL()",
@@ -212,6 +214,9 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
 
     lines.append(f'var {group_var} = &cobra.Command{{')
     lines.append(f'\tUse:   "{group}",')
+    aliases = GROUP_ALIASES.get(collection_name, {}).get(group, [])
+    if aliases:
+        lines.append('\tAliases: []string{' + ', '.join(escape_go_double_quoted(a) for a in aliases) + '},')
     lines.append(f'\tShort: "{group_pascal} commands",')
     lines.append(f'}}')
     lines.append('')
@@ -349,6 +354,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
 
     lines.append(f'{indent2}cmd := &cobra.Command{{')
     lines.append(f'{indent2}\tUse:   {escape_go_double_quoted(cmd_name)},')
+    if ep.get('aliases'):
+        lines.append(f'{indent2}\tAliases: []string{{' + ', '.join(escape_go_double_quoted(a) for a in ep['aliases']) + '},')
     lines.append(f'{indent2}\tShort: {escape_go_double_quoted(original_name)},')
 
     if description:
@@ -359,6 +366,11 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
     indent3 = indent2 + '\t\t'
 
     lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
+
+    # This endpoint returns a non-JSON deletion acknowledgement. Restricting
+    # Accept to application/json causes the service to reject it with HTTP 406.
+    if method == 'DELETE' and path == '/v1/usage-reports/{reportId}':
+        lines.append(f'{indent3}req.Header("Accept", "*/*")')
 
     # --last → from/to conversion
     if has_from:

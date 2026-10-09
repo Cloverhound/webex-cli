@@ -41,8 +41,8 @@ func init() {
 		var singleObjectResponse string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Team(s)",
-			Long:  `Retrieve a list of Team(s) in a given organization.`,
+			Short: "List Teams",
+			Long:  `Retrieve a list of Teams in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/team")
 				req.PathParam("orgid", orgid)
@@ -70,14 +70,14 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, userIds, queueRankings, createdTime, lastUpdatedTime   Use userId field to filter teams assocaited to provided user.   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, userIds, queueRankings, createdTime, lastUpdatedTime   Use the userId field to filter teams associated with the provided user.  The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
 		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (userIds, queueRankings)")
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name, description)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\",\"description\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&supervisorView, "supervisor-view", "", "If set to true, the API will only return data that user has access to, according to User Profile")
-		cmd.Flags().StringVar(&provisioningView, "provisioning-view", "", "If set to true, the API will only return data that user has access to, according to User Profile.")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&supervisorView, "supervisor-view", "", "If set to true, the API will only return data that the user has access to, according to the User Profile.")
+		cmd.Flags().StringVar(&provisioningView, "provisioning-view", "", "If set to true, the API will only return data that the user has access to, according to the User Profile.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
 		teamCmd.AddCommand(cmd)
 	}
 
@@ -179,8 +179,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Team(s)",
-			Long:  `Create, Update or delete Team(s) in bulk in a given organization.`,
+			Short: "Bulk save Teams",
+			Long:  `Create, Update or delete Teams in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/team/bulk")
 				req.PathParam("orgid", orgid)
@@ -244,8 +244,8 @@ func init() {
 		var nextStartId string
 		cmd := &cobra.Command{
 			Use:   "purge-inactive",
-			Short: "Purge inactive Team(s)",
-			Long:  `Purge inactive Team(s) older than the configured interval for a given organization.`,
+			Short: "Purge inactive Teams",
+			Long:  `Purge inactive Teams older than the configured interval for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/team/purge-inactive-entities")
 				req.PathParam("orgid", orgid)
@@ -259,17 +259,18 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch with be selected.")
+		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch will be selected.")
 		teamCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Team by ID",
-			Long:  `Retrieve an existing Team by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Team by ID",
+			Long:    `Retrieve an existing Team by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/team/{id}")
 				req.PathParam("orgid", orgid)
@@ -295,7 +296,7 @@ func init() {
 		teamCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var active string
@@ -320,9 +321,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Team by ID",
-			Long:  `Update an existing Team by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Team by ID",
+			Long:    `Update an existing Team by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/team/{id}")
 				req.PathParam("orgid", orgid)
@@ -389,13 +391,14 @@ func init() {
 		teamCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Team by ID",
-			Long:  `Delete an existing Team by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Team by ID",
+			Long:    `Delete an existing Team by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/team/{id}")
 				req.PathParam("orgid", orgid)

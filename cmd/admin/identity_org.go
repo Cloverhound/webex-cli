@@ -4,6 +4,7 @@ package admin
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
@@ -17,6 +18,7 @@ import (
 var _ = fmt.Sprintf
 var _ = config.Token
 var _ = output.Print
+var _ = strconv.Itoa
 var _ = strings.Join
 
 var identityOrgCmd = &cobra.Command{
@@ -119,6 +121,111 @@ func init() {
 		cmd.MarkFlagRequired("org-id")
 		cmd.Flags().StringVar(&userId, "user-id", "", "The Common Identity-assigned user identifier for an existing user (`entryUUID`).")
 		cmd.MarkFlagRequired("user-id")
+		identityOrgCmd.AddCommand(cmd)
+	}
+
+	{ // update-authentication-configuration-settings
+		var orgId string
+		var schemas []string
+		var rememberMyLoginId bool
+		var rememberMyLoginIdDuration int64
+		var mfaEnabled bool
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-authentication-configuration-settings",
+			Short: "Update Organization Authentication Configuration Settings",
+			Long:  "Update the authentication configuration details, by organizationID.\nSpecify the organization ID in the `orgId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:cisco:codev:identity:idbroker:authnconfig:schemas:1.0\".",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/identity/organizations/{orgId}/authenticationConfig")
+				req.PathParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("schemas", schemas)
+					req.BodyBool("RememberMyLoginId", rememberMyLoginId, cmd.Flags().Changed("remember-my-login-id"))
+					req.BodyInt("RememberMyLoginIdDuration", rememberMyLoginIdDuration, cmd.Flags().Changed("remember-my-login-id-duration"))
+					req.BodyBool("mfaEnabled", mfaEnabled, cmd.Flags().Changed("mfa-enabled"))
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "A unique identifier for the org.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringSliceVar(&schemas, "schemas", nil, "")
+		cmd.Flags().BoolVar(&rememberMyLoginId, "remember-my-login-id", false, "")
+		cmd.Flags().Int64Var(&rememberMyLoginIdDuration, "remember-my-login-id-duration", 0, "")
+		cmd.Flags().BoolVar(&mfaEnabled, "mfa-enabled", false, "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+		identityOrgCmd.AddCommand(cmd)
+	}
+
+	{ // update-password-policy
+		var orgId string
+		var schemas []string
+		var minimumNumeric string
+		var minimumCapAlpha string
+		var minimumLowAlpha string
+		var minimumSpecial string
+		var minimumLength string
+		var historyCount string
+		var maxPasswordAge string
+		var notAcceptableStrings string
+		var bodyRaw string
+		var bodyFile string
+		cmd := &cobra.Command{
+			Use:   "update-password-policy",
+			Short: "Update Organization Password Policy",
+			Long:  "Update Organization Password Policy, by organizationID.\nSpecify the organization ID in the `orgId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:cisco:codev:identity:idbroker:pwdpolicy:schemas:1.0\".",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "PATCH", "/identity/organizations/{orgId}/passwordPolicy")
+				req.PathParam("orgId", orgId)
+				if bodyFile != "" {
+					if err := req.SetBodyFile(bodyFile); err != nil {
+						return err
+					}
+				} else if bodyRaw != "" {
+					req.SetBodyRaw(bodyRaw)
+				} else {
+					req.BodyStringSlice("schemas", schemas)
+					req.BodyString("minimumNumeric", minimumNumeric)
+					req.BodyString("minimumCapAlpha", minimumCapAlpha)
+					req.BodyString("minimumLowAlpha", minimumLowAlpha)
+					req.BodyString("minimumSpecial", minimumSpecial)
+					req.BodyString("minimumLength", minimumLength)
+					req.BodyString("historyCount", historyCount)
+					req.BodyString("maxPasswordAge", maxPasswordAge)
+					req.BodyString("notAcceptableStrings", notAcceptableStrings)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&orgId, "org-id", "", "A unique identifier for the org.")
+		cmd.MarkFlagRequired("org-id")
+		cmd.Flags().StringSliceVar(&schemas, "schemas", nil, "")
+		cmd.Flags().StringVar(&minimumNumeric, "minimum-numeric", "", "")
+		cmd.Flags().StringVar(&minimumCapAlpha, "minimum-cap-alpha", "", "")
+		cmd.Flags().StringVar(&minimumLowAlpha, "minimum-low-alpha", "", "")
+		cmd.Flags().StringVar(&minimumSpecial, "minimum-special", "", "")
+		cmd.Flags().StringVar(&minimumLength, "minimum-length", "", "")
+		cmd.Flags().StringVar(&historyCount, "history-count", "", "")
+		cmd.Flags().StringVar(&maxPasswordAge, "max-password-age", "", "")
+		cmd.Flags().StringVar(&notAcceptableStrings, "not-acceptable-strings", "", "")
+		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		identityOrgCmd.AddCommand(cmd)
 	}
 

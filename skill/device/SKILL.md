@@ -197,6 +197,7 @@ webex device hot-desk delete-session --session-id <id>
 ## Command Reference
 
 > Auto-generated from Postman collections. Run `make codegen` to update.
+> Organization defaults to the authenticated account; use `--organization` to override.
 
 ### device-call
 

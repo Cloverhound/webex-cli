@@ -35,10 +35,11 @@ func init() {
 		var page string
 		var pageSize string
 		var singleObjectResponse string
+		var include string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Skill(s)",
-			Long: `Retrieve a list of Skill(s) in a given organization.
+			Short: "List Skills",
+			Long: `Retrieve a list of Skills in a given organization.
  Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/skill")
@@ -49,6 +50,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("singleObjectResponse", singleObjectResponse)
+				req.QueryParam("include", include)
 				if config.Paginate() {
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
@@ -70,24 +72,13 @@ func init() {
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(name)  The examples below show some search queries - \"Cisco\" - field==\"name\";value==\"Cisco\" - fields=in=(\"name\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
+		cmd.Flags().StringVar(&include, "include", "", "Fetch array fields on demand only. Supported array fields are enumSkillValues.")
 		skillCmd.AddCommand(cmd)
 	}
 
 	{ // create
 		var orgid string
-		var active string
-		var name string
-		var serviceLevelThreshold string
-		var skillType string
-		var organizationId string
-		var id string
-		var version string
-		var description string
-		var enumSkillValues string
-		var dynamicSkill string
-		var createdTime string
-		var lastUpdatedTime string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -97,18 +88,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill")
 				req.PathParam("orgid", orgid)
-				req.QueryParam("active", active)
-				req.QueryParam("name", name)
-				req.QueryParam("serviceLevelThreshold", serviceLevelThreshold)
-				req.QueryParam("skillType", skillType)
-				req.QueryParam("organizationId", organizationId)
-				req.QueryParam("id", id)
-				req.QueryParam("version", version)
-				req.QueryParam("description", description)
-				req.QueryParam("enumSkillValues", enumSkillValues)
-				req.QueryParam("dynamicSkill", dynamicSkill)
-				req.QueryParam("createdTime", createdTime)
-				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -125,18 +104,6 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&active, "active", "", "Skill configuration data")
-		cmd.Flags().StringVar(&name, "name", "", "Skill configuration data")
-		cmd.Flags().StringVar(&serviceLevelThreshold, "service-level-threshold", "", "Skill configuration data")
-		cmd.Flags().StringVar(&skillType, "skill-type", "", "Skill configuration data")
-		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Skill configuration data")
-		cmd.Flags().StringVar(&id, "id", "", "Skill configuration data")
-		cmd.Flags().StringVar(&version, "version", "", "Skill configuration data")
-		cmd.Flags().StringVar(&description, "description", "", "Skill configuration data")
-		cmd.Flags().StringVar(&enumSkillValues, "enum-skill-values", "", "Skill configuration data")
-		cmd.Flags().StringVar(&dynamicSkill, "dynamic-skill", "", "Skill configuration data")
-		cmd.Flags().StringVar(&createdTime, "created-time", "", "Skill configuration data")
-		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Skill configuration data")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		skillCmd.AddCommand(cmd)
@@ -148,8 +115,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Skill(s)",
-			Long:  `Create, Update or delete Skill(s) in bulk in a given organization.`,
+			Short: "Bulk save Skills",
+			Long:  `Create, Update or delete Skills in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill/bulk")
 				req.PathParam("orgid", orgid)
@@ -213,8 +180,8 @@ func init() {
 		var nextStartId string
 		cmd := &cobra.Command{
 			Use:   "purge-inactive",
-			Short: "Purge inactive Skill(s)",
-			Long:  `Purge inactive Skill(s) older than the configured interval for a given organization.`,
+			Short: "Purge inactive Skills",
+			Long:  `Purge inactive Skills older than the configured interval for a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill/purge-inactive-entities")
 				req.PathParam("orgid", orgid)
@@ -228,17 +195,18 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch with be selected.")
+		cmd.Flags().StringVar(&nextStartId, "next-start-id", "", "This is the entity ID from which items for the next purge batch will be selected.")
 		skillCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Skill by ID",
-			Long:  `Retrieve an existing Skill by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Skill by ID",
+			Long:    `Retrieve an existing Skill by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/skill/{id}")
 				req.PathParam("orgid", orgid)
@@ -264,42 +232,20 @@ func init() {
 		skillCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
-		var active string
-		var name string
-		var serviceLevelThreshold string
-		var skillType string
-		var organizationId string
-		var version string
-		var description string
-		var enumSkillValues string
-		var dynamicSkill string
-		var createdTime string
-		var lastUpdatedTime string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Skill by ID",
-			Long:  `Update an existing Skill by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Skill by ID",
+			Long:    `Update an existing Skill by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/skill/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				req.QueryParam("active", active)
-				req.QueryParam("name", name)
-				req.QueryParam("serviceLevelThreshold", serviceLevelThreshold)
-				req.QueryParam("skillType", skillType)
-				req.QueryParam("organizationId", organizationId)
-				req.QueryParam("id", id)
-				req.QueryParam("version", version)
-				req.QueryParam("description", description)
-				req.QueryParam("enumSkillValues", enumSkillValues)
-				req.QueryParam("dynamicSkill", dynamicSkill)
-				req.QueryParam("createdTime", createdTime)
-				req.QueryParam("lastUpdatedTime", lastUpdatedTime)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -318,29 +264,19 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Skill.")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&active, "active", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&name, "name", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&serviceLevelThreshold, "service-level-threshold", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&skillType, "skill-type", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&version, "version", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&description, "description", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&enumSkillValues, "enum-skill-values", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&dynamicSkill, "dynamic-skill", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&createdTime, "created-time", "", "Skill configuration data for update")
-		cmd.Flags().StringVar(&lastUpdatedTime, "last-updated-time", "", "Skill configuration data for update")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		skillCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Skill by ID",
-			Long:  `Delete an existing Skill by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Skill by ID",
+			Long:    `Delete an existing Skill by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/skill/{id}")
 				req.PathParam("orgid", orgid)

@@ -39,9 +39,9 @@ func init() {
 		var singleObjectResponse string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Business Hours resource(s)",
-			Long: `Retrieve a list of Business Hours resource(s) in a given organization.
- Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.`,
+			Short: "List Business Hours resources",
+			Long: `Retrieve a list of Business Hours resources in a given organization.
+ Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/business-hours")
 				req.PathParam("orgid", orgid)
@@ -75,8 +75,8 @@ func init() {
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
 		cmd.Flags().StringVar(&sort, "sort", "", "Sorting criteria in the format: property(, asc | desc). Default sort order is ascending. Supported sortable fields (name, timezone, createdTime, lastUpdatedTime).    The examples below show some sort queries - name,asc - timezone,desc ")
-		cmd.Flags().StringVar(&includeCount, "include-count", "", "Enable the flag to get the count of workingHours")
-		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specifiy whether to include array fields in the response, This query param should use only if the response contain single record, if we are using for multiple objects response query param not supported and throws an exception.")
+		cmd.Flags().StringVar(&includeCount, "include-count", "", "Enable this flag to get the count of working hours.")
+		cmd.Flags().StringVar(&singleObjectResponse, "single-object-response", "", "Specify whether to include array fields in the response. This query parameter should be used only when the response contains a single record. It is not supported for responses with multiple objects and throws an exception.")
 		businessHourCmd.AddCommand(cmd)
 	}
 
@@ -118,8 +118,8 @@ func init() {
 		var bodyFile string
 		cmd := &cobra.Command{
 			Use:   "bulk-save",
-			Short: "Bulk save Business Hours resource(s)",
-			Long:  `Create, Update or delete Business Hours resource(s) in bulk in a given organization.`,
+			Short: "Bulk save Business Hours resources",
+			Long:  `Create, Update or delete Business Hours resources in bulk in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/business-hours/bulk")
 				req.PathParam("orgid", orgid)
@@ -178,13 +178,14 @@ func init() {
 		businessHourCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Business Hours resource by ID",
-			Long:  `Retrieve an existing Business Hours resource by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Business Hours resource by ID",
+			Long:    `Retrieve an existing Business Hours resource by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/business-hours/{id}")
 				req.PathParam("orgid", orgid)
@@ -205,20 +206,21 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hours resource.")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hour.")
 		cmd.MarkFlagRequired("id")
 		businessHourCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Business Hours resource by ID",
-			Long:  `Update an existing Business Hours resource by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Business Hours resource by ID",
+			Long:    `Update an existing Business Hours resource by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/business-hours/{id}")
 				req.PathParam("orgid", orgid)
@@ -239,20 +241,21 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hours resource.")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hour.")
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		businessHourCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Business Hours resource by ID",
-			Long:  `Delete an existing Business Hours resource by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Business Hours resource by ID",
+			Long:    `Delete an existing Business Hours resource by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/business-hours/{id}")
 				req.PathParam("orgid", orgid)
@@ -266,7 +269,7 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hours resource.")
+		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Business Hour.")
 		cmd.MarkFlagRequired("id")
 		businessHourCmd.AddCommand(cmd)
 	}

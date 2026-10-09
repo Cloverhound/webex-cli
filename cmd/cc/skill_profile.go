@@ -199,14 +199,15 @@ func init() {
 		skillProfileCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		var includeSkillDetails string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Skill Profile by ID",
-			Long:  `Retrieve an existing Skill Profile by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Skill Profile by ID",
+			Long:    `Retrieve an existing Skill Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/skill-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -234,7 +235,7 @@ func init() {
 		skillProfileCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var activeSkills string
@@ -248,9 +249,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Skill Profile by ID",
-			Long:  `Update an existing Skill Profile by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Skill Profile by ID",
+			Long:    `Update an existing Skill Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/skill-profile/{id}")
 				req.PathParam("orgid", orgid)
@@ -295,13 +297,14 @@ func init() {
 		skillProfileCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Skill Profile by ID",
-			Long:  `Delete an existing Skill Profile by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Skill Profile by ID",
+			Long:    `Delete an existing Skill Profile by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/skill-profile/{id}")
 				req.PathParam("orgid", orgid)

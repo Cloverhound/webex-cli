@@ -220,13 +220,14 @@ func init() {
 		globalVariablesCmd.AddCommand(cmd)
 	}
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific Global Variable by ID",
-			Long:  `Retrieve an existing Global Variable by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific Global Variable by ID",
+			Long:    `Retrieve an existing Global Variable by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/cad-variable/{id}")
 				req.PathParam("orgid", orgid)
@@ -252,7 +253,7 @@ func init() {
 		globalVariablesCmd.AddCommand(cmd)
 	}
 
-	{ // update-id
+	{ // update
 		var orgid string
 		var id string
 		var active bool
@@ -271,9 +272,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id",
-			Short: "Update specific Global Variable by ID",
-			Long:  `Update an existing Global Variable by ID in a given organization. Required fields in payload are agentEditable, variableType, agentViewable, reportable, active, defaultValue.`,
+			Use:     "update",
+			Aliases: []string{"update-id"},
+			Short:   "Update specific Global Variable by ID",
+			Long:    `Update an existing Global Variable by ID in a given organization. Required fields in payload are agentEditable, variableType, agentViewable, reportable, active, defaultValue.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/cad-variable/{id}")
 				req.PathParam("orgid", orgid)
@@ -329,13 +331,14 @@ func init() {
 		globalVariablesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id",
-			Short: "Delete specific Global Variable by ID",
-			Long:  `Delete an existing Global Variable by ID in a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id"},
+			Short:   "Delete specific Global Variable by ID",
+			Long:    `Delete an existing Global Variable by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/cad-variable/{id}")
 				req.PathParam("orgid", orgid)

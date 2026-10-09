@@ -27,13 +27,14 @@ var aiFeatureCmd = &cobra.Command{
 func init() {
 	cmd.CcCmd.AddCommand(aiFeatureCmd)
 
-	{ // get-id
+	{ // get
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "get-id",
-			Short: "Get specific AI Feature resource by ID",
-			Long:  `Retrieve an existing AI Feature resource by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id"},
+			Short:   "Get specific AI Feature resource by ID",
+			Long:    `Retrieve an existing AI Feature resource by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/ai-feature/{id}")
 				req.PathParam("orgid", orgid)
@@ -59,15 +60,16 @@ func init() {
 		aiFeatureCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id
+	{ // patch
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id",
-			Short: "Partially update AI Feature resource by ID",
-			Long:  `Partially update AI Feature resource by ID in a given organization.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id"},
+			Short:   "Partially update AI Feature resource by ID",
+			Long:    `Partially update AI Feature resource by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/ai-feature/{id}")
 				req.PathParam("orgid", orgid)

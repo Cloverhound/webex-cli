@@ -20,8 +20,9 @@ var _ = output.Print
 var _ = timeutil.ParseLastISO
 
 var hdsCmd = &cobra.Command{
-	Use:   "hds",
-	Short: "Hds commands",
+	Use:     "hds",
+	Aliases: []string{"hybrid-data-security"},
+	Short:   "Hds commands",
 }
 
 func init() {
@@ -94,7 +95,7 @@ To obtain the Cluster ID needed for this API, use the [Get organization details 
 		cmd := &cobra.Command{
 			Use:   "get-org",
 			Short: "Get organization details",
-			Long: `Retrieve details for an HDS organization, such as the organization name, type of organization, and clusters in the organization.
+			Long: `Retrieve details for an HDS organization, such as the organization name, type of organization.
 To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}")
@@ -249,11 +250,12 @@ To obtain the Cluster ID needed for this API, use the [Get organization details 
 		hdsCmd.AddCommand(cmd)
 	}
 
-	{ // get-database-org-2
+	{ // get-database-config-org
 		var organizationId string
 		cmd := &cobra.Command{
-			Use:   "get-database-org-2",
-			Short: "Get database details for the HDS organization",
+			Use:     "get-database-config-org",
+			Aliases: []string{"get-database-org-2"},
+			Short:   "Get database details for the HDS organization",
 			Long: `Retrieve details of database information for an HDS organization, such as database type and version used.
 To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -278,11 +280,12 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 		hdsCmd.AddCommand(cmd)
 	}
 
-	{ // get-multi-tenant-org-2
+	{ // list-tenants-org
 		var organizationId string
 		cmd := &cobra.Command{
-			Use:   "get-multi-tenant-org-2",
-			Short: "Get Multi-Tenant HDS organization details",
+			Use:     "list-tenants-org",
+			Aliases: []string{"get-multi-tenant-org-2"},
+			Short:   "Get Multi-Tenant HDS organization details",
 			Long: `Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.
 To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -304,6 +307,152 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 		}
 		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
 		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // list-nodes-cluster
+		var clusterId string
+		cmd := &cobra.Command{
+			Use:   "list-nodes-cluster",
+			Short: "List nodes for an HDS cluster",
+			Long: `Retrieve a list of all nodes for a specific HDS cluster, including availability, proxy details, deployment type, and release version.
+To obtain the Cluster ID needed for this API, use the [List clusters for an HDS organization API](</docs/api/v1/hds/list-hds-organization-clusters>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}/nodes")
+				req.PathParam("clusterId", clusterId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&clusterId, "cluster-id", "", "Unique ID of the HDS cluster.")
+		cmd.MarkFlagRequired("cluster-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // list-clusters-org
+		var organizationId string
+		cmd := &cobra.Command{
+			Use:   "list-clusters-org",
+			Short: "List clusters for an HDS organization",
+			Long: `Retrieve a list of all clusters for a specific HDS organization, including cluster status, release channel, and upgrade schedule details.
+To obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/clusters")
+				req.PathParam("organizationId", organizationId)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&organizationId, "organization-id", "", "Unique ID of the HDS organization.")
+		cmd.MarkFlagRequired("organization-id")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-alarms-node
+		var nodeId string
+		var from string
+		var to string
+		var last string
+		cmd := &cobra.Command{
+			Use:   "get-alarms-node",
+			Short: "Get alarms for an HDS node",
+			Long: `Returns the alarm details for a single HDS node for the provided time range (last 24 hours).
+To obtain the Node ID needed for this API, use the [List nodes for an HDS cluster API](</docs/api/v1/hds/list-hds-cluster-nodes>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/nodes/{nodeId}/alarms")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
+				req.PathParam("nodeId", nodeId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&nodeId, "node-id", "", "Unique ID of the HDS node.")
+		cmd.MarkFlagRequired("node-id")
+		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
+		hdsCmd.AddCommand(cmd)
+	}
+
+	{ // get-usage-node
+		var nodeId string
+		var from string
+		var to string
+		var last string
+		cmd := &cobra.Command{
+			Use:   "get-usage-node",
+			Short: "Get resource usage for an HDS node",
+			Long: `Retrieve CPU, memory, and disk resource usage details for a specific HDS node over the requested time range.
+To obtain the Node ID needed for this API, use the [List nodes for an HDS cluster API](</docs/api/v1/hds/list-hds-cluster-nodes>)`,
+			RunE: func(cmd *cobra.Command, args []string) error {
+				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/nodes/{nodeId}/resourceUsage")
+				if last != "" {
+					var err error
+					from, to, err = timeutil.ParseLastISO(last)
+					if err != nil {
+						return err
+					}
+				}
+				req.PathParam("nodeId", nodeId)
+				req.QueryParam("from", from)
+				req.QueryParam("to", to)
+				if config.Paginate() {
+					resp, statusCode, err := req.DoPaginated(true)
+					if err != nil {
+						return err
+					}
+					return output.Print(resp, statusCode)
+				}
+				resp, statusCode, err := req.Do()
+				if err != nil {
+					return err
+				}
+				return output.Print(resp, statusCode)
+			},
+		}
+		cmd.Flags().StringVar(&nodeId, "node-id", "", "Unique ID of the HDS node.")
+		cmd.MarkFlagRequired("node-id")
+		cmd.Flags().StringVar(&from, "from", "", "The start date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&to, "to", "", "The end date and time of the requested data in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.")
+		cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 		hdsCmd.AddCommand(cmd)
 	}
 

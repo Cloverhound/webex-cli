@@ -25,13 +25,15 @@ var agentPersonalGreetingFilesCmd = &cobra.Command{
 func init() {
 	cmd.CcCmd.AddCommand(agentPersonalGreetingFilesCmd)
 
-	{ // create-v2-api
+	{ // create
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "create-v2-api",
-			Short: "Create a new Greeting File using v2 API",
+			Use:     "create",
+			Aliases: []string{"create-v2-api"},
+			Short:   "Create a new Greeting File",
+			Long:    `Create a new Greeting File in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v2/agent-personal-greeting")
 				req.PathParam("orgid", orgid)
@@ -56,13 +58,15 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-references-1
+	{ // delete-references
 		var orgid string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "delete-references-1",
-			Short: "delete References 1",
+			Use:     "delete-references",
+			Aliases: []string{"delete-references-1"},
+			Short:   "Delete references of an agent from greeting files",
+			Long:    `Removes all references of the specified agent (ciUserId) from greeting files in the given organization. Typically invoked when an agent is deleted or unassigned. in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/agent-personal-greeting/delete-reference")
 				req.PathParam("orgid", orgid)
@@ -87,14 +91,15 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // get-id-v2-api
+	{ // get
 		var orgid string
 		var id string
 		var includeUrl string
 		cmd := &cobra.Command{
-			Use:   "get-id-v2-api",
-			Short: "Get specific Greeting File by ID using v2 API",
-			Long:  `Retrieve an existing Greeting File by ID in a given organization.`,
+			Use:     "get",
+			Aliases: []string{"get-id", "get-id-v2-api"},
+			Short:   "Get specific Greeting File by ID",
+			Long:    `Retrieve an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -118,19 +123,20 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Greeting File.")
 		cmd.MarkFlagRequired("id")
-		cmd.Flags().StringVar(&includeUrl, "include-url", "", "Indicates if the URL for downloading Greeting Fileshould be included in the response.")
+		cmd.Flags().StringVar(&includeUrl, "include-url", "", "Indicates whether the URL for downloading the greeting file should be included in the response.")
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // update-id-v2-api
+	{ // update
 		var orgid string
 		var id string
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "update-id-v2-api",
-			Short: "Update specific Greeting File by ID using v2 API",
-			Long:  `Update specific Greeting File by ID in a given organization.`,
+			Use:     "update",
+			Aliases: []string{"update-id", "update-id-v2-api"},
+			Short:   "Update specific Greeting File by ID",
+			Long:    `Update an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -158,13 +164,14 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // delete-id-v2-api
+	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:   "delete-id-v2-api",
-			Short: "Delete specific Greeting File by ID using v2 API",
-			Long:  `Delete an existing Greeting File by ID for a given organization.`,
+			Use:     "delete",
+			Aliases: []string{"delete-id", "delete-id-v2-api"},
+			Short:   "Delete specific Greeting File by ID",
+			Long:    `Delete an existing Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -183,7 +190,7 @@ func init() {
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
-	{ // patch-id-v2-api
+	{ // patch
 		var orgid string
 		var id string
 		var attributeTag string
@@ -191,9 +198,10 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:   "patch-id-v2-api",
-			Short: "Partially update Greeting File by ID using v2 API",
-			Long:  `Partially update Greeting File by ID in a given organization.`,
+			Use:     "patch",
+			Aliases: []string{"patch-id", "patch-id-v2-api"},
+			Short:   "Partially update Greeting File by ID",
+			Long:    `Partially update Greeting File by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 				req.PathParam("orgid", orgid)
@@ -236,8 +244,8 @@ func init() {
 		var includeAgentDetails string
 		cmd := &cobra.Command{
 			Use:   "list",
-			Short: "List Greeting File(s)",
-			Long:  `Retrieve a list of Greeting File(s) in a given organization.`,
+			Short: "List Greeting Files",
+			Long:  `Retrieve a list of Greeting Files in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v3/agent-personal-greeting")
 				req.PathParam("orgid", orgid)
@@ -263,12 +271,12 @@ func init() {
 		}
 		cmd.Flags().StringVar(&orgid, "orgid", "", "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.")
 		cmd.MarkFlagRequired("orgid")
-		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. Supported fields are : firstname, lastname, email, ciUserId and attribute tag   The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
+		cmd.Flags().StringVar(&filter, "filter", "", "Specify a filter based on which the results will be fetched. Supported fields are: firstName, lastName, email, ciUserId, and attributeTag.  The examples below show some search queries - id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\" - id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") - id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\") This parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.  Note: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter. ")
 		cmd.Flags().StringVar(&search, "search", "", "Filter data based on the search keyword.Supported search columns(firstName, lastName, email, attributeTag)  The examples below show some search queries - \"Cisco\" - field==\"firstName\";value==\"Cisco\" - fields=in=(\"firstName\",\"email\");value==\"Cisco\" ")
 		cmd.Flags().StringVar(&attributes, "attributes", "", "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.")
 		cmd.Flags().StringVar(&page, "page", "", "Defines the number of displayed page. The page number starts from 0.")
 		cmd.Flags().StringVar(&pageSize, "page-size", "", "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size.")
-		cmd.Flags().StringVar(&includeAgentDetails, "include-agent-details", "", "If includeAgentDetails is set to true then projection, filtering, searching, and sorting on agent firstName, lastName and email will be enabled.")
+		cmd.Flags().StringVar(&includeAgentDetails, "include-agent-details", "", "If includeAgentDetails is set to true, projection, filtering, searching, and sorting on the agent's firstName, lastName, and email will be enabled.")
 		agentPersonalGreetingFilesCmd.AddCommand(cmd)
 	}
 
