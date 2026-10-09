@@ -200,4 +200,6 @@ webex cc external-data-updates update-task-global-variables --body-file task-upd
 
 Discover report types before creating a report; the collection does not enumerate the types or CSV columns. Download with `fileId`, not `reportId`. Reports can span available data up to 36 months, may split into monthly files, and expire seven days after completion. Only one report processes per organization at a time.
 
+Cloverhound live tests returned `AgentActivityRecord`, `AgentSessionRecord`, `ContactActivityRecord`, `ContactSessionRecord`, and `ContactLegRecord`. A single-day Contact Session Record report completed and downloaded as gzip-compressed CSV; check the downloaded format before parsing it. Use `--output raw` to preserve file bytes. Report deletion and cleanup were verified. Completed-task variable updates have only been dry-run checked.
+
 For task controls, `unhold` (alias `resume`) resumes a held voice call; `pause-digital` and `resume-digital` handle paused non-real-time digital tasks. `append-message` retains `update-2` as an alias. Queue lookups use `list-agent-based`, `list-skill-based`, `list-team-based`, `list-by-skill-profile`, `list-by-dynamic-skills`, and `list-by-user-skill-profile`; pass IDs as flags. Whisper coaching is beta. The refresh also adds conference-participant removal, campaign-time lookup, and contact closure across a campaign chain.

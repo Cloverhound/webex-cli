@@ -156,6 +156,7 @@ func init() {
 			Long:  `Deletes the specified usage report and its associated file. This operation cannot be undone.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/usage-reports/{reportId}")
+				req.Header("Accept", "*/*")
 				req.PathParam("reportId", reportId)
 				resp, statusCode, err := req.Do()
 				if err != nil {

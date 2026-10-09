@@ -367,6 +367,11 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
 
     lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
 
+    # This endpoint returns a non-JSON deletion acknowledgement. Restricting
+    # Accept to application/json causes the service to reject it with HTTP 406.
+    if method == 'DELETE' and path == '/v1/usage-reports/{reportId}':
+        lines.append(f'{indent3}req.Header("Accept", "*/*")')
+
     # --last → from/to conversion
     if has_from:
         parse_func = 'timeutil.ParseLastEpochMs' if path in EPOCH_MS_PATHS else 'timeutil.ParseLastISO'

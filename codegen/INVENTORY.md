@@ -444,4 +444,4 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 
 ## Limitations
 
-`cc functions import` lacks multipart upload handling. `cc flow import-legacy` lacks legacy upload body handling. Current-format flow import was live-tested; publish was not. Usage report types and completed-task variable updates were not tenant-tested.
+`cc functions import` lacks multipart upload handling. `cc flow import-legacy` lacks legacy upload body handling. Current-format flow import was live-tested; publish was not. Usage report types, report creation/status/download/deletion, call-quality metrics, and additional refreshed reads were tenant-tested on Cloverhound; see [LIVE_TESTS.md](LIVE_TESTS.md). Completed-task variable updates were dry-run checked only. Self-service call controls returned 403, archived-user query returned a gateway 404, and HDS confirmed the organization has no clusters.
