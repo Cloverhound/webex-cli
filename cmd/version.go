@@ -17,5 +17,7 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.Version = Version
+	rootCmd.SetVersionTemplate("webex-cli {{.Version}}\n")
 	rootCmd.AddCommand(versionCmd)
 }

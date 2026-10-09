@@ -11,7 +11,7 @@ import (
 var logoutCmd = &cobra.Command{
 	Use:   "logout [email]",
 	Short: "Log out and remove stored credentials",
-	Long:  "Removes stored tokens from the OS keyring. Without arguments, removes the default user. Specify an email to remove a specific user, or --all to remove all users.",
+	Long:  "Removes stored tokens from the OS keyring and the credentials file. Without arguments, removes the default user. Specify an email to remove a specific user, or --all to remove all users.",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		allFlag, _ := cmd.Flags().GetBool("all")

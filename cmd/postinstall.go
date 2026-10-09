@@ -4,31 +4,40 @@ import (
 	"archive/zip"
 	"bytes"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 
+	"github.com/Cloverhound/webex-cli/skill"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
-const skillBaseURL = "https://raw.githubusercontent.com/Cloverhound/webex-cli/main/skill/"
+const coworkName = "Claude Cowork"
 
-var skillSubPaths = []string{
-	"SKILL.md",
-	"admin/SKILL.md",
-	"calling/SKILL.md",
-	"cc/SKILL.md",
-	"device/SKILL.md",
-	"meetings/SKILL.md",
-	"messaging/SKILL.md",
+const nonInteractiveEnv = "WEBEX_CLI_NONINTERACTIVE"
+
+// isTerminal is a variable so tests can simulate a terminal.
+var isTerminal = func(f *os.File) bool { return term.IsTerminal(int(f.Fd())) }
+
+// setupOptions controls how post-install and skill updates answer questions.
+type setupOptions struct {
+	prompt    bool // ask with interactive forms
+	assumeYes bool // without prompts, take the recommended action
+	skills    bool // install or update agent skills
 }
 
-const coworkName = "Claude Cowork"
+// newSetupOptions prompts only on a terminal: installers and agents run
+// post-install with no TTY, where a form would fail or hang.
+func newSetupOptions(assumeYes, noSkills bool) setupOptions {
+	nonInteractive, _ := strconv.ParseBool(os.Getenv(nonInteractiveEnv))
+	prompt := !assumeYes && !nonInteractive && isTerminal(os.Stdin) && isTerminal(os.Stdout)
+	return setupOptions{prompt: prompt, assumeYes: assumeYes, skills: !noSkills}
+}
 
 type agentPlatform struct {
 	Name     string
@@ -45,7 +54,21 @@ var agentPlatforms = []agentPlatform{
 var postInstallCmd = &cobra.Command{
 	Use:   "post-install",
 	Short: "Run post-installation setup (PATH, agent skills)",
+	Long: `Adds the install directory to PATH and installs the Webex agent skill.
+
+Without a terminal, or with --yes or $WEBEX_CLI_NONINTERACTIVE=1, nothing is
+asked: the skill is installed for detected agents (Claude Code, Codex, Cursor).
+Without --yes, the PATH line to add is printed instead of editing shell files.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		assumeYes, _ := cmd.Flags().GetBool("yes")
+		noSkills, _ := cmd.Flags().GetBool("no-skills")
+		skillsOnly, _ := cmd.Flags().GetBool("skills-only")
+		opts := newSetupOptions(assumeYes, noSkills)
+
+		if skillsOnly {
+			return checkSkillUpdates(opts)
+		}
+
 		execPath, err := os.Executable()
 		if err != nil {
 			return fmt.Errorf("detecting executable path: %w", err)
@@ -59,7 +82,7 @@ var postInstallCmd = &cobra.Command{
 					return err
 				}
 			} else {
-				if err := setupUnixPath(installDir); err != nil {
+				if err := setupUnixPath(installDir, opts); err != nil {
 					return err
 				}
 			}
@@ -67,7 +90,7 @@ var postInstallCmd = &cobra.Command{
 		}
 
 		// Step 2: Agent skill installation
-		if err := setupAgentSkills(); err != nil {
+		if err := setupAgentSkills(opts); err != nil {
 			return err
 		}
 
@@ -84,7 +107,7 @@ func dirInPath(dir string) bool {
 	return false
 }
 
-func setupUnixPath(installDir string) error {
+func setupUnixPath(installDir string, opts setupOptions) error {
 	shell := filepath.Base(os.Getenv("SHELL"))
 	var rcFile string
 	switch shell {
@@ -105,29 +128,35 @@ func setupUnixPath(installDir string) error {
 		}
 	}
 
-	var choice string
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewSelect[string]().
-				Title(fmt.Sprintf("%s is not in your PATH", installDir)).
-				Description(
-					fmt.Sprintf(
-						"The webex binary was installed to %s, but your shell\n"+
-							"can't find it yet. Adding it to %s will make the\n"+
-							"\"webex\" command available in all new terminal sessions.",
-						installDir, filepath.Base(rcFile),
-					),
-				).
-				Options(
-					huh.NewOption(fmt.Sprintf("Yes — add to %s", filepath.Base(rcFile)), "yes"),
-					huh.NewOption("No — I'll do it myself", "no"),
-				).
-				Value(&choice),
-		),
-	)
+	choice := "no"
+	if opts.assumeYes {
+		choice = "yes"
+	} else if opts.prompt {
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewSelect[string]().
+					Title(fmt.Sprintf("%s is not in your PATH", installDir)).
+					Description(
+						fmt.Sprintf(
+							"The webex binary was installed to %s, but your shell\n"+
+								"can't find it yet. Adding it to %s will make the\n"+
+								"\"webex\" command available in all new terminal sessions.",
+							installDir, filepath.Base(rcFile),
+						),
+					).
+					Options(
+						huh.NewOption(fmt.Sprintf("Yes — add to %s", filepath.Base(rcFile)), "yes"),
+						huh.NewOption("No — I'll do it myself", "no"),
+					).
+					Value(&choice),
+			),
+		)
 
-	if err := form.Run(); err != nil {
-		return nil
+		if err := form.Run(); err != nil {
+			return nil
+		}
+	} else {
+		fmt.Printf("%s is not in your PATH.\n", installDir)
 	}
 
 	if choice == "yes" {
@@ -159,55 +188,59 @@ func setupWindowsPath(installDir string) error {
 	return nil
 }
 
-func setupAgentSkills() error {
+func setupAgentSkills(opts setupOptions) error {
+	if !opts.skills {
+		return nil
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("detecting home directory: %w", err)
 	}
 
-	var options []huh.Option[string]
-	for _, p := range agentPlatforms {
-		label := p.Name
-		if p.Name == coworkName {
-			label += "  (saves ZIP to ~/Downloads for manual upload)"
-		}
-		opt := huh.NewOption(label, p.Name)
-		if agentDetected(home, p) {
-			opt = opt.Selected(true)
-		}
-		options = append(options, opt)
-	}
-
 	var selected []string
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewMultiSelect[string]().
-				Title("Install Webex skill for AI coding agents?").
-				Description(
-					"The Webex skill lets AI coding agents (Claude Code, Codex, Cursor)\n"+
-						"query and manage your Webex environment using natural language.\n"+
-						"Detected agents are pre-selected.",
-				).
-				Options(options...).
-				Value(&selected),
-		),
-	)
+	if opts.prompt {
+		var options []huh.Option[string]
+		for _, p := range agentPlatforms {
+			label := p.Name
+			if p.Name == coworkName {
+				label += "  (saves ZIP to ~/Downloads for manual upload)"
+			}
+			opt := huh.NewOption(label, p.Name)
+			if agentDetected(home, p) {
+				opt = opt.Selected(true)
+			}
+			options = append(options, opt)
+		}
 
-	if err := form.Run(); err != nil {
-		return nil
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewMultiSelect[string]().
+					Title("Install Webex skill for AI coding agents?").
+					Description(
+						"The Webex skill lets AI coding agents (Claude Code, Codex, Cursor)\n"+
+							"query and manage your Webex environment using natural language.\n"+
+							"Detected agents are pre-selected.",
+					).
+					Options(options...).
+					Value(&selected),
+			),
+		)
+
+		if err := form.Run(); err != nil {
+			return nil
+		}
+	} else {
+		selected = detectedSkillAgents(home)
 	}
 
 	if len(selected) == 0 {
 		return nil
 	}
 
-	fmt.Print("Downloading Webex skill...")
-	skillFiles, err := downloadSkillFiles()
+	skillFiles, err := skill.Files()
 	if err != nil {
-		fmt.Println(" failed")
-		return fmt.Errorf("downloading skill: %w", err)
+		return fmt.Errorf("reading embedded skill: %w", err)
 	}
-	fmt.Println(" ok")
 
 	for _, name := range selected {
 		for _, p := range agentPlatforms {
@@ -260,24 +293,16 @@ func agentDetected(home string, p agentPlatform) bool {
 	return err == nil && info.IsDir()
 }
 
-func downloadSkillFiles() (map[string][]byte, error) {
-	files := make(map[string][]byte)
-	for _, subPath := range skillSubPaths {
-		resp, err := http.Get(skillBaseURL + subPath)
-		if err != nil {
-			return nil, fmt.Errorf("downloading %s: %w", subPath, err)
+// detectedSkillAgents lists the detected agents that install from a skill
+// directory. Cowork is left out because it needs a manual ZIP upload.
+func detectedSkillAgents(home string) []string {
+	var names []string
+	for _, p := range agentPlatforms {
+		if p.SkillDir != "" && agentDetected(home, p) {
+			names = append(names, p.Name)
 		}
-		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
-		if err != nil {
-			return nil, fmt.Errorf("reading %s: %w", subPath, err)
-		}
-		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("%s: HTTP %d", subPath, resp.StatusCode)
-		}
-		files[subPath] = body
 	}
-	return files, nil
+	return names
 }
 
 func printCoworkInstructions(zipPath string) {
@@ -341,5 +366,9 @@ func installSkill(dest string, content []byte) error {
 }
 
 func init() {
+	postInstallCmd.Flags().BoolP("yes", "y", false, "Do not prompt; add the PATH line and install skills for detected agents")
+	postInstallCmd.Flags().Bool("no-skills", false, "Skip agent skill installation")
+	postInstallCmd.Flags().Bool("skills-only", false, "Only check installed agent skills against this binary's skill")
+	postInstallCmd.Flags().MarkHidden("skills-only")
 	rootCmd.AddCommand(postInstallCmd)
 }

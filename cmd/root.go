@@ -93,9 +93,12 @@ var rootCmd = &cobra.Command{
 
 		config.SetToken(result.Token)
 
-		// Wire up token refresher for keyring-based auth
-		if result.Source == auth.SourceKeyring && result.UserEmail != "" {
-			config.TokenRefresher = auth.MakeRefresher(result.UserEmail, cfg)
+		// Wire up token refresher for refreshable sources
+		switch {
+		case result.Source == auth.SourceKeyring && result.UserEmail != "":
+			config.TokenRefresher = auth.MakeRefresher(result.UserEmail, result.Token, cfg)
+		case result.Source == auth.SourceEnvRefresh:
+			config.TokenRefresher = auth.MakeEnvRefresher(result.Token, cfg)
 		}
 
 		// Organization: --organization flag > config default org > resolved user's org > default user's org.
@@ -203,7 +206,7 @@ func hideOrgFlags(cmd *cobra.Command) {
 }
 
 func init() {
-	rootCmd.PersistentFlags().String("token", "", "Webex API token (overrides keyring)")
+	rootCmd.PersistentFlags().String("token", "", "Webex API token (overrides stored login)")
 	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, csv, raw")
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")

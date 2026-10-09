@@ -5,15 +5,19 @@ import (
 	"archive/zip"
 	"bytes"
 	"compress/gzip"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -30,16 +34,39 @@ func init() {
 	rootCmd.AddCommand(updateCmd)
 }
 
-func runUpdate() error {
-	latest, err := fetchLatestVersion()
-	if err != nil {
-		return fmt.Errorf("checking latest version: %w", err)
-	}
+// versionPinEnv pins the version that install and update use, skipping lookup.
+const versionPinEnv = "WEBEX_CLI_VERSION"
 
+// Release locations, variables so tests can point them at a local server. The
+// lookup avoids api.github.com where possible: sandboxes and shared CI hosts
+// often block it or exhaust its unauthenticated rate limit, while release
+// downloads and the Go module proxy stay reachable.
+var (
+	releaseBaseURL     = "https://github.com/Cloverhound/webex-cli/releases"
+	goProxyLatestURL   = "https://proxy.golang.org/github.com/!cloverhound/webex-cli/@latest"
+	githubAPILatestURL = "https://api.github.com/repos/Cloverhound/webex-cli/releases/latest"
+)
+
+var lookupClient = &http.Client{Timeout: 30 * time.Second}
+
+func runUpdate() error {
 	current := Version
-	if !isNewer(latest, current) {
-		fmt.Printf("Already up to date (v%s)\n", current)
-		return nil
+	latest := strings.TrimPrefix(os.Getenv(versionPinEnv), "v")
+	if latest != "" {
+		if latest == current {
+			fmt.Printf("Already at pinned version v%s ($%s)\n", current, versionPinEnv)
+			return nil
+		}
+	} else {
+		var err error
+		latest, err = fetchLatestVersion()
+		if err != nil {
+			return fmt.Errorf("checking latest version: %w", err)
+		}
+		if !isNewer(latest, current) {
+			fmt.Printf("Already up to date (v%s)\n", current)
+			return nil
+		}
 	}
 
 	fmt.Printf("Updating v%s -> v%s\n", current, latest)
@@ -49,42 +76,159 @@ func runUpdate() error {
 		return fmt.Errorf("locating binary: %w", err)
 	}
 
-	url := archiveURL(latest)
-	if err := downloadAndReplace(url, binPath); err != nil {
+	if err := downloadAndReplace(latest, binPath); err != nil {
 		return err
 	}
 
 	fmt.Printf("Updated to v%s\n", latest)
 
-	// Check for skill updates
-	if err := checkSkillUpdates(); err != nil {
+	// Skills are embedded in the binary, so the new binary must run the check
+	// to install the skill that matches it.
+	check := exec.Command(binPath, "post-install", "--skills-only")
+	check.Stdin, check.Stdout, check.Stderr = os.Stdin, os.Stdout, os.Stderr
+	if err := check.Run(); err != nil {
 		fmt.Printf("Warning: skill update check failed: %v\n", err)
 	}
 
 	return nil
 }
 
-// fetchLatestVersion queries the GitHub releases API and returns the latest
-// version string (without "v" prefix).
+// fetchLatestVersion returns the latest release version (without "v"), trying
+// the release checksums file, then the Go module proxy, then the GitHub API.
 func fetchLatestVersion() (string, error) {
-	resp, err := http.Get("https://api.github.com/repos/Cloverhound/webex-cli/releases/latest")
+	type source struct {
+		url    string
+		lookup func(string) (string, error)
+	}
+	sources := []source{
+		{releaseBaseURL + "/latest/download/checksums.txt", latestFromChecksums},
+		{goProxyLatestURL, latestFromGoProxy},
+		{githubAPILatestURL, latestFromGitHubAPI},
+	}
+
+	var failures []string
+	for _, s := range sources {
+		v, err := s.lookup(s.url)
+		if err == nil && v != "" {
+			return v, nil
+		}
+		if err == nil {
+			err = fmt.Errorf("no version found")
+		}
+		failures = append(failures, fmt.Sprintf("  %s: %v", s.url, err))
+	}
+	return "", fmt.Errorf("could not determine the latest version; tried:\n%s\nPin a version instead: %s=x.y.z webex update",
+		strings.Join(failures, "\n"), versionPinEnv)
+}
+
+func latestFromChecksums(url string) (string, error) {
+	body, err := httpGetBytes(url, nil)
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	return versionFromChecksums(body, runtime.GOOS, runtime.GOARCH)
+}
 
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("GitHub API returned %s", resp.Status)
+func latestFromGoProxy(url string) (string, error) {
+	body, err := httpGetBytes(url, nil)
+	if err != nil {
+		return "", err
 	}
+	var info struct {
+		Version string `json:"Version"`
+	}
+	if err := json.Unmarshal(body, &info); err != nil {
+		return "", err
+	}
+	return strings.TrimPrefix(info.Version, "v"), nil
+}
 
+func latestFromGitHubAPI(url string) (string, error) {
+	header := http.Header{}
+	if tok := os.Getenv("GITHUB_TOKEN"); tok != "" {
+		header.Set("Authorization", "Bearer "+tok)
+	}
+	body, err := httpGetBytes(url, header)
+	if err != nil {
+		return "", err
+	}
 	var release struct {
 		TagName string `json:"tag_name"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
+	if err := json.Unmarshal(body, &release); err != nil {
 		return "", err
 	}
-
 	return strings.TrimPrefix(release.TagName, "v"), nil
+}
+
+func httpGetBytes(url string, header http.Header) ([]byte, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range header {
+		req.Header[k] = v
+	}
+	resp, err := lookupClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("HTTP %s", resp.Status)
+	}
+	return io.ReadAll(resp.Body)
+}
+
+// archiveName matches the GoReleaser name template:
+// webex-cli_{VERSION}_{OS}_{ARCH}.tar.gz (.zip on Windows).
+func archiveName(version, goos, goarch string) string {
+	ext := "tar.gz"
+	if goos == "windows" {
+		ext = "zip"
+	}
+	return fmt.Sprintf("webex-cli_%s_%s_%s.%s", version, goos, goarch, ext)
+}
+
+// versionFromChecksums finds the archive for goos/goarch in a checksums.txt
+// and returns the version embedded in its file name.
+func versionFromChecksums(data []byte, goos, goarch string) (string, error) {
+	ext := ".tar.gz"
+	if goos == "windows" {
+		ext = ".zip"
+	}
+	suffix := "_" + goos + "_" + goarch + ext
+	for _, line := range strings.Split(string(data), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) != 2 {
+			continue
+		}
+		name := strings.TrimPrefix(fields[1], "*")
+		if strings.HasPrefix(name, "webex-cli_") && strings.HasSuffix(name, suffix) {
+			return strings.TrimSuffix(strings.TrimPrefix(name, "webex-cli_"), suffix), nil
+		}
+	}
+	return "", fmt.Errorf("no %s archive listed", strings.TrimPrefix(suffix, "_"))
+}
+
+// checksumFor returns the lowercase hex SHA-256 listed for name.
+func checksumFor(data []byte, name string) (string, error) {
+	for _, line := range strings.Split(string(data), "\n") {
+		fields := strings.Fields(line)
+		if len(fields) == 2 && strings.TrimPrefix(fields[1], "*") == name {
+			return strings.ToLower(fields[0]), nil
+		}
+	}
+	return "", fmt.Errorf("%s is not listed in checksums.txt", name)
+}
+
+func verifyChecksum(data []byte, want string) error {
+	sum := sha256.Sum256(data)
+	got := hex.EncodeToString(sum[:])
+	if got != strings.ToLower(want) {
+		return fmt.Errorf("checksum mismatch: expected %s, got %s", want, got)
+	}
+	return nil
 }
 
 // isNewer returns true if latest is a higher semver than current.
@@ -117,35 +261,44 @@ func executablePath() (string, error) {
 	return filepath.EvalSymlinks(exe)
 }
 
-// archiveURL builds the download URL for a given version, matching the
-// GoReleaser naming template: webex-cli_{VERSION}_{OS}_{ARCH}.tar.gz (.zip on Windows).
-func archiveURL(version string) string {
-	ext := "tar.gz"
-	if runtime.GOOS == "windows" {
-		ext = "zip"
-	}
-	return fmt.Sprintf(
-		"https://github.com/Cloverhound/webex-cli/releases/download/v%s/webex-cli_%s_%s_%s.%s",
-		version, version, runtime.GOOS, runtime.GOARCH, ext,
-	)
-}
-
-// downloadAndReplace downloads the archive from url, extracts the binary, and
-// atomically replaces the binary at binaryPath.
-func downloadAndReplace(url, binaryPath string) error {
-	resp, err := http.Get(url)
+// downloadRelease downloads the archive for version and this platform and
+// verifies it against the release's checksums.txt.
+func downloadRelease(version string) ([]byte, error) {
+	base := fmt.Sprintf("%s/download/v%s/", releaseBaseURL, version)
+	sums, err := httpGetBytes(base+"checksums.txt", nil)
 	if err != nil {
-		return fmt.Errorf("downloading release: %w", err)
+		return nil, fmt.Errorf("downloading checksums.txt: %w", err)
+	}
+	name := archiveName(version, runtime.GOOS, runtime.GOARCH)
+	want, err := checksumFor(sums, name)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := http.Get(base + name)
+	if err != nil {
+		return nil, fmt.Errorf("downloading release: %w", err)
 	}
 	defer resp.Body.Close()
-
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("download failed: %s", resp.Status)
+		return nil, fmt.Errorf("download failed: %s", resp.Status)
 	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("reading download: %w", err)
+		return nil, fmt.Errorf("reading download: %w", err)
+	}
+	if err := verifyChecksum(body, want); err != nil {
+		return nil, fmt.Errorf("%s: %w; refusing to install", name, err)
+	}
+	return body, nil
+}
+
+// downloadAndReplace downloads and verifies the release archive, extracts the
+// binary, and atomically replaces the binary at binaryPath.
+func downloadAndReplace(version, binaryPath string) error {
+	body, err := downloadRelease(version)
+	if err != nil {
+		return err
 	}
 
 	var bin []byte

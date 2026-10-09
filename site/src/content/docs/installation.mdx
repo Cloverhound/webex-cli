@@ -10,14 +10,41 @@ description: How to install the Webex CLI.
 curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh | sh
 ```
 
-This downloads the latest release and installs it to `/usr/local/bin/webex`.
+This downloads the latest release, verifies it, and installs it to `~/.local/bin/webex`.
 
 **Windows (PowerShell):**
 ```powershell
 irm https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.ps1 | iex
 ```
 
-This downloads the latest release and installs it to `%LOCALAPPDATA%\webex-cli\webex.exe`, and adds it to your user PATH.
+This downloads the latest release, verifies it, installs it to `%LOCALAPPDATA%\webex-cli\webex.exe`, and adds it to your user PATH.
+
+## How the installer works
+
+The installers and `webex update` find the latest version in this order, so they work where `api.github.com` is blocked or rate-limited:
+
+1. A pinned version: `WEBEX_CLI_VERSION`, or `install.sh -v <version>`.
+2. The latest release's `checksums.txt` (`github.com/Cloverhound/webex-cli/releases/latest/download/checksums.txt`).
+3. The Go module proxy (`proxy.golang.org`).
+4. The GitHub API, using `GITHUB_TOKEN` when it is set.
+
+Every download is checked against the release's SHA-256 `checksums.txt`. On a mismatch, or if the archive is not listed, nothing is installed.
+
+## CI, containers, and AI agents
+
+```bash
+# Pin a version and install to a custom directory
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/webex-cli/main/install.sh \
+  | WEBEX_CLI_VERSION=0.16.0 INSTALL_DIR=/usr/local/bin sh
+```
+
+When there is no terminal, the installer does not prompt. `webex post-install` prints the PATH line to add and installs the agent skill for detected agents (Claude Code, Codex, Cursor). You can also run it yourself:
+
+| Option | Effect |
+|--------|--------|
+| `webex post-install --yes` | No prompts; adds the PATH line to your shell profile and installs skills for detected agents |
+| `webex post-install --no-skills` | Skips agent skill installation |
+| `WEBEX_CLI_NONINTERACTIVE=1` | Turns off prompts even in a terminal |
 
 ## Manual Download
 
@@ -45,5 +72,5 @@ Requires Go 1.23+.
 ## Verify Installation
 
 ```bash
-webex version
+webex version    # or: webex --version
 ```
