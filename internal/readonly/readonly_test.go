@@ -6,6 +6,9 @@ func TestIsReadScope(t *testing.T) {
 	cases := map[string]bool{
 		"spark-admin:people_read":         true,
 		"spark:kms":                       true,
+		"spark:xapi_statuses":             true,
+		"spark:xapi_commands":             false,
+		"cjp:user":                        false,
 		"analytics:read_all":              true,
 		"cjp-hybrid-conn:read":            true,
 		"spark:all":                       false,
