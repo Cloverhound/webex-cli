@@ -154,7 +154,7 @@ Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
 - `--token` and `$WEBEX_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.
 
-Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. If your OAuth integration lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`, in the same order as your integration's authorize URL on the developer portal. Webex can reject the same scopes in a different order.
+Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. If your OAuth integration lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`.
 
 ### Organization Override
 
