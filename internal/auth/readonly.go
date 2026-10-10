@@ -9,7 +9,7 @@ import (
 	"github.com/zalando/go-keyring"
 )
 
-// HasReadOnlyToken reports whether the keyring holds a read-only token for email.
+// HasReadOnlyToken reports whether the token store holds a read-only token for email.
 func HasReadOnlyToken(email string) bool {
 	tok, err := LoadToken(email)
 	return err == nil && tok.ReadOnly
@@ -17,14 +17,15 @@ func HasReadOnlyToken(email string) bool {
 
 // PurgeWriteTokens deletes every stored token that is not read-only and removes
 // its user from cfg. It returns the removed emails, sorted. Read-only mode
-// depends on this: the keyring is readable by any process running as the user,
-// so a write-capable token left there would bypass the CLI's checks. An entry
-// that cannot be read or decoded is deleted too, since it may hold write access.
+// depends on this: the keyring and credentials file are readable by any process
+// running as the user, so a write-capable token left there would bypass the
+// CLI's checks. An entry that cannot be read or decoded is deleted too, since it
+// may hold write access.
 func PurgeWriteTokens(cfg *appconfig.Config) ([]string, error) {
 	var removed, failed []string
 	for _, email := range cfg.UserEmails() {
 		tok, err := LoadToken(email)
-		if errors.Is(err, keyring.ErrNotFound) || (err == nil && tok.ReadOnly) {
+		if errors.Is(err, keyring.ErrNotFound) || errors.Is(err, errNotFound) || (err == nil && tok.ReadOnly) {
 			continue
 		}
 		if err := DeleteToken(email); err != nil {
@@ -37,7 +38,7 @@ func PurgeWriteTokens(cfg *appconfig.Config) ([]string, error) {
 	sort.Strings(removed)
 	if len(failed) > 0 {
 		sort.Strings(failed)
-		return removed, fmt.Errorf("could not remove write-capable tokens for %v from the keyring; remove them manually", failed)
+		return removed, fmt.Errorf("could not remove write-capable tokens for %v from the token store; remove them manually", failed)
 	}
 	return removed, nil
 }

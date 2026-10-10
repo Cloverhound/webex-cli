@@ -40,8 +40,10 @@ func storeGet(key string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
+	var kerr error
 	if forced != StoreFile {
-		data, kerr := keyring.Get(serviceName, key)
+		var data string
+		data, kerr = keyring.Get(serviceName, key)
 		if kerr == nil {
 			return data, StoreKeyring, nil
 		}
@@ -50,6 +52,11 @@ func storeGet(key string) (string, string, error) {
 		}
 	}
 	data, err := fileGet(key)
+	// A keyring that failed for any reason but a missing entry may still hold the
+	// token, so "not found" would be a guess; read-only purging relies on that.
+	if errors.Is(err, errNotFound) && kerr != nil && !errors.Is(kerr, keyring.ErrNotFound) {
+		return "", "", fmt.Errorf("not in the credentials file, and the keyring could not be read: %w", kerr)
+	}
 	if err != nil {
 		return "", "", err
 	}
