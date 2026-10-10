@@ -134,13 +134,6 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("autoCsatId", autoCsatId)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -198,13 +191,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/auto-csat/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

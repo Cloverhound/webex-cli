@@ -42,13 +42,6 @@ This API requires a full, user, or read-only administrator or location administr
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/applications")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -132,13 +125,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/bargeIn")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -205,13 +191,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callForwarding")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -271,13 +250,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/intercept")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -337,13 +309,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callRecording")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -403,13 +368,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callWaiting")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -473,13 +431,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callerId")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -539,13 +490,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/callingBehavior")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -612,13 +556,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/doNotDisturb")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -688,13 +625,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/executiveAssistant")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -758,13 +688,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/hoteling")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -828,13 +751,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/monitoring")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -901,13 +817,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/incomingPermission")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -980,13 +889,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/outgoingPermission")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1049,6 +951,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("preferE164Format", preferE164Format)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1084,13 +987,6 @@ This API requires a full, user, or read-only administrator or location administr
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/privacy")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1170,13 +1066,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/pushToTalk")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1249,13 +1138,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/reception")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1404,13 +1286,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1520,13 +1395,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("scheduleId", scheduleId)
 				req.PathParam("eventId", eventId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1683,13 +1551,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/voicemail")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1848,13 +1709,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/person/moveLocation/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1964,13 +1818,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/musicOnHold")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2030,13 +1877,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/outgoingPermission/accessCodes")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2166,13 +2006,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/outgoingPermission/autoTransferNumbers")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2245,13 +2078,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/outgoingPermission/digitPatterns")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2389,13 +2215,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.PathParam("digitPatternId", digitPatternId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2537,13 +2356,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/preferredAnswerEndpoint")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2660,13 +2472,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/applications/{applicationId}/members")
 				req.PathParam("personId", personId)
 				req.PathParam("applicationId", applicationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2763,13 +2568,6 @@ This API requires a full or user administrator or location administrator auth to
 			Long:  `Get a summary of the voicemail messages for the user.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/voiceMessages/summary")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2790,6 +2588,7 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/voiceMessages")
 				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -2909,13 +2708,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/agent/availableCallerIds")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2938,13 +2730,6 @@ This API requires a full or user administrator or location administrator auth to
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/agent/callerId")
 				req.PathParam("personId", personId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3004,13 +2789,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/features/callBridge")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3337,13 +3115,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/settings/msTeams")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3410,13 +3181,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/features/personalAssistant")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3548,6 +3312,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -3617,13 +3382,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/selectiveAccept")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3749,13 +3507,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.PathParam("id", id)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3874,13 +3625,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/selectiveReject")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4006,13 +3750,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.PathParam("id", id)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4131,13 +3868,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/selectiveForward")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4278,13 +4008,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.PathParam("id", id)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4409,13 +4132,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}/features/applications")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4487,13 +4203,6 @@ This API requires a full or user administrator or location administrator auth to
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/applications/members")
 				req.PathParam("personId", personId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4549,13 +4258,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/callCaptions")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4625,13 +4327,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/executive/callFiltering")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4693,13 +4388,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.PathParam("personId", personId)
 				req.PathParam("id", id)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4828,13 +4516,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/executive/alert")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4928,13 +4609,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/executive/assignedAssistants")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5041,13 +4715,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/executive/assistant")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5107,13 +4774,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/executive/screening")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5197,13 +4857,6 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("memberName", memberName)
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("extension", extension)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5232,13 +4885,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5305,13 +4951,6 @@ This API requires a full or user administrator or location administrator auth to
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/countries/{countryCode}")
 				req.PathParam("countryCode", countryCode)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -82,13 +82,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v3/campaign-management/dncList/{dncListName}/phoneNumber/{phoneNumber}")
 				req.PathParam("dncListName", dncListName)
 				req.PathParam("phoneNumber", phoneNumber)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

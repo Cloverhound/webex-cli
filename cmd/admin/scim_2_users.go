@@ -89,6 +89,7 @@ func init() {
 				req.QueryParam("includeGroupDetails", includeGroupDetails)
 				req.QueryParam("groupUsageTypes", groupUsageTypes)
 				if config.Paginate() {
+					req.OffsetPaging("startIndex", "count", 1)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -128,13 +129,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/scim/{orgId}/v2/Users/{userId}")
 				req.PathParam("orgId", orgId)
 				req.PathParam("userId", userId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -253,13 +247,6 @@ func init() {
 			Long:  "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe API can be used by any user to retrieve user information using their own access token.\n\n<br/>",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/scim/v2/Users/me")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

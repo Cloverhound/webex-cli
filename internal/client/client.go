@@ -31,12 +31,18 @@ func ReadOnlyError(method, url string) error {
 // On a 401 it refreshes the token and retries once.
 // On a 429 it reads Retry-After and retries up to 3 times.
 func Do(req *Request) ([]byte, int, error) {
+	body, status, _, err := doWithHeaders(req)
+	return body, status, err
+}
+
+// doWithHeaders is Do, also returning the final response's headers.
+func doWithHeaders(req *Request) ([]byte, int, http.Header, error) {
 	body, status, headers, err := doOnce(req)
 
 	if status == 401 && config.TokenRefresher != nil {
 		newToken, refreshErr := config.TokenRefresher()
 		if refreshErr != nil {
-			return body, status, err
+			return body, status, headers, err
 		}
 		config.SetToken(newToken)
 		body, status, headers, err = doOnce(req)
@@ -49,10 +55,10 @@ func Do(req *Request) ([]byte, int, error) {
 		wait := retryAfterDuration(headers.Get("Retry-After"))
 
 		if retries >= maxRetry {
-			return body, status, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
+			return body, status, headers, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
 		}
 		if maxTimer > 0 && cumulativeWait+wait > maxTimer {
-			return body, status, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s", (cumulativeWait + wait).Round(time.Second), maxTimer.Round(time.Second), wait.Round(time.Second))
+			return body, status, headers, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s", (cumulativeWait + wait).Round(time.Second), maxTimer.Round(time.Second), wait.Round(time.Second))
 		}
 
 		fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), retries+1, maxRetry)
@@ -62,10 +68,10 @@ func Do(req *Request) ([]byte, int, error) {
 	}
 
 	if status == 451 {
-		return body, status, wrongRegionError(body)
+		return body, status, headers, wrongRegionError(body)
 	}
 
-	return body, status, err
+	return body, status, headers, err
 }
 
 // endpointURLPattern finds the regional endpoint Webex returns in a 451 body.
@@ -120,7 +126,9 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	}
 
 	// Add query params
-	if len(req.queryParams) > 0 {
+	if req.rawURL != "" {
+		url = req.rawURL
+	} else if len(req.queryParams) > 0 {
 		params := urlpkg.Values{}
 		for k, v := range req.queryParams {
 			if v != "" {

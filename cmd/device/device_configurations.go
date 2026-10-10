@@ -37,6 +37,7 @@ func init() {
 				req.QueryParam("deviceId", deviceId)
 				req.QueryParam("key", key)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

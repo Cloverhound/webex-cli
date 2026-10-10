@@ -40,13 +40,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/members")
 				req.PathParam("deviceId", deviceId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -187,13 +180,6 @@ func init() {
 				req.PathParam("deviceId", deviceId)
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("deviceModel", deviceModel)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -257,13 +243,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/devices/settings")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -288,13 +267,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}")
 				req.PathParam("deviceId", deviceId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -358,13 +330,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -424,13 +389,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/devices")
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -503,6 +461,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -531,13 +490,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/settings")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -590,6 +542,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/lineKeyTemplates")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -618,13 +571,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/lineKeyTemplates/{templateId}")
 				req.PathParam("templateId", templateId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -769,6 +715,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -797,13 +744,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -828,13 +768,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}/errors")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -857,13 +790,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dects/supportedDevices")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -884,13 +810,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dectNetworks/supportedDevices")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1010,13 +929,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/callDeviceSettings/{jobId}")
 				req.PathParam("jobId", jobId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1077,13 +989,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/{deviceId}/layout")
 				req.PathParam("deviceId", deviceId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1177,6 +1082,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1205,13 +1111,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1236,13 +1135,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones/{jobId}/errors")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1267,13 +1159,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices/settings")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1337,13 +1222,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/workspaces/{workspaceId}/devices/settings")
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1406,6 +1284,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/backgroundImages")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1489,13 +1368,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/{personId}/devices/count")
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1530,13 +1402,6 @@ func init() {
 				req.QueryParam("locationId", locationId)
 				req.QueryParam("extension", extension)
 				req.QueryParam("usageType", usageType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1578,13 +1443,6 @@ func init() {
 				req.QueryParam("usageType", usageType)
 				req.QueryParam("excludeVirtualLine", excludeVirtualLine)
 				req.QueryParam("deviceLocationId", deviceLocationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1617,6 +1475,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1647,13 +1506,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/dynamicSettings/validationSchema")
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1679,13 +1531,6 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
 				req.QueryParam("includeSettingsType", includeSettingsType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1926,13 +1771,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}")
 				req.PathParam("jobId", jobId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1996,6 +1834,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -2028,13 +1867,6 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("familyOrModelDisplayName", familyOrModelDisplayName)
 				req.QueryParam("includeSettingsType", includeSettingsType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2275,13 +2107,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}")
 				req.PathParam("jobId", jobId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

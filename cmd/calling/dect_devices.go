@@ -92,6 +92,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("locationId", locationId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -124,13 +125,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -283,6 +277,7 @@ func init() {
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -347,13 +342,6 @@ func init() {
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.PathParam("baseStationId", baseStationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -470,6 +458,7 @@ func init() {
 				req.QueryParam("basestationId", basestationId)
 				req.QueryParam("memberId", memberId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -508,13 +497,6 @@ func init() {
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.PathParam("handsetId", handsetId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -714,6 +696,7 @@ func init() {
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -745,6 +728,7 @@ func init() {
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -859,13 +843,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

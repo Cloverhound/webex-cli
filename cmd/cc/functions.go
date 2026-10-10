@@ -61,6 +61,7 @@ func init() {
 				req.QueryParam("fields", fields)
 				req.QueryParam("isValidation", isValidation)
 				if config.Paginate() {
+					req.PageSizeParam("size")
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -137,13 +138,6 @@ func init() {
 				req.PathParam("id", id)
 				req.QueryParam("versionOrTag", versionOrTag)
 				req.QueryParam("metaDataOnly", metaDataOnly)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

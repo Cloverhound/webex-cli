@@ -149,6 +149,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/members/me/calls")
 				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -177,13 +178,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/members/me/calls/{callId}")
 				req.PathParam("callId", callId)
 				req.QueryParam("lineOwnerId", lineOwnerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

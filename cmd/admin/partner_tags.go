@@ -34,13 +34,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags")
 				req.QueryParam("type", typeVal)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -93,13 +86,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/organizations/{orgId}")
 				req.PathParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -125,6 +111,7 @@ This API can be used by a partner full admin, a read-only partner, or an partner
 				req.QueryParam("tags", tags)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -192,6 +179,7 @@ This API can be used by partner full admins, partner admins and admin read-only 
 				req.QueryParam("tags", tags)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -222,13 +210,6 @@ This API can be used by partner full admins, partner admins and admin read-only 
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/tags/organizations/{orgId}/subscriptions/{subscriptionId}")
 				req.PathParam("orgId", orgId)
 				req.PathParam("subscriptionId", subscriptionId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

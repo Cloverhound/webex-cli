@@ -36,13 +36,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRecording")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -100,13 +93,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRecording/vendors/{vendorId}/termsOfService")
 				req.PathParam("vendorId", vendorId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -168,13 +154,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRecording/complianceAnnouncement")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -241,13 +220,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callRecording/complianceAnnouncement")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -321,13 +293,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRecording/regions")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -440,13 +405,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callRecording/vendors")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -544,13 +502,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/callRecording/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -578,6 +529,7 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -607,13 +559,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRecording/vendors")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

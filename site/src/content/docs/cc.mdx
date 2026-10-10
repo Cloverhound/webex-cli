@@ -111,6 +111,8 @@ Auto-paginate to get all results:
 webex cc entry-point list --paginate
 ```
 
+`--paginate` requests 100 items per page and overrides `--page-size` or `--size`. Commands that return a single object ignore it. `cc tasks get` returns only the first page because the API does not report a page count.
+
 Manual pagination:
 
 ```bash

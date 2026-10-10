@@ -38,13 +38,6 @@ Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -214,13 +207,6 @@ Role and Scope: Requires id full admin role with cjp:config_write or cjp:config_
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-name/{templateName}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -250,13 +236,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("personId", personId)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -288,13 +267,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("personId", personId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -324,13 +296,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -360,13 +325,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -398,13 +356,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -436,13 +387,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -527,13 +471,6 @@ Role and Scope: Requires id full admin role with cjds:admin_org_write or cjds:ad
 				req.PathParam("identity", identity)
 				req.QueryParam("filter", filter)
 				req.QueryParam("data", data)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

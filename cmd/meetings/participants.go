@@ -53,6 +53,7 @@ func init() {
 				req.QueryParam("joinTimeTo", joinTimeTo)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -142,13 +143,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingParticipants/{participantId}")
 				req.PathParam("participantId", participantId)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

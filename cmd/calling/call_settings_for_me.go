@@ -36,13 +36,6 @@ func init() {
 			Long:  "Retrieve user's own Personal Assistant details.\n\nPersonal Assistant is used to manage a user's incoming calls when they are away.\n\nRetrieving Personal Assistant details requires a user auth token with `spark:telephony_config_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/personalAssistant")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -111,6 +104,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/availablePreferredAnswerEndpoints")
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -136,13 +130,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineOwnerId}/availablePreferredAnswerEndpoints")
 				req.PathParam("lineOwnerId", lineOwnerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -162,13 +149,6 @@ func init() {
 			Long:  "Retrieve the selected preferred answering endpoint for the user. If a preferred endpoint is not set for the person, API returns empty \n\n A Webex Calling user may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco desk IP phone, Webex Calling-supported analog devices or third-party endpoints. Preferred answering endpoints allow users to specify which of these devices should be prioritized for answering calls, particularly when a person's extension (or a virtual line assigned to them) rings on multiple devices. This helps ensure that calls are answered on the most convenient or appropriate device for the person.\n\n This API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/preferredAnswerEndpoint")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -220,13 +200,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineOwnerId}/preferredAnswerEndpoint")
 				req.PathParam("lineOwnerId", lineOwnerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -282,13 +255,6 @@ func init() {
 			Long:  "Retrieve \"Mobile User Aware\" override setting for Do Not Disturb feature.\n\nWhen enabled, a mobile device will still ring even if Do Not Disturb, Quiet Hours, or Presenting Status are enabled.\n\nWhen disabled, a mobile device will return busy for all incoming calls if Do Not Disturb, Quiet Hours, or Presenting Status are enabled.\n\nIt requires a user auth token with `spark:telephony_config_read` scope.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/webexGoOverride")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -338,13 +304,6 @@ func init() {
 			Long:  "Get Caller ID Settings for the authenticated user.\n\nCalling Line ID Delivery Blocking in Webex prevents your name and phone number from being shown to people you call.\nConnected Line Identification Restriction allows you to block your name and phone number from being shown when receiving a call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callerId")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -399,13 +358,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/callerId")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -464,13 +416,6 @@ func init() {
 			Long:  "Read selected caller ID settings associated with the authenticated user.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\nSelected Caller ID settings allow users to choose which configuration among available caller IDs is selected currently.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectedCallerId")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -518,13 +463,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/selectedCallerId")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -576,13 +514,6 @@ func init() {
 			Long:  "Get details of available caller IDs of the authenticated user.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\nThe available caller ID list shows the caller IDs that the user can choose from.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/availableCallerIds")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -602,13 +533,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/availableCallerIds")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -629,6 +553,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/endpoints")
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -654,13 +579,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/endpoints/{endpointId}")
 				req.PathParam("endpointId", endpointId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -712,13 +630,6 @@ func init() {
 			Long:  "Get details of call recording settings associated with the authenticated user.\n\nCall recording settings allow you to access and customize options that determine when and how your calls are recorded, providing control over recording modes and notifications.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callRecording")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -738,13 +649,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/callRecording")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -764,13 +668,6 @@ func init() {
 			Long:  "Get profile details for the authenticated user.\n\nProfile details include the user's name, email, location and calling details.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -788,13 +685,6 @@ func init() {
 			Long:  "Retrieve all Feature Access Codes configured for services that are assigned to the authenticated user. For each feature access code, the name and code are returned. If an alternate code is defined, it is also returned.\n\nFeature access codes (FACs), also known as star codes, give users access to advanced calling features.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/featureAccessCode")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -814,13 +704,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/featureAccessCode")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -840,13 +723,6 @@ func init() {
 			Long:  "Get list of assigned executive assistants for an authenticated user.\n\nAs an executive, you can add assistants to your executive pool to manage calls for you. You can set when and which types of calls they can handle. Assistants can opt in when needed or opt out when not required.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/assignedAssistants")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -899,13 +775,6 @@ func init() {
 			Long:  "Get a list of available executive assistants for the authenticated user.\n\nAs an executive, you can add assistants to your executive pool to manage calls for you. You can set when and which types of calls they can handle. Assistants can opt in when needed or opt out when not required.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/availableAssistants")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -923,13 +792,6 @@ func init() {
 			Long:  "Get settings for an executive assistant.\n\nExecutive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.\nAssistants can also set the call forwarding destination, and join or leave an executive\u2019s pool.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/assistant")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -975,13 +837,6 @@ func init() {
 			Long:  "Retrieves the list of enabled calling services for the authenticated user.\n\nThese services are designed to improve call handling and ensure that users can manage their communications effectively. They are commonly found in both personal and business telephony systems.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/services")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1001,13 +856,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/services")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1027,13 +875,6 @@ func init() {
 			Long:  "Retrieves all single number reach settings configured for the authenticated user.\n\nThe \"Single Number Reach\" feature in Webex allows users to access their business phone capabilities from any device, making it easy to make and receive calls as if at their office. This is especially useful for remote or mobile workers needing flexibility.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/singleNumberReach")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1196,13 +1037,6 @@ func init() {
 			Long:  "Read call forwarding settings associated with the authenticated user.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person is busy.\n\n+ When no answer - forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callForwarding")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1250,13 +1084,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/callForwarding")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1308,13 +1135,6 @@ func init() {
 			Long:  "Get Call Pickup Group Settings for the authenticated user.\n\nCall pickup group enables a user to answer any ringing line within their pickup group. A call pickup group is an administrator-defined set of users within a location, to which the call pickup feature applies.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callPickupGroup")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1334,13 +1154,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/callPickupGroup")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1360,13 +1173,6 @@ func init() {
 			Long:  "Get details of call park settings associated with the authenticated user.\n\nCall Park allows call recipients to place a call on hold so that it can be retrieved from another device.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callPark")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1386,13 +1192,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/callPark")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1440,13 +1239,6 @@ func init() {
 			Long:  "Retrieve a person's voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via voicemail.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nThis API requires a user auth token with a scope of `spark-admin:people_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/voicemail")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1498,13 +1290,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/voicemail")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1524,13 +1309,6 @@ func init() {
 			Long:  "Get details of call block settings associated with the authenticated user.\n\nCall block settings allow you to get the User Call Block Number List.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callBlock")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1582,13 +1360,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callBlock/numbers/{phoneNumberId}")
 				req.PathParam("phoneNumberId", phoneNumberId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1629,13 +1400,6 @@ func init() {
 			Long:  "Retrieves the monitoring settings of the logged in person, which shows specified people, places, virtual lines or call park extensions that are being monitored.\n\nMonitors the line status which indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/monitoring")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1653,13 +1417,6 @@ func init() {
 			Long:  "Retrieves the call center settings and list of all call centers the logged in user belongs to.\n\nCalls from the Call Centers are routed to agents based on configuration. An agent can be assigned to one or more call queues and can be managed by supervisors.\nThe user must have the call center service assigned.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/queues")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1707,13 +1464,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/secondaryLines/{lineownerId}/queues")
 				req.PathParam("lineownerId", lineownerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1765,13 +1515,6 @@ func init() {
 			Long:  "Retrieve the effective call captions settings of the authenticated user.\n\n**NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to locations in India.\n\nThe call caption feature allows the customer to enable and manage closed captions and transcript functionality (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callCaptions")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1789,13 +1532,6 @@ func init() {
 			Long:  "Get call policies settings for the authenticated user.\n\nCall Policies in Webex allow you to manage how your call information is displayed and handled. You can view privacy settings for your connected line ID on redirected calls and review other call-related preferences.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callPolicies")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1845,13 +1581,6 @@ func init() {
 			Long:  "Get executive screening settings for the authenticated user.\n\nExecutive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your preferences. You can enable or disable executive screening and configure alert types and locations for notifications.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/screening")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1913,13 +1642,6 @@ func init() {
 			Long:  "Get executive call filtering settings for the authenticated user.\n\nExecutive Call Filtering in Webex allows you to control which calls are allowed to reach the executive assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable call filtering and configure filter rules to manage incoming calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/callFiltering")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1967,13 +1689,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/callFiltering/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2046,13 +1761,6 @@ func init() {
 			Long:  "Get Do Not Disturb settings for the authenticated user.\n\nDo Not Disturb (DND) enables users to block or silence incoming calls on their phone. When activated, the phone either stops ringing or rejects calls depending on the configured option, but users can still see call information and answer calls if desired.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/doNotDisturb")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2136,13 +1844,6 @@ func init() {
 			Long:  "Get executive alert settings for the authenticated user.\n\nExecutive Alert settings in Webex allow you to control how calls are routed to executive assistants, including alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or simultaneous alerting, and specify what happens when calls aren't answered.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/executive/alert")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2224,13 +1925,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/countries/{countryCode}")
 				req.PathParam("countryCode", countryCode)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2250,13 +1944,6 @@ func init() {
 			Long:  "Retrieve the list of available announcement languages for the authenticated user's telephony configuration.\n\nAnnouncement languages determine the language used for system prompts and announcements during calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/announcementLanguages")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2274,13 +1961,6 @@ func init() {
 			Long:  "Retrieve Barge-In settings of the user.\n\nThe Barge-In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to another subscriber, or barge-in on the call if it was already answered. Barge-In can be used across locations.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/bargeIn")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2333,13 +2013,6 @@ func init() {
 			Long:  "Get Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2444,13 +2117,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2548,13 +2214,6 @@ func init() {
 			Long:  "Get Schedules for Call Settings for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2604,13 +2263,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}")
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2735,13 +2387,6 @@ func init() {
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
 				req.PathParam("eventId", eventId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2838,13 +2483,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}")
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2866,13 +2504,6 @@ func init() {
 			Long:  "Get Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2980,13 +2611,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3084,13 +2708,6 @@ func init() {
 			Long:  "Get Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3195,13 +2812,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3402,13 +3012,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3512,13 +3115,6 @@ func init() {
 			Long:  "Get Selective Call Forward Settings for the authenticated user.\n\nSelective Call Forward allows you to create customized rules to forward specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3577,13 +3173,6 @@ func init() {
 			Long:  "Get Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3686,13 +3275,6 @@ func init() {
 			Long:  "Get Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/anonymousCallReject")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3744,13 +3326,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3848,13 +3423,6 @@ func init() {
 			Long:  "Get Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callWaiting")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -3904,13 +3472,6 @@ func init() {
 			Long:  "Get Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4011,13 +3572,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4115,13 +3669,6 @@ func init() {
 			Long:  "Get Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4226,13 +3773,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/priorityAlert/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4330,13 +3870,6 @@ func init() {
 			Long:  "Get Schedules for Call Settings for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4386,13 +3919,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}")
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4517,13 +4043,6 @@ func init() {
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
 				req.PathParam("eventId", eventId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4620,13 +4139,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}")
 				req.PathParam("scheduleType", scheduleType)
 				req.PathParam("scheduleId", scheduleId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4648,13 +4160,6 @@ func init() {
 			Long:  "Get Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4762,13 +4267,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callNotify/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4866,13 +4364,6 @@ func init() {
 			Long:  "Get Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -4977,13 +4468,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5184,13 +4668,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5294,13 +4771,6 @@ func init() {
 			Long:  "Get Selective Call Forward Settings for the authenticated user.\n\nSelective Call Forward allows you to create customized rules to forward specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveForward")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5359,13 +4829,6 @@ func init() {
 			Long:  "Get Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5468,13 +4931,6 @@ func init() {
 			Long:  "Get Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/anonymousCallReject")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5526,13 +4982,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/selectiveReject/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5630,13 +5079,6 @@ func init() {
 			Long:  "Get Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/callWaiting")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5686,13 +5128,6 @@ func init() {
 			Long:  "Get Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5793,13 +5228,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/sequentialRing/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5897,13 +5325,6 @@ func init() {
 			Long:  "Retrieve simultaneous ring settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Schedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nRetrieving settings requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/simultaneousRing")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -5951,13 +5372,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}")
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -6108,13 +5522,6 @@ func init() {
 			Long:  "Retrieve available guest calling numbers for the authenticated user.\n\nThis API returns a list of phone numbers that can be used for guest calling purposes.\n\nRetrieving guest calling numbers requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/guestCalling/numbers")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -6132,13 +5539,6 @@ func init() {
 			Long:  "Retrieve personal assistant settings for a person. The personal assistant feature allows users to configure an automated attendant that can handle incoming calls when they are unavailable, including presence-based routing and call transfer options.\n\nPersonal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's availability status.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/personalAssistant")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -6206,13 +5606,6 @@ func init() {
 			Long:  "Get person's voicemail passcode rules. Voicemail rules specify the default passcode requirements. They are provided for informational purposes only and cannot be modified.\n\nThe voicemail feature allows users to manage their voicemail settings as part of Webex Calling. Voicemail rules help ensure secure access to voice messages by defining passcode complexity requirements.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/voicemail/rules")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -6262,13 +5655,6 @@ func init() {
 			Long:  "Retrieve hoteling guest settings for a person. Hoteling allows a person to temporarily use a device as a guest, associating their extension and configuration with that device for a limited time. This API returns the current hoteling guest configuration including any active host association details.\n\nHoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into shared devices.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/hoteling/guest")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

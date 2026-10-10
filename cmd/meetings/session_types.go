@@ -37,6 +37,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meeting/config/sessionTypes")
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -68,6 +69,7 @@ func init() {
 				req.QueryParam("personId", personId)
 				req.Header("email", email)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

@@ -142,13 +142,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualExtensions/{extensionId}")
 				req.PathParam("extensionId", extensionId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -246,13 +239,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualExtensions/settings")
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -437,13 +423,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualExtensionRanges/{extensionRangeId}")
 				req.PathParam("extensionRangeId", extensionRangeId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

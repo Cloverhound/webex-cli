@@ -54,13 +54,6 @@ This operation requires a Pro Pack for Control Hub license. The access token mus
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("location", location)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

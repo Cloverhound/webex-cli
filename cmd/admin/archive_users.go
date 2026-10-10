@@ -36,13 +36,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser/{useruuid}")
 				req.PathParam("orgId", orgId)
 				req.PathParam("useruuid", useruuid)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -68,13 +61,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser")
 				req.PathParam("orgId", orgId)
 				req.QueryParam("filter", filter)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

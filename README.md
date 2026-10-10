@@ -202,7 +202,7 @@ webex cc users list --output csv > users.csv
 | `--organization <orgId>` | Override org ID |
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
-| `--paginate` | Auto-paginate list results |
+| `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
 
 ## Configuration
