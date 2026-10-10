@@ -344,4 +344,3 @@ func generateState() string {
 	rand.Read(buf)
 	return hex.EncodeToString(buf)
 }
-

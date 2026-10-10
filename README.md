@@ -142,7 +142,7 @@ See the [full refresh inventory](docs/command-inventory.md), [every renamed comm
 
 - **OAuth PKCE flow** — `webex login` opens a browser, no client secret needed on the user side
 - **Device login** — `webex login --device` prints a URL and code to approve from any browser; used automatically over SSH, in CI, on Linux without a display, or when no browser opens
-- **OS keyring storage** — tokens stored securely in macOS Keychain / Linux keyring / Windows Credential Manager, with a plain-text file fallback when no keyring is available
+- **Token storage** — tokens stored securely in macOS Keychain / Linux keyring / Windows Credential Manager, with a plain-text file fallback when no keyring is available
 - **Auto-refresh** — expired tokens are refreshed automatically
 - **Multi-user** — log in with multiple Webex accounts and switch between them
 
@@ -178,7 +178,7 @@ For CI and unattended agents where nobody can approve a code:
 
 `webex login --read-only` requests only read scopes, so Webex itself rejects writes made with the token. Use it when an AI agent should read but not change your Webex data. While read-only mode is on:
 
-- Stored logins with write access are deleted from the keyring, because any program running as you can read it.
+- Stored logins with write access are deleted from the keyring and credentials file, because any program running as you can read them.
 - `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries.
 - `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.

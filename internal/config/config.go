@@ -19,10 +19,10 @@ var (
 )
 
 func SetToken(t string) { token = t }
-func Token() string      { return token }
+func Token() string     { return token }
 
-func SetMaxRetry(n int)  { maxRetry = n }
-func MaxRetry() int      { return maxRetry }
+func SetMaxRetry(n int) { maxRetry = n }
+func MaxRetry() int     { return maxRetry }
 
 func SetMaxRetryTimer(secs int) { maxRetryTimer = secs }
 func MaxRetryTimer() int        { return maxRetryTimer }
@@ -55,7 +55,7 @@ func SetOrgID(id string) {
 	orgIDBase64 = EncodeOrgID(uuid)
 }
 
-func OrgID() string      { return orgID }
+func OrgID() string       { return orgID }
 func OrgIDBase64() string { return orgIDBase64 }
 
 const (

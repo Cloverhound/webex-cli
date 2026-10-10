@@ -7,22 +7,15 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"strings"
 
 	"github.com/Cloverhound/webex-cli/skill"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 const coworkName = "Claude Cowork"
-
-const nonInteractiveEnv = "WEBEX_CLI_NONINTERACTIVE"
-
-// isTerminal is a variable so tests can simulate a terminal.
-var isTerminal = func(f *os.File) bool { return term.IsTerminal(int(f.Fd())) }
 
 // setupOptions controls how post-install and skill updates answer questions.
 type setupOptions struct {
@@ -31,11 +24,10 @@ type setupOptions struct {
 	skills    bool // install or update agent skills
 }
 
-// newSetupOptions prompts only on a terminal: installers and agents run
-// post-install with no TTY, where a form would fail or hang.
+// newSetupOptions prompts only when a person can answer. These forms are drawn
+// on stdout, so it must be a terminal too.
 func newSetupOptions(assumeYes, noSkills bool) setupOptions {
-	nonInteractive, _ := strconv.ParseBool(os.Getenv(nonInteractiveEnv))
-	prompt := !assumeYes && !nonInteractive && isTerminal(os.Stdin) && isTerminal(os.Stdout)
+	prompt := !assumeYes && canPrompt() && isTerminal(os.Stdout)
 	return setupOptions{prompt: prompt, assumeYes: assumeYes, skills: !noSkills}
 }
 
@@ -217,8 +209,8 @@ func setupAgentSkills(opts setupOptions) error {
 				huh.NewMultiSelect[string]().
 					Title("Install Webex skill for AI coding agents?").
 					Description(
-						"The Webex skill lets AI coding agents (Claude Code, Codex, Cursor)\n"+
-							"query and manage your Webex environment using natural language.\n"+
+						"The Webex skill lets AI coding agents (Claude Code, Codex, Cursor)\n" +
+							"query and manage your Webex environment using natural language.\n" +
 							"Detected agents are pre-selected.",
 					).
 					Options(options...).

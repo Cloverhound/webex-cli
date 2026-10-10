@@ -15,7 +15,7 @@ const (
 	SourceNone       TokenSource = iota
 	SourceFlag                   // --token flag
 	SourceEnv                    // $WEBEX_TOKEN
-	SourceKeyring                // stored login (OS keyring or credentials file)
+	SourceStored                 // stored login (OS keyring or credentials file)
 	SourceEnvRefresh             // $WEBEX_REFRESH_TOKEN
 )
 
@@ -25,7 +25,7 @@ func (s TokenSource) String() string {
 		return "flag"
 	case SourceEnv:
 		return "environment"
-	case SourceKeyring:
+	case SourceStored:
 		return "stored login"
 	case SourceEnvRefresh:
 		return "environment refresh token"
@@ -129,7 +129,7 @@ func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.
 
 	return &ResolveResult{
 		Token:     tok.AccessToken,
-		Source:    SourceKeyring,
+		Source:    SourceStored,
 		UserEmail: email,
 		OrgID:     orgID,
 	}, nil

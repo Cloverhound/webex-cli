@@ -21,7 +21,8 @@ const (
 	StoreFile    = "file"
 )
 
-var errNotFound = errors.New("token not found")
+// ErrTokenNotFound means no store holds a token for the key.
+var ErrTokenNotFound = errors.New("token not found")
 
 // forcedStore returns the store named by $WEBEX_TOKEN_STORE, or "" for automatic selection.
 func forcedStore() (string, error) {
@@ -48,13 +49,16 @@ func storeGet(key string) (string, string, error) {
 			return data, StoreKeyring, nil
 		}
 		if forced == StoreKeyring {
+			if errors.Is(kerr, keyring.ErrNotFound) {
+				return "", "", ErrTokenNotFound
+			}
 			return "", "", kerr
 		}
 	}
 	data, err := fileGet(key)
 	// A keyring that failed for any reason but a missing entry may still hold the
 	// token, so "not found" would be a guess; read-only purging relies on that.
-	if errors.Is(err, errNotFound) && kerr != nil && !errors.Is(kerr, keyring.ErrNotFound) {
+	if errors.Is(err, ErrTokenNotFound) && kerr != nil && !errors.Is(kerr, keyring.ErrNotFound) {
 		return "", "", fmt.Errorf("not in the credentials file, and the keyring could not be read: %w", kerr)
 	}
 	if err != nil {
@@ -63,27 +67,32 @@ func storeGet(key string) (string, string, error) {
 	return data, StoreFile, nil
 }
 
-func storeSet(key, data string) error {
+// storeSet saves data and returns the store that now holds it.
+func storeSet(key, data string) (string, error) {
 	forced, err := forcedStore()
 	if err != nil {
-		return err
+		return "", err
 	}
 	if forced == StoreFile {
-		return fileSetUser(key, data)
+		return StoreFile, fileSetUser(key, data)
 	}
 	kerr := keyring.Set(serviceName, key, data)
-	if kerr == nil || forced == StoreKeyring {
-		if kerr == nil {
-			// A copy left in the file from an earlier fallback would shadow nothing
-			// but would keep a stale secret on disk.
-			_ = fileDelete(key)
-		}
-		return kerr
+	if kerr == nil {
+		// A copy left in the file from an earlier fallback would shadow nothing
+		// but would keep a stale secret on disk.
+		_ = fileDelete(key)
+		return StoreKeyring, nil
+	}
+	if forced == StoreKeyring {
+		return "", kerr
 	}
 	if err := fileSetUser(key, data); err != nil {
-		return fmt.Errorf("keyring unavailable (%v) and file store failed: %w", kerr, err)
+		return "", fmt.Errorf("keyring unavailable (%v) and file store failed: %w", kerr, err)
 	}
-	return nil
+	// The keyring is read first, so an older entry left there would shadow this
+	// token once the keyring works again.
+	_ = keyring.Delete(serviceName, key)
+	return StoreFile, nil
 }
 
 func storeDelete(key string) error {
@@ -164,9 +173,32 @@ func fileGet(key string) (string, error) {
 	}
 	data, ok := cf.Tokens[key]
 	if !ok {
-		return "", errNotFound
+		return "", ErrTokenNotFound
 	}
 	return data, nil
+}
+
+// fileDeletePrefix removes every file entry whose key starts with prefix.
+func fileDeletePrefix(prefix string) error {
+	if _, err := os.Stat(CredentialsPath()); os.IsNotExist(err) {
+		return nil
+	}
+	return withFileLock("credentials.lock", func() error {
+		cf, err := readCredentials()
+		if err != nil {
+			return err
+		}
+		n := len(cf.Tokens)
+		for key := range cf.Tokens {
+			if strings.HasPrefix(key, prefix) {
+				delete(cf.Tokens, key)
+			}
+		}
+		if len(cf.Tokens) == n {
+			return nil
+		}
+		return writeCredentials(cf)
+	})
 }
 
 func fileSet(key, data string) error {

@@ -24,11 +24,18 @@ type envRefreshEntry struct {
 	OrgID string      `json:"org_id,omitempty"`
 }
 
+const envRefreshKeyPrefix = "env-refresh:"
+
 // The cache is keyed by a hash of the env value so a changed secret starts fresh
 // and the original value never lands on disk.
 func envRefreshKey(refreshToken string) string {
 	sum := sha256.Sum256([]byte(refreshToken))
-	return "env-refresh:" + hex.EncodeToString(sum[:8])
+	return envRefreshKeyPrefix + hex.EncodeToString(sum[:8])
+}
+
+// DeleteEnvRefreshCache removes every cached token minted from $WEBEX_REFRESH_TOKEN.
+func DeleteEnvRefreshCache() error {
+	return fileDeletePrefix(envRefreshKeyPrefix)
 }
 
 // EnvRefreshAccessToken returns an access token for the refresh token in

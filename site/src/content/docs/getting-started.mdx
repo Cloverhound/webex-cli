@@ -5,7 +5,7 @@ description: Get up and running with the Webex CLI.
 
 ## Authentication
 
-The CLI uses OAuth with tokens stored in your OS keyring.
+The CLI uses OAuth with tokens stored in your OS keyring, or in a credentials file when no keyring is available.
 
 ```bash
 # Login (opens browser, or device login when there is no browser)
@@ -56,7 +56,7 @@ webex login --read-only
 
 This login requests only read scopes (`webex config get read-only-scopes` lists them) and turns on read-only mode:
 
-- Stored logins with write access are deleted from the OS keyring. Other programs running as you can read the keyring, so leaving those logins there would let them bypass read-only mode.
+- Stored logins with write access are deleted from the OS keyring and the credentials file. Other programs running as you can read both, so leaving those logins there would let them bypass read-only mode.
 - `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries. Webex also rejects writes because the token has no write scopes.
 - `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, because the CLI cannot check the scopes of a token it did not create.
 - `auth switch`, `--user`, and folder defaults work only for users who logged in with `--read-only`.

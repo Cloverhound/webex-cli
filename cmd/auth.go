@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,9 +14,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/auth"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/localconfig"
-	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 var authCmd = &cobra.Command{
@@ -54,17 +53,26 @@ var authStatusCmd = &cobra.Command{
 		}
 
 		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
-			if os.Getenv(env) != "" {
-				fmt.Printf("Env:     $%s is set and overrides the stored login below\n", env)
-				break
+			if os.Getenv(env) == "" {
+				continue
 			}
+			if readOnlyMode(cfg) {
+				fmt.Printf("Env:     $%s is set; read-only mode refuses it, so commands fail until it is unset\n", env)
+			} else {
+				fmt.Printf("Env:     $%s is set and overrides the stored login below\n", env)
+			}
+			break
 		}
 
 		userInfo := cfg.Users[email]
 		tok, store, err := auth.LoadTokenWithStore(email)
 		if err != nil {
-			fmt.Printf("User:   %s\n", email)
-			fmt.Println("Status: token not found in the keyring or credentials file")
+			fmt.Printf("User:    %s\n", email)
+			if errors.Is(err, auth.ErrTokenNotFound) {
+				fmt.Println("Status:  token not found in the keyring or credentials file")
+			} else {
+				fmt.Printf("Status:  %v\n", err)
+			}
 			return nil
 		}
 
@@ -137,10 +145,14 @@ var authStatusCmd = &cobra.Command{
 var authExportCmd = &cobra.Command{
 	Use:   "export [email]",
 	Short: "Print a stored refresh token for use as $WEBEX_REFRESH_TOKEN",
-	Long: `Prints the refresh token of a stored login (the default user unless an email is
-given) so a login made on one machine can seed a CI secret or an unattended
-agent through $WEBEX_REFRESH_TOKEN. Anyone holding the token can act as that
-user until it expires (about 90 days after its last use), so treat it as a password.
+	Long: `Prints the refresh token of a stored login so a login made on one machine can
+seed a CI secret or an unattended agent through $WEBEX_REFRESH_TOKEN. The user
+is the email given, else the one --user, $WEBEX_USER, the folder default, or the
+default user selects. Anyone holding the token can act as that user until it
+expires (about 90 days after its last use), so treat it as a password.
+
+In read-only mode only read-only logins can be exported, and the consumer must
+not be in read-only mode, which refuses $WEBEX_REFRESH_TOKEN.
 
 The token is printed alone on stdout. Confirm at the prompt, or pass --yes
 when there is no terminal.`,
@@ -152,9 +164,15 @@ when there is no terminal.`,
 		if err != nil {
 			return fmt.Errorf("loading config: %w", err)
 		}
+		flagUser, envUser := requestedUser(cmd)
 		email := cfg.DefaultUser
-		if len(args) > 0 {
+		switch {
+		case len(args) > 0:
 			email = args[0]
+		case flagUser != "":
+			email = flagUser
+		case envUser != "":
+			email = envUser
 		}
 		if email == "" {
 			return fmt.Errorf("no authenticated user — run: webex login")
@@ -163,23 +181,22 @@ when there is no terminal.`,
 		if err != nil {
 			return fmt.Errorf("no stored login for %s — run: webex login", email)
 		}
+		// The command skips token resolution, which is where read-only mode
+		// normally rejects write-capable logins.
+		if readOnlyMode(cfg) && !tok.ReadOnly {
+			return fmt.Errorf("read-only mode: %s has no read-only login; only read-only logins can be exported", email)
+		}
 		if tok.RefreshToken == "" || tok.IsRefreshExpired() {
 			return fmt.Errorf("the stored login for %s has no usable refresh token — run: webex login", email)
 		}
 
 		if !yes {
-			if !term.IsTerminal(int(os.Stdin.Fd())) || !term.IsTerminal(int(os.Stderr.Fd())) {
+			if !canPrompt() {
 				return fmt.Errorf("refusing to print a refresh token without confirmation; pass --yes")
 			}
-			var ok bool
-			err := huh.NewForm(huh.NewGroup(
-				huh.NewConfirm().
-					Title(fmt.Sprintf("Print the refresh token for %s?", email)).
-					Description("Anyone with this token can act as you until it expires.").
-					Affirmative("Print it").
-					Negative("Cancel").
-					Value(&ok),
-			)).WithOutput(os.Stderr).Run()
+			ok, err := confirm(fmt.Sprintf("Print the refresh token for %s?", email),
+				"Anyone with this token can act as you until it expires.",
+				"Print it", "Cancel")
 			if err != nil {
 				return err
 			}

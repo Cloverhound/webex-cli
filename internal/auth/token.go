@@ -34,9 +34,16 @@ func (t *StoredToken) IsRefreshExpired() bool {
 // SaveToken stores a token keyed by email, in the OS keyring when one is
 // available and in the credentials file otherwise.
 func SaveToken(email string, tok *StoredToken) error {
+	_, err := SaveTokenWithStore(email, tok)
+	return err
+}
+
+// SaveTokenWithStore stores a token like SaveToken and names the store that
+// now holds it ("keyring" or "file").
+func SaveTokenWithStore(email string, tok *StoredToken) (string, error) {
 	data, err := json.Marshal(tok)
 	if err != nil {
-		return fmt.Errorf("marshaling token: %w", err)
+		return "", fmt.Errorf("marshaling token: %w", err)
 	}
 	return storeSet(email, string(data))
 }

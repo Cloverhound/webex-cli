@@ -18,7 +18,6 @@ import (
 	"github.com/charmbracelet/huh"
 	"github.com/mdp/qrterminal/v3"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 const loginModeEnv = "WEBEX_LOGIN_MODE"
@@ -60,7 +59,7 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 		if jsonOut {
 			msg = os.Stderr
 		}
-		interactive := !jsonOut && term.IsTerminal(int(os.Stdin.Fd())) && term.IsTerminal(int(os.Stdout.Fd()))
+		interactive := !jsonOut && canPrompt()
 
 		cfg, err := appconfig.Load()
 		if err != nil {
@@ -120,10 +119,10 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 			promptStoreCredentials(&result.Token, clientID, clientSecret)
 		}
 
-		if err := auth.SaveToken(result.Email, &result.Token); err != nil {
+		store, err := auth.SaveTokenWithStore(result.Email, &result.Token)
+		if err != nil {
 			return fmt.Errorf("saving token: %w", err)
 		}
-		_, store, _ := auth.LoadTokenWithStore(result.Email)
 
 		// Update config
 		cfg.AddUser(result.Email, result.DisplayName, result.OrgID, result.OrgName)
@@ -150,7 +149,7 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 			}
 		}
 		if jsonOut {
-			_ = json.NewEncoder(os.Stdout).Encode(map[string]any{
+			out := map[string]any{
 				"status":       "logged_in",
 				"email":        result.Email,
 				"display_name": result.DisplayName,
@@ -158,7 +157,14 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 				"org_name":     result.OrgName,
 				"read_only":    readOnlyLogin,
 				"token_store":  store,
-			})
+			}
+			if readOnlyLogin {
+				out["removed_logins"] = purged
+				if purgeErr != nil {
+					out["purge_error"] = purgeErr.Error()
+				}
+			}
+			_ = json.NewEncoder(os.Stdout).Encode(out)
 		}
 		if purgeErr != nil {
 			return purgeErr
@@ -225,7 +231,7 @@ func showDeviceCode(dc *auth.DeviceCode, jsonOut bool) {
 	}
 
 	fmt.Fprintf(os.Stderr, "Open %s and enter %s\n", dc.VerificationURI, dc.UserCode)
-	if term.IsTerminal(int(os.Stderr.Fd())) {
+	if isTerminal(os.Stderr) {
 		fmt.Fprintln(os.Stderr, "Or scan this code with a phone:")
 		qrterminal.GenerateHalfBlock(link, qrterminal.L, os.Stderr)
 	}
@@ -239,7 +245,7 @@ func promptStoreCredentials(tok *auth.StoredToken, clientID, clientSecret string
 			huh.NewSelect[string]().
 				Title("Save OAuth credentials with this account?").
 				Description(
-					"Storing credentials per-account lets each user refresh tokens independently,\n" +
+					"Storing credentials per-account lets each user refresh tokens independently,\n"+
 						"even when multiple accounts are configured with different OAuth apps.",
 				).
 				Options(
@@ -248,7 +254,7 @@ func promptStoreCredentials(tok *auth.StoredToken, clientID, clientSecret string
 				).
 				Value(&choice),
 		),
-	)
+	).WithOutput(os.Stderr)
 
 	if err := form.Run(); err != nil {
 		return
@@ -282,7 +288,7 @@ func promptFolderAssociation(email, dir string) {
 				).
 				Value(&choice),
 		),
-	)
+	).WithOutput(os.Stderr)
 
 	if err := form.Run(); err != nil {
 		return

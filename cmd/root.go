@@ -17,9 +17,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "webex",
-	Short: "Webex CLI — manage Webex APIs",
-	Long:  `A command-line interface for Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.`,
+	Use:          "webex",
+	Short:        "Webex CLI — manage Webex APIs",
+	Long:         `A command-line interface for Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.`,
 	SilenceUsage: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		// Debug mode (set early so auth debug works)
@@ -74,17 +74,7 @@ var rootCmd = &cobra.Command{
 		// Resolve token
 		flagToken, _ := cmd.Flags().GetString("token")
 		envToken := os.Getenv("WEBEX_TOKEN")
-		userFlag, _ := cmd.Flags().GetString("user")
-		envUser := os.Getenv("WEBEX_USER")
-
-		// Check local folder config before falling back to global default
-		if userFlag == "" && envUser == "" {
-			if cwd, err := os.Getwd(); err == nil {
-				if lcfg, err := localconfig.Load(cwd); err == nil && lcfg != nil && lcfg.User != "" {
-					envUser = lcfg.User
-				}
-			}
-		}
+		userFlag, envUser := requestedUser(cmd)
 
 		result, err := auth.ResolveToken(flagToken, envToken, userFlag, envUser, cfg, readOnly)
 		if err != nil {
@@ -95,7 +85,7 @@ var rootCmd = &cobra.Command{
 
 		// Wire up token refresher for refreshable sources
 		switch {
-		case result.Source == auth.SourceKeyring && result.UserEmail != "":
+		case result.Source == auth.SourceStored && result.UserEmail != "":
 			config.TokenRefresher = auth.MakeRefresher(result.UserEmail, result.Token, cfg)
 		case result.Source == auth.SourceEnvRefresh:
 			config.TokenRefresher = auth.MakeEnvRefresher(result.Token, cfg)
@@ -145,6 +135,21 @@ var rootCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+// requestedUser returns the --user flag, and otherwise $WEBEX_USER or the
+// folder default. Both empty means the configured default user.
+func requestedUser(cmd *cobra.Command) (flagUser, envUser string) {
+	flagUser, _ = cmd.Flags().GetString("user")
+	envUser = os.Getenv("WEBEX_USER")
+	if flagUser == "" && envUser == "" {
+		if cwd, err := os.Getwd(); err == nil {
+			if lcfg, err := localconfig.Load(cwd); err == nil && lcfg != nil {
+				envUser = lcfg.User
+			}
+		}
+	}
+	return flagUser, envUser
 }
 
 // setRegion validates a region value and stores it for region-specific hosts.

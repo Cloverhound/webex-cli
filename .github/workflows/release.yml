@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.23"
+          go-version-file: go.mod
 
       - uses: goreleaser/goreleaser-action@v6
         with:
@@ -37,9 +37,8 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
-      # npm uses trusted publishing (OIDC) when the packages are configured for
-      # it, and falls back to NPM_TOKEN otherwise. The first publish needs the
-      # token, because trusted publishing can only be set up on existing packages.
+      # npm uses trusted publishing (OIDC), configured per package on npmjs.com
+      # for this workflow, and falls back to NPM_TOKEN only when OIDC is not set up.
       - name: Publish npm packages
         run: |
           npm install -g npm@11.6.2
