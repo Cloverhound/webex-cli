@@ -63,6 +63,9 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 
+		readOnly := readOnlyMode(cfg)
+		config.SetReadOnly(readOnly)
+
 		// Skip auth for certain commands
 		if skipAuth(cmd) {
 			return nil
@@ -83,7 +86,7 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
-		result, err := auth.ResolveToken(flagToken, envToken, userFlag, envUser, cfg)
+		result, err := auth.ResolveToken(flagToken, envToken, userFlag, envUser, cfg, readOnly)
 		if err != nil {
 			return err
 		}

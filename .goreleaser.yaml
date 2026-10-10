@@ -10,6 +10,7 @@ builds:
       - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientID={{.Env.WEBEX_CLIENT_ID}}
       - -X github.com/Cloverhound/webex-cli/internal/appconfig.DefaultClientSecret={{.Env.WEBEX_CLIENT_SECRET}}
       - "-X 'github.com/Cloverhound/webex-cli/internal/appconfig.DefaultScopes={{.Env.WEBEX_SCOPES}}'"
+      - "-X 'github.com/Cloverhound/webex-cli/internal/appconfig.DefaultReadOnlyScopes={{.Env.WEBEX_READ_ONLY_SCOPES}}'"
     goos:
       - darwin
       - linux

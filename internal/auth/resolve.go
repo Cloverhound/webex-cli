@@ -41,7 +41,15 @@ type ResolveResult struct {
 // 1. --token flag
 // 2. $WEBEX_TOKEN env
 // 3. Keyring (resolve user from --user flag → $WEBEX_USER → config default)
-func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.Config) (*ResolveResult, error) {
+//
+// In read-only mode only keyring tokens from `webex login --read-only` are accepted.
+func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.Config, readOnly bool) (*ResolveResult, error) {
+	// Webex has no public token introspection, so the scopes of a token the CLI
+	// did not obtain itself cannot be checked.
+	if readOnly && (flagToken != "" || envToken != "") {
+		return nil, fmt.Errorf("read-only mode does not accept --token or $WEBEX_TOKEN; use a stored read-only login")
+	}
+
 	// 1. Explicit --token flag
 	if flagToken != "" {
 		return &ResolveResult{Token: flagToken, Source: SourceFlag}, nil
@@ -64,9 +72,16 @@ func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.
 		return nil, fmt.Errorf("no authenticated user — run: webex login")
 	}
 
+	loginCmd := "webex login"
+	if readOnly {
+		loginCmd = "webex login --read-only"
+	}
 	tok, err := LoadToken(email)
 	if err != nil {
-		return nil, fmt.Errorf("no token for %s — run: webex login", email)
+		return nil, fmt.Errorf("no token for %s — run: %s", email, loginCmd)
+	}
+	if readOnly && !tok.ReadOnly {
+		return nil, fmt.Errorf("read-only mode: %s has no read-only login — run: %s", email, loginCmd)
 	}
 
 	// Auto-refresh if expired
@@ -76,9 +91,6 @@ func ResolveToken(flagToken, envToken, userFlag, envUser string, cfg *appconfig.
 		if err != nil {
 			return nil, fmt.Errorf("token expired for %s and refresh failed: %w\nRun: webex login", email, err)
 		}
-		// Carry per-token credentials forward into the refreshed token
-		refreshed.ClientID = tok.ClientID
-		refreshed.ClientSecret = tok.ClientSecret
 		tok = refreshed
 		// Persist the refreshed token
 		if saveErr := SaveToken(email, tok); saveErr != nil {
@@ -112,8 +124,6 @@ func MakeRefresher(email string, cfg *appconfig.Config) func() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		refreshed.ClientID = tok.ClientID
-		refreshed.ClientSecret = tok.ClientSecret
 		if saveErr := SaveToken(email, refreshed); saveErr != nil {
 			fmt.Printf("Warning: could not save refreshed token: %v\n", saveErr)
 		}

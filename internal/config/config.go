@@ -36,6 +36,12 @@ func Paginate() bool     { return paginate }
 func SetDryRun(d bool) { dryRun = d }
 func DryRun() bool     { return dryRun }
 
+var readOnly bool
+
+// SetReadOnly turns on read-only request checks for this process.
+func SetReadOnly(on bool) { readOnly = on }
+func ReadOnly() bool      { return readOnly }
+
 // SetOrgID stores the org ID in both UUID and base64 formats.
 // Accepts either format as input and derives the other.
 func SetOrgID(id string) {

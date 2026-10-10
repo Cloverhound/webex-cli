@@ -41,6 +41,8 @@ Token resolution order: `--token` flag > `WEBEX_TOKEN` env var > `--user` flag >
 
 Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
+**Read-only mode:** When `webex auth status` shows `Mode: read-only`, the stored login has read scopes only. Write requests fail with `read-only mode`, `--token`/`$WEBEX_TOKEN` are refused, and only users marked `(read-only)` in `webex auth list` can be used. Do not try to leave read-only mode or work around it; tell the user which change you need and let them decide. Leaving it requires the user to run `webex login` in an interactive terminal.
+
 ## Command Structure
 
 ```
@@ -136,6 +138,8 @@ The CLI includes a built-in MCP server exposing four tools:
 | `webex_write` | POST / PUT / PATCH / DELETE | Create, update, delete — prompts for confirmation |
 | `webex_help` | — | Discover commands and flags |
 | `webex_usage` | — | View recent MCP command history |
+
+In read-only mode the server does not register `webex_write`.
 
 **Claude Code / stdio clients** — no server process needed:
 ```bash

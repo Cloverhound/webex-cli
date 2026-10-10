@@ -134,6 +134,7 @@ See the [full refresh inventory](docs/command-inventory.md), [every renamed comm
 
 ```bash
 webex login                    # Login (opens browser)
+webex login --read-only        # Login with read scopes only and turn on read-only mode
 webex logout                   # Remove stored tokens
 webex auth status              # Show current user and token status
 webex auth list                # List all authenticated users
@@ -143,6 +144,17 @@ webex auth clear-org           # Clear the org override
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
+
+### Read-only Mode
+
+`webex login --read-only` requests only read scopes, so Webex itself rejects writes made with the token. Use it when an AI agent should read but not change your Webex data. While read-only mode is on:
+
+- Stored logins with write access are deleted from the keyring, because any program running as you can read it.
+- `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries.
+- `--token` and `$WEBEX_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
+- `webex mcp serve` does not register `webex_write`.
+
+Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. If your OAuth integration lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`.
 
 ### Organization Override
 
@@ -199,6 +211,7 @@ webex cc users list --output csv > users.csv
 webex config set client-id <id>          # Use custom OAuth client ID
 webex config set client-secret <secret>  # Use custom OAuth client secret
 webex config set scopes <scopes>         # Override OAuth scopes
+webex config set read-only-scopes <scopes>  # Override scopes for login --read-only
 webex config get client-id               # View current value
 ```
 
@@ -228,7 +241,7 @@ The server exposes 4 tools:
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`.
 
 And 2 MCP resources:
 

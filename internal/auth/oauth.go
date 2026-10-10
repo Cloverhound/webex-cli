@@ -110,7 +110,7 @@ func Login(clientID, clientSecret, scopes string) (*LoginResult, error) {
 	}
 
 	// Exchange code for tokens
-	tok, err := exchangeCode(clientID, clientSecret, code, verifier)
+	tok, err := exchangeCode(clientID, clientSecret, code, verifier, scopes)
 	if err != nil {
 		return nil, err
 	}
@@ -165,6 +165,8 @@ func RefreshAccessToken(clientID, clientSecret string, tok *StoredToken) (*Store
 		return nil, fmt.Errorf("parsing refresh response: %w", err)
 	}
 
+	// A refresh keeps the original grant, so the scopes and the per-account
+	// credentials carry over unchanged.
 	now := time.Now()
 	return &StoredToken{
 		AccessToken:  tokenResp.AccessToken,
@@ -172,6 +174,10 @@ func RefreshAccessToken(clientID, clientSecret string, tok *StoredToken) (*Store
 		ExpiresAt:    now.Add(time.Duration(tokenResp.ExpiresIn) * time.Second),
 		TokenType:    tokenResp.TokenType,
 		IssuedAt:     now,
+		ClientID:     tok.ClientID,
+		ClientSecret: tok.ClientSecret,
+		Scopes:       tok.Scopes,
+		ReadOnly:     tok.ReadOnly,
 	}, nil
 }
 
@@ -180,9 +186,10 @@ type tokenResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	ExpiresIn    int    `json:"expires_in"`
 	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
 }
 
-func exchangeCode(clientID, clientSecret, code, verifier string) (*StoredToken, error) {
+func exchangeCode(clientID, clientSecret, code, verifier, scopes string) (*StoredToken, error) {
 	form := url.Values{
 		"grant_type":    {"authorization_code"},
 		"client_id":     {clientID},
@@ -207,6 +214,10 @@ func exchangeCode(clientID, clientSecret, code, verifier string) (*StoredToken, 
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		return nil, fmt.Errorf("parsing token response: %w", err)
 	}
+	// Prefer the granted scopes when Webex reports them; otherwise record the request.
+	if tokenResp.Scope != "" {
+		scopes = tokenResp.Scope
+	}
 
 	now := time.Now()
 	return &StoredToken{
@@ -215,6 +226,7 @@ func exchangeCode(clientID, clientSecret, code, verifier string) (*StoredToken, 
 		ExpiresAt:    now.Add(time.Duration(tokenResp.ExpiresIn) * time.Second),
 		TokenType:    tokenResp.TokenType,
 		IssuedAt:     now,
+		Scopes:       scopes,
 	}, nil
 }
 

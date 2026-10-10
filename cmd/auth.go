@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
@@ -78,6 +79,16 @@ var authStatusCmd = &cobra.Command{
 
 		fmt.Printf("Source:  keyring\n")
 
+		switch {
+		case cfg.ReadOnly:
+			fmt.Println("Mode:    read-only")
+		case readOnlyEnvSet():
+			fmt.Printf("Mode:    read-only ($%s)\n", readOnlyEnv)
+		}
+		if tok.ReadOnly {
+			fmt.Printf("Scopes:  %s\n", tok.Scopes)
+		}
+
 		if tok.IsExpired() {
 			fmt.Printf("Token:   expired (at %s)\n", tok.ExpiresAt.Format(time.RFC3339))
 			if tok.IsRefreshExpired() {
@@ -142,10 +153,14 @@ var authListCmd = &cobra.Command{
 				status = "active"
 			}
 
-			marker := ""
+			var markers []string
 			if email == cfg.DefaultUser {
-				marker = "(default)"
+				markers = append(markers, "(default)")
 			}
+			if err == nil && tok.ReadOnly {
+				markers = append(markers, "(read-only)")
+			}
+			marker := strings.Join(markers, " ")
 
 			name := info.DisplayName
 			if len(name) > 20 {
@@ -177,6 +192,9 @@ var authSwitchCmd = &cobra.Command{
 
 		if _, ok := cfg.Users[email]; !ok {
 			return fmt.Errorf("user %s not found — run: webex login", email)
+		}
+		if readOnlyMode(cfg) && !auth.HasReadOnlyToken(email) {
+			return fmt.Errorf("read-only mode: %s has no read-only login — run: webex login --read-only", email)
 		}
 
 		clearedOrg := cfg.DefaultOrgName

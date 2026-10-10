@@ -104,6 +104,10 @@ func UploadMultipart(method, url string, parts []MultipartPart) ([]byte, int, er
 		}
 	}
 
+	if config.ReadOnly() {
+		return nil, 0, client.ReadOnlyError(method, url)
+	}
+
 	if config.DryRun() {
 		fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", method, url)
 		fmt.Fprintf(os.Stderr, "[DRY RUN]   Content-Type: %s\n", contentType)

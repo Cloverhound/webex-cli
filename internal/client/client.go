@@ -13,10 +13,19 @@ import (
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 )
 
 // ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
 var ErrDryRun = errors.New("dry run: no changes made")
+
+// ErrReadOnly is returned when read-only mode blocks a request.
+var ErrReadOnly = errors.New("read-only mode")
+
+// ReadOnlyError reports a request blocked by read-only mode.
+func ReadOnlyError(method, url string) error {
+	return fmt.Errorf("%w: %s %s not sent — run 'webex login' to leave read-only mode", ErrReadOnly, method, url)
+}
 
 // Do executes an HTTP request.
 // On a 401 it refreshes the token and retries once.
@@ -159,6 +168,10 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 		}
 	}
 
+	if config.ReadOnly() && !readOnlyAllows(req.method, req.path) {
+		return nil, 0, nil, ReadOnlyError(req.method, url)
+	}
+
 	// Dry-run: intercept write operations before making the HTTP call
 	if config.DryRun() && isWriteMethod(req.method) {
 		fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", req.method, url)
@@ -198,6 +211,15 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n] + "..."
+}
+
+// readOnlyAllows reports whether a request may be sent in read-only mode.
+// path is the unexpanded template, which is how query endpoints are listed.
+func readOnlyAllows(method, path string) bool {
+	if method == http.MethodPost {
+		return readonly.IsQueryPOST(path)
+	}
+	return !isWriteMethod(method)
 }
 
 // isWriteMethod returns true for HTTP methods that modify data.

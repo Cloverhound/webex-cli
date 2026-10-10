@@ -11,6 +11,7 @@ import (
 	"time"
 
 	cmd "github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/spf13/cobra"
 )
@@ -46,6 +47,9 @@ Tools:
   webex_help   Get help text for any command or command group
   webex_usage  Query the MCP usage log (recent commands, timing)
 
+In read-only mode (webex login --read-only, or WEBEX_READ_ONLY=1) the server
+does not register webex_write.
+
 Resources:
   webex://commands  JSON array of all available CLI commands
   webex://usage     Last 50 lines of the raw usage log
@@ -80,7 +84,10 @@ Usage log flags:
 			server.WithToolCapabilities(false),
 		)
 		registerResources(s, logPath)
-		registerTools(s, lg)
+		registerTools(s, lg, config.ReadOnly())
+		if config.ReadOnly() {
+			fmt.Fprintln(os.Stderr, "Read-only mode: webex_write is not available")
+		}
 
 		if flagHTTP {
 			host, _, err := net.SplitHostPort(flagHTTPAddr)
