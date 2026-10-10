@@ -36,35 +36,72 @@ func forcedStore() (string, error) {
 	}
 }
 
-func storeGet(key string) (string, string, error) {
+// selectedStores returns the stores $WEBEX_TOKEN_STORE allows, keyring first.
+func selectedStores() ([]string, error) {
 	forced, err := forcedStore()
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
+	if forced != "" {
+		return []string{forced}, nil
+	}
+	return []string{StoreKeyring, StoreFile}, nil
+}
+
+// storedCopy is the value one store holds for a key.
+type storedCopy struct {
+	store string
+	data  string
+}
+
+// readCopies returns the copies of key held by each of stores. A missing entry
+// is not an error. A keyring that fails for any other reason may still hold the
+// key, so its error is returned when no store produced a copy: reporting "not
+// found" would be a guess, and read-only purging relies on that.
+func readCopies(key string, stores []string) ([]storedCopy, error) {
+	var copies []storedCopy
 	var kerr error
-	if forced != StoreFile {
+	for _, store := range stores {
 		var data string
-		data, kerr = keyring.Get(serviceName, key)
-		if kerr == nil {
-			return data, StoreKeyring, nil
-		}
-		if forced == StoreKeyring {
-			if errors.Is(kerr, keyring.ErrNotFound) {
-				return "", "", ErrTokenNotFound
+		var err error
+		if store == StoreKeyring {
+			data, err = keyring.Get(serviceName, key)
+			if errors.Is(err, keyring.ErrNotFound) {
+				continue
 			}
-			return "", "", kerr
+			if err != nil {
+				kerr = err
+				continue
+			}
+		} else {
+			data, err = fileGet(key)
+			if errors.Is(err, ErrTokenNotFound) {
+				continue
+			}
+			if err != nil {
+				return nil, err
+			}
 		}
+		copies = append(copies, storedCopy{store: store, data: data})
 	}
-	data, err := fileGet(key)
-	// A keyring that failed for any reason but a missing entry may still hold the
-	// token, so "not found" would be a guess; read-only purging relies on that.
-	if errors.Is(err, ErrTokenNotFound) && kerr != nil && !errors.Is(kerr, keyring.ErrNotFound) {
-		return "", "", fmt.Errorf("not in the credentials file, and the keyring could not be read: %w", kerr)
+	if len(copies) == 0 {
+		if kerr != nil {
+			return nil, fmt.Errorf("the keyring could not be read: %w", kerr)
+		}
+		return nil, ErrTokenNotFound
 	}
-	if err != nil {
-		return "", "", err
+	return copies, nil
+}
+
+// deleteFrom removes key from one store.
+func deleteFrom(store, key string) error {
+	if store == StoreFile {
+		return fileDelete(key)
 	}
-	return data, StoreFile, nil
+	if err := keyring.Delete(serviceName, key); err != nil && !errors.Is(err, keyring.ErrNotFound) {
+		return err
+	}
+	return nil
 }
 
 // storeSet saves data and returns the store that now holds it.
@@ -89,8 +126,8 @@ func storeSet(key, data string) (string, error) {
 	if err := fileSetUser(key, data); err != nil {
 		return "", fmt.Errorf("keyring unavailable (%v) and file store failed: %w", kerr, err)
 	}
-	// The keyring is read first, so an older entry left there would shadow this
-	// token once the keyring works again.
+	// An older keyring entry would be a stale secret. Loading prefers the newest
+	// copy, so this matters only for cleanup and may fail while the keyring is down.
 	_ = keyring.Delete(serviceName, key)
 	return StoreFile, nil
 }

@@ -85,6 +85,30 @@ func TestPurgeWriteTokensDeletesUnreadableEntries(t *testing.T) {
 	}
 }
 
+func TestPurgeWriteTokensChecksEveryStore(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	t.Setenv(TokenStoreEnv, StoreFile)
+	if err := keyring.Set(serviceName, "ro@example.com", `{"access_token":"write"}`); err != nil {
+		t.Fatal(err)
+	}
+	saveTestToken(t, "ro@example.com", true)
+	cfg := testConfig("ro@example.com")
+
+	if _, err := PurgeWriteTokens(cfg); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := keyring.Get(serviceName, "ro@example.com"); !errors.Is(err, keyring.ErrNotFound) {
+		t.Errorf("write-capable keyring copy survived: %v", err)
+	}
+	if !HasReadOnlyToken("ro@example.com") {
+		t.Error("read-only file copy was removed")
+	}
+	if _, ok := cfg.Users["ro@example.com"]; !ok {
+		t.Error("user with a read-only login was removed from config")
+	}
+}
+
 func TestPurgeWriteTokensDeletesEnvRefreshCache(t *testing.T) {
 	keyring.MockInit()
 	t.Cleanup(func() { os.Remove(CredentialsPath()) })

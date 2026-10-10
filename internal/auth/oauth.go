@@ -200,18 +200,11 @@ func RefreshAccessToken(clientID, clientSecret string, tok *StoredToken) (*Store
 
 	// A refresh keeps the original grant, so the scopes and the per-account
 	// credentials carry over unchanged.
-	now := time.Now()
-	return &StoredToken{
-		AccessToken:  tokenResp.AccessToken,
-		RefreshToken: tokenResp.RefreshToken,
-		ExpiresAt:    now.Add(time.Duration(tokenResp.ExpiresIn) * time.Second),
-		TokenType:    tokenResp.TokenType,
-		IssuedAt:     now,
-		ClientID:     tok.ClientID,
-		ClientSecret: tok.ClientSecret,
-		Scopes:       tok.Scopes,
-		ReadOnly:     tok.ReadOnly,
-	}, nil
+	refreshed := tokenResp.storedToken(tok.Scopes)
+	refreshed.ClientID = tok.ClientID
+	refreshed.ClientSecret = tok.ClientSecret
+	refreshed.ReadOnly = tok.ReadOnly
+	return refreshed, nil
 }
 
 type tokenResponse struct {
@@ -220,6 +213,28 @@ type tokenResponse struct {
 	ExpiresIn    int    `json:"expires_in"`
 	TokenType    string `json:"token_type"`
 	Scope        string `json:"scope"`
+}
+
+// grantedScopes prefers the scopes Webex reports granting and otherwise
+// records the requested ones.
+func (tr tokenResponse) grantedScopes(requested string) string {
+	if tr.Scope != "" {
+		return tr.Scope
+	}
+	return requested
+}
+
+// storedToken converts a token response issued now.
+func (tr tokenResponse) storedToken(scopes string) *StoredToken {
+	now := time.Now()
+	return &StoredToken{
+		AccessToken:  tr.AccessToken,
+		RefreshToken: tr.RefreshToken,
+		ExpiresAt:    now.Add(time.Duration(tr.ExpiresIn) * time.Second),
+		TokenType:    tr.TokenType,
+		IssuedAt:     now,
+		Scopes:       scopes,
+	}
 }
 
 func exchangeCode(clientID, clientSecret, code, verifier, scopes string) (*StoredToken, error) {
@@ -247,20 +262,7 @@ func exchangeCode(clientID, clientSecret, code, verifier, scopes string) (*Store
 	if err := json.Unmarshal(body, &tokenResp); err != nil {
 		return nil, fmt.Errorf("parsing token response: %w", err)
 	}
-	// Prefer the granted scopes when Webex reports them; otherwise record the request.
-	if tokenResp.Scope != "" {
-		scopes = tokenResp.Scope
-	}
-
-	now := time.Now()
-	return &StoredToken{
-		AccessToken:  tokenResp.AccessToken,
-		RefreshToken: tokenResp.RefreshToken,
-		ExpiresAt:    now.Add(time.Duration(tokenResp.ExpiresIn) * time.Second),
-		TokenType:    tokenResp.TokenType,
-		IssuedAt:     now,
-		Scopes:       scopes,
-	}, nil
+	return tokenResp.storedToken(tokenResp.grantedScopes(scopes)), nil
 }
 
 type identityInfo struct {

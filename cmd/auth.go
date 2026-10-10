@@ -47,21 +47,28 @@ var authStatusCmd = &cobra.Command{
 		}
 
 		email := cfg.DefaultUser
-		if email == "" {
-			fmt.Println("No authenticated user. Run: webex login")
-			return nil
-		}
-
+		envSet := false
 		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
 			if os.Getenv(env) == "" {
 				continue
 			}
-			if readOnlyMode(cfg) {
+			envSet = true
+			switch {
+			case readOnlyMode(cfg):
 				fmt.Printf("Env:     $%s is set; read-only mode refuses it, so commands fail until it is unset\n", env)
-			} else {
+			case email == "":
+				fmt.Printf("Env:     $%s is set; commands authenticate with it\n", env)
+			default:
 				fmt.Printf("Env:     $%s is set and overrides the stored login below\n", env)
 			}
 			break
+		}
+
+		if email == "" {
+			if !envSet {
+				fmt.Println("No authenticated user. Run: webex login")
+			}
+			return nil
 		}
 
 		userInfo := cfg.Users[email]

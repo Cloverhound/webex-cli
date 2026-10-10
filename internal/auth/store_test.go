@@ -3,9 +3,11 @@ package auth
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"runtime"
 	"sync"
 	"sync/atomic"
@@ -161,6 +163,77 @@ func TestParallelRefreshRefreshesOnce(t *testing.T) {
 	stored, _ := LoadToken("a@example.com")
 	if stored.RefreshToken != "rt-1" {
 		t.Errorf("stored refresh token = %q, want rt-1", stored.RefreshToken)
+	}
+}
+
+func TestLoadTokenPrefersNewestCopy(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	encode := func(at string, issued time.Time) string {
+		data, _ := json.Marshal(StoredToken{AccessToken: at, IssuedAt: issued})
+		return string(data)
+	}
+	if err := keyring.Set(serviceName, "a@example.com", encode("stale", time.Now().Add(-time.Hour))); err != nil {
+		t.Fatal(err)
+	}
+	if err := fileSet("a@example.com", encode("fresh", time.Now())); err != nil {
+		t.Fatal(err)
+	}
+
+	got, store, err := LoadTokenWithStore("a@example.com")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.AccessToken != "fresh" || store != StoreFile {
+		t.Errorf("loaded %q from %s, want fresh from file", got.AccessToken, store)
+	}
+}
+
+func TestEnvRefreshKeepsRotatedTokenWithoutCache(t *testing.T) {
+	keyring.MockInit()
+	// A regular file where the credentials directory belongs makes every write fail.
+	blocker := filepath.Join(t.TempDir(), "blocker")
+	if err := os.WriteFile(blocker, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("XDG_CONFIG_HOME", blocker)
+
+	var mu sync.Mutex
+	valid := map[string]bool{"env-rt-nocache": true}
+	issued := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/me" {
+			w.Write([]byte(`{"emails":["svc@example.com"],"orgId":"org-1"}`))
+			return
+		}
+		r.ParseForm()
+		mu.Lock()
+		defer mu.Unlock()
+		rt := r.Form.Get("refresh_token")
+		if !valid[rt] {
+			http.Error(w, `{"error":"invalid_grant"}`, http.StatusBadRequest)
+			return
+		}
+		// Webex rotates the refresh token, and the old one stops working.
+		delete(valid, rt)
+		issued++
+		next := fmt.Sprintf("rt-%d", issued)
+		valid[next] = true
+		json.NewEncoder(w).Encode(map[string]any{
+			"access_token": fmt.Sprintf("at-%d", issued), "refresh_token": next, "expires_in": 3600,
+		})
+	}))
+	oldToken, oldMe := TokenURL, peopleMeURL
+	TokenURL, peopleMeURL = srv.URL+"/token", srv.URL+"/me"
+	t.Cleanup(func() { TokenURL, peopleMeURL = oldToken, oldMe; srv.Close() })
+
+	tok, _, _, err := EnvRefreshAccessToken("env-rt-nocache", "cid", "secret", "")
+	if err != nil || tok != "at-1" {
+		t.Fatalf("first refresh: tok=%s err=%v", tok, err)
+	}
+	tok, _, _, err = EnvRefreshAccessToken("env-rt-nocache", "cid", "secret", "at-1")
+	if err != nil || tok != "at-2" {
+		t.Fatalf("refresh after a 401: tok=%s err=%v; want at-2 from the rotated refresh token", tok, err)
 	}
 }
 

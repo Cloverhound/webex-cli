@@ -55,17 +55,42 @@ func LoadToken(email string) (*StoredToken, error) {
 }
 
 // LoadTokenWithStore retrieves the token stored for email and names the store
-// that held it ("keyring" or "file").
+// that held it ("keyring" or "file"). When both stores hold a copy, as after a
+// save fell back to the file while the keyring was down, the newest one wins.
 func LoadTokenWithStore(email string) (*StoredToken, string, error) {
-	data, store, err := storeGet(email)
+	stores, err := selectedStores()
+	if err != nil {
+		return nil, "", err
+	}
+	copies, err := readCopies(email, stores)
 	if err != nil {
 		return nil, "", fmt.Errorf("loading token for %s: %w", email, err)
 	}
+	var best *StoredToken
+	var bestStore string
+	var parseErr error
+	for _, c := range copies {
+		tok, err := decodeToken(c.data)
+		if err != nil {
+			parseErr = err
+			continue
+		}
+		if best == nil || tok.IssuedAt.After(best.IssuedAt) {
+			best, bestStore = tok, c.store
+		}
+	}
+	if best == nil {
+		return nil, "", parseErr
+	}
+	return best, bestStore, nil
+}
+
+func decodeToken(data string) (*StoredToken, error) {
 	var tok StoredToken
 	if err := json.Unmarshal([]byte(data), &tok); err != nil {
-		return nil, "", fmt.Errorf("parsing stored token: %w", err)
+		return nil, fmt.Errorf("parsing stored token: %w", err)
 	}
-	return &tok, store, nil
+	return &tok, nil
 }
 
 // DeleteToken removes the token for email from every store that holds it.

@@ -11,8 +11,10 @@ var lockTimeout = 30 * time.Second
 
 // withFileLock runs fn while holding an exclusive lock on the named file in
 // CredentialsDir, so parallel CLI processes serialize token writes and refreshes.
-// If the lock cannot be taken (read-only home, timeout), fn runs anyway: a rare
-// race is better than refusing to work.
+// When locking is impossible (read-only home, no lock support), fn runs anyway,
+// since no other process can hold the lock either. When another process holds
+// it past the timeout, fn does not run: it could reuse a single-use refresh
+// token or overwrite that process's write.
 func withFileLock(name string, fn func() error) error {
 	dir := CredentialsDir()
 	if err := os.MkdirAll(dir, 0700); err != nil {
@@ -34,8 +36,7 @@ func withFileLock(name string, fn func() error) error {
 			break
 		}
 		if time.Now().After(deadline) {
-			fmt.Fprintf(os.Stderr, "Warning: timed out waiting for %s; continuing without it\n", f.Name())
-			return fn()
+			return fmt.Errorf("timed out after %s waiting for %s; another webex process is still using it", lockTimeout, f.Name())
 		}
 		time.Sleep(50 * time.Millisecond)
 	}

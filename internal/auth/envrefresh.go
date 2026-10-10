@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -26,6 +27,13 @@ type envRefreshEntry struct {
 
 const envRefreshKeyPrefix = "env-refresh:"
 
+// envRefreshMemo holds this process's latest entry per key, so a rotated refresh
+// token outlives a failed write to the credentials file until the process exits.
+var (
+	envRefreshMu   sync.Mutex
+	envRefreshMemo = map[string]*envRefreshEntry{}
+)
+
 // The cache is keyed by a hash of the env value so a changed secret starts fresh
 // and the original value never lands on disk.
 func envRefreshKey(refreshToken string) string {
@@ -35,6 +43,9 @@ func envRefreshKey(refreshToken string) string {
 
 // DeleteEnvRefreshCache removes every cached token minted from $WEBEX_REFRESH_TOKEN.
 func DeleteEnvRefreshCache() error {
+	envRefreshMu.Lock()
+	clear(envRefreshMemo)
+	envRefreshMu.Unlock()
 	return fileDeletePrefix(envRefreshKeyPrefix)
 }
 
@@ -80,6 +91,9 @@ func EnvRefreshAccessToken(envRefresh, clientID, clientSecret, stale string) (to
 				entry.Email, entry.OrgID = id.email, id.orgID
 			}
 		}
+		envRefreshMu.Lock()
+		envRefreshMemo[key] = entry
+		envRefreshMu.Unlock()
 		if data, err := json.Marshal(entry); err == nil {
 			if err := fileSet(key, string(data)); err != nil {
 				fmt.Fprintf(os.Stderr, "Warning: could not cache the token from $%s (%v); the rotated refresh token is lost when this process exits\n", RefreshTokenEnv, err)
@@ -93,14 +107,23 @@ func EnvRefreshAccessToken(envRefresh, clientID, clientSecret, stale string) (to
 	return entry.Token.AccessToken, entry.Email, entry.OrgID, nil
 }
 
+// loadEnvRefreshEntry returns the newer of the cached entry in the credentials
+// file, which other processes may have updated, and this process's own.
 func loadEnvRefreshEntry(key string) *envRefreshEntry {
+	envRefreshMu.Lock()
+	memo := envRefreshMemo[key]
+	envRefreshMu.Unlock()
+
 	data, err := fileGet(key)
 	if err != nil {
-		return nil
+		return memo
 	}
 	var e envRefreshEntry
 	if json.Unmarshal([]byte(data), &e) != nil {
-		return nil
+		return memo
+	}
+	if memo != nil && memo.Token.IssuedAt.After(e.Token.IssuedAt) {
+		return memo
 	}
 	return &e
 }

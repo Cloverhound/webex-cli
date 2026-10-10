@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+	"time"
 )
 
 // fakeDeviceToken serves the device token endpoint, answering with responses
@@ -49,6 +50,30 @@ var granted = respond(200, `{"access_token":"at","refresh_token":"rt","expires_i
 
 func testCode(expiresIn int) *DeviceCode {
 	return &DeviceCode{DeviceCode: "dev", UserCode: "123456", ExpiresIn: expiresIn, Interval: 1}
+}
+
+func TestPollDeviceTokenStopsStalledRequestAtExpiry(t *testing.T) {
+	release := make(chan struct{})
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		select {
+		case <-release:
+		case <-time.After(5 * time.Second):
+		}
+	}))
+	defer srv.Close()
+	defer close(release)
+	old := DeviceTokenURL
+	DeviceTokenURL = srv.URL
+	defer func() { DeviceTokenURL = old }()
+
+	start := time.Now()
+	_, err := PollDeviceToken(context.Background(), "cid", "secret", testCode(100), "spark:all")
+	if err == nil || !strings.Contains(err.Error(), "expired") {
+		t.Errorf("err = %v, want the code to expire", err)
+	}
+	if elapsed := time.Since(start); elapsed > 2*time.Second {
+		t.Errorf("polling took %s; the stalled request was not cut off at expiry", elapsed)
+	}
 }
 
 func TestPollDeviceTokenPendingThenGranted(t *testing.T) {

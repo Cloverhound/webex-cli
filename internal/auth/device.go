@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -18,6 +19,10 @@ var (
 
 	pollUnit = time.Second
 )
+
+const deviceRequestTimeout = 30 * time.Second
+
+var errDeviceCodeExpired = errors.New("the login code expired before it was approved — run webex login again")
 
 // DeviceHelperRedirectURIs must be registered on the integration: Webex's device
 // approval page redirects to one of them, and which one depends on the region.
@@ -38,10 +43,15 @@ func RequestDeviceCode(clientID, scopes string) (*DeviceCode, error) {
 	if clientID == "" {
 		return nil, fmt.Errorf("client ID not configured — run: webex config set client-id <YOUR_CLIENT_ID>")
 	}
-	resp, err := http.PostForm(DeviceAuthorizeURL, url.Values{
-		"client_id": {clientID},
-		"scope":     {scopes},
-	})
+	ctx, cancel := context.WithTimeout(context.Background(), deviceRequestTimeout)
+	defer cancel()
+	form := url.Values{"client_id": {clientID}, "scope": {scopes}}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, DeviceAuthorizeURL, strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("device authorization request: %w", err)
 	}
@@ -80,20 +90,30 @@ func RequestDeviceCode(clientID, scopes string) (*DeviceCode, error) {
 // keeps polling and slow_down adds 5 seconds to the interval.
 func PollDeviceToken(ctx context.Context, clientID, clientSecret string, dc *DeviceCode, scopes string) (*StoredToken, error) {
 	interval := time.Duration(dc.Interval) * pollUnit
-	deadline := time.Now().Add(time.Duration(dc.ExpiresIn) * pollUnit)
+	parent := ctx
+	// Bounding every request by the code's expiry keeps a stalled connection from
+	// outliving the code.
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(dc.ExpiresIn)*pollUnit)
+	defer cancel()
+	expired := func() error {
+		if parent.Err() != nil {
+			return parent.Err()
+		}
+		return errDeviceCodeExpired
+	}
 
 	for {
 		select {
 		case <-ctx.Done():
-			return nil, ctx.Err()
+			return nil, expired()
 		case <-time.After(interval):
 		}
-		if time.Now().After(deadline) {
-			return nil, fmt.Errorf("the login code expired before it was approved — run webex login again")
-		}
 
-		tok, status, err := requestDeviceToken(clientID, clientSecret, dc.DeviceCode, scopes)
+		tok, status, err := requestDeviceToken(ctx, clientID, clientSecret, dc.DeviceCode, scopes)
 		if err != nil {
+			if ctx.Err() != nil {
+				return nil, expired()
+			}
 			return nil, err
 		}
 		switch status {
@@ -114,13 +134,13 @@ func PollDeviceToken(ctx context.Context, clientID, clientSecret string, dc *Dev
 
 // requestDeviceToken makes one token request. It returns the token on success,
 // or the OAuth error code for a response the caller can act on.
-func requestDeviceToken(clientID, clientSecret, deviceCode, scopes string) (*StoredToken, string, error) {
+func requestDeviceToken(ctx context.Context, clientID, clientSecret, deviceCode, scopes string) (*StoredToken, string, error) {
 	form := url.Values{
 		"grant_type":  {"urn:ietf:params:oauth:grant-type:device_code"},
 		"device_code": {deviceCode},
 		"client_id":   {clientID},
 	}
-	req, err := http.NewRequest(http.MethodPost, DeviceTokenURL, strings.NewReader(form.Encode()))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, DeviceTokenURL, strings.NewReader(form.Encode()))
 	if err != nil {
 		return nil, "", err
 	}
@@ -139,18 +159,7 @@ func requestDeviceToken(clientID, clientSecret, deviceCode, scopes string) (*Sto
 		if err := json.Unmarshal(body, &tr); err != nil {
 			return nil, "", fmt.Errorf("parsing device token response: %w", err)
 		}
-		if tr.Scope != "" {
-			scopes = tr.Scope
-		}
-		now := time.Now()
-		return &StoredToken{
-			AccessToken:  tr.AccessToken,
-			RefreshToken: tr.RefreshToken,
-			ExpiresAt:    now.Add(time.Duration(tr.ExpiresIn) * time.Second),
-			TokenType:    tr.TokenType,
-			IssuedAt:     now,
-			Scopes:       scopes,
-		}, "", nil
+		return tr.storedToken(tr.grantedScopes(scopes)), "", nil
 	}
 
 	var oauthErr struct {
