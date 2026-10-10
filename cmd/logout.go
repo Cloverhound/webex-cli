@@ -11,7 +11,7 @@ import (
 var logoutCmd = &cobra.Command{
 	Use:   "logout [email]",
 	Short: "Log out and remove stored credentials",
-	Long:  "Removes stored tokens from the OS keyring. Without arguments, removes the default user. Specify an email to remove a specific user, or --all to remove all users.",
+	Long:  "Removes stored tokens from the OS keyring and the credentials file. Without arguments, removes the default user. Specify an email to remove a specific user, or --all to remove all users and any tokens cached from $WEBEX_REFRESH_TOKEN.",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		allFlag, _ := cmd.Flags().GetBool("all")
@@ -26,6 +26,9 @@ var logoutCmd = &cobra.Command{
 				if err := auth.DeleteToken(email); err != nil {
 					fmt.Fprintf(cmd.ErrOrStderr(), "Warning: could not remove token for %s: %v\n", email, err)
 				}
+			}
+			if err := auth.DeleteEnvRefreshCache(); err != nil {
+				fmt.Fprintf(cmd.ErrOrStderr(), "Warning: could not remove cached $%s tokens: %v\n", auth.RefreshTokenEnv, err)
 			}
 			cfg.Users = make(map[string]appconfig.UserInfo)
 			cfg.DefaultUser = ""

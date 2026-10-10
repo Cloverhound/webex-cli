@@ -5,11 +5,14 @@ description: Get up and running with the Webex CLI.
 
 ## Authentication
 
-The CLI uses OAuth with tokens stored in your OS keyring.
+The CLI uses OAuth with tokens stored in your OS keyring, or in a credentials file when no keyring is available.
 
 ```bash
-# Login (opens browser)
+# Login (opens browser, or device login when there is no browser)
 webex login
+
+# Login by approving a code from any browser
+webex login --device
 
 # Check auth status
 webex auth status
@@ -27,6 +30,22 @@ You can also use a token directly:
 webex --token "$WEBEX_TOKEN" calling people list
 ```
 
+### Headless login and unattended use
+
+Over SSH, in CI, in containers, on Linux without a display, or when no browser can be opened, `webex login` switches to device login. It prints a line such as `Open https://… and enter 123456`, plus a QR code on a terminal. Approve the code from a browser on any device. Use `--browser` to force the browser flow, or set `WEBEX_LOGIN_MODE=device` or `browser`. With `--output json`, the URL, code, and expiry are printed as JSON on stdout, so an AI agent can show them to you.
+
+If you use your own OAuth integration, register these redirect URIs on it for device login: `https://oauth-helper-{a,r,k,d}.wbx2.com/helperservice/v1/actions/device/callback` (four URIs, one per letter).
+
+When no OS keyring is available, tokens are saved in plain text to `~/.config/webex-cli/credentials.json` (or `$XDG_CONFIG_HOME/webex-cli/`, or `%APPDATA%\webex-cli\` on Windows) with mode `0600`. Set `WEBEX_TOKEN_STORE=keyring` or `file` to force a store. `webex auth status` shows the store in use.
+
+For CI and unattended agents, where nobody can approve a code:
+
+- `WEBEX_TOKEN` takes a personal access token, which lasts 12 hours.
+- `WEBEX_REFRESH_TOKEN` takes a refresh token, from which the CLI mints access tokens as needed. Log in once on your own machine and run `webex auth export` to print one. If it came from your own integration, also set `WEBEX_CLIENT_ID` and `WEBEX_CLIENT_SECRET`. Refresh tokens last about 90 days from their last use. The CLI caches the access token and any rotated refresh token in the credentials file when it can write there.
+- For organization-level automation, use a service app or a bot token instead of a person's login.
+
+Token resolution order: `--token` > `WEBEX_TOKEN` > `WEBEX_REFRESH_TOKEN` > stored login.
+
 ### Read-only mode
 
 Use read-only mode when an AI agent or script should be able to read your Webex data but not change it.
@@ -37,9 +56,9 @@ webex login --read-only
 
 This login requests only read scopes (`webex config get read-only-scopes` lists them) and turns on read-only mode:
 
-- Stored logins with write access are deleted from the OS keyring. Other programs running as you can read the keyring, so leaving those logins there would let them bypass read-only mode.
+- Stored logins with write access are deleted from the OS keyring and the credentials file. Other programs running as you can read both, so leaving those logins there would let them bypass read-only mode.
 - `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries. Webex also rejects writes because the token has no write scopes.
-- `--token` and `$WEBEX_TOKEN` are refused, because the CLI cannot check the scopes of a token it did not create.
+- `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, because the CLI cannot check the scopes of a token it did not create.
 - `auth switch`, `--user`, and folder defaults work only for users who logged in with `--read-only`.
 - `webex mcp serve` does not register the `webex_write` tool.
 

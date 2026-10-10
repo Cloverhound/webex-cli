@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write # npm trusted publishing and provenance
 
 jobs:
   release:
@@ -18,7 +19,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.23"
+          go-version-file: go.mod
 
       - uses: goreleaser/goreleaser-action@v6
         with:
@@ -30,3 +31,18 @@ jobs:
           WEBEX_CLIENT_SECRET: ${{ secrets.WEBEX_CLIENT_SECRET }}
           WEBEX_SCOPES: ${{ secrets.WEBEX_SCOPES }}
           WEBEX_READ_ONLY_SCOPES: ${{ secrets.WEBEX_READ_ONLY_SCOPES }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      # npm uses trusted publishing (OIDC), configured per package on npmjs.com
+      # for this workflow, and falls back to NPM_TOKEN only when OIDC is not set up.
+      - name: Publish npm packages
+        run: |
+          npm install -g npm@11.6.2
+          node npm/stage.mjs --dist dist --out npm/build
+          sh npm/publish.sh npm/build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -81,6 +82,52 @@ func TestPurgeWriteTokensDeletesUnreadableEntries(t *testing.T) {
 	}
 	if _, err := keyring.Get(serviceName, "corrupt@example.com"); !errors.Is(err, keyring.ErrNotFound) {
 		t.Errorf("unreadable entry still in keyring: %v", err)
+	}
+}
+
+func TestPurgeWriteTokensChecksEveryStore(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	t.Setenv(TokenStoreEnv, StoreFile)
+	if err := keyring.Set(serviceName, "ro@example.com", `{"access_token":"write"}`); err != nil {
+		t.Fatal(err)
+	}
+	saveTestToken(t, "ro@example.com", true)
+	cfg := testConfig("ro@example.com")
+
+	if _, err := PurgeWriteTokens(cfg); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := keyring.Get(serviceName, "ro@example.com"); !errors.Is(err, keyring.ErrNotFound) {
+		t.Errorf("write-capable keyring copy survived: %v", err)
+	}
+	if !HasReadOnlyToken("ro@example.com") {
+		t.Error("read-only file copy was removed")
+	}
+	if _, ok := cfg.Users["ro@example.com"]; !ok {
+		t.Error("user with a read-only login was removed from config")
+	}
+}
+
+func TestPurgeWriteTokensDeletesEnvRefreshCache(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	cached := envRefreshKey("env-rt")
+	if err := fileSet(cached, `{"token":{"refresh_token":"rotated"}}`); err != nil {
+		t.Fatal(err)
+	}
+	if err := fileSet("file@example.com", `{"read_only":true}`); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := PurgeWriteTokens(testConfig("file@example.com")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := fileGet(cached); !errors.Is(err, ErrTokenNotFound) {
+		t.Errorf("env refresh cache still in the credentials file: %v", err)
+	}
+	if !HasReadOnlyToken("file@example.com") {
+		t.Error("read-only login in the credentials file was removed")
 	}
 }
 

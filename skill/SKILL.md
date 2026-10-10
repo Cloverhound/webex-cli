@@ -19,7 +19,7 @@ webex
 
 ## Authentication
 
-The CLI supports OAuth login with tokens stored in the OS keyring.
+The CLI supports OAuth login with tokens stored in the OS keyring, or in a credentials file when no keyring is available.
 
 ```bash
 webex auth status                        # Show current user, org, token expiry
@@ -29,19 +29,22 @@ webex auth set-folder-default <email>    # Set default user for current folder
 webex auth clear-folder-default          # Remove folder default
 webex auth set-org <orgId>               # Set a persistent org override (partner admins)
 webex auth clear-org                     # Clear the org override
-webex login                              # OAuth login (opens browser)
+webex login                              # OAuth login (opens browser, or device login when headless)
+webex login --device --output json       # Device login; prints the URL and code as JSON
 webex logout [email]                     # Remove stored credentials
 ```
 
-If not logged in, use `--token <TOKEN>` or set `$WEBEX_TOKEN`.
+If not logged in, use `--token <TOKEN>` or set `$WEBEX_TOKEN` or `$WEBEX_REFRESH_TOKEN`.
+
+**Logging in from an agent:** In a sandbox, over SSH, or wherever no browser can reach the CLI, run `webex login --device --output json` in the background. Its first JSON line has `verification_uri` and `user_code`, and the same text appears on stderr as `Open <url> and enter <code>`. Relay that line to the user word for word, and tell them the code expires in about 5 minutes. The user approves in their own browser. The command exits after approval and prints a second JSON line with `"status":"logged_in"`.
 
 **Per-folder defaults:** Different folders can be associated with different Webex users via `auth set-folder-default`. When a folder default is set, that user's credentials are used automatically when running commands from that directory. This is useful when different project folders connect to different Webex orgs.
 
-Token resolution order: `--token` flag > `WEBEX_TOKEN` env var > `--user` flag > `WEBEX_USER` env var > folder default (`.webex-cli/config.json`) > global default > OS keyring.
+Token resolution order: `--token` flag > `WEBEX_TOKEN` env var > `WEBEX_REFRESH_TOKEN` env var > `--user` flag > `WEBEX_USER` env var > folder default (`.webex-cli/config.json`) > global default > stored login.
 
 Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
-**Read-only mode:** When `webex auth status` shows `Mode: read-only`, the stored login has read scopes only. Write requests fail with `read-only mode`, `--token`/`$WEBEX_TOKEN` are refused, and only users marked `(read-only)` in `webex auth list` can be used. Do not try to leave read-only mode or work around it; tell the user which change you need and let them decide. Leaving it requires the user to run `webex login` in an interactive terminal.
+**Read-only mode:** When `webex auth status` shows `Mode: read-only`, the stored login has read scopes only. Write requests fail with `read-only mode`, `--token`/`$WEBEX_TOKEN`/`$WEBEX_REFRESH_TOKEN` are refused, and only users marked `(read-only)` in `webex auth list` can be used. Do not try to leave read-only mode or work around it; tell the user which change you need and let them decide. Leaving it requires the user to run `webex login` in an interactive terminal.
 
 ## Command Structure
 

@@ -42,9 +42,9 @@ type Params struct {
 	TimeComparator string
 	Filter         string // pre-built GraphQL filter string (from BuildFilter)
 	Fields         string // raw GraphQL field selection (overrides default)
-	Cursor      string
-	PageSize    int
-	CurrentPage int
+	Cursor         string
+	PageSize       int
+	CurrentPage    int
 	Aggregations   []Aggregation
 	Interval       string
 	Timezone       string

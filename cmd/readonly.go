@@ -6,8 +6,6 @@ import (
 	"strconv"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
-	"github.com/charmbracelet/huh"
-	"golang.org/x/term"
 )
 
 const readOnlyEnv = "WEBEX_READ_ONLY"
@@ -31,21 +29,13 @@ func confirmLeaveReadOnly() error {
 	if readOnlyEnvSet() {
 		return fmt.Errorf("$%s is set; unset it to log in with write access", readOnlyEnv)
 	}
-	if !term.IsTerminal(int(os.Stdin.Fd())) || !term.IsTerminal(int(os.Stdout.Fd())) {
+	if !canPrompt() {
 		return fmt.Errorf("read-only mode is on; leaving it requires 'webex login' from an interactive terminal")
 	}
 
-	var leave bool
-	err := huh.NewForm(
-		huh.NewGroup(
-			huh.NewConfirm().
-				Title("Leave read-only mode?").
-				Description("This logs in with write access. Only continue if you started this login yourself.").
-				Affirmative("Leave read-only mode").
-				Negative("Cancel").
-				Value(&leave),
-		),
-	).Run()
+	leave, err := confirm("Leave read-only mode?",
+		"This logs in with write access. Only continue if you started this login yourself.",
+		"Leave read-only mode", "Cancel")
 	if err != nil {
 		return err
 	}
