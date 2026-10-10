@@ -131,13 +131,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/{trunkId}/usagePstnConnection")
 				req.PathParam("trunkId", trunkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -162,13 +155,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/{trunkId}/usageRouteGroup")
 				req.PathParam("trunkId", trunkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -193,13 +179,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/{trunkId}/usage")
 				req.PathParam("trunkId", trunkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -383,13 +362,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/dialPlans/{dialPlanId}")
 				req.PathParam("dialPlanId", dialPlanId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -636,13 +608,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/{trunkId}")
 				req.PathParam("trunkId", trunkId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -741,6 +706,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/trunkTypes")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -839,13 +805,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/routeGroups/{routeGroupId}")
 				req.PathParam("routeGroupId", routeGroupId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -929,13 +888,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/routeGroups/{routeGroupId}/usage")
 				req.PathParam("routeGroupId", routeGroupId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1241,13 +1193,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/routeLists/{routeListId}")
 				req.PathParam("routeListId", routeListId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1525,13 +1470,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/callRouting/translationPatterns/{translationId}")
 				req.PathParam("translationId", translationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1672,13 +1610,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("translationId", translationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

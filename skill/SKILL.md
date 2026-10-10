@@ -270,6 +270,8 @@ webex admin people list --paginate
 webex meetings recordings list --paginate
 ```
 
+`--paginate` sets the page size itself (100 per request), so `--page-size`, `--size` and `--max` have no effect with it. Commands that return a single object ignore it. It follows `Link: rel="next"` headers where the API sends them. Known gaps: `cc tasks get` and the Slido `list-compliance-events` commands return only the first page.
+
 Or paginate manually (CC):
 ```bash
 webex cc entry-point list --page=0 --page-size=100

@@ -37,6 +37,7 @@ func init() {
 				req.QueryParam("personId", personId)
 				req.QueryParam("personEmail", personEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -106,13 +107,6 @@ func init() {
 			Long:  `Epoch-based expiration time for the token.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/authorizations/tokenExpiry")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

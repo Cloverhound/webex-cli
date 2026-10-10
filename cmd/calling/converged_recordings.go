@@ -67,6 +67,7 @@ func init() {
 				req.QueryParam("topic", topic)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -137,6 +138,7 @@ func init() {
 				req.QueryParam("topic", topic)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -178,13 +180,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/convergedRecordings/{recordingId}")
 				req.PathParam("recordingId", recordingId)
 				req.Header("timezone", timezone)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -248,13 +243,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/convergedRecordings/{recordingId}/metadata")
 				req.PathParam("recordingId", recordingId)
 				req.QueryParam("showAllTypes", showAllTypes)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

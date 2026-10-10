@@ -66,13 +66,6 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				req.PathParam("activityName", activityName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -109,13 +102,6 @@ func init() {
 				req.QueryParam("validate", validate)
 				req.QueryParam("parentValue", parentValue)
 				req.QueryParam("parentInputName", parentInputName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

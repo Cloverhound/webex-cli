@@ -52,6 +52,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 				req.QueryParam("beforeMessage", beforeMessage)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -116,6 +117,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 				req.QueryParam("personId", personId)
 				req.QueryParam("personEmail", personEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -186,13 +188,6 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/messages/{messageId}")
 				req.PathParam("messageId", messageId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

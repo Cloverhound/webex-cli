@@ -70,13 +70,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/contacts/organizations/{orgid}/contacts/{contactId}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("contactId", contactId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -171,6 +164,7 @@ func init() {
 				req.QueryParam("groupIds", groupIds)
 				req.QueryParam("groupIds", groupIds)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

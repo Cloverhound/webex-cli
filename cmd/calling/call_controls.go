@@ -786,6 +786,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls")
 				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -814,13 +815,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/{callId}")
 				req.PathParam("callId", callId)
 				req.QueryParam("lineOwnerId", lineOwnerId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -844,6 +838,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/history")
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -999,6 +994,7 @@ func init() {
 				req.PathParam("memberId", memberId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1031,13 +1027,6 @@ func init() {
 				req.PathParam("memberId", memberId)
 				req.PathParam("callId", callId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

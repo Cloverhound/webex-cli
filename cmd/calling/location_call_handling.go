@@ -77,13 +77,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/internalDialing")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -143,13 +136,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/intercept")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -213,13 +199,6 @@ Retrieving a location's outgoing call settings requires a full, user or read-onl
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/outgoingPermission")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -283,13 +262,6 @@ Updating a location's outgoing call settings requires a full administrator or lo
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/outgoingPermission/autoTransferNumbers")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -359,13 +331,6 @@ Updating a location's outgoing call settings requires a full administrator or lo
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/outgoingPermission/accessCodes")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -492,13 +457,6 @@ Creating an access code for the given location requires a full or user administr
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/outgoingPermission/digitPatterns")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -597,13 +555,6 @@ Creating an access code for the given location requires a full or user administr
 				req.PathParam("locationId", locationId)
 				req.PathParam("digitPatternId", digitPatternId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

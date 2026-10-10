@@ -41,13 +41,6 @@ To obtain the Node ID needed for this API, use the [Get cluster details API](</d
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/testResults/nodes/{nodeId}/networkTest")
 				req.PathParam("nodeId", nodeId)
 				req.QueryParam("triggerType", triggerType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -71,13 +64,6 @@ To obtain the Cluster ID needed for this API, use the [Get organization details 
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}")
 				req.PathParam("clusterId", clusterId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -100,13 +86,6 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}")
 				req.PathParam("organizationId", organizationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -129,13 +108,6 @@ To obtain the Node ID needed for this API, use the [Get cluster details API](</d
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/nodes/{nodeId}")
 				req.PathParam("nodeId", nodeId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -158,13 +130,6 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/database/details")
 				req.PathParam("organizationId", organizationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -187,13 +152,6 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/multiTenant")
 				req.PathParam("organizationId", organizationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -228,13 +186,6 @@ To obtain the Cluster ID needed for this API, use the [Get organization details 
 				req.PathParam("clusterId", clusterId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -261,13 +212,6 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/database")
 				req.PathParam("organizationId", organizationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -292,6 +236,7 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/tenants")
 				req.PathParam("organizationId", organizationId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -321,6 +266,7 @@ To obtain the Cluster ID needed for this API, use the [List clusters for an HDS 
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}/nodes")
 				req.PathParam("clusterId", clusterId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -350,6 +296,7 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/clusters")
 				req.PathParam("organizationId", organizationId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -390,13 +337,6 @@ To obtain the Node ID needed for this API, use the [List nodes for an HDS cluste
 				req.PathParam("nodeId", nodeId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -434,13 +374,6 @@ To obtain the Node ID needed for this API, use the [List nodes for an HDS cluste
 				req.PathParam("nodeId", nodeId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

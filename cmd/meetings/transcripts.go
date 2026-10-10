@@ -55,6 +55,7 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -102,6 +103,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -136,13 +138,6 @@ func init() {
 				req.PathParam("transcriptId", transcriptId)
 				req.QueryParam("format", format)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -169,6 +164,7 @@ func init() {
 				req.PathParam("transcriptId", transcriptId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -199,13 +195,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingTranscripts/{transcriptId}/snippets/{snippetId}")
 				req.PathParam("transcriptId", transcriptId)
 				req.PathParam("snippetId", snippetId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

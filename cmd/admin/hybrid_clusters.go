@@ -35,6 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hybrid/clusters")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -63,13 +64,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hybrid/clusters/{hybridClusterId}")
 				req.PathParam("hybridClusterId", hybridClusterId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

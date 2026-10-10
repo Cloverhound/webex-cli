@@ -35,6 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/teams")
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -100,13 +101,6 @@ The authenticated user is automatically added as a member of the team. See the [
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/teams/{teamId}")
 				req.PathParam("teamId", teamId)
 				req.QueryParam("description", description)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

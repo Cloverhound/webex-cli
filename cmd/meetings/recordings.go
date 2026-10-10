@@ -71,6 +71,7 @@ func init() {
 				req.QueryParam("status", status)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -138,6 +139,7 @@ func init() {
 				req.QueryParam("status", status)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -202,13 +204,6 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.Header("timezone", timezone)
 				req.Header("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -467,6 +462,7 @@ func init() {
 				req.Header("timezone", timezone)
 				req.Header("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -509,13 +505,6 @@ func init() {
 				req.QueryParam("personId", personId)
 				req.Header("timezone", timezone)
 				req.Header("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

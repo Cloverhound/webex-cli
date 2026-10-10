@@ -43,6 +43,7 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -105,13 +106,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/locations/{locationId}")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -194,6 +188,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/locations/{locationId}/floors")
 				req.PathParam("locationId", locationId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -262,13 +257,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/locations/{locationId}/floors/{floorId}")
 				req.PathParam("locationId", locationId)
 				req.PathParam("floorId", floorId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

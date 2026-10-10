@@ -145,13 +145,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -45,6 +45,7 @@ Use query parameters to filter the response.`,
 				req.QueryParam("status", status)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -75,13 +76,6 @@ Use query parameters to filter the response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/resourceGroup/memberships/{resourceGroupMembershipId}")
 				req.PathParam("resourceGroupMembershipId", resourceGroupMembershipId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -164,6 +158,7 @@ Use query parameters to filter the response.`,
 				req.QueryParam("type", typeVal)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

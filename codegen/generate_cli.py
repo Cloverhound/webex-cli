@@ -238,6 +238,34 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     return '\n'.join(lines) + '\n'
 
 
+def pagination_hints(cmd_name, query_names, is_calling):
+    """Return the Go calls that configure --paginate for a GET, or None when
+    the endpoint has no paging parameters and is not a list (a single-object
+    GET would otherwise print only an array pulled out of it)."""
+    is_list = cmd_name == 'list' or cmd_name.startswith('list-')
+    if not is_calling:
+        if not is_list and not query_names & {'page', 'pageSize', 'size'}:
+            return None
+        hints = []
+        if 'size' in query_names and 'pageSize' not in query_names:
+            hints.append('req.PageSizeParam("size")')
+        # Without it the flow store returns a bare array with no page count.
+        if 'includePagination' in query_names:
+            hints.append('req.QueryParam("includePagination", "true")')
+        return hints
+    if {'start', 'max'} <= query_names:
+        return []
+    if {'offset', 'max'} <= query_names:
+        return ['req.OffsetPaging("offset", "max", 0)']
+    if {'startIndex', 'count'} <= query_names:
+        return ['req.OffsetPaging("startIndex", "count", 1)']
+    if 'max' in query_names:
+        return ['req.OffsetPaging("", "max", 0)']
+    if is_list:
+        return ['req.OffsetPaging("", "", 0)']
+    return None
+
+
 def generate_command(ep, group_var, base_url_expr, is_calling):
     """Generate Go source for one command within a group's init()."""
     lines = []
@@ -427,9 +455,12 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
         lines.append(f'{indent3}}}')
 
     # Pagination-aware Do for GET commands
-    if method == 'GET':
+    paging_hints = pagination_hints(cmd_name, {p['name'] for p in query_params}, is_calling) if method == 'GET' else None
+    if paging_hints is not None:
         is_calling_go = 'true' if is_calling else 'false'
         lines.append(f'{indent3}if config.Paginate() {{')
+        for hint in paging_hints:
+            lines.append(f'{indent3}\t{hint}')
         lines.append(f'{indent3}\tresp, statusCode, err := req.DoPaginated({is_calling_go})')
         lines.append(f'{indent3}\tif err != nil {{')
         lines.append(f'{indent3}\t\treturn err')

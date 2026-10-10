@@ -44,13 +44,6 @@ func init() {
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				req.PathParam("flowId", flowId)
 				req.QueryParam("version", version)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -125,6 +118,8 @@ func init() {
 				req.QueryParam("includePagination", includePagination)
 				req.QueryParam("isValidation", isValidation)
 				if config.Paginate() {
+					req.PageSizeParam("size")
+					req.QueryParam("includePagination", "true")
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -348,13 +343,6 @@ func init() {
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				req.PathParam("flowId", flowId)
 				req.QueryParam("flowType", flowType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -472,13 +460,6 @@ func init() {
 				req.PathParam("flowId", flowId)
 				req.QueryParam("versionId", versionId)
 				req.QueryParam("flowType", flowType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -511,13 +492,6 @@ func init() {
 				req.PathParam("flowId", flowId)
 				req.QueryParam("version", version)
 				req.QueryParam("flowType", flowType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -555,6 +529,7 @@ func init() {
 				req.QueryParam("size", size)
 				req.QueryParam("keyValueFilter", keyValueFilter)
 				if config.Paginate() {
+					req.PageSizeParam("size")
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
