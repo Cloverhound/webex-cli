@@ -150,7 +150,7 @@ Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > OS keyring.
 `webex login --read-only` requests only read scopes, so Webex itself rejects writes made with the token. Use it when an AI agent should read but not change your Webex data. While read-only mode is on:
 
 - Stored logins with write access are deleted from the keyring, because any program running as you can read it.
-- `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for read actions such as `list`, `get`, `search`, and `query`.
+- `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries.
 - `--token` and `$WEBEX_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.
 

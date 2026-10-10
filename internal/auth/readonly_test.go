@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"strings"
 	"testing"
 	"time"
@@ -61,6 +62,45 @@ func TestPurgeWriteTokens(t *testing.T) {
 	}
 	if _, ok := cfg.Users["gone@example.com"]; !ok {
 		t.Error("user without a token should be left alone")
+	}
+}
+
+func TestPurgeWriteTokensDeletesUnreadableEntries(t *testing.T) {
+	keyring.MockInit()
+	cfg := testConfig("corrupt@example.com")
+	if err := keyring.Set(serviceName, "corrupt@example.com", "not json"); err != nil {
+		t.Fatal(err)
+	}
+
+	removed, err := PurgeWriteTokens(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Join(removed, ",") != "corrupt@example.com" {
+		t.Errorf("removed = %v", removed)
+	}
+	if _, err := keyring.Get(serviceName, "corrupt@example.com"); !errors.Is(err, keyring.ErrNotFound) {
+		t.Errorf("unreadable entry still in keyring: %v", err)
+	}
+}
+
+func TestPurgeWriteTokensReportsKeyringErrors(t *testing.T) {
+	keyring.MockInitWithError(errors.New("keychain locked"))
+	defer keyring.MockInit()
+	cfg := testConfig("locked@example.com")
+
+	removed, err := PurgeWriteTokens(cfg)
+	if err == nil {
+		t.Fatal("expected error when the keyring cannot be read or cleared")
+	}
+	if !strings.Contains(err.Error(), "locked@example.com") {
+		t.Errorf("error does not name the user: %v", err)
+	}
+	if len(removed) != 0 {
+		t.Errorf("removed = %v, want none", removed)
+	}
+	if _, ok := cfg.Users["locked@example.com"]; !ok {
+		t.Error("user removed from config although its token could not be deleted")
 	}
 }
 

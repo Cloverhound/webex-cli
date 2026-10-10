@@ -3,6 +3,7 @@ package readonly
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -95,6 +96,38 @@ func ValidateScopes(scopes string) error {
 		return fmt.Errorf("not read-only scopes: %s", strings.Join(bad, ", "))
 	}
 	return nil
+}
+
+// queryPOSTPaths are POST endpoints that only read: Webex takes their filters
+// in the request body. Read-only mode blocks every other POST, because a
+// command's verb does not prove an endpoint is safe (`calling call-controls
+// get` POSTs to /telephony/calls/retrieve, which picks up a parked call).
+var queryPOSTPaths = []string{
+	"/admin/recordings/query",
+	"/recordings/query",
+	"/generated-summaries/search",
+	"/livemonitoring/liveMeetingsByCountry",
+	"/meetingParticipants/query",
+	"/meetings/{meetingId}/registrants/query",
+	"/meetings/{meetingId}/surveyLinks",
+	"/organization/{orgid}/contact-service-queue/fetch-by-dynamic-skills-and-skillProfile",
+	"/organization/{orgid}/contact-service-queue/fetch-by-userId-skillProfileId",
+	"/organization/{orgid}/contact-service-queue/fetch-manually-assignable-queues",
+	"/organization/{orgid}/user/fetch-by-skill-requirements",
+	"/organization/{orgid}/user/fetch-user-details-by-ids",
+	"/organization/{orgid}/v2/contact-service-queue/fetch-by-grouped-assistant-skill",
+	"/search",
+	"/summary/list",
+	"/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke",
+	"/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
+	"/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
+	"/v1/captures/query",
+	"/v1/{orgid}/functions/{id}:export",
+}
+
+// IsQueryPOST reports whether a POST to the path template only reads data.
+func IsQueryPOST(path string) bool {
+	return slices.Contains(queryPOSTPaths, path)
 }
 
 // readActions are command verbs (and their hyphenated variants) that only read data.

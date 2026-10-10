@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/internal/readonly"
 )
 
 // ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
@@ -167,7 +168,7 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 		}
 	}
 
-	if !config.ReadOnlyAllows(req.method) {
+	if config.ReadOnly() && !readOnlyAllows(req.method, req.path) {
 		return nil, 0, nil, ReadOnlyError(req.method, url)
 	}
 
@@ -210,6 +211,15 @@ func truncate(s string, n int) string {
 		return s
 	}
 	return s[:n] + "..."
+}
+
+// readOnlyAllows reports whether a request may be sent in read-only mode.
+// path is the unexpanded template, which is how query endpoints are listed.
+func readOnlyAllows(method, path string) bool {
+	if method == http.MethodPost {
+		return readonly.IsQueryPOST(path)
+	}
+	return !isWriteMethod(method)
 }
 
 // isWriteMethod returns true for HTTP methods that modify data.

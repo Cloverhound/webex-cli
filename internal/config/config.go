@@ -36,33 +36,11 @@ func Paginate() bool     { return paginate }
 func SetDryRun(d bool) { dryRun = d }
 func DryRun() bool     { return dryRun }
 
-var (
-	readOnly          bool
-	readOnlyPOSTQuery bool
-)
+var readOnly bool
 
-// SetReadOnly turns on read-only request checks for this process. postIsQuery
-// allows POST for commands whose verb marks them as reads: several Webex
-// search and list endpoints take their filters in a POST body.
-func SetReadOnly(on, postIsQuery bool) {
-	readOnly = on
-	readOnlyPOSTQuery = on && postIsQuery
-}
-func ReadOnly() bool { return readOnly }
-
-// ReadOnlyAllows reports whether an HTTP method may be sent in the current mode.
-func ReadOnlyAllows(method string) bool {
-	if !readOnly {
-		return true
-	}
-	switch strings.ToUpper(method) {
-	case "GET", "HEAD", "OPTIONS":
-		return true
-	case "POST":
-		return readOnlyPOSTQuery
-	}
-	return false
-}
+// SetReadOnly turns on read-only request checks for this process.
+func SetReadOnly(on bool) { readOnly = on }
+func ReadOnly() bool      { return readOnly }
 
 // SetOrgID stores the org ID in both UUID and base64 formats.
 // Accepts either format as input and derives the other.

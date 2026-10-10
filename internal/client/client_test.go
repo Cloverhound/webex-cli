@@ -16,14 +16,21 @@ func TestReadOnlyBlocksWritesBeforeSending(t *testing.T) {
 		w.Write([]byte(`{}`))
 	}))
 	defer srv.Close()
-	defer config.SetReadOnly(false, false)
+	defer config.SetReadOnly(false)
 
-	config.SetReadOnly(true, true)
+	config.SetReadOnly(true)
 
-	for _, method := range []string{"PUT", "PATCH", "DELETE"} {
-		_, _, err := Do(NewRequest(srv.URL, method, "/things/1"))
+	blocked := []struct{ method, path string }{
+		{"PUT", "/things/1"},
+		{"PATCH", "/things/1"},
+		{"DELETE", "/things/1"},
+		{"POST", "/things"},
+		{"POST", "/telephony/calls/retrieve"},
+	}
+	for _, b := range blocked {
+		_, _, err := Do(NewRequest(srv.URL, b.method, b.path))
 		if !errors.Is(err, ErrReadOnly) {
-			t.Errorf("%s: got err %v, want ErrReadOnly", method, err)
+			t.Errorf("%s %s: got err %v, want ErrReadOnly", b.method, b.path, err)
 		}
 	}
 	if hits != 0 {
@@ -33,15 +40,17 @@ func TestReadOnlyBlocksWritesBeforeSending(t *testing.T) {
 	if _, _, err := Do(NewRequest(srv.URL, "GET", "/things")); err != nil {
 		t.Fatalf("GET: %v", err)
 	}
-	if _, _, err := Do(NewRequest(srv.URL, "POST", "/search")); err != nil {
+	req := NewRequest(srv.URL, "POST", "/meetings/{meetingId}/registrants/query")
+	req.PathParam("meetingId", "m1")
+	if _, _, err := Do(req); err != nil {
 		t.Fatalf("query POST: %v", err)
-	}
-
-	config.SetReadOnly(true, false)
-	if _, _, err := Do(NewRequest(srv.URL, "POST", "/things")); !errors.Is(err, ErrReadOnly) {
-		t.Fatalf("write POST: got err %v, want ErrReadOnly", err)
 	}
 	if hits != 2 {
 		t.Fatalf("server hits = %d, want 2", hits)
+	}
+
+	config.SetReadOnly(false)
+	if _, _, err := Do(NewRequest(srv.URL, "DELETE", "/things/1")); err != nil {
+		t.Fatalf("DELETE outside read-only mode: %v", err)
 	}
 }

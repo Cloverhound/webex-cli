@@ -13,7 +13,6 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/localconfig"
 	"github.com/Cloverhound/webex-cli/internal/output"
-	"github.com/Cloverhound/webex-cli/internal/readonly"
 	"github.com/spf13/cobra"
 )
 
@@ -65,7 +64,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		readOnly := readOnlyMode(cfg)
-		config.SetReadOnly(readOnly, readonly.IsReadAction(cmd.Name()))
+		config.SetReadOnly(readOnly)
 
 		// Skip auth for certain commands
 		if skipAuth(cmd) {
