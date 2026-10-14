@@ -8,16 +8,17 @@ import (
 
 // Request builds an HTTP request for the Webex API.
 type Request struct {
-	method          string
-	baseURL         string
-	path            string
-	pathParams      map[string]string
-	queryParams     map[string]string
-	headers         map[string]string
-	bodyJSON        map[string]any
-	bodyRaw         string
-	bodyContentType string
-	bodySummary     string
+	method      string
+	baseURL     string
+	path        string
+	pathParams  map[string]string
+	queryParams map[string]string
+	headers     map[string]string
+	bodyJSON    map[string]any
+	bodyRaw     string
+
+	// Multipart bodies override the JSON content type and log a safe summary.
+	bodyContentType, bodySummary string
 }
 
 // NewRequest creates a new request with the given method and path.

@@ -3,9 +3,7 @@ package messaging
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/Cloverhound/webex-cli/internal/client"
@@ -21,7 +19,8 @@ func newMessageCreateCommand() *cobra.Command {
 	c := &cobra.Command{
 		Use: "create", Short: "Create a Message",
 		Long: `Send a message, optionally with one remote URL or local file in the JSON files array.
-Local files are uploaded as multipart/form-data; HTTP(S) URLs retain the JSON request.
+Entries starting with http:// or https:// keep the JSON request; any other entry is a
+local path uploaded as multipart/form-data.
 Relative attachment paths resolve against the current working directory, not the body file.
 Local uploads accept string-valued message fields and one regular file up to 100 MiB.
 
@@ -29,23 +28,7 @@ Examples:
   webex messaging messages create --body '{"toPersonEmail":"user@example.com","files":["./guide.md"]}'
   webex messaging messages create --body-file message.json --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
-			raw := bodyRaw
-			if bodyFile != "" {
-				b, err := os.ReadFile(bodyFile)
-				if err != nil {
-					return fmt.Errorf("reading body file: %w", err)
-				}
-				raw = string(b)
-			}
-			req, err := messageCreateRequest(raw)
-			if err != nil {
-				return err
-			}
-			resp, status, err := req.Do()
-			if err != nil {
-				return err
-			}
-			return output.Print(resp, status)
+			return createMessage(config.CallingBaseURL, bodyRaw, bodyFile)
 		},
 	}
 	c.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
@@ -53,25 +36,39 @@ Examples:
 	return c
 }
 
-var attachmentScheme = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9+.-]*:`)
+func createMessage(baseURL, raw, bodyFile string) error {
+	if bodyFile != "" {
+		b, err := os.ReadFile(bodyFile)
+		if err != nil {
+			return fmt.Errorf("reading body file: %w", err)
+		}
+		raw = string(b)
+	}
+	req, err := messageCreateRequest(baseURL, raw)
+	if err != nil {
+		return err
+	}
+	resp, status, err := req.Do()
+	if err != nil {
+		return err
+	}
+	return output.Print(resp, status)
+}
 
-func messageCreateRequest(raw string) (*client.Request, error) {
+func messageCreateRequest(baseURL, raw string) (*client.Request, error) {
 	var fields map[string]json.RawMessage
 	if err := json.Unmarshal([]byte(raw), &fields); err != nil || fields == nil {
 		return nil, fmt.Errorf("message body must be a JSON object")
 	}
-	req := client.NewRequest(config.CallingBaseURL, "POST", "/messages")
+	req := client.NewRequest(baseURL, "POST", "/messages")
 	req.SetBodyRaw(raw)
-	value, ok := fields["files"]
-	if !ok {
-		return req, nil
-	}
 	var files []string
-	if string(value) == "null" {
-		return nil, fmt.Errorf("files must be an array of file URLs or local paths")
-	}
-	if err := json.Unmarshal(value, &files); err != nil {
-		return nil, fmt.Errorf("files must be an array of file URLs or local paths: %w", err)
+	// Absent, null (decoded as nil) and empty files contain no local path, so
+	// the original JSON is sent unchanged, as the generated command did.
+	if value, ok := fields["files"]; ok {
+		if err := json.Unmarshal(value, &files); err != nil {
+			return nil, fmt.Errorf("files must be an array of file URLs or local paths: %w", err)
+		}
 	}
 	if len(files) == 0 {
 		return req, nil
@@ -83,14 +80,7 @@ func messageCreateRequest(raw string) (*client.Request, error) {
 	if strings.TrimSpace(path) == "" {
 		return nil, fmt.Errorf("files[0] must not be empty")
 	}
-	// Drive-letter paths are filesystem paths, not URI schemes. On other platforms
-	// they fail with the ordinary local-file error rather than being fetched.
-	drivePath := len(path) >= 3 && ((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z')) && path[1] == ':' && (path[2] == '\\' || path[2] == '/')
-	if !drivePath && attachmentScheme.MatchString(path) {
-		u, err := url.Parse(path)
-		if err != nil || u.Hostname() == "" || (u.Scheme != "http" && u.Scheme != "https") {
-			return nil, fmt.Errorf("files[0] must be an HTTP(S) URL or local path (file:// is not supported)")
-		}
+	if lower := strings.ToLower(path); strings.HasPrefix(lower, "http://") || strings.HasPrefix(lower, "https://") {
 		return req, nil
 	}
 	values := make(map[string]string, len(fields)-1)
@@ -106,7 +96,7 @@ func messageCreateRequest(raw string) (*client.Request, error) {
 		values[name] = text
 	}
 	if err := req.SetMultipartFile(values, "files", path); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("files[0] is a local path (not http:// or https://): %w", err)
 	}
 	return req, nil
 }

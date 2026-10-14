@@ -65,24 +65,17 @@ webex messaging memberships list --room-id "ROOM_ID"
 
 ## File Attachments
 
-The existing `files` array accepts one HTTP(S) URL or one local file path, in either `--body` or `--body-file` JSON. A URL uses the normal JSON request; a local path automatically uploads the file as `multipart/form-data`.
+The existing `files` array, in `--body` or `--body-file` JSON, accepts one attachment. Entries starting with `http://` or `https://` keep the JSON request; any other entry is a local path uploaded as `multipart/form-data`.
 
 ```bash
 # Upload a local file to a direct message
 webex messaging messages create --body '{"toPersonEmail":"user@example.com","text":"Guide attached","files":["./guide.md"]}'
 
-# Preview a JSON body saved on disk (no message is sent)
+# Preview without sending (shows path and size, never file contents)
 webex messaging messages create --body-file message.json --dry-run
-
-# Existing URL attachments still work
-webex messaging messages create --body '{"roomId":"ROOM_ID","files":["https://example.com/guide.pdf"]}'
 ```
 
-Relative local paths are resolved from the CLI's **current working directory**, not the JSON body's directory. Absolute paths also work; JSON values do not expand `~` or environment variables. Use filesystem paths rather than `file://` URLs. For MCP, paths refer to files on the server's machine, not a remote chat client's machine.
-
-Local uploads require a regular file of at most **100 MiB**. Files are buffered in memory to support token-refresh and rate-limit retries. One attachment is supported per message; multiple files and mixed local/remote entries are rejected. Other fields in a local-upload body must be strings, so structured values such as Adaptive Card `attachments` are not supported alongside a local file. Remote URL requests retain their JSON fields unchanged.
-
-Dry-run validates the file and shows its path and size without uploading it. Debug and dry-run output do not print attachment contents; read-only mode blocks uploads. Only attach local files you intend to share.
+Relative paths resolve from the **current working directory**, not the JSON file's directory; through MCP they refer to the server's machine. A local upload needs one regular file of at most **100 MiB**, and its other fields must be strings, so Adaptive Card `attachments` cannot accompany it. Read-only mode blocks uploads. Only attach files you intend to share. See the [Messaging skill](https://github.com/Cloverhound/webex-cli/blob/main/skill/messaging/SKILL.md#send-a-message-create) for the full contract.
 
 ## Hybrid Data Security
 

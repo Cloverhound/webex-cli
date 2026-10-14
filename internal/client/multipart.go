@@ -11,7 +11,6 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 )
 
@@ -30,29 +29,30 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 			return fmt.Errorf("invalid multipart field name %q", name)
 		}
 	}
-	// Check the path before opening so ordinary FIFOs/devices are refused
-	// without blocking; check the opened descriptor again below.
-	pathInfo, err := os.Stat(path)
-	if err != nil {
-		return fmt.Errorf("checking attachment %q: %w", path, err)
+	tooLarge := fmt.Errorf("attachment %q exceeds the 100 MiB limit", path)
+	check := func(info os.FileInfo, err error) error {
+		switch {
+		case err != nil:
+			return fmt.Errorf("checking attachment %q: %w", path, err)
+		case !info.Mode().IsRegular():
+			return fmt.Errorf("attachment %q must be a regular file", path)
+		case info.Size() > MaxMessageFileSize:
+			return tooLarge
+		}
+		return nil
 	}
-	if !pathInfo.Mode().IsRegular() {
-		return fmt.Errorf("attachment %q must be a regular file", path)
+	// Check the path before opening so FIFOs/devices are refused without
+	// blocking, then check the opened descriptor in case the path changed.
+	if err := check(os.Stat(path)); err != nil {
+		return err
 	}
 	f, err := os.Open(path)
 	if err != nil {
 		return fmt.Errorf("opening attachment %q: %w", path, err)
 	}
 	defer f.Close()
-	info, err := f.Stat()
-	if err != nil {
-		return fmt.Errorf("checking attachment %q: %w", path, err)
-	}
-	if !info.Mode().IsRegular() {
-		return fmt.Errorf("attachment %q must be a regular file", path)
-	}
-	if info.Size() > MaxMessageFileSize {
-		return fmt.Errorf("attachment %q exceeds the 100 MiB limit", path)
+	if err := check(f.Stat()); err != nil {
+		return err
 	}
 	name := filepath.Base(path)
 	if strings.ContainsAny(name, "\r\n") {
@@ -63,17 +63,12 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 		return fmt.Errorf("reading attachment %q: %w", path, err)
 	}
 	if int64(len(data)) > MaxMessageFileSize {
-		return fmt.Errorf("attachment %q exceeds the 100 MiB limit", path)
+		return tooLarge
 	}
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
-	keys := make([]string, 0, len(fields))
-	for k := range fields {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	for _, k := range keys {
-		if err := writer.WriteField(k, fields[k]); err != nil {
+	for k, v := range fields {
+		if err := writer.WriteField(k, v); err != nil {
 			return fmt.Errorf("writing message field %q: %w", k, err)
 		}
 	}
@@ -82,11 +77,9 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 		contentType = http.DetectContentType(data)
 	}
 	header := make(textproto.MIMEHeader)
-	// Match multipart.Writer.CreateFormFile's quoted UTF-8 parameters.
-	// mime.FormatMediaType uses filename* for non-ASCII names, which RFC 7578
-	// forbids in multipart/form-data. CR/LF names are already rejected above.
-	escape := strings.NewReplacer(`\`, `\\`, `"`, `\"`)
-	header.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, escape.Replace(fieldName), escape.Replace(name)))
+	// Quoted UTF-8 with \ and " escaped, as CreateFormFile writes. Unlike
+	// mime.FormatMediaType it never emits filename*=, which RFC 7578 forbids.
+	header.Set("Content-Disposition", multipart.FileContentDisposition(fieldName, name))
 	header.Set("Content-Type", contentType)
 	part, err := writer.CreatePart(header)
 	if err != nil {

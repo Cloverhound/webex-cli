@@ -9,10 +9,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -20,120 +18,80 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
 
-type messageTransport func(*http.Request) (*http.Response, error)
-
-func (f messageTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
-
-// Redirect the real command's HTTP requests to a local server, never Webex.
-func messageServer(t *testing.T, handler http.HandlerFunc) {
+// messageServer records requests on a local server, never Webex. A nil
+// handler replies with an empty JSON object.
+func messageServer(t *testing.T, handle func(http.ResponseWriter, *http.Request, []byte)) (string, *[][]byte) {
 	t.Helper()
-	srv := httptest.NewServer(handler)
-	t.Cleanup(srv.Close)
-	target, err := url.Parse(srv.URL)
-	if err != nil {
-		t.Fatal(err)
-	}
-	old := http.DefaultClient
-	http.DefaultClient = &http.Client{Transport: messageTransport(func(r *http.Request) (*http.Response, error) {
-		clone := r.Clone(r.Context())
-		clone.URL.Scheme = target.Scheme
-		clone.URL.Host = target.Host
-		return http.DefaultTransport.RoundTrip(clone)
-	})}
+	var bodies [][]byte
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		b, _ := io.ReadAll(r.Body)
+		bodies = append(bodies, b)
+		if handle == nil {
+			w.Write([]byte(`{}`))
+			return
+		}
+		handle(w, r, b)
+	}))
 	oldToken := config.Token()
 	config.SetToken("test-token")
 	t.Cleanup(func() {
-		http.DefaultClient = old
+		srv.Close()
 		config.SetToken(oldToken)
 		config.SetDryRun(false)
 		config.SetReadOnly(false)
 		config.SetDebug(false)
 	})
+	return srv.URL, &bodies
 }
 
-func runCreate(t *testing.T, flag, body string) error {
-	t.Helper()
-	c, _, err := messagesCmd.Find([]string{"create"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	for _, name := range []string{"body", "body-file"} {
-		if err := c.Flags().Set(name, ""); err != nil {
-			t.Fatal(err)
+func TestMessageCreateCommandRegisteredOnce(t *testing.T) {
+	var found int
+	for _, c := range messagesCmd.Commands() {
+		if c.Name() == "create" && c.Flags().Lookup("body") != nil && c.Flags().Lookup("body-file") != nil {
+			found++
 		}
 	}
-	if err := c.Flags().Set(flag, body); err != nil {
-		t.Fatal(err)
+	if found != 1 || len(messagesCmd.Commands()) < 2 {
+		t.Fatalf("create with --body/--body-file registered %d times", found)
 	}
-	return c.RunE(c, nil)
 }
 
 func TestMessageCreateLocalAttachment(t *testing.T) {
-	dir := t.TempDir()
-	t.Chdir(dir)
-	name := `guide "quoted".md`
-	if runtime.GOOS == "windows" {
-		name = "guide unicode.md"
-	} // Quotes are not valid Windows filenames.
+	t.Chdir(t.TempDir())
 	data := []byte("# Guide\n\x00\xffbinary bytes\n")
-	if err := os.WriteFile(name, data, 0600); err != nil {
+	if err := os.WriteFile("guide.md", data, 0600); err != nil {
 		t.Fatal(err)
 	}
-	var hits int
-	messageServer(t, func(w http.ResponseWriter, r *http.Request) {
-		hits++
-		mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
-		if err != nil {
-			t.Error(err)
-			return
+	url, bodies := messageServer(t, func(w http.ResponseWriter, r *http.Request, body []byte) {
+		if r.Header.Get("Authorization") != "Bearer test-token" {
+			t.Error("normal auth missing")
 		}
-		if mediaType != "multipart/form-data" {
-			t.Errorf("Content-Type = %s, want multipart/form-data", mediaType)
-			return
-		}
-		form, err := multipart.NewReader(r.Body, params["boundary"]).ReadForm(1 << 20)
-		if err != nil {
-			t.Error(err)
+		mediaType, params, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
+		form, err := multipart.NewReader(bytes.NewReader(body), params["boundary"]).ReadForm(1 << 20)
+		if mediaType != "multipart/form-data" || err != nil {
+			t.Errorf("Content-Type=%s err=%v", mediaType, err)
 			return
 		}
 		defer form.RemoveAll()
-		for k, v := range map[string]string{"toPersonEmail": "recipient@example.invalid", "text": "Guide", "markdown": "**Guide**", "parentId": "parent"} {
+		for k, v := range map[string]string{"toPersonEmail": "recipient@example.invalid", "markdown": "**Guide**", "parentId": "parent"} {
 			if len(form.Value[k]) != 1 || form.Value[k][0] != v {
 				t.Errorf("field %s = %v", k, form.Value[k])
 			}
 		}
-		files := form.File["files"]
-		if len(files) != 1 {
-			t.Errorf("files = %v", files)
+		if len(form.Value) != 3 || len(form.File["files"]) != 1 || form.File["files"][0].Filename != "guide.md" {
+			t.Errorf("form = %v / %v", form.Value, form.File)
 			return
 		}
-		if files[0].Filename != name {
-			t.Errorf("filename = %q", files[0].Filename)
-		}
-		f, err := files[0].Open()
-		if err != nil {
-			t.Error(err)
-			return
-		}
+		f, _ := form.File["files"][0].Open()
 		defer f.Close()
-		got, err := io.ReadAll(f)
-		if err != nil {
-			t.Error(err)
-		}
-		if !bytes.Equal(got, data) {
+		if got, _ := io.ReadAll(f); !bytes.Equal(got, data) {
 			t.Errorf("file bytes differ: %q", got)
-		}
-		if r.Header.Get("Authorization") != "Bearer test-token" {
-			t.Error("normal auth missing")
 		}
 		w.Write([]byte(`{"id":"test-message"}`))
 	})
-	raw, _ := json.Marshal(map[string]any{"toPersonEmail": "recipient@example.invalid", "text": "Guide", "markdown": "**Guide**", "parentId": "parent", "files": []string{name}})
-	if err := runCreate(t, "body", string(raw)); err != nil {
-		t.Fatal(err)
-	}
-	if hits != 1 {
-		t.Fatalf("hits = %d", hits)
+	raw := `{"toPersonEmail":"recipient@example.invalid","markdown":"**Guide**","parentId":"parent","files":["guide.md"]}`
+	if err := createMessage(url, raw, ""); err != nil || len(*bodies) != 1 {
+		t.Fatalf("err=%v requests=%d", err, len(*bodies))
 	}
 }
 
@@ -143,87 +101,76 @@ func TestMessageCreateBodyFilePathsResolveFromWorkingDirectory(t *testing.T) {
 	if err := os.WriteFile("guide.md", []byte("working directory"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	bodyDir := filepath.Join(dir, "config")
-	if err := os.Mkdir(bodyDir, 0700); err != nil {
+	bodyPath := filepath.Join(dir, "config", "message.json")
+	if err := os.Mkdir(filepath.Dir(bodyPath), 0700); err != nil {
 		t.Fatal(err)
 	}
-	bodyPath := filepath.Join(bodyDir, "message.json")
 	if err := os.WriteFile(bodyPath, []byte(`{"roomId":"room","files":["./guide.md"]}`), 0600); err != nil {
 		t.Fatal(err)
 	}
-	messageServer(t, func(w http.ResponseWriter, r *http.Request) {
-		if err := r.ParseMultipartForm(1 << 20); err != nil {
-			t.Error(err)
-			return
-		}
-		defer r.MultipartForm.RemoveAll()
-		f, _, err := r.FormFile("files")
-		if err != nil {
-			t.Error(err)
-			return
-		}
-		defer f.Close()
-		b, _ := io.ReadAll(f)
-		if string(b) != "working directory" {
-			t.Errorf("bytes=%q", b)
-		}
-		w.Write([]byte(`{}`))
-	})
-	if err := runCreate(t, "body-file", bodyPath); err != nil {
+	url, bodies := messageServer(t, nil)
+	if err := createMessage(url, "", bodyPath); err != nil {
 		t.Fatal(err)
+	}
+	if len(*bodies) != 1 || !bytes.Contains((*bodies)[0], []byte("working directory")) {
+		t.Fatalf("body-file attachment not resolved from working directory: %q", *bodies)
 	}
 }
 
-func TestMessageCreateJSONCompatibility(t *testing.T) {
-	var got []byte
-	messageServer(t, func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Content-Type") != "application/json" {
-			t.Errorf("content type = %s", r.Header.Get("Content-Type"))
-		}
-		got, _ = io.ReadAll(r.Body)
-		w.Write([]byte(`{}`))
+func TestMessageCreateJSONPassthrough(t *testing.T) {
+	var contentTypes []string
+	url, _ := messageServer(t, func(w http.ResponseWriter, r *http.Request, body []byte) {
+		contentTypes = append(contentTypes, r.Header.Get("Content-Type"))
+		w.Write(body)
 	})
 	for _, raw := range []string{
 		`{"roomId":"room","text":"Hello"}`,
 		`{"roomId":"room","files":["https://example.invalid/file.pdf"],"attachments":[{"contentType":"example"}]}`,
 		`{"roomId":"room","files":["http://example.invalid/file.pdf"]}`,
+		`{"roomId":"room","files":["HTTPS://example.invalid/file.pdf"]}`,
+		`{"roomId":"room","files":["https:///missing-host"]}`, // Webex validates URLs, as before
 		`{"roomId":"room","files":[]}`,
+		`{"roomId":"room","files":null}`, // no local path: sent unchanged, as before
 	} {
-		if err := runCreate(t, "body", raw); err != nil {
-			t.Fatal(err)
+		req, err := messageCreateRequest(url, raw)
+		if err != nil {
+			t.Fatalf("%s: %v", raw, err)
 		}
-		if string(got) != raw {
-			t.Errorf("JSON changed: %s", got)
+		if got, _, err := req.Do(); err != nil || string(got) != raw {
+			t.Errorf("JSON changed: %s (err=%v)", got, err)
+		}
+	}
+	for _, ct := range contentTypes {
+		if ct != "application/json" {
+			t.Errorf("content type = %s", ct)
 		}
 	}
 }
 
-func TestMessageCreateInvalidAttachmentsFailBeforeSending(t *testing.T) {
+func TestMessageCreateInvalidInputsSendNothing(t *testing.T) {
 	dir := t.TempDir()
-	file := filepath.Join(dir, "guide.md")
-	if err := os.WriteFile(file, []byte("guide"), 0600); err != nil {
+	t.Chdir(dir)
+	if err := os.WriteFile("guide.md", []byte("guide"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	var hits int
-	messageServer(t, func(w http.ResponseWriter, r *http.Request) { hits++; w.Write([]byte(`{}`)) })
-	inputs := []string{
-		`{"files": "guide.md"}`, `{"files":null}`, `{"files":[null]}`, `{"files":[42]}`, `{"files":[""]}`,
-		`{"files":["a.md","b.md"]}`, `{"files":["https://example.invalid/a","b.md"]}`,
-		`{"files":["file:///tmp/guide.md"]}`, `{"files":["ftp://example.invalid/file"]}`,
-		`{"files":["missing-file.md"]}`, `{"files":["https:///missing-host"]}`,
-		`not-json`, `[]`, `null`,
-	}
-	extra, _ := json.Marshal(map[string]any{"files": []string{dir}})
-	inputs = append(inputs, string(extra))
-	extra, _ = json.Marshal(map[string]any{"files": []string{file}, "attachments": []any{map[string]any{"type": "card"}}})
-	inputs = append(inputs, string(extra))
-	for _, raw := range inputs {
-		if err := runCreate(t, "body", raw); err == nil {
-			t.Errorf("accepted invalid body %s", raw)
+	url, bodies := messageServer(t, nil)
+	for _, raw := range []string{
+		``, `not-json`, `[]`, `null`,
+		`{"files":"guide.md"}`, `{"files":[42]}`, `{"files":[null]}`, `{"files":[""]}`, `{"files":[" "]}`,
+		`{"files":["guide.md","guide.md"]}`, `{"files":["https://example.invalid/a","guide.md"]}`,
+		`{"files":["missing.md"]}`, `{"files":["file:///tmp/guide.md"]}`, `{"files":["."]}`,
+		`{"files":["guide.md"],"attachments":[{"type":"card"}]}`,
+		`{"files":["guide.md"],"text":null}`, `{"files":["guide.md"],"text":1}`,
+	} {
+		if err := createMessage(url, raw, ""); err == nil {
+			t.Errorf("accepted invalid body %q", raw)
 		}
 	}
-	if hits != 0 {
-		t.Errorf("invalid bodies sent %d requests", hits)
+	if err := createMessage(url, "", filepath.Join(dir, "missing.json")); err == nil {
+		t.Error("accepted missing body file")
+	}
+	if len(*bodies) != 0 {
+		t.Errorf("invalid bodies sent %d requests", len(*bodies))
 	}
 }
 
@@ -233,41 +180,35 @@ func TestMessageCreateLocalAttachmentSafetyModes(t *testing.T) {
 		t.Fatal(err)
 	}
 	raw, _ := json.Marshal(map[string]any{"roomId": "room", "files": []string{file}})
-	var hits int
-	messageServer(t, func(w http.ResponseWriter, r *http.Request) { hits++; w.Write([]byte(`{}`)) })
-	oldStderr := os.Stderr
+	url, bodies := messageServer(t, nil)
 	log, err := os.CreateTemp(t.TempDir(), "log")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer log.Close()
+	oldStderr := os.Stderr
 	os.Stderr = log
 	t.Cleanup(func() { os.Stderr = oldStderr })
+
 	config.SetDryRun(true)
-	if err := runCreate(t, "body", string(raw)); !errors.Is(err, client.ErrDryRun) {
+	if err := createMessage(url, string(raw), ""); !errors.Is(err, client.ErrDryRun) {
 		t.Errorf("dry run err=%v", err)
 	}
 	config.SetDryRun(false)
 	config.SetReadOnly(true)
-	if err := runCreate(t, "body", string(raw)); !errors.Is(err, client.ErrReadOnly) {
+	if err := createMessage(url, string(raw), ""); !errors.Is(err, client.ErrReadOnly) {
 		t.Errorf("read-only err=%v", err)
 	}
 	config.SetReadOnly(false)
 	config.SetDebug(true)
-	if err := runCreate(t, "body", string(raw)); err != nil {
+	if err := createMessage(url, string(raw), ""); err != nil {
 		t.Fatal(err)
 	}
-	b, err := os.ReadFile(log.Name())
-	if err != nil {
-		t.Fatal(err)
+	logged, _ := os.ReadFile(log.Name())
+	if strings.Contains(string(logged), "FILE_BYTES_MUST_NOT_BE_LOGGED") || !strings.Contains(string(logged), "secret.md") {
+		t.Errorf("diagnostics must name the file without its bytes:\n%s", logged)
 	}
-	if strings.Contains(string(b), "FILE_BYTES_MUST_NOT_BE_LOGGED") {
-		t.Error("file bytes leaked into logs")
-	}
-	if !strings.Contains(string(b), "secret.md") {
-		t.Error("preview does not identify the file")
-	}
-	if hits != 1 {
-		t.Errorf("hits=%d, want only debug-mode request", hits)
+	if len(*bodies) != 1 {
+		t.Errorf("requests=%d, want only the debug-mode request", len(*bodies))
 	}
 }

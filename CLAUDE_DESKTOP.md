@@ -76,7 +76,7 @@ The extension exposes four tools:
 
 `webex_read`, `webex_help`, and `webex_usage` are safe to auto-approve. `webex_write` is intentionally kept separate so write operations always require explicit user confirmation.
 
-For Messaging file uploads, use `messages create` with a JSON `files` array containing one local path. The path refers to the **machine running the MCP server**; relative paths use that server process's working directory, not the chat client's or JSON body's directory. Only upload a file the user explicitly authorized. See the [Messaging skill](skill/messaging/SKILL.md#send-a-message-create) for URL compatibility, size limits and multipart restrictions.
+For Messaging file uploads, put one local path in the `messages create` JSON `files` array. The path refers to the **machine running the MCP server** (relative paths use its working directory, not the chat client's), and only files the user explicitly authorized should be uploaded. See the [Messaging skill](skill/messaging/SKILL.md#send-a-message-create) for the full contract.
 
 ---
 
