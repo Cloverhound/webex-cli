@@ -53,6 +53,18 @@ webex messaging rooms list
 webex messaging messages list --room-id <id>
 ```
 
+## Message File Attachments
+
+Send one local file using the existing JSON `files` array; no upload-specific flags are needed:
+
+```bash
+webex messaging messages create --body '{"toPersonEmail":"user@example.com","text":"Guide attached","files":["./guide.md"]}'
+# The same JSON can be saved in message.json:
+webex messaging messages create --body-file message.json --dry-run
+```
+
+HTTP(S) URLs retain the existing JSON attachment behavior. Local paths trigger a multipart upload, with relative paths resolved against the current working directory (not the JSON file's directory). Local files must be regular files up to 100 MiB; uploads are buffered in memory for retries. Use one attachment per message, and do not mix paths and URLs. Local uploads support string-valued message fields, not structured fields such as Adaptive Card `attachments`. Dry-run validates the file and previews its path/size without sending it or printing its contents. See the [Messaging skill](skill/messaging/SKILL.md#send-a-message-create) for details.
+
 ## Audio File & Recording Downloads
 
 Several commands provide streamlined binary download and multipart upload for audio files and recordings:

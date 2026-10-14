@@ -68,9 +68,12 @@ SKIP_GROUPS = {
 
 # Per-command skip list, keyed by collection → group → set of command names.
 # These require multipart/form-data file uploads that the generator cannot produce
-# (it emits empty POST/PUT bodies). Each is replaced by a hand-written custom_*.go
-# implementation in the same package.
+# (it emits JSON or empty POST/PUT bodies). Each is replaced by a hand-written
+# custom_*.go implementation in the same package.
 SKIP_COMMANDS = {
+    # Same JSON flags, but files may require a multipart upload.
+    # Replaced by: cmd/messaging/custom_messages.go
+    "Webex Messaging": {"messages": {"create"}},
     "Webex Cloud Calling": {
         # Replaced by: cmd/calling/custom_announcements.go
         "announcement-repository": {

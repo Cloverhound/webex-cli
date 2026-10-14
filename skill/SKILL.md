@@ -229,6 +229,8 @@ webex meetings transcripts list
 webex messaging rooms list --type group --last 24h
 webex messaging messages list --room-id <roomId>
 webex messaging messages create --body '{"roomId":"<roomId>","text":"Hello!"}'
+# Local file upload via the existing files array (see Messaging sub-skill)
+webex messaging messages create --body '{"toPersonEmail":"user@example.com","files":["./guide.md"]}'
 ```
 
 ## Flow authoring and migration
