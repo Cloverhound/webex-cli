@@ -82,7 +82,11 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 		contentType = http.DetectContentType(data)
 	}
 	header := make(textproto.MIMEHeader)
-	header.Set("Content-Disposition", mime.FormatMediaType("form-data", map[string]string{"name": fieldName, "filename": name}))
+	// Match multipart.Writer.CreateFormFile's quoted UTF-8 parameters.
+	// mime.FormatMediaType uses filename* for non-ASCII names, which RFC 7578
+	// forbids in multipart/form-data. CR/LF names are already rejected above.
+	escape := strings.NewReplacer(`\`, `\\`, `"`, `\"`)
+	header.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, escape.Replace(fieldName), escape.Replace(name)))
 	header.Set("Content-Type", contentType)
 	part, err := writer.CreatePart(header)
 	if err != nil {

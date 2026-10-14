@@ -10,10 +10,44 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
+
+func TestMultipartAttachmentUsesQuotedUTF8Filename(t *testing.T) {
+	for _, name := range []string{"日本.md", "guide;v1.md", `guide "quoted".md`, `guide\part.md`} {
+		t.Run(name, func(t *testing.T) {
+			if runtime.GOOS == "windows" && strings.ContainsAny(name, `"\`) {
+				t.Skip("quotes and backslashes are not valid Windows filename characters")
+			}
+			path := filepath.Join(t.TempDir(), name)
+			if err := os.WriteFile(path, []byte("guide"), 0600); err != nil {
+				t.Fatal(err)
+			}
+			req := NewRequest("http://example.invalid", "POST", "/messages")
+			if err := req.SetMultipartFile(nil, "files", path); err != nil {
+				t.Fatal(err)
+			}
+			_, params, err := mime.ParseMediaType(req.bodyContentType)
+			if err != nil {
+				t.Fatal(err)
+			}
+			part, err := multipart.NewReader(strings.NewReader(req.bodyRaw), params["boundary"]).NextPart()
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer part.Close()
+			header := part.Header.Get("Content-Disposition")
+			escaped := strings.NewReplacer(`\`, `\\`, `"`, `\"`).Replace(name)
+			if !strings.Contains(header, `filename="`+escaped+`"`) || strings.Contains(header, "filename*=") {
+				t.Fatalf("non-compliant form-data filename header: %s", header)
+			}
+		})
+	}
+}
 
 func TestMultipartAttachmentRejectsOversizeFile(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "large.bin")
