@@ -42,7 +42,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create-request",
 			Short: "Create Monitoring Request",
-			Long:  `Create a successful monitoring request. It can be done either on an on-going or next successful inbound/outbound call. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Creates a monitoring request for an ongoing call or the next successful inbound or outbound call. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The applicable Call Monitoring profile permissions and resource access are required. When Continuous Scheduled Monitoring is enabled, ad hoc and continuous requests are rejected; use POST /v2/monitor/{taskId} for mid-call monitoring.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor")
 				if bodyFile != "" {
@@ -88,7 +88,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "barge-in-request",
 			Short: "BargeIn Request",
-			Long:  `Create a successful barge-in request for the supervisor to barge in the call that is being monitored already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Creates a barge-in request to join a call that is already being monitored. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant the Call Monitoring Barge In permission.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/bargeIn")
 				req.PathParam("taskId", taskId)
@@ -109,7 +109,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "end-request",
 			Short: "End Monitoring Request",
-			Long:  `Allows to successfully end the on-going monitoring request. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Ends an ongoing monitoring session. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/end")
 				req.PathParam("taskId", taskId)
@@ -130,7 +130,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "hold-request",
 			Short: "Hold Monitoring Request",
-			Long:  `Place the monitoring session on hold for a particular call. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Places the monitoring session for a call on hold. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/hold")
 				req.PathParam("taskId", taskId)
@@ -151,7 +151,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "unhold-request",
 			Short: "Unhold Monitoring Request",
-			Long:  `Resume a particular monitoring request that was on hold already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Resumes a monitoring session that is on hold. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{taskId}/unhold")
 				req.PathParam("taskId", taskId)
@@ -171,7 +171,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-sessions",
 			Short: "Fetch Monitoring Sessions",
-			Long:  `Fetches all active subscriptions for a given clientID.`,
+			Long:  `Fetches all active monitoring subscriptions for the requesting user. Requires the 'cloud-contact-center:pod_read' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module. This operation is unavailable when Continuous Scheduled Monitoring is enabled; use realtime data for active monitoring sessions in that mode.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/monitor/sessions")
 				if config.Paginate() {
@@ -196,7 +196,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete-request",
 			Short: "Delete Monitoring Request",
-			Long:  `Delete a particular monitoring request that was created. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Deletes a monitoring request. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module. This operation is unavailable when Continuous Scheduled Monitoring is enabled.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/v1/monitor/{requestId}")
 				req.PathParam("requestId", requestId)
@@ -217,9 +217,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "whisper-coach-request",
 			Short: "Whisper Coach Request",
-			Long: `This feature is currently in Beta. Contact your Cisco team if you want access to this feature.
-
-Create a Whisper Coach request for the supervisor to coach the agent on a call that is being monitored already. Requires scope 'cloud-contact-center:pod_conv' and 'cjp.supervisor'.`,
+			Long:  `Creates a Whisper Coach request to coach an agent on a call that is already being monitored. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant Call Monitoring edit access and the Whisper Coach permission, and Whisper Coach must be enabled for the organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/monitor/{interactionId}/coach")
 				req.PathParam("interactionId", interactionId)

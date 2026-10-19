@@ -1018,7 +1018,7 @@ Group aliases: `flows`.
 | `unlock` | `--id` *(required)* |
 | `lock` | `--id` *(required)* |
 | `test` | `--id` *(required)*, `--body`, `--body-file` |
-| `publish` | `--id` *(required)*, `--tags`, `--comment`, `--key_0`, `--key_1`, `--key_2`, `--key_3`, `--body`, `--body-file` |
+| `publish` | `--id` *(required)*, `--tags`, `--comment`, `--key_0`, `--key_1`, `--body`, `--body-file` |
 | `export` | `--id` *(required)*, `--version-or-tag` |
 | `update` | `--id` *(required)*, `--body`, `--body-file` |
 | `delete` | `--id` *(required)*, `--is-force-deletion` |
@@ -1084,5 +1084,34 @@ Group aliases: `flows`.
 | Command | Flags |
 |---|---|
 | `update-task-global-variables` | `--body`, `--body-file` |
+
+### call-monitoring-request
+
+| Command | Flags |
+|---|---|
+| `get` (aliases: `get-id`) | `--id` *(required)*, `--include-filter-details` |
+| `list-configurations` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--include-user-details`, `--include-filters-count`, `--include-total-call-monitoring-count-in-org` |
+| `create` | `--body`, `--body-file` |
+| `delete-references` | `--body`, `--body-file` |
+| `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
+| `patch` (aliases: `patch-id`) | `--id` *(required)*, `--body`, `--body-file` |
+| `delete` (aliases: `delete-id`) | `--id` *(required)* |
+
+### organization-setting
+
+| Command | Flags |
+|---|---|
+| `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
+| `get` (aliases: `get-id`) | `--id` *(required)* |
+| `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
+| `patch` (aliases: `patch-id`) | `--id` *(required)*, `--body`, `--body-file` |
+
+### tenant-configuration
+
+| Command | Flags |
+|---|---|
+| `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
+| `get` (aliases: `get-id`) | `--id` *(required)* |
+| `update` (aliases: `update-id`) | `--id` *(required)*, `--timeout-rona-chat-seconds`, `--timeout-rona-email-seconds`, `--timeout-rona-social-seconds`, `--timeout-rona-telephony-seconds`, `--organization-id`, `--version`, `--outdial-enabled`, `--central-log-level`, `--auto-wrap-up-interval`, `--local-disk-log-level`, `--dn-other-description`, `--dn-default-description`, `--not-responding-to-available-timeout`, `--heart-beat-interval`, `--call-variables-suppressed`, `--end-call-enabled`, `--incident-reporting-enabled`, `--watson-analytics-password`, `--system-recovery-msg`, `--watson-analytics-base-url`, `--dn-target-strip-chars`, `--watson-analytics-user-name`, `--dn-other-regex`, `--configuration-version`, `--call-variables-base-url`, `--lost-connection-recovery-timeout`, `--diagnostics-post-url`, `--dn-default-regex`, `--aps-url`, `--end-consult-enabled`, `--reject-duplicate-dn`, `--dn-target-regex`, `--force-default-dn`, `--dn-default-prefix`, `--privacy-shield-visible`, `--console-log-level`, `--dn-target-prefix`, `--auto-base-url`, `--dn-other-prefix`, `--dn-default-strip-chars`, `--missed-heart-beats-allowed`, `--dn-other-strip-chars`, `--aps-enabled`, `--timeout-desktop-inactivity-enabled`, `--timeout-desktop-inactivity-mins`, `--timeout-rona-work-item-seconds`, `--timeout-rona-custom-messaging-seconds`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 
 <!-- codegen:end -->
