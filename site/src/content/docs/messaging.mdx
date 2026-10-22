@@ -63,6 +63,20 @@ webex messaging webhooks list
 webex messaging memberships list --room-id "ROOM_ID"
 ```
 
+## File Attachments
+
+The existing `files` array, in `--body` or `--body-file` JSON, accepts one attachment. Entries starting with `http://` or `https://` keep the JSON request; any other entry is a local path uploaded as `multipart/form-data`.
+
+```bash
+# Upload a local file to a direct message
+webex messaging messages create --body '{"toPersonEmail":"user@example.com","text":"Guide attached","files":["./guide.md"]}'
+
+# Preview without sending (shows path and size, never file contents)
+webex messaging messages create --body-file message.json --dry-run
+```
+
+Relative paths resolve from the **current working directory**, not the JSON file's directory; through MCP they refer to the server's machine. A local upload needs one regular file of at most **100 MiB**, and its other fields must be strings, so Adaptive Card `attachments` cannot accompany it. Read-only mode blocks uploads. Only attach files you intend to share. See the [Messaging skill](https://github.com/Cloverhound/webex-cli/blob/main/skill/messaging/SKILL.md#send-a-message-create) for the full contract.
+
 ## Hybrid Data Security
 
 Use `webex messaging hds` (`hybrid-data-security` is a group alias) to inspect organizations, clusters, nodes, network-test results, alarms, and resource usage. The overlapping upstream groups are consolidated.

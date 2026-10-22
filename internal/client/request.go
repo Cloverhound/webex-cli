@@ -20,11 +20,14 @@ type Request struct {
 	// sets the page size with; empty means "pageSize".
 	pageSizeParam string
 	// offset paging for every other area; see OffsetPaging.
-	offsetSet                     bool
-	offsetStart, offsetSize       string
-	offsetFirst                   int
+	offsetSet               bool
+	offsetStart, offsetSize string
+	offsetFirst             int
 	// rawURL, when set, is sent verbatim in place of path and query params.
 	rawURL string
+
+	// Multipart bodies override the JSON content type and log a safe summary.
+	bodyContentType, bodySummary string
 }
 
 // NewRequest creates a new request with the given method and path.
@@ -106,6 +109,8 @@ func (r *Request) BodyStringSlice(key string, values []string) {
 // SetBodyRaw sets the raw JSON body, overriding individual fields.
 func (r *Request) SetBodyRaw(raw string) {
 	r.bodyRaw = raw
+	r.bodyContentType = ""
+	r.bodySummary = ""
 }
 
 // SetBodyFile reads a file and sets the raw body from its contents.
@@ -114,7 +119,7 @@ func (r *Request) SetBodyFile(path string) error {
 	if err != nil {
 		return fmt.Errorf("reading body file: %w", err)
 	}
-	r.bodyRaw = string(data)
+	r.SetBodyRaw(string(data))
 	return nil
 }
 

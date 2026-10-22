@@ -156,13 +156,23 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 
 	// Content type
 	if req.bodyRaw != "" {
-		httpReq.Header.Set("Content-Type", "application/json")
+		contentType := req.bodyContentType
+		if contentType == "" {
+			contentType = "application/json"
+		}
+		httpReq.Header.Set("Content-Type", contentType)
 	}
 	httpReq.Header.Set("Accept", "application/json")
 
 	// Extra headers
 	for k, v := range req.headers {
 		httpReq.Header.Set(k, v)
+	}
+
+	// Multipart diagnostics describe the file; never print its binary contents.
+	logBody := req.bodyRaw
+	if req.bodySummary != "" {
+		logBody = req.bodySummary
 	}
 
 	// Debug
@@ -172,7 +182,7 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 			fmt.Fprintf(os.Stderr, "DEBUG:   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
 		}
 		if req.bodyRaw != "" {
-			fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(req.bodyRaw, 500))
+			fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(logBody, 500))
 		}
 	}
 
@@ -187,7 +197,7 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 			fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
 		}
 		if req.bodyRaw != "" {
-			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", req.bodyRaw)
+			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", logBody)
 		}
 		return nil, 0, nil, ErrDryRun
 	}
