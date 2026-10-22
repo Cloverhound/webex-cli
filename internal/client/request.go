@@ -16,6 +16,9 @@ type Request struct {
 	headers     map[string]string
 	bodyJSON    map[string]any
 	bodyRaw     string
+
+	// Multipart bodies override the JSON content type and log a safe summary.
+	bodyContentType, bodySummary string
 }
 
 // NewRequest creates a new request with the given method and path.
@@ -82,6 +85,8 @@ func (r *Request) BodyStringSlice(key string, values []string) {
 // SetBodyRaw sets the raw JSON body, overriding individual fields.
 func (r *Request) SetBodyRaw(raw string) {
 	r.bodyRaw = raw
+	r.bodyContentType = ""
+	r.bodySummary = ""
 }
 
 // SetBodyFile reads a file and sets the raw body from its contents.
@@ -90,7 +95,7 @@ func (r *Request) SetBodyFile(path string) error {
 	if err != nil {
 		return fmt.Errorf("reading body file: %w", err)
 	}
-	r.bodyRaw = string(data)
+	r.SetBodyRaw(string(data))
 	return nil
 }
 

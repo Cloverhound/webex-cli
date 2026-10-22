@@ -1,7 +1,20 @@
 """Regression checks for service-specific request generation."""
 import unittest
 
-from generate_cli import generate_command
+from generate_cli import generate_command, generate_group_file
+
+
+class MessagingAttachmentsTest(unittest.TestCase):
+    def test_create_uses_handwritten_override_but_other_messages_are_generated(self):
+        endpoints = [
+            {'command': 'create', 'method': 'POST', 'path': '/messages'},
+            {'command': 'get', 'method': 'GET', 'path': '/messages/{messageId}'},
+        ]
+        code = generate_group_file('messages', endpoints, 'messaging',
+                                   'cmd.MessagingCmd', 'config.CallingBaseURL',
+                                   False, 'Webex Messaging')
+        self.assertNotIn('{ // create', code)
+        self.assertIn('{ // get', code)
 
 
 class UsageReportNegotiationTest(unittest.TestCase):
