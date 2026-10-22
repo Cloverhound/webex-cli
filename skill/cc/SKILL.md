@@ -630,7 +630,7 @@ webex cc address-book delete-entry-id --id <entryId>
 | `get` (aliases: `get-id`) | `--id` *(required)*, `--include-count`, `--include-user-profile-type`, `--include-skill-profile-audit`, `--include-reskill-audit-info`, `--include-skill-details`, `--check-if-user-has-dynamic-skill`, `--dynamic-skill-id` |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
 | `get-dynamic-skill-id` | `--skill-id` *(required)*, `--search`, `--page`, `--page-size` |
-| `list-call-monitoring-id` | `--id` *(required)*, `--page`, `--page-size` |
+| `list-by-call-monitoring-config` (aliases: `list-call-monitoring-id`) | `--id` *(required)*, `--page`, `--page-size` |
 | `get-agents-matching-skill-requirements` | `--search`, `--page`, `--page-size`, `--body`, `--body-file` |
 | `list-by-ids` (aliases: `get-ids`) | `--page`, `--page-size`, `--user-ids`, `--search`, `--queue-id`, `--body`, `--body-file` |
 | `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
@@ -718,18 +718,20 @@ webex cc address-book delete-entry-id --id <entryId>
 | `logout` | `--logout-reason`, `--agent-id`, `--body`, `--body-file` |
 | `state-change` | `--channel-type`, `--state`, `--aux-code-id`, `--reason`, `--agent-id`, `--body`, `--body-file` |
 
-### call-monitoring
+### call-monitor
+
+Group aliases: `call-monitoring`.
 
 | Command | Flags |
 |---|---|
-| `get-sessions` | — |
-| `create-request` | `--id`, `--monitor-type`, `--task-id`, `--queue-ids`, `--teams`, `--sites`, `--agents`, `--tracking-id`, `--invisible-mode`, `--body`, `--body-file` |
-| `barge-in-request` | `--task-id` *(required)* |
-| `end-request` | `--task-id` *(required)* |
-| `hold-request` | `--task-id` *(required)* |
-| `unhold-request` | `--task-id` *(required)* |
-| `whisper-coach-request` | `--interaction-id` *(required)* |
-| `delete-request` | `--request-id` *(required)* |
+| `list-sessions` (aliases: `get-sessions`) | — |
+| `create` (aliases: `create-request`) | `--id`, `--monitor-type`, `--task-id`, `--queue-ids`, `--teams`, `--sites`, `--agents`, `--tracking-id`, `--invisible-mode`, `--body`, `--body-file` |
+| `barge-in` (aliases: `barge-in-request`) | `--task-id` *(required)* |
+| `end` (aliases: `end-request`) | `--task-id` *(required)* |
+| `hold` (aliases: `hold-request`) | `--task-id` *(required)* |
+| `unhold` (aliases: `unhold-request`) | `--task-id` *(required)* |
+| `whisper-coach` (aliases: `whisper-coach-request`) | `--interaction-id` *(required)* |
+| `delete` (aliases: `delete-request`) | `--request-id` *(required)* |
 
 ### tasks
 
@@ -1018,7 +1020,7 @@ Group aliases: `flows`.
 | `unlock` | `--id` *(required)* |
 | `lock` | `--id` *(required)* |
 | `test` | `--id` *(required)*, `--body`, `--body-file` |
-| `publish` | `--id` *(required)*, `--tags`, `--comment`, `--key_0`, `--key_1`, `--body`, `--body-file` |
+| `publish` | `--id` *(required)*, `--tags`, `--comment`, `--body`, `--body-file` |
 | `export` | `--id` *(required)*, `--version-or-tag` |
 | `update` | `--id` *(required)*, `--body`, `--body-file` |
 | `delete` | `--id` *(required)*, `--is-force-deletion` |
@@ -1085,33 +1087,33 @@ Group aliases: `flows`.
 |---|---|
 | `update-task-global-variables` | `--body`, `--body-file` |
 
-### call-monitoring-request
+### call-monitoring-config
 
 | Command | Flags |
 |---|---|
-| `get` (aliases: `get-id`) | `--id` *(required)*, `--include-filter-details` |
-| `list-configurations` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--include-user-details`, `--include-filters-count`, `--include-total-call-monitoring-count-in-org` |
+| `get` | `--id` *(required)*, `--include-filter-details` |
+| `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--include-user-details`, `--include-filters-count`, `--include-total-call-monitoring-count-in-org` |
 | `create` | `--body`, `--body-file` |
 | `delete-references` | `--body`, `--body-file` |
-| `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
-| `patch` (aliases: `patch-id`) | `--id` *(required)*, `--body`, `--body-file` |
-| `delete` (aliases: `delete-id`) | `--id` *(required)* |
+| `update` | `--id` *(required)*, `--body`, `--body-file` |
+| `patch` | `--id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--id` *(required)* |
 
 ### organization-setting
 
 | Command | Flags |
 |---|---|
 | `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
-| `get` (aliases: `get-id`) | `--id` *(required)* |
-| `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
-| `patch` (aliases: `patch-id`) | `--id` *(required)*, `--body`, `--body-file` |
+| `get` | `--id` *(required)* |
+| `update` | `--id` *(required)*, `--body`, `--body-file` |
+| `patch` | `--id` *(required)*, `--body`, `--body-file` |
 
 ### tenant-configuration
 
 | Command | Flags |
 |---|---|
 | `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
-| `get` (aliases: `get-id`) | `--id` *(required)* |
-| `update` (aliases: `update-id`) | `--id` *(required)*, `--timeout-rona-chat-seconds`, `--timeout-rona-email-seconds`, `--timeout-rona-social-seconds`, `--timeout-rona-telephony-seconds`, `--organization-id`, `--version`, `--outdial-enabled`, `--central-log-level`, `--auto-wrap-up-interval`, `--local-disk-log-level`, `--dn-other-description`, `--dn-default-description`, `--not-responding-to-available-timeout`, `--heart-beat-interval`, `--call-variables-suppressed`, `--end-call-enabled`, `--incident-reporting-enabled`, `--watson-analytics-password`, `--system-recovery-msg`, `--watson-analytics-base-url`, `--dn-target-strip-chars`, `--watson-analytics-user-name`, `--dn-other-regex`, `--configuration-version`, `--call-variables-base-url`, `--lost-connection-recovery-timeout`, `--diagnostics-post-url`, `--dn-default-regex`, `--aps-url`, `--end-consult-enabled`, `--reject-duplicate-dn`, `--dn-target-regex`, `--force-default-dn`, `--dn-default-prefix`, `--privacy-shield-visible`, `--console-log-level`, `--dn-target-prefix`, `--auto-base-url`, `--dn-other-prefix`, `--dn-default-strip-chars`, `--missed-heart-beats-allowed`, `--dn-other-strip-chars`, `--aps-enabled`, `--timeout-desktop-inactivity-enabled`, `--timeout-desktop-inactivity-mins`, `--timeout-rona-work-item-seconds`, `--timeout-rona-custom-messaging-seconds`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
+| `get` | `--id` *(required)* |
+| `update` | `--id` *(required)*, `--timeout-rona-chat-seconds`, `--timeout-rona-email-seconds`, `--timeout-rona-social-seconds`, `--timeout-rona-telephony-seconds`, `--organization-id`, `--version`, `--outdial-enabled`, `--central-log-level`, `--auto-wrap-up-interval`, `--local-disk-log-level`, `--dn-other-description`, `--dn-default-description`, `--not-responding-to-available-timeout`, `--heart-beat-interval`, `--call-variables-suppressed`, `--end-call-enabled`, `--incident-reporting-enabled`, `--watson-analytics-password`, `--system-recovery-msg`, `--watson-analytics-base-url`, `--dn-target-strip-chars`, `--watson-analytics-user-name`, `--dn-other-regex`, `--configuration-version`, `--call-variables-base-url`, `--lost-connection-recovery-timeout`, `--diagnostics-post-url`, `--dn-default-regex`, `--aps-url`, `--end-consult-enabled`, `--reject-duplicate-dn`, `--dn-target-regex`, `--force-default-dn`, `--dn-default-prefix`, `--privacy-shield-visible`, `--console-log-level`, `--dn-target-prefix`, `--auto-base-url`, `--dn-other-prefix`, `--dn-default-strip-chars`, `--missed-heart-beats-allowed`, `--dn-other-strip-chars`, `--aps-enabled`, `--timeout-desktop-inactivity-enabled`, `--timeout-desktop-inactivity-mins`, `--timeout-rona-work-item-seconds`, `--timeout-rona-custom-messaging-seconds`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 
 <!-- codegen:end -->

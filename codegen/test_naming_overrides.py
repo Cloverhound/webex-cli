@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from extract_api_spec import extract_collection, merge_folders, apply_naming_overrides
-from naming_overrides import NAMING_OVERRIDES
+from naming_overrides import NAMING_OVERRIDES, RELEASED_ID_ALIASES
 
 
 class NamingOverridesTest(unittest.TestCase):
@@ -47,17 +47,65 @@ class NamingOverridesTest(unittest.TestCase):
         self.assertEqual(self.command(area, 'tasks', 'resume-digital')['path'], '/v1/tasks/{taskId}/resume')
         self.assertEqual(self.command(area, 'tasks', 'resume-recording')['path'], '/v1/tasks/{taskId}/record/resume')
 
-    def test_redundant_id_names_are_aliases_in_every_area(self):
+    def test_redundant_id_names_are_shortened_in_every_area(self):
         for area in self.raw:
             for group in self.resolved(area):
                 for ep in group['endpoints']:
                     self.assertNotIn(ep['command'], ('get-id', 'delete-id', 'patch-id', 'update-id'))
-            for group in self.raw[area]:
-                for ep in group['endpoints']:
-                    if ep['command'] in ('get-id', 'delete-id', 'patch-id', 'update-id'):
-                        result = self.command(area, group['group'], ep['command'])
-                        self.assertEqual(result['path'], ep['path'])
-                        self.assertEqual(result['command'], ep['command'][:-3])
+
+    def test_only_released_id_names_remain_aliases(self):
+        area = 'Webex Contact Center'
+        for group, names in RELEASED_ID_ALIASES[area].items():
+            for name in names:
+                ep = self.command(area, group, name)
+                self.assertEqual(ep['command'], name[:-3])
+        for name in ('get', 'update', 'patch'):
+            ep = self.command(area, 'organization-setting', name)
+            self.assertEqual(ep['aliases'], [])
+
+    def test_released_id_aliases_match_collection_endpoints(self):
+        for area, groups in RELEASED_ID_ALIASES.items():
+            for group, names in groups.items():
+                for name in names:
+                    self.command(area, group, name)
+
+    def test_live_monitoring_keeps_released_names_as_aliases(self):
+        area = 'Webex Contact Center'
+        groups = {g['group']: g for g in self.resolved(area)}
+        self.assertNotIn('call-monitoring', groups)
+        self.assertEqual(groups['call-monitor']['aliases'], ['call-monitoring'])
+        renames = {
+            'create': 'create-request', 'barge-in': 'barge-in-request',
+            'whisper-coach': 'whisper-coach-request', 'hold': 'hold-request',
+            'unhold': 'unhold-request', 'end': 'end-request',
+            'delete': 'delete-request', 'list-sessions': 'get-sessions',
+        }
+        for name, old in renames.items():
+            ep = self.command(area, 'call-monitor', name)
+            self.assertEqual(ep['command'], name)
+            self.assertEqual(ep['aliases'], [old])
+            self.assertTrue(ep['path'].startswith('/v1/monitor'))
+
+    def test_monitoring_configurations_have_unaliased_names(self):
+        area = 'Webex Contact Center'
+        groups = {g['group']: g for g in self.resolved(area)}
+        self.assertNotIn('call-monitoring-request', groups)
+        config = groups['call-monitoring-config']
+        self.assertEqual(sorted(e['command'] for e in config['endpoints']),
+                         ['create', 'delete', 'delete-references', 'get', 'list', 'patch', 'update'])
+        for ep in config['endpoints']:
+            self.assertEqual(ep['aliases'], [])
+            self.assertIn('/call-monitoring', ep['path'])
+        self.assertEqual(self.command(area, 'call-monitoring-config', 'list')['path'],
+                         '/organization/{orgid}/v2/call-monitoring')
+        users = self.command(area, 'users', 'list-by-call-monitoring-config')
+        self.assertEqual(users['aliases'], ['list-call-monitoring-id'])
+
+    def test_placeholder_body_keys_are_not_flags(self):
+        from extract_api_spec import parse_body_fields
+        fields, complex_body = parse_body_fields('{"comment": "<string>", "key_0": 8656, "key_1": true}')
+        self.assertEqual([f['name'] for f in fields], ['comment'])
+        self.assertFalse(complex_body)
 
     def test_shortening_rejects_a_collision_instead_of_numbering(self):
         folders = [{'group': 'example', 'original_folders': ['Example'], 'endpoints': [

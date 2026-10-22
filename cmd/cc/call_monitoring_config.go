@@ -21,13 +21,13 @@ var _ = output.Print
 var _ = strconv.Itoa
 var _ = strings.Join
 
-var callMonitoringRequestCmd = &cobra.Command{
-	Use:   "call-monitoring-request",
-	Short: "CallMonitoringRequest commands",
+var callMonitoringConfigCmd = &cobra.Command{
+	Use:   "call-monitoring-config",
+	Short: "Saved call monitoring configurations",
 }
 
 func init() {
-	cmd.CcCmd.AddCommand(callMonitoringRequestCmd)
+	cmd.CcCmd.AddCommand(callMonitoringConfigCmd)
 
 	{ // create
 		var orgid string
@@ -58,7 +58,7 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 	{ // delete-references
@@ -89,7 +89,7 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 	{ // get
@@ -97,22 +97,14 @@ func init() {
 		var id string
 		var includeFilterDetails string
 		cmd := &cobra.Command{
-			Use:     "get",
-			Aliases: []string{"get-id"},
-			Short:   "Get specific Call Monitoring by ID",
-			Long:    `Retrieve an existing Call Monitoring by ID in a given organization.`,
+			Use:   "get",
+			Short: "Get specific Call Monitoring by ID",
+			Long:  `Retrieve an existing Call Monitoring by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/call-monitoring/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				req.QueryParam("includeFilterDetails", includeFilterDetails)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -125,7 +117,7 @@ func init() {
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Call Monitoring.")
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&includeFilterDetails, "include-filter-details", "", "If set to true, the API response will include entity details (names) for teams, agents, and contact service queues.")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 	{ // update
@@ -134,10 +126,9 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:     "update",
-			Aliases: []string{"update-id"},
-			Short:   "Update specific Call Monitoring by ID",
-			Long:    `Update an existing Call Monitoring by ID in a given organization.`,
+			Use:   "update",
+			Short: "Update specific Call Monitoring by ID",
+			Long:  `Update an existing Call Monitoring by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/call-monitoring/{id}")
 				req.PathParam("orgid", orgid)
@@ -162,17 +153,16 @@ func init() {
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 	{ // delete
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:     "delete",
-			Aliases: []string{"delete-id"},
-			Short:   "Delete specific Call Monitoring by ID",
-			Long:    `Delete an existing Call Monitoring by ID in a given organization.`,
+			Use:   "delete",
+			Short: "Delete specific Call Monitoring by ID",
+			Long:  `Delete an existing Call Monitoring by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/call-monitoring/{id}")
 				req.PathParam("orgid", orgid)
@@ -188,7 +178,7 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&id, "id", "", "Resource ID of the Call Monitoring.")
 		cmd.MarkFlagRequired("id")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 	{ // patch
@@ -197,10 +187,9 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:     "patch",
-			Aliases: []string{"patch-id"},
-			Short:   "Partially update Call Monitoring by ID",
-			Long:    `Partially update Call Monitoring by ID in a given organization.`,
+			Use:   "patch",
+			Short: "Partially update Call Monitoring by ID",
+			Long:  `Partially update Call Monitoring by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PATCH", "/organization/{orgid}/call-monitoring/{id}")
 				req.PathParam("orgid", orgid)
@@ -225,10 +214,10 @@ func init() {
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
-	{ // list-configurations
+	{ // list
 		var orgid string
 		var filter string
 		var attributes string
@@ -239,7 +228,7 @@ func init() {
 		var includeFiltersCount string
 		var includeTotalCallMonitoringCountInOrg string
 		cmd := &cobra.Command{
-			Use:   "list-configurations",
+			Use:   "list",
 			Short: "List Call Monitoring Configurations",
 			Long:  `Retrieve a list of Call Monitoring Configurations in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -277,7 +266,7 @@ func init() {
 		cmd.Flags().StringVar(&includeUserDetails, "include-user-details", "", "If set to true, the API response will include user details (firstName, lastName, email) for the userId field.")
 		cmd.Flags().StringVar(&includeFiltersCount, "include-filters-count", "", "If set to true, the API response will include the count of specific agents, teams, and contact service queues associated with the call monitoring schedule.")
 		cmd.Flags().StringVar(&includeTotalCallMonitoringCountInOrg, "include-total-call-monitoring-count-in-org", "", "If set to true, the API response will include the total number of call monitoring schedules for the organization in the metadata.")
-		callMonitoringRequestCmd.AddCommand(cmd)
+		callMonitoringConfigCmd.AddCommand(cmd)
 	}
 
 }

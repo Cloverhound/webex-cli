@@ -74,21 +74,13 @@ func init() {
 		var orgid string
 		var id string
 		cmd := &cobra.Command{
-			Use:     "get",
-			Aliases: []string{"get-id"},
-			Short:   "Get specific Tenant Configuration by ID",
-			Long:    `Retrieve an existing Tenant Configuration by ID in a given organization.`,
+			Use:   "get",
+			Short: "Get specific Tenant Configuration by ID",
+			Long:  `Retrieve an existing Tenant Configuration by ID in a given organization.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/tenant-configuration/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -159,10 +151,9 @@ func init() {
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
-			Use:     "update",
-			Aliases: []string{"update-id"},
-			Short:   "Update specific Tenant Configuration by ID",
-			Long:    `Update an existing Tenant Configuration by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.`,
+			Use:   "update",
+			Short: "Update specific Tenant Configuration by ID",
+			Long:  `Update an existing Tenant Configuration by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/tenant-configuration/{id}")
 				req.PathParam("orgid", orgid)
