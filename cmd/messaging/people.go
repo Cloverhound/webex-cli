@@ -53,6 +53,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("excludeStatus", excludeStatus)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -123,13 +124,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/{personId}")
 				req.PathParam("personId", personId)
 				req.QueryParam("callingData", callingData)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -214,13 +208,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/people/me")
 				req.QueryParam("callingData", callingData)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

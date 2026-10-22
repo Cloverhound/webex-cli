@@ -82,13 +82,6 @@ Role and Scope: It requires id full admin or any role with cjp:config_read or cj
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -154,13 +147,6 @@ Role and Scope:It requires id full admin or any role with cjp:config_read or cjp
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
 				req.PathParam("actionName", actionName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -192,13 +178,6 @@ Role and Scope: It requires id full admin role with cjp:config_read or cjp:confi
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
 				req.PathParam("actionId", actionId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -87,6 +87,7 @@ func init() {
 				req.QueryParam("includeMembers", includeMembers)
 				req.QueryParam("memberType", memberType)
 				if config.Paginate() {
+					req.OffsetPaging("startIndex", "count", 1)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -127,13 +128,6 @@ func init() {
 				req.PathParam("orgId", orgId)
 				req.PathParam("groupId", groupId)
 				req.QueryParam("excludedAttributes", excludedAttributes)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -264,6 +258,7 @@ func init() {
 				req.QueryParam("count", count)
 				req.QueryParam("memberType", memberType)
 				if config.Paginate() {
+					req.OffsetPaging("startIndex", "count", 1)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

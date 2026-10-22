@@ -36,13 +36,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/settings/organizations/{orgId}/settings/{settingKey}")
 				req.PathParam("orgId", orgId)
 				req.PathParam("settingKey", settingKey)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

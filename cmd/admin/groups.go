@@ -79,6 +79,7 @@ func init() {
 				req.QueryParam("startIndex", startIndex)
 				req.QueryParam("count", count)
 				if config.Paginate() {
+					req.OffsetPaging("startIndex", "count", 1)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -148,13 +149,6 @@ Optionally, the members may be retrieved with this request. The maximum number o
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/groups/{groupId}")
 				req.PathParam("groupId", groupId)
 				req.QueryParam("includeMembers", includeMembers)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -207,6 +201,7 @@ Optionally, the members may be retrieved with this request. The maximum number o
 				req.QueryParam("startIndex", startIndex)
 				req.QueryParam("count", count)
 				if config.Paginate() {
+					req.OffsetPaging("startIndex", "count", 1)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

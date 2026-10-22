@@ -53,6 +53,7 @@ Every resource has properties:
 				req.QueryParam("sessionId", sessionId)
 				req.QueryParam("start", start)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

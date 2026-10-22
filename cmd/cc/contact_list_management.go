@@ -204,13 +204,6 @@ func init() {
 				req.PathParam("campaignId", campaignId)
 				req.QueryParam("status", status)
 				req.QueryParam("source", source)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

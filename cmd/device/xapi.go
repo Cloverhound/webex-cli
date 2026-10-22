@@ -37,13 +37,6 @@ func init() {
 				req.QueryParam("deviceId", deviceId)
 				req.QueryParam("name", name)
 				req.QueryParam("name", name)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -104,13 +97,6 @@ func init() {
 				req.QueryParam("status", status)
 				req.QueryParam("command", command)
 				req.QueryParam("command", command)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

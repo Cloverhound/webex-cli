@@ -32,13 +32,6 @@ func init() {
 			Long:  "This API allows the service client to get all the `Group` schemas information from CI.\n\n**Authorization:**\n\nOAuth token rendered by Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:organizations_rw`\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/Schemas/SCIM2/Group")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -56,13 +49,6 @@ func init() {
 			Long:  "This API allows the service client to get all the `User` schemas information from CI.\n\n**Authorization:**\n\nOAuth token rendered by Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:organizations_rw`\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/Schemas/SCIM2/User")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -82,13 +68,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/Schemas/SCIM2/{schemaId}")
 				req.PathParam("schemaId", schemaId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -36,13 +36,6 @@ func init() {
 			Long:  "Retrieves a list of all mode management features (Auto Attendants, Call Queues, and Hunt Groups) for which the authenticated user has been designated as a mode manager. This API returns basic information about each feature including its ID, name, and type.\n\nMode Management allows designated managers to switch features between different operational configurations based on time schedules or manual triggers. This is useful for managing business hours, holidays, and emergency scenarios.\n\nThis API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must be configured as a mode manager for at least one feature to receive results.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/modeManagement/features")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -62,13 +55,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/modeManagement/features/commonModes")
 				req.QueryParam("featureIds", featureIds)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -124,13 +110,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/modeManagement/features/{featureId}")
 				req.PathParam("featureId", featureId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -152,13 +131,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/modeManagement/features/{featureId}/normalOperationMode")
 				req.PathParam("featureId", featureId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -182,13 +154,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/modeManagement/features/{featureId}/modes/{modeId}")
 				req.PathParam("featureId", featureId)
 				req.PathParam("modeId", modeId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

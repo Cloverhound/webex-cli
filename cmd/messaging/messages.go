@@ -52,6 +52,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 				req.QueryParam("beforeMessage", beforeMessage)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -74,34 +75,6 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 		messagesCmd.AddCommand(cmd)
 	}
 
-	{ // create
-		var bodyRaw string
-		var bodyFile string
-		cmd := &cobra.Command{
-			Use:   "create",
-			Short: "Create a Message",
-			Long:  "Post a plain text or [rich text](/docs/basics#formatting-messages) message, and optionally, a [file attachment](/docs/basics#message-attachments) attachment, to a room.\n\nThe `files` parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.",
-			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "POST", "/messages")
-				if bodyFile != "" {
-					if err := req.SetBodyFile(bodyFile); err != nil {
-						return err
-					}
-				} else if bodyRaw != "" {
-					req.SetBodyRaw(bodyRaw)
-				}
-				resp, statusCode, err := req.Do()
-				if err != nil {
-					return err
-				}
-				return output.Print(resp, statusCode)
-			},
-		}
-		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
-		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-		messagesCmd.AddCommand(cmd)
-	}
-
 	{ // list-direct
 		var parentId string
 		var personId string
@@ -116,6 +89,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 				req.QueryParam("personId", personId)
 				req.QueryParam("personEmail", personEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -186,13 +160,6 @@ Long result sets will be split into [pages](/docs/basics#pagination).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/messages/{messageId}")
 				req.PathParam("messageId", messageId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

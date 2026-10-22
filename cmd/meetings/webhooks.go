@@ -37,6 +37,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("ownedBy", ownedBy)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -116,13 +117,6 @@ To learn more about how to create and use webhooks, see The [Webhooks Guide](/do
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/webhooks/{webhookId}")
 				req.PathParam("webhookId", webhookId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -37,6 +37,7 @@ func init() {
 				req.QueryParam("meetingId", meetingId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -69,6 +70,7 @@ func init() {
 				req.QueryParam("meetingId", meetingId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

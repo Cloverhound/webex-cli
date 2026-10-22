@@ -40,13 +40,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -70,13 +63,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/personalMeetingRoom")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -134,13 +120,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/audio")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -198,13 +177,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/video")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -262,13 +234,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/schedulingOptions")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -418,13 +383,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingPreferences/sites")
 				req.QueryParam("userEmail", userEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

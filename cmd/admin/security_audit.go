@@ -46,6 +46,7 @@ func init() {
 				req.QueryParam("eventCategories", eventCategories)
 				req.QueryParam("eventCategories", eventCategories)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

@@ -36,13 +36,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/search/v2/meta")
 				req.Header("X-ORGANIZATION-ID", xOrganizationId)
 				req.Header("TrackingId", trackingId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
