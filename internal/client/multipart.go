@@ -65,39 +65,87 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 	if int64(len(data)) > MaxMessageFileSize {
 		return tooLarge
 	}
-	var buf bytes.Buffer
-	writer := multipart.NewWriter(&buf)
+	parts := make([]MultipartPart, 0, len(fields)+1)
 	for k, v := range fields {
-		if err := writer.WriteField(k, v); err != nil {
-			return fmt.Errorf("writing message field %q: %w", k, err)
-		}
+		parts = append(parts, MultipartPart{FieldName: k, Data: []byte(v)})
 	}
 	contentType := mime.TypeByExtension(filepath.Ext(name))
 	if contentType == "" {
 		contentType = http.DetectContentType(data)
 	}
-	header := make(textproto.MIMEHeader)
-	// Quoted UTF-8 with \ and " escaped, as CreateFormFile writes. Unlike
-	// mime.FormatMediaType it never emits filename*=, which RFC 7578 forbids.
-	header.Set("Content-Disposition", multipart.FileContentDisposition(fieldName, name))
-	header.Set("Content-Type", contentType)
-	part, err := writer.CreatePart(header)
-	if err != nil {
-		return fmt.Errorf("creating attachment part: %w", err)
-	}
-	if _, err := part.Write(data); err != nil {
-		return fmt.Errorf("writing attachment: %w", err)
-	}
-	if err := writer.Close(); err != nil {
-		return fmt.Errorf("closing attachment body: %w", err)
+	parts = append(parts, MultipartPart{FieldName: fieldName, FileName: name, ContentType: contentType, Data: data})
+	if err := r.SetMultipart(parts); err != nil {
+		return err
 	}
 	summary, _ := json.Marshal(struct {
 		Fields map[string]string `json:"fields"`
 		File   string            `json:"file"`
 		Size   int               `json:"size"`
 	}{fields, path, len(data)})
+	r.bodySummary = string(summary)
+	return nil
+}
+
+// MultipartPart is one part of a multipart/form-data body. A part with a
+// FileName is a file part; diagnostics show its size, never its Data.
+type MultipartPart struct {
+	FieldName   string
+	FileName    string
+	ContentType string // omitted from the part header when empty
+	Data        []byte
+}
+
+// multipartPartSummary is how a part appears in dry-run and debug output.
+type multipartPartSummary struct {
+	Field       string `json:"field"`
+	File        string `json:"file,omitempty"`
+	ContentType string `json:"contentType,omitempty"`
+	Size        *int   `json:"size,omitempty"`
+	Value       string `json:"value,omitempty"`
+}
+
+var quoteEscaper = strings.NewReplacer(`\`, `\\`, `"`, `\"`)
+
+// SetMultipart buffers parts as the request body, so the authentication and
+// 429 retry paths can replay it.
+func (r *Request) SetMultipart(parts []MultipartPart) error {
+	var buf bytes.Buffer
+	writer := multipart.NewWriter(&buf)
+	summary := make([]multipartPartSummary, 0, len(parts))
+	for _, p := range parts {
+		if p.FieldName == "" || strings.ContainsAny(p.FieldName+p.FileName+p.ContentType, "\r\n") {
+			return fmt.Errorf("invalid multipart part %q: names and content type must be non-empty single lines", p.FieldName)
+		}
+		header := make(textproto.MIMEHeader)
+		s := multipartPartSummary{Field: p.FieldName, ContentType: p.ContentType}
+		if p.FileName != "" {
+			// Quoted UTF-8 with \ and " escaped, as CreateFormFile writes. Unlike
+			// mime.FormatMediaType it never emits filename*=, which RFC 7578 forbids.
+			header.Set("Content-Disposition", multipart.FileContentDisposition(p.FieldName, p.FileName))
+			size := len(p.Data)
+			s.File, s.Size = p.FileName, &size
+		} else {
+			header.Set("Content-Disposition", `form-data; name="`+quoteEscaper.Replace(p.FieldName)+`"`)
+			s.Value = string(p.Data)
+		}
+		if p.ContentType != "" {
+			header.Set("Content-Type", p.ContentType)
+		}
+		part, err := writer.CreatePart(header)
+		if err != nil {
+			return fmt.Errorf("creating multipart part %q: %w", p.FieldName, err)
+		}
+		if _, err := part.Write(p.Data); err != nil {
+			return fmt.Errorf("writing multipart part %q: %w", p.FieldName, err)
+		}
+		summary = append(summary, s)
+	}
+	if err := writer.Close(); err != nil {
+		return fmt.Errorf("closing multipart body: %w", err)
+	}
+	summaryJSON, _ := json.Marshal(summary)
 	r.bodyRaw = buf.String()
 	r.bodyContentType = writer.FormDataContentType()
-	r.bodySummary = string(summary)
+	r.bodySummary = string(summaryJSON)
 	return nil
 }

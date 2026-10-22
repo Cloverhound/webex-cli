@@ -3,7 +3,6 @@ package cc
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -100,52 +99,7 @@ Examples:
   webex cc audio-files upload --file prompt.wav --dry-run
   webex cc audio-files upload --file prompt.wav --debug`,
 		RunE: func(c *cobra.Command, args []string) error {
-			f, err := os.Open(filePath)
-			if err != nil {
-				return fmt.Errorf("opening audio file: %w", err)
-			}
-			defer f.Close()
-
-			// Default name to filename; ensure it ends with .wav (API requires it)
-			if name == "" {
-				name = filepath.Base(filePath)
-			}
-			if !strings.HasSuffix(strings.ToLower(name), ".wav") {
-				name += ".wav"
-			}
-
-			u := config.CcBaseURL + "/organization/" + url.PathEscape(orgid) + "/audio-file"
-
-			info := map[string]any{
-				"name":          name,
-				"contentType":   "AUDIO_WAV",
-				"systemDefault": false,
-			}
-			if description != "" {
-				info["description"] = description
-			}
-			infoJSON, _ := json.Marshal(info)
-
-			parts := []audio.MultipartPart{
-				{
-					FieldName:   "audioFileInfo",
-					ContentType: "application/json",
-					Data:        strings.NewReader(string(infoJSON)),
-				},
-				{
-					FieldName:   "audioFile",
-					FileName:    filepath.Base(filePath),
-					ContentType: "audio/wav",
-					Data:        f,
-				},
-			}
-
-			body, statusCode, err := audio.UploadMultipart("POST", u, parts)
-			if err != nil {
-				return err
-			}
-
-			return output.Print(body, statusCode)
+			return uploadAudioFile(config.CcBaseURL, orgid, filePath, name, description)
 		},
 	}
 
@@ -157,4 +111,54 @@ Examples:
 	cmd.Flags().StringVar(&description, "description", "", "Audio file description")
 
 	audioFilesCmd.AddCommand(cmd)
+}
+
+func uploadAudioFile(baseURL, orgid, filePath, name, description string) error {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("reading audio file: %w", err)
+	}
+
+	// Default name to filename; ensure it ends with .wav (API requires it)
+	if name == "" {
+		name = filepath.Base(filePath)
+	}
+	if !strings.HasSuffix(strings.ToLower(name), ".wav") {
+		name += ".wav"
+	}
+
+	info := map[string]any{
+		"name":          name,
+		"contentType":   "AUDIO_WAV",
+		"systemDefault": false,
+	}
+	if description != "" {
+		info["description"] = description
+	}
+	infoJSON, _ := json.Marshal(info)
+
+	req := client.NewRequest(baseURL, "POST", "/organization/{orgid}/audio-file")
+	req.PathParam("orgid", orgid)
+	if err := req.SetMultipart([]client.MultipartPart{
+		{
+			FieldName:   "audioFileInfo",
+			ContentType: "application/json",
+			Data:        infoJSON,
+		},
+		{
+			FieldName:   "audioFile",
+			FileName:    filepath.Base(filePath),
+			ContentType: "audio/wav",
+			Data:        data,
+		},
+	}); err != nil {
+		return err
+	}
+
+	body, statusCode, err := req.Do()
+	if err != nil {
+		return err
+	}
+
+	return output.Print(body, statusCode)
 }

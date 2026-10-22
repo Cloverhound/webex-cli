@@ -3,7 +3,6 @@ package cc
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -100,11 +99,10 @@ Examples:
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
-			f, err := os.Open(filePath)
+			data, err := os.ReadFile(filePath)
 			if err != nil {
-				return fmt.Errorf("opening audio file: %w", err)
+				return fmt.Errorf("reading audio file: %w", err)
 			}
-			defer f.Close()
 
 			// Default name to filename; ensure it ends with .wav (API requires it)
 			if name == "" {
@@ -113,8 +111,6 @@ Examples:
 			if !strings.HasSuffix(strings.ToLower(name), ".wav") {
 				name += ".wav"
 			}
-
-			u := config.CcBaseURL + "/organization/" + url.PathEscape(orgid) + "/v2/agent-personal-greeting"
 
 			info := map[string]any{
 				"agentId":     agentID,
@@ -126,21 +122,25 @@ Examples:
 			}
 			infoJSON, _ := json.Marshal(info)
 
-			parts := []audio.MultipartPart{
+			req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v2/agent-personal-greeting")
+			req.PathParam("orgid", orgid)
+			if err := req.SetMultipart([]client.MultipartPart{
 				{
 					FieldName:   "agentPersonalGreetingInfo",
 					ContentType: "application/json",
-					Data:        strings.NewReader(string(infoJSON)),
+					Data:        infoJSON,
 				},
 				{
 					FieldName:   "audioFile",
 					FileName:    filepath.Base(filePath),
 					ContentType: "audio/wav",
-					Data:        f,
+					Data:        data,
 				},
+			}); err != nil {
+				return err
 			}
 
-			body, statusCode, err := audio.UploadMultipart("POST", u, parts)
+			body, statusCode, err := req.Do()
 			if err != nil {
 				return err
 			}
