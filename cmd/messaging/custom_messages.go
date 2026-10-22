@@ -12,12 +12,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() { messagesCmd.AddCommand(newMessageCreateCommand()) }
+func init() {
+	messagesCmd.AddCommand(newMessageCreateCommand())
+}
 
 func newMessageCreateCommand() *cobra.Command {
 	var bodyRaw, bodyFile string
-	c := &cobra.Command{
-		Use: "create", Short: "Create a Message",
+	cmd := &cobra.Command{
+		Use:   "create",
+		Short: "Create a Message",
 		Long: `Send a message, optionally with one remote URL or local file in the JSON files array.
 Entries starting with http:// or https:// keep the JSON request; any other entry is a
 local path uploaded as multipart/form-data.
@@ -31,9 +34,9 @@ Examples:
 			return createMessage(config.CallingBaseURL, bodyRaw, bodyFile)
 		},
 	}
-	c.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
-	c.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
-	return c
+	cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
+	cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
+	return cmd
 }
 
 func createMessage(baseURL, raw, bodyFile string) error {
@@ -64,7 +67,7 @@ func messageCreateRequest(baseURL, raw string) (*client.Request, error) {
 	req.SetBodyRaw(raw)
 	var files []string
 	// Absent, null (decoded as nil) and empty files contain no local path, so
-	// the original JSON is sent unchanged, as the generated command did.
+	// the original JSON is sent unchanged.
 	if value, ok := fields["files"]; ok {
 		if err := json.Unmarshal(value, &files); err != nil {
 			return nil, fmt.Errorf("files must be an array of file URLs or local paths: %w", err)

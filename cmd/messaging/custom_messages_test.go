@@ -128,9 +128,9 @@ func TestMessageCreateJSONPassthrough(t *testing.T) {
 		`{"roomId":"room","files":["https://example.invalid/file.pdf"],"attachments":[{"contentType":"example"}]}`,
 		`{"roomId":"room","files":["http://example.invalid/file.pdf"]}`,
 		`{"roomId":"room","files":["HTTPS://example.invalid/file.pdf"]}`,
-		`{"roomId":"room","files":["https:///missing-host"]}`, // Webex validates URLs, as before
+		`{"roomId":"room","files":["https:///missing-host"]}`, // URL validation is left to Webex
 		`{"roomId":"room","files":[]}`,
-		`{"roomId":"room","files":null}`, // no local path: sent unchanged, as before
+		`{"roomId":"room","files":null}`, // no local path: sent unchanged
 	} {
 		req, err := messageCreateRequest(url, raw)
 		if err != nil {
