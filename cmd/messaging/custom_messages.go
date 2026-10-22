@@ -21,7 +21,10 @@ func newMessageCreateCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a Message",
-		Long: `Send a message, optionally with one remote URL or local file in the JSON files array.
+		Long: `Post a plain text or rich text message to a room or person, optionally with one
+attachment in the JSON files array. File previews are only rendered for attachments
+of 1 MB or less.
+
 Entries starting with http:// or https:// keep the JSON request; any other entry is a
 local path uploaded as multipart/form-data.
 Relative attachment paths resolve against the current working directory, not the body file.
