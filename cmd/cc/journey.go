@@ -38,13 +38,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/workspace/workspace-id/{workspaceId}")
 				req.PathParam("workspaceId", workspaceId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -128,13 +121,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -331,13 +317,6 @@ For a more information on Patch Requests, see this  [JSON PATCH guide](https://j
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}")
 				req.PathParam("workspaceId", workspaceId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -784,13 +763,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-name/{templateName}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -860,13 +832,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req := client.NewRequest(config.CcBaseURL, "GET", "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}")
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -930,13 +895,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
 				req.PathParam("actionName", actionName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -966,13 +924,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("templateId", templateId)
 				req.PathParam("actionId", actionId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1071,13 +1022,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("personId", personId)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1143,13 +1087,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("personId", personId)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1179,13 +1116,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1215,13 +1145,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1251,13 +1174,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateName", templateName)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1287,13 +1203,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("workspaceId", workspaceId)
 				req.PathParam("identity", identity)
 				req.PathParam("templateId", templateId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1374,13 +1283,6 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.PathParam("identity", identity)
 				req.QueryParam("filter", filter)
 				req.QueryParam("data", data)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

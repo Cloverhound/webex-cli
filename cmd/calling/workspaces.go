@@ -147,13 +147,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}")
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("includeDevices", includeDevices)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -229,13 +222,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaces/{workspaceId}/capabilities")
 				req.PathParam("workspaceId", workspaceId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -261,13 +247,6 @@ func init() {
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("includeDevices", includeDevices)
 				req.QueryParam("includeCapabilities", includeCapabilities)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -44,13 +44,6 @@ func init() {
 				req.PathParam("meetingId", meetingId)
 				req.QueryParam("current", current)
 				req.Header("timezone", timezone)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -81,6 +74,7 @@ func init() {
 				req.QueryParam("current", current)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -195,6 +189,7 @@ func init() {
 				req.Header("password", password)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -254,13 +249,6 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.Header("password", password)
 				req.Header("timezone", timezone)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -453,6 +441,7 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -488,13 +477,6 @@ func init() {
 				req.PathParam("templateId", templateId)
 				req.QueryParam("hostEmail", hostEmail)
 				req.Header("timezone", timezone)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -518,13 +500,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetings/controls")
 				req.QueryParam("meetingId", meetingId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -589,6 +564,7 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -620,13 +596,6 @@ func init() {
 				req.PathParam("sessionTypeId", sessionTypeId)
 				req.QueryParam("hostEmail", hostEmail)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -654,13 +623,6 @@ func init() {
 				req.PathParam("meetingId", meetingId)
 				req.QueryParam("current", current)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -791,6 +753,7 @@ func init() {
 				req.QueryParam("registrationTimeFrom", registrationTimeFrom)
 				req.QueryParam("registrationTimeTo", registrationTimeTo)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -868,13 +831,6 @@ func init() {
 				req.PathParam("registrantId", registrantId)
 				req.QueryParam("current", current)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1113,6 +1069,7 @@ func init() {
 				req.PathParam("meetingId", meetingId)
 				req.QueryParam("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1145,13 +1102,6 @@ func init() {
 				req.PathParam("meetingId", meetingId)
 				req.PathParam("interpreterId", interpreterId)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1265,6 +1215,7 @@ func init() {
 				req.PathParam("meetingId", meetingId)
 				req.Header("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1354,13 +1305,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetings/{meetingId}/survey")
 				req.PathParam("meetingId", meetingId)
 				req.Header("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1394,6 +1338,7 @@ func init() {
 				req.Header("timezone", timezone)
 				req.Header("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1511,6 +1456,7 @@ func init() {
 				req.Header("hostEmail", hostEmail)
 				req.Header("personId", personId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1545,6 +1491,7 @@ func init() {
 				req.QueryParam("service", service)
 				req.QueryParam("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1810,6 +1757,7 @@ func init() {
 				req.Header("timezone", timezone)
 				req.Header("hostEmail", hostEmail)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

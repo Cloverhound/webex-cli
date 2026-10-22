@@ -35,6 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/licenses")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -67,13 +68,6 @@ func init() {
 				req.QueryParam("includeAssignedTo", includeAssignedTo)
 				req.QueryParam("next", next)
 				req.QueryParam("limit", limit)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

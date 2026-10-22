@@ -39,6 +39,7 @@ func init() {
 				req.QueryParam("personId", personId)
 				req.QueryParam("workspaceId", workspaceId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

@@ -37,6 +37,7 @@ Use query parameters to filter the response.`,
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/resourceGroups")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -63,13 +64,6 @@ Use query parameters to filter the response.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/resourceGroups/{resourceGroupId}")
 				req.PathParam("resourceGroupId", resourceGroupId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

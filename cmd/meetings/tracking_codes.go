@@ -35,6 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meeting/config/trackingCodes")
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -91,13 +92,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meeting/config/trackingCodes/{trackingCodeId}")
 				req.PathParam("trackingCodeId", trackingCodeId)
 				req.QueryParam("siteUrl", siteUrl)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -180,13 +174,6 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("personId", personId)
 				req.Header("email", email)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
