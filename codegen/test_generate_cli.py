@@ -17,6 +17,19 @@ class MessagingAttachmentsTest(unittest.TestCase):
         self.assertIn('{ // get', code)
 
 
+class GroupDescriptionTest(unittest.TestCase):
+    def test_described_group_uses_its_description(self):
+        code = generate_group_file('call-monitor', [], 'cc', 'cmd.CcCmd',
+                                   'config.CcBaseURL', False, 'Webex Contact Center')
+        self.assertIn('Short: "Live call monitoring sessions: start, barge in, coach, hold, and end",', code)
+        self.assertIn('Aliases: []string{"call-monitoring"},', code)
+
+    def test_other_groups_keep_the_generated_description(self):
+        code = generate_group_file('site', [], 'cc', 'cmd.CcCmd',
+                                   'config.CcBaseURL', False, 'Webex Contact Center')
+        self.assertIn('Short: "Site commands",', code)
+
+
 class UsageReportNegotiationTest(unittest.TestCase):
     def test_only_report_delete_accepts_non_json_acknowledgement(self):
         for method, path, expected in [

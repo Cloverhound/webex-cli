@@ -51,6 +51,38 @@ NAMING_OVERRIDES = {
             ('outdial-ani', 'bulk-save-entries', ('bulk-save-entry',)),
         ('outdial-ani', 'GET', '/organization/{orgid}/v2/outdial-ani/{outDialAniId}/entry'):
             ('outdial-ani', 'list-entries-for-ani', ('list-entry-2',)),
+        ('call-monitoring', 'POST', '/v1/monitor'):
+            ('call-monitor', 'create', ('create-request',)),
+        ('call-monitoring', 'POST', '/v1/monitor/{taskId}/bargeIn'):
+            ('call-monitor', 'barge-in', ('barge-in-request',)),
+        ('call-monitoring', 'POST', '/v1/monitor/{interactionId}/coach'):
+            ('call-monitor', 'whisper-coach', ('whisper-coach-request',)),
+        ('call-monitoring', 'POST', '/v1/monitor/{taskId}/hold'):
+            ('call-monitor', 'hold', ('hold-request',)),
+        ('call-monitoring', 'POST', '/v1/monitor/{taskId}/unhold'):
+            ('call-monitor', 'unhold', ('unhold-request',)),
+        ('call-monitoring', 'POST', '/v1/monitor/{taskId}/end'):
+            ('call-monitor', 'end', ('end-request',)),
+        ('call-monitoring', 'DELETE', '/v1/monitor/{requestId}'):
+            ('call-monitor', 'delete', ('delete-request',)),
+        ('call-monitoring', 'GET', '/v1/monitor/sessions'):
+            ('call-monitor', 'list-sessions', ('get-sessions',)),
+        ('call-monitoring-request', 'POST', '/organization/{orgid}/call-monitoring'):
+            ('call-monitoring-config', 'create', ()),
+        ('call-monitoring-request', 'POST', '/organization/{orgid}/call-monitoring/delete-reference'):
+            ('call-monitoring-config', 'delete-references', ()),
+        ('call-monitoring-request', 'GET', '/organization/{orgid}/call-monitoring/{id}'):
+            ('call-monitoring-config', 'get', ()),
+        ('call-monitoring-request', 'PUT', '/organization/{orgid}/call-monitoring/{id}'):
+            ('call-monitoring-config', 'update', ()),
+        ('call-monitoring-request', 'DELETE', '/organization/{orgid}/call-monitoring/{id}'):
+            ('call-monitoring-config', 'delete', ()),
+        ('call-monitoring-request', 'PATCH', '/organization/{orgid}/call-monitoring/{id}'):
+            ('call-monitoring-config', 'patch', ()),
+        ('call-monitoring-request', 'GET', '/organization/{orgid}/v2/call-monitoring'):
+            ('call-monitoring-config', 'list', ()),
+        ('users', 'GET', '/organization/{orgid}/user/by-call-monitoring-id/{id}'):
+            ('users', 'list-by-call-monitoring-config', ('list-call-monitoring-id',)),
         ('users', 'POST', '/organization/{orgid}/user/fetch-user-details-by-ids'):
             ('users', 'list-by-ids', ('get-ids',)),
         ('users', 'PATCH', '/organization/{orgid}/user/bulk/update-dynamic-skill/{skillId}'):
@@ -240,7 +272,56 @@ NAMING_OVERRIDES = {
     },
 }
 
-GROUP_ALIASES = {'Webex Contact Center': {'flow': ['flows']}, 'Webex Messaging': {'hds': ['hybrid-data-security']}}
+GROUP_ALIASES = {
+    'Webex Contact Center': {'flow': ['flows'], 'call-monitor': ['call-monitoring']},
+    'Webex Messaging': {'hds': ['hybrid-data-security']},
+}
+
+# Help text for groups whose generated "<Group> commands" summary would not
+# tell them apart from a similarly named group.
+GROUP_DESCRIPTIONS = {
+    'Webex Contact Center': {
+        'call-monitor': 'Live call monitoring sessions: start, barge in, coach, hold, and end',
+        'call-monitoring-config': 'Saved call monitoring configurations',
+    },
+}
+
+# The get/delete/patch/update-id names that shipped before they were shortened.
+# Only these stay as aliases; shortened names for newer endpoints never existed
+# with the suffix, so aliasing them would add names nobody has used.
+RELEASED_ID_ALIASES = {
+    'Webex Contact Center': {
+        'address-book': {'delete-id', 'get-id', 'update-id'},
+        'agent-personal-greeting-files': {'delete-id', 'get-id', 'patch-id', 'update-id'},
+        'ai-feature': {'get-id', 'patch-id'},
+        'asset': {'delete-id', 'get-id', 'patch-id', 'update-id'},
+        'audio-files': {'delete-id', 'get-id', 'patch-id', 'update-id'},
+        'auto-csat': {'get-id', 'update-id'},
+        'auxiliary-code': {'delete-id', 'get-id', 'update-id'},
+        'business-hour': {'delete-id', 'get-id', 'update-id'},
+        'channel': {'delete-id', 'get-id', 'patch-id', 'update-id'},
+        'contact-number': {'delete-id', 'get-id', 'update-id'},
+        'contact-service-queue': {'delete-id', 'get-id', 'update-id'},
+        'desktop-layout': {'delete-id', 'get-id', 'update-id'},
+        'desktop-profile': {'delete-id', 'get-id', 'update-id'},
+        'dial-plan': {'delete-id', 'get-id', 'update-id'},
+        'entry-point': {'delete-id', 'get-id', 'update-id'},
+        'generated-summaries': {'get-id', 'update-id'},
+        'global-variables': {'delete-id', 'get-id', 'update-id'},
+        'holiday-list': {'delete-id', 'get-id', 'update-id'},
+        'multimedia-profile': {'delete-id', 'get-id', 'update-id'},
+        'outdial-ani': {'delete-id', 'get-id', 'update-id'},
+        'overrides': {'delete-id', 'get-id', 'update-id'},
+        'resource-collection': {'delete-id', 'get-id', 'update-id'},
+        'site': {'delete-id', 'get-id', 'update-id'},
+        'skill': {'delete-id', 'get-id', 'update-id'},
+        'skill-profile': {'delete-id', 'get-id', 'update-id'},
+        'team': {'delete-id', 'get-id', 'update-id'},
+        'user-profiles': {'delete-id', 'get-id', 'update-id'},
+        'users': {'get-id', 'patch-id', 'update-id'},
+        'work-types': {'delete-id', 'get-id', 'update-id'},
+    },
+}
 
 # Place user-facing commands by product while retaining upstream collections.
 COLLECTION_MOVES = {("Webex Admin", "metrics"): "Webex Cloud Calling"}

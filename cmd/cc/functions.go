@@ -337,10 +337,6 @@ func init() {
 		var id string
 		var tags []string
 		var comment string
-		var key_0 int64
-		var key_1 float64
-		var key_2 float64
-		var key_3 float64
 		var bodyRaw string
 		var bodyFile string
 		cmd := &cobra.Command{
@@ -360,10 +356,6 @@ func init() {
 				} else {
 					req.BodyStringSlice("tags", tags)
 					req.BodyString("comment", comment)
-					req.BodyInt("key_0", key_0, cmd.Flags().Changed("key_0"))
-					req.BodyFloat("key_1", key_1, cmd.Flags().Changed("key_1"))
-					req.BodyFloat("key_2", key_2, cmd.Flags().Changed("key_2"))
-					req.BodyFloat("key_3", key_3, cmd.Flags().Changed("key_3"))
 				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -378,10 +370,6 @@ func init() {
 		cmd.MarkFlagRequired("id")
 		cmd.Flags().StringSliceVar(&tags, "tags", nil, "")
 		cmd.Flags().StringVar(&comment, "comment", "", "")
-		cmd.Flags().Int64Var(&key_0, "key_0", 0, "")
-		cmd.Flags().Float64Var(&key_1, "key_1", 0, "")
-		cmd.Flags().Float64Var(&key_2, "key_2", 0, "")
-		cmd.Flags().Float64Var(&key_3, "key_3", 0, "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 		functionsCmd.AddCommand(cmd)

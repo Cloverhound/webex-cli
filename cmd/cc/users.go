@@ -616,15 +616,16 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // list-call-monitoring-id
+	{ // list-by-call-monitoring-config
 		var orgid string
 		var id string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-call-monitoring-id",
-			Short: "List users by call monitoring id",
-			Long:  `Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.`,
+			Use:     "list-by-call-monitoring-config",
+			Aliases: []string{"list-call-monitoring-id"},
+			Short:   "List users by call monitoring id",
+			Long:    `Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/by-call-monitoring-id/{id}")
 				req.PathParam("orgid", orgid)

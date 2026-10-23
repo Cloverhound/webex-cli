@@ -10,7 +10,7 @@ import os
 import re
 import subprocess
 import textwrap
-from naming_overrides import GROUP_ALIASES
+from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
@@ -220,7 +220,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     aliases = GROUP_ALIASES.get(collection_name, {}).get(group, [])
     if aliases:
         lines.append('\tAliases: []string{' + ', '.join(escape_go_double_quoted(a) for a in aliases) + '},')
-    lines.append(f'\tShort: "{group_pascal} commands",')
+    short = GROUP_DESCRIPTIONS.get(collection_name, {}).get(group, f'{group_pascal} commands')
+    lines.append(f'\tShort: "{short}",')
     lines.append(f'}}')
     lines.append('')
     lines.append('func init() {')
