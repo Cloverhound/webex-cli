@@ -19,18 +19,26 @@ func HasReadOnlyToken(email string) bool {
 // Read-only mode depends on this: the keyring and credentials file are readable
 // by any process running as the user, so a write-capable token left in either
 // would bypass the CLI's checks. Both stores are checked whatever
-// $WEBEX_TOKEN_STORE selects. An entry that cannot be decoded is deleted too,
+// $WEBEX_TOKEN_STORE selects, and a keyring that cannot be read is a failure
+// unless that setting is "file". An entry that cannot be decoded is deleted too,
 // since it may hold write access, and so is the $WEBEX_REFRESH_TOKEN cache,
 // which read-only mode never uses.
 func PurgeWriteTokens(cfg *appconfig.Config) ([]string, error) {
 	var removed, failed []string
+	var firstErr error
 	for _, email := range cfg.UserEmails() {
 		copies, err := readCopies(email, []string{StoreKeyring, StoreFile})
-		if errors.Is(err, ErrTokenNotFound) {
+		if errors.Is(err, errKeyringUnreadable) && keyringOptional() {
+			err = nil
+		}
+		if err != nil && !errors.Is(err, ErrTokenNotFound) {
+			failed = append(failed, email)
+			if firstErr == nil {
+				firstErr = err
+			}
 			continue
 		}
-		if err != nil {
-			failed = append(failed, email)
+		if len(copies) == 0 {
 			continue
 		}
 		kept, ok := 0, true
@@ -41,6 +49,9 @@ func PurgeWriteTokens(cfg *appconfig.Config) ([]string, error) {
 			}
 			if err := deleteFrom(c.store, email); err != nil {
 				ok = false
+				if firstErr == nil {
+					firstErr = err
+				}
 			}
 		}
 		if !ok {
@@ -55,7 +66,11 @@ func PurgeWriteTokens(cfg *appconfig.Config) ([]string, error) {
 	sort.Strings(removed)
 	if len(failed) > 0 {
 		sort.Strings(failed)
-		return removed, fmt.Errorf("could not remove write-capable tokens for %v from the token store; remove them manually", failed)
+		hint := "remove them manually"
+		if errors.Is(firstErr, errKeyringUnreadable) {
+			hint += fmt.Sprintf(", or set $%s=file if this system has no keyring", TokenStoreEnv)
+		}
+		return removed, fmt.Errorf("could not remove write-capable tokens for %v from the token store (%v); %s", failed, firstErr, hint)
 	}
 	if err := DeleteEnvRefreshCache(); err != nil {
 		return removed, fmt.Errorf("could not remove cached $%s tokens from %s: %w", RefreshTokenEnv, CredentialsPath(), err)

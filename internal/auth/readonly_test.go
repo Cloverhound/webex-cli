@@ -151,6 +151,31 @@ func TestPurgeWriteTokensReportsKeyringErrors(t *testing.T) {
 	}
 }
 
+func TestPurgeWriteTokensReportsKeyringErrorsBesideFileCopy(t *testing.T) {
+	keyring.MockInitWithError(errors.New("keychain locked"))
+	defer keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	if err := fileSet("ro@example.com", `{"read_only":true}`); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := PurgeWriteTokens(testConfig("ro@example.com"))
+	if err == nil || !strings.Contains(err.Error(), "keychain locked") {
+		t.Errorf("err = %v, want the keyring error although the file holds a copy", err)
+	}
+}
+
+func TestPurgeWriteTokensIgnoresMissingKeyringWithFileStore(t *testing.T) {
+	noKeyring(t)
+	defer keyring.MockInit()
+	t.Setenv(TokenStoreEnv, StoreFile)
+	saveTestToken(t, "ro@example.com", true)
+
+	if _, err := PurgeWriteTokens(testConfig("ro@example.com", "gone@example.com")); err != nil {
+		t.Errorf("purge failed with $%s=file and no keyring: %v", TokenStoreEnv, err)
+	}
+}
+
 func TestResolveTokenReadOnly(t *testing.T) {
 	keyring.MockInit()
 	cfg := testConfig("ro@example.com", "rw@example.com")

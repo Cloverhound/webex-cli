@@ -54,10 +54,14 @@ type storedCopy struct {
 	data  string
 }
 
+// errKeyringUnreadable means the keyring failed for a reason other than a
+// missing entry, so it may still hold the key.
+var errKeyringUnreadable = errors.New("the keyring could not be read")
+
 // readCopies returns the copies of key held by each of stores. A missing entry
-// is not an error. A keyring that fails for any other reason may still hold the
-// key, so its error is returned when no store produced a copy: reporting "not
-// found" would be a guess, and read-only purging relies on that.
+// is not an error, and no copies at all is ErrTokenNotFound. A keyring failure
+// is returned as errKeyringUnreadable together with any copies the file holds:
+// loading can use those, but read-only purging must not assume the keyring is empty.
 func readCopies(key string, stores []string) ([]storedCopy, error) {
 	var copies []storedCopy
 	var kerr error
@@ -70,7 +74,7 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 				continue
 			}
 			if err != nil {
-				kerr = err
+				kerr = fmt.Errorf("%w: %w", errKeyringUnreadable, err)
 				continue
 			}
 		} else {
@@ -84,13 +88,21 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 		}
 		copies = append(copies, storedCopy{store: store, data: data})
 	}
+	if kerr != nil {
+		return copies, kerr
+	}
 	if len(copies) == 0 {
-		if kerr != nil {
-			return nil, fmt.Errorf("the keyring could not be read: %w", kerr)
-		}
 		return nil, ErrTokenNotFound
 	}
 	return copies, nil
+}
+
+// keyringOptional reports whether keyring failures can be ignored when cleaning
+// up: with $WEBEX_TOKEN_STORE=file the user has said this host's keyring is not
+// in use, and on a host without one every keyring call fails.
+func keyringOptional() bool {
+	forced, err := forcedStore()
+	return err == nil && forced == StoreFile
 }
 
 // deleteFrom removes key from one store.
@@ -132,20 +144,14 @@ func storeSet(key, data string) (string, error) {
 	return StoreFile, nil
 }
 
+// storeDelete removes key from both stores whatever $WEBEX_TOKEN_STORE says,
+// since a copy saved under an earlier setting stays loadable.
 func storeDelete(key string) error {
 	forced, err := forcedStore()
 	if err != nil {
 		return err
 	}
-	var kerr error
-	if forced != StoreFile {
-		if kerr = keyring.Delete(serviceName, key); errors.Is(kerr, keyring.ErrNotFound) {
-			kerr = nil
-		}
-		if forced == StoreKeyring {
-			return kerr
-		}
-	}
+	kerr := deleteFrom(StoreKeyring, key)
 	hadFile := false
 	if _, err := fileGet(key); err == nil {
 		hadFile = true
@@ -155,7 +161,7 @@ func storeDelete(key string) error {
 	}
 	// Without a keyring, every delete fails there; that only matters when the
 	// token was not in the file.
-	if hadFile {
+	if forced == StoreFile || (hadFile && forced != StoreKeyring) {
 		return nil
 	}
 	return kerr

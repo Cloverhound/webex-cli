@@ -63,7 +63,7 @@ func LoadTokenWithStore(email string) (*StoredToken, string, error) {
 		return nil, "", err
 	}
 	copies, err := readCopies(email, stores)
-	if err != nil {
+	if len(copies) == 0 {
 		return nil, "", fmt.Errorf("loading token for %s: %w", email, err)
 	}
 	var best *StoredToken

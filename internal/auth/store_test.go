@@ -89,6 +89,30 @@ func TestStoreForcedFileSkipsKeyring(t *testing.T) {
 	}
 }
 
+func TestDeleteTokenRemovesEveryCopy(t *testing.T) {
+	for _, forced := range []string{"", StoreKeyring, StoreFile} {
+		keyring.MockInit()
+		t.Cleanup(func() { os.Remove(CredentialsPath()) })
+		t.Setenv(TokenStoreEnv, forced)
+		if err := keyring.Set(serviceName, "a@example.com", `{"access_token":"k"}`); err != nil {
+			t.Fatal(err)
+		}
+		if err := fileSet("a@example.com", `{"access_token":"f"}`); err != nil {
+			t.Fatal(err)
+		}
+
+		if err := DeleteToken("a@example.com"); err != nil {
+			t.Fatalf("store %q: %v", forced, err)
+		}
+		if _, err := keyring.Get(serviceName, "a@example.com"); !errors.Is(err, keyring.ErrNotFound) {
+			t.Errorf("store %q: keyring copy survived: %v", forced, err)
+		}
+		if _, err := fileGet("a@example.com"); !errors.Is(err, ErrTokenNotFound) {
+			t.Errorf("store %q: file copy survived: %v", forced, err)
+		}
+	}
+}
+
 func TestStoreRejectsUnknownStore(t *testing.T) {
 	t.Setenv(TokenStoreEnv, "vault")
 	if err := SaveToken("a@example.com", &StoredToken{}); err == nil {
