@@ -56,6 +56,17 @@ Releases are handled by a GitHub Actions workflow triggered by pushing a tag.
 Do **not** run `goreleaser` locally — it requires secrets (e.g. `WEBEX_CLIENT_ID`)
 that are only available in CI. Version and OAuth defaults are injected via ldflags.
 
+The same workflow publishes the npm packages: `npm/stage.mjs` turns goreleaser's
+`dist/` into `@cloverhound/webex-cli` plus one `@cloverhound/webex-cli-<os>-<cpu>`
+package per binary, and `npm/publish.sh` publishes them with provenance. It
+authenticates with npm trusted publishing (configured per package on npmjs.com
+for `release.yml`), or with the `NPM_TOKEN` secret when that is not set up.
+Tags with a prerelease suffix (`v0.X.0-rc.1`) publish under the `next` dist-tag.
+
+To check the packaging without secrets, run `goreleaser build --snapshot --clean`
+with dummy `WEBEX_CLIENT_*` values, then `node npm/stage.mjs` and `npm pack` the
+folders in `npm/build/`.
+
 ```bash
 git tag v0.X.0
 git push origin v0.X.0
@@ -68,10 +79,11 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 
 - `cmd/root.go` — Root cobra command, global flags (token, org, output, debug, dry-run, paginate, 429 retries, region)
 - `cmd/auth.go` — Auth subcommand (status, list, switch, set-org, clear-org)
-- `cmd/login.go` / `cmd/logout.go` — OAuth PKCE flow
+- `cmd/login.go` / `cmd/logout.go` — OAuth PKCE and device login
 - `cmd/mcp.go` / `cmd/mcp/` — MCP serve/stop, tools, resources, usage log
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
-- `internal/auth/` — Token storage (OS keyring), OAuth, org resolution
+- `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
+- `npm/` — npm wrapper package, staging, and publish scripts
 - `internal/client/` — HTTP client, request builder, pagination, 429 Retry-After
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)

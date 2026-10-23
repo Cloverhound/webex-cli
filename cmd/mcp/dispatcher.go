@@ -18,6 +18,7 @@ import (
 var blockedPrefixes = []string{
 	"login",
 	"logout",
+	"auth export",
 	"auth switch",
 	"auth set-org",
 	"auth clear-org",
@@ -121,14 +122,10 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 
 		args := strings.Fields(command)
 
-		// Blocklist check — join up to 2 tokens to cover two-word prefixes like "auth switch".
-		prefix := strings.Join(args[:min(2, len(args))], " ")
-		for _, blocked := range blockedPrefixes {
-			if strings.HasPrefix(prefix, blocked) {
-				return mcplib.NewToolResultText(fmt.Sprintf(
-					"Error: command '%s' is not permitted via the MCP server.", blocked,
-				)), nil
-			}
+		if blocked := blockedCommand(args); blocked != "" {
+			return mcplib.NewToolResultText(fmt.Sprintf(
+				"Error: command '%s' is not permitted via the MCP server.", blocked,
+			)), nil
 		}
 
 		// Injection guard: reject tokens containing shell-special characters.
@@ -217,6 +214,18 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 		}
 		return mcplib.NewToolResultText(strings.TrimSpace(stdout.String())), nil
 	}
+}
+
+// blockedCommand returns the blocked prefix that args start with, or "". Up to
+// two tokens are joined to cover two-word prefixes like "auth switch".
+func blockedCommand(args []string) string {
+	prefix := strings.Join(args[:min(2, len(args))], " ")
+	for _, blocked := range blockedPrefixes {
+		if strings.HasPrefix(prefix, blocked) {
+			return blocked
+		}
+	}
+	return ""
 }
 
 // actionToken returns the action verb from the command args.

@@ -7,11 +7,13 @@ The Webex CLI includes a [skill](https://agentskills.io) that enables AI coding 
 
 ## Automatic Setup
 
-The installer and `webex post-install` command will offer to install the skill for detected agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) via an interactive menu. Skills are also kept up to date when you run `webex update`.
+The installer and `webex post-install` command will offer to install the skill for detected agents (Claude Code, Claude Cowork, OpenAI Codex, Cursor) via an interactive menu. Without a terminal, or with `webex post-install --yes`, the skill is installed for detected agents without prompts (Cowork is skipped because it needs a manual upload).
+
+The skill files are embedded in the `webex` binary, so installing them needs no network access and the skill always matches the installed version. `webex update` updates installed copies to match the new binary.
 
 ## Manual Setup
 
-If you prefer to install manually, download the skill into the correct folder for your coding agent:
+If you prefer to install manually, download the skill into the correct folder for your coding agent. Replace `main` in the URLs with your installed version's tag (for example `v0.16.0`) to match your binary:
 
 ### Claude Code
 

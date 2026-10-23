@@ -1,0 +1,20 @@
+{
+  "name": "@cloverhound/webex-cli",
+  "version": "0.0.0",
+  "description": "CLI and MCP server for Webex Admin, Calling, Contact Center, Devices, Meetings, and Messaging APIs",
+  "license": "MIT",
+  "homepage": "https://github.com/Cloverhound/webex-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cloverhound/webex-cli.git"
+  },
+  "keywords": ["webex", "cli", "mcp", "cisco", "contact-center"],
+  "bin": {
+    "webex": "bin/webex.js"
+  },
+  "files": ["bin"],
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {}
+}

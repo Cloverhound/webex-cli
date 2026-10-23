@@ -1,10 +1,11 @@
 # Build artifacts
-webex
-webex-cli
+/webex
+/webex-cli
 *.exe
 dist/
 webex-mcp.dxt
 webex.skill
+npm/build/
 
 # Codegen intermediates
 codegen/api_outline.json
