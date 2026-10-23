@@ -62,6 +62,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).
 				req.QueryParam("eventCategories", eventCategories)
 				req.QueryParam("eventCategories", eventCategories)
 				if config.Paginate() {
+					req.OffsetPaging("offset", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -94,6 +95,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/adminAudit/eventCategories")
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

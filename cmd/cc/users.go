@@ -176,13 +176,6 @@ func init() {
 				req.QueryParam("includeUserProfile", includeUserProfile)
 				req.QueryParam("includeNames", includeNames)
 				req.QueryParam("includeSkillDetails", includeSkillDetails)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -329,13 +322,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/with-user-profile/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -376,13 +362,6 @@ func init() {
 				req.QueryParam("includeSkillDetails", includeSkillDetails)
 				req.QueryParam("checkIfUserHasDynamicSkill", checkIfUserHasDynamicSkill)
 				req.QueryParam("dynamicSkillId", dynamicSkillId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -637,15 +616,16 @@ func init() {
 		usersCmd.AddCommand(cmd)
 	}
 
-	{ // list-call-monitoring-id
+	{ // list-by-call-monitoring-config
 		var orgid string
 		var id string
 		var page string
 		var pageSize string
 		cmd := &cobra.Command{
-			Use:   "list-call-monitoring-id",
-			Short: "List users by call monitoring id",
-			Long:  `Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.`,
+			Use:     "list-by-call-monitoring-config",
+			Aliases: []string{"list-call-monitoring-id"},
+			Short:   "List users by call monitoring id",
+			Long:    `Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/by-call-monitoring-id/{id}")
 				req.PathParam("orgid", orgid)

@@ -57,13 +57,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/jobs/sendActivationEmails/{jobId}/status")
 				req.PathParam("orgId", orgId)
 				req.PathParam("jobId", jobId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -92,6 +85,7 @@ func init() {
 				req.PathParam("jobId", jobId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

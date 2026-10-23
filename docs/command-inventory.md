@@ -4,7 +4,7 @@ Changes introduced by the Postman collection refresh. Added names include rename
 
 ## Change classification
 
-**178 added**, **82 modified**, **97 renamed**, **0 deleted**. Added counts include renamed commands. Renamed entries retain aliases; deleted entries would mean the CLI spelling is no longer available. This refresh has no deleted spellings after compatibility aliases are accounted for. Modified entries include method, route, parameters, body, headers, and documentation changes.
+**201 added**, **91 modified**, **106 renamed**, **0 deleted**. Added counts include renamed commands. Renamed entries retain aliases; deleted entries would mean the CLI spelling is no longer available. This refresh has no deleted spellings after compatibility aliases are accounted for. Modified entries include method, route, parameters, body, headers, and documentation changes.
 
 ## Coverage
 
@@ -12,7 +12,7 @@ Changes introduced by the Postman collection refresh. Added names include rename
 | --- | ---: | ---: |
 | `admin` | 39 | 149 |
 | `calling` | 49 | 1111 |
-| `cc` | 64 | 498 |
+| `cc` | 67 | 512 |
 | `device` | 10 | 113 |
 | `meetings` | 23 | 173 |
 | `messaging` | 12 | 65 |
@@ -102,7 +102,21 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc business-hour delete` | `DELETE /organization/{orgid}/business-hours/{id}` | Delete an existing Business Hours resource by ID in a given organization. |
 | `webex cc business-hour get` | `GET /organization/{orgid}/business-hours/{id}` | Retrieve an existing Business Hours resource by ID in a given organization. |
 | `webex cc business-hour update` | `PUT /organization/{orgid}/business-hours/{id}` | Update an existing Business Hours resource by ID in a given organization. |
-| `webex cc call-monitoring whisper-coach-request` | `POST /v1/monitor/{interactionId}/coach` | This feature is currently in Beta |
+| `webex cc call-monitor barge-in` | `POST /v1/monitor/{taskId}/bargeIn` | Join a call that is already being monitored. |
+| `webex cc call-monitor create` | `POST /v1/monitor` | Start monitoring an ongoing call or the next inbound or outbound call. |
+| `webex cc call-monitor delete` | `DELETE /v1/monitor/{requestId}` | Delete a monitoring request. |
+| `webex cc call-monitor end` | `POST /v1/monitor/{taskId}/end` | End an ongoing monitoring session. |
+| `webex cc call-monitor hold` | `POST /v1/monitor/{taskId}/hold` | Put a monitoring session on hold. |
+| `webex cc call-monitor list-sessions` | `GET /v1/monitor/sessions` | List the requesting user's active monitoring sessions. |
+| `webex cc call-monitor unhold` | `POST /v1/monitor/{taskId}/unhold` | Resume a monitoring session that is on hold. |
+| `webex cc call-monitor whisper-coach` | `POST /v1/monitor/{interactionId}/coach` | Coach the agent on a call that is already being monitored. |
+| `webex cc call-monitoring-config create` | `POST /organization/{orgid}/call-monitoring` | Create a new Call Monitoring in a given organization. |
+| `webex cc call-monitoring-config delete` | `DELETE /organization/{orgid}/call-monitoring/{id}` | Delete an existing Call Monitoring by ID in a given organization. |
+| `webex cc call-monitoring-config delete-references` | `POST /organization/{orgid}/call-monitoring/delete-reference` | Remove references to the specified entities from call monitoring configurations. |
+| `webex cc call-monitoring-config get` | `GET /organization/{orgid}/call-monitoring/{id}` | Retrieve an existing Call Monitoring by ID in a given organization. |
+| `webex cc call-monitoring-config list` | `GET /organization/{orgid}/v2/call-monitoring` | Retrieve a list of Call Monitoring Configurations in a given organization. |
+| `webex cc call-monitoring-config patch` | `PATCH /organization/{orgid}/call-monitoring/{id}` | Partially update Call Monitoring by ID in a given organization. |
+| `webex cc call-monitoring-config update` | `PUT /organization/{orgid}/call-monitoring/{id}` | Update an existing Call Monitoring by ID in a given organization. |
 | `webex cc campaign-group list` | `GET /v3/campaign-management/campaign-groups/{campaignGroupName}/campaigns` | Retrieves the list of campaigns that belong to the specified campaign group |
 | `webex cc campaign-manager get-valid-times` | `GET /v1/organization/{orgId}/getValidCampaignTimes` | Gets valid campaign times for a campaign and agent |
 | `webex cc channel bulk-save` | `POST /organization/{orgid}/channel/bulk` | Create, Update or delete Channels in bulk in a given organization. |
@@ -174,6 +188,10 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc multimedia-profile delete` | `DELETE /organization/{orgid}/multimedia-profile/{id}` | Delete an existing Multimedia Profile by ID in a given organization. |
 | `webex cc multimedia-profile get` | `GET /organization/{orgid}/multimedia-profile/{id}` | Retrieve an existing Multimedia Profile by ID in a given organization. |
 | `webex cc multimedia-profile update` | `PUT /organization/{orgid}/multimedia-profile/{id}` | Update an existing Multimedia Profile by ID in a given organization. |
+| `webex cc organization-setting get` | `GET /organization/{orgid}/organization-setting/{id}` | Retrieve an existing Organization Setting by ID in a given organization. |
+| `webex cc organization-setting list` | `GET /organization/{orgid}/v2/organization-setting` | Retrieve a list of Organization Settings in a given organization. |
+| `webex cc organization-setting patch` | `PATCH /organization/{orgid}/organization-setting/{id}` | Partially update Organization Setting by ID in a given organization. |
+| `webex cc organization-setting update` | `PUT /organization/{orgid}/organization-setting/{id}` | Update an existing Organization Setting by ID in a given organization. |
 | `webex cc outdial-ani bulk-save-entries` | `POST /organization/{orgid}/outdial-ani/{outDialAniId}/entry/bulk` | Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization. |
 | `webex cc outdial-ani delete` | `DELETE /organization/{orgid}/outdial-ani/{id}` | Delete an existing Outdial ANI by ID in a given organization. |
 | `webex cc outdial-ani get` | `GET /organization/{orgid}/outdial-ani/{id}` | Retrieve an existing Outdial ANI by ID in a given organization. |
@@ -206,6 +224,9 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc team update` | `PUT /organization/{orgid}/team/{id}` | Update an existing Team by ID in a given organization. |
 | `webex cc templates get-flow` | `GET /templates/{id}` | Retrieve a specific flow template by its ID |
 | `webex cc templates list-flow` | `GET /templates` | List available flow templates that can be used to create new flows. |
+| `webex cc tenant-configuration get` | `GET /organization/{orgid}/tenant-configuration/{id}` | Retrieve an existing Tenant Configuration by ID in a given organization. |
+| `webex cc tenant-configuration list` | `GET /organization/{orgid}/v2/tenant-configuration` | Retrieve a list of Tenant Configuration in a given organization. |
+| `webex cc tenant-configuration update` | `PUT /organization/{orgid}/tenant-configuration/{id}` | Update an existing Tenant Configuration by ID in a given organization. |
 | `webex cc usage-reports create` | `POST /v1/usage-reports` | Creates a new usage report for the specified organization, resource type, |
 | `webex cc usage-reports delete` | `DELETE /v1/usage-reports/{reportId}` | Deletes the specified usage report and its associated file |
 | `webex cc usage-reports download-file` | `GET /v1/usage-reports/{fileId}/download` | Downloads one completed report file as a binary stream. |
@@ -218,7 +239,7 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc users bulk-partial-update-dynamic-skills` | `PATCH /organization/{orgid}/user/bulk/update-dynamic-skill/{skillId}` | Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization. |
 | `webex cc users get` | `GET /organization/{orgid}/user/{id}` | Retrieve an existing Users by ID in a given organization. |
 | `webex cc users list-by-ids` | `POST /organization/{orgid}/user/fetch-user-details-by-ids` | Retrieve an existing User's first name, last name and email by list of IDs in a given organization. |
-| `webex cc users list-call-monitoring-id` | `GET /organization/{orgid}/user/by-call-monitoring-id/{id}` | Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL. |
+| `webex cc users list-by-call-monitoring-config` | `GET /organization/{orgid}/user/by-call-monitoring-id/{id}` | Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL. |
 | `webex cc users patch` | `PATCH /organization/{orgid}/user/{id}` | Partially update User by ID in a given organization. |
 | `webex cc users update` | `PUT /organization/{orgid}/user/{id}` | Update an existing User by ID in a given organization. |
 | `webex cc work-types delete` | `DELETE /organization/{orgid}/work-type/{id}` | Delete an existing Work Type by ID in a given organization. |
@@ -252,6 +273,14 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc business-hour delete-id` | Alias for `webex cc business-hour delete` |
 | `webex cc business-hour get-id` | Alias for `webex cc business-hour get` |
 | `webex cc business-hour update-id` | Alias for `webex cc business-hour update` |
+| `webex cc call-monitoring barge-in-request` | Alias for `webex cc call-monitor barge-in` |
+| `webex cc call-monitoring create-request` | Alias for `webex cc call-monitor create` |
+| `webex cc call-monitoring delete-request` | Alias for `webex cc call-monitor delete` |
+| `webex cc call-monitoring end-request` | Alias for `webex cc call-monitor end` |
+| `webex cc call-monitoring get-sessions` | Alias for `webex cc call-monitor list-sessions` |
+| `webex cc call-monitoring hold-request` | Alias for `webex cc call-monitor hold` |
+| `webex cc call-monitoring unhold-request` | Alias for `webex cc call-monitor unhold` |
+| `webex cc call-monitoring whisper-coach-request` | Alias for `webex cc call-monitor whisper-coach` |
 | `webex cc contact-number delete-id` | Alias for `webex cc contact-number delete` |
 | `webex cc contact-number get-id` | Alias for `webex cc contact-number get` |
 | `webex cc contact-number update-id` | Alias for `webex cc contact-number update` |
@@ -319,6 +348,7 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 | `webex cc users bulk-update-dynamic-skills` | Alias for `webex cc users bulk-partial-update-dynamic-skills` |
 | `webex cc users get-id` | Alias for `webex cc users get` |
 | `webex cc users get-ids` | Alias for `webex cc users list-by-ids` |
+| `webex cc users list-call-monitoring-id` | Alias for `webex cc users list-by-call-monitoring-config` |
 | `webex cc users patch-id` | Alias for `webex cc users patch` |
 | `webex cc users update-id` | Alias for `webex cc users update` |
 | `webex cc work-types delete-id` | Alias for `webex cc work-types delete` |
@@ -329,6 +359,7 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 
 - **Modified** `webex cc agent-personal-greeting-files list` — query parameters: updated `filter`, `includeAgentDetails`; help/description updated
 - **Modified** `webex cc agent-summaries list-2` — body fields: removed `agentCiUserId`
+- **Modified** `webex cc agents buddy-list`, `get-activities`, `get-statistics`, `login`, `logout`, `reload`, `state-change` — help/description updated
 - **Modified** `webex cc business-hour bulk-save` — help/description updated
 - **Modified** `webex cc business-hour list` — query parameters: updated `includeCount`, `singleObjectResponse`; help/description updated
 - **Modified** `webex cc campaign-manager update-request` — JSON body handling changed
@@ -363,8 +394,10 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 - **Modified** `webex cc flow import` — path: `/flow-store/{orgId}/project/{projectId}/flows:import` → `/{orgId}/project/{projectId}/v2/flows:import`; query parameters: updated `overwrite`; body fields: added `contactType`, `description`, `flowName`, `flowType`, `status`, `version`; headers: removed `Content-Length`; request body support changed; JSON body handling changed; documented response code changed; help/description updated
 - **Modified** `webex cc flow list` — path: `/flow-store/{orgId}/project/{projectId}/flows` → `/{orgId}/project/{projectId}/flows`; query parameters: added `isValidation`, `searchBy`; updated `includePagination`; documented response code changed; help/description updated
 - **Modified** `webex cc flow publish` — path: `/flow-store/{orgId}/project/{projectId}/flows/{flowId}:publish` → `/{orgId}/project/{projectId}/flows/{flowId}:publish`; query parameters: added `flowType`, `skipValidation`; documented response code changed; help/description updated
+- **Modified** `webex cc functions publish` — body fields: removed the `key_0`–`key_3` placeholder flags; send free-form properties with `--body`
 - **Modified** `webex cc holiday-list bulk-save` — help/description updated
 - **Modified** `webex cc holiday-list list` — query parameters: updated `includeCount`, `singleObjectResponse`; help/description updated
+- **Modified** `webex cc journey-customer-identification create-remove-replace-person` — help/description updated
 - **Modified** `webex cc notification subscribe` — help/description updated
 - **Modified** `webex cc outdial-ani bulk-save` — help/description updated
 - **Modified** `webex cc outdial-ani list` — query parameters: updated `singleObjectResponse`; help/description updated

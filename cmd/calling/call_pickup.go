@@ -161,13 +161,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("callPickupId", callPickupId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

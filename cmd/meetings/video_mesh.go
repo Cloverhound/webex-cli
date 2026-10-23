@@ -51,6 +51,7 @@ func init() {
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -92,13 +93,6 @@ func init() {
 				req.PathParam("clusterId", clusterId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -136,6 +130,7 @@ func init() {
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -177,13 +172,6 @@ func init() {
 				req.PathParam("nodeId", nodeId)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -231,6 +219,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -283,13 +272,6 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -336,13 +318,6 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -380,6 +355,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -422,6 +398,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -463,13 +440,6 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -506,6 +476,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -547,13 +518,6 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -604,6 +568,7 @@ Changes in V2:
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -660,13 +625,6 @@ Changes in V2:
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -717,13 +675,6 @@ Changes in V2:
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -749,6 +700,7 @@ Changes in V2:
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -775,13 +727,6 @@ Changes in V2:
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters/{clusterId}")
 				req.PathParam("clusterId", clusterId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -879,13 +824,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testStatus")
 				req.QueryParam("commandId", commandId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -907,13 +845,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/testResults")
 				req.QueryParam("commandId", commandId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -954,6 +885,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1003,13 +935,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1053,13 +978,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("triggerType", triggerType)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1099,6 +1017,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("to", to)
 				req.QueryParam("deviceType", deviceType)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1143,13 +1062,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				req.QueryParam("deviceType", deviceType)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1181,6 +1093,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("eventScope", eventScope)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -1238,13 +1151,6 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/eventThresholds/{eventThresholdId}")
 				req.PathParam("eventThresholdId", eventThresholdId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

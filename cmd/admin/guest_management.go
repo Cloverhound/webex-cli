@@ -67,13 +67,6 @@ func init() {
 			Long:  "To retrieve the number of guests, the scopes `guest-issuer:read` or `guest-issuer:write` are needed.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/guests/count")
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

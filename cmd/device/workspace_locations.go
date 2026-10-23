@@ -45,6 +45,7 @@ func init() {
 				req.QueryParam("countryCode", countryCode)
 				req.QueryParam("cityName", cityName)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -125,13 +126,6 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}")
 				req.PathParam("locationId", locationId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -232,6 +226,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}/floors")
 				req.PathParam("locationId", locationId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -300,13 +295,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}/floors/{floorId}")
 				req.PathParam("locationId", locationId)
 				req.PathParam("floorId", floorId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

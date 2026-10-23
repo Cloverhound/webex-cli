@@ -39,13 +39,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/ai-feature/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -234,13 +227,6 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/ai-feature/auto-csat/question/{id}")
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

@@ -62,9 +62,9 @@ Role and Scope: Requires id full admin or any role with cjp:config_write scope`,
 		cmd := &cobra.Command{
 			Use:   "create-remove-replace-person",
 			Short: "Add/Remove/Replace details of a Person",
-			Long: `The Patch Api can be used to add/remove identities(email, phone, customerId) or replace firstName and lastName of an Individual. We support only add, replace and remove operations. 
+			Long: `The Patch Api can be used to add/remove identities (email, phone, customerId, temporaryId, and socialId) or replace firstName and lastName of an Individual. We support only add, replace, and remove operations. 
 
-For a more information on Patch Requests, see this  [JSON PATCH guide](https://jsonpatch.com). 
+For more information on Patch Requests, see this [JSON PATCH guide](https://jsonpatch.com). 
 
 Role and Scope: Requires id full admin role with cjp:config_write or any role with cjp:user or cjp:config_write scope.`,
 			RunE: func(cmd *cobra.Command, args []string) error {

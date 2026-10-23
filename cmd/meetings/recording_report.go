@@ -55,6 +55,7 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -94,6 +95,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -140,6 +142,7 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -173,13 +176,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/recordingReport/meetingArchives/{archiveId}")
 				req.PathParam("archiveId", archiveId)
 				req.Header("timezone", timezone)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

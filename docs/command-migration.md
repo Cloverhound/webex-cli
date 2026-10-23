@@ -6,7 +6,7 @@ Every row gives the full previous command, its current canonical command, what t
 
 **Flow formats:** `flow import`/`export` use the current typed flow document; `import-legacy`/`export-legacy` use deprecated raw FDL. This intentionally changes the format of the pre-refresh unsuffixed commands. Current flow, activity, event, and template commands use unprefixed URLs. Duplicate prefixed commands and the temporary `-direct` names have been removed.
 
-The refresh tables below contain **94 previous-to-current mappings**, followed by **88 ID-suffix mappings**. Commands whose names and groups did not change are omitted.
+The refresh tables below contain **103 previous-to-current mappings**, followed by **88 ID-suffix mappings**. Commands whose names and groups did not change are omitted.
 
 ## calling call-controls-for-me
 
@@ -42,6 +42,21 @@ The refresh tables below contain **94 previous-to-current mappings**, followed b
 | `webex cc agent-personal-greeting-files update-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files update` | Update an existing Greeting File by ID in a given organization. | Yes — alias |
 | `webex cc agent-personal-greeting-files delete-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files delete` | Delete an existing Greeting File by ID in a given organization. | Yes — alias |
 | `webex cc agent-personal-greeting-files patch-id-v2-api` | Before refresh | `webex cc agent-personal-greeting-files patch` | Partially update Greeting File by ID in a given organization. | Yes — alias |
+
+## cc call-monitor
+
+Live monitoring sessions moved from `call-monitoring` to `call-monitor`, and the redundant `-request` suffix was dropped. `call-monitoring` remains a group alias, so every previous spelling still works. Saved monitoring configurations are a separate group, `call-monitoring-config`.
+
+| Previous full command | Source | Current full command | What it does | Previous spelling still works? |
+| --- | --- | --- | --- | --- |
+| `webex cc call-monitoring create-request` | Before refresh | `webex cc call-monitor create` | Start monitoring an ongoing call or the next inbound or outbound call. | Yes — alias |
+| `webex cc call-monitoring barge-in-request` | Before refresh | `webex cc call-monitor barge-in` | Join a call that is already being monitored. | Yes — alias |
+| `webex cc call-monitoring whisper-coach-request` | Before refresh | `webex cc call-monitor whisper-coach` | Coach the agent on a call that is already being monitored. | Yes — alias |
+| `webex cc call-monitoring hold-request` | Before refresh | `webex cc call-monitor hold` | Put a monitoring session on hold. | Yes — alias |
+| `webex cc call-monitoring unhold-request` | Before refresh | `webex cc call-monitor unhold` | Resume a monitoring session that is on hold. | Yes — alias |
+| `webex cc call-monitoring end-request` | Before refresh | `webex cc call-monitor end` | End an ongoing monitoring session. | Yes — alias |
+| `webex cc call-monitoring delete-request` | Before refresh | `webex cc call-monitor delete` | Delete a monitoring request. | Yes — alias |
+| `webex cc call-monitoring get-sessions` | Before refresh | `webex cc call-monitor list-sessions` | List the requesting user's active monitoring sessions. | Yes — alias |
 
 ## cc contact-service-queue
 
@@ -153,6 +168,7 @@ The refresh tables below contain **94 previous-to-current mappings**, followed b
 | `webex cc users list-2` | Generated collection | `webex cc users list-by-ids` | Retrieve an existing User's first name, last name and email by list of IDs in a given organization. | No — use the new command |
 | `webex cc users get-ids` | Before refresh | `webex cc users list-by-ids` | Retrieve an existing User's first name, last name and email by list of IDs in a given organization. | Yes — alias |
 | `webex cc users bulk-update-dynamic-skills` | Before refresh | `webex cc users bulk-partial-update-dynamic-skills` | Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization. | Yes — alias |
+| `webex cc users list-call-monitoring-id` | Before refresh | `webex cc users list-by-call-monitoring-config` | List the users covered by a call monitoring configuration's team filters. | Yes — alias |
 
 ## messaging hds
 
@@ -271,4 +287,4 @@ The ID remains a parameter: `get --id`, `delete --id`, `patch --id`, and `update
 
 Duplicate prefixed entries are excluded through `SUPERSEDED_ROUTES` in `codegen/naming_overrides.py`. Each exclusion identifies a required replacement request; extraction fails if it disappears. The generator keeps the replacement’s complete request contract. Legacy import/export retain their prefixed routes. Publish uses the unprefixed route.
 
-Exact `get-id`, `delete-id`, `patch-id`, and `update-id` names are shortened centrally by `apply_naming_overrides` in `codegen/extract_api_spec.py`, with collision checks and old-name aliases. Route-specific names and compatibility aliases are defined in `codegen/naming_overrides.py` and applied to the enriched spec before generating Go commands and skill references. Update the override table, run `make codegen`, and update this reference when changing a mapping. Handwritten request implementations continue to use `custom_*.go` and the generator skip lists.
+Exact `get-id`, `delete-id`, `patch-id`, and `update-id` names are shortened centrally by `apply_naming_overrides` in `codegen/extract_api_spec.py`, with collision checks. Only the released names listed in `RELEASED_ID_ALIASES` keep the suffixed spelling as an alias; endpoints added later get the short name alone. Route-specific names and compatibility aliases are defined in `codegen/naming_overrides.py` and applied to the enriched spec before generating Go commands and skill references. Update the override table, run `make codegen`, and update this reference when changing a mapping. Handwritten request implementations continue to use `custom_*.go` and the generator skip lists.

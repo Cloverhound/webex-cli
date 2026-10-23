@@ -163,13 +163,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callRecording")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -253,13 +246,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -350,13 +336,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/number")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -421,6 +400,7 @@ func init() {
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -452,6 +432,7 @@ func init() {
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -482,13 +463,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callerId")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -548,13 +522,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callWaiting")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -618,13 +585,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callForwarding")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -684,13 +644,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/incomingPermission")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -763,13 +716,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/outgoingPermission")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -833,13 +779,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/outgoingPermission/accessCodes")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -973,13 +912,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/outgoingPermission/autoTransferNumbers")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1052,13 +984,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/outgoingPermission/digitPatterns")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1196,13 +1121,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.PathParam("virtualLineId", virtualLineId)
 				req.PathParam("digitPatternId", digitPatternId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1309,13 +1227,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/intercept")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1375,13 +1286,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/agent/availableCallerIds")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1404,13 +1308,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/agent/callerId")
 				req.PathParam("virtualLineId", virtualLineId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1470,13 +1367,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/voicemail")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1610,13 +1500,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/musicOnHold")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1676,13 +1559,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/pushToTalk")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1755,13 +1631,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/callBridge")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1825,13 +1694,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/bargeIn")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1898,13 +1760,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/privacy")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -2199,13 +2054,6 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/virtualLines/{virtualLineId}/doNotDisturb")
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

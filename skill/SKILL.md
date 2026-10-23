@@ -232,6 +232,8 @@ webex meetings transcripts list
 webex messaging rooms list --type group --last 24h
 webex messaging messages list --room-id <roomId>
 webex messaging messages create --body '{"roomId":"<roomId>","text":"Hello!"}'
+# Local file upload via the existing files array (see Messaging sub-skill)
+webex messaging messages create --body '{"toPersonEmail":"user@example.com","files":["./guide.md"]}'
 ```
 
 ## Flow authoring and migration
@@ -272,6 +274,8 @@ webex cc entry-point list --paginate
 webex admin people list --paginate
 webex meetings recordings list --paginate
 ```
+
+`--paginate` sets the page size itself (100 per request), so `--page-size`, `--size` and `--max` have no effect with it. Commands that return a single object ignore it. It follows `Link: rel="next"` headers where the API sends them. Known gaps: `cc tasks get` and the Slido `list-compliance-events` commands return only the first page.
 
 Or paginate manually (CC):
 ```bash

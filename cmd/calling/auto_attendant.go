@@ -80,13 +80,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("autoAttendantId", autoAttendantId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -217,13 +210,6 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.PathParam("autoAttendantId", autoAttendantId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -340,13 +326,6 @@ Retrieving a selective call forwarding rule's settings for an auto attendant req
 				req.PathParam("autoAttendantId", autoAttendantId)
 				req.PathParam("ruleId", ruleId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -653,6 +632,7 @@ Retrieving a selective call forwarding rule's settings for an auto attendant req
 				req.PathParam("autoAttendantId", autoAttendantId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err

@@ -41,6 +41,7 @@ func init() {
 				req.QueryParam("hostEmail", hostEmail)
 				req.QueryParam("panelist", panelist)
 				if config.Paginate() {
+					req.OffsetPaging("", "max", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -150,13 +151,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingInvitees/{meetingInviteeId}")
 				req.PathParam("meetingInviteeId", meetingInviteeId)
 				req.QueryParam("hostEmail", hostEmail)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

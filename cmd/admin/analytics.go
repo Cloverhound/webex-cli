@@ -48,13 +48,6 @@ func init() {
 				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -89,13 +82,6 @@ func init() {
 				}
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -132,13 +118,6 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

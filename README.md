@@ -66,6 +66,16 @@ webex messaging rooms list
 webex messaging messages list --room-id <id>
 ```
 
+## Message File Attachments
+
+Put one local file path in the existing JSON `files` array to upload it; `http://` and `https://` entries keep the JSON URL behavior:
+
+```bash
+webex messaging messages create --body '{"toPersonEmail":"user@example.com","text":"Guide attached","files":["./guide.md"]}'
+```
+
+Relative paths use the current working directory. See the [Messaging skill](skill/messaging/SKILL.md#send-a-message-create) for limits (one regular file up to 100 MiB, string fields only) and dry-run behavior.
+
 ## Audio File & Recording Downloads
 
 Several commands provide streamlined binary download and multipart upload for audio files and recordings:
@@ -231,7 +241,7 @@ webex cc users list --output csv > users.csv
 | `--organization <orgId>` | Override org ID |
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
-| `--paginate` | Auto-paginate list results |
+| `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
 
 ## Configuration

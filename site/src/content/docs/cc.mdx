@@ -30,7 +30,8 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 | `auto-csat` | Automated CSAT configuration |
 | `auxiliary-code` | Idle and wrap-up reason codes |
 | `business-hour` | Business hours schedules |
-| `call-monitoring` | Call monitoring configuration |
+| `call-monitor` | Live call monitoring sessions: start, barge in, coach, hold, and end (alias: `call-monitoring`) |
+| `call-monitoring-config` | Saved call monitoring configurations |
 | `callbacks` | Callback management |
 | `campaign-manager` | Outbound campaign management |
 | `captures` | Capture management |
@@ -58,6 +59,7 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 | `journey-workspace-management` | Journey workspace management |
 | `multimedia-profile` | Channel blending profiles |
 | `notification` | Notification management |
+| `organization-setting` | Organization-wide contact center settings |
 | `outdial-ani` | Outdial ANI lists |
 | `overrides` | Schedule overrides |
 | `queues` | Queue statistics and management |
@@ -70,6 +72,7 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 | `subscriptions` | Subscription management |
 | `tasks` | Task management |
 | `team` | Agent teams |
+| `tenant-configuration` | Tenant configuration |
 | `user-profiles` | User profile (access control) |
 | `users` | CC-enabled users |
 | `work-types` | Work type definitions |
@@ -110,6 +113,8 @@ Auto-paginate to get all results:
 ```bash
 webex cc entry-point list --paginate
 ```
+
+`--paginate` requests 100 items per page and overrides `--page-size` or `--size`. Commands that return a single object ignore it. `cc tasks get` returns only the first page because the API does not report a page count.
 
 Manual pagination:
 

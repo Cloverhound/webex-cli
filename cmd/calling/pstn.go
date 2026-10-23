@@ -39,13 +39,6 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("serviceTypes", serviceTypes)
 				req.QueryParam("serviceTypes", serviceTypes)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -116,13 +109,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/pstn/locations/{locationId}/connection")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

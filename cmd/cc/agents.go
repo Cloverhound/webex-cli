@@ -41,7 +41,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "login",
 			Short: "Login",
-			Long:  `Allows the user to login to their desktop. It does not allow a duplicate login and sends an error message over websocket, if an active session already exists. Requires 'cjp:user' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			Long:  `Allows the user to login to their desktop. It does not allow a duplicate login and sends an error message over websocket if an active session already exists. Requires the 'cjp:user' scope. When Licensed Administrator access is enabled for the organization, the access token must also contain at least one of the following roles: 'cjp.standard_agent', 'cjp.premium_agent', 'cjp.supervisor', 'cjp.admin', or 'id_full_admin'. A Licensed Administrator logging in with supervisor capabilities must have the 'cjp.admin' or 'id_full_admin' role, the 'cjp.premium_agent' role, and supervisor capabilities enabled. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/agents/login")
 				if bodyFile != "" {
@@ -84,7 +84,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "logout",
 			Short: "Logout",
-			Long:  `Allows the user to logout from their Desktop. This API needs to be called once the WSS session has been successfully established. Requires 'cjp:user','id_full_admin','id_readonly_admin','atlas-portal.partner.salesadmin','cjp.admin','cjp.supervisor','atlas-portal.partner.provision_admin' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			Long:  `Allows the user to logout from their Desktop. This API needs to be called once the WSS session has been successfully established. Self logout for an agent or supervisor requires the 'cjp:user' scope. Logout on behalf of another user is available to a supervisor with the 'cjp:user' scope and 'cjp.supervisor' role, or to an authorized administrator, help-desk user, or partner with the applicable role: 'id_full_admin', 'id_readonly_admin', 'cjp.admin', 'atlas-portal.partner.salesadmin', 'atlas-portal.partner.helpdesk', or 'atlas-portal.partner.provision_admin'. Partner and external-administrator requests must also be authorized for the managed organization and include the organization and agent identifiers. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/v2/agents/logout")
 				if bodyFile != "" {
@@ -122,7 +122,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "state-change",
 			Short: "State Change",
-			Long:  `Allows the user to toggle between the Idle and Available states. An Administrator within the organization having an Agent license can perform a self state change when they have an active agent session. Supervisors can perform a self state change as well as state changes for agents and admin users within their authorized teams when 'Change Agent States' module is enabled. Requires 'cjp:user' scope for authorization.For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
+			Long:  `Allows the user to toggle between the Idle and Available states for the requested channels. Self state changes for an agent or supervisor require the 'cjp:user' scope and an active agent session. Cross-agent state changes require the 'cjp:user' scope and 'cjp.supervisor' role, and are limited to users in the supervisor's authorized teams. A Licensed Administrator can perform a cross-agent state change when Licensed Administrator access is enabled and the token contains the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role; the administrator must also have supervisor capabilities enabled and access to the target user's team. Agent State Control must be enabled for the organization and requested channels. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "PUT", "/v2/agents/session/state")
 				if bodyFile != "" {
@@ -159,7 +159,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "reload",
 			Short: "Reload",
-			Long:  `Allows the user to receive all the contact assigned to particular agent and state. Requires 'cjp:user' scope for authorization.`,
+			Long:  "Requests restoration of the active agent session, including agent state and assigned interaction context. This asynchronous API returns `202 Accepted` when the request is accepted for processing; the restoration result is delivered over WebSocket. The success notification is selected by the API version persisted when the agent logged in, not by the reload endpoint version. A V1 login session receives `AgentReloginSuccess`, and a V2 login session receives `AgentChannelReloginSuccess`; therefore, either reload endpoint can result in either success notification. The active session remains on its login version until the agent logs out and starts a new session. See [AgentReloginSuccess](/docs/contact-control-apis#agentreloginsuccess) and [AgentChannelReloginSuccess](/docs/contact-control-apis#agentchannelreloginsuccess) in the Contact Control API Guide. Requires the 'cjp:user' scope for authorization.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v2/agents/reload")
 				resp, statusCode, err := req.Do()
@@ -181,7 +181,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "buddy-list",
 			Short: "Buddy Agents List",
-			Long:  `Returns the list of agents in the given state and media according to agent profile settings. Requires 'cjp:user' scope for authorization.`,
+			Long:  `Returns the list of agents in the given state and media according to agent profile settings. Requires an agent or supervisor access token with the 'cjp:user' scope.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "POST", "/v1/agents/buddyList")
 				if bodyFile != "" {
@@ -224,7 +224,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-activities",
 			Short: "Get Agent Activities",
-			Long: `Retrieve agent activities. Sorted by start time ascending.
+			Long: `Retrieve agent activities. Requires a bearer access token authorized to access the requested organization and agent data. Results are sorted by start time in ascending order.
 Maximum number of records that can be fetched for the given from and to is 10,000. 
 For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
 The response will be compressed only if its size exceeds 1 MB.
@@ -324,7 +324,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 		cmd := &cobra.Command{
 			Use:   "get-statistics",
 			Short: "Get Agent Statistics",
-			Long: `Retrieve Agent statistics information for specified time duration and interval.
+			Long: `Retrieve agent statistics for the specified time duration and interval. Requires a bearer access token authorized to access the requested organization and agent data.
 For this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. 
 The response will be compressed only if its size exceeds 1 MB.
 If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.`,
@@ -362,13 +362,6 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("agentIds", agentIds)
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

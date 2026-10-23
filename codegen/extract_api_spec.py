@@ -13,7 +13,9 @@ import json
 import glob
 import os
 import re
-from naming_overrides import NAMING_OVERRIDES, GROUP_ALIASES, COLLECTION_MOVES, SUPERSEDED_ROUTES
+from naming_overrides import (
+    NAMING_OVERRIDES, GROUP_ALIASES, COLLECTION_MOVES, SUPERSEDED_ROUTES, RELEASED_ID_ALIASES,
+)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -85,6 +87,10 @@ def parse_body_fields(raw_body):
     has_complex = False
 
     for key, value in body.items():
+        # Postman writes key_0, key_1, ... for free-form (additionalProperties)
+        # bodies; they are examples, not field names, so only --body can send them.
+        if re.fullmatch(r'key_\d+', key):
+            continue
         go_type = infer_go_type(value)
 
         if go_type == 'object':
@@ -387,7 +393,8 @@ def apply_naming_overrides(collection_name, folders):
             ep['aliases'] = list(aliases)
             if command in ('get-id', 'delete-id', 'patch-id', 'update-id'):
                 ep['command'] = command[:-3]
-                ep['aliases'] = list(dict.fromkeys([command, *aliases]))
+                if command in RELEASED_ID_ALIASES.get(collection_name, {}).get(group, ()):
+                    ep['aliases'] = list(dict.fromkeys([command, *aliases]))
                 shortened_groups.add(group)
             target = merged.setdefault(group, {
                 'group': group, 'original_folders': [], 'endpoints': [],

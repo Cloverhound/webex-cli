@@ -157,13 +157,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -222,6 +215,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -250,13 +244,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -281,13 +268,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix/{jobId}/errors")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -357,13 +337,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/features/emergencyCallbackNumber")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -542,13 +515,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/musicOnHold")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -573,13 +539,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/privateNetworkConnect")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -944,6 +903,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
+					req.OffsetPaging("", "", 0)
 					resp, statusCode, err := req.DoPaginated(true)
 					if err != nil {
 						return err
@@ -988,13 +948,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("extension", extension)
 				req.QueryParam("personId", personId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1291,13 +1244,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}/errors")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1322,13 +1268,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/locations/deleteCallingLocation/{jobId}")
 				req.PathParam("jobId", jobId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -1353,13 +1292,6 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/locations/{locationId}/callCaptions")
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
