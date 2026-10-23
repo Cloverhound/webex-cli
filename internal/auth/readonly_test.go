@@ -2,7 +2,10 @@ package auth
 
 import (
 	"errors"
+	"net/http"
+	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -131,48 +134,127 @@ func TestPurgeWriteTokensDeletesEnvRefreshCache(t *testing.T) {
 	}
 }
 
-func TestPurgeWriteTokensReportsKeyringErrors(t *testing.T) {
-	keyring.MockInitWithError(errors.New("keychain locked"))
+func TestPurgeWriteTokensSkipsUnreadableKeyring(t *testing.T) {
+	noKeyring(t)
 	defer keyring.MockInit()
-	cfg := testConfig("locked@example.com")
-
-	removed, err := PurgeWriteTokens(cfg)
-	if err == nil {
-		t.Fatal("expected error when the keyring cannot be read or cleared")
-	}
-	if !strings.Contains(err.Error(), "locked@example.com") {
-		t.Errorf("error does not name the user: %v", err)
-	}
-	if len(removed) != 0 {
-		t.Errorf("removed = %v, want none", removed)
-	}
-	if _, ok := cfg.Users["locked@example.com"]; !ok {
-		t.Error("user removed from config although its token could not be deleted")
-	}
-}
-
-func TestPurgeWriteTokensReportsKeyringErrorsBesideFileCopy(t *testing.T) {
-	keyring.MockInitWithError(errors.New("keychain locked"))
-	defer keyring.MockInit()
-	t.Cleanup(func() { os.Remove(CredentialsPath()) })
 	if err := fileSet("ro@example.com", `{"read_only":true}`); err != nil {
 		t.Fatal(err)
 	}
+	if err := fileSet("rw@example.com", `{"access_token":"write"}`); err != nil {
+		t.Fatal(err)
+	}
+	cfg := testConfig("ro@example.com", "rw@example.com")
 
-	_, err := PurgeWriteTokens(testConfig("ro@example.com"))
-	if err == nil || !strings.Contains(err.Error(), "keychain locked") {
-		t.Errorf("err = %v, want the keyring error although the file holds a copy", err)
+	removed, err := PurgeWriteTokens(cfg)
+	if err != nil {
+		t.Fatalf("purge failed without a keyring: %v", err)
+	}
+	if strings.Join(removed, ",") != "rw@example.com" {
+		t.Errorf("removed = %v", removed)
+	}
+	if _, err := fileGet("rw@example.com"); !errors.Is(err, ErrTokenNotFound) {
+		t.Errorf("write-capable file copy survived: %v", err)
+	}
+	if !HasReadOnlyToken("ro@example.com") {
+		t.Error("read-only file copy was removed")
 	}
 }
 
-func TestPurgeWriteTokensIgnoresMissingKeyringWithFileStore(t *testing.T) {
-	noKeyring(t)
-	defer keyring.MockInit()
-	t.Setenv(TokenStoreEnv, StoreFile)
+func TestPurgeWriteTokensRemovesUnlistedLogins(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	if err := keyring.Set(serviceName, "orphan@example.com", `{"access_token":"write"}`); err != nil {
+		t.Fatal(err)
+	}
+	if err := fileSet("orphan@example.com", `{"access_token":"write"}`); err != nil {
+		t.Fatal(err)
+	}
 	saveTestToken(t, "ro@example.com", true)
 
-	if _, err := PurgeWriteTokens(testConfig("ro@example.com", "gone@example.com")); err != nil {
-		t.Errorf("purge failed with $%s=file and no keyring: %v", TokenStoreEnv, err)
+	if _, err := PurgeWriteTokens(testConfig("ro@example.com")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := keyring.Get(serviceName, "orphan@example.com"); !errors.Is(err, keyring.ErrNotFound) {
+		t.Errorf("unlisted keyring login survived: %v", err)
+	}
+	if _, err := fileGet("orphan@example.com"); !errors.Is(err, ErrTokenNotFound) {
+		t.Errorf("unlisted file login survived: %v", err)
+	}
+	if !HasReadOnlyToken("ro@example.com") {
+		t.Error("read-only login was removed")
+	}
+}
+
+func TestPurgeWriteTokensWaitsForRefresh(t *testing.T) {
+	keyring.MockInit()
+	started, release := make(chan struct{}), make(chan struct{})
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		close(started)
+		<-release
+		w.Write([]byte(`{"access_token":"renewed","refresh_token":"next","expires_in":3600}`))
+	}))
+	defer srv.Close()
+	old := TokenURL
+	TokenURL = srv.URL
+	defer func() { TokenURL = old }()
+	cfg := testConfig("rw@example.com")
+	if err := SaveToken("rw@example.com", &StoredToken{AccessToken: "old", RefreshToken: "rt", IssuedAt: time.Now()}); err != nil {
+		t.Fatal(err)
+	}
+
+	refreshed := make(chan error, 1)
+	go func() { _, err := refreshStored("rw@example.com", cfg, "old"); refreshed <- err }()
+	<-started
+	purged := make(chan error, 1)
+	go func() { _, err := PurgeWriteTokens(cfg); purged <- err }()
+	time.Sleep(100 * time.Millisecond)
+	close(release)
+
+	if err := <-refreshed; err != nil {
+		t.Fatal(err)
+	}
+	if err := <-purged; err != nil {
+		t.Fatal(err)
+	}
+	if _, err := LoadToken("rw@example.com"); err == nil {
+		t.Error("a refresh in progress saved a write-capable token after the purge")
+	}
+}
+
+func TestKeyringExpected(t *testing.T) {
+	runDir := t.TempDir()
+	env := func(kv ...string) func(string) string {
+		return func(k string) string {
+			for i := 0; i < len(kv); i += 2 {
+				if kv[i] == k {
+					return kv[i+1]
+				}
+			}
+			return ""
+		}
+	}
+	cases := []struct {
+		name   string
+		goos   string
+		getenv func(string) string
+		want   bool
+	}{
+		{"mac", "darwin", env(), true},
+		{"windows", "windows", env(), true},
+		{"linux sandbox", "linux", env(), false},
+		{"linux session bus", "linux", env("DBUS_SESSION_BUS_ADDRESS", "unix:path=/x"), true},
+		{"file store", "darwin", env(TokenStoreEnv, "file"), false},
+	}
+	for _, c := range cases {
+		if got := keyringExpected(c.goos, c.getenv, runDir); got != c.want {
+			t.Errorf("%s: keyringExpected = %v, want %v", c.name, got, c.want)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(runDir, "bus"), nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if !keyringExpected("linux", env(), runDir) {
+		t.Error("linux with a systemd user bus: keyringExpected = false")
 	}
 }
 

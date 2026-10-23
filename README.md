@@ -188,7 +188,7 @@ For CI and unattended agents where nobody can approve a code:
 
 `webex login --read-only` requests only read scopes, so Webex itself rejects writes made with the token. Use it when an AI agent should read but not change your Webex data. While read-only mode is on:
 
-- Stored logins with write access are deleted from the keyring and credentials file, because any program running as you can read them.
+- Stored logins with write access are deleted from the keyring and credentials file, because any program running as you can read them. A keyring that can't be read, such as in a container with none, is skipped; on a host that should have one, login prints a warning.
 - `PUT`, `PATCH`, `DELETE`, and uploads are refused before they are sent. `POST` is allowed only for a fixed list of query endpoints that take their filters in the request body, such as `cc search` and recording queries.
 - `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.

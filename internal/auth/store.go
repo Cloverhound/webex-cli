@@ -54,14 +54,9 @@ type storedCopy struct {
 	data  string
 }
 
-// errKeyringUnreadable means the keyring failed for a reason other than a
-// missing entry, so it may still hold the key.
-var errKeyringUnreadable = errors.New("the keyring could not be read")
-
 // readCopies returns the copies of key held by each of stores. A missing entry
 // is not an error, and no copies at all is ErrTokenNotFound. A keyring failure
-// is returned as errKeyringUnreadable together with any copies the file holds:
-// loading can use those, but read-only purging must not assume the keyring is empty.
+// is returned together with any copies the file holds, which callers can use.
 func readCopies(key string, stores []string) ([]storedCopy, error) {
 	var copies []storedCopy
 	var kerr error
@@ -74,7 +69,7 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 				continue
 			}
 			if err != nil {
-				kerr = fmt.Errorf("%w: %w", errKeyringUnreadable, err)
+				kerr = fmt.Errorf("the keyring could not be read: %w", err)
 				continue
 			}
 		} else {
@@ -95,14 +90,6 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 		return nil, ErrTokenNotFound
 	}
 	return copies, nil
-}
-
-// keyringOptional reports whether keyring failures can be ignored when cleaning
-// up: with $WEBEX_TOKEN_STORE=file the user has said this host's keyring is not
-// in use, and on a host without one every keyring call fails.
-func keyringOptional() bool {
-	forced, err := forcedStore()
-	return err == nil && forced == StoreFile
 }
 
 // deleteFrom removes key from one store.
