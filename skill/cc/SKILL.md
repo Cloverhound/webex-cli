@@ -836,7 +836,7 @@ Group aliases: `flows`.
 | `export` | `--flow-id` *(required)*, `--version`, `--flow-type` |
 | `search` | `--query`, `--flow-type`, `--page`, `--size`, `--key-value-filter` |
 | `import-legacy` | `--overwrite`, `--flow-type` |
-| `publish` | `--flow-id` *(required)*, `--skip-validation`, `--flow-type`, `--comment`, `--tag-ids`, `--body`, `--body-file` |
+| `publish` | `--flow-id` *(required)*, `--flow-type`, `--comment`, `--tag-ids`, `--body`, `--body-file` |
 | `lock` | `--flow-id` *(required)*, `--flow-type` |
 | `unlock` | `--flow-id` *(required)*, `--flow-type` |
 | `validate` | `--body`, `--body-file` |
@@ -986,7 +986,7 @@ Group aliases: `flows`.
 | Command | Flags |
 |---|---|
 | `list` | `--org-id`, `--interaction-id`, `--search-type`, `--body`, `--body-file` |
-| `list-2` | `--org-id`, `--search-type`, `--body`, `--body-file` |
+| `list-2` | `--org-id`, `--interaction-id`, `--search-type`, `--body`, `--body-file` |
 
 ### ai-assistant
 
