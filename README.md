@@ -338,6 +338,14 @@ Each sub-skill also contains an auto-generated **Command Reference** section (up
 
 The skill files are embedded in the binary, so the installed skill always matches the installed version. `webex post-install` offers to install them, and `webex update` updates installed copies to match the new binary.
 
+To set up the CLI from an AI agent, paste this into the agent. It needs only the npm registry, not GitHub:
+
+```text
+Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
+```
+
+`webex agent-setup` prints a standalone `webex-cli-setup` skill that installs the CLI, signs in with device login, and offers to save itself for future sessions.
+
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
 ## Development

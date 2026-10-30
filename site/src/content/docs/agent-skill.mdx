@@ -11,6 +11,16 @@ The installer and `webex post-install` command will offer to install the skill f
 
 The skill files are embedded in the `webex` binary, so installing them needs no network access and the skill always matches the installed version. `webex update` updates installed copies to match the new binary.
 
+## Setup From an Agent
+
+To have an AI agent do the setup, paste this into it. It needs only the npm registry, not GitHub:
+
+```text
+Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
+```
+
+`webex agent-setup` prints a standalone `webex-cli-setup` skill that installs the CLI, signs in with device login, and offers to save itself for future sessions.
+
 ## Manual Setup
 
 If you prefer to install manually, download the skill into the correct folder for your coding agent. Replace `main` in the URLs with your installed version's tag (for example `v0.16.0`) to match your binary:

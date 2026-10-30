@@ -16,6 +16,14 @@ webex --version
 
 npm installs only the prebuilt binary for your platform (macOS, Linux, or Windows on x64 or arm64) through an optional dependency. No install script runs and nothing is downloaded from GitHub, so the package works in sandboxes that allow the npm registry but block other hosts.
 
+To set it up from an AI agent, paste this into the agent:
+
+```text
+Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
+```
+
+The command prints a skill that tells the agent how to install the CLI, sign in with device login, and save the steps for future sessions.
+
 To run it as an MCP server, use `npx -y @cloverhound/webex-cli@<version> mcp serve` as the server command.
 
 See the [documentation](https://cloverhound.github.io/webex-cli/) for login options, including device login for machines without a browser.

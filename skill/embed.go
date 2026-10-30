@@ -10,6 +10,12 @@ import (
 //go:embed SKILL.md */SKILL.md
 var embedded embed.FS
 
+// Setup is a standalone skill that installs the CLI and logs in. It stays out of
+// embedded because it is printed for agents, not installed with the skill files.
+//
+//go:embed SETUP.md
+var Setup string
+
 // Files returns every embedded skill file keyed by its slash-separated path
 // relative to the skill directory, such as "SKILL.md" or "admin/SKILL.md".
 func Files() (map[string][]byte, error) {

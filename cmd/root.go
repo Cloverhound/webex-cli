@@ -250,7 +250,7 @@ func skipAuth(cmd *cobra.Command) bool {
 	}
 
 	switch top.Name() {
-	case "login", "logout", "config", "version", "update", "post-install", "help", "completion":
+	case "login", "logout", "config", "version", "update", "post-install", "agent-setup", "help", "completion":
 		return true
 	case "mcp":
 		// Each tool call runs the CLI in a child process that resolves its own
