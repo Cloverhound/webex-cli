@@ -140,7 +140,8 @@ func DecodeOrgID(id string) string {
 }
 
 // EncodeOrgID converts a UUID to the base64-encoded Webex org ID format:
-// base64("ciscospark://us/ORGANIZATION/<uuid>").
+// base64("ciscospark://us/ORGANIZATION/<uuid>"), unpadded as Webex issues it.
+// Calling multipart upload endpoints never respond to a padded orgId.
 // If the input is empty, returns empty. If the input is already base64-encoded, returns as-is.
 func EncodeOrgID(id string) string {
 	if id == "" {
@@ -149,7 +150,7 @@ func EncodeOrgID(id string) string {
 	// If it looks like a UUID, encode it
 	if strings.Count(id, "-") == 4 && len(id) == 36 {
 		uri := "ciscospark://us/ORGANIZATION/" + id
-		return base64.StdEncoding.EncodeToString([]byte(uri))
+		return base64.RawStdEncoding.EncodeToString([]byte(uri))
 	}
 	// Already base64 or unknown format — return as-is
 	return id
