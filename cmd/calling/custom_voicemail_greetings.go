@@ -2,11 +2,12 @@ package calling
 
 import (
 	"fmt"
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
 
-	"github.com/Cloverhound/webex-cli/internal/audio"
+	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/spf13/cobra"
@@ -166,21 +167,25 @@ func registerGreetingUpload(parentCmd *cobra.Command, use, short, long string,
 			if entityFlag != "" {
 				path = replaceEntityID(path, entityID)
 			}
-			u := config.CallingBaseURL + path
-			if orgID != "" {
-				u += "?orgId=" + url.QueryEscape(orgID)
+			data, err := io.ReadAll(f)
+			if err != nil {
+				return fmt.Errorf("reading audio file: %w", err)
 			}
 
-			parts := []audio.MultipartPart{
+			req := client.NewRequest(config.CallingBaseURL, "POST", path)
+			req.QueryParam("orgId", orgID)
+			if err := req.SetMultipart([]client.MultipartPart{
 				{
 					FieldName:   "file",
 					FileName:    filepath.Base(filePath),
 					ContentType: "audio/wav",
-					Data:        f,
+					Data:        data,
 				},
+			}); err != nil {
+				return err
 			}
 
-			body, statusCode, err := audio.UploadMultipart("POST", u, parts)
+			body, statusCode, err := req.Do()
 			if err != nil {
 				return err
 			}

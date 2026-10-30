@@ -5,9 +5,8 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/Cloverhound/webex-cli/internal/audio"
+	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/spf13/cobra"
@@ -22,7 +21,7 @@ func init() {
 
 // registerAnnouncementCmd is a helper that registers one announcement upload/update command.
 func registerAnnouncementCmd(use, short, long string, method string,
-	buildURL func(orgID, locationID, announcementID string) string,
+	buildPath func(locationID, announcementID string) string,
 	needsLocation, needsAnnouncement bool) {
 
 	var filePath string
@@ -36,29 +35,30 @@ func registerAnnouncementCmd(use, short, long string, method string,
 		Short: short,
 		Long:  long,
 		RunE: func(c *cobra.Command, args []string) error {
-			f, err := os.Open(filePath)
+			data, err := os.ReadFile(filePath)
 			if err != nil {
-				return fmt.Errorf("opening audio file: %w", err)
+				return fmt.Errorf("reading audio file: %w", err)
 			}
-			defer f.Close()
 
-			url := buildURL(orgID, locationID, announcementID)
-
-			parts := []audio.MultipartPart{
+			req := client.NewRequest(config.CallingBaseURL, method, buildPath(locationID, announcementID))
+			req.QueryParam("orgId", orgID)
+			if err := req.SetMultipart([]client.MultipartPart{
 				{
 					FieldName:   "name",
 					ContentType: "text/plain",
-					Data:        strings.NewReader(name),
+					Data:        []byte(name),
 				},
 				{
 					FieldName:   "file",
 					FileName:    filepath.Base(filePath),
 					ContentType: "audio/wav",
-					Data:        f,
+					Data:        data,
 				},
+			}); err != nil {
+				return err
 			}
 
-			body, statusCode, err := audio.UploadMultipart(method, url, parts)
+			body, statusCode, err := req.Do()
 			if err != nil {
 				return err
 			}
@@ -96,12 +96,8 @@ Examples:
   webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting"
   webex calling announcement-repository upload-binary-greeting --file greeting.wav --name "Main Greeting" --dry-run`,
 		"POST",
-		func(orgID, _, _ string) string {
-			u := config.CallingBaseURL + "/telephony/config/announcements"
-			if orgID != "" {
-				u += "?orgId=" + url.QueryEscape(orgID)
-			}
-			return u
+		func(_, _ string) string {
+			return "/telephony/config/announcements"
 		},
 		false, false,
 	)
@@ -119,12 +115,8 @@ Examples:
   webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby Greeting" --location-id <loc-id>
   webex calling announcement-repository upload-binary-greeting-2 --file greeting.wav --name "Lobby Greeting" --location-id <loc-id> --dry-run`,
 		"POST",
-		func(orgID, locationID, _ string) string {
-			u := config.CallingBaseURL + "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements"
-			if orgID != "" {
-				u += "?orgId=" + url.QueryEscape(orgID)
-			}
-			return u
+		func(locationID, _ string) string {
+			return "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements"
 		},
 		true, false,
 	)
@@ -142,12 +134,8 @@ Examples:
   webex calling announcement-repository update-binary-greeting --file greeting.wav --name "Updated Greeting" --announcement-id <ann-id>
   webex calling announcement-repository update-binary-greeting --file greeting.wav --name "Updated Greeting" --announcement-id <ann-id> --dry-run`,
 		"PUT",
-		func(orgID, _, announcementID string) string {
-			u := config.CallingBaseURL + "/telephony/config/announcements/" + url.PathEscape(announcementID)
-			if orgID != "" {
-				u += "?orgId=" + url.QueryEscape(orgID)
-			}
-			return u
+		func(_, announcementID string) string {
+			return "/telephony/config/announcements/" + url.PathEscape(announcementID)
 		},
 		false, true,
 	)
@@ -164,12 +152,8 @@ Uses multipart/form-data with a "name" text field and a "file" binary part.
 Examples:
   webex calling announcement-repository update-binary-greeting-2 --file greeting.wav --name "Updated Greeting" --location-id <loc-id> --announcement-id <ann-id>`,
 		"PUT",
-		func(orgID, locationID, announcementID string) string {
-			u := config.CallingBaseURL + "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements/" + url.PathEscape(announcementID)
-			if orgID != "" {
-				u += "?orgId=" + url.QueryEscape(orgID)
-			}
-			return u
+		func(locationID, announcementID string) string {
+			return "/telephony/config/locations/" + url.PathEscape(locationID) + "/announcements/" + url.PathEscape(announcementID)
 		},
 		true, true,
 	)

@@ -91,7 +91,7 @@ webex cc site list --orgid="4ebc486d-ff5f-4abc-9d44-1234567890ab"   # UUID
 webex admin people list --organization="Y2lzY29zcGFyazovL3Vz..."    # Base64
 ```
 
-You can inspect what the CLI resolved to by running `webex auth status` — the org ID shown there is the base64 form. Strip the trailing `=` padding issues or swap formats if calls are failing with 400/404 on org-scoped endpoints.
+You can inspect what the CLI resolved to by running `webex auth status` — the org ID shown there is the base64 form. The CLI sends base64 org IDs unpadded, as Webex issues them, whether you pass a UUID or a padded or unpadded base64 ID. Swap formats if calls are failing with 400/404 on org-scoped endpoints.
 
 ## CC Subcommand Names
 

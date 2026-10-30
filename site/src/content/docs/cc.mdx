@@ -145,8 +145,9 @@ webex cc audio-files upload --file prompt.wav --dry-run
 # Download an agent greeting
 webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
 
-# Upload a new agent greeting
+# Upload a new agent greeting (uses the org's default greeting purpose)
 webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
+# Upload for a specific greeting purpose
 webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
 ```
 
