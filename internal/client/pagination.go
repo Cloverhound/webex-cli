@@ -149,12 +149,28 @@ func PaginateCC(baseURL, method, path string, pathParams, queryParams, headers m
 	return items, err
 }
 
-// paginateCC pages with page and sizeParam. Most CC endpoints wrap items in
+// VisitCC pages a Contact Center list endpoint like PaginateCC, passing each
+// page's items to visit and stopping as soon as visit returns false.
+func VisitCC(baseURL, method, path string, pathParams, queryParams map[string]string, visit func(items []json.RawMessage) bool) error {
+	_, err := visitCC(baseURL, method, path, "pageSize", pathParams, queryParams, nil, visit)
+	return err
+}
+
+// paginateCC pages with page and sizeParam. A first response that is not a
+// list is returned as single, to be printed unchanged.
+func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string) (items []json.RawMessage, single []byte, err error) {
+	single, err = visitCC(baseURL, method, path, sizeParam, pathParams, queryParams, headers, func(page []json.RawMessage) bool {
+		items = append(items, page...)
+		return true
+	})
+	return items, single, err
+}
+
+// visitCC pages with page and sizeParam. Most CC endpoints wrap items in
 // {data, meta}; the flow store and functions use {data, pageInfo}, and the
 // flow store returns a bare array unless includePagination=true. A first
-// response that is neither is returned as single, to be printed unchanged.
-func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string) (items []json.RawMessage, single []byte, err error) {
-	var allItems []json.RawMessage
+// response that is neither is returned as single and not visited.
+func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
 	page := 0
 	pageSize := 100
 
@@ -174,18 +190,19 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 
 		body, _, err := r.Do()
 		if err != nil {
-			return allItems, nil, err
+			return nil, err
 		}
 
 		// A bare array carries no page metadata, so it is the only page.
 		var bare []json.RawMessage
 		if err := json.Unmarshal(body, &bare); err == nil {
-			return append(allItems, bare...), nil, nil
+			visit(bare)
+			return nil, nil
 		}
 
 		var result map[string]json.RawMessage
 		if err := json.Unmarshal(body, &result); err != nil {
-			return allItems, nil, fmt.Errorf("parsing page: %w", err)
+			return nil, fmt.Errorf("parsing page: %w", err)
 		}
 
 		var items []json.RawMessage
@@ -195,24 +212,26 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 		}
 		if !hasData {
 			if page == 0 {
-				return nil, body, nil
+				return body, nil
 			}
-			return allItems, nil, nil
+			return nil, nil
 		}
-		allItems = append(allItems, items...)
+		if !visit(items) {
+			return nil, nil
+		}
 
 		metaRaw, ok := result["meta"]
 		if !ok {
 			metaRaw, ok = result["pageInfo"]
 		}
 		if !ok || len(items) == 0 {
-			return allItems, nil, nil
+			return nil, nil
 		}
 		var meta struct {
 			TotalPages int `json:"totalPages"`
 		}
 		if err := json.Unmarshal(metaRaw, &meta); err != nil || page+1 >= meta.TotalPages {
-			return allItems, nil, nil
+			return nil, nil
 		}
 
 		page++

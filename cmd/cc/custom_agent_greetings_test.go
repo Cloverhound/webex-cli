@@ -9,21 +9,29 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
 
-// agentGreetingServer serves the greeting purpose list and records the
-// agentPersonalGreetingInfo part of each upload.
-func agentGreetingServer(t *testing.T, purposes string) (string, *[]map[string]any) {
+// agentGreetingServer serves one greeting purpose page per query page number,
+// fails any page beyond those, and records the agentPersonalGreetingInfo part
+// of each upload.
+func agentGreetingServer(t *testing.T, pages ...string) (string, *[]map[string]any) {
 	t.Helper()
 	var infos []map[string]any
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.Method == "GET" && r.URL.Path == "/organization/org1/v2/greeting-purpose":
-			w.Write([]byte(purposes))
+			page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+			if page >= len(pages) {
+				t.Errorf("unexpected greeting purpose page %d", page)
+				w.WriteHeader(500)
+				return
+			}
+			w.Write([]byte(pages[page]))
 		case r.Method == "POST" && r.URL.Path == "/organization/org1/v2/agent-personal-greeting":
 			_, params, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
 			body, _ := io.ReadAll(r.Body)
@@ -69,6 +77,19 @@ func TestAgentGreetingUploadDefaultsToSystemPurpose(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(*infos) != 1 || (*infos)[0]["greetingPurposeId"] != "default-purpose" || (*infos)[0]["agentId"] != "agent1" {
+		t.Errorf("info = %v", *infos)
+	}
+}
+
+// The lookup pages until it finds the default and reads no further.
+func TestAgentGreetingUploadFindsDefaultPurposeOnLaterPage(t *testing.T) {
+	url, infos := agentGreetingServer(t,
+		`{"data":[{"id":"custom","systemDefault":false}],"meta":{"page":0,"totalPages":3}}`,
+		`{"data":[{"id":"default-purpose","systemDefault":true}],"meta":{"page":1,"totalPages":3}}`)
+	if err := uploadAgentGreeting(url, "org1", writeGreeting(t), "", "agent1", ""); err != nil {
+		t.Fatal(err)
+	}
+	if len(*infos) != 1 || (*infos)[0]["greetingPurposeId"] != "default-purpose" {
 		t.Errorf("info = %v", *infos)
 	}
 }

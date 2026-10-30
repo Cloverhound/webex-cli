@@ -174,26 +174,26 @@ func uploadAgentGreeting(baseURL, orgid, filePath, name, agentID, greetingPurpos
 
 // defaultGreetingPurpose returns the ID of the org's system default greeting purpose.
 func defaultGreetingPurpose(baseURL, orgid string) (string, error) {
-	req := client.NewRequest(baseURL, "GET", "/organization/{orgid}/v2/greeting-purpose")
-	req.PathParam("orgid", orgid)
-	req.QueryParam("pageSize", "100")
-	resp, _, err := req.Do()
+	var id string
+	err := client.VisitCC(baseURL, "GET", "/organization/{orgid}/v2/greeting-purpose",
+		map[string]string{"orgid": orgid}, nil, func(items []json.RawMessage) bool {
+			for _, item := range items {
+				var p struct {
+					ID            string `json:"id"`
+					SystemDefault bool   `json:"systemDefault"`
+				}
+				if json.Unmarshal(item, &p) == nil && p.SystemDefault {
+					id = p.ID
+					return false
+				}
+			}
+			return true
+		})
 	if err != nil {
 		return "", fmt.Errorf("looking up the default greeting purpose: %w", err)
 	}
-	var list struct {
-		Data []struct {
-			ID            string `json:"id"`
-			SystemDefault bool   `json:"systemDefault"`
-		} `json:"data"`
+	if id == "" {
+		return "", fmt.Errorf("no default greeting purpose found; pass --greeting-purpose-id")
 	}
-	if err := json.Unmarshal(resp, &list); err != nil {
-		return "", fmt.Errorf("parsing greeting purposes: %w", err)
-	}
-	for _, p := range list.Data {
-		if p.SystemDefault {
-			return p.ID, nil
-		}
-	}
-	return "", fmt.Errorf("no default greeting purpose found; pass --greeting-purpose-id")
+	return id, nil
 }
