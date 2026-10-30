@@ -24,6 +24,32 @@ func noKeyring(t *testing.T) {
 	t.Cleanup(func() { os.Remove(CredentialsPath()) })
 }
 
+func TestLoadTokenSurvivesMalformedCredentialsFile(t *testing.T) {
+	keyring.MockInit()
+	t.Cleanup(func() { os.Remove(CredentialsPath()) })
+	if err := keyring.Set(serviceName, "kept@example.com", `{"access_token":"from-keyring"}`); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(CredentialsDir(), 0700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(CredentialsPath(), []byte("not json"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	tok, store, err := LoadTokenWithStore("kept@example.com")
+	if err != nil {
+		t.Fatalf("keyring login lost to a malformed file: %v", err)
+	}
+	if tok.AccessToken != "from-keyring" || store != StoreKeyring {
+		t.Errorf("token = %q from %s", tok.AccessToken, store)
+	}
+
+	if _, _, err := LoadTokenWithStore("missing@example.com"); err == nil || errors.Is(err, ErrTokenNotFound) {
+		t.Errorf("malformed file hidden when no store has the token: %v", err)
+	}
+}
+
 func TestStoreFallsBackToFile(t *testing.T) {
 	noKeyring(t)
 

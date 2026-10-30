@@ -55,11 +55,11 @@ type storedCopy struct {
 }
 
 // readCopies returns the copies of key held by each of stores. A missing entry
-// is not an error, and no copies at all is ErrTokenNotFound. A keyring failure
-// is returned together with any copies the file holds, which callers can use.
+// is not an error, and no copies at all is ErrTokenNotFound. A store that fails
+// is reported together with any copies the other holds, which callers can use.
 func readCopies(key string, stores []string) ([]storedCopy, error) {
 	var copies []storedCopy
-	var kerr error
+	var readErr error
 	for _, store := range stores {
 		var data string
 		var err error
@@ -69,7 +69,7 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 				continue
 			}
 			if err != nil {
-				kerr = fmt.Errorf("the keyring could not be read: %w", err)
+				readErr = fmt.Errorf("the keyring could not be read: %w", err)
 				continue
 			}
 		} else {
@@ -78,13 +78,14 @@ func readCopies(key string, stores []string) ([]storedCopy, error) {
 				continue
 			}
 			if err != nil {
-				return nil, err
+				readErr = err
+				continue
 			}
 		}
 		copies = append(copies, storedCopy{store: store, data: data})
 	}
-	if kerr != nil {
-		return copies, kerr
+	if readErr != nil {
+		return copies, readErr
 	}
 	if len(copies) == 0 {
 		return nil, ErrTokenNotFound
