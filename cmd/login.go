@@ -70,6 +70,7 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 		clientSecret := cfg.EffectiveClientSecret()
 		scopes := cfg.EffectiveScopes()
 		if readOnlyLogin {
+			clientID, clientSecret = cfg.EffectiveReadOnlyClient()
 			scopes = cfg.EffectiveReadOnlyScopes()
 			if err := readonly.ValidateScopes(scopes); err != nil {
 				return fmt.Errorf("read-only-scopes config: %w", err)
@@ -107,15 +108,12 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 			return err
 		}
 		if readOnlyLogin {
-			if err := readonly.ValidateScopes(result.Token.Scopes); err != nil {
-				return fmt.Errorf("granted scopes include write access, token not saved: %w", err)
+			if err := markReadOnly(&result.Token, clientID, clientSecret); err != nil {
+				return err
 			}
-			result.Token.ReadOnly = true
-		}
-
-		// Offer to store OAuth credentials with this user account before saving the token.
-		// This allows each user to have independent client credentials for token refresh.
-		if clientID != "" && interactive {
+		} else if clientID != "" && interactive {
+			// Offer to store OAuth credentials with this user account before saving the token.
+			// This allows each user to have independent client credentials for token refresh.
 			promptStoreCredentials(&result.Token, clientID, clientSecret)
 		}
 
@@ -180,6 +178,18 @@ and only read-only logins can be used. Leaving read-only mode requires a plain
 
 		return nil
 	},
+}
+
+// markReadOnly refuses a token with write scopes and records the integration
+// that issued it, because a refresh token only works with that integration.
+func markReadOnly(tok *auth.StoredToken, clientID, clientSecret string) error {
+	if err := readonly.ValidateScopes(tok.Scopes); err != nil {
+		return fmt.Errorf("granted scopes include write access, token not saved: %w", err)
+	}
+	tok.ReadOnly = true
+	tok.ClientID = clientID
+	tok.ClientSecret = clientSecret
+	return nil
 }
 
 // chooseLoginMode returns "device", "browser" or "auto" (browser, falling back

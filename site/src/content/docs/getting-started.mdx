@@ -64,7 +64,7 @@ This login requests only read scopes (`webex config get read-only-scopes` lists 
 
 To leave read-only mode, run `webex login` from an interactive terminal and confirm the prompt. The command refuses to run without a terminal, so an agent running shell commands cannot leave read-only mode on its own. Setting `WEBEX_READ_ONLY=1` turns on the same checks for one process. It never turns them off.
 
-The OAuth integration must have every read-only scope registered. If login fails with `invalid_scope`, set a list that matches your integration with `webex config set read-only-scopes "<scopes>"`. Only read scopes are accepted.
+Release builds log in through a separate read-only OAuth integration that has no write scopes. If you set your own integration with `webex config set client-id`, it is used instead and must have every read-only scope registered. If login fails with `invalid_scope`, set a list that matches your integration with `webex config set read-only-scopes "<scopes>"`. Only read scopes are accepted.
 
 ## Command Structure
 

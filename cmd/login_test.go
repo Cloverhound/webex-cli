@@ -1,6 +1,25 @@
 package cmd
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/Cloverhound/webex-cli/internal/auth"
+)
+
+func TestMarkReadOnly(t *testing.T) {
+	tok := auth.StoredToken{Scopes: "spark:people_read spark:kms"}
+	if err := markReadOnly(&tok, "ro-client", "ro-secret"); err != nil {
+		t.Fatal(err)
+	}
+	if !tok.ReadOnly || tok.ClientID != "ro-client" || tok.ClientSecret != "ro-secret" {
+		t.Errorf("token = %+v, want read-only and tied to the client that issued it", tok)
+	}
+
+	write := auth.StoredToken{Scopes: "spark:all"}
+	if err := markReadOnly(&write, "ro-client", "ro-secret"); err == nil || write.ReadOnly {
+		t.Errorf("write scope accepted: err = %v, read-only = %v", err, write.ReadOnly)
+	}
+}
 
 func TestChooseLoginMode(t *testing.T) {
 	cases := []struct {

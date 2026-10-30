@@ -31,7 +31,7 @@ Run `webex auth status`. If it shows `Token: valid` or `Refresh: available`, ski
 
 ## 4. Sign in with device login
 
-Start the login in the background, because it blocks until the user approves. It writes the instructions to stderr, so capture both streams:
+Start the login in the background, because it blocks until the user approves. It writes the instructions to stderr, so capture both streams. If the user asks for read-only access, add `--read-only`:
 
 ```bash
 nohup webex login --device --output json > /tmp/webex-login.log 2>&1 &
@@ -39,7 +39,9 @@ nohup webex login --device --output json > /tmp/webex-login.log 2>&1 &
 
 Read `/tmp/webex-login.log`. Relay the line `Open <url> and enter <code>` to the user word for word, and include the expiry from the `Waiting for approval` line.
 
-End the turn and wait. When the user replies, read the log again. A JSON line with `"status":"logged_in"` means the login worked. If the code expired or the login failed, start a new device login and relay the new code.
+Do not end the turn or ask the user to reply. Watch for approval yourself until the code expires. If your environment tells you when a background command exits, wait for that. Otherwise read the log about once a minute, keeping each wait under 60 seconds. A JSON line with `"status":"logged_in"` means the login worked.
+
+If the code expired or the login failed, start a new device login and relay the new code. If you cannot keep watching, ask the user to reply after approving, then read the log. If the login process has stopped without `"status":"logged_in"`, start a new device login.
 
 ## 5. Confirm
 

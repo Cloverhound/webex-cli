@@ -193,7 +193,7 @@ For CI and unattended agents where nobody can approve a code:
 - `--token`, `$WEBEX_TOKEN`, and `$WEBEX_REFRESH_TOKEN` are refused, and `auth switch`, `--user`, and folder defaults accept only users who logged in with `--read-only`.
 - `webex mcp serve` does not register `webex_write`.
 
-Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. If your OAuth integration lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`.
+Leaving read-only mode requires `webex login` from an interactive terminal, with a confirmation prompt. `WEBEX_READ_ONLY=1` turns the same checks on for one process and never turns them off. Release builds log in through a separate read-only OAuth integration that has no write scopes. If you set your own integration with `webex config set client-id` and it lacks some of the default read scopes, set your own list with `webex config set read-only-scopes "<scopes>"`.
 
 ### Organization Override
 
