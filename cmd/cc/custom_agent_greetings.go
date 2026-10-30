@@ -92,6 +92,7 @@ func registerAgentGreetingUpload() {
 
 The upload sends two parts: agentPersonalGreetingInfo (JSON metadata) and audioFile (binary).
 If --name is omitted, the filename (with .wav extension) is used.
+If --greeting-purpose-id is omitted, the org's system default greeting purpose is used.
 
 Examples:
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav
@@ -99,53 +100,7 @@ Examples:
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
-			data, err := os.ReadFile(filePath)
-			if err != nil {
-				return fmt.Errorf("reading audio file: %w", err)
-			}
-
-			// Default name to filename; ensure it ends with .wav (API requires it)
-			if name == "" {
-				name = filepath.Base(filePath)
-			}
-			if !strings.HasSuffix(strings.ToLower(name), ".wav") {
-				name += ".wav"
-			}
-
-			info := map[string]any{
-				"agentId":     agentID,
-				"name":        name,
-				"contentType": "AUDIO_WAV",
-			}
-			if greetingPurposeID != "" {
-				info["greetingPurposeId"] = greetingPurposeID
-			}
-			infoJSON, _ := json.Marshal(info)
-
-			req := client.NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/v2/agent-personal-greeting")
-			req.PathParam("orgid", orgid)
-			if err := req.SetMultipart([]client.MultipartPart{
-				{
-					FieldName:   "agentPersonalGreetingInfo",
-					ContentType: "application/json",
-					Data:        infoJSON,
-				},
-				{
-					FieldName:   "audioFile",
-					FileName:    filepath.Base(filePath),
-					ContentType: "audio/wav",
-					Data:        data,
-				},
-			}); err != nil {
-				return err
-			}
-
-			body, statusCode, err := req.Do()
-			if err != nil {
-				return err
-			}
-
-			return output.Print(body, statusCode)
+			return uploadAgentGreeting(config.CcBaseURL, orgid, filePath, name, agentID, greetingPurposeID)
 		},
 	}
 
@@ -156,7 +111,89 @@ Examples:
 	cmd.Flags().StringVar(&agentID, "agent-id", "", "Agent ID (WxCC agent resource ID)")
 	cmd.MarkFlagRequired("agent-id")
 	cmd.Flags().StringVar(&name, "name", "", "Greeting name (defaults to filename)")
-	cmd.Flags().StringVar(&greetingPurposeID, "greeting-purpose-id", "", "Greeting purpose ID")
+	cmd.Flags().StringVar(&greetingPurposeID, "greeting-purpose-id", "", "Greeting purpose ID (defaults to the org's system default purpose)")
 
 	agentPersonalGreetingFilesCmd.AddCommand(cmd)
+}
+
+func uploadAgentGreeting(baseURL, orgid, filePath, name, agentID, greetingPurposeID string) error {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("reading audio file: %w", err)
+	}
+
+	// Default name to filename; ensure it ends with .wav (API requires it)
+	if name == "" {
+		name = filepath.Base(filePath)
+	}
+	if !strings.HasSuffix(strings.ToLower(name), ".wav") {
+		name += ".wav"
+	}
+
+	// The v2 endpoint answers a greeting without a purpose with a 409.
+	if greetingPurposeID == "" {
+		greetingPurposeID, err = defaultGreetingPurpose(baseURL, orgid)
+		if err != nil {
+			return err
+		}
+	}
+
+	info := map[string]any{
+		"agentId":           agentID,
+		"name":              name,
+		"contentType":       "AUDIO_WAV",
+		"greetingPurposeId": greetingPurposeID,
+	}
+	infoJSON, _ := json.Marshal(info)
+
+	req := client.NewRequest(baseURL, "POST", "/organization/{orgid}/v2/agent-personal-greeting")
+	req.PathParam("orgid", orgid)
+	if err := req.SetMultipart([]client.MultipartPart{
+		{
+			FieldName:   "agentPersonalGreetingInfo",
+			ContentType: "application/json",
+			Data:        infoJSON,
+		},
+		{
+			FieldName:   "audioFile",
+			FileName:    filepath.Base(filePath),
+			ContentType: "audio/wav",
+			Data:        data,
+		},
+	}); err != nil {
+		return err
+	}
+
+	body, statusCode, err := req.Do()
+	if err != nil {
+		return err
+	}
+
+	return output.Print(body, statusCode)
+}
+
+// defaultGreetingPurpose returns the ID of the org's system default greeting purpose.
+func defaultGreetingPurpose(baseURL, orgid string) (string, error) {
+	req := client.NewRequest(baseURL, "GET", "/organization/{orgid}/v2/greeting-purpose")
+	req.PathParam("orgid", orgid)
+	req.QueryParam("pageSize", "100")
+	resp, _, err := req.Do()
+	if err != nil {
+		return "", fmt.Errorf("looking up the default greeting purpose: %w", err)
+	}
+	var list struct {
+		Data []struct {
+			ID            string `json:"id"`
+			SystemDefault bool   `json:"systemDefault"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal(resp, &list); err != nil {
+		return "", fmt.Errorf("parsing greeting purposes: %w", err)
+	}
+	for _, p := range list.Data {
+		if p.SystemDefault {
+			return p.ID, nil
+		}
+	}
+	return "", fmt.Errorf("no default greeting purpose found; pass --greeting-purpose-id")
 }
