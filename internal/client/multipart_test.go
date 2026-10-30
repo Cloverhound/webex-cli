@@ -110,6 +110,69 @@ func TestMultipartAttachmentAuthenticationRetryReplaysBody(t *testing.T) {
 	}
 }
 
+func TestSetMultipartWritesTypedPartsAndSummarizesFiles(t *testing.T) {
+	data := []byte("RIFF\x00\xffWAVE_BYTES_MUST_NOT_BE_LOGGED")
+	req := NewRequest("http://example.invalid", "POST", "/audio-file")
+	err := req.SetMultipart([]MultipartPart{
+		{FieldName: "audioFileInfo", ContentType: "application/json", Data: []byte(`{"name":"prompt.wav"}`)},
+		{FieldName: "audioFile", FileName: "prompt.wav", ContentType: "audio/wav", Data: data},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, params, _ := mime.ParseMediaType(req.bodyContentType)
+	reader := multipart.NewReader(strings.NewReader(req.bodyRaw), params["boundary"])
+	for _, want := range []struct{ field, file, contentType, body string }{
+		{"audioFileInfo", "", "application/json", `{"name":"prompt.wav"}`},
+		{"audioFile", "prompt.wav", "audio/wav", string(data)},
+	} {
+		part, err := reader.NextPart()
+		if err != nil {
+			t.Fatal(err)
+		}
+		body, _ := io.ReadAll(part)
+		if part.FormName() != want.field || part.FileName() != want.file ||
+			part.Header.Get("Content-Type") != want.contentType || string(body) != want.body {
+			t.Errorf("part %s = %v %q", want.field, part.Header, body)
+		}
+	}
+	if strings.Contains(req.bodySummary, "WAVE_BYTES") || !strings.Contains(req.bodySummary, "prompt.wav") ||
+		!strings.Contains(req.bodySummary, `{\"name\":\"prompt.wav\"}`) {
+		t.Errorf("summary must show text parts and name files without their bytes: %s", req.bodySummary)
+	}
+}
+
+// Diagnostics must be stable across runs even though fields arrive as a map.
+func TestSetMultipartFileSummarizesPartsInFieldOrder(t *testing.T) {
+	path := writeTempFile(t, "guide.md", []byte("guide"))
+	want := `[{"field":"markdown","value":"**hi**"},{"field":"roomId","value":"room"},{"field":"text","value":"hi"},` +
+		`{"field":"files","file":"guide.md","contentType":"text/markdown; charset=utf-8","size":5}]`
+	for i := 0; i < 20; i++ {
+		req := NewRequest("http://example.invalid", "POST", "/messages")
+		fields := map[string]string{"roomId": "room", "text": "hi", "markdown": "**hi**"}
+		if err := req.SetMultipartFile(fields, "files", path); err != nil {
+			t.Fatal(err)
+		}
+		if req.bodySummary != want {
+			t.Fatalf("summary = %s", req.bodySummary)
+		}
+	}
+}
+
+func TestSetMultipartRejectsHeaderInjection(t *testing.T) {
+	for _, part := range []MultipartPart{
+		{FieldName: ""},
+		{FieldName: "file\r\nX-Injected: true"},
+		{FieldName: "file", FileName: "a\nb.wav"},
+		{FieldName: "file", ContentType: "audio/wav\r\nX-Injected: true"},
+	} {
+		req := NewRequest("http://example.invalid", "POST", "/upload")
+		if err := req.SetMultipart([]MultipartPart{part}); err == nil {
+			t.Errorf("accepted %+v", part)
+		}
+	}
+}
+
 // SetBodyRaw replaces the whole body, including multipart content type and summary.
 func TestSetBodyRawAfterMultipartRestoresJSON(t *testing.T) {
 	req := NewRequest("http://example.invalid", "POST", "/messages")

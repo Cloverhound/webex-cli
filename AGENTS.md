@@ -84,11 +84,11 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `internal/client/` — HTTP client, request builder, pagination, 429 Retry-After
+- `internal/client/` — HTTP client, request builder (JSON and multipart bodies), pagination, 429 Retry-After
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)
 - `internal/output/` — JSON/table/csv/raw formatting
-- `internal/audio/` — Binary download / multipart upload helpers
+- `internal/audio/` — Binary download from pre-signed URLs (no Webex token)
 - `codegen/extract_api_outline.py` — Postman → normalized CLI names
 - `codegen/extract_api_spec.py` — Postman → enriched API spec (params, body fields)
 - `codegen/generate_cli.py` — API spec → Go cobra command files
