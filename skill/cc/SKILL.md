@@ -194,14 +194,28 @@ webex cc audio-files list [--filter <rsql>] [--search <text>]
 # Get with download URL
 webex cc audio-files get --id <id> --include-url true
 
-# Create / upload
-webex cc audio-files create --body '{"name":"Main Greeting","description":"..."}'
-# After creating, upload the WAV via update
-webex cc audio-files update --id <id> --body '{...}'
+# Upload a WAV (multipart; --name defaults to the filename)
+webex cc audio-files upload --file prompt.wav --name "Main Greeting" [--description "..."]
+
+# Download the WAV to disk (prints the metadata)
+webex cc audio-files download --id <id> --output prompt.wav
 
 # Delete
 webex cc audio-files delete --id <id>
 ```
+
+`create` and `update` only send JSON metadata; use `upload` to send audio.
+
+## Agent Personal Greetings
+
+```bash
+webex cc agent-personal-greeting-files list
+webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav [--name "..."] [--greeting-purpose-id <id>]
+webex cc agent-personal-greeting-files download --id <greeting-id> --output greeting.wav
+webex cc agent-personal-greeting-files delete --id <greeting-id>
+```
+
+Without `--greeting-purpose-id`, `upload` uses the org's system default greeting purpose; the API rejects a greeting with no purpose.
 
 ## Configuration Resources
 
