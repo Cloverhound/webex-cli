@@ -142,6 +142,23 @@ func TestSetMultipartWritesTypedPartsAndSummarizesFiles(t *testing.T) {
 	}
 }
 
+// Diagnostics must be stable across runs even though fields arrive as a map.
+func TestSetMultipartFileSummarizesPartsInFieldOrder(t *testing.T) {
+	path := writeTempFile(t, "guide.md", []byte("guide"))
+	want := `[{"field":"markdown","value":"**hi**"},{"field":"roomId","value":"room"},{"field":"text","value":"hi"},` +
+		`{"field":"files","file":"guide.md","contentType":"text/markdown; charset=utf-8","size":5}]`
+	for i := 0; i < 20; i++ {
+		req := NewRequest("http://example.invalid", "POST", "/messages")
+		fields := map[string]string{"roomId": "room", "text": "hi", "markdown": "**hi**"}
+		if err := req.SetMultipartFile(fields, "files", path); err != nil {
+			t.Fatal(err)
+		}
+		if req.bodySummary != want {
+			t.Fatalf("summary = %s", req.bodySummary)
+		}
+	}
+}
+
 func TestSetMultipartRejectsHeaderInjection(t *testing.T) {
 	for _, part := range []MultipartPart{
 		{FieldName: ""},

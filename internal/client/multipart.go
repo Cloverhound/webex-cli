@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"maps"
 	"mime"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -66,24 +68,15 @@ func (r *Request) SetMultipartFile(fields map[string]string, fieldName, path str
 		return tooLarge
 	}
 	parts := make([]MultipartPart, 0, len(fields)+1)
-	for k, v := range fields {
-		parts = append(parts, MultipartPart{FieldName: k, Data: []byte(v)})
+	for _, k := range slices.Sorted(maps.Keys(fields)) {
+		parts = append(parts, MultipartPart{FieldName: k, Data: []byte(fields[k])})
 	}
 	contentType := mime.TypeByExtension(filepath.Ext(name))
 	if contentType == "" {
 		contentType = http.DetectContentType(data)
 	}
 	parts = append(parts, MultipartPart{FieldName: fieldName, FileName: name, ContentType: contentType, Data: data})
-	if err := r.SetMultipart(parts); err != nil {
-		return err
-	}
-	summary, _ := json.Marshal(struct {
-		Fields map[string]string `json:"fields"`
-		File   string            `json:"file"`
-		Size   int               `json:"size"`
-	}{fields, path, len(data)})
-	r.bodySummary = string(summary)
-	return nil
+	return r.SetMultipart(parts)
 }
 
 // MultipartPart is one part of a multipart/form-data body. A part with a
