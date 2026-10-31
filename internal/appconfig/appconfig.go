@@ -15,6 +15,13 @@ var (
 	DefaultClientSecret = ""
 	DefaultScopes       = "spark:all spark-admin:all"
 
+	// DefaultReadOnlyClientID and DefaultReadOnlyClientSecret identify a separate
+	// integration for `webex login --read-only`. The portal won't register
+	// spark:all beside individual read scopes, and device login rejects scopes
+	// that aren't registered. Empty means the main integration.
+	DefaultReadOnlyClientID     = ""
+	DefaultReadOnlyClientSecret = ""
+
 	// DefaultReadOnlyScopes is injected by release builds to match the OAuth
 	// integration's registered scopes. Empty means readonly.DefaultScopes.
 	DefaultReadOnlyScopes = ""
@@ -113,6 +120,15 @@ func (c *Config) EffectiveScopes() string {
 		return c.Scopes
 	}
 	return DefaultScopes
+}
+
+// EffectiveReadOnlyClient returns the client ID and secret for `webex login
+// --read-only`. A configured integration wins, since the user chose it for every login.
+func (c *Config) EffectiveReadOnlyClient() (clientID, clientSecret string) {
+	if c.ClientID == "" && DefaultReadOnlyClientID != "" {
+		return DefaultReadOnlyClientID, DefaultReadOnlyClientSecret
+	}
+	return c.EffectiveClientID(), c.EffectiveClientSecret()
 }
 
 // EffectiveReadOnlyScopes returns the scopes requested by `webex login --read-only`.

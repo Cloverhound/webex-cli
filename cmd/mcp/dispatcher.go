@@ -8,16 +8,21 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/Cloverhound/webex-cli/cmd"
 	"github.com/Cloverhound/webex-cli/internal/readonly"
 	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
 
+var findMu sync.Mutex
+
 var blockedPrefixes = []string{
 	"login",
 	"logout",
+	"auth export",
 	"auth switch",
 	"auth set-org",
 	"auth clear-org",
@@ -121,14 +126,10 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 
 		args := strings.Fields(command)
 
-		// Blocklist check — join up to 2 tokens to cover two-word prefixes like "auth switch".
-		prefix := strings.Join(args[:min(2, len(args))], " ")
-		for _, blocked := range blockedPrefixes {
-			if strings.HasPrefix(prefix, blocked) {
-				return mcplib.NewToolResultText(fmt.Sprintf(
-					"Error: command '%s' is not permitted via the MCP server.", blocked,
-				)), nil
-			}
+		if blocked := blockedCommand(args); blocked != "" {
+			return mcplib.NewToolResultText(fmt.Sprintf(
+				"Error: command '%s' is not permitted via the MCP server.", blocked,
+			)), nil
 		}
 
 		// Injection guard: reject tokens containing shell-special characters.
@@ -219,26 +220,41 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 	}
 }
 
-// actionToken returns the action verb from the command args.
-// For "calling people list", it returns "list" (positional index 2).
-// For two-token commands like "auth status", it returns "status" (positional index 1).
-func actionToken(args []string) string {
-	var positional []string
-	for _, a := range args {
-		if !strings.HasPrefix(a, "-") {
-			positional = append(positional, a)
-		}
-	}
-	switch {
-	case len(positional) >= 3:
-		return strings.ToLower(positional[2])
-	case len(positional) == 2:
-		return strings.ToLower(positional[1])
-	case len(positional) == 1:
-		return strings.ToLower(positional[0])
-	default:
+// commandPath returns the command the CLI will run for args, without the binary
+// name, or "" if args name none, in which case the CLI rejects them too. Cobra's
+// own lookup is used so the checks below cannot disagree with it about which
+// tokens are flag values. The mutex is there because Find merges flag sets and
+// tool calls can run concurrently.
+func commandPath(args []string) string {
+	findMu.Lock()
+	defer findMu.Unlock()
+	root := cmd.RootCommand()
+	c, _, err := root.Find(args)
+	if err != nil {
 		return ""
 	}
+	return strings.TrimPrefix(strings.TrimPrefix(c.CommandPath(), root.Name()), " ")
+}
+
+// blockedCommand returns the blocked prefix that args resolve to, or "".
+func blockedCommand(args []string) string {
+	path := commandPath(args)
+	for _, blocked := range blockedPrefixes {
+		if strings.HasPrefix(path, blocked) {
+			return blocked
+		}
+	}
+	return ""
+}
+
+// actionToken returns the action verb from the command args: "list" for
+// "calling people list" and "status" for "auth status".
+func actionToken(args []string) string {
+	words := strings.Fields(commandPath(args))
+	if len(words) == 0 {
+		return ""
+	}
+	return strings.ToLower(words[len(words)-1])
 }
 
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {

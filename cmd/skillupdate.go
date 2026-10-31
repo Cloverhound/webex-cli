@@ -6,10 +6,17 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Cloverhound/webex-cli/skill"
 	"github.com/charmbracelet/huh"
 )
 
-func checkSkillUpdates() error {
+// checkSkillUpdates compares installed agent skills with the skill embedded in
+// this binary. Without prompts, outdated skills are updated and agents without
+// the skill are left alone, unless opts.assumeYes is set.
+func checkSkillUpdates(opts setupOptions) error {
+	if !opts.skills {
+		return nil
+	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return err
@@ -21,13 +28,10 @@ func checkSkillUpdates() error {
 		Status   string // "outdated", "new"
 	}
 
-	fmt.Print("Checking for skill updates...")
-	latest, err := downloadSkillFiles()
+	latest, err := skill.Files()
 	if err != nil {
-		fmt.Println(" failed")
-		return err
+		return fmt.Errorf("reading embedded skill: %w", err)
 	}
-	fmt.Println(" ok")
 
 	var actions []skillAction
 	for _, p := range agentPlatforms {
@@ -35,19 +39,13 @@ func checkSkillUpdates() error {
 			continue // skip Cowork (no filesystem path)
 		}
 		skillDir := filepath.Join(home, p.SkillDir)
-		rootPath := filepath.Join(skillDir, "SKILL.md")
-		current, err := os.ReadFile(rootPath)
-		if err == nil {
-			outdated := !bytes.Equal(current, latest["SKILL.md"])
-			if !outdated {
-				for subPath := range latest {
-					if subPath == "SKILL.md" {
-						continue
-					}
-					if _, serr := os.Stat(filepath.Join(skillDir, filepath.FromSlash(subPath))); serr != nil {
-						outdated = true
-						break
-					}
+		if _, err := os.Stat(filepath.Join(skillDir, "SKILL.md")); err == nil {
+			outdated := false
+			for subPath, content := range latest {
+				current, rerr := os.ReadFile(filepath.Join(skillDir, filepath.FromSlash(subPath)))
+				if rerr != nil || !bytes.Equal(current, content) {
+					outdated = true
+					break
 				}
 			}
 			if outdated {
@@ -63,48 +61,58 @@ func checkSkillUpdates() error {
 		return nil
 	}
 
-	// Step 1: Ask if user wants to review skill updates
-	var proceed bool
-	confirmForm := huh.NewForm(
-		huh.NewGroup(
-			huh.NewConfirm().
-				Title("Agent skill updates available").
-				Description(fmt.Sprintf("%d agent skill(s) can be updated or installed.", len(actions))).
-				Affirmative("Review changes").
-				Negative("Skip").
-				Value(&proceed),
-		),
-	)
-
-	if err := confirmForm.Run(); err != nil || !proceed {
-		return nil
-	}
-
-	// Step 2: Show multiselect with specific skills
-	var options []huh.Option[string]
-	for _, a := range actions {
-		label := a.Platform.Name
-		if a.Status == "outdated" {
-			label += "  (update available)"
-		} else {
-			label += "  (not yet installed)"
-		}
-		options = append(options, huh.NewOption(label, a.Platform.Name).Selected(true))
-	}
-
 	var selected []string
-	form := huh.NewForm(
-		huh.NewGroup(
-			huh.NewMultiSelect[string]().
-				Title("Skill updates available").
-				Description("The following agents can be updated or have the Webex skill\ninstalled. Deselect any you want to skip.").
-				Options(options...).
-				Value(&selected),
-		),
-	)
+	if !opts.prompt {
+		for _, a := range actions {
+			if a.Status == "outdated" || opts.assumeYes {
+				selected = append(selected, a.Platform.Name)
+			} else {
+				fmt.Printf("  %s: skill not installed (run: webex post-install --yes)\n", a.Platform.Name)
+			}
+		}
+	} else {
+		// Step 1: Ask if user wants to review skill updates
+		var proceed bool
+		confirmForm := huh.NewForm(
+			huh.NewGroup(
+				huh.NewConfirm().
+					Title("Agent skill updates available").
+					Description(fmt.Sprintf("%d agent skill(s) can be updated or installed.", len(actions))).
+					Affirmative("Review changes").
+					Negative("Skip").
+					Value(&proceed),
+			),
+		)
 
-	if err := form.Run(); err != nil {
-		return nil
+		if err := confirmForm.Run(); err != nil || !proceed {
+			return nil
+		}
+
+		// Step 2: Show multiselect with specific skills
+		var options []huh.Option[string]
+		for _, a := range actions {
+			label := a.Platform.Name
+			if a.Status == "outdated" {
+				label += "  (update available)"
+			} else {
+				label += "  (not yet installed)"
+			}
+			options = append(options, huh.NewOption(label, a.Platform.Name).Selected(true))
+		}
+
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewMultiSelect[string]().
+					Title("Skill updates available").
+					Description("The following agents can be updated or have the Webex skill\ninstalled. Deselect any you want to skip.").
+					Options(options...).
+					Value(&selected),
+			),
+		)
+
+		if err := form.Run(); err != nil {
+			return nil
+		}
 	}
 
 	if len(selected) == 0 {
