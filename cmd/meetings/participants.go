@@ -204,7 +204,7 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "admit",
 			Short: "Admit Participants",
-			Long:  "Admit multiple participants to a meeting in progress.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
+			Long:  "To admit participants into a live meeting or its breakout sessions in bulk. If `breakoutSessionId` is null for all the requested participants, they are admitted into the main session of the meeting. If `breakoutSessionId` is not null for all the requested participants, they are admitted into the breakout sessions specified by each `breakoutSessionId`. It's not allowed that some requested participants have `breakoutSessionId` and the others haven't.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/meetingParticipants/admit")
 				if bodyFile != "" {
