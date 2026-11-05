@@ -3,7 +3,7 @@
 package webexops
 
 var CCAgentWellbeingSubscribeRealtimeBurnoutEvents = &Operation{
-	Area: "cc", Group: "agent-wellbeing", Command: "subscribe-realtime-burnout-events",
+	ID: "CCAgentWellbeingSubscribeRealtimeBurnoutEvents", Area: "cc", Group: "agent-wellbeing", Command: "subscribe-realtime-burnout-events",
 	Summary:     "Subscribe for realtime burnout events",
 	Description: "This endpoint provides real-time burnout events that are generated for agents belonging to the organization. It gives us a WebSocket URL to which we can connect to receive the real-time burnout events.",
 	Method:      "POST", Path: "/v1/agentburnout/subscribe", Host: HostCC,
@@ -21,7 +21,7 @@ var CCAgentWellbeingSubscribeRealtimeBurnoutEvents = &Operation{
 }
 
 var CCAgentWellbeingRecordRealtimeBurnoutEvents = &Operation{
-	Area: "cc", Group: "agent-wellbeing", Command: "record-realtime-burnout-events",
+	ID: "CCAgentWellbeingRecordRealtimeBurnoutEvents", Area: "cc", Group: "agent-wellbeing", Command: "record-realtime-burnout-events",
 	Summary:     "Record the realtime burnout events",
 	Description: "The endpoint need to be invoked by Partners and Third-Party that will subscribe to the Agent Burnout system, in order to take certain action based on the agent burnout index calculated.",
 	Method:      "POST", Path: "/v1/agentburnout/action", Host: HostCC,
@@ -32,7 +32,7 @@ var CCAgentWellbeingRecordRealtimeBurnoutEvents = &Operation{
 }
 
 var CCAgentWellbeingGetBurnoutId = &Operation{
-	Area: "cc", Group: "agent-wellbeing", Command: "get-burnout-id",
+	ID: "CCAgentWellbeingGetBurnoutId", Area: "cc", Group: "agent-wellbeing", Command: "get-burnout-id",
 	Summary:     "Get specific Agent Burnout resource by ID",
 	Description: "Retrieve an existing Agent Burnout resource by ID in a given organization. Deprecated. Use GET /ai-feature/agent-burnout/{id} instead.",
 	Method:      "GET", Path: "/organization/{orgid}/agent-burnout/{id}", Host: HostCC,
@@ -43,7 +43,7 @@ var CCAgentWellbeingGetBurnoutId = &Operation{
 }
 
 var CCAgentWellbeingUpdateBurnoutId = &Operation{
-	Area: "cc", Group: "agent-wellbeing", Command: "update-burnout-id",
+	ID: "CCAgentWellbeingUpdateBurnoutId", Area: "cc", Group: "agent-wellbeing", Command: "update-burnout-id",
 	Summary:     "Update specific Agent Burnout resource by ID",
 	Description: "Update an existing Agent Burnout resource by ID in a given organization. Deprecated. Use PUT /ai-feature/agent-burnout/{id} instead.",
 	Method:      "PUT", Path: "/organization/{orgid}/agent-burnout/{id}", Host: HostCC,
@@ -64,7 +64,7 @@ var CCAgentWellbeingUpdateBurnoutId = &Operation{
 }
 
 var CCAgentWellbeingListBurnout = &Operation{
-	Area: "cc", Group: "agent-wellbeing", Command: "list-burnout",
+	ID: "CCAgentWellbeingListBurnout", Area: "cc", Group: "agent-wellbeing", Command: "list-burnout",
 	Summary:     "List Agent Burnout resource(s)",
 	Description: "Retrieve a list of Agent Burnout resource(s) in a given organization.Only one entry per organization can exist for Agent Burnout resource. Deprecated. Use GET /v2/ai-feature/agent-burnout instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/agent-burnout", Host: HostCC,
@@ -79,7 +79,7 @@ var CCAgentWellbeingListBurnout = &Operation{
 }
 
 var CCAutoCsatCreateMappedQuestion = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "create-mapped-question",
+	ID: "CCAutoCsatCreateMappedQuestion", Area: "cc", Group: "auto-csat", Command: "create-mapped-question",
 	Summary:     "Create a new Auto CSAT mapped Question",
 	Description: "Create a new Auto CSAT mapped Question in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question instead.",
 	Method:      "POST", Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question", Host: HostCC,
@@ -99,7 +99,7 @@ var CCAutoCsatCreateMappedQuestion = &Operation{
 }
 
 var CCAutoCsatBulkSaveMappedQuestion = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "bulk-save-mapped-question",
+	ID: "CCAutoCsatBulkSaveMappedQuestion", Area: "cc", Group: "auto-csat", Command: "bulk-save-mapped-question",
 	Summary:     "Bulk save Auto CSAT mapped Question(s)",
 	Description: "Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question/bulk instead.",
 	Method:      "POST", Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/bulk", Host: HostCC,
@@ -111,7 +111,7 @@ var CCAutoCsatBulkSaveMappedQuestion = &Operation{
 }
 
 var CCAutoCsatGetMappedQuestionId = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "get-mapped-question-id",
+	ID: "CCAutoCsatGetMappedQuestionId", Area: "cc", Group: "auto-csat", Command: "get-mapped-question-id",
 	Summary:     "Get specific Auto CSAT mapped Question by ID",
 	Description: "Retrieve an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/question/{id} instead.",
 	Method:      "GET", Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}", Host: HostCC,
@@ -123,7 +123,7 @@ var CCAutoCsatGetMappedQuestionId = &Operation{
 }
 
 var CCAutoCsatDeleteMappedQuestionId = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "delete-mapped-question-id",
+	ID: "CCAutoCsatDeleteMappedQuestionId", Area: "cc", Group: "auto-csat", Command: "delete-mapped-question-id",
 	Summary:     "Delete specific Auto CSAT mapped Question by ID",
 	Description: "Delete an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use DELETE /ai-feature/auto-csat/question/{id} instead.",
 	Method:      "DELETE", Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}", Host: HostCC,
@@ -135,7 +135,7 @@ var CCAutoCsatDeleteMappedQuestionId = &Operation{
 }
 
 var CCAutoCsatGet = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "get",
+	ID: "CCAutoCsatGet", Area: "cc", Group: "auto-csat", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Auto CSAT resource by ID",
 	Description: "Retrieve an existing Auto CSAT resource by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/{id} instead.",
@@ -147,7 +147,7 @@ var CCAutoCsatGet = &Operation{
 }
 
 var CCAutoCsatUpdate = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "update",
+	ID: "CCAutoCsatUpdate", Area: "cc", Group: "auto-csat", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Auto CSAT resource by ID",
 	Description: "Update an existing Auto CSAT resource by ID in a given organization. Deprecated. Use PUT /ai-feature/auto-csat/{id} instead.",
@@ -170,7 +170,7 @@ var CCAutoCsatUpdate = &Operation{
 }
 
 var CCAutoCsatList = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "list",
+	ID: "CCAutoCsatList", Area: "cc", Group: "auto-csat", Command: "list",
 	Summary:     "List Auto CSAT resource(s)",
 	Description: "Retrieve a list of Auto CSAT resource(s) in a given organization.Only one entry per organization can exist for Auto CSAT resource. Deprecated. Use GET /v2/ai-feature/auto-csat instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/auto-csat", Host: HostCC,
@@ -185,7 +185,7 @@ var CCAutoCsatList = &Operation{
 }
 
 var CCAutoCsatListMappedQuestion = &Operation{
-	Area: "cc", Group: "auto-csat", Command: "list-mapped-question",
+	ID: "CCAutoCsatListMappedQuestion", Area: "cc", Group: "auto-csat", Command: "list-mapped-question",
 	Summary:     "List Auto CSAT mapped Question(s)",
 	Description: "Retrieve a list of Auto CSAT mapped Question(s) in a given organization. Deprecated. Use GET /v2/ai-feature/auto-csat/question instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/auto-csat/{autoCsatId}/question", Host: HostCC,
@@ -201,7 +201,7 @@ var CCAutoCsatListMappedQuestion = &Operation{
 }
 
 var CCGeneratedSummariesGet = &Operation{
-	Area: "cc", Group: "generated-summaries", Command: "get",
+	ID: "CCGeneratedSummariesGet", Area: "cc", Group: "generated-summaries", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Generated Summaries resource by ID",
 	Description: "Retrieve an existing Generated Summaries resource by ID in a given organization. Deprecated. Use GET /ai-feature/generated-summaries/{id} instead.",
@@ -213,7 +213,7 @@ var CCGeneratedSummariesGet = &Operation{
 }
 
 var CCGeneratedSummariesUpdate = &Operation{
-	Area: "cc", Group: "generated-summaries", Command: "update",
+	ID: "CCGeneratedSummariesUpdate", Area: "cc", Group: "generated-summaries", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Generated Summaries resource by ID",
 	Description: "Update an existing Generated Summaries resource by ID in a given organization. Deprecated. Use PUT /ai-feature/generated-summaries/{id} instead.",
@@ -236,7 +236,7 @@ var CCGeneratedSummariesUpdate = &Operation{
 }
 
 var CCGeneratedSummariesList = &Operation{
-	Area: "cc", Group: "generated-summaries", Command: "list",
+	ID: "CCGeneratedSummariesList", Area: "cc", Group: "generated-summaries", Command: "list",
 	Summary:     "List Generated Summaries resource(s)",
 	Description: "Retrieve a list of Generated Summaries resource(s) in a given organization.Only one entry per organization can exist for Generated Summaries resource. Deprecated. Use GET /v2/ai-feature/generated-summaries instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/generated-summaries", Host: HostCC,
@@ -251,7 +251,7 @@ var CCGeneratedSummariesList = &Operation{
 }
 
 var CCBusinessHourList = &Operation{
-	Area: "cc", Group: "business-hour", Command: "list",
+	ID: "CCBusinessHourList", Area: "cc", Group: "business-hour", Command: "list",
 	Summary:     "List Business Hours resources",
 	Description: "Retrieve a list of Business Hours resources in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/business-hours", Host: HostCC,
@@ -270,7 +270,7 @@ var CCBusinessHourList = &Operation{
 }
 
 var CCBusinessHourCreate = &Operation{
-	Area: "cc", Group: "business-hour", Command: "create",
+	ID: "CCBusinessHourCreate", Area: "cc", Group: "business-hour", Command: "create",
 	Summary:     "Create a new Business Hours resource",
 	Description: "Create a new Business Hours resource in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/business-hours", Host: HostCC,
@@ -281,7 +281,7 @@ var CCBusinessHourCreate = &Operation{
 }
 
 var CCBusinessHourBulkSave = &Operation{
-	Area: "cc", Group: "business-hour", Command: "bulk-save",
+	ID: "CCBusinessHourBulkSave", Area: "cc", Group: "business-hour", Command: "bulk-save",
 	Summary:     "Bulk save Business Hours resources",
 	Description: "Create, Update or delete Business Hours resources in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/business-hours/bulk", Host: HostCC,
@@ -292,7 +292,7 @@ var CCBusinessHourBulkSave = &Operation{
 }
 
 var CCBusinessHourBulkExport = &Operation{
-	Area: "cc", Group: "business-hour", Command: "bulk-export",
+	ID: "CCBusinessHourBulkExport", Area: "cc", Group: "business-hour", Command: "bulk-export",
 	Summary:     "Bulk export Business Hours resource(s)",
 	Description: "Export all Business Hours resource(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/business-hours/bulk-export", Host: HostCC,
@@ -305,7 +305,7 @@ var CCBusinessHourBulkExport = &Operation{
 }
 
 var CCBusinessHourGet = &Operation{
-	Area: "cc", Group: "business-hour", Command: "get",
+	ID: "CCBusinessHourGet", Area: "cc", Group: "business-hour", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Business Hours resource by ID",
 	Description: "Retrieve an existing Business Hours resource by ID in a given organization.",
@@ -317,7 +317,7 @@ var CCBusinessHourGet = &Operation{
 }
 
 var CCBusinessHourUpdate = &Operation{
-	Area: "cc", Group: "business-hour", Command: "update",
+	ID: "CCBusinessHourUpdate", Area: "cc", Group: "business-hour", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Business Hours resource by ID",
 	Description: "Update an existing Business Hours resource by ID in a given organization.",
@@ -330,7 +330,7 @@ var CCBusinessHourUpdate = &Operation{
 }
 
 var CCBusinessHourDelete = &Operation{
-	Area: "cc", Group: "business-hour", Command: "delete",
+	ID: "CCBusinessHourDelete", Area: "cc", Group: "business-hour", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Business Hours resource by ID",
 	Description: "Delete an existing Business Hours resource by ID in a given organization.",
@@ -342,7 +342,7 @@ var CCBusinessHourDelete = &Operation{
 }
 
 var CCBusinessHourListReferences = &Operation{
-	Area: "cc", Group: "business-hour", Command: "list-references",
+	ID: "CCBusinessHourListReferences", Area: "cc", Group: "business-hour", Command: "list-references",
 	Summary:     "List references for a specific Business Hours resource",
 	Description: "Retrieve a list of all entities that have reference to an existing Business Hours resource by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/business-hours/{id}/incoming-references", Host: HostCC,
@@ -356,8 +356,21 @@ var CCBusinessHourListReferences = &Operation{
 	Paging: &Paging{},
 }
 
+var CCBusinessHourListV1 = &Operation{
+	ID: "CCBusinessHourListV1", Area: "cc", Group: "business-hour", Command: "list-v1",
+	Summary:     "List Business Hours (v1)",
+	Description: "Lists business hours through the v1 route. Items leave out working hours, so read each one for them. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/business-hours", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCHolidayListList = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "list",
+	ID: "CCHolidayListList", Area: "cc", Group: "holiday-list", Command: "list",
 	Summary:     "List Holiday Lists",
 	Description: "Retrieve a list of Holiday Lists in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/holiday-list", Host: HostCC,
@@ -376,7 +389,7 @@ var CCHolidayListList = &Operation{
 }
 
 var CCHolidayListCreate = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "create",
+	ID: "CCHolidayListCreate", Area: "cc", Group: "holiday-list", Command: "create",
 	Summary:     "Create a new Holiday List",
 	Description: "Create a new Holiday List in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/holiday-list", Host: HostCC,
@@ -387,7 +400,7 @@ var CCHolidayListCreate = &Operation{
 }
 
 var CCHolidayListBulkSave = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "bulk-save",
+	ID: "CCHolidayListBulkSave", Area: "cc", Group: "holiday-list", Command: "bulk-save",
 	Summary:     "Bulk save Holiday Lists",
 	Description: "Create, Update or delete Holiday Lists in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/holiday-list/bulk", Host: HostCC,
@@ -398,7 +411,7 @@ var CCHolidayListBulkSave = &Operation{
 }
 
 var CCHolidayListBulkExport = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "bulk-export",
+	ID: "CCHolidayListBulkExport", Area: "cc", Group: "holiday-list", Command: "bulk-export",
 	Summary:     "Bulk export Holiday List(s)",
 	Description: "Export all Holiday List(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/holiday-list/bulk-export", Host: HostCC,
@@ -411,7 +424,7 @@ var CCHolidayListBulkExport = &Operation{
 }
 
 var CCHolidayListGet = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "get",
+	ID: "CCHolidayListGet", Area: "cc", Group: "holiday-list", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Holiday List by ID",
 	Description: "Retrieve an existing Holiday List by ID in a given organization.",
@@ -423,7 +436,7 @@ var CCHolidayListGet = &Operation{
 }
 
 var CCHolidayListUpdate = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "update",
+	ID: "CCHolidayListUpdate", Area: "cc", Group: "holiday-list", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Holiday List by ID",
 	Description: "Update an existing Holiday List by ID in a given organization.",
@@ -436,7 +449,7 @@ var CCHolidayListUpdate = &Operation{
 }
 
 var CCHolidayListDelete = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "delete",
+	ID: "CCHolidayListDelete", Area: "cc", Group: "holiday-list", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Holiday List by ID",
 	Description: "Delete an existing Holiday List by ID in a given organization.",
@@ -448,7 +461,7 @@ var CCHolidayListDelete = &Operation{
 }
 
 var CCHolidayListListReferences = &Operation{
-	Area: "cc", Group: "holiday-list", Command: "list-references",
+	ID: "CCHolidayListListReferences", Area: "cc", Group: "holiday-list", Command: "list-references",
 	Summary:     "List references for a specific Holiday List",
 	Description: "Retrieve a list of all entities that have reference to an existing Holiday List by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/holiday-list/{id}/incoming-references", Host: HostCC,
@@ -463,7 +476,7 @@ var CCHolidayListListReferences = &Operation{
 }
 
 var CCOverridesList = &Operation{
-	Area: "cc", Group: "overrides", Command: "list",
+	ID: "CCOverridesList", Area: "cc", Group: "overrides", Command: "list",
 	Summary:     "List Overrides resource(s)",
 	Description: "Retrieve a list of Overrides resource(s) in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/overrides", Host: HostCC,
@@ -482,7 +495,7 @@ var CCOverridesList = &Operation{
 }
 
 var CCOverridesCreate = &Operation{
-	Area: "cc", Group: "overrides", Command: "create",
+	ID: "CCOverridesCreate", Area: "cc", Group: "overrides", Command: "create",
 	Summary:     "Create a new Overrides resource",
 	Description: "Create a new Overrides resource in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/overrides", Host: HostCC,
@@ -493,7 +506,7 @@ var CCOverridesCreate = &Operation{
 }
 
 var CCOverridesBulkSave = &Operation{
-	Area: "cc", Group: "overrides", Command: "bulk-save",
+	ID: "CCOverridesBulkSave", Area: "cc", Group: "overrides", Command: "bulk-save",
 	Summary:     "Bulk save Overrides resource(s)",
 	Description: "Create, Update or delete Overrides resource(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/overrides/bulk", Host: HostCC,
@@ -504,7 +517,7 @@ var CCOverridesBulkSave = &Operation{
 }
 
 var CCOverridesBulkExport = &Operation{
-	Area: "cc", Group: "overrides", Command: "bulk-export",
+	ID: "CCOverridesBulkExport", Area: "cc", Group: "overrides", Command: "bulk-export",
 	Summary:     "Bulk export Overrides resource(s)",
 	Description: "Export all Overrides resource(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/overrides/bulk-export", Host: HostCC,
@@ -517,7 +530,7 @@ var CCOverridesBulkExport = &Operation{
 }
 
 var CCOverridesGet = &Operation{
-	Area: "cc", Group: "overrides", Command: "get",
+	ID: "CCOverridesGet", Area: "cc", Group: "overrides", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Overrides resource by ID",
 	Description: "Retrieve an existing Overrides resource by ID in a given organization.",
@@ -529,7 +542,7 @@ var CCOverridesGet = &Operation{
 }
 
 var CCOverridesUpdate = &Operation{
-	Area: "cc", Group: "overrides", Command: "update",
+	ID: "CCOverridesUpdate", Area: "cc", Group: "overrides", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Overrides resource by ID",
 	Description: "Update an existing Overrides resource by ID in a given organization.",
@@ -542,7 +555,7 @@ var CCOverridesUpdate = &Operation{
 }
 
 var CCOverridesDelete = &Operation{
-	Area: "cc", Group: "overrides", Command: "delete",
+	ID: "CCOverridesDelete", Area: "cc", Group: "overrides", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Overrides resource by ID",
 	Description: "Delete an existing Overrides resource by ID in a given organization.",
@@ -554,7 +567,7 @@ var CCOverridesDelete = &Operation{
 }
 
 var CCOverridesListReferences = &Operation{
-	Area: "cc", Group: "overrides", Command: "list-references",
+	ID: "CCOverridesListReferences", Area: "cc", Group: "overrides", Command: "list-references",
 	Summary:     "List references for a specific Overrides resource",
 	Description: "Retrieve a list of all entities that have reference to an existing Overrides resource by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/overrides/{id}/incoming-references", Host: HostCC,
@@ -569,7 +582,7 @@ var CCOverridesListReferences = &Operation{
 }
 
 var CCAddressBookList = &Operation{
-	Area: "cc", Group: "address-book", Command: "list",
+	ID: "CCAddressBookList", Area: "cc", Group: "address-book", Command: "list",
 	Summary:     "List Address Book(s)",
 	Description: "Retrieve a list of Address Book(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/address-book", Host: HostCC,
@@ -585,7 +598,7 @@ var CCAddressBookList = &Operation{
 }
 
 var CCAddressBookCreate = &Operation{
-	Area: "cc", Group: "address-book", Command: "create",
+	ID: "CCAddressBookCreate", Area: "cc", Group: "address-book", Command: "create",
 	Summary:     "Create a new Address Book",
 	Description: "Create a new Address Book in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/v3/address-book", Host: HostCC,
@@ -604,7 +617,7 @@ var CCAddressBookCreate = &Operation{
 }
 
 var CCAddressBookBulkExport = &Operation{
-	Area: "cc", Group: "address-book", Command: "bulk-export",
+	ID: "CCAddressBookBulkExport", Area: "cc", Group: "address-book", Command: "bulk-export",
 	Summary:     "Bulk export Address Book(s)",
 	Description: "Export all Address Book(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/address-book/bulk-export", Host: HostCC,
@@ -617,7 +630,7 @@ var CCAddressBookBulkExport = &Operation{
 }
 
 var CCAddressBookCreateEntry = &Operation{
-	Area: "cc", Group: "address-book", Command: "create-entry",
+	ID: "CCAddressBookCreateEntry", Area: "cc", Group: "address-book", Command: "create-entry",
 	Summary:     "Create a new Address Book Entry",
 	Description: "Create a new Address Book Entry in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/address-book/{addressBookId}/entry", Host: HostCC,
@@ -635,7 +648,7 @@ var CCAddressBookCreateEntry = &Operation{
 }
 
 var CCAddressBookBulkSaveEntry = &Operation{
-	Area: "cc", Group: "address-book", Command: "bulk-save-entry",
+	ID: "CCAddressBookBulkSaveEntry", Area: "cc", Group: "address-book", Command: "bulk-save-entry",
 	Summary:     "Bulk save Address Book Entry(s)",
 	Description: "Create, Update or delete Address Book Entry(s) in bulk for an Address Book in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/address-book/{addressBookId}/entry/bulk", Host: HostCC,
@@ -647,7 +660,7 @@ var CCAddressBookBulkSaveEntry = &Operation{
 }
 
 var CCAddressBookGetEntryId = &Operation{
-	Area: "cc", Group: "address-book", Command: "get-entry-id",
+	ID: "CCAddressBookGetEntryId", Area: "cc", Group: "address-book", Command: "get-entry-id",
 	Summary:     "Get specific Address Book Entry by ID",
 	Description: "Retrieve an existing Address Book Entry by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}", Host: HostCC,
@@ -659,7 +672,7 @@ var CCAddressBookGetEntryId = &Operation{
 }
 
 var CCAddressBookUpdateEntryId = &Operation{
-	Area: "cc", Group: "address-book", Command: "update-entry-id",
+	ID: "CCAddressBookUpdateEntryId", Area: "cc", Group: "address-book", Command: "update-entry-id",
 	Summary:     "Update specific Address Book Entry by ID",
 	Description: "Update an existing Address Book Entry by ID in a given organization.",
 	Method:      "PUT", Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}", Host: HostCC,
@@ -678,7 +691,7 @@ var CCAddressBookUpdateEntryId = &Operation{
 }
 
 var CCAddressBookDeleteEntryId = &Operation{
-	Area: "cc", Group: "address-book", Command: "delete-entry-id",
+	ID: "CCAddressBookDeleteEntryId", Area: "cc", Group: "address-book", Command: "delete-entry-id",
 	Summary:     "Delete specific Address Book Entry by ID",
 	Description: "Delete an existing Address Book Entry by ID in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}", Host: HostCC,
@@ -690,7 +703,7 @@ var CCAddressBookDeleteEntryId = &Operation{
 }
 
 var CCAddressBookGet = &Operation{
-	Area: "cc", Group: "address-book", Command: "get",
+	ID: "CCAddressBookGet", Area: "cc", Group: "address-book", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Address Book by ID",
 	Description: "Retrieve an existing Address Book by ID in a given organization.",
@@ -702,7 +715,7 @@ var CCAddressBookGet = &Operation{
 }
 
 var CCAddressBookUpdate = &Operation{
-	Area: "cc", Group: "address-book", Command: "update",
+	ID: "CCAddressBookUpdate", Area: "cc", Group: "address-book", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Address Book by ID",
 	Description: "Update an existing Address Book by ID in a given organization.",
@@ -723,7 +736,7 @@ var CCAddressBookUpdate = &Operation{
 }
 
 var CCAddressBookDelete = &Operation{
-	Area: "cc", Group: "address-book", Command: "delete",
+	ID: "CCAddressBookDelete", Area: "cc", Group: "address-book", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Address Book by ID",
 	Description: "Delete an existing Address Book by ID in a given organization.",
@@ -735,7 +748,7 @@ var CCAddressBookDelete = &Operation{
 }
 
 var CCAddressBookListReferences = &Operation{
-	Area: "cc", Group: "address-book", Command: "list-references",
+	ID: "CCAddressBookListReferences", Area: "cc", Group: "address-book", Command: "list-references",
 	Summary:     "List references for a specific Address Book",
 	Description: "Retrieve a list of all entities that have reference to an existing Address Book by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/address-book/{id}/incoming-references", Host: HostCC,
@@ -750,7 +763,7 @@ var CCAddressBookListReferences = &Operation{
 }
 
 var CCAddressBookListEntry = &Operation{
-	Area: "cc", Group: "address-book", Command: "list-entry",
+	ID: "CCAddressBookListEntry", Area: "cc", Group: "address-book", Command: "list-entry",
 	Summary:     "List Address Book Entry(s)",
 	Description: "Retrieve a list of Address Book Entry(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/address-book/{addressBookId}/entry", Host: HostCC,
@@ -767,7 +780,7 @@ var CCAddressBookListEntry = &Operation{
 }
 
 var CCAudioFilesCreate = &Operation{
-	Area: "cc", Group: "audio-files", Command: "create",
+	ID: "CCAudioFilesCreate", Area: "cc", Group: "audio-files", Command: "create",
 	Summary:     "Create a new Audio File",
 	Description: "Create a new Audio File in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/audio-file", Host: HostCC,
@@ -778,7 +791,7 @@ var CCAudioFilesCreate = &Operation{
 }
 
 var CCAudioFilesGet = &Operation{
-	Area: "cc", Group: "audio-files", Command: "get",
+	ID: "CCAudioFilesGet", Area: "cc", Group: "audio-files", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Audio File by ID",
 	Description: "Retrieve an existing Audio File by ID in a given organization.",
@@ -791,7 +804,7 @@ var CCAudioFilesGet = &Operation{
 }
 
 var CCAudioFilesUpdate = &Operation{
-	Area: "cc", Group: "audio-files", Command: "update",
+	ID: "CCAudioFilesUpdate", Area: "cc", Group: "audio-files", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Audio File by ID",
 	Description: "Update an existing Audio File by ID in a given organization.",
@@ -804,7 +817,7 @@ var CCAudioFilesUpdate = &Operation{
 }
 
 var CCAudioFilesDelete = &Operation{
-	Area: "cc", Group: "audio-files", Command: "delete",
+	ID: "CCAudioFilesDelete", Area: "cc", Group: "audio-files", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Audio File by ID",
 	Description: "Delete an existing Audio File by ID in a given organization.",
@@ -816,7 +829,7 @@ var CCAudioFilesDelete = &Operation{
 }
 
 var CCAudioFilesPatch = &Operation{
-	Area: "cc", Group: "audio-files", Command: "patch",
+	ID: "CCAudioFilesPatch", Area: "cc", Group: "audio-files", Command: "patch",
 	Aliases:     []string{"patch-id"},
 	Summary:     "Partially update Audio File by ID",
 	Description: "Partially update Audio File by ID in a given organization.",
@@ -831,7 +844,7 @@ var CCAudioFilesPatch = &Operation{
 }
 
 var CCAudioFilesListReferences = &Operation{
-	Area: "cc", Group: "audio-files", Command: "list-references",
+	ID: "CCAudioFilesListReferences", Area: "cc", Group: "audio-files", Command: "list-references",
 	Summary:     "List references for a specific Audio File",
 	Description: "Retrieve a list of all entities that have reference to an existing Audio File by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/audio-file/{id}/incoming-references", Host: HostCC,
@@ -846,7 +859,7 @@ var CCAudioFilesListReferences = &Operation{
 }
 
 var CCAudioFilesList = &Operation{
-	Area: "cc", Group: "audio-files", Command: "list",
+	ID: "CCAudioFilesList", Area: "cc", Group: "audio-files", Command: "list",
 	Summary:     "List Audio File(s)",
 	Description: "Retrieve a list of Audio File(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/audio-file", Host: HostCC,
@@ -862,7 +875,7 @@ var CCAudioFilesList = &Operation{
 }
 
 var CCAuxiliaryCodeList = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "list",
+	ID: "CCAuxiliaryCodeList", Area: "cc", Group: "auxiliary-code", Command: "list",
 	Summary:     "List Auxiliary Code(s)",
 	Description: "Retrieve a list of Auxiliary Code(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/auxiliary-code", Host: HostCC,
@@ -880,7 +893,7 @@ var CCAuxiliaryCodeList = &Operation{
 }
 
 var CCAuxiliaryCodeCreate = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "create",
+	ID: "CCAuxiliaryCodeCreate", Area: "cc", Group: "auxiliary-code", Command: "create",
 	Summary:     "Create a new Auxiliary Code",
 	Description: "Create a new Auxiliary Code in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/auxiliary-code", Host: HostCC,
@@ -904,7 +917,7 @@ var CCAuxiliaryCodeCreate = &Operation{
 }
 
 var CCAuxiliaryCodeBulkSave = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "bulk-save",
+	ID: "CCAuxiliaryCodeBulkSave", Area: "cc", Group: "auxiliary-code", Command: "bulk-save",
 	Summary:     "Bulk save Auxiliary Code(s)",
 	Description: "Create, Update or delete Auxiliary Code(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/auxiliary-code/bulk", Host: HostCC,
@@ -915,7 +928,7 @@ var CCAuxiliaryCodeBulkSave = &Operation{
 }
 
 var CCAuxiliaryCodeBulkPartialUpdate = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "bulk-partial-update",
+	ID: "CCAuxiliaryCodeBulkPartialUpdate", Area: "cc", Group: "auxiliary-code", Command: "bulk-partial-update",
 	Summary:     "Bulk partial update Auxiliary Code(s)",
 	Description: "Update some or all properties for multiple Auxiliary codes in bulk in a given organization.",
 	Method:      "PATCH", Path: "/organization/{orgid}/auxiliary-code/bulk", Host: HostCC,
@@ -926,7 +939,7 @@ var CCAuxiliaryCodeBulkPartialUpdate = &Operation{
 }
 
 var CCAuxiliaryCodeBulkExport = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "bulk-export",
+	ID: "CCAuxiliaryCodeBulkExport", Area: "cc", Group: "auxiliary-code", Command: "bulk-export",
 	Summary:     "Bulk export Auxiliary Code(s)",
 	Description: "Export all Auxiliary Code(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/auxiliary-code/bulk-export", Host: HostCC,
@@ -939,7 +952,7 @@ var CCAuxiliaryCodeBulkExport = &Operation{
 }
 
 var CCAuxiliaryCodePurgeInactive = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "purge-inactive",
+	ID: "CCAuxiliaryCodePurgeInactive", Area: "cc", Group: "auxiliary-code", Command: "purge-inactive",
 	Summary:     "Purge inactive Auxiliary Code(s)",
 	Description: "Purge inactive Auxiliary Code(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/auxiliary-code/purge-inactive-entities", Host: HostCC,
@@ -950,7 +963,7 @@ var CCAuxiliaryCodePurgeInactive = &Operation{
 }
 
 var CCAuxiliaryCodeGet = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "get",
+	ID: "CCAuxiliaryCodeGet", Area: "cc", Group: "auxiliary-code", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Auxiliary Code by ID",
 	Description: "Retrieve an existing Auxiliary Code by ID in a given organization.",
@@ -962,7 +975,7 @@ var CCAuxiliaryCodeGet = &Operation{
 }
 
 var CCAuxiliaryCodeUpdate = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "update",
+	ID: "CCAuxiliaryCodeUpdate", Area: "cc", Group: "auxiliary-code", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Auxiliary Code by ID",
 	Description: "Update an existing Auxiliary Code by ID in a given organization.",
@@ -988,7 +1001,7 @@ var CCAuxiliaryCodeUpdate = &Operation{
 }
 
 var CCAuxiliaryCodeDelete = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "delete",
+	ID: "CCAuxiliaryCodeDelete", Area: "cc", Group: "auxiliary-code", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Auxiliary Code by ID",
 	Description: "Delete an existing Auxiliary Code by ID in a given organization.",
@@ -1000,7 +1013,7 @@ var CCAuxiliaryCodeDelete = &Operation{
 }
 
 var CCAuxiliaryCodeListReferences = &Operation{
-	Area: "cc", Group: "auxiliary-code", Command: "list-references",
+	ID: "CCAuxiliaryCodeListReferences", Area: "cc", Group: "auxiliary-code", Command: "list-references",
 	Summary:     "List references for a specific Auxiliary Code",
 	Description: "Retrieve a list of all entities that have reference to an existing Auxiliary Code by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/auxiliary-code/{id}/incoming-references", Host: HostCC,
@@ -1015,7 +1028,7 @@ var CCAuxiliaryCodeListReferences = &Operation{
 }
 
 var CCContactNumberCreate = &Operation{
-	Area: "cc", Group: "contact-number", Command: "create",
+	ID: "CCContactNumberCreate", Area: "cc", Group: "contact-number", Command: "create",
 	Summary:     "Create a new Contact Number",
 	Description: "Create a new Contact Number in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/contact-number", Host: HostCC,
@@ -1031,7 +1044,7 @@ var CCContactNumberCreate = &Operation{
 }
 
 var CCContactNumberListAll = &Operation{
-	Area: "cc", Group: "contact-number", Command: "list-all",
+	ID: "CCContactNumberListAll", Area: "cc", Group: "contact-number", Command: "list-all",
 	Summary:     "List all contact numbers(property - number)",
 	Description: "Retrieve a list of  only contact numbers(property - number) from Contact Number(s) without pagination in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-number/all-numbers", Host: HostCC,
@@ -1042,7 +1055,7 @@ var CCContactNumberListAll = &Operation{
 }
 
 var CCContactNumberBulkSave = &Operation{
-	Area: "cc", Group: "contact-number", Command: "bulk-save",
+	ID: "CCContactNumberBulkSave", Area: "cc", Group: "contact-number", Command: "bulk-save",
 	Summary:     "Bulk save Contact Number(s)",
 	Description: "Create, Update or delete Contact Number(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/contact-number/bulk", Host: HostCC,
@@ -1053,7 +1066,7 @@ var CCContactNumberBulkSave = &Operation{
 }
 
 var CCContactNumberBulkExport = &Operation{
-	Area: "cc", Group: "contact-number", Command: "bulk-export",
+	ID: "CCContactNumberBulkExport", Area: "cc", Group: "contact-number", Command: "bulk-export",
 	Summary:     "Bulk export Contact Number(s)",
 	Description: "Export all Contact Number(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-number/bulk-export", Host: HostCC,
@@ -1066,7 +1079,7 @@ var CCContactNumberBulkExport = &Operation{
 }
 
 var CCContactNumberGet = &Operation{
-	Area: "cc", Group: "contact-number", Command: "get",
+	ID: "CCContactNumberGet", Area: "cc", Group: "contact-number", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Contact Number by ID",
 	Description: "Retrieve an existing Contact Number by ID in a given organization.",
@@ -1078,7 +1091,7 @@ var CCContactNumberGet = &Operation{
 }
 
 var CCContactNumberUpdate = &Operation{
-	Area: "cc", Group: "contact-number", Command: "update",
+	ID: "CCContactNumberUpdate", Area: "cc", Group: "contact-number", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Contact Number by ID",
 	Description: "Update an existing Contact Number by ID in a given organization.",
@@ -1096,7 +1109,7 @@ var CCContactNumberUpdate = &Operation{
 }
 
 var CCContactNumberDelete = &Operation{
-	Area: "cc", Group: "contact-number", Command: "delete",
+	ID: "CCContactNumberDelete", Area: "cc", Group: "contact-number", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Contact Number by ID",
 	Description: "Delete an existing Contact Number by ID in a given organization.",
@@ -1108,7 +1121,7 @@ var CCContactNumberDelete = &Operation{
 }
 
 var CCContactNumberList = &Operation{
-	Area: "cc", Group: "contact-number", Command: "list",
+	ID: "CCContactNumberList", Area: "cc", Group: "contact-number", Command: "list",
 	Summary:     "List Contact Number(s)",
 	Description: "Retrieve a list of Contact Number(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/contact-number", Host: HostCC,
@@ -1124,7 +1137,7 @@ var CCContactNumberList = &Operation{
 }
 
 var CCContactServiceQueueList = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list",
+	ID: "CCContactServiceQueueList", Area: "cc", Group: "contact-service-queue", Command: "list",
 	Summary:     "List Contact Service Queues",
 	Description: "Retrieve a list of Contact Service Queues in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead. Deprecated. Use GET /v2/contact-service-queue instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/contact-service-queue", Host: HostCC,
@@ -1143,7 +1156,7 @@ var CCContactServiceQueueList = &Operation{
 }
 
 var CCContactServiceQueueCreate = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "create",
+	ID: "CCContactServiceQueueCreate", Area: "cc", Group: "contact-service-queue", Command: "create",
 	Summary:     "Create a new Contact Service Queue",
 	Description: "Create a new Contact Service Queue in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/v2/contact-service-queue", Host: HostCC,
@@ -1154,7 +1167,7 @@ var CCContactServiceQueueCreate = &Operation{
 }
 
 var CCContactServiceQueueBulkSave = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "bulk-save",
+	ID: "CCContactServiceQueueBulkSave", Area: "cc", Group: "contact-service-queue", Command: "bulk-save",
 	Summary:     "Bulk save Contact Service Queues",
 	Description: "Create, Update or delete Contact Service Queues in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/contact-service-queue/v2/bulk", Host: HostCC,
@@ -1165,7 +1178,7 @@ var CCContactServiceQueueBulkSave = &Operation{
 }
 
 var CCContactServiceQueueBulkPartialUpdate = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "bulk-partial-update",
+	ID: "CCContactServiceQueueBulkPartialUpdate", Area: "cc", Group: "contact-service-queue", Command: "bulk-partial-update",
 	Summary:     "Bulk partial update Contact Service Queues",
 	Description: "Update some or all properties for multiple Contact Service Queues in bulk in a given organization.",
 	Method:      "PATCH", Path: "/organization/{orgid}/contact-service-queue/bulk", Host: HostCC,
@@ -1176,7 +1189,7 @@ var CCContactServiceQueueBulkPartialUpdate = &Operation{
 }
 
 var CCContactServiceQueueBulkExport = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "bulk-export",
+	ID: "CCContactServiceQueueBulkExport", Area: "cc", Group: "contact-service-queue", Command: "bulk-export",
 	Summary:     "Bulk export Contact Service Queue(s)",
 	Description: "Export all Contact Service Queue(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-service-queue/bulk-export", Host: HostCC,
@@ -1190,7 +1203,7 @@ var CCContactServiceQueueBulkExport = &Operation{
 }
 
 var CCContactServiceQueueListBySkillProfile = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-by-skill-profile",
+	ID: "CCContactServiceQueueListBySkillProfile", Area: "cc", Group: "contact-service-queue", Command: "list-by-skill-profile",
 	Aliases:     []string{"list-skill-csqs-skill-profile"},
 	Summary:     "List skill-based Contact Service Queues by skill profile ID (public)",
 	Description: "Retrieve a list of skill-based Contact Service Queues associated with a given skill profile ID, accessible to authorized clients in a given organization.",
@@ -1203,7 +1216,7 @@ var CCContactServiceQueueListBySkillProfile = &Operation{
 }
 
 var CCContactServiceQueueDeleteReferences = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "delete-references",
+	ID: "CCContactServiceQueueDeleteReferences", Area: "cc", Group: "contact-service-queue", Command: "delete-references",
 	Aliases:     []string{"delete-csq-references"},
 	Summary:     "Delete references from Contact Service Queues",
 	Description: "Removes the references to the specified entities (such as teams, sites, or agents) from Contact Service Queues for a given organization.",
@@ -1215,7 +1228,7 @@ var CCContactServiceQueueDeleteReferences = &Operation{
 }
 
 var CCContactServiceQueueListManuallyAssignable = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-manually-assignable",
+	ID: "CCContactServiceQueueListManuallyAssignable", Area: "cc", Group: "contact-service-queue", Command: "list-manually-assignable",
 	Aliases:     []string{"list-manually-assignable-csqs"},
 	Summary:     "List manually assignable Contact Service Queues",
 	Description: "Retrieve a list of Contact Service Queues that are eligible for manual contact assignment based on the provided criteria in a given organization.",
@@ -1230,7 +1243,7 @@ var CCContactServiceQueueListManuallyAssignable = &Operation{
 }
 
 var CCContactServiceQueuePurgeInactive = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "purge-inactive",
+	ID: "CCContactServiceQueuePurgeInactive", Area: "cc", Group: "contact-service-queue", Command: "purge-inactive",
 	Summary:     "Purge inactive Contact Service Queues",
 	Description: "Purge inactive Contact Service Queues older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/contact-service-queue/purge-inactive-entities", Host: HostCC,
@@ -1241,7 +1254,7 @@ var CCContactServiceQueuePurgeInactive = &Operation{
 }
 
 var CCContactServiceQueueGet = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "get",
+	ID: "CCContactServiceQueueGet", Area: "cc", Group: "contact-service-queue", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Contact Service Queue by ID",
 	Description: "Retrieve an existing Contact Service Queue by ID in a given organization.",
@@ -1254,7 +1267,7 @@ var CCContactServiceQueueGet = &Operation{
 }
 
 var CCContactServiceQueueUpdate = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "update",
+	ID: "CCContactServiceQueueUpdate", Area: "cc", Group: "contact-service-queue", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Contact Service Queue by ID",
 	Description: "Update an existing Contact Service Queue by ID in a given organization.",
@@ -1267,7 +1280,7 @@ var CCContactServiceQueueUpdate = &Operation{
 }
 
 var CCContactServiceQueueDelete = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "delete",
+	ID: "CCContactServiceQueueDelete", Area: "cc", Group: "contact-service-queue", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Contact Service Queue by ID",
 	Description: "Delete an existing Contact Service Queue by ID in a given organization.",
@@ -1279,7 +1292,7 @@ var CCContactServiceQueueDelete = &Operation{
 }
 
 var CCContactServiceQueueListReferences = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-references",
+	ID: "CCContactServiceQueueListReferences", Area: "cc", Group: "contact-service-queue", Command: "list-references",
 	Aliases:     []string{"list-csq-references-id"},
 	Summary:     "List references for a specific Contact Service Queue",
 	Description: "Retrieve a list of all entities that have reference to an existing Contact Service Queue by ID in a given organization.",
@@ -1295,7 +1308,7 @@ var CCContactServiceQueueListReferences = &Operation{
 }
 
 var CCContactServiceQueueListAgentBased = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-agent-based",
+	ID: "CCContactServiceQueueListAgentBased", Area: "cc", Group: "contact-service-queue", Command: "list-agent-based",
 	Summary:     "List agent-based Contact Service Queues by user ID",
 	Description: "Retrieve a list of agent-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/agent-based-queues", Host: HostCC,
@@ -1310,7 +1323,7 @@ var CCContactServiceQueueListAgentBased = &Operation{
 }
 
 var CCContactServiceQueueListSkillBased = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-skill-based",
+	ID: "CCContactServiceQueueListSkillBased", Area: "cc", Group: "contact-service-queue", Command: "list-skill-based",
 	Summary:     "List skill-based Contact Service Queues by user ID",
 	Description: "Retrieve a list of skill-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/skill-based-queues", Host: HostCC,
@@ -1325,7 +1338,7 @@ var CCContactServiceQueueListSkillBased = &Operation{
 }
 
 var CCContactServiceQueueListTeamBased = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-team-based",
+	ID: "CCContactServiceQueueListTeamBased", Area: "cc", Group: "contact-service-queue", Command: "list-team-based",
 	Summary:     "List team-based Contact Service Queues by user ID",
 	Description: "Retrieve a list of team-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/team-based-queues", Host: HostCC,
@@ -1340,7 +1353,7 @@ var CCContactServiceQueueListTeamBased = &Operation{
 }
 
 var CCContactServiceQueueCreateRemoveAgentsUsersAgent = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "create-remove-agents-users-agent",
+	ID: "CCContactServiceQueueCreateRemoveAgentsUsersAgent", Area: "cc", Group: "contact-service-queue", Command: "create-remove-agents-users-agent",
 	Summary:     "Add or remove agents/users to/from an agent based queue",
 	Description: "This API can be used by a contact center supervisor to add or remove agents to or from an agent-based queue that they can access through their user profile access rights. Additionally, the request payload should contain the user ID(s) managed by the supervisor.",
 	Method:      "POST", Path: "/organization/{orgid}/v2/contact-service-queue/{id}/reassign-agents", Host: HostCC,
@@ -1355,7 +1368,7 @@ var CCContactServiceQueueCreateRemoveAgentsUsersAgent = &Operation{
 }
 
 var CCContactServiceQueueListMappingSummaryGroupedAssistantSkill = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-mapping-summary-grouped-assistant-skill",
+	ID: "CCContactServiceQueueListMappingSummaryGroupedAssistantSkill", Area: "cc", Group: "contact-service-queue", Command: "list-mapping-summary-grouped-assistant-skill",
 	Summary:     "List queue mapping summary grouped by Assistant Skill",
 	Description: "Retrieve a list of queue mapping summary for a specified list of Assistant Skills specified in a given organization. The summary currently includes mapped queue count, and the last assigned time of queue mapping.",
 	Method:      "POST", Path: "/organization/{orgid}/v2/contact-service-queue/fetch-by-grouped-assistant-skill", Host: HostCC,
@@ -1370,7 +1383,7 @@ var CCContactServiceQueueListMappingSummaryGroupedAssistantSkill = &Operation{
 }
 
 var CCContactServiceQueueListInternalSkillCsqsProfile = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-internal-skill-csqs-profile",
+	ID: "CCContactServiceQueueListInternalSkillCsqsProfile", Area: "cc", Group: "contact-service-queue", Command: "list-internal-skill-csqs-profile",
 	Summary:     "List Internal Skill CSQs by Profile",
 	Description: "Retrieve skill-based Contact Service Queues by skill profile ID for internal use in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}/internal", Host: HostCC,
@@ -1382,7 +1395,7 @@ var CCContactServiceQueueListInternalSkillCsqsProfile = &Operation{
 }
 
 var CCContactServiceQueueListTeamCsqsTeamId = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-team-csqs-team-id",
+	ID: "CCContactServiceQueueListTeamCsqsTeamId", Area: "cc", Group: "contact-service-queue", Command: "list-team-csqs-team-id",
 	Summary:     "List Team CSQs by Team ID",
 	Description: "Retrieve team-based Contact Service Queues by team ID for internal use in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-service-queue/by-team-id/{id}/internal", Host: HostCC,
@@ -1394,7 +1407,7 @@ var CCContactServiceQueueListTeamCsqsTeamId = &Operation{
 }
 
 var CCContactServiceQueueListAgentCsqsCiUserId = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-agent-csqs-ci-user-id",
+	ID: "CCContactServiceQueueListAgentCsqsCiUserId", Area: "cc", Group: "contact-service-queue", Command: "list-agent-csqs-ci-user-id",
 	Summary:     "List Agent CSQs by CI User ID",
 	Description: "Retrieve agent-based Contact Service Queues by CI user ID for internal use in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-service-queue/by-user-ci-id/{ciUserId}/internal", Host: HostCC,
@@ -1406,7 +1419,7 @@ var CCContactServiceQueueListAgentCsqsCiUserId = &Operation{
 }
 
 var CCContactServiceQueueListByDynamicSkills = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-by-dynamic-skills",
+	ID: "CCContactServiceQueueListByDynamicSkills", Area: "cc", Group: "contact-service-queue", Command: "list-by-dynamic-skills",
 	Aliases:     []string{"list-csqs-skills-profile"},
 	Summary:     "List skill-based Contact Service Queues by dynamic skills and skill profile",
 	Description: "Retrieve a list of skill-based Contact Service Queues that match the given dynamic skills and skill profile criteria in a given organization.",
@@ -1418,7 +1431,7 @@ var CCContactServiceQueueListByDynamicSkills = &Operation{
 }
 
 var CCContactServiceQueueListByUserSkillProfile = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-by-user-skill-profile",
+	ID: "CCContactServiceQueueListByUserSkillProfile", Area: "cc", Group: "contact-service-queue", Command: "list-by-user-skill-profile",
 	Aliases:     []string{"list-csqs-user-profile"},
 	Summary:     "List skill-based Contact Service Queues by skill profile ID and user ID",
 	Description: "Retrieve a list of skill-based Contact Service Queues associated with the given skill profile ID and user ID combination in a given organization.",
@@ -1430,7 +1443,7 @@ var CCContactServiceQueueListByUserSkillProfile = &Operation{
 }
 
 var CCContactServiceQueueListSkillCsqsCiUserId = &Operation{
-	Area: "cc", Group: "contact-service-queue", Command: "list-skill-csqs-ci-user-id",
+	ID: "CCContactServiceQueueListSkillCsqsCiUserId", Area: "cc", Group: "contact-service-queue", Command: "list-skill-csqs-ci-user-id",
 	Summary:     "List Skill CSQs by CI User ID",
 	Description: "Retrieve skill-based Contact Service Queues by CI user ID for internal use in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/contact-service-queue/skill-based-queues/by-ci-user-id/{id}/internal", Host: HostCC,
@@ -1441,8 +1454,21 @@ var CCContactServiceQueueListSkillCsqsCiUserId = &Operation{
 	Paging: &Paging{},
 }
 
+var CCContactServiceQueueListV2 = &Operation{
+	ID: "CCContactServiceQueueListV2", Area: "cc", Group: "contact-service-queue", Command: "list-v2",
+	Summary:     "List Contact Service Queues (v2)",
+	Description: "Lists queues through the v2 route. Items leave out call distribution groups, so read each queue for them. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/v2/contact-service-queue", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCDesktopLayoutCreate = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "create",
+	ID: "CCDesktopLayoutCreate", Area: "cc", Group: "desktop-layout", Command: "create",
 	Summary:     "Create a new Desktop Layout",
 	Description: "Create a new Desktop Layout in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/desktop-layout", Host: HostCC,
@@ -1473,7 +1499,7 @@ var CCDesktopLayoutCreate = &Operation{
 }
 
 var CCDesktopLayoutBulkSave = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "bulk-save",
+	ID: "CCDesktopLayoutBulkSave", Area: "cc", Group: "desktop-layout", Command: "bulk-save",
 	Summary:     "Bulk save Desktop Layout(s)",
 	Description: "Create, Update or delete Desktop Layout(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/desktop-layout/bulk", Host: HostCC,
@@ -1484,7 +1510,7 @@ var CCDesktopLayoutBulkSave = &Operation{
 }
 
 var CCDesktopLayoutBulkExport = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "bulk-export",
+	ID: "CCDesktopLayoutBulkExport", Area: "cc", Group: "desktop-layout", Command: "bulk-export",
 	Summary:     "Bulk export Desktop Layout(s)",
 	Description: "Export all Desktop Layout(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/desktop-layout/bulk-export", Host: HostCC,
@@ -1497,7 +1523,7 @@ var CCDesktopLayoutBulkExport = &Operation{
 }
 
 var CCDesktopLayoutPurgeInactive = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "purge-inactive",
+	ID: "CCDesktopLayoutPurgeInactive", Area: "cc", Group: "desktop-layout", Command: "purge-inactive",
 	Summary:     "Purge inactive Desktop Layout(s)",
 	Description: "Purge inactive Desktop Layout(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/desktop-layout/purge-inactive-entities", Host: HostCC,
@@ -1508,7 +1534,7 @@ var CCDesktopLayoutPurgeInactive = &Operation{
 }
 
 var CCDesktopLayoutGet = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "get",
+	ID: "CCDesktopLayoutGet", Area: "cc", Group: "desktop-layout", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Desktop Layout by ID",
 	Description: "Retrieve an existing Desktop Layout by ID in a given organization.",
@@ -1520,7 +1546,7 @@ var CCDesktopLayoutGet = &Operation{
 }
 
 var CCDesktopLayoutUpdate = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "update",
+	ID: "CCDesktopLayoutUpdate", Area: "cc", Group: "desktop-layout", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Desktop Layout by ID",
 	Description: "Update an existing Desktop Layout by ID in a given organization.",
@@ -1553,7 +1579,7 @@ var CCDesktopLayoutUpdate = &Operation{
 }
 
 var CCDesktopLayoutDelete = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "delete",
+	ID: "CCDesktopLayoutDelete", Area: "cc", Group: "desktop-layout", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Desktop Layout by ID",
 	Description: "Delete an existing Desktop Layout by ID in a given organization.",
@@ -1565,7 +1591,7 @@ var CCDesktopLayoutDelete = &Operation{
 }
 
 var CCDesktopLayoutListReferences = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "list-references",
+	ID: "CCDesktopLayoutListReferences", Area: "cc", Group: "desktop-layout", Command: "list-references",
 	Summary:     "List references for a specific Desktop Layout",
 	Description: "Retrieve a list of all entities that have reference to an existing Desktop Layout by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/desktop-layout/{id}/incoming-references", Host: HostCC,
@@ -1580,7 +1606,7 @@ var CCDesktopLayoutListReferences = &Operation{
 }
 
 var CCDesktopLayoutList = &Operation{
-	Area: "cc", Group: "desktop-layout", Command: "list",
+	ID: "CCDesktopLayoutList", Area: "cc", Group: "desktop-layout", Command: "list",
 	Summary:     "List Desktop Layout(s)",
 	Description: "Retrieve a list of Desktop Layout(s) in a given organization. Json file content field won't be avalible in get all even though it is showing in sample response structure. and it will be avialable only in get by id.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/desktop-layout", Host: HostCC,
@@ -1598,7 +1624,7 @@ var CCDesktopLayoutList = &Operation{
 }
 
 var CCDesktopProfileList = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "list",
+	ID: "CCDesktopProfileList", Area: "cc", Group: "desktop-profile", Command: "list",
 	Summary:     "List Desktop Profiles",
 	Description: "Retrieve a list of Desktop Profiles in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/agent-profile", Host: HostCC,
@@ -1616,7 +1642,7 @@ var CCDesktopProfileList = &Operation{
 }
 
 var CCDesktopProfileCreate = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "create",
+	ID: "CCDesktopProfileCreate", Area: "cc", Group: "desktop-profile", Command: "create",
 	Summary:     "Create a new Desktop Profile",
 	Description: "Create a new Desktop Profile in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/agent-profile", Host: HostCC,
@@ -1678,7 +1704,7 @@ var CCDesktopProfileCreate = &Operation{
 }
 
 var CCDesktopProfileBulkSave = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "bulk-save",
+	ID: "CCDesktopProfileBulkSave", Area: "cc", Group: "desktop-profile", Command: "bulk-save",
 	Summary:     "Bulk save Desktop Profiles",
 	Description: "Create, Update or delete Desktop Profiles in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/agent-profile/bulk", Host: HostCC,
@@ -1689,7 +1715,7 @@ var CCDesktopProfileBulkSave = &Operation{
 }
 
 var CCDesktopProfileBulkExport = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "bulk-export",
+	ID: "CCDesktopProfileBulkExport", Area: "cc", Group: "desktop-profile", Command: "bulk-export",
 	Summary:     "Bulk export Desktop Profile(s)",
 	Description: "Export all Desktop Profile(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/agent-profile/bulk-export", Host: HostCC,
@@ -1702,7 +1728,7 @@ var CCDesktopProfileBulkExport = &Operation{
 }
 
 var CCDesktopProfilePurgeInactive = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "purge-inactive",
+	ID: "CCDesktopProfilePurgeInactive", Area: "cc", Group: "desktop-profile", Command: "purge-inactive",
 	Summary:     "Purge inactive Desktop Profiles",
 	Description: "Purge inactive Desktop Profiles older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/agent-profile/purge-inactive-entities", Host: HostCC,
@@ -1713,7 +1739,7 @@ var CCDesktopProfilePurgeInactive = &Operation{
 }
 
 var CCDesktopProfileGet = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "get",
+	ID: "CCDesktopProfileGet", Area: "cc", Group: "desktop-profile", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Desktop Profile by ID",
 	Description: "Retrieve an existing Desktop Profile by ID in a given organization.",
@@ -1725,7 +1751,7 @@ var CCDesktopProfileGet = &Operation{
 }
 
 var CCDesktopProfileUpdate = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "update",
+	ID: "CCDesktopProfileUpdate", Area: "cc", Group: "desktop-profile", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Desktop Profile by ID",
 	Description: "Update an existing Desktop Profile by ID in a given organization.",
@@ -1789,7 +1815,7 @@ var CCDesktopProfileUpdate = &Operation{
 }
 
 var CCDesktopProfileDelete = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "delete",
+	ID: "CCDesktopProfileDelete", Area: "cc", Group: "desktop-profile", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Desktop Profile by ID",
 	Description: "Delete an existing Desktop Profile by ID in a given organization.",
@@ -1801,7 +1827,7 @@ var CCDesktopProfileDelete = &Operation{
 }
 
 var CCDesktopProfileListReferences = &Operation{
-	Area: "cc", Group: "desktop-profile", Command: "list-references",
+	ID: "CCDesktopProfileListReferences", Area: "cc", Group: "desktop-profile", Command: "list-references",
 	Summary:     "List references for a specific Desktop Profile",
 	Description: "Retrieve a list of all entities that have reference to an existing Desktop Profile by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/agent-profile/{id}/incoming-references", Host: HostCC,
@@ -1816,7 +1842,7 @@ var CCDesktopProfileListReferences = &Operation{
 }
 
 var CCDialNumberListDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "list-dialed-mapping",
+	ID: "CCDialNumberListDialedMapping", Area: "cc", Group: "dial-number", Command: "list-dialed-mapping",
 	Summary:     "List Dialed Number Mapping(s)",
 	Description: "Retrieve a list of Dialed Number Mapping(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/dial-number", Host: HostCC,
@@ -1833,7 +1859,7 @@ var CCDialNumberListDialedMapping = &Operation{
 }
 
 var CCDialNumberCreateDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "create-dialed-mapping",
+	ID: "CCDialNumberCreateDialedMapping", Area: "cc", Group: "dial-number", Command: "create-dialed-mapping",
 	Summary:     "Create a new Dialed Number Mapping",
 	Description: "Create a new Dialed Number Mapping in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/dial-number", Host: HostCC,
@@ -1861,7 +1887,7 @@ var CCDialNumberCreateDialedMapping = &Operation{
 }
 
 var CCDialNumberDeleteAllDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "delete-all-dialed-mapping",
+	ID: "CCDialNumberDeleteAllDialedMapping", Area: "cc", Group: "dial-number", Command: "delete-all-dialed-mapping",
 	Summary:     "Delete all Dialed Number Mapping(s)",
 	Description: "Delete all Dialed Number Mapping(s) in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/dial-number", Host: HostCC,
@@ -1871,7 +1897,7 @@ var CCDialNumberDeleteAllDialedMapping = &Operation{
 }
 
 var CCDialNumberBulkSaveDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "bulk-save-dialed-mapping",
+	ID: "CCDialNumberBulkSaveDialedMapping", Area: "cc", Group: "dial-number", Command: "bulk-save-dialed-mapping",
 	Summary:     "Bulk save Dialed Number Mapping(s)",
 	Description: "Create, Update or delete Dialed Number Mapping(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/dial-number/bulk", Host: HostCC,
@@ -1882,7 +1908,7 @@ var CCDialNumberBulkSaveDialedMapping = &Operation{
 }
 
 var CCDialNumberBulkExportDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "bulk-export-dialed-mapping",
+	ID: "CCDialNumberBulkExportDialedMapping", Area: "cc", Group: "dial-number", Command: "bulk-export-dialed-mapping",
 	Summary:     "Bulk export Dialed Number Mapping(s)",
 	Description: "Export all Dialed Number Mapping(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-number/bulk-export", Host: HostCC,
@@ -1895,7 +1921,7 @@ var CCDialNumberBulkExportDialedMapping = &Operation{
 }
 
 var CCDialNumberListDialedDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "list-dialed-dialed-mapping",
+	ID: "CCDialNumberListDialedDialedMapping", Area: "cc", Group: "dial-number", Command: "list-dialed-dialed-mapping",
 	Summary:     "List  only dialed numbers(property - dialledNumber) from Dialed Number Mapping(s)",
 	Description: "Retrieve a list of  only dialed numbers(property - dialledNumber) from Dialed Number Mapping(s) without pagination in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-number/numbers-only", Host: HostCC,
@@ -1906,7 +1932,7 @@ var CCDialNumberListDialedDialedMapping = &Operation{
 }
 
 var CCDialNumberGetDialedMappingId = &Operation{
-	Area: "cc", Group: "dial-number", Command: "get-dialed-mapping-id",
+	ID: "CCDialNumberGetDialedMappingId", Area: "cc", Group: "dial-number", Command: "get-dialed-mapping-id",
 	Summary:     "Get specific Dialed Number Mapping by ID",
 	Description: "Retrieve an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-number/{id}", Host: HostCC,
@@ -1917,7 +1943,7 @@ var CCDialNumberGetDialedMappingId = &Operation{
 }
 
 var CCDialNumberUpdateDialedMappingId = &Operation{
-	Area: "cc", Group: "dial-number", Command: "update-dialed-mapping-id",
+	ID: "CCDialNumberUpdateDialedMappingId", Area: "cc", Group: "dial-number", Command: "update-dialed-mapping-id",
 	Summary:     "Update specific Dialed Number Mapping by ID",
 	Description: "Update an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "PUT", Path: "/organization/{orgid}/dial-number/{id}", Host: HostCC,
@@ -1946,7 +1972,7 @@ var CCDialNumberUpdateDialedMappingId = &Operation{
 }
 
 var CCDialNumberDeleteDialedMappingId = &Operation{
-	Area: "cc", Group: "dial-number", Command: "delete-dialed-mapping-id",
+	ID: "CCDialNumberDeleteDialedMappingId", Area: "cc", Group: "dial-number", Command: "delete-dialed-mapping-id",
 	Summary:     "Delete specific Dialed Number Mapping by ID",
 	Description: "Delete an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/dial-number/{id}", Host: HostCC,
@@ -1957,7 +1983,7 @@ var CCDialNumberDeleteDialedMappingId = &Operation{
 }
 
 var CCDialNumberListReferencesDialedMapping = &Operation{
-	Area: "cc", Group: "dial-number", Command: "list-references-dialed-mapping",
+	ID: "CCDialNumberListReferencesDialedMapping", Area: "cc", Group: "dial-number", Command: "list-references-dialed-mapping",
 	Summary:     "List references for a specific Dialed Number Mapping",
 	Description: "Retrieve a list of all entities that have reference to an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-number/{id}/incoming-references", Host: HostCC,
@@ -1972,7 +1998,7 @@ var CCDialNumberListReferencesDialedMapping = &Operation{
 }
 
 var CCDialPlanList = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "list",
+	ID: "CCDialPlanList", Area: "cc", Group: "dial-plan", Command: "list",
 	Summary:     "List Dial Plans",
 	Description: "Retrieve a list of Dial Plans in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/dial-plan", Host: HostCC,
@@ -1988,7 +2014,7 @@ var CCDialPlanList = &Operation{
 }
 
 var CCDialPlanCreate = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "create",
+	ID: "CCDialPlanCreate", Area: "cc", Group: "dial-plan", Command: "create",
 	Summary:     "Create a new Dial Plan",
 	Description: "Create a new Dial Plan in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "POST", Path: "/organization/{orgid}/dial-plan", Host: HostCC,
@@ -2012,7 +2038,7 @@ var CCDialPlanCreate = &Operation{
 }
 
 var CCDialPlanBulkSave = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "bulk-save",
+	ID: "CCDialPlanBulkSave", Area: "cc", Group: "dial-plan", Command: "bulk-save",
 	Summary:     "Bulk save Dial Plans",
 	Description: "Create, Update or delete Dial Plans in bulk in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "POST", Path: "/organization/{orgid}/dial-plan/bulk", Host: HostCC,
@@ -2023,7 +2049,7 @@ var CCDialPlanBulkSave = &Operation{
 }
 
 var CCDialPlanBulkExport = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "bulk-export",
+	ID: "CCDialPlanBulkExport", Area: "cc", Group: "dial-plan", Command: "bulk-export",
 	Summary:     "Bulk export Dial Plan(s)",
 	Description: "Export all Dial Plan(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-plan/bulk-export", Host: HostCC,
@@ -2036,7 +2062,7 @@ var CCDialPlanBulkExport = &Operation{
 }
 
 var CCDialPlanGet = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "get",
+	ID: "CCDialPlanGet", Area: "cc", Group: "dial-plan", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Dial Plan by ID",
 	Description: "Retrieve an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
@@ -2048,7 +2074,7 @@ var CCDialPlanGet = &Operation{
 }
 
 var CCDialPlanUpdate = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "update",
+	ID: "CCDialPlanUpdate", Area: "cc", Group: "dial-plan", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Dial Plan by ID",
 	Description: "Update an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
@@ -2074,7 +2100,7 @@ var CCDialPlanUpdate = &Operation{
 }
 
 var CCDialPlanDelete = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "delete",
+	ID: "CCDialPlanDelete", Area: "cc", Group: "dial-plan", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Dial Plan by ID",
 	Description: "Delete an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
@@ -2086,7 +2112,7 @@ var CCDialPlanDelete = &Operation{
 }
 
 var CCDialPlanListReferences = &Operation{
-	Area: "cc", Group: "dial-plan", Command: "list-references",
+	ID: "CCDialPlanListReferences", Area: "cc", Group: "dial-plan", Command: "list-references",
 	Summary:     "List references for a specific Dial Plan",
 	Description: "Retrieve a list of all entities that have reference to an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "GET", Path: "/organization/{orgid}/dial-plan/{id}/incoming-references", Host: HostCC,
@@ -2101,7 +2127,7 @@ var CCDialPlanListReferences = &Operation{
 }
 
 var CCEntryPointList = &Operation{
-	Area: "cc", Group: "entry-point", Command: "list",
+	ID: "CCEntryPointList", Area: "cc", Group: "entry-point", Command: "list",
 	Summary:     "List Entry Point(s)",
 	Description: "Retrieve a list of Entry Point(s) in a given organization.\n Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/entry-point", Host: HostCC,
@@ -2121,7 +2147,7 @@ var CCEntryPointList = &Operation{
 }
 
 var CCEntryPointCreate = &Operation{
-	Area: "cc", Group: "entry-point", Command: "create",
+	ID: "CCEntryPointCreate", Area: "cc", Group: "entry-point", Command: "create",
 	Summary:     "Create a new Entry Point",
 	Description: "Create a new Entry Point in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/entry-point", Host: HostCC,
@@ -2132,7 +2158,7 @@ var CCEntryPointCreate = &Operation{
 }
 
 var CCEntryPointBulkSave = &Operation{
-	Area: "cc", Group: "entry-point", Command: "bulk-save",
+	ID: "CCEntryPointBulkSave", Area: "cc", Group: "entry-point", Command: "bulk-save",
 	Summary:     "Bulk save Entry Point(s)",
 	Description: "Create, Update or delete Entry Point(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/entry-point/bulk", Host: HostCC,
@@ -2143,7 +2169,7 @@ var CCEntryPointBulkSave = &Operation{
 }
 
 var CCEntryPointBulkExport = &Operation{
-	Area: "cc", Group: "entry-point", Command: "bulk-export",
+	ID: "CCEntryPointBulkExport", Area: "cc", Group: "entry-point", Command: "bulk-export",
 	Summary:     "Bulk export Entry Point(s)",
 	Description: "Export all Entry Point(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/entry-point/bulk-export", Host: HostCC,
@@ -2157,7 +2183,7 @@ var CCEntryPointBulkExport = &Operation{
 }
 
 var CCEntryPointPurgeInactive = &Operation{
-	Area: "cc", Group: "entry-point", Command: "purge-inactive",
+	ID: "CCEntryPointPurgeInactive", Area: "cc", Group: "entry-point", Command: "purge-inactive",
 	Summary:     "Purge inactive Entry Point(s)",
 	Description: "Purge inactive Entry Point(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/entry-point/purge-inactive-entities", Host: HostCC,
@@ -2168,7 +2194,7 @@ var CCEntryPointPurgeInactive = &Operation{
 }
 
 var CCEntryPointGet = &Operation{
-	Area: "cc", Group: "entry-point", Command: "get",
+	ID: "CCEntryPointGet", Area: "cc", Group: "entry-point", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Entry Point by ID",
 	Description: "Retrieve an existing Entry Point by ID in a given organization.",
@@ -2181,7 +2207,7 @@ var CCEntryPointGet = &Operation{
 }
 
 var CCEntryPointUpdate = &Operation{
-	Area: "cc", Group: "entry-point", Command: "update",
+	ID: "CCEntryPointUpdate", Area: "cc", Group: "entry-point", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Entry Point by ID",
 	Description: "Update an existing Entry Point by ID in a given organization.",
@@ -2194,7 +2220,7 @@ var CCEntryPointUpdate = &Operation{
 }
 
 var CCEntryPointDelete = &Operation{
-	Area: "cc", Group: "entry-point", Command: "delete",
+	ID: "CCEntryPointDelete", Area: "cc", Group: "entry-point", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Entry Point by ID",
 	Description: "Delete an existing Entry Point by ID in a given organization.",
@@ -2206,7 +2232,7 @@ var CCEntryPointDelete = &Operation{
 }
 
 var CCEntryPointListReferences = &Operation{
-	Area: "cc", Group: "entry-point", Command: "list-references",
+	ID: "CCEntryPointListReferences", Area: "cc", Group: "entry-point", Command: "list-references",
 	Summary:     "List references for a specific Entry Point",
 	Description: "Retrieve a list of all entities that have reference to an existing Entry Point by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/entry-point/{id}/incoming-references", Host: HostCC,
@@ -2220,8 +2246,21 @@ var CCEntryPointListReferences = &Operation{
 	Paging: &Paging{},
 }
 
+var CCEntryPointListV1 = &Operation{
+	ID: "CCEntryPointListV1", Area: "cc", Group: "entry-point", Command: "list-v1",
+	Summary:     "List Entry Point(s) (v1)",
+	Description: "Lists entry points with every field, through the v1 route. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/entry-point", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCGlobalVariablesCreate = &Operation{
-	Area: "cc", Group: "global-variables", Command: "create",
+	ID: "CCGlobalVariablesCreate", Area: "cc", Group: "global-variables", Command: "create",
 	Summary:     "Create a new Global Variable",
 	Description: "Create a new Global Variable in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/cad-variable", Host: HostCC,
@@ -2247,7 +2286,7 @@ var CCGlobalVariablesCreate = &Operation{
 }
 
 var CCGlobalVariablesBulkSave = &Operation{
-	Area: "cc", Group: "global-variables", Command: "bulk-save",
+	ID: "CCGlobalVariablesBulkSave", Area: "cc", Group: "global-variables", Command: "bulk-save",
 	Summary:     "Bulk save Global Variable(s)",
 	Description: "Export all Global Variable(s) in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/cad-variable/bulk", Host: HostCC,
@@ -2258,7 +2297,7 @@ var CCGlobalVariablesBulkSave = &Operation{
 }
 
 var CCGlobalVariablesBulkExport = &Operation{
-	Area: "cc", Group: "global-variables", Command: "bulk-export",
+	ID: "CCGlobalVariablesBulkExport", Area: "cc", Group: "global-variables", Command: "bulk-export",
 	Summary:     "Bulk export Global Variable(s)",
 	Description: "Export all Global Variable(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/cad-variable/bulk-export", Host: HostCC,
@@ -2271,7 +2310,7 @@ var CCGlobalVariablesBulkExport = &Operation{
 }
 
 var CCGlobalVariablesPurgeInactive = &Operation{
-	Area: "cc", Group: "global-variables", Command: "purge-inactive",
+	ID: "CCGlobalVariablesPurgeInactive", Area: "cc", Group: "global-variables", Command: "purge-inactive",
 	Summary:     "Purge inactive Global Variable(s)",
 	Description: "Purge inactive Global Variable(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/cad-variable/purge-inactive-entities", Host: HostCC,
@@ -2282,7 +2321,7 @@ var CCGlobalVariablesPurgeInactive = &Operation{
 }
 
 var CCGlobalVariablesGetReportableCount = &Operation{
-	Area: "cc", Group: "global-variables", Command: "get-reportable-count",
+	ID: "CCGlobalVariablesGetReportableCount", Area: "cc", Group: "global-variables", Command: "get-reportable-count",
 	Summary:     "Get reportable count for Global Variable(s)",
 	Description: "Get count for all the reportable Global Variable(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/cad-variable/reportable-count", Host: HostCC,
@@ -2292,7 +2331,7 @@ var CCGlobalVariablesGetReportableCount = &Operation{
 }
 
 var CCGlobalVariablesGet = &Operation{
-	Area: "cc", Group: "global-variables", Command: "get",
+	ID: "CCGlobalVariablesGet", Area: "cc", Group: "global-variables", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Global Variable by ID",
 	Description: "Retrieve an existing Global Variable by ID in a given organization.",
@@ -2304,7 +2343,7 @@ var CCGlobalVariablesGet = &Operation{
 }
 
 var CCGlobalVariablesUpdate = &Operation{
-	Area: "cc", Group: "global-variables", Command: "update",
+	ID: "CCGlobalVariablesUpdate", Area: "cc", Group: "global-variables", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Global Variable by ID",
 	Description: "Update an existing Global Variable by ID in a given organization. Required fields in payload are agentEditable, variableType, agentViewable, reportable, active, defaultValue.",
@@ -2332,7 +2371,7 @@ var CCGlobalVariablesUpdate = &Operation{
 }
 
 var CCGlobalVariablesDelete = &Operation{
-	Area: "cc", Group: "global-variables", Command: "delete",
+	ID: "CCGlobalVariablesDelete", Area: "cc", Group: "global-variables", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Global Variable by ID",
 	Description: "Delete an existing Global Variable by ID in a given organization.",
@@ -2344,7 +2383,7 @@ var CCGlobalVariablesDelete = &Operation{
 }
 
 var CCGlobalVariablesListReferences = &Operation{
-	Area: "cc", Group: "global-variables", Command: "list-references",
+	ID: "CCGlobalVariablesListReferences", Area: "cc", Group: "global-variables", Command: "list-references",
 	Summary:     "List references for a specific Global Variable",
 	Description: "Retrieve a list of all entities that have reference to an existing Global Variable by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/cad-variable/{id}/incoming-references", Host: HostCC,
@@ -2359,7 +2398,7 @@ var CCGlobalVariablesListReferences = &Operation{
 }
 
 var CCGlobalVariablesList = &Operation{
-	Area: "cc", Group: "global-variables", Command: "list",
+	ID: "CCGlobalVariablesList", Area: "cc", Group: "global-variables", Command: "list",
 	Summary:     "List Global Variable(s)",
 	Description: "Retrieve a list of Global Variable(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/cad-variable", Host: HostCC,
@@ -2375,7 +2414,7 @@ var CCGlobalVariablesList = &Operation{
 }
 
 var CCMultimediaProfileList = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "list",
+	ID: "CCMultimediaProfileList", Area: "cc", Group: "multimedia-profile", Command: "list",
 	Summary:     "List Multimedia Profile(s)",
 	Description: "Retrieve a list of Multimedia Profile(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/multimedia-profile", Host: HostCC,
@@ -2391,7 +2430,7 @@ var CCMultimediaProfileList = &Operation{
 }
 
 var CCMultimediaProfileCreate = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "create",
+	ID: "CCMultimediaProfileCreate", Area: "cc", Group: "multimedia-profile", Command: "create",
 	Summary:     "Create a new Multimedia Profile",
 	Description: "Create a new Multimedia Profile in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/multimedia-profile", Host: HostCC,
@@ -2402,7 +2441,7 @@ var CCMultimediaProfileCreate = &Operation{
 }
 
 var CCMultimediaProfileBulkSave = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "bulk-save",
+	ID: "CCMultimediaProfileBulkSave", Area: "cc", Group: "multimedia-profile", Command: "bulk-save",
 	Summary:     "Bulk save Multimedia Profile(s)",
 	Description: "Create, Update or delete Multimedia Profile(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/multimedia-profile/bulk", Host: HostCC,
@@ -2413,7 +2452,7 @@ var CCMultimediaProfileBulkSave = &Operation{
 }
 
 var CCMultimediaProfileBulkExport = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "bulk-export",
+	ID: "CCMultimediaProfileBulkExport", Area: "cc", Group: "multimedia-profile", Command: "bulk-export",
 	Summary:     "Bulk export Multimedia Profile(s)",
 	Description: "Export all Multimedia Profile(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/multimedia-profile/bulk-export", Host: HostCC,
@@ -2426,7 +2465,7 @@ var CCMultimediaProfileBulkExport = &Operation{
 }
 
 var CCMultimediaProfilePurgeInactive = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "purge-inactive",
+	ID: "CCMultimediaProfilePurgeInactive", Area: "cc", Group: "multimedia-profile", Command: "purge-inactive",
 	Summary:     "Purge inactive Multimedia Profile(s)",
 	Description: "Purge inactive Multimedia Profile(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/multimedia-profile/purge-inactive-entities", Host: HostCC,
@@ -2437,7 +2476,7 @@ var CCMultimediaProfilePurgeInactive = &Operation{
 }
 
 var CCMultimediaProfileGet = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "get",
+	ID: "CCMultimediaProfileGet", Area: "cc", Group: "multimedia-profile", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Multimedia Profile by ID",
 	Description: "Retrieve an existing Multimedia Profile by ID in a given organization.",
@@ -2449,7 +2488,7 @@ var CCMultimediaProfileGet = &Operation{
 }
 
 var CCMultimediaProfileUpdate = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "update",
+	ID: "CCMultimediaProfileUpdate", Area: "cc", Group: "multimedia-profile", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Multimedia Profile by ID",
 	Description: "Update an existing Multimedia Profile by ID in a given organization.",
@@ -2462,7 +2501,7 @@ var CCMultimediaProfileUpdate = &Operation{
 }
 
 var CCMultimediaProfileDelete = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "delete",
+	ID: "CCMultimediaProfileDelete", Area: "cc", Group: "multimedia-profile", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Multimedia Profile by ID",
 	Description: "Delete an existing Multimedia Profile by ID in a given organization.",
@@ -2474,7 +2513,7 @@ var CCMultimediaProfileDelete = &Operation{
 }
 
 var CCMultimediaProfileListReferences = &Operation{
-	Area: "cc", Group: "multimedia-profile", Command: "list-references",
+	ID: "CCMultimediaProfileListReferences", Area: "cc", Group: "multimedia-profile", Command: "list-references",
 	Summary:     "List references for a specific Multimedia Profile",
 	Description: "Retrieve a list of all entities that have reference to an existing Multimedia Profile by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/multimedia-profile/{id}/incoming-references", Host: HostCC,
@@ -2489,7 +2528,7 @@ var CCMultimediaProfileListReferences = &Operation{
 }
 
 var CCOutdialAniList = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "list",
+	ID: "CCOutdialAniList", Area: "cc", Group: "outdial-ani", Command: "list",
 	Summary:     "List Outdial ANIs",
 	Description: "Retrieve a list of Outdial ANIs in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/outdial-ani", Host: HostCC,
@@ -2506,7 +2545,7 @@ var CCOutdialAniList = &Operation{
 }
 
 var CCOutdialAniCreate = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "create",
+	ID: "CCOutdialAniCreate", Area: "cc", Group: "outdial-ani", Command: "create",
 	Summary:     "Create a new Outdial ANI",
 	Description: "Create a new Outdial ANI in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/outdial-ani", Host: HostCC,
@@ -2517,7 +2556,7 @@ var CCOutdialAniCreate = &Operation{
 }
 
 var CCOutdialAniBulkSave = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "bulk-save",
+	ID: "CCOutdialAniBulkSave", Area: "cc", Group: "outdial-ani", Command: "bulk-save",
 	Summary:     "Bulk save Outdial ANIs",
 	Description: "Create, Update or delete Outdial ANIs in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/outdial-ani/bulk", Host: HostCC,
@@ -2528,7 +2567,7 @@ var CCOutdialAniBulkSave = &Operation{
 }
 
 var CCOutdialAniBulkExport = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "bulk-export",
+	ID: "CCOutdialAniBulkExport", Area: "cc", Group: "outdial-ani", Command: "bulk-export",
 	Summary:     "Bulk export Outdial ANI(s)",
 	Description: "Export all Outdial ANI(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/outdial-ani/bulk-export", Host: HostCC,
@@ -2541,7 +2580,7 @@ var CCOutdialAniBulkExport = &Operation{
 }
 
 var CCOutdialAniListEntries = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "list-entries",
+	ID: "CCOutdialAniListEntries", Area: "cc", Group: "outdial-ani", Command: "list-entries",
 	Aliases:     []string{"list-entry"},
 	Summary:     "List Outdial ANI Entries",
 	Description: "Retrieve a list of Outdial ANI Entries in a given organization.",
@@ -2558,7 +2597,7 @@ var CCOutdialAniListEntries = &Operation{
 }
 
 var CCOutdialAniGet = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "get",
+	ID: "CCOutdialAniGet", Area: "cc", Group: "outdial-ani", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Outdial ANI by ID",
 	Description: "Retrieve an existing Outdial ANI by ID in a given organization.",
@@ -2570,7 +2609,7 @@ var CCOutdialAniGet = &Operation{
 }
 
 var CCOutdialAniUpdate = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "update",
+	ID: "CCOutdialAniUpdate", Area: "cc", Group: "outdial-ani", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Outdial ANI by ID",
 	Description: "Update an existing Outdial ANI by ID in a given organization.",
@@ -2583,7 +2622,7 @@ var CCOutdialAniUpdate = &Operation{
 }
 
 var CCOutdialAniDelete = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "delete",
+	ID: "CCOutdialAniDelete", Area: "cc", Group: "outdial-ani", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Outdial ANI by ID",
 	Description: "Delete an existing Outdial ANI by ID in a given organization.",
@@ -2595,7 +2634,7 @@ var CCOutdialAniDelete = &Operation{
 }
 
 var CCOutdialAniListReferences = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "list-references",
+	ID: "CCOutdialAniListReferences", Area: "cc", Group: "outdial-ani", Command: "list-references",
 	Summary:     "List references for a specific Outdial ANI",
 	Description: "Retrieve a list of all entities that have reference to an existing Outdial ANI by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/outdial-ani/{id}/incoming-references", Host: HostCC,
@@ -2610,7 +2649,7 @@ var CCOutdialAniListReferences = &Operation{
 }
 
 var CCOutdialAniCreateEntry = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "create-entry",
+	ID: "CCOutdialAniCreateEntry", Area: "cc", Group: "outdial-ani", Command: "create-entry",
 	Summary:     "Create a new Outdial ANI Entry",
 	Description: "Create a new Outdial ANI Entry in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry", Host: HostCC,
@@ -2631,7 +2670,7 @@ var CCOutdialAniCreateEntry = &Operation{
 }
 
 var CCOutdialAniBulkSaveEntries = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "bulk-save-entries",
+	ID: "CCOutdialAniBulkSaveEntries", Area: "cc", Group: "outdial-ani", Command: "bulk-save-entries",
 	Aliases:     []string{"bulk-save-entry"},
 	Summary:     "Bulk save Outdial ANI Entries",
 	Description: "Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization.",
@@ -2644,7 +2683,7 @@ var CCOutdialAniBulkSaveEntries = &Operation{
 }
 
 var CCOutdialAniGetEntryId = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "get-entry-id",
+	ID: "CCOutdialAniGetEntryId", Area: "cc", Group: "outdial-ani", Command: "get-entry-id",
 	Summary:     "Get specific Outdial ANI Entry by ID",
 	Description: "Retrieve an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}", Host: HostCC,
@@ -2656,7 +2695,7 @@ var CCOutdialAniGetEntryId = &Operation{
 }
 
 var CCOutdialAniUpdateEntryId = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "update-entry-id",
+	ID: "CCOutdialAniUpdateEntryId", Area: "cc", Group: "outdial-ani", Command: "update-entry-id",
 	Summary:     "Update specific Outdial ANI Entry by ID",
 	Description: "Update an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "PUT", Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}", Host: HostCC,
@@ -2678,7 +2717,7 @@ var CCOutdialAniUpdateEntryId = &Operation{
 }
 
 var CCOutdialAniDeleteEntryId = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "delete-entry-id",
+	ID: "CCOutdialAniDeleteEntryId", Area: "cc", Group: "outdial-ani", Command: "delete-entry-id",
 	Summary:     "Delete specific Outdial ANI Entry by ID",
 	Description: "Delete an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}", Host: HostCC,
@@ -2690,7 +2729,7 @@ var CCOutdialAniDeleteEntryId = &Operation{
 }
 
 var CCOutdialAniListEntriesForAni = &Operation{
-	Area: "cc", Group: "outdial-ani", Command: "list-entries-for-ani",
+	ID: "CCOutdialAniListEntriesForAni", Area: "cc", Group: "outdial-ani", Command: "list-entries-for-ani",
 	Aliases:     []string{"list-entry-2"},
 	Summary:     "List Outdial ANI Entries",
 	Description: "Retrieve a list of Outdial ANI Entries in a given organization.",
@@ -2708,7 +2747,7 @@ var CCOutdialAniListEntriesForAni = &Operation{
 }
 
 var CCSiteList = &Operation{
-	Area: "cc", Group: "site", Command: "list",
+	ID: "CCSiteList", Area: "cc", Group: "site", Command: "list",
 	Summary:     "List Site(s)",
 	Description: "Retrieve a list of Site(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/site", Host: HostCC,
@@ -2724,7 +2763,7 @@ var CCSiteList = &Operation{
 }
 
 var CCSiteCreate = &Operation{
-	Area: "cc", Group: "site", Command: "create",
+	ID: "CCSiteCreate", Area: "cc", Group: "site", Command: "create",
 	Summary:     "Create a new Site",
 	Description: "Create a new Site in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/site", Host: HostCC,
@@ -2744,7 +2783,7 @@ var CCSiteCreate = &Operation{
 }
 
 var CCSiteBulkSave = &Operation{
-	Area: "cc", Group: "site", Command: "bulk-save",
+	ID: "CCSiteBulkSave", Area: "cc", Group: "site", Command: "bulk-save",
 	Summary:     "Bulk save Site(s)",
 	Description: "Create, Update or delete Site(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/site/bulk", Host: HostCC,
@@ -2755,7 +2794,7 @@ var CCSiteBulkSave = &Operation{
 }
 
 var CCSiteBulkExport = &Operation{
-	Area: "cc", Group: "site", Command: "bulk-export",
+	ID: "CCSiteBulkExport", Area: "cc", Group: "site", Command: "bulk-export",
 	Summary:     "Bulk export Site(s)",
 	Description: "Export all Site(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/site/bulk-export", Host: HostCC,
@@ -2768,7 +2807,7 @@ var CCSiteBulkExport = &Operation{
 }
 
 var CCSitePurgeInactive = &Operation{
-	Area: "cc", Group: "site", Command: "purge-inactive",
+	ID: "CCSitePurgeInactive", Area: "cc", Group: "site", Command: "purge-inactive",
 	Summary:     "Purge inactive Site(s)",
 	Description: "Purge inactive Site(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/site/purge-inactive-entities", Host: HostCC,
@@ -2779,7 +2818,7 @@ var CCSitePurgeInactive = &Operation{
 }
 
 var CCSiteGet = &Operation{
-	Area: "cc", Group: "site", Command: "get",
+	ID: "CCSiteGet", Area: "cc", Group: "site", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Site by ID",
 	Description: "Retrieve an existing Site by ID in a given organization.",
@@ -2791,7 +2830,7 @@ var CCSiteGet = &Operation{
 }
 
 var CCSiteUpdate = &Operation{
-	Area: "cc", Group: "site", Command: "update",
+	ID: "CCSiteUpdate", Area: "cc", Group: "site", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Site by ID",
 	Description: "Update an existing Site by ID in a given organization.",
@@ -2813,7 +2852,7 @@ var CCSiteUpdate = &Operation{
 }
 
 var CCSiteDelete = &Operation{
-	Area: "cc", Group: "site", Command: "delete",
+	ID: "CCSiteDelete", Area: "cc", Group: "site", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Site by ID",
 	Description: "Delete an existing Site by ID in a given organization.",
@@ -2825,7 +2864,7 @@ var CCSiteDelete = &Operation{
 }
 
 var CCSiteListReferences = &Operation{
-	Area: "cc", Group: "site", Command: "list-references",
+	ID: "CCSiteListReferences", Area: "cc", Group: "site", Command: "list-references",
 	Summary:     "List references for a specific Site",
 	Description: "Retrieve a list of all entities that have reference to an existing Site by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/site/{id}/incoming-references", Host: HostCC,
@@ -2839,8 +2878,21 @@ var CCSiteListReferences = &Operation{
 	Paging: &Paging{},
 }
 
+var CCSiteListV1 = &Operation{
+	ID: "CCSiteListV1", Area: "cc", Group: "site", Command: "list-v1",
+	Summary:     "List Site(s) (v1)",
+	Description: "Lists sites with every field, through the v1 route. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/site", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCSkillList = &Operation{
-	Area: "cc", Group: "skill", Command: "list",
+	ID: "CCSkillList", Area: "cc", Group: "skill", Command: "list",
 	Summary:     "List Skills",
 	Description: "Retrieve a list of Skills in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/skill", Host: HostCC,
@@ -2858,7 +2910,7 @@ var CCSkillList = &Operation{
 }
 
 var CCSkillCreate = &Operation{
-	Area: "cc", Group: "skill", Command: "create",
+	ID: "CCSkillCreate", Area: "cc", Group: "skill", Command: "create",
 	Summary:     "Create a new Skill",
 	Description: "Create a new Skill in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/skill", Host: HostCC,
@@ -2869,7 +2921,7 @@ var CCSkillCreate = &Operation{
 }
 
 var CCSkillBulkSave = &Operation{
-	Area: "cc", Group: "skill", Command: "bulk-save",
+	ID: "CCSkillBulkSave", Area: "cc", Group: "skill", Command: "bulk-save",
 	Summary:     "Bulk save Skills",
 	Description: "Create, Update or delete Skills in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/skill/bulk", Host: HostCC,
@@ -2880,7 +2932,7 @@ var CCSkillBulkSave = &Operation{
 }
 
 var CCSkillBulkExport = &Operation{
-	Area: "cc", Group: "skill", Command: "bulk-export",
+	ID: "CCSkillBulkExport", Area: "cc", Group: "skill", Command: "bulk-export",
 	Summary:     "Bulk export Skill(s)",
 	Description: "Export all Skill(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/skill/bulk-export", Host: HostCC,
@@ -2893,7 +2945,7 @@ var CCSkillBulkExport = &Operation{
 }
 
 var CCSkillPurgeInactive = &Operation{
-	Area: "cc", Group: "skill", Command: "purge-inactive",
+	ID: "CCSkillPurgeInactive", Area: "cc", Group: "skill", Command: "purge-inactive",
 	Summary:     "Purge inactive Skills",
 	Description: "Purge inactive Skills older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/skill/purge-inactive-entities", Host: HostCC,
@@ -2904,7 +2956,7 @@ var CCSkillPurgeInactive = &Operation{
 }
 
 var CCSkillGet = &Operation{
-	Area: "cc", Group: "skill", Command: "get",
+	ID: "CCSkillGet", Area: "cc", Group: "skill", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Skill by ID",
 	Description: "Retrieve an existing Skill by ID in a given organization.",
@@ -2916,7 +2968,7 @@ var CCSkillGet = &Operation{
 }
 
 var CCSkillUpdate = &Operation{
-	Area: "cc", Group: "skill", Command: "update",
+	ID: "CCSkillUpdate", Area: "cc", Group: "skill", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Skill by ID",
 	Description: "Update an existing Skill by ID in a given organization.",
@@ -2929,7 +2981,7 @@ var CCSkillUpdate = &Operation{
 }
 
 var CCSkillDelete = &Operation{
-	Area: "cc", Group: "skill", Command: "delete",
+	ID: "CCSkillDelete", Area: "cc", Group: "skill", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Skill by ID",
 	Description: "Delete an existing Skill by ID in a given organization.",
@@ -2941,7 +2993,7 @@ var CCSkillDelete = &Operation{
 }
 
 var CCSkillListReferences = &Operation{
-	Area: "cc", Group: "skill", Command: "list-references",
+	ID: "CCSkillListReferences", Area: "cc", Group: "skill", Command: "list-references",
 	Summary:     "List references for a specific Skill",
 	Description: "Retrieve a list of all entities that have reference to an existing Skill by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/skill/{id}/incoming-references", Host: HostCC,
@@ -2956,7 +3008,7 @@ var CCSkillListReferences = &Operation{
 }
 
 var CCSkillPopulateJsonAttributesFieldSkillIdOrg = &Operation{
-	Area: "cc", Group: "skill", Command: "populate-json-attributes-field-skill-id-org",
+	ID: "CCSkillPopulateJsonAttributesFieldSkillIdOrg", Area: "cc", Group: "skill", Command: "populate-json-attributes-field-skill-id-org",
 	Summary: "Populate json-attributes field for a given skill-id of an organization",
 	Method:  "POST", Path: "/organization/{orgid}/skill/populate-json-attr/{id}", Host: HostCC,
 	Params: []Param{
@@ -2965,8 +3017,21 @@ var CCSkillPopulateJsonAttributesFieldSkillIdOrg = &Operation{
 	},
 }
 
+var CCSkillListV1 = &Operation{
+	ID: "CCSkillListV1", Area: "cc", Group: "skill", Command: "list-v1",
+	Summary:     "List Skills (v1)",
+	Description: "Lists skills with every field, through the v1 route. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/skill", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCSkillProfileList = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "list",
+	ID: "CCSkillProfileList", Area: "cc", Group: "skill-profile", Command: "list",
 	Summary:     "List Skill Profile(s)",
 	Description: "Retrieve a list of Skill Profile(s) in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/skill-profile", Host: HostCC,
@@ -2983,7 +3048,7 @@ var CCSkillProfileList = &Operation{
 }
 
 var CCSkillProfileCreate = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "create",
+	ID: "CCSkillProfileCreate", Area: "cc", Group: "skill-profile", Command: "create",
 	Summary:     "Create a new Skill Profile",
 	Description: "Create a new Skill Profile in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/skill-profile", Host: HostCC,
@@ -3003,7 +3068,7 @@ var CCSkillProfileCreate = &Operation{
 }
 
 var CCSkillProfileBulkSave = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "bulk-save",
+	ID: "CCSkillProfileBulkSave", Area: "cc", Group: "skill-profile", Command: "bulk-save",
 	Summary:     "Bulk save Skill Profile(s)",
 	Description: "Create, Update or delete Skill Profile(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/skill-profile/bulk", Host: HostCC,
@@ -3014,7 +3079,7 @@ var CCSkillProfileBulkSave = &Operation{
 }
 
 var CCSkillProfileBulkExport = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "bulk-export",
+	ID: "CCSkillProfileBulkExport", Area: "cc", Group: "skill-profile", Command: "bulk-export",
 	Summary:     "Bulk export Skill Profile(s)",
 	Description: "Export all Skill Profile(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/skill-profile/bulk-export", Host: HostCC,
@@ -3027,7 +3092,7 @@ var CCSkillProfileBulkExport = &Operation{
 }
 
 var CCSkillProfileGet = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "get",
+	ID: "CCSkillProfileGet", Area: "cc", Group: "skill-profile", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Skill Profile by ID",
 	Description: "Retrieve an existing Skill Profile by ID in a given organization.",
@@ -3040,7 +3105,7 @@ var CCSkillProfileGet = &Operation{
 }
 
 var CCSkillProfileUpdate = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "update",
+	ID: "CCSkillProfileUpdate", Area: "cc", Group: "skill-profile", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Skill Profile by ID",
 	Description: "Update an existing Skill Profile by ID in a given organization.",
@@ -3062,7 +3127,7 @@ var CCSkillProfileUpdate = &Operation{
 }
 
 var CCSkillProfileDelete = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "delete",
+	ID: "CCSkillProfileDelete", Area: "cc", Group: "skill-profile", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Skill Profile by ID",
 	Description: "Delete an existing Skill Profile by ID in a given organization.",
@@ -3074,7 +3139,7 @@ var CCSkillProfileDelete = &Operation{
 }
 
 var CCSkillProfileListReferences = &Operation{
-	Area: "cc", Group: "skill-profile", Command: "list-references",
+	ID: "CCSkillProfileListReferences", Area: "cc", Group: "skill-profile", Command: "list-references",
 	Summary:     "List references for a specific Skill Profile",
 	Description: "Retrieve a list of all entities that have reference to an existing Skill Profile by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/skill-profile/{id}/incoming-references", Host: HostCC,
@@ -3089,7 +3154,7 @@ var CCSkillProfileListReferences = &Operation{
 }
 
 var CCTeamList = &Operation{
-	Area: "cc", Group: "team", Command: "list",
+	ID: "CCTeamList", Area: "cc", Group: "team", Command: "list",
 	Summary:     "List Teams",
 	Description: "Retrieve a list of Teams in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/team", Host: HostCC,
@@ -3108,7 +3173,7 @@ var CCTeamList = &Operation{
 }
 
 var CCTeamCreate = &Operation{
-	Area: "cc", Group: "team", Command: "create",
+	ID: "CCTeamCreate", Area: "cc", Group: "team", Command: "create",
 	Summary:     "Create a new Team",
 	Description: "Create a new Team in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/team", Host: HostCC,
@@ -3139,7 +3204,7 @@ var CCTeamCreate = &Operation{
 }
 
 var CCTeamBulkSave = &Operation{
-	Area: "cc", Group: "team", Command: "bulk-save",
+	ID: "CCTeamBulkSave", Area: "cc", Group: "team", Command: "bulk-save",
 	Summary:     "Bulk save Teams",
 	Description: "Create, Update or delete Teams in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/team/bulk", Host: HostCC,
@@ -3150,7 +3215,7 @@ var CCTeamBulkSave = &Operation{
 }
 
 var CCTeamBulkExport = &Operation{
-	Area: "cc", Group: "team", Command: "bulk-export",
+	ID: "CCTeamBulkExport", Area: "cc", Group: "team", Command: "bulk-export",
 	Summary:     "Bulk export Team(s)",
 	Description: "Export all Team(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/team/bulk-export", Host: HostCC,
@@ -3163,7 +3228,7 @@ var CCTeamBulkExport = &Operation{
 }
 
 var CCTeamPurgeInactive = &Operation{
-	Area: "cc", Group: "team", Command: "purge-inactive",
+	ID: "CCTeamPurgeInactive", Area: "cc", Group: "team", Command: "purge-inactive",
 	Summary:     "Purge inactive Teams",
 	Description: "Purge inactive Teams older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/team/purge-inactive-entities", Host: HostCC,
@@ -3174,7 +3239,7 @@ var CCTeamPurgeInactive = &Operation{
 }
 
 var CCTeamGet = &Operation{
-	Area: "cc", Group: "team", Command: "get",
+	ID: "CCTeamGet", Area: "cc", Group: "team", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Team by ID",
 	Description: "Retrieve an existing Team by ID in a given organization.",
@@ -3186,7 +3251,7 @@ var CCTeamGet = &Operation{
 }
 
 var CCTeamUpdate = &Operation{
-	Area: "cc", Group: "team", Command: "update",
+	ID: "CCTeamUpdate", Area: "cc", Group: "team", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Team by ID",
 	Description: "Update an existing Team by ID in a given organization.",
@@ -3219,7 +3284,7 @@ var CCTeamUpdate = &Operation{
 }
 
 var CCTeamDelete = &Operation{
-	Area: "cc", Group: "team", Command: "delete",
+	ID: "CCTeamDelete", Area: "cc", Group: "team", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Team by ID",
 	Description: "Delete an existing Team by ID in a given organization.",
@@ -3231,7 +3296,7 @@ var CCTeamDelete = &Operation{
 }
 
 var CCTeamListReferences = &Operation{
-	Area: "cc", Group: "team", Command: "list-references",
+	ID: "CCTeamListReferences", Area: "cc", Group: "team", Command: "list-references",
 	Summary:     "List references for a specific Team",
 	Description: "Retrieve a list of all entities that have reference to an existing Team by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/team/{id}/incoming-references", Host: HostCC,
@@ -3245,8 +3310,21 @@ var CCTeamListReferences = &Operation{
 	Paging: &Paging{},
 }
 
+var CCTeamListV1 = &Operation{
+	ID: "CCTeamListV1", Area: "cc", Group: "team", Command: "list-v1",
+	Summary:     "List Teams (v1)",
+	Description: "Lists teams with every field, through the v1 route. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/team", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCUserProfilesList = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "list",
+	ID: "CCUserProfilesList", Area: "cc", Group: "user-profiles", Command: "list",
 	Summary:     "List user profiles",
 	Description: "Retrieve a list of user profiles in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/user-profile", Host: HostCC,
@@ -3262,7 +3340,7 @@ var CCUserProfilesList = &Operation{
 }
 
 var CCUserProfilesBulkSave = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "bulk-save",
+	ID: "CCUserProfilesBulkSave", Area: "cc", Group: "user-profiles", Command: "bulk-save",
 	Summary:     "Bulk save User Profiles",
 	Description: "Create, Update or delete user profiles in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/v3/user-profile/bulk", Host: HostCC,
@@ -3273,7 +3351,7 @@ var CCUserProfilesBulkSave = &Operation{
 }
 
 var CCUserProfilesBulkExport = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "bulk-export",
+	ID: "CCUserProfilesBulkExport", Area: "cc", Group: "user-profiles", Command: "bulk-export",
 	Summary:     "Bulk export User Profiles",
 	Description: "Export all user profiles in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/user-profile/bulk-export", Host: HostCC,
@@ -3286,7 +3364,7 @@ var CCUserProfilesBulkExport = &Operation{
 }
 
 var CCUserProfilesPurgeInactive = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "purge-inactive",
+	ID: "CCUserProfilesPurgeInactive", Area: "cc", Group: "user-profiles", Command: "purge-inactive",
 	Summary:     "Purge inactive User Profile(s)",
 	Description: "Purge inactive User Profile(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/user-profile/purge-inactive-entities", Host: HostCC,
@@ -3297,7 +3375,7 @@ var CCUserProfilesPurgeInactive = &Operation{
 }
 
 var CCUserProfilesGet = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "get",
+	ID: "CCUserProfilesGet", Area: "cc", Group: "user-profiles", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific User Profile by ID",
 	Description: "Retrieve an existing user profile by ID in a given organization.",
@@ -3310,7 +3388,7 @@ var CCUserProfilesGet = &Operation{
 }
 
 var CCUserProfilesUpdate = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "update",
+	ID: "CCUserProfilesUpdate", Area: "cc", Group: "user-profiles", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific User Profile by ID",
 	Description: "Update an existing user profile by ID in a given organization.",
@@ -3323,7 +3401,7 @@ var CCUserProfilesUpdate = &Operation{
 }
 
 var CCUserProfilesDelete = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "delete",
+	ID: "CCUserProfilesDelete", Area: "cc", Group: "user-profiles", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific User Profile by ID",
 	Description: "Delete an existing user profile by ID in a given organization.",
@@ -3335,7 +3413,7 @@ var CCUserProfilesDelete = &Operation{
 }
 
 var CCUserProfilesListReferences = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "list-references",
+	ID: "CCUserProfilesListReferences", Area: "cc", Group: "user-profiles", Command: "list-references",
 	Summary:     "List references for a specific User Profile",
 	Description: "Retrieve a list of all entities that have reference to an existing user profile by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/user-profile/{id}/incoming-references", Host: HostCC,
@@ -3350,7 +3428,7 @@ var CCUserProfilesListReferences = &Operation{
 }
 
 var CCUserProfilesCreate = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "create",
+	ID: "CCUserProfilesCreate", Area: "cc", Group: "user-profiles", Command: "create",
 	Summary:     "Create a new User Profile",
 	Description: "Create a new user profile in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/v3/user-profile", Host: HostCC,
@@ -3361,7 +3439,7 @@ var CCUserProfilesCreate = &Operation{
 }
 
 var CCUserProfilesGetAclId = &Operation{
-	Area: "cc", Group: "user-profiles", Command: "get-acl-id",
+	ID: "CCUserProfilesGetAclId", Area: "cc", Group: "user-profiles", Command: "get-acl-id",
 	Summary:     "Get specific User Profile ACL by ID",
 	Description: "Retrieve an existing User Profile ACL by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/user-profile/{id}/acl", Host: HostCC,
@@ -3373,7 +3451,7 @@ var CCUserProfilesGetAclId = &Operation{
 }
 
 var CCUsersList = &Operation{
-	Area: "cc", Group: "users", Command: "list",
+	ID: "CCUsersList", Area: "cc", Group: "users", Command: "list",
 	Summary:     "List Users",
 	Description: "Retrieve a list of Users in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/user", Host: HostCC,
@@ -3396,7 +3474,7 @@ var CCUsersList = &Operation{
 }
 
 var CCUsersBulkPartialUpdate = &Operation{
-	Area: "cc", Group: "users", Command: "bulk-partial-update",
+	ID: "CCUsersBulkPartialUpdate", Area: "cc", Group: "users", Command: "bulk-partial-update",
 	Summary:     "Bulk partial update Users",
 	Description: "Update some or all properties for multiple users in bulk for a given organization.",
 	Method:      "PATCH", Path: "/organization/{orgid}/user/bulk", Host: HostCC,
@@ -3407,7 +3485,7 @@ var CCUsersBulkPartialUpdate = &Operation{
 }
 
 var CCUsersBulkExport = &Operation{
-	Area: "cc", Group: "users", Command: "bulk-export",
+	ID: "CCUsersBulkExport", Area: "cc", Group: "users", Command: "bulk-export",
 	Summary:     "Bulk export User(s)",
 	Description: "Export all User(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/user/bulk-export", Host: HostCC,
@@ -3420,7 +3498,7 @@ var CCUsersBulkExport = &Operation{
 }
 
 var CCUsersGetCiId = &Operation{
-	Area: "cc", Group: "users", Command: "get-ci-id",
+	ID: "CCUsersGetCiId", Area: "cc", Group: "users", Command: "get-ci-id",
 	Summary:     "Get specific User by CI User ID",
 	Description: "Retrieve an existing User using the CI ID  in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/user/by-ci-user-id/{id}", Host: HostCC,
@@ -3434,7 +3512,7 @@ var CCUsersGetCiId = &Operation{
 }
 
 var CCUsersGetAgentsMatchingSkillRequirements = &Operation{
-	Area: "cc", Group: "users", Command: "get-agents-matching-skill-requirements",
+	ID: "CCUsersGetAgentsMatchingSkillRequirements", Area: "cc", Group: "users", Command: "get-agents-matching-skill-requirements",
 	Summary:     "Get the agents matching skill requirements criteria",
 	Description: "This API can be used to fetch the agents who match the provided skill requirements criteria. Maximum of 50 skill requirements criteria can be passed in the request.",
 	Method:      "POST", Path: "/organization/{orgid}/user/fetch-by-skill-requirements", Host: HostCC,
@@ -3448,7 +3526,7 @@ var CCUsersGetAgentsMatchingSkillRequirements = &Operation{
 }
 
 var CCUsersListByIds = &Operation{
-	Area: "cc", Group: "users", Command: "list-by-ids",
+	ID: "CCUsersListByIds", Area: "cc", Group: "users", Command: "list-by-ids",
 	Aliases:     []string{"get-ids"},
 	Summary:     "List Users with details",
 	Description: "Retrieve an existing User's first name, last name and email by list of IDs in a given organization.",
@@ -3466,7 +3544,7 @@ var CCUsersListByIds = &Operation{
 }
 
 var CCUsersListAlongProfile = &Operation{
-	Area: "cc", Group: "users", Command: "list-along-profile",
+	ID: "CCUsersListAlongProfile", Area: "cc", Group: "users", Command: "list-along-profile",
 	Summary:     "List Users along with profile",
 	Description: "Retrieve a list of Users along with their User Profiles in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/user/with-user-profile", Host: HostCC,
@@ -3477,7 +3555,7 @@ var CCUsersListAlongProfile = &Operation{
 }
 
 var CCUsersGetAlongProfileId = &Operation{
-	Area: "cc", Group: "users", Command: "get-along-profile-id",
+	ID: "CCUsersGetAlongProfileId", Area: "cc", Group: "users", Command: "get-along-profile-id",
 	Summary:     "Get specific User along with profile by ID",
 	Description: "Retrieve an existing User along with the corresponding User Profile by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/user/with-user-profile/{id}", Host: HostCC,
@@ -3488,7 +3566,7 @@ var CCUsersGetAlongProfileId = &Operation{
 }
 
 var CCUsersGet = &Operation{
-	Area: "cc", Group: "users", Command: "get",
+	ID: "CCUsersGet", Area: "cc", Group: "users", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific User by ID",
 	Description: "Retrieve an existing Users by ID in a given organization.",
@@ -3507,7 +3585,7 @@ var CCUsersGet = &Operation{
 }
 
 var CCUsersUpdate = &Operation{
-	Area: "cc", Group: "users", Command: "update",
+	ID: "CCUsersUpdate", Area: "cc", Group: "users", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific User by ID",
 	Description: "Update an existing User by ID in a given organization.",
@@ -3520,7 +3598,7 @@ var CCUsersUpdate = &Operation{
 }
 
 var CCUsersPatch = &Operation{
-	Area: "cc", Group: "users", Command: "patch",
+	ID: "CCUsersPatch", Area: "cc", Group: "users", Command: "patch",
 	Aliases:     []string{"patch-id"},
 	Summary:     "Partially update User by ID",
 	Description: "Partially update User by ID in a given organization.",
@@ -3535,7 +3613,7 @@ var CCUsersPatch = &Operation{
 }
 
 var CCUsersListReferences = &Operation{
-	Area: "cc", Group: "users", Command: "list-references",
+	ID: "CCUsersListReferences", Area: "cc", Group: "users", Command: "list-references",
 	Summary:     "List references for a specific User",
 	Description: "Retrieve a list of all entities that have reference to an existing User by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/user/{id}/incoming-references", Host: HostCC,
@@ -3550,7 +3628,7 @@ var CCUsersListReferences = &Operation{
 }
 
 var CCUsersBulkPartialUpdateDynamicSkills = &Operation{
-	Area: "cc", Group: "users", Command: "bulk-partial-update-dynamic-skills",
+	ID: "CCUsersBulkPartialUpdateDynamicSkills", Area: "cc", Group: "users", Command: "bulk-partial-update-dynamic-skills",
 	Aliases:     []string{"bulk-update-dynamic-skills"},
 	Summary:     "Bulk partial update Users with dynamic skills",
 	Description: "Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization.",
@@ -3563,7 +3641,7 @@ var CCUsersBulkPartialUpdateDynamicSkills = &Operation{
 }
 
 var CCUsersGetDynamicSkillId = &Operation{
-	Area: "cc", Group: "users", Command: "get-dynamic-skill-id",
+	ID: "CCUsersGetDynamicSkillId", Area: "cc", Group: "users", Command: "get-dynamic-skill-id",
 	Summary:     "Get users by dynamic skill ID",
 	Description: "Fetches all users assigned to a specific dynamic skill with search and pagination support. Returns user details with the specific dynamic skill value.",
 	Method:      "GET", Path: "/organization/{orgid}/user/by-dynamic-skill-id/{skillId}", Host: HostCC,
@@ -3578,7 +3656,7 @@ var CCUsersGetDynamicSkillId = &Operation{
 }
 
 var CCUsersReskillAgents = &Operation{
-	Area: "cc", Group: "users", Command: "reskill-agents",
+	ID: "CCUsersReskillAgents", Area: "cc", Group: "users", Command: "reskill-agents",
 	Summary:     "Reskill Agents",
 	Description: "Reskill agents by assigning or unassigning skills.",
 	Method:      "PATCH", Path: "/organization/{orgid}/user/{id}/reskill", Host: HostCC,
@@ -3590,7 +3668,7 @@ var CCUsersReskillAgents = &Operation{
 }
 
 var CCUsersListByCallMonitoringConfig = &Operation{
-	Area: "cc", Group: "users", Command: "list-by-call-monitoring-config",
+	ID: "CCUsersListByCallMonitoringConfig", Area: "cc", Group: "users", Command: "list-by-call-monitoring-config",
 	Aliases:     []string{"list-call-monitoring-id"},
 	Summary:     "List users by call monitoring id",
 	Description: "Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.",
@@ -3604,8 +3682,21 @@ var CCUsersListByCallMonitoringConfig = &Operation{
 	Paging: &Paging{},
 }
 
+var CCUsersListV1 = &Operation{
+	ID: "CCUsersListV1", Area: "cc", Group: "users", Command: "list-v1",
+	Summary:     "List Users (v1)",
+	Description: "Lists Contact Center users through the v1 route. Each item carries lastUpdatedTime.",
+	Method:      "GET", Path: "/organization/{orgid}/user", Host: HostCC,
+	Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", Usage: "Organization ID."},
+		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number, from 0."},
+		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Items per page."},
+	},
+	Paging: &Paging{},
+}
+
 var CCWorkTypesCreate = &Operation{
-	Area: "cc", Group: "work-types", Command: "create",
+	ID: "CCWorkTypesCreate", Area: "cc", Group: "work-types", Command: "create",
 	Summary:     "Create a new Work Type",
 	Description: "Create a new Work Type in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/work-type", Host: HostCC,
@@ -3625,7 +3716,7 @@ var CCWorkTypesCreate = &Operation{
 }
 
 var CCWorkTypesBulkSave = &Operation{
-	Area: "cc", Group: "work-types", Command: "bulk-save",
+	ID: "CCWorkTypesBulkSave", Area: "cc", Group: "work-types", Command: "bulk-save",
 	Summary:     "Bulk save Work Type(s)",
 	Description: "Create, Update or delete Work Type(s) in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/work-type/bulk", Host: HostCC,
@@ -3636,7 +3727,7 @@ var CCWorkTypesBulkSave = &Operation{
 }
 
 var CCWorkTypesBulkExport = &Operation{
-	Area: "cc", Group: "work-types", Command: "bulk-export",
+	ID: "CCWorkTypesBulkExport", Area: "cc", Group: "work-types", Command: "bulk-export",
 	Summary:     "Bulk export Work Type(s)",
 	Description: "Export all Work Type(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/work-type/bulk-export", Host: HostCC,
@@ -3649,7 +3740,7 @@ var CCWorkTypesBulkExport = &Operation{
 }
 
 var CCWorkTypesPurgeInactive = &Operation{
-	Area: "cc", Group: "work-types", Command: "purge-inactive",
+	ID: "CCWorkTypesPurgeInactive", Area: "cc", Group: "work-types", Command: "purge-inactive",
 	Summary:     "Purge inactive Work Type(s)",
 	Description: "Purge inactive Work Type(s) older than the configured interval for a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/work-type/purge-inactive-entities", Host: HostCC,
@@ -3660,7 +3751,7 @@ var CCWorkTypesPurgeInactive = &Operation{
 }
 
 var CCWorkTypesGet = &Operation{
-	Area: "cc", Group: "work-types", Command: "get",
+	ID: "CCWorkTypesGet", Area: "cc", Group: "work-types", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Work Type by ID",
 	Description: "Retrieve an existing Work Type by ID in a given organization.",
@@ -3672,7 +3763,7 @@ var CCWorkTypesGet = &Operation{
 }
 
 var CCWorkTypesUpdate = &Operation{
-	Area: "cc", Group: "work-types", Command: "update",
+	ID: "CCWorkTypesUpdate", Area: "cc", Group: "work-types", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Work Type by ID",
 	Description: "Update an existing Work Type by ID in a given organization.",
@@ -3694,7 +3785,7 @@ var CCWorkTypesUpdate = &Operation{
 }
 
 var CCWorkTypesDelete = &Operation{
-	Area: "cc", Group: "work-types", Command: "delete",
+	ID: "CCWorkTypesDelete", Area: "cc", Group: "work-types", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Work Type by ID",
 	Description: "Delete an existing Work Type by ID in a given organization.",
@@ -3706,7 +3797,7 @@ var CCWorkTypesDelete = &Operation{
 }
 
 var CCWorkTypesListReferences = &Operation{
-	Area: "cc", Group: "work-types", Command: "list-references",
+	ID: "CCWorkTypesListReferences", Area: "cc", Group: "work-types", Command: "list-references",
 	Summary:     "List references for a specific Work Type",
 	Description: "Retrieve a list of all entities that have reference to an existing Work Type by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/work-type/{id}/incoming-references", Host: HostCC,
@@ -3721,7 +3812,7 @@ var CCWorkTypesListReferences = &Operation{
 }
 
 var CCWorkTypesList = &Operation{
-	Area: "cc", Group: "work-types", Command: "list",
+	ID: "CCWorkTypesList", Area: "cc", Group: "work-types", Command: "list",
 	Summary:     "List Work Type(s)",
 	Description: "Retrieve a list of Work Type(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/work-type", Host: HostCC,
@@ -3737,7 +3828,7 @@ var CCWorkTypesList = &Operation{
 }
 
 var CCDataSourcesRegister = &Operation{
-	Area: "cc", Group: "data-sources", Command: "register",
+	ID: "CCDataSourcesRegister", Area: "cc", Group: "data-sources", Command: "register",
 	Summary:     "Register a Data Source",
 	Description: "Register a data source with the Webex BYODS system. Authenticate using a Service App with the `spark-admin:datasource_write` scope.\nSchema IDs determine the types of data Webex sends to the DAP and the expected responses. Use the Data Source Schemas endpoints to inspect the available schemas.",
 	Method:      "POST", Path: "/dataSources", Host: HostCC,
@@ -3752,21 +3843,21 @@ var CCDataSourcesRegister = &Operation{
 }
 
 var CCDataSourcesGetAll = &Operation{
-	Area: "cc", Group: "data-sources", Command: "get-all",
+	ID: "CCDataSourcesGetAll", Area: "cc", Group: "data-sources", Command: "get-all",
 	Summary:     "Retrieve All Data Sources",
 	Description: "Lists all data sources registered by the Service App. Requires the `spark-admin:datasource_read` scope.",
 	Method:      "GET", Path: "/dataSources", Host: HostCC,
 }
 
 var CCDataSourcesGetSchemas = &Operation{
-	Area: "cc", Group: "data-sources", Command: "get-schemas",
+	ID: "CCDataSourcesGetSchemas", Area: "cc", Group: "data-sources", Command: "get-schemas",
 	Summary:     "Retrieve Data Source Schemas",
 	Description: "Lists the available data source schemas. A valid API access token is required, but no specific scope is needed.",
 	Method:      "GET", Path: "/dataSources/schemas", Host: HostCC,
 }
 
 var CCDataSourcesGetSchema = &Operation{
-	Area: "cc", Group: "data-sources", Command: "get-schema",
+	ID: "CCDataSourcesGetSchema", Area: "cc", Group: "data-sources", Command: "get-schema",
 	Summary:     "Retrieve Details of a Specific Data Source Schema",
 	Description: "Retrieves details for a specific data source schema by schema ID. A valid API access token is required, but no specific scope is needed.",
 	Method:      "GET", Path: "/dataSources/schemas/{schemaId}", Host: HostCC,
@@ -3776,7 +3867,7 @@ var CCDataSourcesGetSchema = &Operation{
 }
 
 var CCDataSourcesDelete = &Operation{
-	Area: "cc", Group: "data-sources", Command: "delete",
+	ID: "CCDataSourcesDelete", Area: "cc", Group: "data-sources", Command: "delete",
 	Summary:     "Delete a Data Source",
 	Description: "Deletes a data source by ID.\n\nSpecify the data source ID in the `dataSourceId` URI parameter.",
 	Method:      "DELETE", Path: "/dataSources/{dataSourceId}", Host: HostCC,
@@ -3786,7 +3877,7 @@ var CCDataSourcesDelete = &Operation{
 }
 
 var CCDataSourcesGet = &Operation{
-	Area: "cc", Group: "data-sources", Command: "get",
+	ID: "CCDataSourcesGet", Area: "cc", Group: "data-sources", Command: "get",
 	Summary:     "Retrieve Data Source Details",
 	Description: "Retrieves details for a data source by ID. Use a Service App token with the `spark-admin:datasource_read` scope.",
 	Method:      "GET", Path: "/dataSources/{dataSourceId}", Host: HostCC,
@@ -3796,7 +3887,7 @@ var CCDataSourcesGet = &Operation{
 }
 
 var CCDataSourcesUpdate = &Operation{
-	Area: "cc", Group: "data-sources", Command: "update",
+	ID: "CCDataSourcesUpdate", Area: "cc", Group: "data-sources", Command: "update",
 	Summary:     "Update a Data Source",
 	Description: "Updates a data source. The fields you can update are `audience`, `subject`, `nonce`, `url`, and `tokenLifetimeMinutes`.\nYou can set `status` from `active` to `disabled` only if you provide an `errorMessage`, which may be shown to the customer administrator in Control Hub.\nUpdate tokens before they expire to prevent service interruption.",
 	Method:      "PUT", Path: "/dataSources/{dataSourceId}", Host: HostCC,
@@ -3816,7 +3907,7 @@ var CCDataSourcesUpdate = &Operation{
 }
 
 var CCEstimatedWaitTimeGet = &Operation{
-	Area: "cc", Group: "estimated-wait-time", Command: "get",
+	ID: "CCEstimatedWaitTimeGet", Area: "cc", Group: "estimated-wait-time", Command: "get",
 	Summary:     "Get Estimated Wait Time",
 	Description: "Retrieve Estimated Wait Time information for a specified look back interval for a specific orgId and queueId combination, with ability to customomize maxCV and minValidSamples (See description above).\n",
 	Method:      "GET", Path: "/v1/ewt", Host: HostCC,
@@ -3831,7 +3922,7 @@ var CCEstimatedWaitTimeGet = &Operation{
 }
 
 var CCNotificationSubscribe = &Operation{
-	Area: "cc", Group: "notification", Command: "subscribe",
+	ID: "CCNotificationSubscribe", Area: "cc", Group: "notification", Command: "subscribe",
 	Summary:     "Subscribe Notification",
 	Description: "Access this endpoint when the user has to register for a WebSocket Session. Requires one of the following accepted registration scopes: `cjp:user` or `cloud-contact-center:pod_conv`. The `cjp-hybrid-conn:read` scope is also accepted when CCE authentication is enabled. Tokens with only admin or partner roles and no accepted registration scope are rejected.",
 	Method:      "POST", Path: "/v1/notification/subscribe", Host: HostCC,
@@ -3844,7 +3935,7 @@ var CCNotificationSubscribe = &Operation{
 }
 
 var CCQueuesGetStatistics = &Operation{
-	Area: "cc", Group: "queues", Command: "get-statistics",
+	ID: "CCQueuesGetStatistics", Area: "cc", Group: "queues", Command: "get-statistics",
 	Summary:     "Get Queue Statistics",
 	Description: "Retrieve Queue statistics for a given interval of time. \nAn important thing to note is that each stat produced is for a specified time window (last 15, 30, or 60 minutes etc) and is not cumulative. \nContacts that span across intervals will also have stats broken down across intervals. For example: A contact that starts at 12:05 and ends at 12:25 will have stats for Interval A (12:00-12:15) and Interval B (12:15-12:30) assuming the interval window is for 15 minutes. \nStats that only require the start time of the contact like 'totalOfferedTasks' and 'totalAcceptedTasks' will be counted only once and it will be present in the interval where the contact started i.e. Interval A. \nWhereas, stats that require the end time as well for calculations like 'averageHandledTime', will be present in the interval where the contact ended i.e. interval B. \n\nFor this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. \nThe response will be compressed only if its size exceeds 1 MB.\nIf the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients. \n",
 	Method:      "GET", Path: "/v1/queues/statistics", Host: HostCC,
@@ -3861,7 +3952,7 @@ var CCQueuesGetStatistics = &Operation{
 }
 
 var CCRealtimeSubscribeNotification = &Operation{
-	Area: "cc", Group: "realtime", Command: "subscribe-notification",
+	ID: "CCRealtimeSubscribeNotification", Area: "cc", Group: "realtime", Command: "subscribe-notification",
 	Summary:     "Subscribe Realtime Notification",
 	Description: "Access this endpoint when the user has to register for a WebSocket Session to receive realtime events. Requires one of the following accepted registration scopes: `cjp:user` or `cloud-contact-center:pod_conv`. The `cjp-hybrid-conn:read` scope is also accepted when CCE authentication is enabled. Tokens with only admin or partner roles and no accepted registration scope are rejected.",
 	Method:      "POST", Path: "/v1/realtime/subscribe", Host: HostCC,
@@ -3874,7 +3965,7 @@ var CCRealtimeSubscribeNotification = &Operation{
 }
 
 var CCSearchSearchTasks = &Operation{
-	Area: "cc", Group: "search", Command: "search-tasks",
+	ID: "CCSearchSearchTasks", Area: "cc", Group: "search", Command: "search-tasks",
 	Summary:     "Search tasks",
 	Description: "The /search API is a GraphQL endpoint that enables customers to fetch data from Webex Contact Center.\n\n**Authentication & Authorization:**\n- **Required Scopes:** `cjp:config` or `cjp:config_read`\n- **Required Roles:** Administrator or Supervisor\n\nMandatory parameters are FROM and TO, which accept datetime in epoch format. The FROM parameter cannot be older than 36 months from the current time. The TO parameter, if given as a future time, will be set to the current time. Optional parameters such as filter and aggregation are accepted for each query.\n\nResponse Compression: For this API, response compression using gzip can be enabled by including the 'Accept-Encoding' header in the request with its value as 'gzip'. The response will be compressed only if its size exceeds 1 MB. If the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma-separated encodings), then the API response will not be compressed, impacting latency as observed from clients.",
 	Method:      "POST", Path: "/search", Host: HostCC,
@@ -3887,7 +3978,7 @@ var CCSearchSearchTasks = &Operation{
 }
 
 var CCSubscriptionsListV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "list-v1",
+	ID: "CCSubscriptionsListV1", Area: "cc", Group: "subscriptions", Command: "list-v1",
 	Summary:     "List Subscriptions",
 	Description: "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V1 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 	Method:      "GET", Path: "/v1/subscriptions", Host: HostCC,
@@ -3899,7 +3990,7 @@ var CCSubscriptionsListV1 = &Operation{
 }
 
 var CCSubscriptionsListV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "list-v2",
+	ID: "CCSubscriptionsListV2", Area: "cc", Group: "subscriptions", Command: "list-v2",
 	Summary:     "List Subscriptions",
 	Description: "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V2 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 	Method:      "GET", Path: "/v2/subscriptions", Host: HostCC,
@@ -3911,7 +4002,7 @@ var CCSubscriptionsListV2 = &Operation{
 }
 
 var CCSubscriptionsRegisterV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "register-v1",
+	ID: "CCSubscriptionsRegisterV1", Area: "cc", Group: "subscriptions", Command: "register-v1",
 	Summary:     "Register Subscription",
 	Description: "Create a subscription which would allow consumers to listen to events. If creating a subscription causes the org-level limit to be exceeded, the subscription registration will be denied. Requires `cjp:config_write` scope.",
 	Method:      "POST", Path: "/v1/subscriptions", Host: HostCC,
@@ -3929,7 +4020,7 @@ var CCSubscriptionsRegisterV1 = &Operation{
 }
 
 var CCSubscriptionsRegisterV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "register-v2",
+	ID: "CCSubscriptionsRegisterV2", Area: "cc", Group: "subscriptions", Command: "register-v2",
 	Summary:     "Register Subscription",
 	Description: "Create a subscription which would allow consumers to listen to events. If creating a subscription causes the org-level limit to be exceeded, the subscription registration will be denied. Requires `cjp:config_write` scope.",
 	Method:      "POST", Path: "/v2/subscriptions", Host: HostCC,
@@ -3948,7 +4039,7 @@ var CCSubscriptionsRegisterV2 = &Operation{
 }
 
 var CCSubscriptionsGetV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "get-v1",
+	ID: "CCSubscriptionsGetV1", Area: "cc", Group: "subscriptions", Command: "get-v1",
 	Summary:     "Get Subscription",
 	Description: "Retrieve a subscription for a given subscription ID. Requires `cjp:config_read` scope.",
 	Method:      "GET", Path: "/v1/subscriptions/{id}", Host: HostCC,
@@ -3960,7 +4051,7 @@ var CCSubscriptionsGetV1 = &Operation{
 }
 
 var CCSubscriptionsGetV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "get-v2",
+	ID: "CCSubscriptionsGetV2", Area: "cc", Group: "subscriptions", Command: "get-v2",
 	Summary:     "Get Subscription",
 	Description: "Retrieve a subscription for a given subscription ID. Requires `cjp:config_read` scope.",
 	Method:      "GET", Path: "/v2/subscriptions/{id}", Host: HostCC,
@@ -3972,7 +4063,7 @@ var CCSubscriptionsGetV2 = &Operation{
 }
 
 var CCSubscriptionsDeleteV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "delete-v1",
+	ID: "CCSubscriptionsDeleteV1", Area: "cc", Group: "subscriptions", Command: "delete-v1",
 	Summary:     "Delete Subscription",
 	Description: "Deletes a subscription for a given subscription ID. Requires `cjp:config_write` scope.",
 	Method:      "DELETE", Path: "/v1/subscriptions/{id}", Host: HostCC,
@@ -3984,7 +4075,7 @@ var CCSubscriptionsDeleteV1 = &Operation{
 }
 
 var CCSubscriptionsDeleteV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "delete-v2",
+	ID: "CCSubscriptionsDeleteV2", Area: "cc", Group: "subscriptions", Command: "delete-v2",
 	Summary:     "Delete Subscription",
 	Description: "Deletes a subscription for a given subscription ID. Requires `cjp:config_write` scope.",
 	Method:      "DELETE", Path: "/v2/subscriptions/{id}", Host: HostCC,
@@ -3996,7 +4087,7 @@ var CCSubscriptionsDeleteV2 = &Operation{
 }
 
 var CCSubscriptionsUpdateV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "update-v1",
+	ID: "CCSubscriptionsUpdateV1", Area: "cc", Group: "subscriptions", Command: "update-v1",
 	Summary:     "Update Subscription",
 	Description: "Updates some of the properties in a subscription, for a given subscription ID. Requires `cjp:config_write` scope.",
 	Method:      "PATCH", Path: "/v1/subscriptions/{id}", Host: HostCC,
@@ -4015,7 +4106,7 @@ var CCSubscriptionsUpdateV1 = &Operation{
 }
 
 var CCSubscriptionsUpdateV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "update-v2",
+	ID: "CCSubscriptionsUpdateV2", Area: "cc", Group: "subscriptions", Command: "update-v2",
 	Summary:     "Update Subscription",
 	Description: "Updates some of the properties in a subscription, for a given subscription ID. Requires `cjp:config_write` scope.",
 	Method:      "PATCH", Path: "/v2/subscriptions/{id}", Host: HostCC,
@@ -4035,7 +4126,7 @@ var CCSubscriptionsUpdateV2 = &Operation{
 }
 
 var CCSubscriptionsListEventTypesV1 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "list-event-types-v1",
+	ID: "CCSubscriptionsListEventTypesV1", Area: "cc", Group: "subscriptions", Command: "list-event-types-v1",
 	Summary:     "List Event Types",
 	Description: "Retrieve all available event types for an organization. Requires `cjp:config_read` scope.",
 	Method:      "GET", Path: "/v1/event-types", Host: HostCC,
@@ -4047,7 +4138,7 @@ var CCSubscriptionsListEventTypesV1 = &Operation{
 }
 
 var CCSubscriptionsListEventTypesV2 = &Operation{
-	Area: "cc", Group: "subscriptions", Command: "list-event-types-v2",
+	ID: "CCSubscriptionsListEventTypesV2", Area: "cc", Group: "subscriptions", Command: "list-event-types-v2",
 	Summary:     "List Event Types",
 	Description: "Retrieve all available event types for an organization along with information about the currently supported resource versions. Requires `cjp:config_read` scope. ",
 	Method:      "GET", Path: "/v2/event-types", Host: HostCC,
@@ -4059,7 +4150,7 @@ var CCSubscriptionsListEventTypesV2 = &Operation{
 }
 
 var CCAgentsLogin = &Operation{
-	Area: "cc", Group: "agents", Command: "login",
+	ID: "CCAgentsLogin", Area: "cc", Group: "agents", Command: "login",
 	Summary:     "Login",
 	Description: "Allows the user to login to their desktop. It does not allow a duplicate login and sends an error message over websocket if an active session already exists. Requires the 'cjp:user' scope. When Licensed Administrator access is enabled for the organization, the access token must also contain at least one of the following roles: 'cjp.standard_agent', 'cjp.premium_agent', 'cjp.supervisor', 'cjp.admin', or 'id_full_admin'. A Licensed Administrator logging in with supervisor capabilities must have the 'cjp.admin' or 'id_full_admin' role, the 'cjp.premium_agent' role, and supervisor capabilities enabled. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).",
 	Method:      "POST", Path: "/v2/agents/login", Host: HostCC,
@@ -4074,7 +4165,7 @@ var CCAgentsLogin = &Operation{
 }
 
 var CCAgentsLogout = &Operation{
-	Area: "cc", Group: "agents", Command: "logout",
+	ID: "CCAgentsLogout", Area: "cc", Group: "agents", Command: "logout",
 	Summary:     "Logout",
 	Description: "Allows the user to logout from their Desktop. This API needs to be called once the WSS session has been successfully established. Self logout for an agent or supervisor requires the 'cjp:user' scope. Logout on behalf of another user is available to a supervisor with the 'cjp:user' scope and 'cjp.supervisor' role, or to an authorized administrator, help-desk user, or partner with the applicable role: 'id_full_admin', 'id_readonly_admin', 'cjp.admin', 'atlas-portal.partner.salesadmin', 'atlas-portal.partner.helpdesk', or 'atlas-portal.partner.provision_admin'. Partner and external-administrator requests must also be authorized for the managed organization and include the organization and agent identifiers. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).",
 	Method:      "PUT", Path: "/v2/agents/logout", Host: HostCC,
@@ -4085,7 +4176,7 @@ var CCAgentsLogout = &Operation{
 }
 
 var CCAgentsStateChange = &Operation{
-	Area: "cc", Group: "agents", Command: "state-change",
+	ID: "CCAgentsStateChange", Area: "cc", Group: "agents", Command: "state-change",
 	Summary:     "State Change",
 	Description: "Allows the user to toggle between the Idle and Available states for the requested channels. Self state changes for an agent or supervisor require the 'cjp:user' scope and an active agent session. Cross-agent state changes require the 'cjp:user' scope and 'cjp.supervisor' role, and are limited to users in the supervisor's authorized teams. A Licensed Administrator can perform a cross-agent state change when Licensed Administrator access is enabled and the token contains the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role; the administrator must also have supervisor capabilities enabled and access to the target user's team. Agent State Control must be enabled for the organization and requested channels. For a list of possible response messages, see the [Call Control API Guide](/documentation/guides/contact-control-apis).",
 	Method:      "PUT", Path: "/v2/agents/session/state", Host: HostCC,
@@ -4099,14 +4190,14 @@ var CCAgentsStateChange = &Operation{
 }
 
 var CCAgentsReload = &Operation{
-	Area: "cc", Group: "agents", Command: "reload",
+	ID: "CCAgentsReload", Area: "cc", Group: "agents", Command: "reload",
 	Summary:     "Reload",
 	Description: "Requests restoration of the active agent session, including agent state and assigned interaction context. This asynchronous API returns `202 Accepted` when the request is accepted for processing; the restoration result is delivered over WebSocket. The success notification is selected by the API version persisted when the agent logged in, not by the reload endpoint version. A V1 login session receives `AgentReloginSuccess`, and a V2 login session receives `AgentChannelReloginSuccess`; therefore, either reload endpoint can result in either success notification. The active session remains on its login version until the agent logs out and starts a new session. See [AgentReloginSuccess](/docs/contact-control-apis#agentreloginsuccess) and [AgentChannelReloginSuccess](/docs/contact-control-apis#agentchannelreloginsuccess) in the Contact Control API Guide. Requires the 'cjp:user' scope for authorization.",
 	Method:      "POST", Path: "/v2/agents/reload", Host: HostCC,
 }
 
 var CCAgentsBuddyList = &Operation{
-	Area: "cc", Group: "agents", Command: "buddy-list",
+	ID: "CCAgentsBuddyList", Area: "cc", Group: "agents", Command: "buddy-list",
 	Summary:     "Buddy Agents List",
 	Description: "Returns the list of agents in the given state and media according to agent profile settings. Requires an agent or supervisor access token with the 'cjp:user' scope.",
 	Method:      "POST", Path: "/v1/agents/buddyList", Host: HostCC,
@@ -4118,7 +4209,7 @@ var CCAgentsBuddyList = &Operation{
 }
 
 var CCAgentsGetActivities = &Operation{
-	Area: "cc", Group: "agents", Command: "get-activities",
+	ID: "CCAgentsGetActivities", Area: "cc", Group: "agents", Command: "get-activities",
 	Summary:     "Get Agent Activities",
 	Description: "Retrieve agent activities. Requires a bearer access token authorized to access the requested organization and agent data. Results are sorted by start time in ascending order.\nMaximum number of records that can be fetched for the given from and to is 10,000. \nFor this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. \nThe response will be compressed only if its size exceeds 1 MB.\nIf the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.",
 	Method:      "GET", Path: "/v1/agents/activities", Host: HostCC,
@@ -4177,7 +4268,7 @@ var CCAgentsGetActivities = &Operation{
 }
 
 var CCAgentsGetStatistics = &Operation{
-	Area: "cc", Group: "agents", Command: "get-statistics",
+	ID: "CCAgentsGetStatistics", Area: "cc", Group: "agents", Command: "get-statistics",
 	Summary:     "Get Agent Statistics",
 	Description: "Retrieve agent statistics for the specified time duration and interval. Requires a bearer access token authorized to access the requested organization and agent data.\nFor this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. \nThe response will be compressed only if its size exceeds 1 MB.\nIf the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.",
 	Method:      "GET", Path: "/v1/agents/statistics", Host: HostCC,
@@ -4212,7 +4303,7 @@ var CCAgentsGetStatistics = &Operation{
 }
 
 var CCCallMonitorCreate = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "create",
+	ID: "CCCallMonitorCreate", Area: "cc", Group: "call-monitor", Command: "create",
 	Aliases:     []string{"create-request"},
 	Summary:     "Create Monitoring Request",
 	Description: "Creates a monitoring request for an ongoing call or the next successful inbound or outbound call. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The applicable Call Monitoring profile permissions and resource access are required. When Continuous Scheduled Monitoring is enabled, ad hoc and continuous requests are rejected; use POST /v2/monitor/{taskId} for mid-call monitoring.",
@@ -4231,7 +4322,7 @@ var CCCallMonitorCreate = &Operation{
 }
 
 var CCCallMonitorBargeIn = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "barge-in",
+	ID: "CCCallMonitorBargeIn", Area: "cc", Group: "call-monitor", Command: "barge-in",
 	Aliases:     []string{"barge-in-request"},
 	Summary:     "BargeIn Request",
 	Description: "Creates a barge-in request to join a call that is already being monitored. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant the Call Monitoring Barge In permission.",
@@ -4242,7 +4333,7 @@ var CCCallMonitorBargeIn = &Operation{
 }
 
 var CCCallMonitorEnd = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "end",
+	ID: "CCCallMonitorEnd", Area: "cc", Group: "call-monitor", Command: "end",
 	Aliases:     []string{"end-request"},
 	Summary:     "End Monitoring Request",
 	Description: "Ends an ongoing monitoring session. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.",
@@ -4253,7 +4344,7 @@ var CCCallMonitorEnd = &Operation{
 }
 
 var CCCallMonitorHold = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "hold",
+	ID: "CCCallMonitorHold", Area: "cc", Group: "call-monitor", Command: "hold",
 	Aliases:     []string{"hold-request"},
 	Summary:     "Hold Monitoring Request",
 	Description: "Places the monitoring session for a call on hold. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.",
@@ -4264,7 +4355,7 @@ var CCCallMonitorHold = &Operation{
 }
 
 var CCCallMonitorUnhold = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "unhold",
+	ID: "CCCallMonitorUnhold", Area: "cc", Group: "call-monitor", Command: "unhold",
 	Aliases:     []string{"unhold-request"},
 	Summary:     "Unhold Monitoring Request",
 	Description: "Resumes a monitoring session that is on hold. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module.",
@@ -4275,7 +4366,7 @@ var CCCallMonitorUnhold = &Operation{
 }
 
 var CCCallMonitorListSessions = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "list-sessions",
+	ID: "CCCallMonitorListSessions", Area: "cc", Group: "call-monitor", Command: "list-sessions",
 	Aliases:     []string{"get-sessions"},
 	Summary:     "Fetch Monitoring Sessions",
 	Description: "Fetches all active monitoring subscriptions for the requesting user. Requires the 'cloud-contact-center:pod_read' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module. This operation is unavailable when Continuous Scheduled Monitoring is enabled; use realtime data for active monitoring sessions in that mode.",
@@ -4284,7 +4375,7 @@ var CCCallMonitorListSessions = &Operation{
 }
 
 var CCCallMonitorDelete = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "delete",
+	ID: "CCCallMonitorDelete", Area: "cc", Group: "call-monitor", Command: "delete",
 	Aliases:     []string{"delete-request"},
 	Summary:     "Delete Monitoring Request",
 	Description: "Deletes a monitoring request. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant access to the Call Monitoring module. This operation is unavailable when Continuous Scheduled Monitoring is enabled.",
@@ -4295,7 +4386,7 @@ var CCCallMonitorDelete = &Operation{
 }
 
 var CCCallMonitorWhisperCoach = &Operation{
-	Area: "cc", Group: "call-monitor", Command: "whisper-coach",
+	ID: "CCCallMonitorWhisperCoach", Area: "cc", Group: "call-monitor", Command: "whisper-coach",
 	Aliases:     []string{"whisper-coach-request"},
 	Summary:     "Whisper Coach Request",
 	Description: "Creates a Whisper Coach request to coach an agent on a call that is already being monitored. Requires the 'cloud-contact-center:pod_conv' scope and either the 'cjp.supervisor' role with a supervisor profile or, when Licensed Administrator access is enabled, the 'cjp.admin' or 'id_full_admin' role together with the 'cjp.premium_agent' role and an administrator profile. When Licensed Administrator access is enabled, contact-center access and supervisor capabilities must also be enabled. The user profile must grant Call Monitoring edit access and the Whisper Coach permission, and Whisper Coach must be enabled for the organization.",
@@ -4306,7 +4397,7 @@ var CCCallMonitorWhisperCoach = &Operation{
 }
 
 var CCTasksCreate = &Operation{
-	Area: "cc", Group: "tasks", Command: "create",
+	ID: "CCTasksCreate", Area: "cc", Group: "tasks", Command: "create",
 	Summary:     "Create Task",
 	Description: "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nCreates a new contact center task using the v2 task contract. The request body must include a `channelType` discriminator to select the task variant — `workItem` for structured form tasks, `customMessaging` for conversational messaging tasks, or `telephony` for voice tasks.\n\nOn success, returns a `201` response containing the task ID, which can be used to track the task lifecycle.\n\nRequires `cjp:task_write` OAuth scope. For partner-initiated inbound tasks (`workItem`, `customMessaging`), the `cjp:task_write` scope must be present in the partner application's access token. When an authenticated agent initiates an outdial (`telephony`) task, ensure the `cjp:task_write` scope is included in the agent's access token.",
 	Method:      "POST", Path: "/v2/tasks", Host: HostCC,
@@ -4314,7 +4405,7 @@ var CCTasksCreate = &Operation{
 }
 
 var CCTasksGet = &Operation{
-	Area: "cc", Group: "tasks", Command: "get",
+	ID: "CCTasksGet", Area: "cc", Group: "tasks", Command: "get",
 	Summary:     "Get Tasks",
 	Description: "Retrieve open and closed tasks. Sorted by createdTime ascending. Uses offset-based pagination.\nFor this API, response compression using gzip can be enabled by including 'Accept-Encoding' header  in the request with its value as 'gzip'. \nThe response will be compressed only if its size exceeds 1 MB.\nIf the header is not present in the request or if gzip is not listed as one of the encodings in the header's value (comma separated encodings), then API response will not be compressed and this can impact the latency as observed from clients.",
 	Method:      "GET", Path: "/v1/tasks", Host: HostCC,
@@ -4332,7 +4423,7 @@ var CCTasksGet = &Operation{
 }
 
 var CCTasksUpdate = &Operation{
-	Area: "cc", Group: "tasks", Command: "update",
+	ID: "CCTasksUpdate", Area: "cc", Group: "tasks", Command: "update",
 	Summary:     "Update Task",
 	Description: "This API is to update a task. Represents both inbound tasks (originating from customer-facing channels) and outbound tasks (originating from contact center to customer-facing channel). Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization.. For a list of possible response messages, see the Call Control API Guide.",
 	Method:      "PATCH", Path: "/v1/tasks/{taskId}", Host: HostCC,
@@ -4343,7 +4434,7 @@ var CCTasksUpdate = &Operation{
 }
 
 var CCTasksAccept = &Operation{
-	Area: "cc", Group: "tasks", Command: "accept",
+	ID: "CCTasksAccept", Area: "cc", Group: "tasks", Command: "accept",
 	Summary:     "Accept Task",
 	Description: "Access this endpoint when the user has to accept either an inbound or an outbound requests. The request can be social, a chat or an email. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/accept", Host: HostCC,
@@ -4353,7 +4444,7 @@ var CCTasksAccept = &Operation{
 }
 
 var CCTasksEnd = &Operation{
-	Area: "cc", Group: "tasks", Command: "end",
+	ID: "CCTasksEnd", Area: "cc", Group: "tasks", Command: "end",
 	Summary:     "End Task",
 	Description: "Access this endpoint when the user has to end either an inbound or an outbound requests. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/end", Host: HostCC,
@@ -4363,7 +4454,7 @@ var CCTasksEnd = &Operation{
 }
 
 var CCTasksWrapUp = &Operation{
-	Area: "cc", Group: "tasks", Command: "wrap-up",
+	ID: "CCTasksWrapUp", Area: "cc", Group: "tasks", Command: "wrap-up",
 	Summary:     "Wrap Up Task",
 	Description: "Access this endpoint when the user has to wrap up a call. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/wrapup", Host: HostCC,
@@ -4377,7 +4468,7 @@ var CCTasksWrapUp = &Operation{
 }
 
 var CCTasksHold = &Operation{
-	Area: "cc", Group: "tasks", Command: "hold",
+	ID: "CCTasksHold", Area: "cc", Group: "tasks", Command: "hold",
 	Summary:     "Hold Task",
 	Description: "Access this endpoint when the user has to hold a call. When an user is in consulting state, the task will be put on hold. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/hold", Host: HostCC,
@@ -4390,7 +4481,7 @@ var CCTasksHold = &Operation{
 }
 
 var CCTasksUnhold = &Operation{
-	Area: "cc", Group: "tasks", Command: "unhold",
+	ID: "CCTasksUnhold", Area: "cc", Group: "tasks", Command: "unhold",
 	Aliases:     []string{"resume"},
 	Summary:     "Unhold Task",
 	Description: "Access this endpoint when the user has to resume a call from hold. When an user is done consulting, the previously held interaction with the customer should be resumed. It is not applicable for chats and emails. Requires one of the following scopes 'cjp:user','cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
@@ -4404,7 +4495,7 @@ var CCTasksUnhold = &Operation{
 }
 
 var CCTasksReject = &Operation{
-	Area: "cc", Group: "tasks", Command: "reject",
+	ID: "CCTasksReject", Area: "cc", Group: "tasks", Command: "reject",
 	Summary:     "Reject Task",
 	Description: "Access this endpoint when the user has to reject a task. Once a task is rejected, the status of the user goes to idle from available. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/reject", Host: HostCC,
@@ -4417,7 +4508,7 @@ var CCTasksReject = &Operation{
 }
 
 var CCTasksPauseRecording = &Operation{
-	Area: "cc", Group: "tasks", Command: "pause-recording",
+	ID: "CCTasksPauseRecording", Area: "cc", Group: "tasks", Command: "pause-recording",
 	Summary:     "Pause Recording Task",
 	Description: "When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might want to pause the recording and later on resume recording. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires OAuth scope cjp:user. The authenticated user must have a UserProfile of type Agent to access this API.",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/record/pause", Host: HostCC,
@@ -4427,7 +4518,7 @@ var CCTasksPauseRecording = &Operation{
 }
 
 var CCTasksResumeRecording = &Operation{
-	Area: "cc", Group: "tasks", Command: "resume-recording",
+	ID: "CCTasksResumeRecording", Area: "cc", Group: "tasks", Command: "resume-recording",
 	Summary:     "Resume Recording Task",
 	Description: "When configured by the administrator, telephony tasks are often being recorded for various reasons. When an user is handling sensitive customer information, he/she might resume the recording after the pause. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis). Requires OAuth scope cjp:user. The authenticated user must have a UserProfile of type Agent to access this API.",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/record/resume", Host: HostCC,
@@ -4440,7 +4531,7 @@ var CCTasksResumeRecording = &Operation{
 }
 
 var CCTasksTransfer = &Operation{
-	Area: "cc", Group: "tasks", Command: "transfer",
+	ID: "CCTasksTransfer", Area: "cc", Group: "tasks", Command: "transfer",
 	Summary:     "Transfer Task",
 	Description: "Access this endpoint when the user has to transfer a call to another user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' scope for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/transfer", Host: HostCC,
@@ -4454,7 +4545,7 @@ var CCTasksTransfer = &Operation{
 }
 
 var CCTasksConsultTask = &Operation{
-	Area: "cc", Group: "tasks", Command: "consult-task",
+	ID: "CCTasksConsultTask", Area: "cc", Group: "tasks", Command: "consult-task",
 	Summary:     "Consult Task",
 	Description: "Access this endpoint when the user has to consult a call to another user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/consult", Host: HostCC,
@@ -4469,7 +4560,7 @@ var CCTasksConsultTask = &Operation{
 }
 
 var CCTasksConsultConference = &Operation{
-	Area: "cc", Group: "tasks", Command: "consult-conference",
+	ID: "CCTasksConsultConference", Area: "cc", Group: "tasks", Command: "consult-conference",
 	Summary:     "Consult Conference Task",
 	Description: "Access this endpoint when the user has to initiate a conference with the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/consult/conference", Host: HostCC,
@@ -4484,7 +4575,7 @@ var CCTasksConsultConference = &Operation{
 }
 
 var CCTasksConsultTransfer = &Operation{
-	Area: "cc", Group: "tasks", Command: "consult-transfer",
+	ID: "CCTasksConsultTransfer", Area: "cc", Group: "tasks", Command: "consult-transfer",
 	Summary:     "Consult Transfer Task",
 	Description: "Access this endpoint when the user has to transfer a call to the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/consult/transfer", Host: HostCC,
@@ -4498,7 +4589,7 @@ var CCTasksConsultTransfer = &Operation{
 }
 
 var CCTasksConsultAccept = &Operation{
-	Area: "cc", Group: "tasks", Command: "consult-accept",
+	ID: "CCTasksConsultAccept", Area: "cc", Group: "tasks", Command: "consult-accept",
 	Summary:     "Consult Accept Task",
 	Description: "Access this endpoint when the user has to accept a call to the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/consult/accept", Host: HostCC,
@@ -4508,7 +4599,7 @@ var CCTasksConsultAccept = &Operation{
 }
 
 var CCTasksAssign = &Operation{
-	Area: "cc", Group: "tasks", Command: "assign",
+	ID: "CCTasksAssign", Area: "cc", Group: "tasks", Command: "assign",
 	Summary:     "Assign Task",
 	Description: "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to assign tasks to themselves. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/assign", Host: HostCC,
@@ -4518,7 +4609,7 @@ var CCTasksAssign = &Operation{
 }
 
 var CCTasksConsultEnd = &Operation{
-	Area: "cc", Group: "tasks", Command: "consult-end",
+	ID: "CCTasksConsultEnd", Area: "cc", Group: "tasks", Command: "consult-end",
 	Summary:     "Consult End Task",
 	Description: "Access this endpoint when the user has to end a call with the consulting user. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/consult/end", Host: HostCC,
@@ -4531,7 +4622,7 @@ var CCTasksConsultEnd = &Operation{
 }
 
 var CCTasksExitConference = &Operation{
-	Area: "cc", Group: "tasks", Command: "exit-conference",
+	ID: "CCTasksExitConference", Area: "cc", Group: "tasks", Command: "exit-conference",
 	Summary:     "Exit Conference Task",
 	Description: "Access this endpoint when the user wants to exit from a conference call. Requires one of the following scopes 'cjp:user' or 'cloud-contact-center:pod_conv' for authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/conference/exit", Host: HostCC,
@@ -4541,7 +4632,7 @@ var CCTasksExitConference = &Operation{
 }
 
 var CCTasksAcceptPreview = &Operation{
-	Area: "cc", Group: "tasks", Command: "accept-preview",
+	ID: "CCTasksAcceptPreview", Area: "cc", Group: "tasks", Command: "accept-preview",
 	Summary:     "Accept Preview Task",
 	Description: "API to accept the preview campaign task offered to the agent.",
 	Method:      "POST", Path: "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/accept", Host: HostCC,
@@ -4552,7 +4643,7 @@ var CCTasksAcceptPreview = &Operation{
 }
 
 var CCTasksSkipPreview = &Operation{
-	Area: "cc", Group: "tasks", Command: "skip-preview",
+	ID: "CCTasksSkipPreview", Area: "cc", Group: "tasks", Command: "skip-preview",
 	Summary:     "Skip Preview Task",
 	Description: "API to skip the preview campaign task offered to the agent.",
 	Method:      "POST", Path: "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/skip", Host: HostCC,
@@ -4563,7 +4654,7 @@ var CCTasksSkipPreview = &Operation{
 }
 
 var CCTasksDeletePreview = &Operation{
-	Area: "cc", Group: "tasks", Command: "delete-preview",
+	ID: "CCTasksDeletePreview", Area: "cc", Group: "tasks", Command: "delete-preview",
 	Summary:     "Remove Preview Task",
 	Description: "API to remove the preview campaign task offered to the agent",
 	Method:      "POST", Path: "/v1/dialer/campaign/{campaignId}/preview-task/{taskId}/remove", Host: HostCC,
@@ -4574,7 +4665,7 @@ var CCTasksDeletePreview = &Operation{
 }
 
 var CCTasksAppendMessage = &Operation{
-	Area: "cc", Group: "tasks", Command: "append-message",
+	ID: "CCTasksAppendMessage", Area: "cc", Group: "tasks", Command: "append-message",
 	Aliases:     []string{"update-2"},
 	Summary:     "Append Task Message",
 	Description: "This feature is currently in Beta. Contact your Cisco team if you want access to this feature.\n\nAppends an inbound message to an existing `workItem` or `customMessaging` task. Use this API after the initial task has been created through Create Task. Requires `cjp:task_write` OAuth scope. For partner-initiated inbound message appends, the `cjp:task_write` scope must be present in the partner application's access token.\n\nOn success, returns a `202` response containing the append event identifier as `data.id`. Partners can use this identifier to correlate subsequent webhook delivery for the appended message.",
@@ -4586,7 +4677,7 @@ var CCTasksAppendMessage = &Operation{
 }
 
 var CCTasksDropParticipantConference = &Operation{
-	Area: "cc", Group: "tasks", Command: "drop-participant-conference",
+	ID: "CCTasksDropParticipantConference", Area: "cc", Group: "tasks", Command: "drop-participant-conference",
 	Summary:     "Drop Participant From Conference",
 	Description: "Access this endpoint when the user needs to drop a specific participant from an active conference associated with a task. This operation removes only the targeted participant while keeping the remaining parties in the conference. Requires `cjp:user` scope for  authorization. For a list of possible response messages, see the [Call Control API Guide](/docs/contact-control-apis)",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/conference/participants/{participantId}/drop", Host: HostCC,
@@ -4597,7 +4688,7 @@ var CCTasksDropParticipantConference = &Operation{
 }
 
 var CCTasksPauseDigital = &Operation{
-	Area: "cc", Group: "tasks", Command: "pause-digital",
+	ID: "CCTasksPauseDigital", Area: "cc", Group: "tasks", Command: "pause-digital",
 	Summary:     "Pause Task",
 	Description: "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to pause a task that cannot be handled immediately. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/pause", Host: HostCC,
@@ -4607,7 +4698,7 @@ var CCTasksPauseDigital = &Operation{
 }
 
 var CCTasksResumeDigital = &Operation{
-	Area: "cc", Group: "tasks", Command: "resume-digital",
+	ID: "CCTasksResumeDigital", Area: "cc", Group: "tasks", Command: "resume-digital",
 	Summary:     "Resume Task",
 	Description: "Access this endpoint when users such as administrators, supervisors, or agents with an agent license need to resume a previously paused task. This API is supported only for non-real-time digital channels, such as email, social, etc. Authorization requires the `cjp:user` scope. For a list of potential response messages, refer to the [Call Control API Guide](/docs/contact-control-apis).",
 	Method:      "POST", Path: "/v1/tasks/{taskId}/resume", Host: HostCC,
@@ -4617,7 +4708,7 @@ var CCTasksResumeDigital = &Operation{
 }
 
 var CCJourneyGetWorkspace = &Operation{
-	Area: "cc", Group: "journey", Command: "get-workspace",
+	ID: "CCJourneyGetWorkspace", Area: "cc", Group: "journey", Command: "get-workspace",
 	Summary:     "Get Workspace",
 	Description: "Get workspace details. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -4627,7 +4718,7 @@ var CCJourneyGetWorkspace = &Operation{
 }
 
 var CCJourneyUpdateWorkspace = &Operation{
-	Area: "cc", Group: "journey", Command: "update-workspace",
+	ID: "CCJourneyUpdateWorkspace", Area: "cc", Group: "journey", Command: "update-workspace",
 	Summary:     "Update Workspace",
 	Description: "Update workspace by Id. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "PUT", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -4641,7 +4732,7 @@ var CCJourneyUpdateWorkspace = &Operation{
 }
 
 var CCJourneyDeleteWorkspace = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-workspace",
+	ID: "CCJourneyDeleteWorkspace", Area: "cc", Group: "journey", Command: "delete-workspace",
 	Summary:     "Delete Workspace",
 	Description: "Delete Workspace By Id. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "DELETE", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -4651,7 +4742,7 @@ var CCJourneyDeleteWorkspace = &Operation{
 }
 
 var CCJourneyGetTemplateSearchedTemplateId = &Operation{
-	Area: "cc", Group: "journey", Command: "get-template-searched-template-id",
+	ID: "CCJourneyGetTemplateSearchedTemplateId", Area: "cc", Group: "journey", Command: "get-template-searched-template-id",
 	Summary:     "Get A specific Template searched by template id",
 	Description: "Get Template details by template Id in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -4662,7 +4753,7 @@ var CCJourneyGetTemplateSearchedTemplateId = &Operation{
 }
 
 var CCJourneyUpdateProfileviewtemplate = &Operation{
-	Area: "cc", Group: "journey", Command: "update-profileviewtemplate",
+	ID: "CCJourneyUpdateProfileviewtemplate", Area: "cc", Group: "journey", Command: "update-profileviewtemplate",
 	Summary:     "Update existing ProfileViewTemplate",
 	Description: "Update existing Profile View Template in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "PUT", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -4674,7 +4765,7 @@ var CCJourneyUpdateProfileviewtemplate = &Operation{
 }
 
 var CCJourneyDeleteTemplateTemplateId = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-template-template-id",
+	ID: "CCJourneyDeleteTemplateTemplateId", Area: "cc", Group: "journey", Command: "delete-template-template-id",
 	Summary:     "Delete Template by template Id",
 	Description: "Delete Template By template id in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "DELETE", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -4685,7 +4776,7 @@ var CCJourneyDeleteTemplateTemplateId = &Operation{
 }
 
 var CCJourneyDeletePersonId = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-person-id",
+	ID: "CCJourneyDeletePersonId", Area: "cc", Group: "journey", Command: "delete-person-id",
 	Summary:     "Delete specific Person by id",
 	Description: "Delete Person Details searched by Person id in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "DELETE", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -4696,7 +4787,7 @@ var CCJourneyDeletePersonId = &Operation{
 }
 
 var CCJourneyCreateRemoveReplacePerson = &Operation{
-	Area: "cc", Group: "journey", Command: "create-remove-replace-person",
+	ID: "CCJourneyCreateRemoveReplacePerson", Area: "cc", Group: "journey", Command: "create-remove-replace-person",
 	Summary:     "Add/Remove/Replace details of a Person.",
 	Description: "The Patch Api can be used to add/remove identities(email, phone, customerId) or replace firstName and lastName of an Individual. We support only add, replace and remove operations. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope. \n\nFor a more information on Patch Requests, see this  [JSON PATCH guide](https://jsonpatch.com)",
 	Method:      "PATCH", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -4708,7 +4799,7 @@ var CCJourneyCreateRemoveReplacePerson = &Operation{
 }
 
 var CCJourneyCreateOneMoreIdentitiesPerson = &Operation{
-	Area: "cc", Group: "journey", Command: "create-one-more-identities-person",
+	ID: "CCJourneyCreateOneMoreIdentitiesPerson", Area: "cc", Group: "journey", Command: "create-one-more-identities-person",
 	Summary:     "Add one/more Identities to a person",
 	Description: "This Patch Api can be used to add identities(email, phone, customerId) to a person. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope.",
 	Method:      "PATCH", Path: "/admin/v1/api/person/add-identities/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -4725,7 +4816,7 @@ var CCJourneyCreateOneMoreIdentitiesPerson = &Operation{
 }
 
 var CCJourneyGetWxccSubscription = &Operation{
-	Area: "cc", Group: "journey", Command: "get-wxcc-subscription",
+	ID: "CCJourneyGetWxccSubscription", Area: "cc", Group: "journey", Command: "get-wxcc-subscription",
 	Summary:     "Get WXCC Subscription",
 	Description: "Get WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -4735,7 +4826,7 @@ var CCJourneyGetWxccSubscription = &Operation{
 }
 
 var CCJourneyCreateWxccSubscription = &Operation{
-	Area: "cc", Group: "journey", Command: "create-wxcc-subscription",
+	ID: "CCJourneyCreateWxccSubscription", Area: "cc", Group: "journey", Command: "create-wxcc-subscription",
 	Summary:     "Create WXCC Subscription",
 	Description: "Create WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -4745,7 +4836,7 @@ var CCJourneyCreateWxccSubscription = &Operation{
 }
 
 var CCJourneyDeleteWxccSubscription = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-wxcc-subscription",
+	ID: "CCJourneyDeleteWxccSubscription", Area: "cc", Group: "journey", Command: "delete-wxcc-subscription",
 	Summary:     "Delete WXCC Subscription",
 	Description: "Delete WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "DELETE", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -4755,7 +4846,7 @@ var CCJourneyDeleteWxccSubscription = &Operation{
 }
 
 var CCJourneyGetAllWorkspaces = &Operation{
-	Area: "cc", Group: "journey", Command: "get-all-workspaces",
+	ID: "CCJourneyGetAllWorkspaces", Area: "cc", Group: "journey", Command: "get-all-workspaces",
 	Summary:     "Get All Workspaces",
 	Description: "Get All Workspaces. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/workspace", Host: HostCC,
@@ -4770,7 +4861,7 @@ var CCJourneyGetAllWorkspaces = &Operation{
 }
 
 var CCJourneyCreateWorkspace = &Operation{
-	Area: "cc", Group: "journey", Command: "create-workspace",
+	ID: "CCJourneyCreateWorkspace", Area: "cc", Group: "journey", Command: "create-workspace",
 	Summary:     "Create Workspace",
 	Description: "Create Workspace in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Path: "/admin/v1/api/workspace", Host: HostCC,
@@ -4784,7 +4875,7 @@ var CCJourneyCreateWorkspace = &Operation{
 }
 
 var CCJourneyGetAllTemplate = &Operation{
-	Area: "cc", Group: "journey", Command: "get-all-template",
+	ID: "CCJourneyGetAllTemplate", Area: "cc", Group: "journey", Command: "get-all-template",
 	Summary:     "Get All Template Details.",
 	Description: "Get Template details by Organization Id and workspaceId in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}", Host: HostCC,
@@ -4800,7 +4891,7 @@ var CCJourneyGetAllTemplate = &Operation{
 }
 
 var CCJourneyCreateTemplate = &Operation{
-	Area: "cc", Group: "journey", Command: "create-template",
+	ID: "CCJourneyCreateTemplate", Area: "cc", Group: "journey", Command: "create-template",
 	Summary:     "Create Template",
 	Description: "Creates a Profile View Template in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "POST", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}", Host: HostCC,
@@ -4811,7 +4902,7 @@ var CCJourneyCreateTemplate = &Operation{
 }
 
 var CCJourneyGetAllPerson = &Operation{
-	Area: "cc", Group: "journey", Command: "get-all-person",
+	ID: "CCJourneyGetAllPerson", Area: "cc", Group: "journey", Command: "get-all-person",
 	Summary:     "Get all or a specific Person Details",
 	Description: "Get Person Details in JDS. If personId is provided by query parameter, this returns the Person whose personId matches the parameter.\nIf not, this will return ALL the Persons within the organization and workspace. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/person/workspace-id/{workspaceId}", Host: HostCC,
@@ -4828,7 +4919,7 @@ var CCJourneyGetAllPerson = &Operation{
 }
 
 var CCJourneyCreatePerson = &Operation{
-	Area: "cc", Group: "journey", Command: "create-person",
+	ID: "CCJourneyCreatePerson", Area: "cc", Group: "journey", Command: "create-person",
 	Summary:     "Create a Person",
 	Description: "Creates a Person in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "POST", Path: "/admin/v1/api/person/workspace-id/{workspaceId}", Host: HostCC,
@@ -4846,7 +4937,7 @@ var CCJourneyCreatePerson = &Operation{
 }
 
 var CCJourneyMergesIdentitiesPrimaryIdentity = &Operation{
-	Area: "cc", Group: "journey", Command: "merges-identities-primary-identity",
+	ID: "CCJourneyMergesIdentitiesPrimaryIdentity", Area: "cc", Group: "journey", Command: "merges-identities-primary-identity",
 	Summary:     "Merges Identities to a Primary Identity.",
 	Description: "Merges one/more Identities to a **Primary** Individual in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "POST", Path: "/admin/v1/api/person/merge/workspace-id/{workspaceId}/primary-person-id/{primaryPersonId}", Host: HostCC,
@@ -4860,7 +4951,7 @@ var CCJourneyMergesIdentitiesPrimaryIdentity = &Operation{
 }
 
 var CCJourneyCreatesMergesAliasesIndividualJds = &Operation{
-	Area: "cc", Group: "journey", Command: "creates-merges-aliases-individual-jds",
+	ID: "CCJourneyCreatesMergesAliasesIndividualJds", Area: "cc", Group: "journey", Command: "creates-merges-aliases-individual-jds",
 	Summary:     "Creates or merges aliases to an Individual in JDS.",
 	Description: "Merges one/more aliases in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "POST", Path: "/admin/v1/api/person/merge-identities/workspace-id/{workspaceId}", Host: HostCC,
@@ -4878,7 +4969,7 @@ var CCJourneyCreatesMergesAliasesIndividualJds = &Operation{
 }
 
 var CCJourneyGetAllActions = &Operation{
-	Area: "cc", Group: "journey", Command: "get-all-actions",
+	ID: "CCJourneyGetAllActions", Area: "cc", Group: "journey", Command: "get-all-actions",
 	Summary:     "Get all Journey Actions",
 	Description: "Get all Journey Actions in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}", Host: HostCC,
@@ -4893,7 +4984,7 @@ var CCJourneyGetAllActions = &Operation{
 }
 
 var CCJourneyGetTemplateSearchedTemplateName = &Operation{
-	Area: "cc", Group: "journey", Command: "get-template-searched-template-name",
+	ID: "CCJourneyGetTemplateSearchedTemplateName", Area: "cc", Group: "journey", Command: "get-template-searched-template-name",
 	Summary:     "Get A specific Template searched by template name",
 	Description: "Get Template details by template Name in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-name/{templateName}", Host: HostCC,
@@ -4904,7 +4995,7 @@ var CCJourneyGetTemplateSearchedTemplateName = &Operation{
 }
 
 var CCJourneySearchIdentityAliases = &Operation{
-	Area: "cc", Group: "journey", Command: "search-identity-aliases",
+	ID: "CCJourneySearchIdentityAliases", Area: "cc", Group: "journey", Command: "search-identity-aliases",
 	Summary:     "Search for an Identity via aliases",
 	Description: "Get one or more Person Details searched by aliases in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes. Multiple aliases should be separated by a comma.",
 	Method:      "GET", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/aliases/{aliases}", Host: HostCC,
@@ -4920,7 +5011,7 @@ var CCJourneySearchIdentityAliases = &Operation{
 }
 
 var CCJourneyGetAllActionsTemplate = &Operation{
-	Area: "cc", Group: "journey", Command: "get-all-actions-template",
+	ID: "CCJourneyGetAllActionsTemplate", Area: "cc", Group: "journey", Command: "get-all-actions-template",
 	Summary:     "Get all Journey Actions for a template",
 	Description: "Get all Journey Actions for a template in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -4931,7 +5022,7 @@ var CCJourneyGetAllActionsTemplate = &Operation{
 }
 
 var CCJourneyCreateAction = &Operation{
-	Area: "cc", Group: "journey", Command: "create-action",
+	ID: "CCJourneyCreateAction", Area: "cc", Group: "journey", Command: "create-action",
 	Summary:     "Create a new  Journey Action.",
 	Description: "Create a new Journey Action in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "POST", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -4943,7 +5034,7 @@ var CCJourneyCreateAction = &Operation{
 }
 
 var CCJourneyGetActionName = &Operation{
-	Area: "cc", Group: "journey", Command: "get-action-name",
+	ID: "CCJourneyGetActionName", Area: "cc", Group: "journey", Command: "get-action-name",
 	Summary:     "Get specific Journey Action By Name",
 	Description: "Get specific Journey Action By Name in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-name/{actionName}", Host: HostCC,
@@ -4955,7 +5046,7 @@ var CCJourneyGetActionName = &Operation{
 }
 
 var CCJourneyGetActionActionid = &Operation{
-	Area: "cc", Group: "journey", Command: "get-action-actionid",
+	ID: "CCJourneyGetActionActionid", Area: "cc", Group: "journey", Command: "get-action-actionid",
 	Summary:     "Get specific Journey Action By ActionId",
 	Description: "Get specific Journey Action By ActionId in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -4967,7 +5058,7 @@ var CCJourneyGetActionActionid = &Operation{
 }
 
 var CCJourneyUpdateAction = &Operation{
-	Area: "cc", Group: "journey", Command: "update-action",
+	ID: "CCJourneyUpdateAction", Area: "cc", Group: "journey", Command: "update-action",
 	Summary:     "Update existing Journey Action.",
 	Description: "Update existing Journey Action in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "PUT", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -4980,7 +5071,7 @@ var CCJourneyUpdateAction = &Operation{
 }
 
 var CCJourneyDeleteActionConfigurationActionid = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-action-configuration-actionid",
+	ID: "CCJourneyDeleteActionConfigurationActionid", Area: "cc", Group: "journey", Command: "delete-action-configuration-actionid",
 	Summary:     "Delete Journey Action configuration By ActionId.",
 	Description: "Delete Journey Action configuration By ActionId in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
 	Method:      "DELETE", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -4992,7 +5083,7 @@ var CCJourneyDeleteActionConfigurationActionid = &Operation{
 }
 
 var CCJourneyGetHistoricProfileViewTemplateName = &Operation{
-	Area: "cc", Group: "journey", Command: "get-historic-profile-view-template-name",
+	ID: "CCJourneyGetHistoricProfileViewTemplateName", Area: "cc", Group: "journey", Command: "get-historic-profile-view-template-name",
 	Summary:     "Historic Progressive Profile View using Template Name.",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}", Host: HostCC,
@@ -5004,7 +5095,7 @@ var CCJourneyGetHistoricProfileViewTemplateName = &Operation{
 }
 
 var CCJourneyDeleteOneMoreIdentitiesPerson = &Operation{
-	Area: "cc", Group: "journey", Command: "delete-one-more-identities-person",
+	ID: "CCJourneyDeleteOneMoreIdentitiesPerson", Area: "cc", Group: "journey", Command: "delete-one-more-identities-person",
 	Summary:     "Remove one/more Identities from a person",
 	Description: "This Patch Api can be used to remove identities(email, phone, customerId) from a person. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope.",
 	Method:      "PATCH", Path: "/v1/api/person/remove-identities/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -5016,7 +5107,7 @@ var CCJourneyDeleteOneMoreIdentitiesPerson = &Operation{
 }
 
 var CCJourneyGetHistoricProfileView = &Operation{
-	Area: "cc", Group: "journey", Command: "get-historic-profile-view",
+	ID: "CCJourneyGetHistoricProfileView", Area: "cc", Group: "journey", Command: "get-historic-profile-view",
 	Summary:     "Historic Progressive Profile View.",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-id/{templateId}", Host: HostCC,
@@ -5028,7 +5119,7 @@ var CCJourneyGetHistoricProfileView = &Operation{
 }
 
 var CCJourneyGetHistoricProfileViewIdentityTemplateName = &Operation{
-	Area: "cc", Group: "journey", Command: "get-historic-profile-view-identity-template-name",
+	ID: "CCJourneyGetHistoricProfileViewIdentityTemplateName", Area: "cc", Group: "journey", Command: "get-historic-profile-view-identity-template-name",
 	Summary:     "Historic Progressive Profile View By Identity and Template Name.",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}", Host: HostCC,
@@ -5040,7 +5131,7 @@ var CCJourneyGetHistoricProfileViewIdentityTemplateName = &Operation{
 }
 
 var CCJourneyGetHistoricProfileViewIdentityTemplateId = &Operation{
-	Area: "cc", Group: "journey", Command: "get-historic-profile-view-identity-template-id",
+	ID: "CCJourneyGetHistoricProfileViewIdentityTemplateId", Area: "cc", Group: "journey", Command: "get-historic-profile-view-identity-template-id",
 	Summary:     "Historic Progressive Profile View By Identity and Template Id",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}", Host: HostCC,
@@ -5052,7 +5143,7 @@ var CCJourneyGetHistoricProfileViewIdentityTemplateId = &Operation{
 }
 
 var CCJourneyStreamProfileViewsTemplateName = &Operation{
-	Area: "cc", Group: "journey", Command: "stream-profile-views-template-name",
+	ID: "CCJourneyStreamProfileViewsTemplateName", Area: "cc", Group: "journey", Command: "stream-profile-views-template-name",
 	Summary:     "Stream Progressive profile Views By Template Name",
 	Description: "Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}", Host: HostCC,
@@ -5064,7 +5155,7 @@ var CCJourneyStreamProfileViewsTemplateName = &Operation{
 }
 
 var CCJourneyStreamProfileViews = &Operation{
-	Area: "cc", Group: "journey", Command: "stream-profile-views",
+	ID: "CCJourneyStreamProfileViews", Area: "cc", Group: "journey", Command: "stream-profile-views",
 	Summary:     "Stream Progressive profile Views",
 	Description: "Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}", Host: HostCC,
@@ -5076,7 +5167,7 @@ var CCJourneyStreamProfileViews = &Operation{
 }
 
 var CCJourneyGetHistoricEvents = &Operation{
-	Area: "cc", Group: "journey", Command: "get-historic-events",
+	ID: "CCJourneyGetHistoricEvents", Area: "cc", Group: "journey", Command: "get-historic-events",
 	Summary:     "Historic Journey Events",
 	Description: "Getting Historic Customer Journey Events from Pinot. These events are append-only, immutable data ledger that can be queried to retrieve snapshot of latest events that moment in time or historically to play-back events as they occurred to understand or analyze Journeys using ML/AI models. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes ",
 	Method:      "GET", Path: "/v1/api/events/workspace-id/{workspaceId}", Host: HostCC,
@@ -5094,7 +5185,7 @@ var CCJourneyGetHistoricEvents = &Operation{
 }
 
 var CCJourneyStreamEventsIdentity = &Operation{
-	Area: "cc", Group: "journey", Command: "stream-events-identity",
+	ID: "CCJourneyStreamEventsIdentity", Area: "cc", Group: "journey", Command: "stream-events-identity",
 	Summary:     "Stream Events By Identity",
 	Description: "Real-time streaming enables API consumers to listen for events as it arrives as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. Optionally accepts filter and data parameters slice/dice further. It  requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/events/stream/workspace-id/{workspaceId}/identity/{identity}", Host: HostCC,
@@ -5107,7 +5198,7 @@ var CCJourneyStreamEventsIdentity = &Operation{
 }
 
 var CCJourneyEventPosting = &Operation{
-	Area: "cc", Group: "journey", Command: "event-posting",
+	ID: "CCJourneyEventPosting", Area: "cc", Group: "journey", Command: "event-posting",
 	Summary:     "Journey Event Posting",
 	Description: "Journey Event Posting Api.API accepts events that describe what occurred, when, and by whom on every interaction across touch points and applications. Data Ingestion is based on Cloud Events specification for describing event data in a common way. API accepts data in the form of POST with support for Header based authorization. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Path: "/publish/v1/api/event", Host: HostCC,
@@ -5118,7 +5209,7 @@ var CCJourneyEventPosting = &Operation{
 }
 
 var CCCampaignManagerStartRequest = &Operation{
-	Area: "cc", Group: "campaign-manager", Command: "start-request",
+	ID: "CCCampaignManagerStartRequest", Area: "cc", Group: "campaign-manager", Command: "start-request",
 	Summary:     "Start Campaign Request",
 	Description: "A start campaign API allows businesses to programmatically start outbound campaigns using their own software applications. This type of API typically allows businesses to set up the parameters for a campaign, such as the list of phone numbers to call, the message or script to deliver, and the time of day or day of the week to call. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "POST", Path: "/v1/dialer/campaign", Host: HostCC,
@@ -5126,7 +5217,7 @@ var CCCampaignManagerStartRequest = &Operation{
 }
 
 var CCCampaignManagerUpdateRequest = &Operation{
-	Area: "cc", Group: "campaign-manager", Command: "update-request",
+	ID: "CCCampaignManagerUpdateRequest", Area: "cc", Group: "campaign-manager", Command: "update-request",
 	Summary:     "Update Campaign Request",
 	Description: "By using an update campaign API, businesses can automate the process of modifying and managing outbound campaigns, and integrate campaign updates into their existing workflows or applications. This can help to improve efficiency and reduce errors, as well as allow for greater flexibility and control over outbound campaigns. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "PUT", Path: "/v1/dialer/campaign/{campaignId}", Host: HostCC,
@@ -5137,7 +5228,7 @@ var CCCampaignManagerUpdateRequest = &Operation{
 }
 
 var CCCampaignManagerStopRequest = &Operation{
-	Area: "cc", Group: "campaign-manager", Command: "stop-request",
+	ID: "CCCampaignManagerStopRequest", Area: "cc", Group: "campaign-manager", Command: "stop-request",
 	Summary:     "Stop Campaign Request",
 	Description: "The stop campaign API enables businesses to automate the process of managing outbound campaigns and integrate campaign deletion into their existing workflows or applications. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "DELETE", Path: "/v1/dialer/campaign/{campaignId}", Host: HostCC,
@@ -5147,7 +5238,7 @@ var CCCampaignManagerStopRequest = &Operation{
 }
 
 var CCCampaignManagerGetValidTimes = &Operation{
-	Area: "cc", Group: "campaign-manager", Command: "get-valid-times",
+	ID: "CCCampaignManagerGetValidTimes", Area: "cc", Group: "campaign-manager", Command: "get-valid-times",
 	Summary:     "Get Valid Campaign Times",
 	Description: "Gets valid campaign times for a campaign and agent. This request is accepted for asynchronous processing. Requires 'cjp:user','cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "GET", Path: "/v1/organization/{orgid}/getValidCampaignTimes", Host: HostCC,
@@ -5161,7 +5252,7 @@ var CCCampaignManagerGetValidTimes = &Operation{
 }
 
 var CCCapturesList = &Operation{
-	Area: "cc", Group: "captures", Command: "list",
+	ID: "CCCapturesList", Area: "cc", Group: "captures", Command: "list",
 	Summary:     "List Captures",
 	Description: "Retrieve a list of Captures given a set of task IDs.\n\n### Captures Availability\n\nNot all tasks will have captures by default and they will be available based on the organization's configurations and retention policy. Querying closed tasks is recommended, as open tasks may return incomplete data.\n\nTranscripts retrieved through this API are post-interaction artifacts.\n- For voice, transcripts are available when at least one transcript based configuration/feature is enabled such as Auto CSAT, Agent Well Being, Call Drop Summary, Topics Analytics.\n\n- For digital channels such as Chat, Email, Social, Work Item, and Custom Messaging, transcripts are generated from the conversation messages. Please refer [guide for digital transcripts](/docs/guide-for-digital-transcripts) for more details\n\n### URL Expiry\n\nThe maximum duration of validity of pre signed URL or default value when no value is passed for urlExpiration is 60 minutes.\n\n### Authentication & Authorization\n\nThis API requires a valid bearer token. The caller must satisfy the scope and role requirements for one of the following:\n\n#### Service App\n- **Required Scope:** `cjp:config_read`\n- The `orgId` must be provided in the request body and must match the token's org.\n- For service app setup, refer to [Contact Center Service Apps](/docs/contact-center-service-apps).\n\n#### Org Admin\n- **Required Scopes:** `Identity:SCIM` and `Identity:Organization`\n- **Required Role (one of):** `id_full_admin`, `id_readonly_admin`, `cjp.admin`, or `atlas-portal.partner.provision_admin`\n- The user must belong to the organization being queried. If `orgId` is provided in the request body, it must match the token's org. If `orgId` is omitted, it is inferred from the token.\n\n#### Partner Admin\n- **Required Scope:** `Identity:SCIM` for the managed org\n- **Required Role:** `atlas-portal.partner.salesadmin`\n- The org ID must be included in the managed org list. This is accomplished by adding the org to the `Managed customer orgs` list in control hub.\n\n#### Supervisor\n- **Required Role:** `cjp.supervisor`\n- The user must belong to the organization being queried. If `orgId` is provided in the request body, it must match the token's org. If `orgId` is omitted, it is inferred from the token.\n\n**Note:** Please refer to the contact center setup documentation for the configuration details.\n\n",
 	Method:      "POST", Path: "/v1/captures/query", Host: HostCC,
@@ -5169,7 +5260,7 @@ var CCCapturesList = &Operation{
 }
 
 var CCFlowExportLegacy = &Operation{
-	Area: "cc", Group: "flow", Command: "export-legacy",
+	ID: "CCFlowExportLegacy", Area: "cc", Group: "flow", Command: "export-legacy",
 	Summary:     "Export a Flow or Subflow",
 	Description: "Returns the exported flow/subflow in response.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Path: "/flow-store/{orgid}/project/{projectId}/flows/{flowId}:export", Host: HostCC,
@@ -5182,7 +5273,7 @@ var CCFlowExportLegacy = &Operation{
 }
 
 var CCFlowImportLegacy = &Operation{
-	Area: "cc", Group: "flow", Command: "import-legacy",
+	ID: "CCFlowImportLegacy", Area: "cc", Group: "flow", Command: "import-legacy",
 	Summary:     "Import a Flow or Subflow",
 	Description: "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "POST", Path: "/flow-store/{orgid}/project/{projectId}/flows:import", Host: HostCC,
@@ -5196,7 +5287,7 @@ var CCFlowImportLegacy = &Operation{
 }
 
 var CCFlowList = &Operation{
-	Area: "cc", Group: "flow", Command: "list",
+	ID: "CCFlowList", Area: "cc", Group: "flow", Command: "list",
 	Summary:     "List Flows or Subflows",
 	Description: "Returns a list of flows in response. Channel-based filtering can be applied with the `searchBy` query parameter (for example, `channelType|telephony`, `channelType|workItem`, `channelType|customMessaging`, `channelType|genericAction`). Channel visibility may be constrained by organization feature flags. If associatedChannels key is missing or empty, it will be treated as telephony flow.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/flows", Host: HostCC,
@@ -5217,7 +5308,7 @@ var CCFlowList = &Operation{
 }
 
 var CCFlowPublish = &Operation{
-	Area: "cc", Group: "flow", Command: "publish",
+	ID: "CCFlowPublish", Area: "cc", Group: "flow", Command: "publish",
 	Summary:     "Publish a Flow or Subflow",
 	Description: "Returns the published flow in response.\n\nThe Publish API validates the basic structure of the flows. We recommend manually verifying the published flows before proceeding with live traffic.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/flows/{flowId}:publish", Host: HostCC,
@@ -5236,7 +5327,7 @@ var CCFlowPublish = &Operation{
 }
 
 var CCFlowLock = &Operation{
-	Area: "cc", Group: "flow", Command: "lock",
+	ID: "CCFlowLock", Area: "cc", Group: "flow", Command: "lock",
 	Summary:     "Lock a Flow or Subflow",
 	Description: "Lock a flow to prevent concurrent edits by other users. Locks expire after 15 minutes of inactivity.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/flows/{flowId}:lock", Host: HostCC,
@@ -5249,7 +5340,7 @@ var CCFlowLock = &Operation{
 }
 
 var CCFlowUnlock = &Operation{
-	Area: "cc", Group: "flow", Command: "unlock",
+	ID: "CCFlowUnlock", Area: "cc", Group: "flow", Command: "unlock",
 	Summary:     "Unlock a Flow or Subflow",
 	Description: "Release the lock on a flow to allow other users to edit it.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/flows/{flowId}:unlock", Host: HostCC,
@@ -5262,7 +5353,7 @@ var CCFlowUnlock = &Operation{
 }
 
 var CCFlowValidate = &Operation{
-	Area: "cc", Group: "flow", Command: "validate",
+	ID: "CCFlowValidate", Area: "cc", Group: "flow", Command: "validate",
 	Summary:     "Validate a Flow or Subflow",
 	Description: "Dry-run validate a flow/subflow definition without persisting it. Use this to check correctness before importing. Include `associatedChannels` to preserve the channel metadata that import and export payloads round-trip. Validation requests where `associatedChannels` is missing or empty are treated as telephony flows, and dry-run validation does not derive the effective channel from `associatedChannels`.\n\nNote: validation is more lenient than import. A flow that passes `:validate` can still be rejected by `:import` (for example, a missing start activity), so a successful validation does not guarantee a successful import.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/v2/flows:validate", Host: HostCC,
@@ -5274,7 +5365,7 @@ var CCFlowValidate = &Operation{
 }
 
 var CCFlowImport = &Operation{
-	Area: "cc", Group: "flow", Command: "import",
+	ID: "CCFlowImport", Area: "cc", Group: "flow", Command: "import",
 	Summary:     "Import a Flow or Subflow",
 	Description: "Import a new flow/subflow from a flow definition. Creates the flow/subflow in draft state and returns the assigned flow metadata, including `flowId`. Include `associatedChannels` in the payload when the flow contains channel-specific activities (for example, `customMessaging`) so channel references can be resolved correctly during import. If `associatedChannels` is missing or empty, the import is treated as a telephony flow. For `FLOW` imports, blank or whitespace-only `associatedChannels[].channelType` values are rejected.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/v2/flows:import", Host: HostCC,
@@ -5288,7 +5379,7 @@ var CCFlowImport = &Operation{
 }
 
 var CCFlowGet = &Operation{
-	Area: "cc", Group: "flow", Command: "get",
+	ID: "CCFlowGet", Area: "cc", Group: "flow", Command: "get",
 	Summary:     "Get a Flow or Subflow",
 	Description: "Retrieve the current draft of a flow/subflow as a flow document. To fetch a specific published version, use the `:export` endpoint. The response includes channel metadata (for example, `associatedChannels`) used by channel-specific activities such as `customMessaging`. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}", Host: HostCC,
@@ -5301,7 +5392,7 @@ var CCFlowGet = &Operation{
 }
 
 var CCFlowSaveDraft = &Operation{
-	Area: "cc", Group: "flow", Command: "save-draft",
+	ID: "CCFlowSaveDraft", Area: "cc", Group: "flow", Command: "save-draft",
 	Summary:     "Save a Flow or Subflow Draft",
 	Description: "Save a complete flow/subflow document as the current draft, replacing the existing draft. Submitted `associatedChannels` values are not persisted on save; the draft preserves the existing stored channel metadata. Omitting `associatedChannels` does not default an existing flow to telephony. Pass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}", Host: HostCC,
@@ -5316,7 +5407,7 @@ var CCFlowSaveDraft = &Operation{
 }
 
 var CCFlowPatchDraft = &Operation{
-	Area: "cc", Group: "flow", Command: "patch-draft",
+	ID: "CCFlowPatchDraft", Area: "cc", Group: "flow", Command: "patch-draft",
 	Summary:     "Patch a Flow or Subflow Draft",
 	Description: "Apply partial updates to an existing flow/subflow draft without replacing the entire document. The patch body is a Patch Draft Contract — server-side merge, idempotent, and re-validated after the merge. The patch is rejected if the merged document fails validation, so the draft is never left in a broken state. The body may also include top-level overrides such as `name` and `description`. Submitted `associatedChannels` values are not persisted on patch; the draft preserves the existing stored channel metadata.\n\nPass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
 	Method:      "PATCH", Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}", Host: HostCC,
@@ -5331,7 +5422,7 @@ var CCFlowPatchDraft = &Operation{
 }
 
 var CCFlowValidateDraft = &Operation{
-	Area: "cc", Group: "flow", Command: "validate-draft",
+	ID: "CCFlowValidateDraft", Area: "cc", Group: "flow", Command: "validate-draft",
 	Summary:     "Validate an Existing Flow or Subflow Draft",
 	Description: "Validate the current draft of an existing flow/subflow (read-only operation). Validation reads the draft as stored. Drafts where `associatedChannels` is missing or empty are treated as telephony flows, and validation does not derive the effective channel from `associatedChannels`.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:validate", Host: HostCC,
@@ -5345,7 +5436,7 @@ var CCFlowValidateDraft = &Operation{
 }
 
 var CCFlowExport = &Operation{
-	Area: "cc", Group: "flow", Command: "export",
+	ID: "CCFlowExport", Area: "cc", Group: "flow", Command: "export",
 	Summary:     "Export a Flow or Subflow",
 	Description: "Export a flow/subflow as a flow document for backup, migration, or version control. The exported payload includes `associatedChannels` metadata to preserve channel-specific activity behavior (for example, `customMessaging`) during re-import. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:export", Host: HostCC,
@@ -5359,7 +5450,7 @@ var CCFlowExport = &Operation{
 }
 
 var CCFlowSearch = &Operation{
-	Area: "cc", Group: "flow", Command: "search",
+	ID: "CCFlowSearch", Area: "cc", Group: "flow", Command: "search",
 	Summary:     "Search Flows",
 	Description: "Returns a list of flows in response. The search is case-sensitive.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/flows:search", Host: HostCC,
@@ -5376,7 +5467,7 @@ var CCFlowSearch = &Operation{
 }
 
 var CCFlowDelete = &Operation{
-	Area: "cc", Group: "flow", Command: "delete",
+	ID: "CCFlowDelete", Area: "cc", Group: "flow", Command: "delete",
 	Summary:     "Delete a Flow or Subflow",
 	Description: "Permanently deletes a flow or subflow. Flows deleted via this API are removed permanently and cannot be recovered.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "DELETE", Path: "/{orgid}/project/{projectId}/flows/{flowId}", Host: HostCC,
@@ -5391,7 +5482,7 @@ var CCFlowDelete = &Operation{
 }
 
 var CCCallbacksSchedule = &Operation{
-	Area: "cc", Group: "callbacks", Command: "schedule",
+	ID: "CCCallbacksSchedule", Area: "cc", Group: "callbacks", Command: "schedule",
 	Summary:     "Schedule a Callback",
 	Description: "Creates a new callback request for a customer. Authorization requires the cjp:user scope. The callback default endpoint (EP) and default ANI must be configured as mandatory settings to successfully make API calls.",
 	Method:      "POST", Path: "/v1/callbacks/organization/{orgid}/scheduled-callback", Host: HostCC,
@@ -5413,7 +5504,7 @@ var CCCallbacksSchedule = &Operation{
 }
 
 var CCCallbacksGetScheduled = &Operation{
-	Area: "cc", Group: "callbacks", Command: "get-scheduled",
+	ID: "CCCallbacksGetScheduled", Area: "cc", Group: "callbacks", Command: "get-scheduled",
 	Summary:     "Get scheduled callbacks",
 	Description: "Allows the user to list scheduled callbacks for a given customer number or assignee agent, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
 	Method:      "GET", Path: "/v1/callbacks/organization/{orgid}/scheduled-callback", Host: HostCC,
@@ -5430,7 +5521,7 @@ var CCCallbacksGetScheduled = &Operation{
 }
 
 var CCCallbacksGetScheduledId = &Operation{
-	Area: "cc", Group: "callbacks", Command: "get-scheduled-id",
+	ID: "CCCallbacksGetScheduledId", Area: "cc", Group: "callbacks", Command: "get-scheduled-id",
 	Summary:     "Get scheduled callback by Id",
 	Description: "Retrieve an existing scheduled callback by Id, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
 	Method:      "GET", Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}", Host: HostCC,
@@ -5441,7 +5532,7 @@ var CCCallbacksGetScheduledId = &Operation{
 }
 
 var CCCallbacksUpdateScheduledId = &Operation{
-	Area: "cc", Group: "callbacks", Command: "update-scheduled-id",
+	ID: "CCCallbacksUpdateScheduledId", Area: "cc", Group: "callbacks", Command: "update-scheduled-id",
 	Summary:     "Update scheduled callback by Id",
 	Description: "Update an existing scheduled callback by Id,those whose scheduled trigger time has already passed cannot be updated. Requires 'cjp:user' scope for authorization.",
 	Method:      "PUT", Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}", Host: HostCC,
@@ -5465,7 +5556,7 @@ var CCCallbacksUpdateScheduledId = &Operation{
 }
 
 var CCCallbacksDeleteScheduledId = &Operation{
-	Area: "cc", Group: "callbacks", Command: "delete-scheduled-id",
+	ID: "CCCallbacksDeleteScheduledId", Area: "cc", Group: "callbacks", Command: "delete-scheduled-id",
 	Summary:     "Delete scheduled callback by Id",
 	Description: "Delete an existing scheduled callback by Id, those whose scheduled trigger time has already passed cannot be deleted. Requires 'cjp:user' scope for authorization.",
 	Method:      "DELETE", Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}", Host: HostCC,
@@ -5476,7 +5567,7 @@ var CCCallbacksDeleteScheduledId = &Operation{
 }
 
 var CCAiFeatureGet = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "get",
+	ID: "CCAiFeatureGet", Area: "cc", Group: "ai-feature", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific AI Feature resource by ID",
 	Description: "Retrieve an existing AI Feature resource by ID in a given organization.",
@@ -5488,7 +5579,7 @@ var CCAiFeatureGet = &Operation{
 }
 
 var CCAiFeaturePatch = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "patch",
+	ID: "CCAiFeaturePatch", Area: "cc", Group: "ai-feature", Command: "patch",
 	Aliases:     []string{"patch-id"},
 	Summary:     "Partially update AI Feature resource by ID",
 	Description: "Partially update AI Feature resource by ID in a given organization.",
@@ -5501,7 +5592,7 @@ var CCAiFeaturePatch = &Operation{
 }
 
 var CCAiFeatureList = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "list",
+	ID: "CCAiFeatureList", Area: "cc", Group: "ai-feature", Command: "list",
 	Summary:     "List AI Feature resource(s)",
 	Description: "Retrieve a list of AI Feature resource(s) in a given organization.Only one entry per organization can exist for AI Feature resource.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/ai-feature", Host: HostCC,
@@ -5516,7 +5607,7 @@ var CCAiFeatureList = &Operation{
 }
 
 var CCAiFeatureCreateQuestionMappedAutocsat = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "create-question-mapped-autocsat",
+	ID: "CCAiFeatureCreateQuestionMappedAutocsat", Area: "cc", Group: "ai-feature", Command: "create-question-mapped-autocsat",
 	Summary:     "Create a new Question mapped to AutoCSAT",
 	Description: "Create a new Auto CSAT mapped Question in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/ai-feature/auto-csat/question", Host: HostCC,
@@ -5535,7 +5626,7 @@ var CCAiFeatureCreateQuestionMappedAutocsat = &Operation{
 }
 
 var CCAiFeatureBulkSaveQuestionMappedAutocsat = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "bulk-save-question-mapped-autocsat",
+	ID: "CCAiFeatureBulkSaveQuestionMappedAutocsat", Area: "cc", Group: "ai-feature", Command: "bulk-save-question-mapped-autocsat",
 	Summary:     "Bulk save Question mapped to AutoCSAT",
 	Description: "Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/ai-feature/auto-csat/question/bulk", Host: HostCC,
@@ -5546,7 +5637,7 @@ var CCAiFeatureBulkSaveQuestionMappedAutocsat = &Operation{
 }
 
 var CCAiFeatureGetQuestionMappedAutocsatId = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "get-question-mapped-autocsat-id",
+	ID: "CCAiFeatureGetQuestionMappedAutocsatId", Area: "cc", Group: "ai-feature", Command: "get-question-mapped-autocsat-id",
 	Summary:     "Get specific Question mapped to AutoCSAT by ID",
 	Description: "Retrieve an existing Auto CSAT mapped Question by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/ai-feature/auto-csat/question/{id}", Host: HostCC,
@@ -5557,7 +5648,7 @@ var CCAiFeatureGetQuestionMappedAutocsatId = &Operation{
 }
 
 var CCAiFeatureDeleteQuestionMappedAutocsatId = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "delete-question-mapped-autocsat-id",
+	ID: "CCAiFeatureDeleteQuestionMappedAutocsatId", Area: "cc", Group: "ai-feature", Command: "delete-question-mapped-autocsat-id",
 	Summary:     "Delete specific Question mapped to AutoCSAT by ID",
 	Description: "Delete an existing Auto CSAT mapped Question by ID in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/ai-feature/auto-csat/question/{id}", Host: HostCC,
@@ -5568,7 +5659,7 @@ var CCAiFeatureDeleteQuestionMappedAutocsatId = &Operation{
 }
 
 var CCAiFeatureListQuestionMappedAutocsat = &Operation{
-	Area: "cc", Group: "ai-feature", Command: "list-question-mapped-autocsat",
+	ID: "CCAiFeatureListQuestionMappedAutocsat", Area: "cc", Group: "ai-feature", Command: "list-question-mapped-autocsat",
 	Summary:     "List Question mapped to AutoCSAT(s)",
 	Description: "Retrieve a list of Auto CSAT mapped Question(s) in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/ai-feature/auto-csat/question", Host: HostCC,
@@ -5583,7 +5674,7 @@ var CCAiFeatureListQuestionMappedAutocsat = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesCreate = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "create",
+	ID: "CCAgentPersonalGreetingFilesCreate", Area: "cc", Group: "agent-personal-greeting-files", Command: "create",
 	Aliases:     []string{"create-v2-api"},
 	Summary:     "Create a new Greeting File",
 	Description: "Create a new Greeting File in a given organization.",
@@ -5595,7 +5686,7 @@ var CCAgentPersonalGreetingFilesCreate = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesDeleteReferences = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "delete-references",
+	ID: "CCAgentPersonalGreetingFilesDeleteReferences", Area: "cc", Group: "agent-personal-greeting-files", Command: "delete-references",
 	Aliases:     []string{"delete-references-1"},
 	Summary:     "Delete references of an agent from greeting files",
 	Description: "Removes all references of the specified agent (ciUserId) from greeting files in the given organization. Typically invoked when an agent is deleted or unassigned. in a given organization.",
@@ -5607,7 +5698,7 @@ var CCAgentPersonalGreetingFilesDeleteReferences = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesGet = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "get",
+	ID: "CCAgentPersonalGreetingFilesGet", Area: "cc", Group: "agent-personal-greeting-files", Command: "get",
 	Aliases:     []string{"get-id", "get-id-v2-api"},
 	Summary:     "Get specific Greeting File by ID",
 	Description: "Retrieve an existing Greeting File by ID in a given organization.",
@@ -5620,7 +5711,7 @@ var CCAgentPersonalGreetingFilesGet = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesUpdate = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "update",
+	ID: "CCAgentPersonalGreetingFilesUpdate", Area: "cc", Group: "agent-personal-greeting-files", Command: "update",
 	Aliases:     []string{"update-id", "update-id-v2-api"},
 	Summary:     "Update specific Greeting File by ID",
 	Description: "Update an existing Greeting File by ID in a given organization.",
@@ -5633,7 +5724,7 @@ var CCAgentPersonalGreetingFilesUpdate = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesDelete = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "delete",
+	ID: "CCAgentPersonalGreetingFilesDelete", Area: "cc", Group: "agent-personal-greeting-files", Command: "delete",
 	Aliases:     []string{"delete-id", "delete-id-v2-api"},
 	Summary:     "Delete specific Greeting File by ID",
 	Description: "Delete an existing Greeting File by ID in a given organization.",
@@ -5645,7 +5736,7 @@ var CCAgentPersonalGreetingFilesDelete = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesPatch = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "patch",
+	ID: "CCAgentPersonalGreetingFilesPatch", Area: "cc", Group: "agent-personal-greeting-files", Command: "patch",
 	Aliases:     []string{"patch-id", "patch-id-v2-api"},
 	Summary:     "Partially update Greeting File by ID",
 	Description: "Partially update Greeting File by ID in a given organization.",
@@ -5661,7 +5752,7 @@ var CCAgentPersonalGreetingFilesPatch = &Operation{
 }
 
 var CCAgentPersonalGreetingFilesList = &Operation{
-	Area: "cc", Group: "agent-personal-greeting-files", Command: "list",
+	ID: "CCAgentPersonalGreetingFilesList", Area: "cc", Group: "agent-personal-greeting-files", Command: "list",
 	Summary:     "List Greeting Files",
 	Description: "Retrieve a list of Greeting Files in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v3/agent-personal-greeting", Host: HostCC,
@@ -5678,7 +5769,7 @@ var CCAgentPersonalGreetingFilesList = &Operation{
 }
 
 var CCJourneyCustomerIdentificationDeletePersonId = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "delete-person-id",
+	ID: "CCJourneyCustomerIdentificationDeletePersonId", Area: "cc", Group: "journey-customer-identification", Command: "delete-person-id",
 	Summary:     "Delete specific Person by id",
 	Description: "Delete Person Details searched by Person id in JDS. \n\nRole and Scope: Requires id full admin or any role with cjp:config_write scope",
 	Method:      "DELETE", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -5689,7 +5780,7 @@ var CCJourneyCustomerIdentificationDeletePersonId = &Operation{
 }
 
 var CCJourneyCustomerIdentificationCreateRemoveReplacePerson = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "create-remove-replace-person",
+	ID: "CCJourneyCustomerIdentificationCreateRemoveReplacePerson", Area: "cc", Group: "journey-customer-identification", Command: "create-remove-replace-person",
 	Summary:     "Add/Remove/Replace details of a Person",
 	Description: "The Patch Api can be used to add/remove identities (email, phone, customerId, temporaryId, and socialId) or replace firstName and lastName of an Individual. We support only add, replace, and remove operations. \n\nFor more information on Patch Requests, see this [JSON PATCH guide](https://jsonpatch.com). \n\nRole and Scope: Requires id full admin role with cjp:config_write or any role with cjp:user or cjp:config_write scope.",
 	Method:      "PATCH", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -5701,7 +5792,7 @@ var CCJourneyCustomerIdentificationCreateRemoveReplacePerson = &Operation{
 }
 
 var CCJourneyCustomerIdentificationCreateOneMoreIdentitiesPerson = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "create-one-more-identities-person",
+	ID: "CCJourneyCustomerIdentificationCreateOneMoreIdentitiesPerson", Area: "cc", Group: "journey-customer-identification", Command: "create-one-more-identities-person",
 	Summary:     "Add one/more Identities to a person",
 	Description: "This Patch Api can be used to add identities(email, phone, customerId) to a person.\n\nRole and Scope: Requires id full admin or any role with cjp:config_write scope.",
 	Method:      "PATCH", Path: "/admin/v1/api/person/add-identities/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -5718,7 +5809,7 @@ var CCJourneyCustomerIdentificationCreateOneMoreIdentitiesPerson = &Operation{
 }
 
 var CCJourneyCustomerIdentificationDeleteOneMoreIdentitiesPerson = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "delete-one-more-identities-person",
+	ID: "CCJourneyCustomerIdentificationDeleteOneMoreIdentitiesPerson", Area: "cc", Group: "journey-customer-identification", Command: "delete-one-more-identities-person",
 	Summary:     "Remove one/more Identities from a person",
 	Description: "This Patch Api can be used to remove identities(email, phone, customerId) from a person.\n\nRole and Scope: Requires id full admin or any role with cjp:config_write scope.",
 	Method:      "PATCH", Path: "/admin/v1/api/person/remove-identities/workspace-id/{workspaceId}/person-id/{personId}", Host: HostCC,
@@ -5730,7 +5821,7 @@ var CCJourneyCustomerIdentificationDeleteOneMoreIdentitiesPerson = &Operation{
 }
 
 var CCJourneyCustomerIdentificationGetAllPerson = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "get-all-person",
+	ID: "CCJourneyCustomerIdentificationGetAllPerson", Area: "cc", Group: "journey-customer-identification", Command: "get-all-person",
 	Summary:     "Get all or a specific Person Details",
 	Description: "Get Person Details in JDS. If personId is provided by query parameter, this returns the Person whose personId matches the parameter.\nIf not, this will return ALL the Persons within the organization and workspace. \n\nRole and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or it requires any role with cjp:user, cjp:config_write  or cjp:config_read scope.",
 	Method:      "GET", Path: "/admin/v1/api/person/workspace-id/{workspaceId}", Host: HostCC,
@@ -5747,7 +5838,7 @@ var CCJourneyCustomerIdentificationGetAllPerson = &Operation{
 }
 
 var CCJourneyCustomerIdentificationCreatePerson = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "create-person",
+	ID: "CCJourneyCustomerIdentificationCreatePerson", Area: "cc", Group: "journey-customer-identification", Command: "create-person",
 	Summary:     "Create a Person",
 	Description: "This API helps to create a Person in JDS.\n\nRole and Scope: Requires id full admin OR any role with cjp:config_write scope.",
 	Method:      "POST", Path: "/admin/v1/api/person/workspace-id/{workspaceId}", Host: HostCC,
@@ -5765,7 +5856,7 @@ var CCJourneyCustomerIdentificationCreatePerson = &Operation{
 }
 
 var CCJourneyCustomerIdentificationMergesIdentitiesPrimaryIdentity = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "merges-identities-primary-identity",
+	ID: "CCJourneyCustomerIdentificationMergesIdentitiesPrimaryIdentity", Area: "cc", Group: "journey-customer-identification", Command: "merges-identities-primary-identity",
 	Summary:     "Merges Identities to a Primary Identity",
 	Description: "Merges one/more Identities to a **Primary** Individual in JDS. \n\nRole and Scope: Requires id full admin role with cjp:config_write scope.",
 	Method:      "POST", Path: "/admin/v1/api/person/merge/workspace-id/{workspaceId}/primary-person-id/{primaryPersonId}", Host: HostCC,
@@ -5779,7 +5870,7 @@ var CCJourneyCustomerIdentificationMergesIdentitiesPrimaryIdentity = &Operation{
 }
 
 var CCJourneyCustomerIdentificationCreatesMergesAliasesIndividualJds = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "creates-merges-aliases-individual-jds",
+	ID: "CCJourneyCustomerIdentificationCreatesMergesAliasesIndividualJds", Area: "cc", Group: "journey-customer-identification", Command: "creates-merges-aliases-individual-jds",
 	Summary:     "Creates or merges aliases to an Individual in JDS",
 	Description: "This API enables you to consolidate multiple customer identifiers into a single, unified profile effortlessly. By integrating it with your Flow Designer, you can automatically retrieve and merge customer identifiers from various systems, such as your CRM or other third-party tools. This integration ensures all relevant data is consolidated into one profile, enhancing personalization and streamlining customer interactions. \n\n**Adding a New Alias** - To associate an additional alias (e.g., a new phone number) with an existing customer profile, simply update the API with the new identifier while leaving the existing identifiers intact. The system will automatically merge the new alias into the current profile, maintaining a comprehensive view of the customer.\n\n**Removing an Alias** - If you need to delete an alias from a customer’s profile, set the override flag to true in your API request. Include only the identifiers you wish to retain in the payload. The system will remove any identifiers not included in the updated payload, keeping the profile streamlined and up-to-date.\n\nRole and Scope: Requires id full admin OR any role with cjp:config_write scope.",
 	Method:      "POST", Path: "/admin/v1/api/person/merge-identities/workspace-id/{workspaceId}", Host: HostCC,
@@ -5799,7 +5890,7 @@ var CCJourneyCustomerIdentificationCreatesMergesAliasesIndividualJds = &Operatio
 }
 
 var CCJourneyCustomerIdentificationSearchIdentityAliases = &Operation{
-	Area: "cc", Group: "journey-customer-identification", Command: "search-identity-aliases",
+	ID: "CCJourneyCustomerIdentificationSearchIdentityAliases", Area: "cc", Group: "journey-customer-identification", Command: "search-identity-aliases",
 	Summary:     "Search for an Identity via aliases",
 	Description: "Get one or more Person Details searched by aliases in JDS. Multiple aliases should be separated by a comma.\n\nRole and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or it requires any role with cjp:user, cjp:config_write  or cjp:config_read scope.",
 	Method:      "GET", Path: "/admin/v1/api/person/workspace-id/{workspaceId}/aliases/{aliases}", Host: HostCC,
@@ -5815,7 +5906,7 @@ var CCJourneyCustomerIdentificationSearchIdentityAliases = &Operation{
 }
 
 var CCJourneyDataIngestionEventPosting = &Operation{
-	Area: "cc", Group: "journey-data-ingestion", Command: "event-posting",
+	ID: "CCJourneyDataIngestionEventPosting", Area: "cc", Group: "journey-data-ingestion", Command: "event-posting",
 	Summary:     "Journey Event Posting",
 	Description: "Journey Event Posting API accepts events that describe what occurred, when, and by whom on every interaction across touch points and applications. Data Ingestion is based on Cloud Events specification for describing event data in a common way. API accepts data in the form of POST with support for Header based authorization. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or any role with cjp:config_write scope.",
 	Method:      "POST", Path: "/publish/v1/api/event", Host: HostCC,
@@ -5826,7 +5917,7 @@ var CCJourneyDataIngestionEventPosting = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateId = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-template-searched-template-id",
+	ID: "CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateId", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-template-searched-template-id",
 	Summary:     "Get A specific Template searched by template id",
 	Description: "Get Template details by template Id in JDS. \n\nRole and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_write scope.",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -5837,7 +5928,7 @@ var CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateId = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsUpdateProfileviewtemplate = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "update-profileviewtemplate",
+	ID: "CCJourneyProfileCreationInsightsUpdateProfileviewtemplate", Area: "cc", Group: "journey-profile-creation-insights", Command: "update-profileviewtemplate",
 	Summary:     "Update existing ProfileViewTemplate",
 	Description: "Update existing Profile View Template in JDS. \n\nRole and Scope: Requires id full admin or any role with cjp:config_write scope.",
 	Method:      "PUT", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -5849,7 +5940,7 @@ var CCJourneyProfileCreationInsightsUpdateProfileviewtemplate = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsDeleteTemplateTemplateId = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "delete-template-template-id",
+	ID: "CCJourneyProfileCreationInsightsDeleteTemplateTemplateId", Area: "cc", Group: "journey-profile-creation-insights", Command: "delete-template-template-id",
 	Summary:     "Delete Template by template Id",
 	Description: "Delete Template By template id in JDS. \n\nRole and Scope: Requires id full admin or any role with cjp:config_write scope.",
 	Method:      "DELETE", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -5860,7 +5951,7 @@ var CCJourneyProfileCreationInsightsDeleteTemplateTemplateId = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetAllTemplate = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-all-template",
+	ID: "CCJourneyProfileCreationInsightsGetAllTemplate", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-all-template",
 	Summary:     "Get All Template Details",
 	Description: "Get Template details by Organization Id and workspaceId in JDS. \n\nRole and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}", Host: HostCC,
@@ -5876,7 +5967,7 @@ var CCJourneyProfileCreationInsightsGetAllTemplate = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsCreateTemplate = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "create-template",
+	ID: "CCJourneyProfileCreationInsightsCreateTemplate", Area: "cc", Group: "journey-profile-creation-insights", Command: "create-template",
 	Summary:     "Create Template",
 	Description: "Creates a Profile View Template in JDS. \n\n **Role and Scope**: Requires id full admin or any role with cjp:config_write scope.\n\n **Template with single rule**: \n  ```\n  {\n    \"name\": \"ClosedCaller\",\n    \"attributes\": [\n      {\n        \"version\": \"0.1\",\n        \"event\": \"Closed Queue\",\n        \"metaDataType\": \"string\",\n        \"metaData\": \"category\",\n        \"limit\": 100,\n        \"displayName\": \"ClosedCaller\",\n        \"lookBackDurationType\": \"minutes\",\n        \"lookBackPeriod\": 5,\n        \"aggregationMode\": \"Count\",\n        \"rules\": {\n          \"logic\": \"SINGLE\",\n          \"condition\": \"Closed Queue,category,string,Value EQ Closed\"\n        },\n        \"widgetAttributes\": {\n          \"type\": \"table\"\n        },\n        \"verbose\": false\n      }\n    ]\n  }\n ```\n\n\n **Example Event:** \n  ```\n  {\n    \"id\": \"{{$guid}}\",\n    \"specversion\": \"1.0\",\n    \"type\": \"Closed Queue\",\n    \"source\": \"Voice%20Contact\",\n    \"identity\": \"jes@gmail.com\",\n    \"identitytype\": \"email\",\n    \"datacontenttype\": \"application/json\",\n    \"data\": {\n      \"Email\": \"jes@gmail.com\",\n      \"CallsQueuedNow\": \"Use GetQueueInfoNode Values\",\n      \"OldestCallTime\": \"Use GetQueueInfoNode Values\",\n      \"LoggedOnAgents\": \"Use GetQueueInfoNode Values\",\n      \"PIQ\": \"Use GetQueueInfoNode Values\",\n      \"EWT\": \"Use GetQueueInfoNode Values\",\n      \"category\": \"Closed\",\n      \"origin\": \"Past Due - 1st Notification\",\n      \"channelType\": \"QueueCall\",\n      \"channelBreakout\": \"voice\"\n    }\n  }\n  ```\n\n\n **Key components of the rule:** \n   * template.event: This refers to the specific event type you want to match (e.g., \"Closed Queue\").\n   * event.type: This refers to the actual event type present in the event data.\n   * event.data: This is the dictionary/object containing all the metadata associated with the event.\n   * template.rules.condition - category: This is the specific metadata field you want to compare within event.data.\n   * template.rules.condition - string: This indicates that the category metadata is a string type.\n   * template.rules.condition - Value EQ Closed: This defines the condition: the value of the category field (as a string) must be equal to \"Closed\".\n\n\n **Evaluation process:** \n  1. The rule checks if template.event matches the event.type in the incoming event.\n  2. If they match, the rule retrieves the value of the category field from event.data.\n  3. It then compares the value of category (treated as a string) to \"Closed\" using an equality operator (EQ).\n  4. If the values are equal, the condition evaluates to True and creates a progressive profile for the identity. Otherwise, it evaluates to False.\n  \n  The template has lookBackPeriod and lookBackDurationType which decide how long to look back for the calculation. In the above template, it fetches events triggered in the last 5 minutes and performs the aggregation mode on the data received from rules.\n  \n  * When the aggregation mode is Value, the profile result will have the value of the rule as the output.\n  * When the aggregation mode is Count, the profile will have the count of events with category closed in the past 5 minutes.\n  * When the aggregation mode is Distinct, the profile will have the value closed.\n  * When aggregation mode is Sum, the data type should be Integer or double and it will be the sum of all matching values in the last 5 minutes.\n  * When aggregation mode is Max, the data type should be Integer or double and it will be the max of all matching values in the last 5 minutes.\n  * When aggregation mode is Min, the data type should be Integer or double and it will be the min of all matching values in the last 5 minutes.\n  * When aggregation mode is Average, the data type should be Integer or double and it will be the average of all matching values in the last 5 minutes.\n\n\n **Example template with multiple rules :** \n  ```\n1. {\n2.   \"name\": \"sample-template-multi-condition\",\n3.   \"attributes\": [\n4.     {\n5.       \"version\": \"0.1\",\n6.       \"event\": \"Quote\",\n7.       \"metaDataType\": \"string\",\n8.       \"metaData\": \"email\",\n9.       \"limit\": 1,\n10.      \"displayName\": \"Email\",\n11.      \"lookBackDurationType\": \"days\",\n12.      \"lookBackPeriod\": 50,\n13.      \"aggregationMode\": \"Value\",\n14.      \"rules\": {\n15.        \"args\": [\n16.          \"Quote,isEV,string,Value EQ Yes\",\n17.          \"Quote,isEV,string,Value EQ No\",\n18.          {\n19.            \"args\": [\n20.              \"Quote,make,string,Value EQ Honda\",\n21.              \"Quote,model,string,Value EQ CR-V\"\n22.            ],\n23.            \"logic\": \"AND\"\n24.          }\n25.        ],\n26.        \"logic\": \"OR\"\n27.      },\n28.      \"widgetAttributes\": {\n29.        \"type\": \"table\"\n30.      },\n31.      \"verbose\": false\n32.    }\n33.  ]\n34. }\n  ```\n1. In the above template we have multiple rules.\n2. The arguments in line 20 and 21 are evaluated with logical AND condition.\n3. Then arguments in line 16 and 17 along with the result for 20 AND 21 are evaluated with logical OR (line 26).\n",
 	Method:      "POST", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}", Host: HostCC,
@@ -5887,7 +5978,7 @@ var CCJourneyProfileCreationInsightsCreateTemplate = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateName = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-template-searched-template-name",
+	ID: "CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-template-searched-template-name",
 	Summary:     "Get A specific Template searched by template name",
 	Description: "Get Template details by template Name in JDS. \n\nRole and Scope: Requires id full admin role with cjp:config_write or cjp:config_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/admin/v1/api/profile-view-template/workspace-id/{workspaceId}/template-name/{templateName}", Host: HostCC,
@@ -5898,7 +5989,7 @@ var CCJourneyProfileCreationInsightsGetTemplateSearchedTemplateName = &Operation
 }
 
 var CCJourneyProfileCreationInsightsGetHistoricViewTemplateName = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name",
+	ID: "CCJourneyProfileCreationInsightsGetHistoricViewTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name",
 	Summary:     "Historic Progressive Profile View by Template Name",
 	Description: "Get Historic Progressive Profile View in JDS. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}", Host: HostCC,
@@ -5910,7 +6001,7 @@ var CCJourneyProfileCreationInsightsGetHistoricViewTemplateName = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetHistoricView = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view",
+	ID: "CCJourneyProfileCreationInsightsGetHistoricView", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view",
 	Summary:     "Historic Progressive Profile View",
 	Description: "Get Historic Progressive Profile View in JDS. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-id/{templateId}", Host: HostCC,
@@ -5922,7 +6013,7 @@ var CCJourneyProfileCreationInsightsGetHistoricView = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetHistoricViewTemplateName2 = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name-2",
+	ID: "CCJourneyProfileCreationInsightsGetHistoricViewTemplateName2", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name-2",
 	Summary:     "Historic Progressive Profile View By Template Name",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}", Host: HostCC,
@@ -5934,7 +6025,7 @@ var CCJourneyProfileCreationInsightsGetHistoricViewTemplateName2 = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetHistoricViewTemplateId = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-id",
+	ID: "CCJourneyProfileCreationInsightsGetHistoricViewTemplateId", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-id",
 	Summary:     "Historic Progressive Profile View By Template Id",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}", Host: HostCC,
@@ -5946,7 +6037,7 @@ var CCJourneyProfileCreationInsightsGetHistoricViewTemplateId = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsStreamViewsTemplateName = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-views-template-name",
+	ID: "CCJourneyProfileCreationInsightsStreamViewsTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-views-template-name",
 	Summary:     "Stream Progressive profile Views By Template Name",
 	Description: "Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}", Host: HostCC,
@@ -5958,7 +6049,7 @@ var CCJourneyProfileCreationInsightsStreamViewsTemplateName = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsStreamViewsTemplateId = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-views-template-id",
+	ID: "CCJourneyProfileCreationInsightsStreamViewsTemplateId", Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-views-template-id",
 	Summary:     "Stream Progressive profile Views By Template Id",
 	Description: "Real-time streaming enables API consumers to listen for Progressive profile Views as it created/updated as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/progressive-profile-view/stream/workspace-id/{workspaceId}/identity/{identity}/template-id/{templateId}", Host: HostCC,
@@ -5970,7 +6061,7 @@ var CCJourneyProfileCreationInsightsStreamViewsTemplateId = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsGetHistoricEvents = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-events",
+	ID: "CCJourneyProfileCreationInsightsGetHistoricEvents", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-events",
 	Summary:     "Historic Journey Events",
 	Description: "Getting Historic Customer Journey Events from Pinot. These events are append-only, immutable data ledger that can be queried to retrieve snapshot of latest events that moment in time or historically to play-back events as they occurred to understand or analyze Journeys using ML/AI models. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/events/workspace-id/{workspaceId}", Host: HostCC,
@@ -5988,7 +6079,7 @@ var CCJourneyProfileCreationInsightsGetHistoricEvents = &Operation{
 }
 
 var CCJourneyProfileCreationInsightsStreamEventsIdentity = &Operation{
-	Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-events-identity",
+	ID: "CCJourneyProfileCreationInsightsStreamEventsIdentity", Area: "cc", Group: "journey-profile-creation-insights", Command: "stream-events-identity",
 	Summary:     "Stream Events By Identity",
 	Description: "Real-time streaming enables API consumers to listen for events as it arrives as part of the Journey; these may be transformed, value-added/enriched, and ready to be consumed or forwarded to another destination. Optionally accepts filter and data parameters slice/dice further. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/v1/api/events/stream/workspace-id/{workspaceId}/identity/{identity}", Host: HostCC,
@@ -6001,7 +6092,7 @@ var CCJourneyProfileCreationInsightsStreamEventsIdentity = &Operation{
 }
 
 var CCJourneySubscriptionGetWxcc = &Operation{
-	Area: "cc", Group: "journey-subscription", Command: "get-wxcc",
+	ID: "CCJourneySubscriptionGetWxcc", Area: "cc", Group: "journey-subscription", Command: "get-wxcc",
 	Summary:     "Get WXCC Subscription",
 	Description: "Get WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -6011,7 +6102,7 @@ var CCJourneySubscriptionGetWxcc = &Operation{
 }
 
 var CCJourneySubscriptionCreateWxcc = &Operation{
-	Area: "cc", Group: "journey-subscription", Command: "create-wxcc",
+	ID: "CCJourneySubscriptionCreateWxcc", Area: "cc", Group: "journey-subscription", Command: "create-wxcc",
 	Summary:     "Create WXCC Subscription",
 	Description: "Create WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -6021,7 +6112,7 @@ var CCJourneySubscriptionCreateWxcc = &Operation{
 }
 
 var CCJourneySubscriptionDeleteWxcc = &Operation{
-	Area: "cc", Group: "journey-subscription", Command: "delete-wxcc",
+	ID: "CCJourneySubscriptionDeleteWxcc", Area: "cc", Group: "journey-subscription", Command: "delete-wxcc",
 	Summary:     "Delete WXCC Subscription",
 	Description: "Delete WXCC Subscription in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "DELETE", Path: "/admin/v1/api/wxcc-subscription/workspace-id/{workspaceId}", Host: HostCC,
@@ -6031,7 +6122,7 @@ var CCJourneySubscriptionDeleteWxcc = &Operation{
 }
 
 var CCJourneyTriggerActionsGetAll = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "get-all",
+	ID: "CCJourneyTriggerActionsGetAll", Area: "cc", Group: "journey-trigger-actions", Command: "get-all",
 	Summary:     "Get all Journey Actions",
 	Description: "Get all Journey Actions in JDS. \n\nRole and Scope: Requires id full admin or any role with cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}", Host: HostCC,
@@ -6046,7 +6137,7 @@ var CCJourneyTriggerActionsGetAll = &Operation{
 }
 
 var CCJourneyTriggerActionsGetAllTemplate = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "get-all-template",
+	ID: "CCJourneyTriggerActionsGetAllTemplate", Area: "cc", Group: "journey-trigger-actions", Command: "get-all-template",
 	Summary:     "Get all Journey Actions for a template",
 	Description: "Get all Journey Actions for a template in JDS. \n\nRole and Scope: It requires id full admin or any role with cjp:config_read or cjp:config_write scope.",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -6057,7 +6148,7 @@ var CCJourneyTriggerActionsGetAllTemplate = &Operation{
 }
 
 var CCJourneyTriggerActionsCreate = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "create",
+	ID: "CCJourneyTriggerActionsCreate", Area: "cc", Group: "journey-trigger-actions", Command: "create",
 	Summary:     "Create a new  Journey Action",
 	Description: "Create a new Journey Action in JDS. \n\n **Role and Scope**: It requires id full admin or any role with cjp:config_write scope.\n\n **Sample Input for Creating new Journey action**: \n  ```\n  {\n    \"name\": \"Closed Queue Action\",\n    \"cooldownPeriodInMinutes\": 1,\n    \"rules\": {\n      \"logic\": \"SINGLE\",\n      \"condition\": \"Closed Queue,category,string,Value GTE 2\"\n    },\n    \"actionTriggers\": [\n      {\n        \"type\": \"Webhook\",\n        \"webhookURL\": \"https://hooks.us.webexconnect.io/events/6M347NJ6\",\n        \"attributes\": {\n          \"httpverb\": \"post\",\n          \"requestbody\": \"{\\\"SMS\\\":\\\"12263762551\\\",\\\"callID\\\":\\\"\\\",\\\"MessageToSend\\\":\\\"Hello there!\\\"}\"\n        }\n      }\n    ],\n    \"isActive\": true\n  }\n ```\nThe action trigger's evaluation process is predicated on the progressive profile that has been established. \nIn this specific action trigger, the rule assessment verifies whether the progressive profile value from the prior template evaluation was in excess of 2. \nIf this condition is met, the webhook is subsequently activated.\n\n\nPrior to rule evaluation for actions, several conditions must be satisfied. \nFirstly, the event associated with the template must align with the rule event, which, in this case, is 'Closed Queue'. \nSecondly, the metadata assigned to the template must correspond with the metadata set by the rules, which in this context, is 'category'. \nThirdly, the aggregation mode of the template must be equivalent to the rules' aggregation mode, which is 'value' in this instance. \nFinally, the operator of the template's aggregation mode must match those defined for 'value'. \nIn this scenario, it is 'GTE' (greater than or equal), which is an accepted value for 'value'.\n",
 	Method:      "POST", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}", Host: HostCC,
@@ -6069,7 +6160,7 @@ var CCJourneyTriggerActionsCreate = &Operation{
 }
 
 var CCJourneyTriggerActionsGetName = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "get-name",
+	ID: "CCJourneyTriggerActionsGetName", Area: "cc", Group: "journey-trigger-actions", Command: "get-name",
 	Summary:     "Get specific Journey Action By Name",
 	Description: "Get specific Journey Action By Name in JDS. \n\nRole and Scope:It requires id full admin or any role with cjp:config_read or cjp:config_write scope.",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-name/{actionName}", Host: HostCC,
@@ -6081,7 +6172,7 @@ var CCJourneyTriggerActionsGetName = &Operation{
 }
 
 var CCJourneyTriggerActionsGetActionid = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "get-actionid",
+	ID: "CCJourneyTriggerActionsGetActionid", Area: "cc", Group: "journey-trigger-actions", Command: "get-actionid",
 	Summary:     "Get specific Journey Action By ActionId",
 	Description: "Get specific Journey Action By ActionId in JDS. \n\nRole and Scope: It requires id full admin role with cjp:config_read or cjp:config_write scope.",
 	Method:      "GET", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -6093,7 +6184,7 @@ var CCJourneyTriggerActionsGetActionid = &Operation{
 }
 
 var CCJourneyTriggerActionsUpdate = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "update",
+	ID: "CCJourneyTriggerActionsUpdate", Area: "cc", Group: "journey-trigger-actions", Command: "update",
 	Summary:     "Update existing Journey Action",
 	Description: "Update existing Journey Action in JDS. \n\nRole and Scope: It requires id full admin or any role with cjp:config_write scope.",
 	Method:      "PUT", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -6106,7 +6197,7 @@ var CCJourneyTriggerActionsUpdate = &Operation{
 }
 
 var CCJourneyTriggerActionsDeleteConfigurationActionid = &Operation{
-	Area: "cc", Group: "journey-trigger-actions", Command: "delete-configuration-actionid",
+	ID: "CCJourneyTriggerActionsDeleteConfigurationActionid", Area: "cc", Group: "journey-trigger-actions", Command: "delete-configuration-actionid",
 	Summary:     "Delete Journey Action configuration By ActionId",
 	Description: "Delete Journey Action configuration By ActionId in JDS. \n\nRole and Scope: It requires id full admin role with cjp:config_write scope.",
 	Method:      "DELETE", Path: "/admin/v1/api/journey-actions/workspace-id/{workspaceId}/template-id/{templateId}/action-id/{actionId}", Host: HostCC,
@@ -6118,7 +6209,7 @@ var CCJourneyTriggerActionsDeleteConfigurationActionid = &Operation{
 }
 
 var CCJourneyWorkspaceManagementGet = &Operation{
-	Area: "cc", Group: "journey-workspace-management", Command: "get",
+	ID: "CCJourneyWorkspaceManagementGet", Area: "cc", Group: "journey-workspace-management", Command: "get",
 	Summary:     "Get Workspace",
 	Description: "Get workspace details. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -6128,7 +6219,7 @@ var CCJourneyWorkspaceManagementGet = &Operation{
 }
 
 var CCJourneyWorkspaceManagementUpdate = &Operation{
-	Area: "cc", Group: "journey-workspace-management", Command: "update",
+	ID: "CCJourneyWorkspaceManagementUpdate", Area: "cc", Group: "journey-workspace-management", Command: "update",
 	Summary:     "Update Workspace",
 	Description: "Update workspace by Id. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "PUT", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -6142,7 +6233,7 @@ var CCJourneyWorkspaceManagementUpdate = &Operation{
 }
 
 var CCJourneyWorkspaceManagementDelete = &Operation{
-	Area: "cc", Group: "journey-workspace-management", Command: "delete",
+	ID: "CCJourneyWorkspaceManagementDelete", Area: "cc", Group: "journey-workspace-management", Command: "delete",
 	Summary:     "Delete Workspace",
 	Description: "Delete Workspace By Id. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "DELETE", Path: "/admin/v1/api/workspace/workspace-id/{workspaceId}", Host: HostCC,
@@ -6152,7 +6243,7 @@ var CCJourneyWorkspaceManagementDelete = &Operation{
 }
 
 var CCJourneyWorkspaceManagementGetAll = &Operation{
-	Area: "cc", Group: "journey-workspace-management", Command: "get-all",
+	ID: "CCJourneyWorkspaceManagementGetAll", Area: "cc", Group: "journey-workspace-management", Command: "get-all",
 	Summary:     "Get All Workspaces",
 	Description: "Get All Workspaces. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Path: "/admin/v1/api/workspace", Host: HostCC,
@@ -6167,7 +6258,7 @@ var CCJourneyWorkspaceManagementGetAll = &Operation{
 }
 
 var CCJourneyWorkspaceManagementCreate = &Operation{
-	Area: "cc", Group: "journey-workspace-management", Command: "create",
+	ID: "CCJourneyWorkspaceManagementCreate", Area: "cc", Group: "journey-workspace-management", Command: "create",
 	Summary:     "Create Workspace",
 	Description: "Create Workspace in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope.It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Path: "/admin/v1/api/workspace", Host: HostCC,
@@ -6178,7 +6269,7 @@ var CCJourneyWorkspaceManagementCreate = &Operation{
 }
 
 var CCDncManagementCreatePhoneNumberList = &Operation{
-	Area: "cc", Group: "dnc-management", Command: "create-phone-number-list",
+	ID: "CCDncManagementCreatePhoneNumberList", Area: "cc", Group: "dnc-management", Command: "create-phone-number-list",
 	Summary:     "Add Phone Number to DNC List",
 	Description: "Adds a phone number to the specified Do Not Contact (DNC) list. This operation helps ensure compliance with applicable rules & regulations by preventing outbound calls to specific numbers.\n\n**Note:** Phone numbers must be in E.164 format (e.g., +1234567890). Duplicate entries will be rejected with a 409 error.",
 	Method:      "POST", Path: "/v3/campaign-management/dncList/{dncListName}/phoneNumber", Host: HostCC,
@@ -6193,7 +6284,7 @@ var CCDncManagementCreatePhoneNumberList = &Operation{
 }
 
 var CCDncManagementGetPhoneNumberList = &Operation{
-	Area: "cc", Group: "dnc-management", Command: "get-phone-number-list",
+	ID: "CCDncManagementGetPhoneNumberList", Area: "cc", Group: "dnc-management", Command: "get-phone-number-list",
 	Summary:     "Get Phone Number from DNC List",
 	Description: "Retrieves details of a specific phone number from the specified Do Not Contact (DNC) list. This operation allows you to check if a number is present in the list and view associated metadata.\n\n**Note:** Phone numbers must be URL-encoded and in E.164 format (e.g., %2B1234567890 for +1234567890).",
 	Method:      "GET", Path: "/v3/campaign-management/dncList/{dncListName}/phoneNumber/{phoneNumber}", Host: HostCC,
@@ -6204,7 +6295,7 @@ var CCDncManagementGetPhoneNumberList = &Operation{
 }
 
 var CCDncManagementDeletePhoneNumberList = &Operation{
-	Area: "cc", Group: "dnc-management", Command: "delete-phone-number-list",
+	ID: "CCDncManagementDeletePhoneNumberList", Area: "cc", Group: "dnc-management", Command: "delete-phone-number-list",
 	Summary:     "Remove Phone Number from DNC List",
 	Description: "Removes a phone number from the specified Do Not Contact (DNC) list. This operation allows administrators to remove numbers that should no longer be blocked from receiving calls.\n\n**Note:** Phone numbers must be URL-encoded and in E.164 format (e.g., +1234567890 for +1234567890). If the number doesn't exist in the list, a 404 error will be returned.",
 	Method:      "DELETE", Path: "/v3/campaign-management/dncList/{dncListName}/phoneNumber/{phoneNumber}", Host: HostCC,
@@ -6215,7 +6306,7 @@ var CCDncManagementDeletePhoneNumberList = &Operation{
 }
 
 var CCResourceCollectionCreate = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "create",
+	ID: "CCResourceCollectionCreate", Area: "cc", Group: "resource-collection", Command: "create",
 	Summary:     "Create a new Resource Collection",
 	Description: "Create a new resource collection in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/resource-collection", Host: HostCC,
@@ -6226,7 +6317,7 @@ var CCResourceCollectionCreate = &Operation{
 }
 
 var CCResourceCollectionBulkPartialUpdate = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "bulk-partial-update",
+	ID: "CCResourceCollectionBulkPartialUpdate", Area: "cc", Group: "resource-collection", Command: "bulk-partial-update",
 	Summary:     "Bulk partial update Resource Collections",
 	Description: "Update some or all properties for resource collections in bulk for a given organization.",
 	Method:      "PATCH", Path: "/organization/{orgid}/resource-collection/bulk", Host: HostCC,
@@ -6237,7 +6328,7 @@ var CCResourceCollectionBulkPartialUpdate = &Operation{
 }
 
 var CCResourceCollectionUpdateDefault = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "update-default",
+	ID: "CCResourceCollectionUpdateDefault", Area: "cc", Group: "resource-collection", Command: "update-default",
 	Summary:     "Update resource with default resource collection",
 	Description: "Update resource with default resource collection. Ensure resource should not associated to any resource collection and resource should not be updated and not older than 15 min. Only single Resource Collection is allowed to update.",
 	Method:      "POST", Path: "/organization/{orgid}/resource-collection/update-resource", Host: HostCC,
@@ -6248,7 +6339,7 @@ var CCResourceCollectionUpdateDefault = &Operation{
 }
 
 var CCResourceCollectionGet = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "get",
+	ID: "CCResourceCollectionGet", Area: "cc", Group: "resource-collection", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Resource Collection by ID",
 	Description: "Retrieve an existing Resource Collection by ID in a given organization.",
@@ -6260,7 +6351,7 @@ var CCResourceCollectionGet = &Operation{
 }
 
 var CCResourceCollectionUpdate = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "update",
+	ID: "CCResourceCollectionUpdate", Area: "cc", Group: "resource-collection", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Resource Collection by ID",
 	Description: "Update an existing resource collection by ID in a given organization.",
@@ -6273,7 +6364,7 @@ var CCResourceCollectionUpdate = &Operation{
 }
 
 var CCResourceCollectionDelete = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "delete",
+	ID: "CCResourceCollectionDelete", Area: "cc", Group: "resource-collection", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Resource Collection by ID",
 	Description: "Delete an existing resource collection by ID in a given organization.",
@@ -6285,7 +6376,7 @@ var CCResourceCollectionDelete = &Operation{
 }
 
 var CCResourceCollectionListReferences = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "list-references",
+	ID: "CCResourceCollectionListReferences", Area: "cc", Group: "resource-collection", Command: "list-references",
 	Summary:     "List references for a specific Resource Collection",
 	Description: "Retrieve a list of all entities that have reference to an existing resource collection by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/resource-collection/{id}/incoming-references", Host: HostCC,
@@ -6300,7 +6391,7 @@ var CCResourceCollectionListReferences = &Operation{
 }
 
 var CCResourceCollectionList = &Operation{
-	Area: "cc", Group: "resource-collection", Command: "list",
+	ID: "CCResourceCollectionList", Area: "cc", Group: "resource-collection", Command: "list",
 	Summary:     "List Resource Collections",
 	Description: "Retrieve a list of resource collections in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/resource-collection", Host: HostCC,
@@ -6316,7 +6407,7 @@ var CCResourceCollectionList = &Operation{
 }
 
 var CCContactListManagementCreate = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "create",
+	ID: "CCContactListManagementCreate", Area: "cc", Group: "contact-list-management", Command: "create",
 	Summary:     "Create contact list",
 	Description: "Creates and activates a contact list for a campaign. The system can activate a contact list even if there are no contact records within it.",
 	Method:      "POST", Path: "/v3/campaign-management/campaigns/{campaignId}/contact-list", Host: HostCC,
@@ -6331,7 +6422,7 @@ var CCContactListManagementCreate = &Operation{
 }
 
 var CCContactListManagementCreateWithin = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "create-within",
+	ID: "CCContactListManagementCreateWithin", Area: "cc", Group: "contact-list-management", Command: "create-within",
 	Summary:     "Create contacts within a contact list",
 	Description: "Creates contacts within a contact list (only if that contact list was created using API method). If the contact record is invalid, it will be added as INVALID and reflected in the 'Processed' and 'Invalid' counts. This is an Asynchronous operation. The values within the 'contactAttributes' param should conform to datatypes of the contact attributes as specified in the 'Field mapping' associated with the campaign.",
 	Method:      "POST", Path: "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/contacts", Host: HostCC,
@@ -6343,7 +6434,7 @@ var CCContactListManagementCreateWithin = &Operation{
 }
 
 var CCContactListManagementUpdateStatusWithin = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "update-status-within",
+	ID: "CCContactListManagementUpdateStatusWithin", Area: "cc", Group: "contact-list-management", Command: "update-status-within",
 	Summary:     "Update a contact's status within a contact list",
 	Description: "Updates a contact's status within a contact list. After update, system overwrites 'Latest Telephony Outcome' to blank and 'Latest Business Outcome' to 'Closed via API call' if status is CLOSED. This is an Asynchronous operation.",
 	Method:      "PATCH", Path: "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/contacts/{contactId}", Host: HostCC,
@@ -6358,7 +6449,7 @@ var CCContactListManagementUpdateStatusWithin = &Operation{
 }
 
 var CCContactListManagementUpdateStatus = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "update-status",
+	ID: "CCContactListManagementUpdateStatus", Area: "cc", Group: "contact-list-management", Command: "update-status",
 	Summary:     "Update contact list status",
 	Description: "Updates the status of a contact list (e.g., EXPIRED). Note: This value is not case-sensitive.",
 	Method:      "PATCH", Path: "/v3/campaign-management/campaigns/{campaignId}/contact-list/{contactListId}/status", Host: HostCC,
@@ -6372,7 +6463,7 @@ var CCContactListManagementUpdateStatus = &Operation{
 }
 
 var CCContactListManagementGetWithinCampaign = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "get-within-campaign",
+	ID: "CCContactListManagementGetWithinCampaign", Area: "cc", Group: "contact-list-management", Command: "get-within-campaign",
 	Summary:     "Get Contact Lists within a Campaign",
 	Description: "Retrieves all contact lists within a campaign. Use the optional `status` and `source` query parameters to filter results.\n\nEach contact list in the response includes the source file name, the time contact counts were last updated, and a breakdown of contact counts by processing and dialer status (for example, processed, invalid, valid, eligible, fresh, open, closed, and ready for dialer).\n\nResponses may reflect the same data for up to 30 seconds when the same campaign and filters are requested repeatedly.",
 	Method:      "GET", Path: "/v4/campaign-management/campaigns/{campaignId}/contact-lists", Host: HostCC,
@@ -6384,7 +6475,7 @@ var CCContactListManagementGetWithinCampaign = &Operation{
 }
 
 var CCContactListManagementUpdateStatusAcrossCampaignChain = &Operation{
-	Area: "cc", Group: "contact-list-management", Command: "update-status-across-campaign-chain",
+	ID: "CCContactListManagementUpdateStatusAcrossCampaignChain", Area: "cc", Group: "contact-list-management", Command: "update-status-across-campaign-chain",
 	Summary:     "Update contact status across the campaign chain",
 	Description: "Synchronously closes the specified contacts and returns the outcome in the same response. Contacts are identified using the same unique identifiers configured in your campaign field mappings, such as Contact Phone (format as per the associated field mapping) or Customer Unique ID or Account Unique ID (For more info, please refer to the [global variables help documentation](https://docs-campaign-for-contact-centers.webexcampaign.com/docs/global-variables)).\n\n By default, the API searches the specified campaign and any of its downstream target campaigns in the chain (across all active contact-lists associated with these campaigns), and closes the contact wherever it is found in a closeable state. Set `searchAcrossTheCampaignChain` to `no` to close the contact only in the campaign specified in the request path.\n\n**Optional query parameters**\n\n- `contactListId` - Search only the specific contact-list within the campaign specified in the request path. If `searchAcrossTheCampaignChain` is set to `yes` then all active contact-lists in the other downstream target campaigns in the chain are also searched.\n- `fields` - Return specified contact field values in the response for the matching contact records (for example: FirstName, LastName, AmountDue).",
 	Method:      "PATCH", Path: "/v3/campaign-management/campaigns/{campaignId}/contacts/{contactId}", Host: HostCC,
@@ -6401,7 +6492,7 @@ var CCContactListManagementUpdateStatusAcrossCampaignChain = &Operation{
 }
 
 var CCAgentSummariesList = &Operation{
-	Area: "cc", Group: "agent-summaries", Command: "list",
+	ID: "CCAgentSummariesList", Area: "cc", Group: "agent-summaries", Command: "list",
 	Summary:     "List summaries",
 	Description: "Lists summaries based on the requested search type.",
 	Method:      "POST", Path: "/summary/list", Host: HostCC,
@@ -6413,7 +6504,7 @@ var CCAgentSummariesList = &Operation{
 }
 
 var CCAgentSummariesList2 = &Operation{
-	Area: "cc", Group: "agent-summaries", Command: "list-2",
+	ID: "CCAgentSummariesList2", Area: "cc", Group: "agent-summaries", Command: "list-2",
 	Summary:     "List summaries",
 	Description: "Lists summaries based on the requested search type.",
 	Method:      "POST", Path: "/generated-summaries/search", Host: HostCC,
@@ -6424,7 +6515,7 @@ var CCAgentSummariesList2 = &Operation{
 }
 
 var CCAiAssistantGetSuggestions = &Operation{
-	Area: "cc", Group: "ai-assistant", Command: "get-suggestions",
+	ID: "CCAiAssistantGetSuggestions", Area: "cc", Group: "ai-assistant", Command: "get-suggestions",
 	Summary:     "Get suggestions",
 	Description: "API for getting suggestions based on transcripts. \n\nNotes:\n- Requires machine account token with scope `cjp:config_read` for WxCC\n- Requires machine account token with scope `cjp-hybrid-conn:read` for WxCCE/CCE.\n- `aiAssistantSkillId` / `source` is required for WxCCE/CCE.",
 	Method:      "POST", Path: "/event", Host: HostCC,
@@ -6432,7 +6523,7 @@ var CCAiAssistantGetSuggestions = &Operation{
 }
 
 var CCActivitiesListDefinitions = &Operation{
-	Area: "cc", Group: "activities", Command: "list-definitions",
+	ID: "CCActivitiesListDefinitions", Area: "cc", Group: "activities", Command: "list-definitions",
 	Summary:     "List Activity Definitions",
 	Description: "List all available activity types with their full schemas, including inputs, outputs, ports, and descriptions. The response is sufficient on its own to construct nodes — there is no separate schema endpoint.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/activities", Host: HostCC,
@@ -6444,7 +6535,7 @@ var CCActivitiesListDefinitions = &Operation{
 }
 
 var CCActivitiesDescribe = &Operation{
-	Area: "cc", Group: "activities", Command: "describe",
+	ID: "CCActivitiesDescribe", Area: "cc", Group: "activities", Command: "describe",
 	Summary:     "Describe an Activity",
 	Description: "Retrieve a single activity's full definition, including inputs, outputs, named ports, and the JSON Schema for its inputs — all returned inline.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}", Host: HostCC,
@@ -6456,7 +6547,7 @@ var CCActivitiesDescribe = &Operation{
 }
 
 var CCActivitiesGetInputChoices = &Operation{
-	Area: "cc", Group: "activities", Command: "get-input-choices",
+	ID: "CCActivitiesGetInputChoices", Area: "cc", Group: "activities", Command: "get-input-choices",
 	Summary:     "Get Activity Input Choices",
 	Description: "Resolve choices for an activity input. Use this when an activity input requires a value from a predefined or dynamically resolved set (e.g., available queues, audio files, agents).\n\nThis endpoint is only valid for inputs that expose choices (an input whose definition includes `allowedValues` or a `choicesEndpoint`, as returned by `describeActivity`). Calling it for an input that does not support choices returns 400.\n\nPass `search` to filter the choices (type-ahead). Add `validate=true` together with `search` to do a point-lookup of a single value instead of filtering — the match is against the choice's `value` (its ID), not its display `name`. For a cascading input whose allowed values depend on a sibling input, supply the parent with `parentInputName` and `parentValue`; otherwise a cascading input returns 400.\n\nFiltering and validation apply only to dynamic (`choicesEndpoint`-backed) inputs. A static input always returns its full enumerated list regardless of `search`/`validate`.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices", Host: HostCC,
@@ -6473,7 +6564,7 @@ var CCActivitiesGetInputChoices = &Operation{
 }
 
 var CCEventsListSpecifications = &Operation{
-	Area: "cc", Group: "events", Command: "list-specifications",
+	ID: "CCEventsListSpecifications", Area: "cc", Group: "events", Command: "list-specifications",
 	Summary:     "List Event Specifications",
 	Description: "List the event types available for use in `event_flows[]`. Each entry describes the event name, payload schema, and any contextual metadata bound when the event fires.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/{orgid}/project/{projectId}/v2/event-specifications", Host: HostCC,
@@ -6485,7 +6576,7 @@ var CCEventsListSpecifications = &Operation{
 }
 
 var CCFunctionsList = &Operation{
-	Area: "cc", Group: "functions", Command: "list",
+	ID: "CCFunctionsList", Area: "cc", Group: "functions", Command: "list",
 	Summary:     "List Custom Functions",
 	Description: "List or search custom functions in the organization. Without filters, returns all custom functions. Supports filtering by name, language, and status, plus sorting and pagination.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/v1/{orgid}/functions", Host: HostCC,
@@ -6507,7 +6598,7 @@ var CCFunctionsList = &Operation{
 }
 
 var CCFunctionsCreate = &Operation{
-	Area: "cc", Group: "functions", Command: "create",
+	ID: "CCFunctionsCreate", Area: "cc", Group: "functions", Command: "create",
 	Summary:     "Create a Custom Function",
 	Description: "Create a new custom function. The source code is provided as an escaped string and the runtime defaults to the highest supported runtime for the given language.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions", Host: HostCC,
@@ -6518,7 +6609,7 @@ var CCFunctionsCreate = &Operation{
 }
 
 var CCFunctionsGet = &Operation{
-	Area: "cc", Group: "functions", Command: "get",
+	ID: "CCFunctionsGet", Area: "cc", Group: "functions", Command: "get",
 	Summary:     "Get a Custom Function",
 	Description: "Retrieve a custom function by its ID. Use `versionOrTag` to fetch a specific published version, or omit it to get the draft.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/v1/{orgid}/functions/{id}", Host: HostCC,
@@ -6531,7 +6622,7 @@ var CCFunctionsGet = &Operation{
 }
 
 var CCFunctionsUpdate = &Operation{
-	Area: "cc", Group: "functions", Command: "update",
+	ID: "CCFunctionsUpdate", Area: "cc", Group: "functions", Command: "update",
 	Summary:     "Update a Custom Function",
 	Description: "Update an existing custom function by ID. Replaces the draft source code and metadata with the supplied body.\n\nScope: `cjp:config_write`",
 	Method:      "PUT", Path: "/v1/{orgid}/functions/{id}", Host: HostCC,
@@ -6543,7 +6634,7 @@ var CCFunctionsUpdate = &Operation{
 }
 
 var CCFunctionsDelete = &Operation{
-	Area: "cc", Group: "functions", Command: "delete",
+	ID: "CCFunctionsDelete", Area: "cc", Group: "functions", Command: "delete",
 	Summary:     "Delete a Custom Function",
 	Description: "Delete a custom function by ID. Use `isForceDeletion=true` to delete even when the function is referenced by one or more flows.\n\nScope: `cjp:config_write`",
 	Method:      "DELETE", Path: "/v1/{orgid}/functions/{id}", Host: HostCC,
@@ -6555,7 +6646,7 @@ var CCFunctionsDelete = &Operation{
 }
 
 var CCFunctionsImport = &Operation{
-	Area: "cc", Group: "functions", Command: "import",
+	ID: "CCFunctionsImport", Area: "cc", Group: "functions", Command: "import",
 	Summary:     "Import a Custom Function",
 	Description: "Import a custom function from a previously exported function-definition JSON file, uploaded as the multipart `file` part (not a zip or base64 envelope). Use `overwrite=true` to replace any existing function with the same name.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions:import", Host: HostCC,
@@ -6568,7 +6659,7 @@ var CCFunctionsImport = &Operation{
 }
 
 var CCFunctionsUnlock = &Operation{
-	Area: "cc", Group: "functions", Command: "unlock",
+	ID: "CCFunctionsUnlock", Area: "cc", Group: "functions", Command: "unlock",
 	Summary:     "Unlock a Custom Function",
 	Description: "Release the edit lock on a custom function so that other users can edit it.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions/{id}:unlock", Host: HostCC,
@@ -6579,7 +6670,7 @@ var CCFunctionsUnlock = &Operation{
 }
 
 var CCFunctionsLock = &Operation{
-	Area: "cc", Group: "functions", Command: "lock",
+	ID: "CCFunctionsLock", Area: "cc", Group: "functions", Command: "lock",
 	Summary:     "Lock a Custom Function",
 	Description: "Acquire an edit lock on a custom function to prevent concurrent writes by other users.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions/{id}:lock", Host: HostCC,
@@ -6590,7 +6681,7 @@ var CCFunctionsLock = &Operation{
 }
 
 var CCFunctionsTest = &Operation{
-	Area: "cc", Group: "functions", Command: "test",
+	ID: "CCFunctionsTest", Area: "cc", Group: "functions", Command: "test",
 	Summary:     "Test a Custom Function",
 	Description: "Execute a custom function with a test payload. Implicitly publishes the latest draft first, so the run uses the most recent source code.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions/{id}:test", Host: HostCC,
@@ -6602,7 +6693,7 @@ var CCFunctionsTest = &Operation{
 }
 
 var CCFunctionsPublish = &Operation{
-	Area: "cc", Group: "functions", Command: "publish",
+	ID: "CCFunctionsPublish", Area: "cc", Group: "functions", Command: "publish",
 	Summary:     "Publish a Custom Function",
 	Description: "Publish the latest draft of a custom function under one or more tags (`Dev`, `Test`, `Latest`, `Live`). Ensure the function has been created or updated before calling this API.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Path: "/v1/{orgid}/functions/{id}:publish", Host: HostCC,
@@ -6617,7 +6708,7 @@ var CCFunctionsPublish = &Operation{
 }
 
 var CCFunctionsExport = &Operation{
-	Area: "cc", Group: "functions", Command: "export",
+	ID: "CCFunctionsExport", Area: "cc", Group: "functions", Command: "export",
 	Summary:     "Export a Custom Function",
 	Description: "Export a custom function for the given version or publish tag. Returns the plain function-definition JSON (name, language, runtime, description, source code, inputs, and outputs), suitable for re-importing via the import API.\n\nScope: `cjp:config_read`",
 	Method:      "POST", Path: "/v1/{orgid}/functions/{id}:export", Host: HostCC,
@@ -6629,7 +6720,7 @@ var CCFunctionsExport = &Operation{
 }
 
 var CCFunctionsListOptions = &Operation{
-	Area: "cc", Group: "functions", Command: "list-options",
+	ID: "CCFunctionsListOptions", Area: "cc", Group: "functions", Command: "list-options",
 	Summary:     "List Function Options",
 	Description: "List the supported programming languages, runtimes, and corresponding wrapper code for custom functions. Filter by `language` or `runtime` to narrow the result.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/v1/{orgid}/functions/options", Host: HostCC,
@@ -6642,7 +6733,7 @@ var CCFunctionsListOptions = &Operation{
 }
 
 var CCTemplatesListFlow = &Operation{
-	Area: "cc", Group: "templates", Command: "list-flow",
+	ID: "CCTemplatesListFlow", Area: "cc", Group: "templates", Command: "list-flow",
 	Summary:     "List Flow Templates",
 	Description: "List available flow templates that can be used to create new flows.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/templates", Host: HostCC,
@@ -6653,7 +6744,7 @@ var CCTemplatesListFlow = &Operation{
 }
 
 var CCTemplatesGetFlow = &Operation{
-	Area: "cc", Group: "templates", Command: "get-flow",
+	ID: "CCTemplatesGetFlow", Area: "cc", Group: "templates", Command: "get-flow",
 	Summary:     "Get a Flow Template",
 	Description: "Retrieve a specific flow template by its ID. Use this to inspect a template's flow structure before creating a flow from it.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Path: "/templates/{id}", Host: HostCC,
@@ -6663,7 +6754,7 @@ var CCTemplatesGetFlow = &Operation{
 }
 
 var CCCampaignGroupList = &Operation{
-	Area: "cc", Group: "campaign-group", Command: "list",
+	ID: "CCCampaignGroupList", Area: "cc", Group: "campaign-group", Command: "list",
 	Summary:     "List Campaigns by Campaign Group",
 	Description: "Retrieves the list of campaigns that belong to the specified campaign group. Results are paginated and can optionally be filtered by campaign status.\n\n**Note:** The `campaignStatus` filter is case-insensitive. Allowed values are `Draft`, `Running`, `Pending`, `Paused`, `Completed`, `Ended`. Unknown values will result in a 400 response.",
 	Method:      "GET", Path: "/v3/campaign-management/campaign-groups/{campaignGroupName}/campaigns", Host: HostCC,
@@ -6677,7 +6768,7 @@ var CCCampaignGroupList = &Operation{
 }
 
 var CCSearchMetadataGet = &Operation{
-	Area: "cc", Group: "search-metadata", Command: "get",
+	ID: "CCSearchMetadataGet", Area: "cc", Group: "search-metadata", Command: "get",
 	Summary:     "Get Search Metadata",
 	Description: "Returns schema metadata for the Webex Contact Center Search GraphQL API, describing supported queries, fields, nested structures, data types, filters, sorting options, grouping capabilities, and aggregation operations.\n\n**Authentication & Authorization:**\n- **Required Scopes:** `cjp:config` or `cjp:config_read`\n\nAn asterisk (*) in the rendered response schema indicates a required property.",
 	Method:      "GET", Path: "/search/v2/meta", Host: HostCC,
@@ -6688,7 +6779,7 @@ var CCSearchMetadataGet = &Operation{
 }
 
 var CCAssetCreate = &Operation{
-	Area: "cc", Group: "asset", Command: "create",
+	ID: "CCAssetCreate", Area: "cc", Group: "asset", Command: "create",
 	Summary:     "Create a new Asset",
 	Description: "Create a new Asset in a given organization. Supports work item assets with the specified channel and data schema.",
 	Method:      "POST", Path: "/organization/{orgid}/asset", Host: HostCC,
@@ -6699,7 +6790,7 @@ var CCAssetCreate = &Operation{
 }
 
 var CCAssetBulkSave = &Operation{
-	Area: "cc", Group: "asset", Command: "bulk-save",
+	ID: "CCAssetBulkSave", Area: "cc", Group: "asset", Command: "bulk-save",
 	Summary:     "Bulk save Assets",
 	Description: "Create, Update or delete Assets in bulk in a given organization. Supports CREATE, UPDATE, and DELETE actions in a single request.",
 	Method:      "POST", Path: "/organization/{orgid}/asset/bulk", Host: HostCC,
@@ -6710,7 +6801,7 @@ var CCAssetBulkSave = &Operation{
 }
 
 var CCAssetGet = &Operation{
-	Area: "cc", Group: "asset", Command: "get",
+	ID: "CCAssetGet", Area: "cc", Group: "asset", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Asset by ID",
 	Description: "Retrieve an existing Asset by ID in a given organization. Set includeChannelName to true to include the channel name in the response.",
@@ -6723,7 +6814,7 @@ var CCAssetGet = &Operation{
 }
 
 var CCAssetUpdate = &Operation{
-	Area: "cc", Group: "asset", Command: "update",
+	ID: "CCAssetUpdate", Area: "cc", Group: "asset", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Asset by ID",
 	Description: "Update an existing Asset by ID in a given organization. Supported for WORK_ITEM assets. For CUSTOM_MESSAGING assets, use PATCH instead.",
@@ -6736,7 +6827,7 @@ var CCAssetUpdate = &Operation{
 }
 
 var CCAssetDelete = &Operation{
-	Area: "cc", Group: "asset", Command: "delete",
+	ID: "CCAssetDelete", Area: "cc", Group: "asset", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Asset by ID",
 	Description: "Delete an existing Asset by ID in a given organization. Validates whether the asset is associated with any flow before deletion.",
@@ -6748,7 +6839,7 @@ var CCAssetDelete = &Operation{
 }
 
 var CCAssetPatch = &Operation{
-	Area: "cc", Group: "asset", Command: "patch",
+	ID: "CCAssetPatch", Area: "cc", Group: "asset", Command: "patch",
 	Aliases:     []string{"patch-id"},
 	Summary:     "Partially update Asset by ID",
 	Description: "Partially update Asset by ID in a given organization. Supported only for CUSTOM_MESSAGING assets. Send only the fields to change; absent fields retain their current values. webhookConfig is optional; omit it to keep the existing credentials. For WORK_ITEM assets, use PUT instead.",
@@ -6763,7 +6854,7 @@ var CCAssetPatch = &Operation{
 }
 
 var CCAssetListReferences = &Operation{
-	Area: "cc", Group: "asset", Command: "list-references",
+	ID: "CCAssetListReferences", Area: "cc", Group: "asset", Command: "list-references",
 	Summary:     "List references for a specific Asset",
 	Description: "Retrieve a list of all entities that have reference to an existing Asset by ID in a given organization. For example, Entry Points.",
 	Method:      "GET", Path: "/organization/{orgid}/asset/{id}/incoming-references", Host: HostCC,
@@ -6778,7 +6869,7 @@ var CCAssetListReferences = &Operation{
 }
 
 var CCAssetList = &Operation{
-	Area: "cc", Group: "asset", Command: "list",
+	ID: "CCAssetList", Area: "cc", Group: "asset", Command: "list",
 	Summary:     "List Assets",
 	Description: "Retrieve a list of Assets in a given organization. Supports pagination metadata. Set includeChannelName to true to include the channel name in the response. Set excludeEPAssociated to true to return only assets that are not associated with any Entry Point.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/asset", Host: HostCC,
@@ -6799,7 +6890,7 @@ var CCAssetList = &Operation{
 }
 
 var CCChannelCreate = &Operation{
-	Area: "cc", Group: "channel", Command: "create",
+	ID: "CCChannelCreate", Area: "cc", Group: "channel", Command: "create",
 	Summary:     "Create a new Channel",
 	Description: "Create a new Channel in a given organization. Supports custom channels for work items.",
 	Method:      "POST", Path: "/organization/{orgid}/channel", Host: HostCC,
@@ -6810,7 +6901,7 @@ var CCChannelCreate = &Operation{
 }
 
 var CCChannelBulkSave = &Operation{
-	Area: "cc", Group: "channel", Command: "bulk-save",
+	ID: "CCChannelBulkSave", Area: "cc", Group: "channel", Command: "bulk-save",
 	Summary:     "Bulk save Channels",
 	Description: "Create, Update or delete Channels in bulk in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/channel/bulk", Host: HostCC,
@@ -6821,7 +6912,7 @@ var CCChannelBulkSave = &Operation{
 }
 
 var CCChannelGet = &Operation{
-	Area: "cc", Group: "channel", Command: "get",
+	ID: "CCChannelGet", Area: "cc", Group: "channel", Command: "get",
 	Aliases:     []string{"get-id"},
 	Summary:     "Get specific Channel by ID",
 	Description: "Retrieve an existing Channel by ID in a given organization. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response.",
@@ -6834,7 +6925,7 @@ var CCChannelGet = &Operation{
 }
 
 var CCChannelUpdate = &Operation{
-	Area: "cc", Group: "channel", Command: "update",
+	ID: "CCChannelUpdate", Area: "cc", Group: "channel", Command: "update",
 	Aliases:     []string{"update-id"},
 	Summary:     "Update specific Channel by ID",
 	Description: "Update an existing Channel by ID in a given organization.",
@@ -6846,7 +6937,7 @@ var CCChannelUpdate = &Operation{
 }
 
 var CCChannelDelete = &Operation{
-	Area: "cc", Group: "channel", Command: "delete",
+	ID: "CCChannelDelete", Area: "cc", Group: "channel", Command: "delete",
 	Aliases:     []string{"delete-id"},
 	Summary:     "Delete specific Channel by ID",
 	Description: "Delete an existing Channel by ID in a given organization.",
@@ -6858,7 +6949,7 @@ var CCChannelDelete = &Operation{
 }
 
 var CCChannelPatch = &Operation{
-	Area: "cc", Group: "channel", Command: "patch",
+	ID: "CCChannelPatch", Area: "cc", Group: "channel", Command: "patch",
 	Aliases:     []string{"patch-id"},
 	Summary:     "Partially update Channel by ID",
 	Description: "Partially update a channel by ID. Only the supplied fields are changed; absent fields retain their current values. Patchable fields: name, description, logoType (MOMENTUM only), logoIconName. logoUrl and logoUrlVersioned cannot be changed by using PATCH; use PUT to update the logo image. channelType cannot be changed after creation. in a given organization.",
@@ -6875,7 +6966,7 @@ var CCChannelPatch = &Operation{
 }
 
 var CCChannelListReferences = &Operation{
-	Area: "cc", Group: "channel", Command: "list-references",
+	ID: "CCChannelListReferences", Area: "cc", Group: "channel", Command: "list-references",
 	Summary:     "List references for a specific Channel",
 	Description: "Retrieve a list of all entities that have reference to an existing Channel by ID in a given organization. Includes Asset and Entry Point entities that reference the channel.",
 	Method:      "GET", Path: "/organization/{orgid}/channel/{id}/incoming-references", Host: HostCC,
@@ -6890,7 +6981,7 @@ var CCChannelListReferences = &Operation{
 }
 
 var CCChannelList = &Operation{
-	Area: "cc", Group: "channel", Command: "list",
+	ID: "CCChannelList", Area: "cc", Group: "channel", Command: "list",
 	Summary:     "List Channels",
 	Description: "Retrieve a list of Channels in a given organization. Supports pagination metadata. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/channel", Host: HostCC,
@@ -6910,7 +7001,7 @@ var CCChannelList = &Operation{
 }
 
 var CCUsageReportsListResourceTypes = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "list-resource-types",
+	ID: "CCUsageReportsListResourceTypes", Area: "cc", Group: "usage-reports", Command: "list-resource-types",
 	Summary:     "Get available resource types",
 	Description: "Returns the list of available resource types that can be used for report generation, along with available data dates.",
 	Method:      "GET", Path: "/v1/usage-reports/resource-types", Host: HostCC,
@@ -6918,7 +7009,7 @@ var CCUsageReportsListResourceTypes = &Operation{
 }
 
 var CCUsageReportsCreate = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "create",
+	ID: "CCUsageReportsCreate", Area: "cc", Group: "usage-reports", Command: "create",
 	Summary:     "Create usage report",
 	Description: "Creates a new usage report for the specified organization, resource type,\nand date range. The report is generated asynchronously in the background.\n\nA single **usage report (reportId)** is always created for each request.\nDepending on the requested date range, the report may contain **one or more\nreport files**, each representing a sub-range of the overall time period.\n\nWhen the requested date range spans **more than 30 days**, the overall range\nis **automatically split by natural calendar months**, and **multiple report\nfiles** are generated under the same report.\n\n**Examples:**\n\n- Requested range: `2025-12-23` ~ `2026-03-20`\n  - Generated result:\n    - Report ID: single report\n    - Report files:\n      - `2025-12-23` ~ `2025-12-31`\n      - `2026-01-01` ~ `2026-01-31`\n      - `2026-02-01` ~ `2026-02-28`\n      - `2026-03-01` ~ `2026-03-20`\n\n- Requested range: `2025-12-23` ~ `2026-01-21`\n  - Generated result:\n    - Report ID: single report\n    - Report files:\n      - `2025-12-23` ~ `2026-01-21`\n\n**Important Notes:**\n- Only one usage report can be processed at a time for the same organization.\n  If there is an ongoing report, new report creation requests will be rejected.\n",
 	Method:      "POST", Path: "/v1/usage-reports", Host: HostCC,
@@ -6930,7 +7021,7 @@ var CCUsageReportsCreate = &Operation{
 }
 
 var CCUsageReportsList = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "list",
+	ID: "CCUsageReportsList", Area: "cc", Group: "usage-reports", Command: "list",
 	Summary:     "List usage reports",
 	Description: "Retrieves a list of usage reports for the organization. Supports optional filtering by resource type and creation date range.\n\nEach report has a `reportId` and may contain one or more generated files in `reportFiles[]`. For long date ranges, the service can split results by calendar month to avoid creating a single very large download. For example, a 12-month report can return up to 12 report files, and a 36-month report can return up to 36 report files.\n\nUse `reportId` to retrieve the overall report status, list the generated files, or delete the report. Use each file's `fileId` or `downloadUrl` to download that specific file. The download API does not accept `reportId`.",
 	Method:      "GET", Path: "/v1/usage-reports", Host: HostCC,
@@ -6943,7 +7034,7 @@ var CCUsageReportsList = &Operation{
 }
 
 var CCUsageReportsGet = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "get",
+	ID: "CCUsageReportsGet", Area: "cc", Group: "usage-reports", Command: "get",
 	Summary:     "Get usage report details",
 	Description: "Retrieves detailed information for a specific usage report.",
 	Method:      "GET", Path: "/v1/usage-reports/{reportId}", Host: HostCC,
@@ -6953,7 +7044,7 @@ var CCUsageReportsGet = &Operation{
 }
 
 var CCUsageReportsDelete = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "delete",
+	ID: "CCUsageReportsDelete", Area: "cc", Group: "usage-reports", Command: "delete",
 	Summary:     "Delete usage report",
 	Description: "Deletes the specified usage report and its associated file. This operation cannot be undone.",
 	Method:      "DELETE", Path: "/v1/usage-reports/{reportId}", Host: HostCC,
@@ -6964,7 +7055,7 @@ var CCUsageReportsDelete = &Operation{
 }
 
 var CCUsageReportsDownloadFile = &Operation{
-	Area: "cc", Group: "usage-reports", Command: "download-file",
+	ID: "CCUsageReportsDownloadFile", Area: "cc", Group: "usage-reports", Command: "download-file",
 	Summary:     "Download usage report file",
 	Description: "Downloads one completed report file as a binary stream.\n\nUse the `fileId` returned in the report's `reportFiles` array. A `reportId` identifies the overall report and cannot be used with this endpoint. Usage Reports can cover up to 36 months of raw data, so large date ranges may be split into one file per calendar month. This keeps individual compressed files more manageable and avoids requiring customers to download a single very large file. If a report contains multiple files, call this endpoint once for each `fileId`.\n\nPassing a `reportId` to this endpoint returns `404` because the path parameter expects a file-level identifier.\n\nThe Developer Portal may not handle binary downloads reliably. Use Postman, curl, or a programmatic API client to download the file.\n\n**Note:** Both file and download URLs expire 7 days after report completion.\n",
 	Method:      "GET", Path: "/v1/usage-reports/{fileId}/download", Host: HostCC,
@@ -6974,7 +7065,7 @@ var CCUsageReportsDownloadFile = &Operation{
 }
 
 var CCExternalDataUpdatesUpdateTaskGlobalVariables = &Operation{
-	Area: "cc", Group: "external-data-updates", Command: "update-task-global-variables",
+	ID: "CCExternalDataUpdatesUpdateTaskGlobalVariables", Area: "cc", Group: "external-data-updates", Command: "update-task-global-variables",
 	Summary:     "Update Task Global Variables",
 	Description: "Updates numeric global variable values associated with a completed Webex Contact Center task. The request must identify the organization and task along with its start and end timestamps. The task should have ended within two days prior to the time of making the request.",
 	Method:      "PUT", Path: "/v1/data/updateExternal", Host: HostCC,
@@ -6986,7 +7077,7 @@ var CCExternalDataUpdatesUpdateTaskGlobalVariables = &Operation{
 }
 
 var CCCallMonitoringConfigCreate = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "create",
+	ID: "CCCallMonitoringConfigCreate", Area: "cc", Group: "call-monitoring-config", Command: "create",
 	Summary:     "Create a new Call Monitoring",
 	Description: "Create a new Call Monitoring in a given organization.",
 	Method:      "POST", Path: "/organization/{orgid}/call-monitoring", Host: HostCC,
@@ -6997,7 +7088,7 @@ var CCCallMonitoringConfigCreate = &Operation{
 }
 
 var CCCallMonitoringConfigDeleteReferences = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "delete-references",
+	ID: "CCCallMonitoringConfigDeleteReferences", Area: "cc", Group: "call-monitoring-config", Command: "delete-references",
 	Summary: "delete References Call Monitoring",
 	Method:  "POST", Path: "/organization/{orgid}/call-monitoring/delete-reference", Host: HostCC,
 	Params: []Param{
@@ -7007,7 +7098,7 @@ var CCCallMonitoringConfigDeleteReferences = &Operation{
 }
 
 var CCCallMonitoringConfigGet = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "get",
+	ID: "CCCallMonitoringConfigGet", Area: "cc", Group: "call-monitoring-config", Command: "get",
 	Summary:     "Get specific Call Monitoring by ID",
 	Description: "Retrieve an existing Call Monitoring by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/call-monitoring/{id}", Host: HostCC,
@@ -7019,7 +7110,7 @@ var CCCallMonitoringConfigGet = &Operation{
 }
 
 var CCCallMonitoringConfigUpdate = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "update",
+	ID: "CCCallMonitoringConfigUpdate", Area: "cc", Group: "call-monitoring-config", Command: "update",
 	Summary:     "Update specific Call Monitoring by ID",
 	Description: "Update an existing Call Monitoring by ID in a given organization.",
 	Method:      "PUT", Path: "/organization/{orgid}/call-monitoring/{id}", Host: HostCC,
@@ -7031,7 +7122,7 @@ var CCCallMonitoringConfigUpdate = &Operation{
 }
 
 var CCCallMonitoringConfigDelete = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "delete",
+	ID: "CCCallMonitoringConfigDelete", Area: "cc", Group: "call-monitoring-config", Command: "delete",
 	Summary:     "Delete specific Call Monitoring by ID",
 	Description: "Delete an existing Call Monitoring by ID in a given organization.",
 	Method:      "DELETE", Path: "/organization/{orgid}/call-monitoring/{id}", Host: HostCC,
@@ -7042,7 +7133,7 @@ var CCCallMonitoringConfigDelete = &Operation{
 }
 
 var CCCallMonitoringConfigPatch = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "patch",
+	ID: "CCCallMonitoringConfigPatch", Area: "cc", Group: "call-monitoring-config", Command: "patch",
 	Summary:     "Partially update Call Monitoring by ID",
 	Description: "Partially update Call Monitoring by ID in a given organization.",
 	Method:      "PATCH", Path: "/organization/{orgid}/call-monitoring/{id}", Host: HostCC,
@@ -7054,7 +7145,7 @@ var CCCallMonitoringConfigPatch = &Operation{
 }
 
 var CCCallMonitoringConfigList = &Operation{
-	Area: "cc", Group: "call-monitoring-config", Command: "list",
+	ID: "CCCallMonitoringConfigList", Area: "cc", Group: "call-monitoring-config", Command: "list",
 	Summary:     "List Call Monitoring Configurations",
 	Description: "Retrieve a list of Call Monitoring Configurations in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/call-monitoring", Host: HostCC,
@@ -7073,7 +7164,7 @@ var CCCallMonitoringConfigList = &Operation{
 }
 
 var CCOrganizationSettingList = &Operation{
-	Area: "cc", Group: "organization-setting", Command: "list",
+	ID: "CCOrganizationSettingList", Area: "cc", Group: "organization-setting", Command: "list",
 	Summary:     "List Organization Settings",
 	Description: "Retrieve a list of Organization Settings in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/organization-setting", Host: HostCC,
@@ -7089,7 +7180,7 @@ var CCOrganizationSettingList = &Operation{
 }
 
 var CCOrganizationSettingGet = &Operation{
-	Area: "cc", Group: "organization-setting", Command: "get",
+	ID: "CCOrganizationSettingGet", Area: "cc", Group: "organization-setting", Command: "get",
 	Summary:     "Get specific Organization Setting by ID",
 	Description: "Retrieve an existing Organization Setting by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/organization-setting/{id}", Host: HostCC,
@@ -7100,7 +7191,7 @@ var CCOrganizationSettingGet = &Operation{
 }
 
 var CCOrganizationSettingUpdate = &Operation{
-	Area: "cc", Group: "organization-setting", Command: "update",
+	ID: "CCOrganizationSettingUpdate", Area: "cc", Group: "organization-setting", Command: "update",
 	Summary:     "Update specific Organization Setting by ID",
 	Description: "Update an existing Organization Setting by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PUT", Path: "/organization/{orgid}/organization-setting/{id}", Host: HostCC,
@@ -7112,7 +7203,7 @@ var CCOrganizationSettingUpdate = &Operation{
 }
 
 var CCOrganizationSettingPatch = &Operation{
-	Area: "cc", Group: "organization-setting", Command: "patch",
+	ID: "CCOrganizationSettingPatch", Area: "cc", Group: "organization-setting", Command: "patch",
 	Summary:     "Partially update Organization Setting by ID",
 	Description: "Partially update Organization Setting by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PATCH", Path: "/organization/{orgid}/organization-setting/{id}", Host: HostCC,
@@ -7124,7 +7215,7 @@ var CCOrganizationSettingPatch = &Operation{
 }
 
 var CCTenantConfigurationList = &Operation{
-	Area: "cc", Group: "tenant-configuration", Command: "list",
+	ID: "CCTenantConfigurationList", Area: "cc", Group: "tenant-configuration", Command: "list",
 	Summary:     "List Tenant Configuration",
 	Description: "Retrieve a list of Tenant Configuration in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/v2/tenant-configuration", Host: HostCC,
@@ -7140,7 +7231,7 @@ var CCTenantConfigurationList = &Operation{
 }
 
 var CCTenantConfigurationGet = &Operation{
-	Area: "cc", Group: "tenant-configuration", Command: "get",
+	ID: "CCTenantConfigurationGet", Area: "cc", Group: "tenant-configuration", Command: "get",
 	Summary:     "Get specific Tenant Configuration by ID",
 	Description: "Retrieve an existing Tenant Configuration by ID in a given organization.",
 	Method:      "GET", Path: "/organization/{orgid}/tenant-configuration/{id}", Host: HostCC,
@@ -7151,7 +7242,7 @@ var CCTenantConfigurationGet = &Operation{
 }
 
 var CCTenantConfigurationUpdate = &Operation{
-	Area: "cc", Group: "tenant-configuration", Command: "update",
+	ID: "CCTenantConfigurationUpdate", Area: "cc", Group: "tenant-configuration", Command: "update",
 	Summary:     "Update specific Tenant Configuration by ID",
 	Description: "Update an existing Tenant Configuration by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PUT", Path: "/organization/{orgid}/tenant-configuration/{id}", Host: HostCC,
@@ -7215,7 +7306,7 @@ var CCTenantConfigurationUpdate = &Operation{
 }
 
 var CCAiAgentList = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "list",
+	ID: "CCAiAgentList", Area: "cc", Group: "ai-agent", Command: "list",
 	Summary:     "List AI agents",
 	Description: "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.",
 	Method:      "GET", Path: "/api/v2/organizations/{orgid}/agents/", Host: HostAIAgent,
@@ -7230,7 +7321,7 @@ var CCAiAgentList = &Operation{
 }
 
 var CCAiAgentGet = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "get",
+	ID: "CCAiAgentGet", Area: "cc", Group: "ai-agent", Command: "get",
 	Summary:     "Get AI agent",
 	Description: "Gets an AI agent's settings. `bot_metadata.ai_engine` here is the engine family; the exact engine is `bot_metadata.engine_identifier`.",
 	Method:      "GET", Path: "/api/v1/bot/{agentId}/", Host: HostAIAgent,
@@ -7243,7 +7334,7 @@ var CCAiAgentGet = &Operation{
 }
 
 var CCAiAgentCreate = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "create",
+	ID: "CCAiAgentCreate", Area: "cc", Group: "ai-agent", Command: "create",
 	Summary:     "Create AI agent",
 	Description: "Creates an AI agent. `bot_unique_name` must be unique; Studio's own UI uses the name followed by `-` and 8 random letters and digits. Turning transparency off needs a `disable_reason`. Every new agent gets the system \"Agent handover\" tool.",
 	Method:      "POST", Path: "/api/v1/bot/", Host: HostAIAgent,
@@ -7253,7 +7344,7 @@ var CCAiAgentCreate = &Operation{
 }
 
 var CCAiAgentUpdate = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "update",
+	ID: "CCAiAgentUpdate", Area: "cc", Group: "ai-agent", Command: "update",
 	Summary:     "Update AI agent",
 	Description: "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
 	Method:      "PUT", Path: "/api/v1/bot/{agentId}/", Host: HostAIAgent,
@@ -7267,7 +7358,7 @@ var CCAiAgentUpdate = &Operation{
 }
 
 var CCAiAgentDelete = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "delete",
+	ID: "CCAiAgentDelete", Area: "cc", Group: "ai-agent", Command: "delete",
 	Summary:     "Delete AI agent",
 	Description: "Deletes an AI agent.",
 	Method:      "DELETE", Path: "/api/v1/bot/{agentId}/", Host: HostAIAgent,
@@ -7280,7 +7371,7 @@ var CCAiAgentDelete = &Operation{
 }
 
 var CCAiAgentGetConfiguration = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "get-configuration",
+	ID: "CCAiAgentGetConfiguration", Area: "cc", Group: "ai-agent", Command: "get-configuration",
 	Summary:     "Get AI agent configuration",
 	Description: "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
 	Method:      "GET", Path: "/api/v1/llmagent/getdefault/", Host: HostAIAgent,
@@ -7292,7 +7383,7 @@ var CCAiAgentGetConfiguration = &Operation{
 }
 
 var CCAiAgentListVersions = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "list-versions",
+	ID: "CCAiAgentListVersions", Area: "cc", Group: "ai-agent", Command: "list-versions",
 	Summary:     "List AI agent versions",
 	Description: "Lists the draft and the published versions (`state: live`) of the agent's configuration.",
 	Method:      "GET", Path: "/api/v1/llmagent/", Host: HostAIAgent,
@@ -7308,7 +7399,7 @@ var CCAiAgentListVersions = &Operation{
 }
 
 var CCAiAgentExport = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "export",
+	ID: "CCAiAgentExport", Area: "cc", Group: "ai-agent", Command: "export",
 	Summary:     "Export AI agent",
 	Description: "Exports the agent's draft configuration and tools as one JSON document (`bot_type`, `configuration`, `tools`).",
 	Method:      "GET", Path: "/api/v1/llmagent/export/", Host: HostAIAgent,
@@ -7320,7 +7411,7 @@ var CCAiAgentExport = &Operation{
 }
 
 var CCAiAgentPublish = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "publish",
+	ID: "CCAiAgentPublish", Area: "cc", Group: "ai-agent", Command: "publish",
 	Summary:     "Publish AI agent",
 	Description: "Publishes the agent's draft, so live calls use it. The description labels the version in the history.",
 	Method:      "POST", Path: "/api/v1/llmagent/makelive/", Host: HostAIAgent,
@@ -7335,7 +7426,7 @@ var CCAiAgentPublish = &Operation{
 }
 
 var CCAiAgentCreateTool = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "create-tool",
+	ID: "CCAiAgentCreateTool", Area: "cc", Group: "ai-agent", Command: "create-tool",
 	Summary:     "Create AI agent tool",
 	Description: "Adds a tool (action) to the agent's draft. `input_entities` is required, in JSON Schema form, even when the tool takes no input. Copy a working tool from `get-configuration` for the fulfillment of flow and MCP tools.",
 	Method:      "POST", Path: "/api/v1/llmagent/tool/create/", Host: HostAIAgent,
@@ -7348,7 +7439,7 @@ var CCAiAgentCreateTool = &Operation{
 }
 
 var CCAiAgentUpdateTool = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "update-tool",
+	ID: "CCAiAgentUpdateTool", Area: "cc", Group: "ai-agent", Command: "update-tool",
 	Summary:     "Update AI agent tool",
 	Description: "Updates a tool in the agent's draft. Send the whole tool as `get-configuration` returns it, with `tool_id` set to its `id`.",
 	Method:      "POST", Path: "/api/v1/llmagent/tool/update/", Host: HostAIAgent,
@@ -7361,7 +7452,7 @@ var CCAiAgentUpdateTool = &Operation{
 }
 
 var CCAiAgentDeleteTool = &Operation{
-	Area: "cc", Group: "ai-agent", Command: "delete-tool",
+	ID: "CCAiAgentDeleteTool", Area: "cc", Group: "ai-agent", Command: "delete-tool",
 	Summary:     "Delete AI agent tool",
 	Description: "Deletes a tool from the agent's draft.",
 	Method:      "POST", Path: "/api/v1/llmagent/tool/delete/", Host: HostAIAgent,
@@ -7376,7 +7467,7 @@ var CCAiAgentDeleteTool = &Operation{
 }
 
 var CCAiAgentSessionList = &Operation{
-	Area: "cc", Group: "ai-agent-session", Command: "list",
+	ID: "CCAiAgentSessionList", Area: "cc", Group: "ai-agent-session", Command: "list",
 	Summary:     "List AI agent sessions",
 	Description: "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.",
 	Method:      "GET", Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/", Host: HostAIAgent,
@@ -7392,7 +7483,7 @@ var CCAiAgentSessionList = &Operation{
 }
 
 var CCAiAgentSessionGet = &Operation{
-	Area: "cc", Group: "ai-agent-session", Command: "get",
+	ID: "CCAiAgentSessionGet", Area: "cc", Group: "ai-agent-session", Command: "get",
 	Summary:     "Get AI agent session",
 	Description: "Gets one conversation session.",
 	Method:      "GET", Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/", Host: HostAIAgent,
@@ -7406,7 +7497,7 @@ var CCAiAgentSessionGet = &Operation{
 }
 
 var CCAiAgentSessionListMessages = &Operation{
-	Area: "cc", Group: "ai-agent-session", Command: "list-messages",
+	ID: "CCAiAgentSessionListMessages", Area: "cc", Group: "ai-agent-session", Command: "list-messages",
 	Summary:     "List AI agent session messages",
 	Description: "Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.",
 	Method:      "GET", Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/", Host: HostAIAgent,
@@ -7423,7 +7514,7 @@ var CCAiAgentSessionListMessages = &Operation{
 }
 
 var CCAiAgentTranscriptCreateAuditRecord = &Operation{
-	Area: "cc", Group: "ai-agent-transcript", Command: "create-audit-record",
+	ID: "CCAiAgentTranscriptCreateAuditRecord", Area: "cc", Group: "ai-agent-transcript", Command: "create-audit-record",
 	Summary:     "Create transcript audit record",
 	Description: "Records a compliance audit entry for reading a session's transcript, as Studio does before it shows one. `room_id` is the session ID and `message` the reason. The entry is permanent and names the caller, so create one only with a real reason. With a regular Webex login, the messages of an encrypted session stay encrypted after the audit.",
 	Method:      "POST", Path: "/api/v1/decrypt_audit/", Host: HostAIAgent,
@@ -7440,7 +7531,7 @@ var CCAiAgentTranscriptCreateAuditRecord = &Operation{
 }
 
 var CCAiAgentTranscriptGetSession = &Operation{
-	Area: "cc", Group: "ai-agent-transcript", Command: "get-session",
+	ID: "CCAiAgentTranscriptGetSession", Area: "cc", Group: "ai-agent-transcript", Command: "get-session",
 	Summary:     "Get transcript session",
 	Description: "Gets a session's full record, including `data_encrypted` and its channels.",
 	Method:      "GET", Path: "/api/v1/room/", Host: HostAIAgent,
@@ -7453,7 +7544,7 @@ var CCAiAgentTranscriptGetSession = &Operation{
 }
 
 var CCAiAgentTranscriptListMessages = &Operation{
-	Area: "cc", Group: "ai-agent-transcript", Command: "list-messages",
+	ID: "CCAiAgentTranscriptListMessages", Area: "cc", Group: "ai-agent-transcript", Command: "list-messages",
 	Summary:     "List transcript messages",
 	Description: "Lists a session's messages with full detail: tool calls, classification and `data_encrypted`. For an encrypted session, create an audit record first.",
 	Method:      "GET", Path: "/api/v1/message/", Host: HostAIAgent,
@@ -7567,6 +7658,7 @@ var ccOperations = []*Operation{
 	CCBusinessHourUpdate,
 	CCBusinessHourDelete,
 	CCBusinessHourListReferences,
+	CCBusinessHourListV1,
 	CCHolidayListList,
 	CCHolidayListCreate,
 	CCHolidayListBulkSave,
@@ -7645,6 +7737,7 @@ var ccOperations = []*Operation{
 	CCContactServiceQueueListByDynamicSkills,
 	CCContactServiceQueueListByUserSkillProfile,
 	CCContactServiceQueueListSkillCsqsCiUserId,
+	CCContactServiceQueueListV2,
 	CCDesktopLayoutCreate,
 	CCDesktopLayoutBulkSave,
 	CCDesktopLayoutBulkExport,
@@ -7690,6 +7783,7 @@ var ccOperations = []*Operation{
 	CCEntryPointUpdate,
 	CCEntryPointDelete,
 	CCEntryPointListReferences,
+	CCEntryPointListV1,
 	CCGlobalVariablesCreate,
 	CCGlobalVariablesBulkSave,
 	CCGlobalVariablesBulkExport,
@@ -7733,6 +7827,7 @@ var ccOperations = []*Operation{
 	CCSiteUpdate,
 	CCSiteDelete,
 	CCSiteListReferences,
+	CCSiteListV1,
 	CCSkillList,
 	CCSkillCreate,
 	CCSkillBulkSave,
@@ -7743,6 +7838,7 @@ var ccOperations = []*Operation{
 	CCSkillDelete,
 	CCSkillListReferences,
 	CCSkillPopulateJsonAttributesFieldSkillIdOrg,
+	CCSkillListV1,
 	CCSkillProfileList,
 	CCSkillProfileCreate,
 	CCSkillProfileBulkSave,
@@ -7760,6 +7856,7 @@ var ccOperations = []*Operation{
 	CCTeamUpdate,
 	CCTeamDelete,
 	CCTeamListReferences,
+	CCTeamListV1,
 	CCUserProfilesList,
 	CCUserProfilesBulkSave,
 	CCUserProfilesBulkExport,
@@ -7786,6 +7883,7 @@ var ccOperations = []*Operation{
 	CCUsersGetDynamicSkillId,
 	CCUsersReskillAgents,
 	CCUsersListByCallMonitoringConfig,
+	CCUsersListV1,
 	CCWorkTypesCreate,
 	CCWorkTypesBulkSave,
 	CCWorkTypesBulkExport,

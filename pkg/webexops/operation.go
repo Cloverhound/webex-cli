@@ -127,6 +127,9 @@ type Group struct {
 
 // Operation is one API call.
 type Operation struct {
+	// ID is the operation's Go variable name, such as CCTeamList.
+	ID string
+
 	// Area, Group and Command are the CLI names: webex <area> <group> <command>.
 	Area, Group, Command string
 	Aliases              []string

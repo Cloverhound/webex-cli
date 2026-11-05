@@ -13,6 +13,15 @@ When a downloaded collection documents the same method and route, the
 downloaded definition wins and extraction prints the route to remove from
 here. Routes here keep their trailing slash, which the APIs below require.
 
+## Contact Center lists
+
+`Contact Center lists.postman_collection.json` holds older Contact Center list
+routes that Webex still serves but Cisco's collection replaced with newer
+versions. They join their resource's group as `list-v1` (`list-v2` for queues;
+see `naming_overrides.py`). The SDK catalog (`pkg/catalog`) reads through them,
+because their items carry `lastUpdatedTime` and, for most types, every field.
+Each was read on a live organization before it was added.
+
 ## AI Agent Studio
 
 `AI Agent Studio.postman_collection.json` holds the private AI Agent Studio

@@ -1,0 +1,163 @@
+{
+  "info": {
+    "name": "Webex Contact Center",
+    "description": "Hand-maintained. Contact Center list routes that Webex still serves but Cisco's Postman collection replaced with newer versions. Webex Admin Studio reads these; see codegen/supplemental/README.md.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Site",
+      "item": [
+        {
+          "name": "List Site(s) (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists sites with every field, through the v1 route. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/site?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "site"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists Contact Center users through the v1 route. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/user?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "user"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Team",
+      "item": [
+        {
+          "name": "List Teams (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists teams with every field, through the v1 route. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/team?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "team"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skill",
+      "item": [
+        {
+          "name": "List Skills (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists skills with every field, through the v1 route. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/skill?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "skill"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Entry Point",
+      "item": [
+        {
+          "name": "List Entry Point(s) (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists entry points with every field, through the v1 route. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/entry-point?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "entry-point"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Service Queue",
+      "item": [
+        {
+          "name": "List Contact Service Queues (v2)",
+          "request": {
+            "method": "GET",
+            "description": "Lists queues through the v2 route. Items leave out call distribution groups, so read each queue for them. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/v2/contact-service-queue?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "v2", "contact-service-queue"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Hour",
+      "item": [
+        {
+          "name": "List Business Hours (v1)",
+          "request": {
+            "method": "GET",
+            "description": "Lists business hours through the v1 route. Items leave out working hours, so read each one for them. Each item carries lastUpdatedTime.",
+            "url": {
+              "raw": "{{baseUrl}}/organization/:orgid/business-hours?page=0&pageSize=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", ":orgid", "business-hours"],
+              "query": [
+                {"key": "page", "value": "0", "description": "Page number, from 0."},
+                {"key": "pageSize", "value": "100", "description": "Items per page."}
+              ],
+              "variable": [{"key": "orgid", "description": "Organization ID."}]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

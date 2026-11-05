@@ -6110,6 +6110,56 @@
   ]
  },
  {
+  "command": "cc business-hour list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/business-hours?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc business-hour list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/business-hours",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc business-hour list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/business-hours?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
   "command": "cc business-hour update",
   "variant": "all-flags",
   "args": [
@@ -9671,6 +9721,56 @@
   ]
  },
  {
+  "command": "cc contact-service-queue list-v2",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc contact-service-queue list-v2",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc contact-service-queue list-v2",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
   "command": "cc contact-service-queue purge-inactive",
   "variant": "all-flags",
   "args": [
@@ -12545,6 +12645,56 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point/s-id/incoming-references?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc entry-point list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc entry-point list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc entry-point list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point?page=0&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -22516,6 +22666,56 @@
   ]
  },
  {
+  "command": "cc site list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/site?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc site list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/site",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc site list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/site?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
   "command": "cc site purge-inactive",
   "variant": "all-flags",
   "args": [
@@ -22949,6 +23149,56 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill/s-id/incoming-references?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc skill list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc skill list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc skill list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill?page=0&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -25697,6 +25947,56 @@
   ]
  },
  {
+  "command": "cc team list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/team?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc team list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/team",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc team list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/team?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
   "command": "cc team purge-inactive",
   "variant": "all-flags",
   "args": [
@@ -27581,6 +27881,56 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user/s-id/incoming-references?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc users list-v1",
+  "variant": "all-flags",
+  "args": [
+   "--page=s-page",
+   "--page-size=s-page-size"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user?page=s-page&pageSize=s-page-size",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc users list-v1",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc users list-v1",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user?page=0&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"

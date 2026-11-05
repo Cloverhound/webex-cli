@@ -48818,6 +48818,36 @@
   ]
  },
  {
+  "path": "webex cc business-hour list-v1",
+  "short": "List Business Hours (v1)",
+  "long": "Lists business hours through the v1 route. Items leave out working hours, so read each one for them. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
+   }
+  ]
+ },
+ {
   "path": "webex cc business-hour update",
   "aliases": [
    "update-id"
@@ -51404,6 +51434,36 @@
     "type": "string",
     "usage": "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization.",
     "hidden": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc contact-service-queue list-v2",
+  "short": "List Contact Service Queues (v2)",
+  "long": "Lists queues through the v2 route. Items leave out call distribution groups, so read each queue for them. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v2"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
    }
   ]
  },
@@ -54163,6 +54223,36 @@
     "name": "type",
     "type": "string",
     "usage": "Entity type of the other entity that has a reference to this specific entity."
+   }
+  ]
+ },
+ {
+  "path": "webex cc entry-point list-v1",
+  "short": "List Entry Point(s) (v1)",
+  "long": "Lists entry points with every field, through the v1 route. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
    }
   ]
  },
@@ -61893,6 +61983,36 @@
   ]
  },
  {
+  "path": "webex cc site list-v1",
+  "short": "List Site(s) (v1)",
+  "long": "Lists sites with every field, through the v1 route. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
+   }
+  ]
+ },
+ {
   "path": "webex cc site purge-inactive",
   "short": "Purge inactive Site(s)",
   "long": "Purge inactive Site(s) older than the configured interval for a given organization.",
@@ -62232,6 +62352,36 @@
     "name": "type",
     "type": "string",
     "usage": "Entity type of the other entity that has a reference to this specific entity."
+   }
+  ]
+ },
+ {
+  "path": "webex cc skill list-v1",
+  "short": "List Skills (v1)",
+  "long": "Lists skills with every field, through the v1 route. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
    }
   ]
  },
@@ -64268,6 +64418,36 @@
   ]
  },
  {
+  "path": "webex cc team list-v1",
+  "short": "List Teams (v1)",
+  "long": "Lists teams with every field, through the v1 route. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
+   }
+  ]
+ },
+ {
   "path": "webex cc team purge-inactive",
   "short": "Purge inactive Teams",
   "long": "Purge inactive Teams older than the configured interval for a given organization.",
@@ -65822,6 +66002,36 @@
     "name": "type",
     "type": "string",
     "usage": "Entity type of the other entity that has a reference to this specific entity."
+   }
+  ]
+ },
+ {
+  "path": "webex cc users list-v1",
+  "short": "List Users (v1)",
+  "long": "Lists Contact Center users through the v1 route. Each item carries lastUpdatedTime.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-v1"
+   },
+   {
+    "name": "orgid",
+    "type": "string",
+    "usage": "Organization ID.",
+    "hidden": true
+   },
+   {
+    "name": "page",
+    "type": "string",
+    "usage": "Page number, from 0."
+   },
+   {
+    "name": "page-size",
+    "type": "string",
+    "usage": "Items per page."
    }
   ]
  },

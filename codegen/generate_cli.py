@@ -331,7 +331,7 @@ def build_operation(ep, collection_name, is_calling, default_host, group):
 def render_operation(var, area, op):
     """Go source for one operation variable."""
     lines = [f'var {var} = &Operation{{']
-    lines.append(f'\tArea: {go_string(area)}, Group: {go_string(op["group"])}, Command: {go_string(op["command"])},')
+    lines.append(f'\tID: {go_string(var)}, Area: {go_string(area)}, Group: {go_string(op["group"])}, Command: {go_string(op["command"])},')
     if op['aliases']:
         lines.append('\tAliases: []string{' + ', '.join(go_string(a) for a in op['aliases']) + '},')
     lines.append(f'\tSummary: {go_string(op["summary"])},')

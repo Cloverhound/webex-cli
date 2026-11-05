@@ -25,6 +25,15 @@ NAMING_OVERRIDES = {
             ('call-controls-for-me', 'get', ()),
     },
     'Webex Contact Center': {
+        # Older list routes from codegen/supplemental, named by API version.
+        ('site', 'GET', '/organization/{orgid}/site'): ('site', 'list-v1', ()),
+        ('users', 'GET', '/organization/{orgid}/user'): ('users', 'list-v1', ()),
+        ('team', 'GET', '/organization/{orgid}/team'): ('team', 'list-v1', ()),
+        ('skill', 'GET', '/organization/{orgid}/skill'): ('skill', 'list-v1', ()),
+        ('entry-point', 'GET', '/organization/{orgid}/entry-point'): ('entry-point', 'list-v1', ()),
+        ('contact-service-queue', 'GET', '/organization/{orgid}/v2/contact-service-queue'):
+            ('contact-service-queue', 'list-v2', ()),
+        ('business-hour', 'GET', '/organization/{orgid}/business-hours'): ('business-hour', 'list-v1', ()),
         ('flow', 'GET', '/flow-store/{orgId}/project/{projectId}/flows/{flowId}:export'): ('flow', 'export-legacy', ()),
         ('flow', 'POST', '/flow-store/{orgId}/project/{projectId}/flows:import'): ('flow', 'import-legacy', ()),
         ('contact-service-queue', 'GET', '/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}'):

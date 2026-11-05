@@ -3,7 +3,7 @@
 package webexops
 
 var AdminAdminAuditListEvents = &Operation{
-	Area: "admin", Group: "admin-audit", Command: "list-events",
+	ID: "AdminAdminAuditListEvents", Area: "admin", Group: "admin-audit", Command: "list-events",
 	Summary:     "List Admin Audit Events",
 	Description: "List admin audit events in your organization. Several query parameters are available to filter the response.\n\nLong result sets will be split into [pages](/docs/basics#pagination).\n\n**NOTE**: A maximum of one year of audit events can be returned per request.",
 	Method:      "GET", Path: "/adminAudit/events", Host: HostWebex,
@@ -22,7 +22,7 @@ var AdminAdminAuditListEvents = &Operation{
 }
 
 var AdminAdminAuditListEventCategories = &Operation{
-	Area: "admin", Group: "admin-audit", Command: "list-event-categories",
+	ID: "AdminAdminAuditListEventCategories", Area: "admin", Group: "admin-audit", Command: "list-event-categories",
 	Summary:     "List Admin Audit Event Categories",
 	Description: "Get the list of all admin event categories.",
 	Method:      "GET", Path: "/adminAudit/eventCategories", Host: HostWebex,
@@ -30,7 +30,7 @@ var AdminAdminAuditListEventCategories = &Operation{
 }
 
 var AdminAuthorizationsListUser = &Operation{
-	Area: "admin", Group: "authorizations", Command: "list-user",
+	ID: "AdminAuthorizationsListUser", Area: "admin", Group: "authorizations", Command: "list-user",
 	Summary:     "List authorizations for a user",
 	Description: "Lists all authorizations for a user. Either `personId` or `personEmail` must be provided. This API does not support pagination.",
 	Method:      "GET", Path: "/authorizations", Host: HostWebex,
@@ -42,7 +42,7 @@ var AdminAuthorizationsListUser = &Operation{
 }
 
 var AdminAuthorizationsDeleteOrgClientId = &Operation{
-	Area: "admin", Group: "authorizations", Command: "delete-org-client-id",
+	ID: "AdminAuthorizationsDeleteOrgClientId", Area: "admin", Group: "authorizations", Command: "delete-org-client-id",
 	Summary:     "Delete authorization of org and client ID",
 	Description: "Deletes an authorization by org ID and client ID.",
 	Method:      "DELETE", Path: "/authorizations", Host: HostWebex,
@@ -53,7 +53,7 @@ var AdminAuthorizationsDeleteOrgClientId = &Operation{
 }
 
 var AdminAuthorizationsDelete = &Operation{
-	Area: "admin", Group: "authorizations", Command: "delete",
+	ID: "AdminAuthorizationsDelete", Area: "admin", Group: "authorizations", Command: "delete",
 	Summary:     "Delete authorization",
 	Description: "Deletes an authorization by authorization ID.\n\nSpecify the authorization Id in the `authorizationId` parameter in the URI, which was listed in the list resource.",
 	Method:      "DELETE", Path: "/authorizations/{authorizationId}", Host: HostWebex,
@@ -63,14 +63,14 @@ var AdminAuthorizationsDelete = &Operation{
 }
 
 var AdminAuthorizationsGetExpirationStatusToken = &Operation{
-	Area: "admin", Group: "authorizations", Command: "get-expiration-status-token",
+	ID: "AdminAuthorizationsGetExpirationStatusToken", Area: "admin", Group: "authorizations", Command: "get-expiration-status-token",
 	Summary:     "Get expiration status for a token",
 	Description: "Epoch-based expiration time for the token.",
 	Method:      "GET", Path: "/authorizations/tokenExpiry", Host: HostWebex,
 }
 
 var AdminClassificationsList = &Operation{
-	Area: "admin", Group: "classifications", Command: "list",
+	ID: "AdminClassificationsList", Area: "admin", Group: "classifications", Command: "list",
 	Summary:     "List classifications",
 	Description: "List all the space classifications configured in your org.",
 	Method:      "GET", Path: "/classifications", Host: HostWebex,
@@ -78,7 +78,7 @@ var AdminClassificationsList = &Operation{
 }
 
 var AdminDataSourcesRegister = &Operation{
-	Area: "admin", Group: "data-sources", Command: "register",
+	ID: "AdminDataSourcesRegister", Area: "admin", Group: "data-sources", Command: "register",
 	Summary:     "Register a Data Source",
 	Description: "Register a data source with the Webex BYODS system. Authenticate using a Service App with the `spark-admin:datasource_write` scope.\nSchema IDs determine the types of data Webex sends to the DAP and the expected responses. Use the Data Source Schemas endpoints to inspect the available schemas.",
 	Method:      "POST", Path: "/dataSources", Host: HostWebex,
@@ -93,21 +93,21 @@ var AdminDataSourcesRegister = &Operation{
 }
 
 var AdminDataSourcesGetAll = &Operation{
-	Area: "admin", Group: "data-sources", Command: "get-all",
+	ID: "AdminDataSourcesGetAll", Area: "admin", Group: "data-sources", Command: "get-all",
 	Summary:     "Retrieve All Data Sources",
 	Description: "Lists all data sources registered by the Service App. Requires the `spark-admin:datasource_read` scope.",
 	Method:      "GET", Path: "/dataSources", Host: HostWebex,
 }
 
 var AdminDataSourcesGetSchemas = &Operation{
-	Area: "admin", Group: "data-sources", Command: "get-schemas",
+	ID: "AdminDataSourcesGetSchemas", Area: "admin", Group: "data-sources", Command: "get-schemas",
 	Summary:     "Retrieve Data Source Schemas",
 	Description: "Lists the available data source schemas. A valid API access token is required, but no specific scope is needed.",
 	Method:      "GET", Path: "/dataSources/schemas", Host: HostWebex,
 }
 
 var AdminDataSourcesGetSchema = &Operation{
-	Area: "admin", Group: "data-sources", Command: "get-schema",
+	ID: "AdminDataSourcesGetSchema", Area: "admin", Group: "data-sources", Command: "get-schema",
 	Summary:     "Retrieve Details of a Specific Data Source Schema",
 	Description: "Retrieves details for a specific data source schema by schema ID. A valid API access token is required, but no specific scope is needed.",
 	Method:      "GET", Path: "/dataSources/schemas/{schemaId}", Host: HostWebex,
@@ -117,7 +117,7 @@ var AdminDataSourcesGetSchema = &Operation{
 }
 
 var AdminDataSourcesDelete = &Operation{
-	Area: "admin", Group: "data-sources", Command: "delete",
+	ID: "AdminDataSourcesDelete", Area: "admin", Group: "data-sources", Command: "delete",
 	Summary:     "Delete a Data Source",
 	Description: "Deletes a data source by ID.\n\nSpecify the data source ID in the `dataSourceId` URI parameter.",
 	Method:      "DELETE", Path: "/dataSources/{dataSourceId}", Host: HostWebex,
@@ -127,7 +127,7 @@ var AdminDataSourcesDelete = &Operation{
 }
 
 var AdminDataSourcesGet = &Operation{
-	Area: "admin", Group: "data-sources", Command: "get",
+	ID: "AdminDataSourcesGet", Area: "admin", Group: "data-sources", Command: "get",
 	Summary:     "Retrieve Data Source Details",
 	Description: "Retrieves details for a data source by ID. Use a Service App token with the `spark-admin:datasource_read` scope.",
 	Method:      "GET", Path: "/dataSources/{dataSourceId}", Host: HostWebex,
@@ -137,7 +137,7 @@ var AdminDataSourcesGet = &Operation{
 }
 
 var AdminDataSourcesUpdate = &Operation{
-	Area: "admin", Group: "data-sources", Command: "update",
+	ID: "AdminDataSourcesUpdate", Area: "admin", Group: "data-sources", Command: "update",
 	Summary:     "Update a Data Source",
 	Description: "Updates a data source. The fields you can update are `audience`, `subject`, `nonce`, `url`, and `tokenLifetimeMinutes`.\nYou can set `status` from `active` to `disabled` only if you provide an `errorMessage`, which may be shown to the customer administrator in Control Hub.\nUpdate tokens before they expire to prevent service interruption.",
 	Method:      "PUT", Path: "/dataSources/{dataSourceId}", Host: HostWebex,
@@ -157,7 +157,7 @@ var AdminDataSourcesUpdate = &Operation{
 }
 
 var AdminDomainManagementGetVerificationToken = &Operation{
-	Area: "admin", Group: "domain-management", Command: "get-verification-token",
+	ID: "AdminDomainManagementGetVerificationToken", Area: "admin", Group: "domain-management", Command: "get-verification-token",
 	Summary:     "Get Domain Verification Token",
 	Description: "This endpoint helps generate a token for a given domain within the specified organization. The user needs to add this token as a 'TXT' record to the DNS server.\n\n**Possible Error:**\n\n- 409: The request encountered a resource conflict. This error occurs if the domain is either claimed by another organization or by the same organization.\n\n**Authorization:**\n\nAn 'OAuth' token issued by the 'Identity Broker' is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:Organization`\n\n- `identity:organizations_rw`\n\n**Administrator Roles:**\n\nThe following administrators can use this API:\n\n- `id_full_admin`",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/actions/getDomainVerificationToken", Host: HostWebex,
@@ -170,7 +170,7 @@ var AdminDomainManagementGetVerificationToken = &Operation{
 }
 
 var AdminDomainManagementVerify = &Operation{
-	Area: "admin", Group: "domain-management", Command: "verify",
+	ID: "AdminDomainManagementVerify", Area: "admin", Group: "domain-management", Command: "verify",
 	Summary:     "Verify Domain",
 	Description: "This endpoint helps verify a given domain within the specified organization. This API verifies domain ownership by looking up and validating the 'TXT' record for the domain.\nOnce verified, domain enforcement will be applied to the organization. Any users in the organization whose email domain doesn't match one of the verified domains will be marked as transient.\n\nIf you want to verify and claim the domain, just set the 'claimDomain' parameter to true. By default, it's set to false, which will only verify the domain.\n\n**Possible Errors:**\n\n- 400: The request was a Bad Request. The domain can't be verified. This error happens if the user didn't request a token before trying to verify the domain.\n\n- 409: The request resulted in a resource conflict. This error occurs if the domain has already been claimed by another organization.\n\n**Authorization:**\n\nAn 'OAuth' token issued by the 'Identity Broker' is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:Organization`\n\n- `identity:organizations_rw`\n\n**Administrator Roles:**\n\nThe following administrators can use this API:\n\n- `id_full_admin`",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/actions/verifyDomain", Host: HostWebex,
@@ -185,7 +185,7 @@ var AdminDomainManagementVerify = &Operation{
 }
 
 var AdminDomainManagementClaim = &Operation{
-	Area: "admin", Group: "domain-management", Command: "claim",
+	ID: "AdminDomainManagementClaim", Area: "admin", Group: "domain-management", Command: "claim",
 	Summary:     "Claim Domain",
 	Description: "This endpoint helps claim the given domain within the specified organization. The domain needs to be verified before it can be claimed.\n\n**Note**\n<callout type=\"warning\">\n\nThere's an organization-level boolean flag called 'enforceVerifiedDomains'. If this flag is set to false, we won't put any user in the organization into a transient state when verifying or claiming a domain.\nCustomers can still create users within the organization who don't use the verified domains as their email. However, if the flag is set to true, all users in the organization must use one of the verified domains as their email.\nThis flag defines whether the organization enforces user email verification within the organization. If set to true, all users inside the organization must use one of the verified domains.\nThis flag is effective only after the admin has verified at least one email domain.\n</callout>\n\n**Possible Error:**\n\n- 400: The request was a Bad Request. This error occurs if the domain is not verified.\n\n**Authorization:**\n\nAn 'OAuth' token issued by the 'Identity Broker' is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:Organization`\n\n- `identity:organizations_rw`\n\n**Administrator Roles:**\n\nThe following administrators can use this API:\n\n- `id_full_admin`",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/actions/claimDomain", Host: HostWebex,
@@ -196,7 +196,7 @@ var AdminDomainManagementClaim = &Operation{
 }
 
 var AdminDomainManagementUnverify = &Operation{
-	Area: "admin", Group: "domain-management", Command: "unverify",
+	ID: "AdminDomainManagementUnverify", Area: "admin", Group: "domain-management", Command: "unverify",
 	Summary:     "Unverify Domain",
 	Description: "After you unclaim the domain, it will still be verified. Domain enforcement will still apply to the organization. The unverify endpoint helps to remove the domain ownership verification for the organization.\n\n**Possible Error:**\n\n- 400: The request was a Bad Request. The domain cannot be unverified. This error occurs if the domain is still claimed.\n\n- 404: The request was Not Found. This error occurs if the domain is not associated with the organization.\n\n**Authorization:**\n\nAn 'OAuth' token issued by the 'Identity Broker' is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:Organization`\n\n- `identity:organizations_rw`\n\n**Administrator Roles:**\n\nThe following administrators can use this API:\n\n- `id_full_admin`",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/actions/unverifyDomain", Host: HostWebex,
@@ -210,7 +210,7 @@ var AdminDomainManagementUnverify = &Operation{
 }
 
 var AdminDomainManagementUnclaim = &Operation{
-	Area: "admin", Group: "domain-management", Command: "unclaim",
+	ID: "AdminDomainManagementUnclaim", Area: "admin", Group: "domain-management", Command: "unclaim",
 	Summary:     "Unclaim Domain",
 	Description: "This API is used to unclaim a domain for the organization. The domain will remain verified, and domain enforcement will still apply to the given organization.\n\n**Possible Error:**\n\n- 400: The request was a Bad Request. The domain cannot be unclaimed. This error occurs if the requested parameter is invalid.\n\n**Authorization:**\n\nAn 'OAuth' token issued by the 'Identity Broker' is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:Organization`\n\n- `identity:organizations_rw`\n\n**Administrator Roles:**\n\nThe following administrators can use this API:\n\n- `id_full_admin`",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/actions/unclaimDomain", Host: HostWebex,
@@ -223,7 +223,7 @@ var AdminDomainManagementUnclaim = &Operation{
 }
 
 var AdminIdentityOrgGet = &Operation{
-	Area: "admin", Group: "identity-org", Command: "get",
+	ID: "AdminIdentityOrgGet", Area: "admin", Group: "identity-org", Command: "get",
 	Summary:     "Get an organization",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n- `identity:organizations_read`\n\n<br/>",
 	Method:      "GET", Path: "/identity/organizations/{orgId}", Host: HostWebex,
@@ -233,7 +233,7 @@ var AdminIdentityOrgGet = &Operation{
 }
 
 var AdminIdentityOrgUpdate = &Operation{
-	Area: "admin", Group: "identity-org", Command: "update",
+	ID: "AdminIdentityOrgUpdate", Area: "admin", Group: "identity-org", Command: "update",
 	Summary:     "Update an organization",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:cisco:codev:identity:organization:core:1.0\".",
 	Method:      "PATCH", Path: "/identity/organizations/{orgId}", Host: HostWebex,
@@ -248,7 +248,7 @@ var AdminIdentityOrgUpdate = &Operation{
 }
 
 var AdminIdentityOrgGenerateOtp = &Operation{
-	Area: "admin", Group: "identity-org", Command: "generate-otp",
+	ID: "AdminIdentityOrgGenerateOtp", Area: "admin", Group: "identity-org", Command: "generate-otp",
 	Summary:     "Generate OTP",
 	Description: "This API allows an admin to generate a One-Time Password (OTP) for user accounts with `userNameType` set as `partner-upn`. The OTP is used by users to log in to any Webex application, whereupon they are asked to change their password.\nThe OTP generated by this API has a default length of 6 digits and expires in 7 days.\n\nSeveral OTPs can be active for the same user. When the user successfully uses an OTP, all other OTPs are automatically revoked.\n\nThe creation of OTPs is logged in the [Admin Audit Events](https://developer.webex.com/docs/api/v1/admin-audit-events).\n\n**Possible Error:**\n\n- 403: The request was forbidden. OTP generation is restricted to users with a `userNameType` of `partner-upn`. This error occurs if the user does not meet the required criteria for OTP generation.\n\n**Authorization:**\n\nAn OAuth token issued by the Identity Broker is required to access this endpoint. The token must include one of the following scopes:\n\n- `Identity:one_time_password`\nor\n\n- `Identity:Config`\n\n**Administrator Roles:**\n\nThe following administrators have permission to use this API:\n\n- `Org Full Admin`: Can generate OTPs for non-email-type users in their organization.\n\n- `Partner Full Admin`: Can generate OTPs for User/Machine Accounts in Customer Orgs.\n\n- `Org User Admin`: Can generate OTPs for User/Machine Accounts within their organization.",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/users/{userId}/actions/generateOtp", Host: HostWebex,
@@ -259,7 +259,7 @@ var AdminIdentityOrgGenerateOtp = &Operation{
 }
 
 var AdminIdentityOrgUpdateAuthenticationConfigurationSettings = &Operation{
-	Area: "admin", Group: "identity-org", Command: "update-authentication-configuration-settings",
+	ID: "AdminIdentityOrgUpdateAuthenticationConfigurationSettings", Area: "admin", Group: "identity-org", Command: "update-authentication-configuration-settings",
 	Summary:     "Update Organization Authentication Configuration Settings",
 	Description: "Update the authentication configuration details, by organizationID.\nSpecify the organization ID in the `orgId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:cisco:codev:identity:idbroker:authnconfig:schemas:1.0\".",
 	Method:      "PATCH", Path: "/identity/organizations/{orgId}/authenticationConfig", Host: HostWebex,
@@ -275,7 +275,7 @@ var AdminIdentityOrgUpdateAuthenticationConfigurationSettings = &Operation{
 }
 
 var AdminIdentityOrgUpdatePasswordPolicy = &Operation{
-	Area: "admin", Group: "identity-org", Command: "update-password-policy",
+	ID: "AdminIdentityOrgUpdatePasswordPolicy", Area: "admin", Group: "identity-org", Command: "update-password-policy",
 	Summary:     "Update Organization Password Policy",
 	Description: "Update Organization Password Policy, by organizationID.\nSpecify the organization ID in the `orgId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by identity broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:organizations_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:cisco:codev:identity:idbroker:pwdpolicy:schemas:1.0\".",
 	Method:      "PATCH", Path: "/identity/organizations/{orgId}/passwordPolicy", Host: HostWebex,
@@ -296,7 +296,7 @@ var AdminIdentityOrgUpdatePasswordPolicy = &Operation{
 }
 
 var AdminEventsList = &Operation{
-	Area: "admin", Group: "events", Command: "list",
+	ID: "AdminEventsList", Area: "admin", Group: "events", Command: "list",
 	Summary:     "List Events",
 	Description: "List events in your organization. Several query parameters are available to filter the events returned in the response.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Path: "/events", Host: HostWebex,
@@ -314,7 +314,7 @@ var AdminEventsList = &Operation{
 }
 
 var AdminEventsGet = &Operation{
-	Area: "admin", Group: "events", Command: "get",
+	ID: "AdminEventsGet", Area: "admin", Group: "events", Command: "get",
 	Summary:     "Get Event Details",
 	Description: "Shows details for an event, by event ID.\n\nSpecify the event ID in the `eventId` parameter in the URI.",
 	Method:      "GET", Path: "/events/{eventId}", Host: HostWebex,
@@ -324,7 +324,7 @@ var AdminEventsGet = &Operation{
 }
 
 var AdminGroupsCreate = &Operation{
-	Area: "admin", Group: "groups", Command: "create",
+	ID: "AdminGroupsCreate", Area: "admin", Group: "groups", Command: "create",
 	Summary:     "Create a Group",
 	Description: "Create a new group for a given organization. The group may optionally be created with group members.",
 	Method:      "POST", Path: "/groups", Host: HostWebex,
@@ -332,7 +332,7 @@ var AdminGroupsCreate = &Operation{
 }
 
 var AdminGroupsListSearch = &Operation{
-	Area: "admin", Group: "groups", Command: "list-search",
+	ID: "AdminGroupsListSearch", Area: "admin", Group: "groups", Command: "list-search",
 	Summary:     "List and Search Groups",
 	Description: "List groups in your organization.\n\n* Set the `includeMembers` parameter to `true` to return group members. The total number of members returned is limited to 500.\n\n* Use the `startIndex` and `count` parameters to page through result set.\n\n* To search for a specific group use the `filter` parameter.\n\n* Use `sortBy` parameter to sort the responses by `id` or `displayName`.",
 	Method:      "GET", Path: "/groups", Host: HostWebex,
@@ -350,7 +350,7 @@ var AdminGroupsListSearch = &Operation{
 }
 
 var AdminGroupsUpdate = &Operation{
-	Area: "admin", Group: "groups", Command: "update",
+	ID: "AdminGroupsUpdate", Area: "admin", Group: "groups", Command: "update",
 	Summary:     "Update a Group",
 	Description: "Update the group details, by ID.\n\nSpecify the group ID in the `groupId` parameter in the URI.",
 	Method:      "PATCH", Path: "/groups/{groupId}", Host: HostWebex,
@@ -361,7 +361,7 @@ var AdminGroupsUpdate = &Operation{
 }
 
 var AdminGroupsGet = &Operation{
-	Area: "admin", Group: "groups", Command: "get",
+	ID: "AdminGroupsGet", Area: "admin", Group: "groups", Command: "get",
 	Summary:     "Get Group Details",
 	Description: "Get details for a group, by ID.\n\nOptionally, the members may be retrieved with this request. The maximum number of members returned is 500.",
 	Method:      "GET", Path: "/groups/{groupId}", Host: HostWebex,
@@ -372,7 +372,7 @@ var AdminGroupsGet = &Operation{
 }
 
 var AdminGroupsDelete = &Operation{
-	Area: "admin", Group: "groups", Command: "delete",
+	ID: "AdminGroupsDelete", Area: "admin", Group: "groups", Command: "delete",
 	Summary:     "Delete a Group",
 	Description: "Remove a group from the system.\n\nSpecify the group ID in the `groupId` parameter in the URI.",
 	Method:      "DELETE", Path: "/groups/{groupId}", Host: HostWebex,
@@ -382,7 +382,7 @@ var AdminGroupsDelete = &Operation{
 }
 
 var AdminGroupsGetMembers = &Operation{
-	Area: "admin", Group: "groups", Command: "get-members",
+	ID: "AdminGroupsGetMembers", Area: "admin", Group: "groups", Command: "get-members",
 	Summary:     "Get Group Members",
 	Description: "Gets the members of a group.\n\n* The default maximum members returned is 500.\n\n* Control parameters is available to page through the members and to control the size of the results.",
 	Method:      "GET", Path: "/groups/{groupId}/members", Host: HostWebex,
@@ -395,7 +395,7 @@ var AdminGroupsGetMembers = &Operation{
 }
 
 var AdminGuestManagementCreate = &Operation{
-	Area: "admin", Group: "guest-management", Command: "create",
+	ID: "AdminGuestManagementCreate", Area: "admin", Group: "guest-management", Command: "create",
 	Summary:     "Create a Guest",
 	Description: "Create a new token for a single guest user. The Service App that creates the guest must have the scope `guest-issuer:write`.\n\nGuests are implicitly created by retrieving the guest access token.\n\nRepeated calls to this API with the same `subject` will create additional tokens without invalidating previous ones. Tokens are valid until the `expiresIn`.\n\nGuests can be renamed by supplying the same `subject` and changing the `displayName.`\n\nTo retrieve a new token for an existing guest, please provide the existing guest's `subject`. Tokens are valid until `expiresIn`.",
 	Method:      "POST", Path: "/guests/token", Host: HostWebex,
@@ -406,14 +406,14 @@ var AdminGuestManagementCreate = &Operation{
 }
 
 var AdminGuestManagementGetCount = &Operation{
-	Area: "admin", Group: "guest-management", Command: "get-count",
+	ID: "AdminGuestManagementGetCount", Area: "admin", Group: "guest-management", Command: "get-count",
 	Summary:     "Get Guest Count",
 	Description: "To retrieve the number of guests, the scopes `guest-issuer:read` or `guest-issuer:write` are needed.",
 	Method:      "GET", Path: "/guests/count", Host: HostWebex,
 }
 
 var AdminAnalyticsHistoricalDataRelatedMessaging = &Operation{
-	Area: "admin", Group: "analytics", Command: "historical-data-related-messaging",
+	ID: "AdminAnalyticsHistoricalDataRelatedMessaging", Area: "admin", Group: "analytics", Command: "historical-data-related-messaging",
 	Summary:     "Historical Data related to Messaging",
 	Description: "Returns daily aggregates of various metrics related to Webex messaging.\n\n<div><Callout type=\"error\">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>",
 	Method:      "GET", Path: "/v1/analytics/messagingMetrics/dailyTotals", Host: HostAnalytics,
@@ -425,7 +425,7 @@ var AdminAnalyticsHistoricalDataRelatedMessaging = &Operation{
 }
 
 var AdminAnalyticsHistoricalDataRelatedRoomDevices = &Operation{
-	Area: "admin", Group: "analytics", Command: "historical-data-related-room-devices",
+	ID: "AdminAnalyticsHistoricalDataRelatedRoomDevices", Area: "admin", Group: "analytics", Command: "historical-data-related-room-devices",
 	Summary:     "Historical Data related to Room Devices",
 	Description: "Returns daily aggregates of various metrics related to Room Devices.\n\n<div><Callout type=\"error\">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature. </Callout></div>",
 	Method:      "GET", Path: "/v1/analytics/roomDeviceMetrics/dailyTotals", Host: HostAnalytics,
@@ -437,7 +437,7 @@ var AdminAnalyticsHistoricalDataRelatedRoomDevices = &Operation{
 }
 
 var AdminAnalyticsHistoricalDataRelatedMeetings = &Operation{
-	Area: "admin", Group: "analytics", Command: "historical-data-related-meetings",
+	ID: "AdminAnalyticsHistoricalDataRelatedMeetings", Area: "admin", Group: "analytics", Command: "historical-data-related-meetings",
 	Summary:     "Historical Data related to Meetings",
 	Description: "Return aggregates of various metrics related to meetings for a given Webex site over a specified time range.\n\n<div><Callout type=\"error\">The base URL for these APIs is **analytics.webexapis.com**, which does not work with the **Try It** feature.</Callout></div>",
 	Method:      "GET", Path: "/v1/analytics/meetingsMetrics/aggregates", Host: HostAnalytics,
@@ -450,7 +450,7 @@ var AdminAnalyticsHistoricalDataRelatedMeetings = &Operation{
 }
 
 var AdminHybridClustersList = &Operation{
-	Area: "admin", Group: "hybrid-clusters", Command: "list",
+	ID: "AdminHybridClustersList", Area: "admin", Group: "hybrid-clusters", Command: "list",
 	Summary:     "List Hybrid Clusters",
 	Description: "List hybrid clusters for an organization. If no `orgId` is specified, the default is the organization of the authenticated user.\n\nOnly an admin auth token with the `spark-admin:hybrid_clusters_read` scope can list clusters.",
 	Method:      "GET", Path: "/hybrid/clusters", Host: HostWebex,
@@ -461,7 +461,7 @@ var AdminHybridClustersList = &Operation{
 }
 
 var AdminHybridClustersGet = &Operation{
-	Area: "admin", Group: "hybrid-clusters", Command: "get",
+	ID: "AdminHybridClustersGet", Area: "admin", Group: "hybrid-clusters", Command: "get",
 	Summary:     "Get Hybrid Cluster Details",
 	Description: "Shows details for a hybrid cluster, by ID.\n\nOnly an admin auth token with the `spark-admin:hybrid_clusters_read` scope can see cluster details.",
 	Method:      "GET", Path: "/hybrid/clusters/{hybridClusterId}", Host: HostWebex,
@@ -472,7 +472,7 @@ var AdminHybridClustersGet = &Operation{
 }
 
 var AdminHybridConnectorsList = &Operation{
-	Area: "admin", Group: "hybrid-connectors", Command: "list",
+	ID: "AdminHybridConnectorsList", Area: "admin", Group: "hybrid-connectors", Command: "list",
 	Summary:     "List Hybrid Connectors",
 	Description: "List hybrid connectors for an organization. If no `orgId` is specified, the default is the organization of the authenticated user.\n\nOnly an admin auth token with the `spark-admin:hybrid_connectors_read` scope can list connectors.",
 	Method:      "GET", Path: "/hybrid/connectors", Host: HostWebex,
@@ -483,7 +483,7 @@ var AdminHybridConnectorsList = &Operation{
 }
 
 var AdminHybridConnectorsGet = &Operation{
-	Area: "admin", Group: "hybrid-connectors", Command: "get",
+	ID: "AdminHybridConnectorsGet", Area: "admin", Group: "hybrid-connectors", Command: "get",
 	Summary:     "Get Hybrid Connector Details",
 	Description: "Shows details for a hybrid connector, by ID.\n\nOnly an admin auth token with the `spark-admin:hybrid_connectors_read` scope can see connector details.",
 	Method:      "GET", Path: "/hybrid/connectors/{connectorId}", Host: HostWebex,
@@ -493,7 +493,7 @@ var AdminHybridConnectorsGet = &Operation{
 }
 
 var AdminLicensesList = &Operation{
-	Area: "admin", Group: "licenses", Command: "list",
+	ID: "AdminLicensesList", Area: "admin", Group: "licenses", Command: "list",
 	Summary:     "List Licenses",
 	Description: "List all licenses for a given organization.  If no `orgId` is specified, the default is the organization of the authenticated user.\n\nResponse properties that are not applicable to the license will not be present in the response.",
 	Method:      "GET", Path: "/licenses", Host: HostWebex,
@@ -504,7 +504,7 @@ var AdminLicensesList = &Operation{
 }
 
 var AdminLicensesGetLicense = &Operation{
-	Area: "admin", Group: "licenses", Command: "get-license",
+	ID: "AdminLicensesGetLicense", Area: "admin", Group: "licenses", Command: "get-license",
 	Summary:     "Get License Details",
 	Description: "Shows details for a license, by ID.\n\nSpecify the license ID in the `licenseId` parameter in the URI.\nUse the optional query parameter `includeAssignedTo` to get a list of all objects that are assigned with the license. The objects include but not limited to, users including external users. Long result sets will be split into [pages](/docs/basics#pagination).\n\nResponse properties that are not applicable to the license will not be present in the response.",
 	Method:      "GET", Path: "/licenses/{licenseId}", Host: HostWebex,
@@ -517,7 +517,7 @@ var AdminLicensesGetLicense = &Operation{
 }
 
 var AdminLicensesAssignUsers = &Operation{
-	Area: "admin", Group: "licenses", Command: "assign-users",
+	ID: "AdminLicensesAssignUsers", Area: "admin", Group: "licenses", Command: "assign-users",
 	Summary:     "Assign Licenses to Users",
 	Description: "Assign licenses and attendee `siteUrls` to existing users. Only an admin can assign licenses. Only existing users can be assigned a license. Assign meeting licenses to users outside your organization (Status will be pending until the user accepts the invite)\n\nAt least one of the following body parameters is required to assign license to the user: `email`, `personId`. For Calling license assignment, properties `phoneNumber` or `extension` are required. If `phoneNumber` is not provided then `locationId` is mandatory.\n\nWhen assigning licenses and attendee siteUrls to a user who does not belong to the organization, the licenses and siteUrls remain in pending state until the user accepts them. The `pendingLicenses` and `pendingSiteUrls` are part of the response.",
 	Method:      "PATCH", Path: "/licenses/users", Host: HostWebex,
@@ -525,7 +525,7 @@ var AdminLicensesAssignUsers = &Operation{
 }
 
 var AdminMeetingQualitiesGet = &Operation{
-	Area: "admin", Group: "meeting-qualities", Command: "get",
+	ID: "AdminMeetingQualitiesGet", Area: "admin", Group: "meeting-qualities", Command: "get",
 	Summary:     "Get Meeting Qualities",
 	Description: "Get quality data for a meeting, by `meetingId`. Only organization administrators can retrieve meeting quality data.",
 	Method:      "GET", Path: "/meeting/qualities", Host: HostWebex,
@@ -538,7 +538,7 @@ var AdminMeetingQualitiesGet = &Operation{
 }
 
 var AdminOrgContactsCreate = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "create",
+	ID: "AdminOrgContactsCreate", Area: "admin", Group: "org-contacts", Command: "create",
 	Summary:     "Create a Contact",
 	Description: "Creating a new contact for a given organization requires an org admin role.\n\nAt least one of the following body parameters: `phoneNumbers`, `emails`, `sipAddresses` is required to create a new contact for source \"CH\",\n`displayName` is required to create a new contact for source \"Webex4Broadworks\".\n\nUse the optional `groupIds` field to add group IDs in an array within the organisation contact. This will become a group contact.",
 	Method:      "POST", Path: "/contacts/organizations/{orgid}/contacts", Host: HostWebex,
@@ -549,7 +549,7 @@ var AdminOrgContactsCreate = &Operation{
 }
 
 var AdminOrgContactsGet = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "get",
+	ID: "AdminOrgContactsGet", Area: "admin", Group: "org-contacts", Command: "get",
 	Summary:     "Get a Contact",
 	Description: "Shows details for an organization contact by ID.\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.\n\n**NOTE**:\nThe `orgId` used in the path for this API are the org UUIDs. They follow a xxxx-xxxx-xxxx-xxxx pattern. If you have an orgId in base64 encoded format (starting with Y2.....) you need to base64 decode the id and extract the UUID from the slug, before you use it in your API call.",
 	Method:      "GET", Path: "/contacts/organizations/{orgid}/contacts/{contactId}", Host: HostWebex,
@@ -560,7 +560,7 @@ var AdminOrgContactsGet = &Operation{
 }
 
 var AdminOrgContactsUpdate = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "update",
+	ID: "AdminOrgContactsUpdate", Area: "admin", Group: "org-contacts", Command: "update",
 	Summary:     "Update a Contact",
 	Description: "Update details for contact by ID. Only an admin can update a contact.\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.\n\nUse the optional `groupIds` field to update the group IDs by changing the existing array. You can add or remove one or all groups. To remove all associated groups, pass an empty array in the `groupIds` field.",
 	Method:      "PATCH", Path: "/contacts/organizations/{orgid}/contacts/{contactId}", Host: HostWebex,
@@ -572,7 +572,7 @@ var AdminOrgContactsUpdate = &Operation{
 }
 
 var AdminOrgContactsDelete = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "delete",
+	ID: "AdminOrgContactsDelete", Area: "admin", Group: "org-contacts", Command: "delete",
 	Summary:     "Delete a Contact",
 	Description: "Remove a contact from the organization. Only an admin can remove a contact.\n\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.",
 	Method:      "DELETE", Path: "/contacts/organizations/{orgid}/contacts/{contactId}", Host: HostWebex,
@@ -583,7 +583,7 @@ var AdminOrgContactsDelete = &Operation{
 }
 
 var AdminOrgContactsList = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "list",
+	ID: "AdminOrgContactsList", Area: "admin", Group: "org-contacts", Command: "list",
 	Summary:     "List Contacts",
 	Description: "List contacts in the organization. The default limit is `100`.\n\n`keyword` can be the value of \"displayName\", \"firstName\", \"lastName\", \"email\". An empty string of `keyword` means get all contacts.\n\n`groupIds` is a comma separated list group IDs. Results are filtered based on those group IDs.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Path: "/contacts/organizations/{orgid}/contacts/search", Host: HostWebex,
@@ -599,7 +599,7 @@ var AdminOrgContactsList = &Operation{
 }
 
 var AdminOrgContactsBulkCreateUpdate = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "bulk-create-update",
+	ID: "AdminOrgContactsBulkCreateUpdate", Area: "admin", Group: "org-contacts", Command: "bulk-create-update",
 	Summary:     "Bulk Create or Update Contacts",
 	Description: "Create or update contacts in bulk. Update an existing contact by specifying the contact ID in the `contactId` parameter in the request body.",
 	Method:      "POST", Path: "/contacts/organizations/{orgid}/contacts/bulk", Host: HostWebex,
@@ -610,7 +610,7 @@ var AdminOrgContactsBulkCreateUpdate = &Operation{
 }
 
 var AdminOrgContactsBulkDelete = &Operation{
-	Area: "admin", Group: "org-contacts", Command: "bulk-delete",
+	ID: "AdminOrgContactsBulkDelete", Area: "admin", Group: "org-contacts", Command: "bulk-delete",
 	Summary:     "Bulk Delete Contacts",
 	Description: "Delete contacts in bulk.",
 	Method:      "POST", Path: "/contacts/organizations/{orgid}/contacts/bulk/delete", Host: HostWebex,
@@ -624,7 +624,7 @@ var AdminOrgContactsBulkDelete = &Operation{
 }
 
 var AdminOrganizationsList = &Operation{
-	Area: "admin", Group: "organizations", Command: "list",
+	ID: "AdminOrganizationsList", Area: "admin", Group: "organizations", Command: "list",
 	Summary:     "List Organizations",
 	Description: "List all organizations visible by your account. The results will not be [paginated](/docs/basics#pagination).",
 	Method:      "GET", Path: "/organizations", Host: HostWebex,
@@ -632,7 +632,7 @@ var AdminOrganizationsList = &Operation{
 }
 
 var AdminOrganizationsGet = &Operation{
-	Area: "admin", Group: "organizations", Command: "get",
+	ID: "AdminOrganizationsGet", Area: "admin", Group: "organizations", Command: "get",
 	Summary:     "Get Organization Details",
 	Description: "Shows details for an organization, by ID.\n\nSpecify the org ID in the `orgId` parameter in the URI.",
 	Method:      "GET", Path: "/organizations/{orgId}", Host: HostWebex,
@@ -642,7 +642,7 @@ var AdminOrganizationsGet = &Operation{
 }
 
 var AdminOrganizationsDelete = &Operation{
-	Area: "admin", Group: "organizations", Command: "delete",
+	ID: "AdminOrganizationsDelete", Area: "admin", Group: "organizations", Command: "delete",
 	Summary:     "Delete Organization",
 	Description: "Deletes an organization, by ID. It may take up to 10 minutes for the organization to be deleted after the response is returned.\n<br/><br/>\nSpecify the org ID in the `orgId` parameter in the URI.\n\n<div><Callout type=\"warning\">Deleting your organization permanently deletes all of the information associated with your organization and is irreversible.</Callout></div>\n\nDeleting an Organization may fail with a HTTP 409 Conflict response and encounter one or more of the errors described below. Resolve these conditions to allow the delete to succeed.\n<br/><br/>\n\n+ Org cannot be deleted as it has Linked sites.\n\n+ Org cannot be deleted as it has active subscriptions or licenses.\n\n+ Org cannot be deleted as [Directory Synchronization](https://developer.webex.com/docs/api/v1/broadworks-enterprises/get-directory-sync-status-for-an-enterprise) is enabled.\n\n+ Org cannot be deleted as it has more than 1 user.\n\n+ Org cannot be deleted as it has more than 1 managed by relationship.\n\n+ Org cannot be deleted as it has managed orgs.\n\n<div>\n<Callout type='info'>When deleting a Webex for BroadWorks Organization with BroadWorks Directory Synchronization enabled, a prerequisite is to disable BroadWorks Directory Synchronization for the given Organization. Refer to the [Organization Deletion](https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#organization-deletion) section of the [Webex for BroadWorks](/docs/api/guides/webex-for-broadworks-developers-guide) guide for more information.</Callout>\n</div>",
 	Method:      "DELETE", Path: "/organizations/{orgId}", Host: HostWebex,
@@ -652,7 +652,7 @@ var AdminOrganizationsDelete = &Operation{
 }
 
 var AdminPartnerAdministratorsGetAllCustomersManagedAdmin = &Operation{
-	Area: "admin", Group: "partner-administrators", Command: "get-all-customers-managed-admin",
+	ID: "AdminPartnerAdministratorsGetAllCustomersManagedAdmin", Area: "admin", Group: "partner-administrators", Command: "get-all-customers-managed-admin",
 	Summary:     "Get all customers managed by a partner admin",
 	Description: "Get all customer organizations managed by given partner admin, in the `managedBy` request parameter. The `managedBy` user typically has the role of a Partner Admin. In case where a Partner Full Admin or Partner Read-Only admin is selected an error like \"The user already has access to all customers managed by their partner organization.\" is shown as a Partner Admin (Full and Read-Only) is able to manage all customers by default. This does not include customers managed through Customer Groups.\n\nThis API can be invoked by Partner Full Admin and Partner Readonly Admin.\nSpecify the `personId` in the `managedBy` parameter in the URI.",
 	Method:      "GET", Path: "/partner/organizations", Host: HostWebex,
@@ -662,7 +662,7 @@ var AdminPartnerAdministratorsGetAllCustomersManagedAdmin = &Operation{
 }
 
 var AdminPartnerAdministratorsGetAllAdminsAssignedCustomer = &Operation{
-	Area: "admin", Group: "partner-administrators", Command: "get-all-admins-assigned-customer",
+	ID: "AdminPartnerAdministratorsGetAllAdminsAssignedCustomer", Area: "admin", Group: "partner-administrators", Command: "get-all-admins-assigned-customer",
 	Summary:     "Get all partner admins assigned to a customer",
 	Description: "For a given customer, get all the partner admins with their role details. This does not include partner admins who have access through Customer Groups.\nThis API can be used by Partner Full Admins.\n\nSpecify the `orgId` in the path parameter.",
 	Method:      "GET", Path: "/partner/organizations/{orgId}/partnerAdmins", Host: HostWebex,
@@ -672,7 +672,7 @@ var AdminPartnerAdministratorsGetAllAdminsAssignedCustomer = &Operation{
 }
 
 var AdminPartnerAdministratorsAssignAdminCustomer = &Operation{
-	Area: "admin", Group: "partner-administrators", Command: "assign-admin-customer",
+	ID: "AdminPartnerAdministratorsAssignAdminCustomer", Area: "admin", Group: "partner-administrators", Command: "assign-admin-customer",
 	Summary:     "Assign partner admin to a customer",
 	Description: "Assign a specific Partner Admin to a customer organization. The partner admin is a user that has the Partner Administrator role.\nOther partner roles, such as Partner Full Administrator are not applicable for this API, since this role manages all customer organizations.\n\nThis API can be used b a Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
 	Method:      "POST", Path: "/partner/organizations/{orgId}/partnerAdmin/{personId}/assign", Host: HostWebex,
@@ -683,7 +683,7 @@ var AdminPartnerAdministratorsAssignAdminCustomer = &Operation{
 }
 
 var AdminPartnerAdministratorsUnassignAdminCustomer = &Operation{
-	Area: "admin", Group: "partner-administrators", Command: "unassign-admin-customer",
+	ID: "AdminPartnerAdministratorsUnassignAdminCustomer", Area: "admin", Group: "partner-administrators", Command: "unassign-admin-customer",
 	Summary:     "Unassign partner admin from a customer",
 	Description: "Unassign a specific partner admin from a customer organization. Unassigning a customer organization from a partner admin does not remove the role from the user. If a partner admin is also managing the customer organization through a Customer Group, they will continue to have access.\nThis API can be used by Partner Full Admin.\n\nSpecify the `orgId` and the `personId` in the path param.",
 	Method:      "DELETE", Path: "/partner/organizations/{orgId}/partnerAdmin/{personId}/unassign", Host: HostWebex,
@@ -694,7 +694,7 @@ var AdminPartnerAdministratorsUnassignAdminCustomer = &Operation{
 }
 
 var AdminPartnerAdministratorsRevokeAllAdminRolesPersonId = &Operation{
-	Area: "admin", Group: "partner-administrators", Command: "revoke-all-admin-roles-person-id",
+	ID: "AdminPartnerAdministratorsRevokeAllAdminRolesPersonId", Area: "admin", Group: "partner-administrators", Command: "revoke-all-admin-roles-person-id",
 	Summary:     "Revoke all partner admin roles for a given person ID",
 	Description: "Revoke all partner administrator roles from a user, thereby revoking access to Partner Hub and all managed customer organizations.\nThis action does not grant or revoke Control Hub administrator roles (e.g. Full Administrator, User and Device Administrator, etc.).\nThis API can be used by Partner Full Admin.\nSpecify the `personId` in the path param.",
 	Method:      "DELETE", Path: "/partner/organizations/partnerAdmin/{personId}", Host: HostWebex,
@@ -704,7 +704,7 @@ var AdminPartnerAdministratorsRevokeAllAdminRolesPersonId = &Operation{
 }
 
 var AdminPartnerReportsTemplatesList = &Operation{
-	Area: "admin", Group: "partner-reports-templates", Command: "list",
+	ID: "AdminPartnerReportsTemplatesList", Area: "admin", Group: "partner-reports-templates", Command: "list",
 	Summary:     "List Reports",
 	Description: "Lists all reports previously generated from a given region. Use query parameters to filter the response. The parameters are optional.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` scopes.\n\n<div><Callout type=\"info\">CSV reports for Webex suite services are only supported for organizations based in one region per API request. Organizations based in a different region will require a separate request with region specified.</Callout></div>\n\n<div><Callout type=\"info\">When no region is specified, the request defaults to Partner organization's home region.</Callout></div>\n\n<div><Callout type=\"info\">Reports are usually provided in zip format. A content-header application/zip or application/octet-stream does indicate the zip format. There is usually no .zip file extension.</Callout></div>",
 	Method:      "GET", Path: "/partner/reports", Host: HostWebex,
@@ -721,7 +721,7 @@ var AdminPartnerReportsTemplatesList = &Operation{
 }
 
 var AdminPartnerReportsTemplatesCreate = &Operation{
-	Area: "admin", Group: "partner-reports-templates", Command: "create",
+	ID: "AdminPartnerReportsTemplatesCreate", Area: "admin", Group: "partner-reports-templates", Command: "create",
 	Summary:     "Create a Report",
 	Description: "Create a new report. A new report can be created using `templateId` available from the _List Report Templates_ API. For each `templateId`, there are a set of validation rules that need to be followed.\n\nThe `templateId` parameter is a number. However, it is a limitation of developer.webex.com platform that it is passed as a string when you try to test the API from here.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_write` and `identity:people_read` scopes.\n\n**Notes**:\n\n<div><Callout type=\"info\">CSV reports for Webex suite services are only created for organizations in the specified region. Organizations based in a different region will require a separate request with region specified.</Callout></div>\n\n<div><Callout type=\"info\">When no region is specified, the request defaults to Partner organization's home region. A request against a region where there are no organizations will return blank CSV files.</Callout></div>",
 	Method:      "POST", Path: "/partner/reports", Host: HostWebex,
@@ -737,7 +737,7 @@ var AdminPartnerReportsTemplatesCreate = &Operation{
 }
 
 var AdminPartnerReportsTemplatesGet = &Operation{
-	Area: "admin", Group: "partner-reports-templates", Command: "get",
+	ID: "AdminPartnerReportsTemplatesGet", Area: "admin", Group: "partner-reports-templates", Command: "get",
 	Summary:     "Get Report Details",
 	Description: "Shows details for a report by report ID.\n\nSpecify the report ID in the `reportId` parameter in the URI.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` scopes.\n\n**Notes**:\n\n<div><Callout type=\"info\">Reports are usually provided in zip format. A content-header application/zip or application/octet-stream does indicate the zip format. There is usually no .zip file extension.</Callout></div>",
 	Method:      "GET", Path: "/partner/reports/{reportId}", Host: HostWebex,
@@ -748,7 +748,7 @@ var AdminPartnerReportsTemplatesGet = &Operation{
 }
 
 var AdminPartnerReportsTemplatesDelete = &Operation{
-	Area: "admin", Group: "partner-reports-templates", Command: "delete",
+	ID: "AdminPartnerReportsTemplatesDelete", Area: "admin", Group: "partner-reports-templates", Command: "delete",
 	Summary:     "Delete a Report",
 	Description: "Remove a report from the system.\n\nSpecify the report ID in the `reportId` parameter in the URI\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_write` scope.",
 	Method:      "DELETE", Path: "/partner/reports/{reportId}", Host: HostWebex,
@@ -759,7 +759,7 @@ var AdminPartnerReportsTemplatesDelete = &Operation{
 }
 
 var AdminPartnerReportsTemplatesList2 = &Operation{
-	Area: "admin", Group: "partner-reports-templates", Command: "list-2",
+	ID: "AdminPartnerReportsTemplatesList2", Area: "admin", Group: "partner-reports-templates", Command: "list-2",
 	Summary:     "List Report Templates",
 	Description: "List report templates. Report templates are available for use with the Partner Reports API.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` [scopes](/docs/integrations#scopes). The authenticated user must be a Partner full administrator or Partner read-only administrator of the organization.",
 	Method:      "GET", Path: "/partner/reports/templates", Host: HostWebex,
@@ -770,7 +770,7 @@ var AdminPartnerReportsTemplatesList2 = &Operation{
 }
 
 var AdminPeopleList = &Operation{
-	Area: "admin", Group: "people", Command: "list",
+	ID: "AdminPeopleList", Area: "admin", Group: "people", Command: "list",
 	Summary:     "List People",
 	Description: "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Path: "/people", Host: HostWebex,
@@ -789,7 +789,7 @@ var AdminPeopleList = &Operation{
 }
 
 var AdminPeopleCreatePerson = &Operation{
-	Area: "admin", Group: "people", Command: "create-person",
+	ID: "AdminPeopleCreatePerson", Area: "admin", Group: "people", Command: "create-person",
 	Summary:     "Create a Person",
 	Description: "Create a new user account for a given organization. Only an admin can create a new user account.\n\nAt least one of the following body parameters is required to create a new user: `displayName`, `firstName`, `lastName`.\n\nCurrently, users may have only one email address associated with their account. The `emails` parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.\n\nAdmin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person was created still. One way to get into this state is if an invalid phone number is assigned to a user. The people API aggregates calls to several other microservices, and one may have failed. A best practice is to check if the user exists before retrying. This can be done with the user's email address and a GET /people.\n\nWhen doing attendee management, append `#attendee` to the `siteUrl` parameter (e.g. `mysite.webex.com#attendee`) to make the new user an attendee for a site.\n\n**NOTES**:\n\n* For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and `licenses` string in the same request.\n\n* `SipAddresses` are asigned via an asynchronous process. This means that the POST response may not show the SIPAddresses immediately. Instead you can verify them with a separate GET to /people, after they were newly configured.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "POST", Path: "/people", Host: HostWebex,
@@ -801,7 +801,7 @@ var AdminPeopleCreatePerson = &Operation{
 }
 
 var AdminPeopleGetPerson = &Operation{
-	Area: "admin", Group: "people", Command: "get-person",
+	ID: "AdminPeopleGetPerson", Area: "admin", Group: "people", Command: "get-person",
 	Summary:     "Get Person Details",
 	Description: "Shows details for a person, by ID.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "GET", Path: "/people/{personId}", Host: HostWebex,
@@ -812,7 +812,7 @@ var AdminPeopleGetPerson = &Operation{
 }
 
 var AdminPeopleUpdatePerson = &Operation{
-	Area: "admin", Group: "people", Command: "update-person",
+	ID: "AdminPeopleUpdatePerson", Area: "admin", Group: "people", Command: "update-person",
 	Summary:     "Update a Person",
 	Description: "Update details for a person, by ID.\n\nSpecify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.\n\nInclude all details for the person. This action expects all user details to be present in the request. A common approach is to first [GET the person's details](/docs/api/v1/people/get-person-details), make changes, then PUT both the changed and unchanged values.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.\n\nWhen doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to the respective `siteUrl` and remove the meeting host license for this site from the license array.\nTo update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the `siteurl` parameter.\n\nTo remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.\n\n**NOTE**:\n\n* When assigning a Webex Calling license, either a telephone number or extension must already be assigned to the person or provided in the request payload.\n\n* When `callingData` is set to `true`, a Webex Calling license must be included in the `licenses` array.\n\n* The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user is already an existing calling user.\n\n* The `extension` field should be used to update the Webex Calling extension for a person. The extension value should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen in the response payload of [List People](/docs/api/v1/people/list-people) or [Get Person Details](/docs/api/v1/people/get-person-details), cannot be used to set the Webex Calling extension for a person.\n\n* When updating a user with multiple email addresses using a PUT request, ensure that the primary email address is listed first in the array. Note that the order of email addresses returned by a GET request is not guaranteed..\n\n* The People API is a combination of several microservices, each responsible for specific attributes of a person. As a result, a PUT request that returns an error response code may still have altered some values of the person's data. Therefore, it is recommended to perform a GET request after encountering an error to verify the current state of the resource. \n\n* Some licenses are implicitly assigned by the system and cannot be admin controlled. They are necessary for the baseline function of the Webex system. If you get an error about implicitly assigned licensed that cannot be removed, please ensure you have the corresponding license in your PUT request.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "PUT", Path: "/people/{personId}", Host: HostWebex,
@@ -826,7 +826,7 @@ var AdminPeopleUpdatePerson = &Operation{
 }
 
 var AdminPeopleDeletePerson = &Operation{
-	Area: "admin", Group: "people", Command: "delete-person",
+	ID: "AdminPeopleDeletePerson", Area: "admin", Group: "people", Command: "delete-person",
 	Summary:     "Delete a Person",
 	Description: "Remove a person from the system.\n\n**Required Administrator Roles:**\n\nThe following administrators have permission to use this API:\n\n**Customer Organization:**\n- Full administrator\n- User administrator\n\n**Partner/External Access:**\n- External full administrator\n\n**Note:** External read-only administrators, provisioning administrators, and device administrators cannot delete users.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "DELETE", Path: "/people/{personId}", Host: HostWebex,
@@ -836,7 +836,7 @@ var AdminPeopleDeletePerson = &Operation{
 }
 
 var AdminPeopleGetMyOwn = &Operation{
-	Area: "admin", Group: "people", Command: "get-my-own",
+	ID: "AdminPeopleGetMyOwn", Area: "admin", Group: "people", Command: "get-my-own",
 	Summary:     "Get My Own Details",
 	Description: "Get profile details for the authenticated user. This is the same as GET `/people/{personId}` using the Person ID associated with your Auth token.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.",
 	Method:      "GET", Path: "/people/me", Host: HostWebex,
@@ -846,7 +846,7 @@ var AdminPeopleGetMyOwn = &Operation{
 }
 
 var AdminRecordingReportListAuditSummaries = &Operation{
-	Area: "admin", Group: "recording-report", Command: "list-audit-summaries",
+	ID: "AdminRecordingReportListAuditSummaries", Area: "admin", Group: "recording-report", Command: "list-audit-summaries",
 	Summary:     "List of Recording Audit Report Summaries",
 	Description: "Lists of recording audit report summaries. You can specify a date range and the maximum number of recording audit report summaries to return.\n\nOnly recording audit report summaries of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the recording audit report summaries of the specified site will be listed; otherwise, recording audit report summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Path: "/recordingReport/accessSummary", Host: HostWebex,
@@ -863,7 +863,7 @@ var AdminRecordingReportListAuditSummaries = &Operation{
 }
 
 var AdminRecordingReportGetAudit = &Operation{
-	Area: "admin", Group: "recording-report", Command: "get-audit",
+	ID: "AdminRecordingReportGetAudit", Area: "admin", Group: "recording-report", Command: "get-audit",
 	Summary:     "Get Recording Audit Report Details",
 	Description: "Retrieves details for a recording audit report with a specified recording ID.\n\nOnly recording audit report details of meetings hosted by or shared with the authenticated user may be retrieved.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Path: "/recordingReport/accessDetail", Host: HostWebex,
@@ -877,7 +877,7 @@ var AdminRecordingReportGetAudit = &Operation{
 }
 
 var AdminRecordingReportListMeetingArchiveSummaries = &Operation{
-	Area: "admin", Group: "recording-report", Command: "list-meeting-archive-summaries",
+	ID: "AdminRecordingReportListMeetingArchiveSummaries", Area: "admin", Group: "recording-report", Command: "list-meeting-archive-summaries",
 	Summary:     "List Meeting Archive Summaries",
 	Description: "Lists of meeting archive summaries. You can specify a date range and the maximum number of meeting archive summaries to return.\n\nMeeting archive summaries are only available to full administrators, not even the meeting host.\n\nThe list returned is sorted in descending order by the date and time that the archives were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the meeting archive summaries of the specified site will be listed; otherwise, meeting archive summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Path: "/recordingReport/meetingArchiveSummaries", Host: HostWebex,
@@ -893,7 +893,7 @@ var AdminRecordingReportListMeetingArchiveSummaries = &Operation{
 }
 
 var AdminRecordingReportGetMeetingArchive = &Operation{
-	Area: "admin", Group: "recording-report", Command: "get-meeting-archive",
+	ID: "AdminRecordingReportGetMeetingArchive", Area: "admin", Group: "recording-report", Command: "get-meeting-archive",
 	Summary:     "Get Meeting Archive Details",
 	Description: "Retrieves details for a meeting archive report with a specified archive ID, which contains recording metadata.\n\nMeeting archive details are only available to full administrators, not even the meeting host.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Path: "/recordingReport/meetingArchives/{archiveId}", Host: HostWebex,
@@ -904,7 +904,7 @@ var AdminRecordingReportGetMeetingArchive = &Operation{
 }
 
 var AdminRecordingsList = &Operation{
-	Area: "admin", Group: "recordings", Command: "list",
+	ID: "AdminRecordingsList", Area: "admin", Group: "recordings", Command: "list",
 	Summary:     "List Recordings",
 	Description: "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings](/docs/api/v1/recordings/query-recordings) API instead.</Callout></div>\n\nLists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "GET", Path: "/recordings", Host: HostWebex,
@@ -927,7 +927,7 @@ var AdminRecordingsList = &Operation{
 }
 
 var AdminRecordingsListAdminComplianceOfficer = &Operation{
-	Area: "admin", Group: "recordings", Command: "list-admin-compliance-officer",
+	ID: "AdminRecordingsListAdminComplianceOfficer", Area: "admin", Group: "recordings", Command: "list-admin-compliance-officer",
 	Summary:     "List Recordings For an Admin or Compliance Officer",
 	Description: "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings For an Admin or Compliance Officer](/docs/api/v1/recordings/query-recordings-for-an-admin-or-compliance-officer) API instead.</Callout></div>\n\nList recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "GET", Path: "/admin/recordings", Host: HostWebex,
@@ -949,7 +949,7 @@ var AdminRecordingsListAdminComplianceOfficer = &Operation{
 }
 
 var AdminRecordingsDeleteAdmin = &Operation{
-	Area: "admin", Group: "recordings", Command: "delete-admin",
+	ID: "AdminRecordingsDeleteAdmin", Area: "admin", Group: "recordings", Command: "delete-admin",
 	Summary:     "Delete a Recording By an Admin",
 	Description: "Removes a recording with a specified recording ID by an admin. The deleted recording cannot be recovered. It will be inaccessible to regular users (host, attendees and shared) or an admin, but it will be still available to the Compliance Officer.\n\nAny recording on a site which is managed by the admin can be deleted by him.\n\nThe `temporaryDirectDownloadLinks` of a recording which are retrieved by the [Get Recording Details](/docs/api/v1/recordings/get-recording-details) API are still available to Compliance Officers even if the recording has been deleted.",
 	Method:      "DELETE", Path: "/admin/recordings/{recordingId}", Host: HostWebex,
@@ -959,7 +959,7 @@ var AdminRecordingsDeleteAdmin = &Operation{
 }
 
 var AdminRecordingsGet = &Operation{
-	Area: "admin", Group: "recordings", Command: "get",
+	ID: "AdminRecordingsGet", Area: "admin", Group: "recordings", Command: "get",
 	Summary:     "Get Recording Details",
 	Description: "Retrieves details for a recording with a specified recording ID.\n\nOnly recordings of meetings hosted by or shared with the authenticated user may be retrieved.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*\n\n* `siteUrl`: Optional request header parameter. If specified, retrieve the recording details from that site; otherwise, retrieve it from the site which is implied based on the recording ID.",
 	Method:      "GET", Path: "/recordings/{recordingId}", Host: HostWebex,
@@ -972,7 +972,7 @@ var AdminRecordingsGet = &Operation{
 }
 
 var AdminRecordingsDelete = &Operation{
-	Area: "admin", Group: "recordings", Command: "delete",
+	ID: "AdminRecordingsDelete", Area: "admin", Group: "recordings", Command: "delete",
 	Summary:     "Delete a Recording",
 	Description: "Removes a recording with a specified recording ID. The deleted recording cannot be recovered. If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users (host, attendees and shared), but will be still available to the Compliance Officer.\n\nOnly recordings of meetings hosted by the authenticated user can be deleted.\n\nThe `temporaryDirectDownloadLinks` of a recording which are retrieved by the [Get Recording Details](/docs/api/v1/recordings/get-recording-details) API are still available to Compliance Officers even if the recording has been deleted.",
 	Method:      "DELETE", Path: "/recordings/{recordingId}", Host: HostWebex,
@@ -987,7 +987,7 @@ var AdminRecordingsDelete = &Operation{
 }
 
 var AdminRecordingsMoveRecycleBin = &Operation{
-	Area: "admin", Group: "recordings", Command: "move-recycle-bin",
+	ID: "AdminRecordingsMoveRecycleBin", Area: "admin", Group: "recordings", Command: "move-recycle-bin",
 	Summary:     "Move Recordings into the Recycle Bin",
 	Description: "Move recordings into the recycle bin with recording IDs. Recordings in the recycle bin can be recovered by [Restore Recordings from Recycle Bin](/docs/api/v1/recordings/restore-recordings-from-recycle-bin) API. If you'd like to empty recordings from the recycle bin, you can use [Purge Recordings from Recycle Bin](/docs/api/v1/recordings/purge-recordings-from-recycle-bin) API to purge all or some of them.\n\nOnly recordings of meetings hosted by the authenticated user can be moved into the recycle bin.\n\n* `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Path: "/recordings/softDelete", Host: HostWebex,
@@ -1001,7 +1001,7 @@ var AdminRecordingsMoveRecycleBin = &Operation{
 }
 
 var AdminRecordingsRestoreRecycleBin = &Operation{
-	Area: "admin", Group: "recordings", Command: "restore-recycle-bin",
+	ID: "AdminRecordingsRestoreRecycleBin", Area: "admin", Group: "recordings", Command: "restore-recycle-bin",
 	Summary:     "Restore Recordings from Recycle Bin",
 	Description: "Restore all or some recordings from the recycle bin. Only recordings of meetings hosted by the authenticated user can be restored from recycle bin.\n\n* If `restoreAll` is `true`, `recordingIds` should be empty.\n\n* If `restoreAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Path: "/recordings/restore", Host: HostWebex,
@@ -1016,7 +1016,7 @@ var AdminRecordingsRestoreRecycleBin = &Operation{
 }
 
 var AdminRecordingsPurgeRecycleBin = &Operation{
-	Area: "admin", Group: "recordings", Command: "purge-recycle-bin",
+	ID: "AdminRecordingsPurgeRecycleBin", Area: "admin", Group: "recordings", Command: "purge-recycle-bin",
 	Summary:     "Purge Recordings from Recycle Bin",
 	Description: "Purge recordings from recycle bin with recording IDs or purge all the recordings that are in the recycle bin.\n\nOnly recordings of meetings hosted by the authenticated user can be purged from recycle bin.\n\n* If `purgeAll` is `true`, `recordingIds` should be empty.\n\n* If `purgeAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Path: "/recordings/purge", Host: HostWebex,
@@ -1031,7 +1031,7 @@ var AdminRecordingsPurgeRecycleBin = &Operation{
 }
 
 var AdminRecordingsShare = &Operation{
-	Area: "admin", Group: "recordings", Command: "share",
+	ID: "AdminRecordingsShare", Area: "admin", Group: "recordings", Command: "share",
 	Summary:     "Share a Recording",
 	Description: "Share or unshare a recording with other users by recording ID and email addresses.",
 	Method:      "POST", Path: "/recordings/{recordingId}/accessList", Host: HostWebex,
@@ -1047,7 +1047,7 @@ var AdminRecordingsShare = &Operation{
 }
 
 var AdminRecordingsListGroup = &Operation{
-	Area: "admin", Group: "recordings", Command: "list-group",
+	ID: "AdminRecordingsListGroup", Area: "admin", Group: "recordings", Command: "list-group",
 	Summary:     "List Group Recordings",
 	Description: "List group recordings for a service app which has group recording access. You can specify a date range, the maximum number of recordings to return, and `personId` or `hostEmail` of whom the recordings will be retrieved.\n\n* The list returned is sorted in descending order by the date and time that the recordings were created.\n\n* Only recordings which are in the `available` status and not shared by others can be listed. Those in the `deleted` or `purged` status or shared by others can't be listed.\n\n* Long result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the API lists group recordings on the specified site; otherwise, the API lists group recordings on all the sites managed by the service app. All the sites managed by a service app can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only recordings of meetings hosted by the person of `personId` or `hostEmail` will be returned.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.\n\n* `hostEmail`: Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "GET", Path: "/group/recordings", Host: HostWebex,
@@ -1068,7 +1068,7 @@ var AdminRecordingsListGroup = &Operation{
 }
 
 var AdminRecordingsGetGroup = &Operation{
-	Area: "admin", Group: "recordings", Command: "get-group",
+	ID: "AdminRecordingsGetGroup", Area: "admin", Group: "recordings", Command: "get-group",
 	Summary:     "Get Group Recording Details",
 	Description: "Retrieves details for a group recording for a service app which has group recording access.\n\n* Only recordings which are in the `available` status and not shared by others can be listed. Those in the `deleted` or `purged` status or shared by others can't be listed.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only recordings of meetings hosted by the person of `personId` or `hostEmail` will be returned.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*\n\n* `hostEmail`: Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "GET", Path: "/group/recordings/{recordingId}", Host: HostWebex,
@@ -1081,7 +1081,7 @@ var AdminRecordingsGetGroup = &Operation{
 }
 
 var AdminRecordingsShareLink = &Operation{
-	Area: "admin", Group: "recordings", Command: "share-link",
+	ID: "AdminRecordingsShareLink", Area: "admin", Group: "recordings", Command: "share-link",
 	Summary:     "Share a Recording Link",
 	Description: "Share or unshare a recording with other users by recording link and email addresses.",
 	Method:      "POST", Path: "/recordings/accessList", Host: HostWebex,
@@ -1095,7 +1095,7 @@ var AdminRecordingsShareLink = &Operation{
 }
 
 var AdminRecordingsQuery = &Operation{
-	Area: "admin", Group: "recordings", Command: "query",
+	ID: "AdminRecordingsQuery", Area: "admin", Group: "recordings", Command: "query",
 	Summary:     "Query Recordings",
 	Description: "Queries recordings with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, hostEmail, topic, format, serviceType, and status.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "POST", Path: "/recordings/query", Host: HostWebex,
@@ -1118,7 +1118,7 @@ var AdminRecordingsQuery = &Operation{
 }
 
 var AdminRecordingsQueryAdminComplianceOfficer = &Operation{
-	Area: "admin", Group: "recordings", Command: "query-admin-compliance-officer",
+	ID: "AdminRecordingsQueryAdminComplianceOfficer", Area: "admin", Group: "recordings", Command: "query-admin-compliance-officer",
 	Summary:     "Query Recordings For an Admin or Compliance Officer",
 	Description: "Queries recordings for an admin or compliance officer with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, topic, format, serviceType, and status.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "POST", Path: "/admin/recordings/query", Host: HostWebex,
@@ -1141,7 +1141,7 @@ var AdminRecordingsQueryAdminComplianceOfficer = &Operation{
 }
 
 var AdminReportTemplatesList = &Operation{
-	Area: "admin", Group: "report-templates", Command: "list",
+	ID: "AdminReportTemplatesList", Area: "admin", Group: "report-templates", Command: "list",
 	Summary:     "List Report Templates",
 	Description: "List all the available report templates that can be generated.\n\nCSV (comma separated value) reports for Webex services are only supported for organizations based in the North American region. Organizations based in other regions will return blank CSV files for any Webex reports.\n\n#### Validation Fields\n\nEach template includes validation rules that specify which fields are required when generating a report using the [Reports API](/docs/api/v1/reports). The possible validation field values are:\n\n- **templateId**: The unique identifier of the report template to use. This is always required when creating a report.\n- **siteList**: A comma-separated list of Webex sites (e.g., \"cisco.webex.com\"). Required for site-based templates, typically for Webex Meetings reports.\n- **subIds**: Subscription IDs for the report. Required for certain enterprise agreement templates, particularly for Webex Onboarding service reports.\n- **startDate**: The start date for the report data range in YYYY-MM-DD format. Required for date-range based templates.\n- **endDate**: The end date for the report data range in YYYY-MM-DD format. Required for date-range based templates.\n\nWhen creating a report, ensure you provide all fields marked as \"required\": \"yes\" in the template's validation rules.",
 	Method:      "GET", Path: "/report/templates", Host: HostWebex,
@@ -1149,7 +1149,7 @@ var AdminReportTemplatesList = &Operation{
 }
 
 var AdminReportsList = &Operation{
-	Area: "admin", Group: "reports", Command: "list",
+	ID: "AdminReportsList", Area: "admin", Group: "reports", Command: "list",
 	Summary:     "List Reports",
 	Description: "Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from` and `to` parameters should be provided together.\n\n**Notes**:\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.\n\nReports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream` does indicate the zip format. There is usually no .zip file extension.",
 	Method:      "GET", Path: "/reports", Host: HostWebex,
@@ -1165,7 +1165,7 @@ var AdminReportsList = &Operation{
 }
 
 var AdminReportsCreate = &Operation{
-	Area: "admin", Group: "reports", Command: "create",
+	ID: "AdminReportsCreate", Area: "admin", Group: "reports", Command: "create",
 	Summary:     "Create a Report",
 	Description: "Create a new report. For each `templateId`, there are a set of validation rules that need to be followed. For example, for templates belonging to Webex, the user needs to provide `siteUrl`. These validation rules can be retrieved via the [Report Templates API](/docs/api/v1/report-templates).\n\nThe 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is passed as a string when you try to test the API from here.\n\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.",
 	Method:      "POST", Path: "/reports", Host: HostWebex,
@@ -1179,7 +1179,7 @@ var AdminReportsCreate = &Operation{
 }
 
 var AdminReportsGet = &Operation{
-	Area: "admin", Group: "reports", Command: "get",
+	ID: "AdminReportsGet", Area: "admin", Group: "reports", Command: "get",
 	Summary:     "Get Report Details",
 	Description: "Shows details for a report, by report ID.\n\nSpecify the report ID in the `reportId` parameter in the URI.\n\n**Notes**:\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.\n\nReports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream` does indicate the zip     format. There is usually no .zip file extension.",
 	Method:      "GET", Path: "/reports/{reportId}", Host: HostWebex,
@@ -1189,7 +1189,7 @@ var AdminReportsGet = &Operation{
 }
 
 var AdminReportsDelete = &Operation{
-	Area: "admin", Group: "reports", Command: "delete",
+	ID: "AdminReportsDelete", Area: "admin", Group: "reports", Command: "delete",
 	Summary:     "Delete a Report",
 	Description: "Remove a report from the system.\n\nSpecify the report ID in the `reportId` parameter in the URI\n\nCSV reports for Webex suite services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.",
 	Method:      "DELETE", Path: "/reports/{reportId}", Host: HostWebex,
@@ -1199,7 +1199,7 @@ var AdminReportsDelete = &Operation{
 }
 
 var AdminResourceMembershipsListGroup = &Operation{
-	Area: "admin", Group: "resource-memberships", Command: "list-group",
+	ID: "AdminResourceMembershipsListGroup", Area: "admin", Group: "resource-memberships", Command: "list-group",
 	Summary:     "List Resource Group Memberships",
 	Description: "Lists all resource group memberships for an organization.\n\nUse query parameters to filter the response.",
 	Method:      "GET", Path: "/resourceGroup/memberships", Host: HostWebex,
@@ -1214,7 +1214,7 @@ var AdminResourceMembershipsListGroup = &Operation{
 }
 
 var AdminResourceMembershipsGetGroup = &Operation{
-	Area: "admin", Group: "resource-memberships", Command: "get-group",
+	ID: "AdminResourceMembershipsGetGroup", Area: "admin", Group: "resource-memberships", Command: "get-group",
 	Summary:     "Get Resource Group Membership Details",
 	Description: "Shows details for a resource group membership, by ID.\n\nSpecify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.",
 	Method:      "GET", Path: "/resourceGroup/memberships/{resourceGroupMembershipId}", Host: HostWebex,
@@ -1224,7 +1224,7 @@ var AdminResourceMembershipsGetGroup = &Operation{
 }
 
 var AdminResourceMembershipsUpdateGroup = &Operation{
-	Area: "admin", Group: "resource-memberships", Command: "update-group",
+	ID: "AdminResourceMembershipsUpdateGroup", Area: "admin", Group: "resource-memberships", Command: "update-group",
 	Summary:     "Update a Resource Group Membership",
 	Description: "Updates a resource group membership, by ID.\n\nSpecify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.\n\nOnly the `resourceGroupId` can be changed with this action. Resource group memberships with a `status` of \"pending\" cannot be updated. For more information about resource group memberships, see the [Managing Hybrid Services](/docs/api/guides/managing-hybrid-services-licenses#webex-resource-groups) guide.",
 	Method:      "PUT", Path: "/resourceGroup/memberships/{resourceGroupMembershipId}", Host: HostWebex,
@@ -1241,7 +1241,7 @@ var AdminResourceMembershipsUpdateGroup = &Operation{
 }
 
 var AdminResourceMembershipsListGroupV2 = &Operation{
-	Area: "admin", Group: "resource-memberships", Command: "list-group-v2",
+	ID: "AdminResourceMembershipsListGroupV2", Area: "admin", Group: "resource-memberships", Command: "list-group-v2",
 	Summary:     "List Resource Group Memberships V2",
 	Description: "Lists all resource group memberships for an organization having filtering option based on entity type (User / Workspace).\n\nUse query parameters to filter the response.",
 	Method:      "GET", Path: "/resourceGroup/memberships/v2", Host: HostWebex,
@@ -1257,7 +1257,7 @@ var AdminResourceMembershipsListGroupV2 = &Operation{
 }
 
 var AdminResourceGroupsList = &Operation{
-	Area: "admin", Group: "resource-groups", Command: "list",
+	ID: "AdminResourceGroupsList", Area: "admin", Group: "resource-groups", Command: "list",
 	Summary:     "List Resource Groups",
 	Description: "List resource groups.\n\nUse query parameters to filter the response.",
 	Method:      "GET", Path: "/resourceGroups", Host: HostWebex,
@@ -1268,7 +1268,7 @@ var AdminResourceGroupsList = &Operation{
 }
 
 var AdminResourceGroupsGet = &Operation{
-	Area: "admin", Group: "resource-groups", Command: "get",
+	ID: "AdminResourceGroupsGet", Area: "admin", Group: "resource-groups", Command: "get",
 	Summary:     "Get Resource Group Details",
 	Description: "Shows details for a resource group, by ID.\n\nSpecify the resource group ID in the `resourceGroupId` parameter in the URI.",
 	Method:      "GET", Path: "/resourceGroups/{resourceGroupId}", Host: HostWebex,
@@ -1278,7 +1278,7 @@ var AdminResourceGroupsGet = &Operation{
 }
 
 var AdminRolesList = &Operation{
-	Area: "admin", Group: "roles", Command: "list",
+	ID: "AdminRolesList", Area: "admin", Group: "roles", Command: "list",
 	Summary:     "List Roles",
 	Description: "List all roles. Must be called by an admin user.",
 	Method:      "GET", Path: "/roles", Host: HostWebex,
@@ -1286,7 +1286,7 @@ var AdminRolesList = &Operation{
 }
 
 var AdminRolesGet = &Operation{
-	Area: "admin", Group: "roles", Command: "get",
+	ID: "AdminRolesGet", Area: "admin", Group: "roles", Command: "get",
 	Summary:     "Get Role Details",
 	Description: "Shows details for a role, by ID.\n\nSpecify the role ID in the `roleId` parameter in the URI.",
 	Method:      "GET", Path: "/roles/{roleId}", Host: HostWebex,
@@ -1296,7 +1296,7 @@ var AdminRolesGet = &Operation{
 }
 
 var AdminScim2BulkUserApi = &Operation{
-	Area: "admin", Group: "scim-2-bulk", Command: "user-api",
+	ID: "AdminScim2BulkUserApi", Area: "admin", Group: "scim-2-bulk", Command: "user-api",
 	Summary:     "User bulk API",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\n**Usage**:\n\n1. The input JSON must conform to the following schema: 'urn:ietf:params:scim:api:messages:2.0:BulkRequest'.\n\n1. The request must be accompanied with a body in JSON format according to the standard SCIM schema definition.\n   The maximum number of operations in a request is 100; an error is thrown if the limit is exceeded.\n\n1. `failOnErrors` parameter\n\n   An integer specifies the number of errors that the service provider will accept before the operation is terminated and an error response is returned.\n   It is OPTIONAL in a request.\n   Maximum number of operations allowed to fail before the server stops processing the request. The value must be between 1 and 100.\n\n1. `operations` parameter\n\n   Contains a list of bulk operations for POST/PATCH/DELETE operations. (REQUIRED)\n    + `operations.method`\n\n      The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.\n    + `operations.path`\n\n      The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;\n      e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;\n      e.g., /Users/2819c223-7f76-453a-919d-413861904646.\n    + `operations.data`\n\n      The Resource data as it would appear for a single POST or PATCH Resource operation.\n      It is REQUIRED in a request when method is POST and PATCH.\n      Refer to corresponding wiki for SCIM 2.0 POST, PATCH and DELETE API.\n    + `operations.bulkId`\n\n      The transient identifier of a newly created resource, unique within a bulk request and created by the client.\n      The bulkId serves as a surrogate resource id enabling clients to uniquely identify newly created resources in the response and cross-reference new resources in and across operations within a bulk request.\n      It is REQUIRED when \"method\" is \"POST\".",
 	Method:      "POST", Path: "/identity/scim/{orgId}/v2/Bulk", Host: HostWebex,
@@ -1307,7 +1307,7 @@ var AdminScim2BulkUserApi = &Operation{
 }
 
 var AdminScim2GroupsCreate = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "create",
+	ID: "AdminScim2GroupsCreate", Area: "admin", Group: "scim-2-groups", Command: "create",
 	Summary:     "Create a group",
 	Description: "Create a new group for a given organization. The group may optionally be created with group members.\n\n<br/>\n\n**Authorization**\n\nOAuth token returned by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n<br/>\n\n**Usage**:\n\n1. The input JSON must conform to one of the following schemas:\n    - `urn:ietf:params:scim:schemas:core:2.0:Group`\n    - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`\n\n1. Unrecognized schemas (ID/section) are ignored.\n\n1. Read-only attributes provided as input values are ignored.",
 	Method:      "POST", Path: "/identity/scim/{orgId}/v2/Groups", Host: HostWebex,
@@ -1318,7 +1318,7 @@ var AdminScim2GroupsCreate = &Operation{
 }
 
 var AdminScim2GroupsSearch = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "search",
+	ID: "AdminScim2GroupsSearch", Area: "admin", Group: "scim-2-groups", Command: "search",
 	Summary:     "Search groups",
 	Description: "Retrieve a list of groups in the organization.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n<br/>\n\n**Authorization**\n\nAn OAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/identity/scim/{orgId}/v2/Groups", Host: HostWebex,
@@ -1338,7 +1338,7 @@ var AdminScim2GroupsSearch = &Operation{
 }
 
 var AdminScim2GroupsGet = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "get",
+	ID: "AdminScim2GroupsGet", Area: "admin", Group: "scim-2-groups", Command: "get",
 	Summary:     "Get a group",
 	Description: "Retrieve details for a group, by ID.\n\nOptionally, members can be retrieved with this request. The maximum number of members returned is 500.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/identity/scim/{orgId}/v2/Groups/{groupId}", Host: HostWebex,
@@ -1350,7 +1350,7 @@ var AdminScim2GroupsGet = &Operation{
 }
 
 var AdminScim2GroupsUpdatePut = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "update-put",
+	ID: "AdminScim2GroupsUpdatePut", Area: "admin", Group: "scim-2-groups", Command: "update-put",
 	Summary:     "Update a group with PUT",
 	Description: "Replace the contents of the Group.\n\nSpecify the group ID in the `groupId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token returned by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n<br/>\n\n**Usage**:\n\n1. The input JSON must conform to one of the following schemas:\n    - `urn:ietf:params:scim:schemas:core:2.0:Group`\n    - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`\n\n1. Unrecognized schemas (ID/section) are ignored.\n\n1. Read-only attributes provided as input values are ignored.\n\n1. The group `id` is not changed.\n\n1. All attributes are cleaned up if a new value is not provided by the client.\n\n1. The values, `meta` and `created` are not changed.",
 	Method:      "PUT", Path: "/identity/scim/{orgId}/v2/Groups/{groupId}", Host: HostWebex,
@@ -1362,7 +1362,7 @@ var AdminScim2GroupsUpdatePut = &Operation{
 }
 
 var AdminScim2GroupsUpdatePatch = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "update-patch",
+	ID: "AdminScim2GroupsUpdatePatch", Area: "admin", Group: "scim-2-groups", Command: "update-patch",
 	Summary:     "Update a group with PATCH",
 	Description: "Update group attributes with PATCH.\n\nSpecify the group ID in the `groupId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token returned by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n<br/>\n\n**Usage**:\n\n1. The input JSON must conform to one of the following schemas:\n    - `urn:ietf:params:scim:schemas:core:2.0:Group`\n    - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`\n\n1. Unrecognized schemas (ID/section) are ignored.\n\n1. Read-only attributes provided as input values are ignored.\n\n1. Each operation on an attribute must be compatible with the attribute's mutability.\n\n1. Each PATCH operation represents a single action to be applied to the\n   same SCIM resource specified by the request URI. Operations are\n   applied sequentially in the order they appear in the array. Each\n   operation in the sequence is applied to the target resource; the\n   resulting resource becomes the target of the next operation.\n   Evaluation continues until all operations are successfully applied or\n   until an error condition is encountered.\n\n<br/>\n\n**Add operations**:\n\nThe `add` operation is used to add a new attribute value to an existing resource. The operation must contain a `value` member whose content specifies the value to be added. The value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`. The result of the add operation depends upon the target location indicated by `path` references:\n\n<br/>\n\n- If omitted, the target location is assumed to be the resource itself. The `value` parameter contains a set of attributes to be added to the resource.\n\n- If the target location does not exist, the attribute and value are added.\n\n- If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the `value` parameter.\n\n- If the target location specifies a multi-valued attribute, a new value is added to the attribute.\n\n- If the target location specifies a single-valued attribute, the existing value is replaced.\n\n- If the target location specifies an attribute that does not exist (has no value), the attribute is added with the new value.\n\n- If the target location exists, the value is replaced.\n\n- If the target location already contains the value specified, no changes should be made to the resource.\n\n<br/>\n\n**Replace operations**:\n\nThe `replace` operation replaces the value at the target location specified by the `path`. The operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If the `path` parameter is omitted, the target is assumed to be the resource itself. In this case, the `value` attribute shall contain a list of one or more attributes that are to be replaced.\n\n- If the target location is a single-value attribute, the value of the attribute is replaced.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are replaced.\n\n- If the target location path specifies an attribute that does not exist, the service provider shall treat the operation as an \"add\".\n\n- If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the `value` parameter, which replaces any existing values or adds where an attribute did not previously exist. Sub-attributes that are not specified in the `value` parameters are left unchanged.\n\n- If the target location is a multi-valued attribute and a value selection (\"valuePath\") filter is specified that matches one or more values of the multi-valued attribute, then all matching record values will be replaced.\n\n- If the target location is a complex multi-valued attribute with a value selection filter (\"valuePath\") and a specific sub-attribute (e.g., \"addresses[type eq \"work\"].streetAddress\"), the matching sub-attribute of all matching records is replaced.\n\n- If the target location is a multi-valued attribute for which a value selection filter (\"valuePath\") has been supplied and no record match was made, the service provider will indicate the failure by returning HTTP status code 400 and a `scimType` error code of `noTarget`.\n\n<br/>\n\n**Remove operations**:\n\nThe `remove` operation removes the value at the target location specified by the required attribute `path`. The operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If `path` is unspecified, the operation fails with HTTP status code 400 and a \"scimType\" error code of \"noTarget\".\n\n- If the target location is a single-value attribute, the attribute and its associated value is removed, and the attribute will be considered unassigned.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are removed, and the attribute SHALL be considered unassigned.\n\n- If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the values matched by the filter are removed. If no other values remain after the removal of the selected values, the multi-valued attribute will be considered unassigned.\n\n- If the target location is a complex multi-valued attribute and a complex filter is specified based on the attribute`s sub-attributes, the matching records are removed. Sub-attributes whose values have been removed will be considered unassigned. If the complex multi-valued attribute has no remaining records, the attribute will be considered unassigned.",
 	Method:      "PATCH", Path: "/identity/scim/{orgId}/v2/Groups/{groupId}", Host: HostWebex,
@@ -1374,7 +1374,7 @@ var AdminScim2GroupsUpdatePatch = &Operation{
 }
 
 var AdminScim2GroupsDelete = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "delete",
+	ID: "AdminScim2GroupsDelete", Area: "admin", Group: "scim-2-groups", Command: "delete",
 	Summary:     "Delete a group",
 	Description: "Remove a group from the system.\n\nSpecify the group ID in the `groupId` parameter in the URI.\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`",
 	Method:      "DELETE", Path: "/identity/scim/{orgId}/v2/Groups/{groupId}", Host: HostWebex,
@@ -1385,7 +1385,7 @@ var AdminScim2GroupsDelete = &Operation{
 }
 
 var AdminScim2GroupsGetMembers = &Operation{
-	Area: "admin", Group: "scim-2-groups", Command: "get-members",
+	ID: "AdminScim2GroupsGetMembers", Area: "admin", Group: "scim-2-groups", Command: "get-members",
 	Summary:     "Get Group Members",
 	Description: "Returns the members of a group.\n\n- The default maximum number of members returned is 500.\n\n- Control parameters are available to page through the members and to control the size of the results.\n\n- Long result sets are split into [pages](/docs/basics#pagination).\n\n**Note**\nLocation groups are different from SCIM groups. You cannot search for identities in a location via groups.\n\n<br/>\n\n**Authorization**\n\nOAuth token returned by the Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_group_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/identity/scim/{orgId}/v2/Groups/{groupId}/Members", Host: HostWebex,
@@ -1400,7 +1400,7 @@ var AdminScim2GroupsGetMembers = &Operation{
 }
 
 var AdminScim2UsersCreate = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "create",
+	ID: "AdminScim2UsersCreate", Area: "admin", Group: "scim-2-users", Command: "create",
 	Summary:     "Create a user",
 	Description: "The SCIM 2 /Users API provides a programmatic way to manage users in Webex Identity using The Internet Engineering Task Force standard SCIM 2.0 standard as specified by [RFC 7643 SCIM 2.0 Core Schema ](https://datatracker.ietf.org/doc/html/rfc7643) and [RFC 7644 SCIM 2.0 Core Protocol](https://datatracker.ietf.org/doc/html/rfc7644).  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:\n\n• urn:ietf:params:scim:schemas:core:2.0:User\n\n• urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\n\n• urn:scim:schemas:extension:cisco:webexidentity:2.0:User\n\n<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:ietf:params:scim:schemas:core:2.0:User\".\n\n2. Support 3 schemas :\n    - \"urn:ietf:params:scim:schemas:core:2.0:User\"\n    - \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n    - \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\"\n\n3. Unrecognized schemas (ID/section) are ignored.\n\n4. Read-only attributes provided as input values are ignored.\n\n The following roles cannot be assigned to a user:\n\n1. Location Admin\n\n2. Webex Site Admin",
 	Method:      "POST", Path: "/identity/scim/{orgId}/v2/Users", Host: HostWebex,
@@ -1411,7 +1411,7 @@ var AdminScim2UsersCreate = &Operation{
 }
 
 var AdminScim2UsersSearch = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "search",
+	ID: "AdminScim2UsersSearch", Area: "admin", Group: "scim-2-users", Command: "search",
 	Summary:     "Search users",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`\n\n<br/>",
 	Method:      "GET", Path: "/identity/scim/{orgId}/v2/Users", Host: HostWebex,
@@ -1432,7 +1432,7 @@ var AdminScim2UsersSearch = &Operation{
 }
 
 var AdminScim2UsersGet = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "get",
+	ID: "AdminScim2UsersGet", Area: "admin", Group: "scim-2-users", Command: "get",
 	Summary:     "Get a user",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`\n\n<br/>",
 	Method:      "GET", Path: "/identity/scim/{orgId}/v2/Users/{userId}", Host: HostWebex,
@@ -1443,7 +1443,7 @@ var AdminScim2UsersGet = &Operation{
 }
 
 var AdminScim2UsersUpdatePut = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "update-put",
+	ID: "AdminScim2UsersUpdatePut", Area: "admin", Group: "scim-2-users", Command: "update-put",
 	Summary:     "Update a user with PUT",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. Input JSON must contain schema: \"urn:ietf:params:scim:schemas:core:2.0:User\".\n\n2. Support 3 schemas :\n    - \"urn:ietf:params:scim:schemas:core:2.0:User\"\n    - \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\"\n    - \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\"\n\n3. Unrecognized schemas (ID/section) are ignored.\n\n4. Read-only attributes provided as input values are ignored.\n\n5. User `id` will not be changed.\n\n6. `meta`.`created` will not be changed.\n\n7. The PUT API replaces the contents of the user's data with the data in the request body.  All attributes specified in the request body will replace all existing attributes for the `userId` specified in the URL.  Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM PATCH operation https://developer.webex.com/docs/api/v1/scim2-user/update-a-user-with-patch.\n\n<br/>\n\n**NOTE**:\n\nOnce a user's role or managed roles are changed, all tokens associated with that user will be invalidated.",
 	Method:      "PUT", Path: "/identity/scim/{orgId}/v2/Users/{userId}", Host: HostWebex,
@@ -1455,7 +1455,7 @@ var AdminScim2UsersUpdatePut = &Operation{
 }
 
 var AdminScim2UsersUpdatePatch = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "update-patch",
+	ID: "AdminScim2UsersUpdatePatch", Area: "admin", Group: "scim-2-users", Command: "update-patch",
 	Summary:     "Update a user with PATCH",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>\n\n**Usage**:\n\n1. The PATCH API replaces individual attributes and roles of the user's data in the request body.\n   The PATCH API supports `add`, `remove`, and `replace` operations on any individual\n   attribute or role allowing only specific attributes of the user's object to be modified.\n\n2. Each operation against an attribute must be compatible with the attribute's mutability.\n\n3. Each PATCH operation represents a single action to be applied to the\n   same SCIM resource specified by the request URI.  Operations are\n   applied sequentially in the order they appear in the array.  Each\n   operation in the sequence is applied to the target resource; the\n   resulting resource becomes the target of the next operation.\n   Evaluation continues until all operations are successfully applied or\n   until an error condition is encountered.\n\n<br/>\n\n**Add operations**:\n\nThe `add` operation adds a new attribute value to an existing resource.\nThe operation must contain a `value` member whose content specifies the value to be added.\nThe value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`.\nThe result of the add operation depends upon the target `path` reference locations:\n\n<br/>\n\n- If omitted, the target location is assumed to be the resource itself.  The `value` parameter contains a set of attributes to be added to the resource.\n\n- If the target location does not exist, the attribute and value are added.\n\n- If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the `value` parameter.\n\n- If the target location specifies a multi-valued attribute, a new value is added to the attribute.\n\n- If the target location specifies a single-valued attribute, the existing value is replaced.\n\n- If the target location specifies an attribute that does not exist (has no value), the attribute is added with the new value.\n\n- If the target location exists, the value is replaced.\n\n- If the target location already contains the value specified, no changes should be made to the resource.\n\n<br/>\n\n**Replace operations**:\n\nThe `replace` operation replaces the value at the target location specified by the `path`.\nThe operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If the `path` parameter is omitted, the target is assumed to be the resource itself.  In this case, the `value` attribute shall contain a list of one or more attributes to be replaced.\n\n- If the target location is a single-value attribute, the value of the attribute is replaced.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are replaced.\n\n- If the target location path specifies an attribute that does not exist, the service provider shall treat the operation as an \"add\".\n\n- If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.  Sub-attributes not specified in the `value` parameters are left unchanged.\n\n- If the target location is a multi-valued attribute and a value selection (\"valuePath\") filter is specified that matches one or more values of the multi-valued attribute, then all matching record values will be replaced.\n\n- If the target location is a complex multi-valued attribute with a value selection filter (\"valuePath\") and a specific sub-attribute (e.g., \"addresses[type eq \"work\"].streetAddress\"), the matching sub-attribute of all matching records is replaced.\n\n- If the target location is a multi-valued attribute for which a value selection filter (\"valuePath\") has been supplied and no record match was made, the service provider will return failure as HTTP status code 400 and a `scimType` error code of \"noTarget\".\n\n<br/>\n\n**Remove operations**:\n\nThe `remove` operation removes the value at the target location specified by the required attribute `path`.  The operation performs the following functions, depending on the target location specified by `path`:\n\n<br/>\n\n- If `path` is unspecified, the operation fails with HTTP status code 400 and a \"scimType\" error code of \"noTarget\".\n\n- If the target location is a single-value attribute, the attribute and its associated value is removed, and the attribute will be considered unassigned.\n\n- If the target location is a multi-valued attribute and no filter is specified, the attribute and all values are removed, and the attribute SHALL be considered unassigned.\n\n- If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the values matched by the filter are removed.  If no other values remain after the removal of the selected values, the multi-valued attribute will be considered unassigned.\n\n- If the target location is a complex multi-valued attribute and a complex filter is specified based on the attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute will be considered unassigned.\n\n The following roles cannot be assigned to a user:\n\n1. Location Admin\n\n2. Webex Site Admin \n\n<br/>\n\n**NOTE**:\n\nOnce a user's role or managed roles are changed, all tokens associated with that user will be invalidated.",
 	Method:      "PATCH", Path: "/identity/scim/{orgId}/v2/Users/{userId}", Host: HostWebex,
@@ -1467,7 +1467,7 @@ var AdminScim2UsersUpdatePatch = &Operation{
 }
 
 var AdminScim2UsersDelete = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "delete",
+	ID: "AdminScim2UsersDelete", Area: "admin", Group: "scim-2-users", Command: "delete",
 	Summary:     "Delete a user",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n<br/>\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n<br/>",
 	Method:      "DELETE", Path: "/identity/scim/{orgId}/v2/Users/{userId}", Host: HostWebex,
@@ -1478,14 +1478,14 @@ var AdminScim2UsersDelete = &Operation{
 }
 
 var AdminScim2UsersGetMe = &Operation{
-	Area: "admin", Group: "scim-2-users", Command: "get-me",
+	ID: "AdminScim2UsersGetMe", Area: "admin", Group: "scim-2-users", Command: "get-me",
 	Summary:     "Get Me",
 	Description: "<br/>\n\n**Authorization**\n\nOAuth token rendered by Identity Broker.\n\n<br/>\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:people_read`\n\n<br/>\n\nThe API can be used by any user to retrieve user information using their own access token.\n\n<br/>",
 	Method:      "GET", Path: "/identity/scim/v2/Users/me", Host: HostWebex,
 }
 
 var AdminSecurityAuditListEvents = &Operation{
-	Area: "admin", Group: "security-audit", Command: "list-events",
+	ID: "AdminSecurityAuditListEvents", Area: "admin", Group: "security-audit", Command: "list-events",
 	Summary:     "List Security Audit Events",
 	Description: "List Security Audit Events. This API currently returns user sign-in and sign-out data.\nTo call this API the `audit:events_read` scope must be selected for the Integration or Service App and authorized by a Full Admin.\n\nSeveral query parameters are available to filter the response.\n\nLong result sets will be split into multiple [pages](/docs/basics#pagination)\n\n**NOTE**: A maximum of one year of audit events can be returned per request.",
 	Method:      "GET", Path: "/admin/securityAudit/events", Host: HostWebex,
@@ -1502,7 +1502,7 @@ var AdminSecurityAuditListEvents = &Operation{
 }
 
 var AdminSettingsGetOrg = &Operation{
-	Area: "admin", Group: "settings", Command: "get-org",
+	ID: "AdminSettingsGetOrg", Area: "admin", Group: "settings", Command: "get-org",
 	Summary:     "Get an Organization Setting",
 	Description: "This endpoint retrieves the specified setting for the given organization and is accessible with the scope 'identity:organizations_read'.",
 	Method:      "GET", Path: "/settings/organizations/{orgId}/settings/{settingKey}", Host: HostWebex,
@@ -1513,7 +1513,7 @@ var AdminSettingsGetOrg = &Operation{
 }
 
 var AdminSettingsCreateUpdateOrg = &Operation{
-	Area: "admin", Group: "settings", Command: "create-update-org",
+	ID: "AdminSettingsCreateUpdateOrg", Area: "admin", Group: "settings", Command: "create-update-org",
 	Summary:     "Create or Update an Organization Setting",
 	Description: "This endpoint creates or updates the specified setting for the given organization; however, the 'name' of the setting cannot be modified. It is accessible with the scope 'identity:organizations_rw'.",
 	Method:      "POST", Path: "/settings/organizations/{orgId}/settings", Host: HostWebex,
@@ -1527,7 +1527,7 @@ var AdminSettingsCreateUpdateOrg = &Operation{
 }
 
 var AdminPartnerTagsGetAllCustomer = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "get-all-customer",
+	ID: "AdminPartnerTagsGetAllCustomer", Area: "admin", Group: "partner-tags", Command: "get-all-customer",
 	Summary:     "Retrieve all customer tags",
 	Description: "Retrieves all tags which are being used by any customer organizations. Once a tag is unassigned from the last customer, it is automatically removed and is not returned by this API.\nThis API can be used by a partner full admin, a read-only partner, or an partner admin. \nThe `type` can have the value ORGANIZATION or SUBSCRIPTION. If not provided, the value is ORGANIZATION",
 	Method:      "GET", Path: "/partner/tags", Host: HostWebex,
@@ -1537,7 +1537,7 @@ var AdminPartnerTagsGetAllCustomer = &Operation{
 }
 
 var AdminPartnerTagsCreateReplaceCustomerProvidedOnes = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "create-replace-customer-provided-ones",
+	ID: "AdminPartnerTagsCreateReplaceCustomerProvidedOnes", Area: "admin", Group: "partner-tags", Command: "create-replace-customer-provided-ones",
 	Summary:     "Create or Replace existing customer tags with the provided ones",
 	Description: "Assign or replace tag(s) which for a customer organization. If the tag doesn't already exist, a new one is created and assigned to the customer automatically.\nThis API can be used by partner full admins and partner admins. \nEach tag has a character limit of 25. Currently, there is a limit of 5 tags per organization when creating tags. To remove all the tags, pass an empty array.\nSpecify the customer organization ID in the `orgId` parameter in the URI.",
 	Method:      "POST", Path: "/partner/tags/organizations/{orgId}/assignTags", Host: HostWebex,
@@ -1548,7 +1548,7 @@ var AdminPartnerTagsCreateReplaceCustomerProvidedOnes = &Operation{
 }
 
 var AdminPartnerTagsGetCustomerOrg = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "get-customer-org",
+	ID: "AdminPartnerTagsGetCustomerOrg", Area: "admin", Group: "partner-tags", Command: "get-customer-org",
 	Summary:     "Get customer organization's tags",
 	Description: "Retrieve tags associated with a customer organization based on the `orgId` provided.\nThis API can be used by a partner full admin, a read-only partner, or an partner admin. \nSpecify the customer orgId in the `orgId` parameter in the URI.",
 	Method:      "GET", Path: "/partner/tags/organizations/{orgId}", Host: HostWebex,
@@ -1558,7 +1558,7 @@ var AdminPartnerTagsGetCustomerOrg = &Operation{
 }
 
 var AdminPartnerTagsGetAllCustomersSet = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "get-all-customers-set",
+	ID: "AdminPartnerTagsGetAllCustomersSet", Area: "admin", Group: "partner-tags", Command: "get-all-customers-set",
 	Summary:     "Fetch all customers for a given set of tags",
 	Description: "For a set of tags, retrieve all customer organizations that match any one of the tags.\nThis API can be used by a partner full admin, a read-only partner, or an partner admin.",
 	Method:      "GET", Path: "/partner/tags/organizations", Host: HostWebex,
@@ -1570,7 +1570,7 @@ var AdminPartnerTagsGetAllCustomersSet = &Operation{
 }
 
 var AdminPartnerTagsCreateReplaceSubscriptionProvidedOnes = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "create-replace-subscription-provided-ones",
+	ID: "AdminPartnerTagsCreateReplaceSubscriptionProvidedOnes", Area: "admin", Group: "partner-tags", Command: "create-replace-subscription-provided-ones",
 	Summary:     "Create or Replace existing subscription tags with the provided ones",
 	Description: "Assign or replace tags specific to each subscription for an organization. Each organization may have one or more subscriptions.\nThis API can be used by partner full admins and partner admins. \nCurrently there is a limit of 5 tags per subscription when creating tags. To remove all the tags, pass an empty array.\nSpecify the customer organization ID in the `orgId` parameter in the URI and subscription ID in `subscriptionId` parameter",
 	Method:      "POST", Path: "/partner/tags/organizations/{orgId}/subscriptions/{subscriptionId}/assignTags", Host: HostWebex,
@@ -1582,7 +1582,7 @@ var AdminPartnerTagsCreateReplaceSubscriptionProvidedOnes = &Operation{
 }
 
 var AdminPartnerTagsSubscriptionListNameSet = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "subscription-list-name-set",
+	ID: "AdminPartnerTagsSubscriptionListNameSet", Area: "admin", Group: "partner-tags", Command: "subscription-list-name-set",
 	Summary:     "Subscription List on a given tag name or a set of tags",
 	Description: "For a partner organization fetch all it's subscriptions with their tag list for a given tag names.\nThis API can be used by partner full admins, partner admins and admin read-only partners.",
 	Method:      "GET", Path: "/partner/tags/subscriptions", Host: HostWebex,
@@ -1594,7 +1594,7 @@ var AdminPartnerTagsSubscriptionListNameSet = &Operation{
 }
 
 var AdminPartnerTagsGetSubscription = &Operation{
-	Area: "admin", Group: "partner-tags", Command: "get-subscription",
+	ID: "AdminPartnerTagsGetSubscription", Area: "admin", Group: "partner-tags", Command: "get-subscription",
 	Summary:     "Fetch a Subscription",
 	Description: "For a given partner org, customer org and external subscription id, fetch subscription details with its associated tags.\nThis API can be used by partner full admins, partner admins and admin read-only partners.",
 	Method:      "GET", Path: "/partner/tags/organizations/{orgId}/subscriptions/{subscriptionId}", Host: HostWebex,
@@ -1605,7 +1605,7 @@ var AdminPartnerTagsGetSubscription = &Operation{
 }
 
 var AdminWorkspaceLocationsList = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "list",
+	ID: "AdminWorkspaceLocationsList", Area: "admin", Group: "workspace-locations", Command: "list",
 	Summary:     "List Workspace Locations",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace locations. Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another\norganization (such as partners). The `displayName`, `address`, `countryCode` and `cityName` parameters are all optional.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Path: "/workspaceLocations", Host: HostWebex,
@@ -1620,7 +1620,7 @@ var AdminWorkspaceLocationsList = &Operation{
 }
 
 var AdminWorkspaceLocationsCreate = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "create",
+	ID: "AdminWorkspaceLocationsCreate", Area: "admin", Group: "workspace-locations", Command: "create",
 	Summary:     "Create a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a location. The `cityName` and `notes` parameters are optional, and omitting them will result in the creation of a location without values for those attributes.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "POST", Path: "/workspaceLocations", Host: HostWebex,
@@ -1636,7 +1636,7 @@ var AdminWorkspaceLocationsCreate = &Operation{
 }
 
 var AdminWorkspaceLocationsGet = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "get",
+	ID: "AdminWorkspaceLocationsGet", Area: "admin", Group: "workspace-locations", Command: "get",
 	Summary:     "Get a Workspace Location Details",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Path: "/workspaceLocations/{locationId}", Host: HostWebex,
@@ -1646,7 +1646,7 @@ var AdminWorkspaceLocationsGet = &Operation{
 }
 
 var AdminWorkspaceLocationsUpdate = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "update",
+	ID: "AdminWorkspaceLocationsUpdate", Area: "admin", Group: "workspace-locations", Command: "update",
 	Summary:     "Update a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI. The request should include all details for the location returned in a previous call to [Get Workspace Location Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `cityName` or `notes` fields will result in those fields no longer being defined for the location.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "PUT", Path: "/workspaceLocations/{locationId}", Host: HostWebex,
@@ -1666,7 +1666,7 @@ var AdminWorkspaceLocationsUpdate = &Operation{
 }
 
 var AdminWorkspaceLocationsDelete = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "delete",
+	ID: "AdminWorkspaceLocationsDelete", Area: "admin", Group: "workspace-locations", Command: "delete",
 	Summary:     "Delete a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new location can be reassigned to them.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "DELETE", Path: "/workspaceLocations/{locationId}", Host: HostWebex,
@@ -1676,7 +1676,7 @@ var AdminWorkspaceLocationsDelete = &Operation{
 }
 
 var AdminWorkspaceLocationsListFloors = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "list-floors",
+	ID: "AdminWorkspaceLocationsListFloors", Area: "admin", Group: "workspace-locations", Command: "list-floors",
 	Summary:     "List Workspace Location Floors",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace location floors.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Path: "/workspaceLocations/{locationId}/floors", Host: HostWebex,
@@ -1687,7 +1687,7 @@ var AdminWorkspaceLocationsListFloors = &Operation{
 }
 
 var AdminWorkspaceLocationsCreateFloor = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "create-floor",
+	ID: "AdminWorkspaceLocationsCreateFloor", Area: "admin", Group: "workspace-locations", Command: "create-floor",
 	Summary:     "Create a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a new floor in the given location. The `displayName` parameter is optional, and omitting it will result in the creation of a floor without that value set.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "POST", Path: "/workspaceLocations/{locationId}/floors", Host: HostWebex,
@@ -1701,7 +1701,7 @@ var AdminWorkspaceLocationsCreateFloor = &Operation{
 }
 
 var AdminWorkspaceLocationsGetFloor = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "get-floor",
+	ID: "AdminWorkspaceLocationsGetFloor", Area: "admin", Group: "workspace-locations", Command: "get-floor",
 	Summary:     "Get a Workspace Location Floor Details",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Path: "/workspaceLocations/{locationId}/floors/{floorId}", Host: HostWebex,
@@ -1712,7 +1712,7 @@ var AdminWorkspaceLocationsGetFloor = &Operation{
 }
 
 var AdminWorkspaceLocationsUpdateFloor = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "update-floor",
+	ID: "AdminWorkspaceLocationsUpdateFloor", Area: "admin", Group: "workspace-locations", Command: "update-floor",
 	Summary:     "Update a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all details for the floor returned by a previous call to [Get Workspace Location Floor Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `displayName` field will result in that field no longer being defined for the floor.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "PUT", Path: "/workspaceLocations/{locationId}/floors/{floorId}", Host: HostWebex,
@@ -1727,7 +1727,7 @@ var AdminWorkspaceLocationsUpdateFloor = &Operation{
 }
 
 var AdminWorkspaceLocationsDeleteFloor = &Operation{
-	Area: "admin", Group: "workspace-locations", Command: "delete-floor",
+	ID: "AdminWorkspaceLocationsDeleteFloor", Area: "admin", Group: "workspace-locations", Command: "delete-floor",
 	Summary:     "Delete a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a floor, by ID.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "DELETE", Path: "/workspaceLocations/{locationId}/floors/{floorId}", Host: HostWebex,
@@ -1738,7 +1738,7 @@ var AdminWorkspaceLocationsDeleteFloor = &Operation{
 }
 
 var AdminWorkspaceMetricsWorkspaceMetrics = &Operation{
-	Area: "admin", Group: "workspace-metrics", Command: "workspace-metrics",
+	ID: "AdminWorkspaceMetricsWorkspaceMetrics", Area: "admin", Group: "workspace-metrics", Command: "workspace-metrics",
 	Summary:     "Workspace Metrics",
 	Description: "Get metric data for the specified workspace and metric name, optionally aggregated over a specified time period.\n\n* The `workspaceId` and `metricName` parameters indicate which workspace to fetch metrics for and what kind of metrics to get.\n\n* When executing an aggregated query, the result bucket start times will be truncated to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation modes `none` and `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.\n\n* If the aggregation mode query parameter is set to `none`, the returned data in the response will be an array of items with the `deviceId`, `timestamp` and the raw `value`.\n\n* If the aggregation mode is `hourly` or `daily`, the returned data in the response will be an array of items with the `start` and `end` of the aggregation time bucket, and the `mean`, `max` and `min` values of the requested value. Note that zeroes and negative values are ignored. For example, this means that the `peopleCount` mean value should be interpreted as the average number of people in the room _when it is in use_.",
 	Method:      "GET", Path: "/workspaceMetrics", Host: HostWebex,
@@ -1755,7 +1755,7 @@ var AdminWorkspaceMetricsWorkspaceMetrics = &Operation{
 }
 
 var AdminWorkspaceMetricsDuration = &Operation{
-	Area: "admin", Group: "workspace-metrics", Command: "duration",
+	ID: "AdminWorkspaceMetricsDuration", Area: "admin", Group: "workspace-metrics", Command: "duration",
 	Summary:     "Workspace Duration Metrics",
 	Description: "Get metrics for how much time a workspace has been in the state given by the `measurement` parameter.\n\nFor example, if the measurement is  `timeBooked` then the duration for which the workspace has been booked is returned. The `workspaceId` parameter indicates which workspace to fetch metrics for. If no `measurement` is given, the default value is `timeUsed`.\n\n* When executing a query, the result bucket start times will default to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation mode `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.",
 	Method:      "GET", Path: "/workspaceDurationMetrics", Host: HostWebex,
@@ -1770,21 +1770,21 @@ var AdminWorkspaceMetricsDuration = &Operation{
 }
 
 var AdminScim2SchemasGetGroup = &Operation{
-	Area: "admin", Group: "scim-2-schemas", Command: "get-group",
+	ID: "AdminScim2SchemasGetGroup", Area: "admin", Group: "scim-2-schemas", Command: "get-group",
 	Summary:     "Get Group Schema",
 	Description: "This API allows the service client to get all the `Group` schemas information from CI.\n\n**Authorization:**\n\nOAuth token rendered by Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:organizations_rw`\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/Schemas/SCIM2/Group", Host: HostWebex,
 }
 
 var AdminScim2SchemasGetUser = &Operation{
-	Area: "admin", Group: "scim-2-schemas", Command: "get-user",
+	ID: "AdminScim2SchemasGetUser", Area: "admin", Group: "scim-2-schemas", Command: "get-user",
 	Summary:     "Get User Schema",
 	Description: "This API allows the service client to get all the `User` schemas information from CI.\n\n**Authorization:**\n\nOAuth token rendered by Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:organizations_rw`\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/Schemas/SCIM2/User", Host: HostWebex,
 }
 
 var AdminScim2SchemasGetGroupId = &Operation{
-	Area: "admin", Group: "scim-2-schemas", Command: "get-group-id",
+	ID: "AdminScim2SchemasGetGroupId", Area: "admin", Group: "scim-2-schemas", Command: "get-group-id",
 	Summary:     "Get Schema using Group Schema ID",
 	Description: "This API allows the service client to get the Group/User Schema using `Schema Id` from CI.\n\nExample:\n\n- `urn:ietf:params:scim:schemas:core:2.0:Group` is one of the `Group Schema Id`. Using this particular ID, we can fetch all information related to it.\n\n- `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User` is one of the `User Schema Id`. Using this particular ID, we can fetch all information related to it.\n\n**Authorization:**\n\nOAuth token rendered by Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`\n\n- `identity:organizations_rw`\n\nThe following administrators can use this API:\n\n- `id_full_admin`\n\n- `id_user_admin`\n\n- `id_readonly_admin`\n\n- `id_device_admin`",
 	Method:      "GET", Path: "/Schemas/SCIM2/{schemaId}", Host: HostWebex,
@@ -1794,7 +1794,7 @@ var AdminScim2SchemasGetGroupId = &Operation{
 }
 
 var AdminSendActivationEmailInitiateBulkResendJob = &Operation{
-	Area: "admin", Group: "send-activation-email", Command: "initiate-bulk-resend-job",
+	ID: "AdminSendActivationEmailInitiateBulkResendJob", Area: "admin", Group: "send-activation-email", Command: "initiate-bulk-resend-job",
 	Summary:     "Initiate Bulk Activation Email Resend Job",
 	Description: "Initiate a bulk activation email resend job that sends an activation email to all eligible users in an organization. Only a single instance of the job can be running for an organization.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write`.",
 	Method:      "POST", Path: "/identity/organizations/{orgId}/jobs/sendActivationEmails", Host: HostWebex,
@@ -1804,7 +1804,7 @@ var AdminSendActivationEmailInitiateBulkResendJob = &Operation{
 }
 
 var AdminSendActivationEmailGetBulkResendJobStatus = &Operation{
-	Area: "admin", Group: "send-activation-email", Command: "get-bulk-resend-job-status",
+	ID: "AdminSendActivationEmailGetBulkResendJobStatus", Area: "admin", Group: "send-activation-email", Command: "get-bulk-resend-job-status",
 	Summary:     "Get Bulk Activation Email Resend Job Status",
 	Description: "Get the details of an activation email resend job by its job ID.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only administrator auth token with a scope of `spark-admin:people_read`.",
 	Method:      "GET", Path: "/identity/organizations/{orgId}/jobs/sendActivationEmails/{jobId}/status", Host: HostWebex,
@@ -1815,7 +1815,7 @@ var AdminSendActivationEmailGetBulkResendJobStatus = &Operation{
 }
 
 var AdminSendActivationEmailGetBulkResendJobErrors = &Operation{
-	Area: "admin", Group: "send-activation-email", Command: "get-bulk-resend-job-errors",
+	ID: "AdminSendActivationEmailGetBulkResendJobErrors", Area: "admin", Group: "send-activation-email", Command: "get-bulk-resend-job-errors",
 	Summary:     "Get Bulk Activation Email Resend Job Errors",
 	Description: "Get errors of an activation email resend job by its job ID.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only administrator auth token with a scope of `spark-admin:people_read`.",
 	Method:      "GET", Path: "/identity/organizations/{orgId}/jobs/sendActivationEmails/{jobId}/errors", Host: HostWebex,
@@ -1828,7 +1828,7 @@ var AdminSendActivationEmailGetBulkResendJobErrors = &Operation{
 }
 
 var AdminServiceAppsCreateAccessToken = &Operation{
-	Area: "admin", Group: "service-apps", Command: "create-access-token",
+	ID: "AdminServiceAppsCreateAccessToken", Area: "admin", Group: "service-apps", Command: "create-access-token",
 	Summary:     "Create Service App Access Token",
 	Description: "Retrieves an organization specific token pair for an already authorized Service App. Service Apps use machine accounts to make API calls on behalf of an organization, independent of individual user life cycles.\n\nThis endpoint allows you to programmatically retrieve access and refresh tokens after a Full Admin has authorized your Service App in Control Hub.\n\nTo call this endpoint, you need an integration with the spark:applications_token scope.",
 	Method:      "POST", Path: "/applications/{applicationId}/token", Host: HostWebex,
@@ -1843,7 +1843,7 @@ var AdminServiceAppsCreateAccessToken = &Operation{
 }
 
 var AdminLiveMonitoringGetMeetingMetricsCategorizedCountry = &Operation{
-	Area: "admin", Group: "live-monitoring", Command: "get-meeting-metrics-categorized-country",
+	ID: "AdminLiveMonitoringGetMeetingMetricsCategorizedCountry", Area: "admin", Group: "live-monitoring", Command: "get-meeting-metrics-categorized-country",
 	Summary:     "Get Live Meeting metrics categorized by Country",
 	Description: "Retrieve live meeting metrics categorized by country for a specific meeting site or for all meeting sites owned by the customer. \n\nTo retrieve live monitoring information, you must use an administrator token with the `analytics:read_all` [scope](/docs/integrations#scopes). The authenticated user must be a read-only or full administrator of the organization to which the meeting belongs and must not be an external administrator.\n\nTo use this endpoint, the org needs to be licensed for the Webex Pro Pack.\n\nA rate limit of one API call per minute applies to each customer organization",
 	Method:      "POST", Path: "/livemonitoring/liveMeetingsByCountry", Host: HostWebex,
@@ -1854,7 +1854,7 @@ var AdminLiveMonitoringGetMeetingMetricsCategorizedCountry = &Operation{
 }
 
 var AdminArchiveUsersGet = &Operation{
-	Area: "admin", Group: "archive-users", Command: "get",
+	ID: "AdminArchiveUsersGet", Area: "admin", Group: "archive-users", Command: "get",
 	Summary:     "Get Archive User",
 	Description: "The `useruuid` is the unique identifier of a user in the system. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
 	Method:      "GET", Path: "/identity/organizations/{orgId}/v1/ArchivedUser/{useruuid}", Host: HostWebex,
@@ -1865,7 +1865,7 @@ var AdminArchiveUsersGet = &Operation{
 }
 
 var AdminArchiveUsersQuery = &Operation{
-	Area: "admin", Group: "archive-users", Command: "query",
+	ID: "AdminArchiveUsersQuery", Area: "admin", Group: "archive-users", Command: "query",
 	Summary:     "Query Archive User",
 	Description: "Retrieves archived user information for the specified organization. Supported attributes are `id`, which is the unique identifier of a user in the system, and `username`. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
 	Method:      "GET", Path: "/identity/organizations/{orgId}/v1/ArchivedUser", Host: HostWebex,
