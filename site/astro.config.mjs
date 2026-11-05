@@ -25,6 +25,7 @@ export default defineConfig({
 				]},
 				{ label: 'Integrations', items: [
 					{ label: 'Coding Agent Skill', slug: 'agent-skill' },
+					{ label: 'Change Sets', slug: 'changesets' },
 				]},
 			],
 		}),

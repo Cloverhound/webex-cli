@@ -1,0 +1,123 @@
+---
+title: Change Sets
+description: Propose Webex changes as a portable file for review and apply.
+---
+
+A change set file proposes Webex configuration changes without making them. It names each object by its API route and Webex ID, and each field by its path in the API's JSON. Any tool that knows the Webex REST API can therefore read or write one. Webex Admin Studio imports change sets for review, plan and apply.
+
+## Recording a change set
+
+Run ordinary write commands with `--changeset <file>`, or set `$WEBEX_CHANGESET`. For each write, the CLI:
+
+1. reads the object the command names;
+2. records only the fields whose values the command changes;
+3. keeps the values it read as preconditions.
+
+Nothing is sent to Webex, so recording works in read-only mode too.
+
+```bash
+webex changeset new desk.changeset.json --title "Boulder front desk" \
+  --rationale "Ticket IT-4812" --on-behalf-of admin@example.com
+
+webex --changeset desk.changeset.json calling hunt-group update \
+  --location-id <loc> --hunt-group-id <hg> \
+  --body '{"callPolicies":{"noAnswer":{"numberOfRings":5}}}'
+
+webex --changeset desk.changeset.json cc team create \
+  --body '{"name":"Boulder Desk","siteId":"<site>","teamType":"AGENT","teamStatus":"IN_SERVICE","active":true}'
+# {"action":"create","changeset":"…","id":"new:boulder-desk","recorded":"op-2"}
+```
+
+**Recording rules**
+
+- **Creates:** a create prints a placeholder ID such as `new:boulder-desk`. Later commands in the same change set can use it in flags and bodies.
+  - An update to the new object folds into its create.
+  - A delete withdraws the create.
+- **Repeat edits:** edits to one object merge into one operation. The latest value wins, and the first precondition is kept.
+- **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded.
+- **Other writes:** bulk saves, purges, and action endpoints are recorded as `invoke` operations, which an engine cannot review field by field.
+- **Uploads:** file uploads cannot be recorded.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `webex changeset new <file>` | Starts a change set for the current org, with optional `--title`, `--rationale`, `--author`, `--on-behalf-of` and `--link name=url` |
+| `webex changeset show <file>` | Summarizes operations by intent, with before → after values |
+| `webex changeset validate <file> [--live]` | Checks the structure. With `--live`, it also re-reads every updated or deleted object and reports drifted preconditions and missing objects |
+| `webex changeset intent <file> <id> <summary> [op-id…]` | Adds or rewords a plain-language intent and assigns operations to it |
+| `webex changeset schema` | Prints the JSON Schema |
+
+The MCP server offers the same features through `webex_propose` and `webex_changeset`. Both are available in read-only mode.
+
+## File format
+
+```json
+{
+  "format": "webex-changeset/v1",
+  "metadata": {
+    "id": "cs_20261103T150000Z_1a2b3c4d",
+    "title": "Boulder front desk",
+    "createdAt": "2026-11-03T15:00:00Z",
+    "rationale": "Ticket IT-4812",
+    "author": { "type": "agent", "id": "webex-mcp", "onBehalfOf": "admin@example.com" },
+    "links": { "ticket": "https://tickets.example.com/IT-4812" }
+  },
+  "scope": { "orgId": "<org UUID>" },
+  "intents": [{ "id": "front-desk", "summary": "Create a Boulder front desk team" }],
+  "operations": [
+    {
+      "id": "op-1", "intent": "front-desk", "action": "create", "handle": "boulder-desk",
+      "target": { "api": "cc", "route": "/team", "display": "Boulder Desk" },
+      "body": { "name": "Boulder Desk", "siteId": "<site>", "teamType": "AGENT" }
+    },
+    {
+      "id": "op-2", "action": "update",
+      "target": {
+        "api": "webex",
+        "route": "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}",
+        "params": { "locationId": "<loc>", "huntGroupId": "<hg>" },
+        "display": "Front Desk"
+      },
+      "changes": [{ "path": "callPolicies.noAnswer.numberOfRings", "before": 3, "value": 5 }]
+    },
+    {
+      "id": "op-3", "action": "delete",
+      "target": { "api": "cc", "route": "/skill/{id}", "params": { "id": "<skill>" }, "display": "Old skill" }
+    }
+  ]
+}
+```
+
+### Targets
+
+- **`api`** is `webex` for `https://webexapis.com/v1` (Calling, Admin and other areas), or `cc` for the Contact Center API.
+- **`route`** is the API route template.
+  - Contact Center routes are relative to `/organization/{orgId}`.
+  - An update or delete route ends with the object's ID placeholder. A settings update may target a route with no ID.
+  - A create route names the collection.
+  - Placeholder names do not matter when routes are compared.
+- **`params`** gives a value for every placeholder.
+- **`query`** holds any other query parameters the command sent.
+- **`display`** is a label for people.
+
+### Operations
+
+| Action | Carries | Meaning |
+|---|---|---|
+| `create` | `handle`, `body` | Create an object with this request body |
+| `update` | `changes` | Set each `path` in the object's JSON to `value` |
+| `delete` | — | Delete the object |
+| `invoke` | `method`, `body` | Any other write, kept as sent |
+
+Each change carries a `path` and a `value`:
+
+- **`path`** is a dotted path into the object's API JSON. Lists are replaced whole, as Webex replaces them.
+- **`value`** is the new value. `null` clears a value.
+- **`before`** is optional. It is the value the author saw, and `null` means the field was absent. An engine should not apply a change whose `before` no longer matches.
+
+Any value `{"$ref": "<handle>"}`, in a body or a change, means the ID of the object that the create with that handle makes. A create must come before the operations that refer to it.
+
+### Review
+
+An exported change set may carry a `review` block with the plan it was reviewed against (`plan.hash`, `plan.commit`, `plan.plannedAt`) and any `approvals`. Importers display it but do not enforce it.

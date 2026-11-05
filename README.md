@@ -168,9 +168,14 @@ webex auth switch <email>      # Switch default user
 webex auth set-org <org-id>    # Set a persistent org override
 webex auth clear-org           # Clear the org override
 webex auth export              # Print the refresh token for $WEBEX_REFRESH_TOKEN
+webex auth token               # Print the access token
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
+
+`webex auth status`, `auth list`, and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
+
+Other Go programs can use the same HTTP transport through `github.com/Cloverhound/webex-cli/pkg/webexapi`, which has no process-wide state, takes a context on every call, and fails a list that cannot be read to its end instead of returning it short.
 
 ### Headless and Unattended Use
 
@@ -243,6 +248,23 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
+| `--changeset <file>` | Record write requests in a [change set](#change-sets) file instead of sending them (or `$WEBEX_CHANGESET`) |
+
+## Change Sets
+
+A change set file proposes Webex changes without making them. An AI agent, or a person, runs ordinary write commands with `--changeset <file>`. For each write the CLI reads the object, records only the fields the command changes, and keeps the values it saw as preconditions. Nothing is sent to Webex, so this works in [read-only mode](#read-only-mode) too. Webex Admin Studio imports the file into a change set for review, plan and apply.
+
+```bash
+webex changeset new desk.changeset.json --title "Front desk ring count" --rationale "Ticket IT-4812"
+webex --changeset desk.changeset.json calling hunt-group update \
+  --location-id <loc> --hunt-group-id <hg> --body '{"callPolicies":{"noAnswer":{"numberOfRings":5}}}'
+webex changeset show desk.changeset.json
+webex changeset validate desk.changeset.json --live   # report values that changed since recording
+```
+
+A create prints a placeholder ID such as `new:boulder-desk`, which later commands in the same change set can use in flags and bodies. Repeat edits to one object merge. `webex changeset intent` groups operations under a plain-language summary, and `webex changeset schema` prints the JSON Schema. The [Change Sets](https://cloverhound.github.io/webex-cli/changesets/) page describes the file format.
+
+Limits: writes other than a plain create, update or delete, such as bulk saves and purges, are recorded as `invoke` operations with no field-level review. File uploads cannot be recorded.
 
 ## Configuration
 
@@ -271,16 +293,18 @@ claude mcp add webex -- webex mcp serve
 claude mcp add webex -- /path/to/webex mcp serve
 ```
 
-The server exposes 4 tools:
+The server exposes 6 tools:
 
 | Tool | API methods | Description |
 |---|---|---|
 | `webex_read` | GET | Execute a read-only CLI command (list, get, download, export, search) |
 | `webex_write` | POST / PUT / PATCH / DELETE | Execute a command that creates, updates, or deletes a resource |
+| `webex_propose` | GET | Record a write command in a [change set](#change-sets) file instead of running it |
+| `webex_changeset` | GET | Start, show, validate, or annotate a change set file |
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex.
 
 And 2 MCP resources:
 

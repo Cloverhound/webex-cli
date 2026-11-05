@@ -43,12 +43,15 @@ uses the same stored credentials with automatic token refresh.
 
 Tools:
   webex_read   Execute a read-only CLI command (list, get, download, export)
-  webex_write  Execute a command that creates, updates, or deletes a resource
-  webex_help   Get help text for any command or command group
-  webex_usage  Query the MCP usage log (recent commands, timing)
+  webex_write      Execute a command that creates, updates, or deletes a resource
+  webex_propose    Record a write command in a change set file instead of running it
+  webex_changeset  Start, show, validate, or annotate a change set file
+  webex_help       Get help text for any command or command group
+  webex_usage      Query the MCP usage log (recent commands, timing)
 
 In read-only mode (webex login --read-only, or WEBEX_READ_ONLY=1) the server
-does not register webex_write.
+does not register webex_write. webex_propose stays available because it never
+writes to Webex.
 
 Resources:
   webex://commands  JSON array of all available CLI commands

@@ -1,6 +1,7 @@
 package mcp
 
 import (
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -51,5 +52,19 @@ func TestReadOnlyServerOmitsWriteTool(t *testing.T) {
 		if hasWrite := s.GetTool("webex_write") != nil; hasWrite == readOnly {
 			t.Errorf("readOnly=%v: webex_write registered = %v", readOnly, hasWrite)
 		}
+		for _, name := range []string{"webex_propose", "webex_changeset"} {
+			if s.GetTool(name) == nil {
+				t.Errorf("readOnly=%v: %s missing", readOnly, name)
+			}
+		}
+	}
+}
+
+func TestChangesetPath(t *testing.T) {
+	if _, errText := changesetPath("notes.txt"); errText == "" {
+		t.Error("accepted a path that is not .json")
+	}
+	if path, errText := changesetPath("x.changeset.json"); errText != "" || !filepath.IsAbs(path) {
+		t.Errorf("path = %q, err = %q", path, errText)
 	}
 }

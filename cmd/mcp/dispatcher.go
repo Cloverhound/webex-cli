@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -55,7 +56,58 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 				mcplib.Description(`Optional flags as a JSON object string (e.g. {"max": "10", "paginate": "true"}). Keys are flag names without '--'.`),
 			),
 		),
-		makeDispatchHandler(lg, true),
+		makeDispatchHandler(lg, modeRead),
+	)
+
+	// Proposing never writes to Webex, so it is offered in read-only mode too.
+	s.AddTool(
+		mcplib.NewTool("webex_propose",
+			mcplib.WithDescription(
+				"Record a Webex CLI write command (create, update, delete) in a change set file instead of running it. "+
+					"Nothing is sent to Webex. The CLI reads the object, records only the fields the command changes, "+
+					"and keeps the values it saw as preconditions. A create returns a placeholder ID like \"new:sales-team\" "+
+					"that later proposals can use in flags or bodies. Start the file with webex_changeset action \"new\", "+
+					"then give the file to the person, who can review and apply it in Webex Admin Studio.",
+			),
+			mcplib.WithString("changeset",
+				mcplib.Required(),
+				mcplib.Description("Path of the change set file, ending in .json (e.g. /path/to/boulder.changeset.json)"),
+			),
+			mcplib.WithString("command",
+				mcplib.Required(),
+				mcplib.Description("Write CLI command without 'webex' prefix (e.g. 'calling hunt-group update', 'cc team create')"),
+			),
+			mcplib.WithString("flags",
+				mcplib.Description(`Optional flags as a JSON object string (e.g. {"location-id": "xxx", "hunt-group-id": "yyy", "body": "{\"name\":\"Front Desk\"}"}). Keys are flag names without '--'.`),
+			),
+		),
+		makeDispatchHandler(lg, modePropose),
+	)
+
+	s.AddTool(
+		mcplib.NewTool("webex_changeset",
+			mcplib.WithDescription(
+				"Manage a change set file: \"new\" starts one for the current org, \"show\" summarizes it, "+
+					"\"validate\" checks it (live=true also re-reads Webex and reports values that changed since they were recorded), "+
+					"and \"intent\" adds a plain-language summary and assigns operations to it.",
+			),
+			mcplib.WithString("action",
+				mcplib.Required(),
+				mcplib.Enum("new", "show", "validate", "intent"),
+			),
+			mcplib.WithString("path",
+				mcplib.Required(),
+				mcplib.Description("Path of the change set file, ending in .json"),
+			),
+			mcplib.WithString("title", mcplib.Description("new: a short title")),
+			mcplib.WithString("rationale", mcplib.Description("new: why these changes are needed")),
+			mcplib.WithString("on_behalf_of", mcplib.Description("new: the person you are working for")),
+			mcplib.WithBoolean("live", mcplib.Description("validate: also compare preconditions with Webex")),
+			mcplib.WithString("intent_id", mcplib.Description("intent: a short ID such as \"front-desk\"")),
+			mcplib.WithString("summary", mcplib.Description("intent: what the operations achieve, in plain words")),
+			mcplib.WithString("ops", mcplib.Description("intent: space-separated operation IDs to assign, such as \"op-1 op-2\"")),
+		),
+		makeChangesetHandler(lg),
 	)
 
 	if !readOnly {
@@ -76,7 +128,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 					mcplib.Description(`Optional flags as a JSON object string (e.g. {"room-id": "xxx", "text": "Hello"}). Keys are flag names without '--'.`),
 				),
 			),
-			makeDispatchHandler(lg, false),
+			makeDispatchHandler(lg, modeWrite),
 		)
 	}
 
@@ -111,12 +163,19 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 	)
 }
 
-// makeDispatchHandler returns a handler for either webex_read (readOnly=true) or webex_write (readOnly=false).
-func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
-	toolName := "webex_write"
-	if readOnly {
-		toolName = "webex_read"
-	}
+type dispatchMode int
+
+const (
+	modeRead dispatchMode = iota
+	modeWrite
+	modePropose
+)
+
+var toolNames = map[dispatchMode]string{modeRead: "webex_read", modeWrite: "webex_write", modePropose: "webex_propose"}
+
+// makeDispatchHandler returns the handler for webex_read, webex_write or webex_propose.
+func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+	toolName := toolNames[mode]
 
 	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 		command := strings.TrimSpace(req.GetString("command", ""))
@@ -143,14 +202,22 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 			}
 		}
 
-		// Read-only enforcement for webex_read.
-		if readOnly {
-			action := actionToken(args)
+		switch action := actionToken(args); mode {
+		case modeRead:
 			if action != "" && !readonly.IsReadAction(action) {
 				return mcplib.NewToolResultText(fmt.Sprintf(
 					"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
 				)), nil
 			}
+		case modePropose:
+			if strings.HasPrefix(commandPath(args), "changeset") {
+				return mcplib.NewToolResultText("Error: use the webex_changeset tool to manage the file."), nil
+			}
+			path, errText := changesetPath(req.GetString("changeset", ""))
+			if errText != "" {
+				return mcplib.NewToolResultText(errText), nil
+			}
+			args = append(args, "--changeset="+path)
 		}
 
 		// Force JSON output.
@@ -171,52 +238,121 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 						"Error: flag key or value contains disallowed characters.",
 					), nil
 				}
+				if mode == modePropose && (k == "changeset" || k == "dry-run") {
+					return mcplib.NewToolResultText("Error: the changeset parameter names the file; do not pass --" + k + "."), nil
+				}
 				args = append(args, fmt.Sprintf("--%s=%s", k, v))
 			}
 		}
 
-		exe, err := os.Executable()
-		if err != nil {
-			return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
+		return runCLI(ctx, lg, toolName, command, flagsStr, args, mode == modePropose), nil
+	}
+}
+
+// runCLI runs the CLI binary with args, logs the call and returns its output.
+// allOutput adds stderr on success and stdout on failure, for commands that
+// warn on stderr or report a failed check on stdout.
+func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string, allOutput bool) *mcplib.CallToolResult {
+	exe, err := os.Executable()
+	if err != nil {
+		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error())
+	}
+
+	runCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
+	defer cancel()
+
+	var stdout, stderr bytes.Buffer
+	//nolint:gosec // args are validated by the callers; exec.Command does not invoke a shell
+	c := exec.CommandContext(runCtx, exe, args...)
+	c.Stdout = &stdout
+	c.Stderr = &stderr
+
+	start := time.Now()
+	runErr := c.Run()
+	elapsed := time.Since(start).Milliseconds()
+
+	status := "ok"
+	if runErr != nil {
+		status = "error"
+	}
+
+	_ = lg.Write(usageEntry{
+		Time:    time.Now().UTC().Format(time.RFC3339),
+		Tool:    toolName,
+		Command: command,
+		Flags:   flagsStr,
+		Status:  status,
+		Ms:      elapsed,
+	})
+
+	if runErr != nil {
+		errText := strings.TrimSpace(stderr.String())
+		if allOutput {
+			errText = strings.TrimSpace(stdout.String() + "\n" + errText)
 		}
-
-		runCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
-		defer cancel()
-
-		var stdout, stderr bytes.Buffer
-		//nolint:gosec // args are validated above; exec.Command does not invoke a shell
-		c := exec.CommandContext(runCtx, exe, args...)
-		c.Stdout = &stdout
-		c.Stderr = &stderr
-
-		start := time.Now()
-		runErr := c.Run()
-		elapsed := time.Since(start).Milliseconds()
-
-		status := "ok"
-		if runErr != nil {
-			status = "error"
+		if errText == "" {
+			errText = runErr.Error()
 		}
+		return mcplib.NewToolResultText(fmt.Sprintf(
+			"Error running 'webex %s': %s", command, errText,
+		))
+	}
+	out := strings.TrimSpace(stdout.String())
+	if allOutput {
+		out = strings.TrimSpace(out + "\n" + stderr.String())
+	}
+	return mcplib.NewToolResultText(out)
+}
 
-		_ = lg.Write(usageEntry{
-			Time:    time.Now().UTC().Format(time.RFC3339),
-			Tool:    toolName,
-			Command: command,
-			Flags:   flagsStr,
-			Status:  status,
-			Ms:      elapsed,
-		})
+// changesetPath checks a change set path from a tool call and makes it absolute,
+// since the CLI runs from the server's working directory.
+func changesetPath(path string) (string, string) {
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return "", "Error: changeset is required."
+	}
+	if !strings.HasSuffix(path, ".json") {
+		return "", "Error: the change set path must end in .json."
+	}
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return "", "Error: " + err.Error()
+	}
+	return abs, ""
+}
 
-		if runErr != nil {
-			errText := strings.TrimSpace(stderr.String())
-			if errText == "" {
-				errText = runErr.Error()
+func makeChangesetHandler(lg *usageLogger) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+		action := req.GetString("action", "")
+		path, errText := changesetPath(req.GetString("path", ""))
+		if errText != "" {
+			return mcplib.NewToolResultText(errText), nil
+		}
+		args := []string{"changeset", action, path}
+		switch action {
+		case "new":
+			for flag, param := range map[string]string{"title": "title", "rationale": "rationale", "on-behalf-of": "on_behalf_of"} {
+				if v := req.GetString(param, ""); v != "" {
+					args = append(args, "--"+flag+"="+v)
+				}
 			}
-			return mcplib.NewToolResultText(fmt.Sprintf(
-				"Error running 'webex %s': %s", command, errText,
-			)), nil
+			args = append(args, "--author=webex-mcp")
+		case "show":
+		case "validate":
+			if req.GetBool("live", false) {
+				args = append(args, "--live")
+			}
+		case "intent":
+			id, summary := req.GetString("intent_id", ""), req.GetString("summary", "")
+			if id == "" || summary == "" {
+				return mcplib.NewToolResultText("Error: intent needs intent_id and summary."), nil
+			}
+			args = append(args, id, summary)
+			args = append(args, strings.Fields(req.GetString("ops", ""))...)
+		default:
+			return mcplib.NewToolResultText(`Error: action must be "new", "show", "validate" or "intent".`), nil
 		}
-		return mcplib.NewToolResultText(strings.TrimSpace(stdout.String())), nil
+		return runCLI(ctx, lg, "webex_changeset", "changeset "+action, "", args, true), nil
 	}
 }
 

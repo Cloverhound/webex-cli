@@ -1,0 +1,257 @@
+package changeset
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"reflect"
+	"strings"
+	"sync"
+	"testing"
+)
+
+func doc(t *testing.T, s string) map[string]any {
+	t.Helper()
+	var v map[string]any
+	if err := decode([]byte(s), &v); err != nil {
+		t.Fatal(err)
+	}
+	return v
+}
+
+func paths(changes []Change) []string {
+	var out []string
+	for _, c := range changes {
+		out = append(out, c.Path)
+	}
+	return out
+}
+
+func huntGroup(id string) Target {
+	return Target{API: APIWebex, Route: "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}",
+		Params: map[string]string{"locationId": "loc1", "huntGroupId": id}}
+}
+
+func TestDiffReportsOnlyChangedPathsWithBefore(t *testing.T) {
+	current := doc(t, `{"name":"Desk","enabled":true,"callPolicies":{"noAnswer":{"numberOfRings":3,"nextAgentEnabled":true}},"agents":[{"id":"a"}]}`)
+	desired := doc(t, `{"name":"Desk","enabled":true,"callPolicies":{"noAnswer":{"numberOfRings":5.0,"nextAgentEnabled":true}},"agents":[{"id":"a"},{"id":"b"}],"extension":"4100"}`)
+
+	got := Diff(current, desired)
+	if want := []string{"agents", "callPolicies.noAnswer.numberOfRings", "extension"}; !reflect.DeepEqual(paths(got), want) {
+		t.Fatalf("paths = %v, want %v", paths(got), want)
+	}
+	rings := got[1]
+	if !rings.HasBefore || !Equal(rings.Before, json.Number("3")) || !Equal(rings.Value, json.Number("5")) {
+		t.Errorf("rings change = %+v", rings)
+	}
+	if ext := got[2]; !ext.HasBefore || ext.Before != nil {
+		t.Errorf("a field the object lacks should have a null before, got %+v", ext)
+	}
+}
+
+func TestDiffIgnoresNumberSpelling(t *testing.T) {
+	if changes := Diff(doc(t, `{"n":20}`), doc(t, `{"n":2e1}`)); len(changes) != 0 {
+		t.Errorf("changes = %+v", changes)
+	}
+}
+
+func TestLeavesFlattensObjectsWithoutPreconditions(t *testing.T) {
+	got := Leaves(doc(t, `{"a":{"b":1,"c":{"d":"x"}},"e":[1,2]}`))
+	if want := []string{"a.b", "a.c.d", "e"}; !reflect.DeepEqual(paths(got), want) {
+		t.Fatalf("paths = %v", paths(got))
+	}
+	for _, c := range got {
+		if c.HasBefore {
+			t.Errorf("%s has a precondition", c.Path)
+		}
+	}
+}
+
+func TestGetAndSet(t *testing.T) {
+	d := map[string]any{}
+	Set(d, "a.b.c", 1)
+	Set(d, "a.x", "y")
+	if v, ok := Get(d, "a.b.c"); !ok || v != 1 {
+		t.Errorf("Get a.b.c = %v %v", v, ok)
+	}
+	if _, ok := Get(d, "a.b.missing"); ok {
+		t.Error("Get found a missing path")
+	}
+}
+
+func TestRepeatUpdatesMergeKeepingTheFirstBefore(t *testing.T) {
+	cs := New("org")
+	first := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "B", Before: "A", HasBefore: true}})
+	second := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "C", Before: "B", HasBefore: true}, {Path: "enabled", Value: false}})
+	if first != second || len(cs.Operations) != 1 {
+		t.Fatalf("expected one operation, got %+v", cs.Operations)
+	}
+	changes := cs.Operations[0].Changes
+	if changes[0].Value != "C" || changes[0].Before != "A" || len(changes) != 2 {
+		t.Errorf("changes = %+v", changes)
+	}
+}
+
+func TestPlaceholderNamesDoNotSplitTargets(t *testing.T) {
+	cs := New("org")
+	a := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{id}", Params: map[string]string{"id": "t1"}}, []Change{{Path: "name", Value: "x"}})
+	b := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{teamId}", Params: map[string]string{"teamId": "t1"}}, []Change{{Path: "capacity", Value: 2}})
+	if a != b {
+		t.Errorf("same object recorded twice: %s, %s", a, b)
+	}
+}
+
+func TestDeleteReplacesUpdate(t *testing.T) {
+	cs := New("org")
+	cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}})
+	cs.AddDelete(huntGroup("hg1"))
+	if len(cs.Operations) != 1 || cs.Operations[0].Action != Delete || cs.Operations[0].Changes != nil {
+		t.Errorf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestCreatesGetHandlesThatReferencesResolveTo(t *testing.T) {
+	cs := New("org")
+	team := Target{API: APIContactCenter, Route: "/team"}
+	_, h1 := cs.AddCreate(team, map[string]any{"name": "Boulder Desk"})
+	_, h2 := cs.AddCreate(team, map[string]any{"name": "Boulder desk!"})
+	_, h3 := cs.AddCreate(Target{API: APIContactCenter, Route: "/skill"}, map[string]any{})
+	if h1 != "boulder-desk" || h2 != "boulder-desk-2" || h3 != "new-skill" {
+		t.Fatalf("handles = %q %q %q", h1, h2, h3)
+	}
+
+	resolved, err := cs.ResolvePlaceholders(map[string]any{"teamIds": []any{"t0", "new:boulder-desk"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	ids := resolved.(map[string]any)["teamIds"].([]any)
+	if ids[0] != "t0" || !reflect.DeepEqual(ids[1], RefTo("boulder-desk")) {
+		t.Errorf("resolved = %v", resolved)
+	}
+	if _, err := cs.ResolvePlaceholders("new:nope"); err == nil {
+		t.Error("an unknown handle resolved")
+	}
+}
+
+func TestUpdatesToANewObjectFoldIntoItsCreate(t *testing.T) {
+	cs := New("org")
+	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})
+	if _, err := cs.UpdateCreate(h, []Change{{Path: "capacity", Value: 3}, {Path: "a.b", Value: true}}); err != nil {
+		t.Fatal(err)
+	}
+	body := cs.Operations[0].Body.(map[string]any)
+	if body["capacity"] != 3 || body["a"].(map[string]any)["b"] != true {
+		t.Errorf("body = %v", body)
+	}
+}
+
+func TestRemoveCreateRefusesWhileReferenced(t *testing.T) {
+	cs := New("org")
+	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})
+	cs.AddUpdate(Target{API: APIContactCenter, Route: "/entry-point/{id}", Params: map[string]string{"id": "e"}},
+		[]Change{{Path: "teamIds", Value: []any{RefTo(h)}}})
+	if _, err := cs.RemoveCreate(h); err == nil {
+		t.Fatal("removed a create still referred to")
+	}
+	cs.Operations = cs.Operations[:1]
+	if _, err := cs.RemoveCreate(h); err != nil || len(cs.Operations) != 0 {
+		t.Errorf("err = %v, operations = %+v", err, cs.Operations)
+	}
+}
+
+func TestValidate(t *testing.T) {
+	cs := New("org")
+	cs.Intents = []Intent{{ID: "i", Summary: "s"}}
+	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})
+	cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: RefTo(h)}})
+	cs.Operations[1].Intent = "i"
+	if p := Validate(cs); len(p.Errors) > 0 {
+		t.Fatalf("valid change set: %v", p.Errors)
+	}
+
+	bad := *cs
+	bad.Operations = []Operation{
+		{ID: "op-1", Action: Update, Target: huntGroup("hg1"), Changes: []Change{{Path: "a..b", Value: 1}, {Path: "x", Value: RefTo("later")}}, Intent: "nope"},
+		{ID: "op-1", Action: Delete, Target: Target{API: "calling", Route: "/team"}},
+		{ID: "op-3", Action: Create, Handle: "later", Target: Target{API: APIContactCenter, Route: "/team"}, Body: map[string]any{}},
+		{ID: "op-4", Action: Invoke, Method: "POST", Target: Target{API: APIContactCenter, Route: "/team/bulk"}},
+		{ID: "op-5", Action: Update, Target: huntGroup("new:later"), Changes: []Change{{Path: "a", Value: 1}}},
+		{ID: "op-6", Action: Delete, Target: huntGroup("hg1")},
+	}
+	p := Validate(&bad)
+	for _, want := range []string{
+		`bad change path "a..b"`, `$ref "later" does not name an earlier create`, `intent "nope" is not defined`,
+		"op-1: id appears twice", `target.api is "calling"`, "route of a delete must end with the object's ID",
+		"is a placeholder ID", "op-6: targets the same object as op-1",
+	} {
+		if !strings.Contains(strings.Join(p.Errors, "\n"), want) {
+			t.Errorf("missing error %q in:\n%s", want, strings.Join(p.Errors, "\n"))
+		}
+	}
+	if len(p.Warnings) != 1 {
+		t.Errorf("warnings = %v", p.Warnings)
+	}
+}
+
+func TestFileRoundTripKeepsNullBeforeAndExactNumbers(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "x.changeset.json")
+	cs := New("org")
+	cs.AddUpdate(huntGroup("hg1"), []Change{
+		{Path: "a", Value: json.Number("12345678901234567890"), Before: nil, HasBefore: true},
+		{Path: "b", Value: nil},
+	})
+	if err := Save(path, cs); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(path)
+	if !strings.Contains(string(data), `"before": null`) || strings.Count(string(data), `"before"`) != 1 {
+		t.Errorf("file:\n%s", data)
+	}
+	back, err := Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	changes := back.Operations[0].Changes
+	if !changes[0].HasBefore || changes[1].HasBefore || changes[0].Value != json.Number("12345678901234567890") {
+		t.Errorf("changes = %+v", changes)
+	}
+}
+
+func TestParseRejectsUnknownKeys(t *testing.T) {
+	if _, err := Parse([]byte(`{"format":"webex-changeset/v1","metdata":{}}`)); err == nil {
+		t.Error("a misspelt key was accepted")
+	}
+}
+
+func TestConcurrentUpdatesKeepEveryOperation(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "x.changeset.json")
+	var wg sync.WaitGroup
+	for i := 0; i < 20; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			err := Edit(path, func() (*ChangeSet, error) { return New("org"), nil }, func(cs *ChangeSet) error {
+				cs.AddDelete(Target{API: APIContactCenter, Route: "/skill/{id}", Params: map[string]string{"id": string(rune('a' + i))}})
+				return nil
+			})
+			if err != nil {
+				t.Error(err)
+			}
+		}(i)
+	}
+	wg.Wait()
+	cs, err := Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cs.Operations) != 20 {
+		t.Errorf("operations = %d", len(cs.Operations))
+	}
+}
+
+func TestSchemaIsJSON(t *testing.T) {
+	var v map[string]any
+	if err := json.Unmarshal(Schema, &v); err != nil {
+		t.Fatal(err)
+	}
+}

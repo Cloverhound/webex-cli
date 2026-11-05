@@ -36,6 +36,13 @@ func Paginate() bool     { return paginate }
 func SetDryRun(d bool) { dryRun = d }
 func DryRun() bool     { return dryRun }
 
+var changesetPath string
+
+// SetChangesetPath turns on capture mode: write requests are recorded in the
+// change set file at path instead of being sent.
+func SetChangesetPath(path string) { changesetPath = path }
+func ChangesetPath() string        { return changesetPath }
+
 var readOnly bool
 
 // SetReadOnly turns on read-only request checks for this process.

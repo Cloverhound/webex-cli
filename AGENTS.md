@@ -84,7 +84,10 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `internal/client/` — HTTP client, request builder (JSON and multipart bodies), pagination, 429 Retry-After
+- `pkg/webexapi/` — Public HTTP transport: send with 401 refresh and 429 Retry-After, structured errors, fail-closed list paging. Holds no process state, and other Go programs import it
+- `pkg/changeset/` — Public change set file format (types, recording rules, validation, JSON Schema). Webex Admin Studio imports it
+- `internal/client/capture.go` — `--changeset` capture: records write requests in a change set instead of sending them
+- `internal/client/` — Request builder (JSON and multipart bodies), CLI pagination, and the CLI's use of `pkg/webexapi` with its process-wide flags
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)
 - `internal/output/` — JSON/table/csv/raw formatting
