@@ -78935,6 +78935,72 @@
   ]
  },
  {
+  "path": "webex resource",
+  "aliases": [
+   "resources"
+  ],
+  "short": "Read and safely change Webex objects by type",
+  "long": "Read and change Webex objects by type, using the SDK catalog's knowledge of\neach type: where its fields live, how Webex lists it, and how a write must be\nsent.\n\nWrites are safe where raw API commands are not. A Contact Center PUT replaces the\nwhole object, so \"set\" reads the object first and sends it back whole with only\nthe named fields changed. Every write is read back to confirm Webex holds the\nresult, and nothing is retried after a failure that may have committed.\n\n  webex resource list-types\n  webex resource describe cc_queue\n  webex resource list cc_team\n  webex resource get cc_team <id>\n  webex resource set cc_queue <id> max_time_in_queue=900 recording_permitted=true\n  webex resource create cc_skill name=zz-test skill_type=BOOLEAN\n  webex resource delete cc_skill <id>\n\nObjects of types with a parent, such as hunt groups in a location, are named\n<parent>/<id>; a bare ID is looked up. Field values are text, true or false,\nnumbers, a comma-separated or JSON list, or JSON rows. --values takes them as\none JSON object instead, which suits values with spaces:\n\n  webex resource set cc_team <id> --values '{\"name\":\"Front Desk\",\"capacity\":4}'\n\nWith --changeset, set, create and delete are recorded in the change set instead\nof being sent, like any other write command."
+ },
+ {
+  "path": "webex resource create",
+  "short": "Create an object",
+  "flags": [
+   {
+    "name": "values",
+    "type": "string",
+    "usage": "Field values as a JSON object, such as {\"name\":\"Front Desk\",\"capacity\":4}"
+   }
+  ]
+ },
+ {
+  "path": "webex resource delete",
+  "short": "Delete an object"
+ },
+ {
+  "path": "webex resource describe",
+  "short": "Show a type's fields and operations"
+ },
+ {
+  "path": "webex resource get",
+  "short": "Read one object",
+  "flags": [
+   {
+    "name": "raw",
+    "type": "bool",
+    "default": "false",
+    "usage": "Include the object as Webex returns it"
+   }
+  ]
+ },
+ {
+  "path": "webex resource list",
+  "short": "List every object of a type",
+  "flags": [
+   {
+    "name": "raw",
+    "type": "bool",
+    "default": "false",
+    "usage": "Include the object as Webex returns it"
+   }
+  ]
+ },
+ {
+  "path": "webex resource list-types",
+  "short": "List the object types"
+ },
+ {
+  "path": "webex resource set",
+  "short": "Change fields of one object, keeping the rest",
+  "flags": [
+   {
+    "name": "values",
+    "type": "string",
+    "usage": "Field values as a JSON object, such as {\"name\":\"Front Desk\",\"capacity\":4}"
+   }
+  ]
+ },
+ {
   "path": "webex update",
   "short": "Update webex-cli to the latest version"
  },

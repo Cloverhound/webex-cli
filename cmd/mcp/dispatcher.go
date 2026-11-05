@@ -45,6 +45,8 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 					"Maps to GET API calls — safe to auto-approve. "+
 					"Provide the command without the 'webex' prefix "+
 					"(e.g. 'calling people list' runs 'webex calling people list'). "+
+					"'resource list <type>' and 'resource get <type> <id>' read objects with their fields named, "+
+					"and 'resource list-types' lists the types. "+
 					"Use webex_write for create/update/delete operations. "+
 					"Use webex_help to discover valid commands and flags.",
 			),
@@ -118,6 +120,10 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 						"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
 						"Provide the command without the 'webex' prefix "+
 						"(e.g. 'messaging messages create'). "+
+						"To change an object of a type 'resource list-types' lists, prefer "+
+						"'resource set <type> <id>' with flags {\"values\": \"{\\\"field\\\": value}\"}: "+
+						"it keeps the fields you do not name, where a raw Contact Center update replaces the whole object, "+
+						"and it reads the result back. 'resource describe <type>' lists the fields. "+
 						"Use webex_read for list/get/download/export operations.",
 				),
 				mcplib.WithString("command",
