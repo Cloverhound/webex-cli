@@ -53,6 +53,9 @@ func configDir() string {
 	return filepath.Join(home, ".webex-cli")
 }
 
+// Dir is the directory that holds the config file and other per-user CLI state.
+func Dir() string { return configDir() }
+
 func configPath() string {
 	return filepath.Join(configDir(), "config.json")
 }

@@ -216,8 +216,19 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 				"Error running 'webex %s': %s", command, errText,
 			)), nil
 		}
-		return mcplib.NewToolResultText(strings.TrimSpace(stdout.String())), nil
+		return successResult(stdout.String(), stderr.String()), nil
 	}
+}
+
+// successResult returns a command's output, and its stderr as a second text
+// item when there is any. Notices such as the private-API caution are printed
+// there once, so dropping stderr would leave agents never seeing them.
+func successResult(stdout, stderr string) *mcplib.CallToolResult {
+	result := mcplib.NewToolResultText(strings.TrimSpace(stdout))
+	if note := strings.TrimSpace(stderr); note != "" {
+		result.Content = append(result.Content, mcplib.NewTextContent(note))
+	}
+	return result
 }
 
 // commandPath returns the command the CLI will run for args, without the binary

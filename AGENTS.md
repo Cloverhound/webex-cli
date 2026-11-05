@@ -39,6 +39,8 @@ and the generator skip lists when the request itself needs handwritten handling.
 
 No API key is required — collections are fetched from the Webex Public Workspace via Postman's public gateway (`codegen/download_collections.py`).
 
+APIs missing from those collections are described by hand in `codegen/supplemental/`, which downloads never touch. Each file joins the downloaded collection its `info.name` names, and a route the download also documents is taken from the download. The private AI Agent Studio routes behind `cc ai-agent*` live there; see `codegen/supplemental/README.md` before adding to them.
+
 A weekly GitHub Actions workflow (`.github/workflows/update-collections.yml`) downloads collections, regenerates commands and skills, and opens or updates a PR. It also has `workflow_dispatch`. If GitHub has disabled it for inactivity, re-enable it under Actions after merging workflow fixes.
 
 ## Build
@@ -89,6 +91,8 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)
 - `internal/output/` — JSON/table/csv/raw formatting
 - `internal/audio/` — Binary download from pre-signed URLs (no Webex token)
+- `internal/aiagent/` — AI Agent Studio support for generated commands: agent runtime token lookup and response redaction
+- `codegen/supplemental/` — Hand-maintained Postman collections for APIs not in Cisco's collections
 - `codegen/extract_api_outline.py` — Postman → normalized CLI names
 - `codegen/extract_api_spec.py` — Postman → enriched API spec (params, body fields)
 - `codegen/generate_cli.py` — API spec → Go cobra command files

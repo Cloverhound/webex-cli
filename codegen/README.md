@@ -4,6 +4,10 @@ Run `make codegen` from the repository root to extract API specifications, gener
 
 Generated files in the six command area packages must not be edited by hand. Change `generate_cli.py` for generation behavior or use `custom_*.go` with the generator skip lists for handwritten request implementations.
 
+## Supplemental collections
+
+APIs that Cisco has not published in Postman are described by hand in [`supplemental/`](supplemental/README.md). Each one joins the downloaded collection its `info.name` names and is regenerated with it, while `make download` leaves the folder alone. A route that a downloaded collection also documents is taken from the download.
+
 ## Naming overrides
 
 Define route-specific group names, command names, and compatibility aliases in `naming_overrides.py`. Overrides are keyed by collection, source group, HTTP method, and route so collection reordering does not affect names. Use meaningful resource/action names rather than numeric collision suffixes. IDs belong in flags; exact `get-id`, `delete-id`, `patch-id`, and `update-id` names are shortened centrally with compatibility aliases and collision checks.
