@@ -173,9 +173,12 @@ webex auth switch <email>      # Switch default user
 webex auth set-org <org-id>    # Set a persistent org override
 webex auth clear-org           # Clear the org override
 webex auth export              # Print the refresh token for $WEBEX_REFRESH_TOKEN
+webex auth token               # Print the access token
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
+
+`webex auth status`, `auth list`, and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
 
 ### Headless and Unattended Use
 
@@ -248,6 +251,51 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
+| `--changeset <file>` | Record write requests in a [change set](#change-sets) file instead of sending them (or `$WEBEX_CHANGESET`) |
+| `--region us\|ca\|eu\|eun\|in\|au` | Data region for region-specific hosts (Detailed Call History) |
+| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1` | Contact Center data center, which selects the Contact Center and AI Agent Studio hosts (default `us1`; also `$WEBEX_CC_REGION` or `webex config set cc-region`) |
+
+Contact Center requests in one run are spaced to 15 a second, below the rate Webex refuses, so paging and bulk work do not stall on 429s.
+
+## Resource Commands
+
+`webex resource` reads and changes Webex objects by type, using a catalog of what each type's fields are, where they live in the API's JSON, and how a write must be sent:
+
+```bash
+webex resource list-types                   # types, and which can be written
+webex resource describe cc_queue            # fields, kinds, options, and the API commands used
+webex resource list cc_team                 # every object, with fields named
+webex resource get hunt_group <id>          # one object (--raw adds the API's own JSON)
+webex resource set cc_queue <id> max_time_in_queue=900 recording_permitted=true
+webex resource set cc_team <id> --values '{"name":"Front Desk","capacity":4}'
+webex resource create cc_skill name=zz-test skill_type=BOOLEAN
+webex resource delete cc_skill <id>
+```
+
+Writes are safer than the raw API commands:
+
+- **Only the named fields change.** A Contact Center PUT replaces the whole object, so `cc team update` with a partial body erases the fields it leaves out. `resource set` reads the object first and sends it back whole with only the named fields changed.
+- **Every write is read back.** Webex can accept a write and change nothing; the command fails if the result is not what was asked.
+- **Nothing is retried after a failure that may have committed**, such as a 5xx or a dropped connection, and the error says the outcome is unknown.
+- Values are checked against the catalog: unknown fields, wrong kinds, values outside a field's options, and changes to fields that are fixed after creation are refused before anything is sent.
+
+Writes work on types proven on a live tenant (`writable` in `list-types`); the rest are read-only. With `--changeset`, `set`, `create`, and `delete` are recorded instead of sent, and `--dry-run` prints them. A type with a parent, such as a hunt group in a location, takes `<parent>/<id>`; a bare ID is looked up.
+
+## Change Sets
+
+A change set file proposes Webex changes without making them. An AI agent, or a person, runs ordinary write commands with `--changeset <file>`. For each write the CLI reads the object, records only the fields the command changes, and keeps the values it saw as preconditions. Nothing is sent to Webex, so this works in [read-only mode](#read-only-mode) too. Webex Admin Studio imports the file into a change set for review, plan and apply.
+
+```bash
+webex changeset new desk.changeset.json --title "Front desk ring count" --rationale "Ticket IT-4812"
+webex --changeset desk.changeset.json calling hunt-group update \
+  --location-id <loc> --hunt-group-id <hg> --body '{"callPolicies":{"noAnswer":{"numberOfRings":5}}}'
+webex changeset show desk.changeset.json
+webex changeset validate desk.changeset.json --live   # report values that changed since recording
+```
+
+A create prints a placeholder ID such as `new:boulder-desk`, which later commands in the same change set can use in flags and bodies. Repeat edits to one object merge. `webex changeset intent` groups operations under a plain-language summary, and `webex changeset schema` prints the JSON Schema. The [Change Sets](https://cloverhound.github.io/webex-cli/changesets/) page describes the file format.
+
+Limits: writes other than a plain create, update or delete, such as bulk saves and purges, are recorded as `invoke` operations with no field-level review. File uploads, requests for another org, and Contact Center routes outside `/organization/{orgid}` (such as flow drafts) cannot be recorded.
 
 ## Configuration
 
@@ -256,6 +304,8 @@ webex config set client-id <id>          # Use custom OAuth client ID
 webex config set client-secret <secret>  # Use custom OAuth client secret
 webex config set scopes <scopes>         # Override OAuth scopes
 webex config set read-only-scopes <scopes>  # Override scopes for login --read-only
+webex config set region <region>         # Data region for Detailed Call History
+webex config set cc-region <dc>          # Contact Center data center (us1, eu1, ...)
 webex config get client-id               # View current value
 ```
 
@@ -276,16 +326,18 @@ claude mcp add webex -- webex mcp serve
 claude mcp add webex -- /path/to/webex mcp serve
 ```
 
-The server exposes 4 tools:
+The server exposes 6 tools:
 
 | Tool | API methods | Description |
 |---|---|---|
 | `webex_read` | GET | Execute a read-only CLI command (list, get, download, export, search) |
 | `webex_write` | POST / PUT / PATCH / DELETE | Execute a command that creates, updates, or deletes a resource |
+| `webex_propose` | GET | Record a write command in a [change set](#change-sets) file instead of running it |
+| `webex_changeset` | GET | Start, show, validate, or annotate a change set file |
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex.
 
 And 2 MCP resources:
 
@@ -294,7 +346,7 @@ And 2 MCP resources:
 | `webex://commands` | JSON array of all available CLI commands with short descriptions |
 | `webex://usage` | Last 50 raw lines of the usage log |
 
-Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added.
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added. The tool descriptions point agents at [`resource set`](#resource-commands) for changing objects, so they do not erase fields with a partial Contact Center update.
 
 Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
 
@@ -353,11 +405,45 @@ Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
 
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
+## Go SDK
+
+The CLI is built on a Go SDK in `pkg/`, which other programs import as `github.com/Cloverhound/webex-cli/pkg/...`. Webex Admin Studio is built on it too.
+
+| Package | What it is |
+|---|---|
+| `webexapi` | HTTP transport: 401 refresh, 429 retry, structured errors, lists that fail instead of ending short, hosts for every region, org ID conversion, Contact Center pacing. No process-wide state; every call takes a context. |
+| `webexops` | Every API operation as data, generated from Cisco's Postman collections: route, parameters, body fields, paging. `Call` sends one. |
+| `resource` | Object types as data: fields, JSON paths, write mode, and the operations each type uses. |
+| `catalog` | The object types, and which can be written. |
+| `webex` | Reads and writes objects by type: lists that read items in parallel where a list leaves fields out, full or partial writes as the route needs. |
+| `guard` | The write protocol: conflict check before a write, read-back after it, and stop after a failure. |
+| `changeset` | The portable change set file format. |
+| `aiagent` | AI Agent Studio's private routes: agent token lookup and credential redaction. |
+| `fakeapi` | A fake Webex for tests, with fault injection. |
+
+```go
+hosts, _ := webexapi.NewHosts("us1", "us")
+api := &webexapi.Client{Token: func(context.Context) (string, error) { return token, nil }, MaxRetries: 3}
+
+// One operation.
+resp, err := webexops.Call(ctx, api, hosts, webexops.CCTeamGet, webexops.Args{
+	Path: map[string]string{"orgid": orgUUID, "id": teamID},
+})
+
+// Objects by type, with safe writes.
+c := &webex.Client{API: api, Hosts: hosts, OrgUUID: orgUUID}
+team, _ := catalog.ByName("cc_team")
+g := &guard.Guard{API: c, Writable: true}
+values, err := g.Update(ctx, team, key, before, after)
+```
+
+Each operation is an exported variable, so a program that uses one fails to build when a Postman refresh drops or renames it.
+
 ## Development
 
 See [AGENTS.md](AGENTS.md) for project structure and development workflow.
 
-Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
+API commands are built at startup from the operation table in `pkg/webexops`, which is **generated** from Postman collections — do not edit it by hand. Run `make refresh` to re-download collections, regenerate the table, update skill documentation, and rebuild. `testdata/golden/` records every command's flags and the request each one sends; run `make golden` after an intended change and review the diff. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
 
 ## License
 

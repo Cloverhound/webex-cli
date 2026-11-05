@@ -18,3 +18,9 @@ jobs:
       - run: go build ./...
 
       - run: go vet ./...
+
+      # Includes the golden files that pin every command and request.
+      - run: go test ./...
+
+      # The naming tests read the spec, which is built from the committed collections.
+      - run: cd codegen && python3 extract_api_spec.py && cd .. && python3 -m unittest discover -s codegen -p 'test_*.py'

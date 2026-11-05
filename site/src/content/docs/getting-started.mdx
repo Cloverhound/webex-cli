@@ -87,6 +87,12 @@ webex messaging <resource> <action> [flags]   # Webex Messaging APIs
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
+| `--dry-run` | Print write requests without executing them |
+| `--changeset <file>` | Record write requests in a [change set](/webex-cli/changesets/) instead of sending them |
+| `--region <region>` | Data region for region-specific hosts (Detailed Call History) |
+| `--cc-region <dc>` | Contact Center data center: `us1` (default), `eu1`, `eu2`, `anz1`, `ca1`, `jp1`, `sg1` |
+
+To change an object without erasing the fields you leave out, use the [resource commands](/webex-cli/resources/).
 
 ## Admin Examples
 

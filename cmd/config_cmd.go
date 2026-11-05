@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configKeys = "client-id, client-secret, scopes, read-only-scopes, region"
+const configKeys = "client-id, client-secret, scopes, read-only-scopes, region, cc-region"
 
 var configCmd = &cobra.Command{
 	Use:   "config",
@@ -58,6 +58,11 @@ var configSetCmd = &cobra.Command{
 				return err
 			}
 			cfg.Region = config.Region()
+		case "cc-region":
+			if err := setCCRegion(value); err != nil {
+				return err
+			}
+			cfg.CCRegion = config.CCRegion()
 		default:
 			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)
 		}
@@ -128,6 +133,12 @@ var configGetCmd = &cobra.Command{
 				fmt.Printf("%s (custom)\n", cfg.Region)
 			} else {
 				fmt.Println("us (default)")
+			}
+		case "cc-region":
+			if cfg.CCRegion != "" {
+				fmt.Printf("%s (custom)\n", cfg.CCRegion)
+			} else {
+				fmt.Println("us1 (default)")
 			}
 		default:
 			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"slices"
 	"strings"
 
@@ -29,6 +30,20 @@ var rootCmd = &cobra.Command{
 		// Dry-run mode
 		dryRun, _ := cmd.Flags().GetBool("dry-run")
 		config.SetDryRun(dryRun)
+
+		// Capture mode: --changeset flag > WEBEX_CHANGESET env.
+		changesetPath, _ := cmd.Flags().GetString("changeset")
+		if changesetPath == "" {
+			changesetPath = os.Getenv("WEBEX_CHANGESET")
+		}
+		if changesetPath != "" {
+			abs, err := filepath.Abs(changesetPath)
+			if err != nil {
+				return err
+			}
+			changesetPath = abs
+		}
+		config.SetChangesetPath(changesetPath)
 
 		// Output format
 		format, _ := cmd.Flags().GetString("output")
@@ -60,6 +75,18 @@ var rootCmd = &cobra.Command{
 			regionFlag = cfg.Region
 		}
 		if err := setRegion(regionFlag); err != nil {
+			return err
+		}
+
+		// Contact Center data center: --cc-region flag > WEBEX_CC_REGION env > config file.
+		ccRegion, _ := cmd.Flags().GetString("cc-region")
+		if ccRegion == "" {
+			ccRegion = os.Getenv("WEBEX_CC_REGION")
+		}
+		if ccRegion == "" {
+			ccRegion = cfg.CCRegion
+		}
+		if err := setCCRegion(ccRegion); err != nil {
 			return err
 		}
 
@@ -166,6 +193,16 @@ func setRegion(region string) error {
 	return nil
 }
 
+// setCCRegion validates a Contact Center data center and selects its hosts.
+func setCCRegion(dc string) error {
+	normalized := strings.ToLower(strings.TrimSpace(dc))
+	if normalized != "" && !slices.Contains(config.CCRegions, normalized) {
+		return fmt.Errorf("unknown Contact Center region %q (valid: %s)", dc, strings.Join(config.CCRegions, ", "))
+	}
+	config.SetCCRegion(normalized)
+	return nil
+}
+
 // RootCommand returns the root cobra command for external introspection.
 func RootCommand() *cobra.Command { return rootCmd }
 
@@ -216,9 +253,11 @@ func init() {
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
 	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
+	rootCmd.PersistentFlags().String("changeset", "", "Record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")
+	rootCmd.PersistentFlags().String("cc-region", "", "Contact Center data center: "+strings.Join(config.CCRegions, ", ")+" (default us1)")
 	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
 	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 
@@ -259,6 +298,10 @@ func skipAuth(cmd *cobra.Command) bool {
 	case "auth":
 		// set-org validates the org against the API; token prints it.
 		return cmd.Name() != "set-org" && cmd.Name() != "token"
+	case "changeset":
+		// new needs the org to scope the file to; validate --live reads Webex.
+		live, _ := cmd.Flags().GetBool("live")
+		return cmd.Name() != "new" && !(cmd.Name() == "validate" && live)
 	}
 
 	return false

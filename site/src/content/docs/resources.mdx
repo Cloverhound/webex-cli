@@ -1,0 +1,46 @@
+---
+title: Resource Commands
+description: Read and safely change Webex objects by type.
+---
+
+`webex resource` reads and changes Webex objects by type. It works from a catalog that knows each type's fields, where they live in the API's JSON, how Webex lists the type, and how a write must be sent.
+
+```bash
+webex resource list-types                   # types, and which can be written
+webex resource describe cc_queue            # fields, kinds, options, and the API commands used
+webex resource list cc_team                 # every object, with fields named
+webex resource get hunt_group <id>          # one object
+webex resource get hunt_group <id> --raw    # with the API's own JSON
+```
+
+## Changing objects
+
+```bash
+webex resource set cc_queue <id> max_time_in_queue=900 recording_permitted=true
+webex resource set cc_team <id> --values '{"name":"Front Desk","capacity":4}'
+webex resource create cc_skill name=zz-test skill_type=BOOLEAN
+webex resource delete cc_skill <id>
+```
+
+Values given as `field=value` are text, `true` or `false`, whole numbers, a comma-separated or JSON list, or JSON rows. `--values` takes them as one JSON object, which suits values with spaces.
+
+### Why use these instead of `update`
+
+- **Only the named fields change.** A Contact Center `PUT` replaces the whole object, so a raw `webex cc team update` with a partial body erases every field the body leaves out. `resource set` reads the object first and sends it back whole, with only the named fields changed. Calling routes that merge the body get only the changed fields.
+- **Every write is read back.** Webex can accept a write and change nothing. The command checks that Webex holds the result and fails if it does not.
+- **Nothing is retried after a failure that may have committed.** A 5xx or a dropped connection can follow a write that landed, so the error says the outcome is unknown. Read the object before trying again.
+- **Values are checked before anything is sent:** the field must exist, the value must be of its kind and among its options, and fields that are fixed at creation, such as a skill's type, cannot be changed.
+
+### Which types can be written
+
+`list-types` marks a type `writable` once its writes have been proven on a live tenant: the Calling hunt groups, call queues and auto attendants, and most Contact Center configuration (sites, teams, users, skills and skill profiles, desktop and multimedia profiles, queues, entry points, dial numbers and plans, business hours, codes, variables, and others). The rest are read-only. Some writable types cannot be created or deleted here, because Webex needs something the catalog does not cover, such as an uploaded audio file.
+
+A type with a parent, such as a hunt group in a location, names its objects `<parent>/<id>`. A bare ID is looked up.
+
+## Proposing and previewing
+
+With [`--changeset`](/webex-cli/changesets/), `set`, `create` and `delete` are recorded in the change set instead of being sent, like any other write command. `--dry-run` prints the request that would be sent.
+
+## MCP
+
+The commands are available to AI agents through the MCP server: `list-types`, `describe`, `list` and `get` through `webex_read`, and `set`, `create` and `delete` through `webex_write` or `webex_propose`. The tool descriptions point agents at `resource set` for changing objects.

@@ -41,7 +41,7 @@ Examples:
   webex meetings recordings download --recording-id <id> --output meeting.mp4 --host-email admin@example.com`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET recording metadata
-			req := client.NewRequest(config.CallingBaseURL, "GET", "/recordings/{recordingId}")
+			req := client.NewRequest(config.CallingBaseURL(), "GET", "/recordings/{recordingId}")
 			req.PathParam("recordingId", recordingID)
 			req.QueryParam("hostEmail", hostEmail)
 
