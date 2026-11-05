@@ -20,7 +20,7 @@ var _ = output.Print
 
 var aiAgentTranscriptCmd = &cobra.Command{
 	Use:   "ai-agent-transcript",
-	Short: "AI Agent Studio audited transcript reads (private API)",
+	Short: "AI Agent Studio audited transcript reads (unsupported private API)",
 }
 
 func init() {
@@ -36,8 +36,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create-audit-record",
 			Short: "Create transcript audit record",
-			Long:  "Records a compliance audit entry for reading a session's transcript, as Studio does before it shows one. `room_id` is the session ID and `message` the reason. The entry is permanent and names the caller, so create one only with a real reason. With a regular Webex login, the messages of an encrypted session stay encrypted after the audit.",
+			Long:  "Records a compliance audit entry for reading a session's transcript, as Studio does before it shows one. `room_id` is the session ID and `message` the reason. The entry is permanent and names the caller, so create one only with a real reason. With a regular Webex login, the messages of an encrypted session stay encrypted after the audit.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/decrypt_audit/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -79,8 +80,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-session",
 			Short: "Get transcript session",
-			Long:  "Gets a session's full record, including `data_encrypted` and its channels.",
+			Long:  "Gets a session's full record, including `data_encrypted` and its channels.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/room/")
 				req.QueryParam("id", id)
 				botToken, err := aiagent.BotToken(agentId)
@@ -111,8 +113,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-messages",
 			Short: "List transcript messages",
-			Long:  "Lists a session's messages with full detail: tool calls, classification and `data_encrypted`. For an encrypted session, create an audit record first.",
+			Long:  "Lists a session's messages with full detail: tool calls, classification and `data_encrypted`. For an encrypted session, create an audit record first.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/message/")
 				req.QueryParam("room_id", room_id)
 				req.QueryParam("order_by", order_by)

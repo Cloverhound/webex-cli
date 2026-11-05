@@ -161,9 +161,9 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 **Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
 
-## AI Agent Studio (private API)
+## AI Agent Studio (unsupported private API)
 
-`ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's undocumented API with the regular Webex login. Expect it to change without notice.
+> **Caution:** `ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
 
 ```bash
 webex cc ai-agent list --paginate                       # ids for --agent-id

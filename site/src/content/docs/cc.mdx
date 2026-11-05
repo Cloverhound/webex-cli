@@ -189,7 +189,9 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 ## AI Agent Studio
 
-The `ai-agent`, `ai-agent-session` and `ai-agent-transcript` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document this API, so it can change without notice.
+:::caution[Unsupported private API]
+The `ai-agent`, `ai-agent-session` and `ai-agent-transcript` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation, not as a dependency of production automation, integrations or scheduled jobs. Commands show this caution in `--help`, and the first one you run prints it once.
+:::
 
 ```bash
 webex cc ai-agent list --paginate

@@ -20,7 +20,7 @@ var _ = output.Print
 
 var aiAgentSessionCmd = &cobra.Command{
 	Use:   "ai-agent-session",
-	Short: "AI Agent Studio conversation sessions and messages (private API)",
+	Short: "AI Agent Studio sessions and messages (unsupported private API)",
 }
 
 func init() {
@@ -34,8 +34,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List AI agent sessions",
-			Long:  "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.",
+			Long:  "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/")
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)
@@ -74,8 +75,11 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get AI agent session",
-			Long:  `Gets one conversation session.`,
+			Long: `Gets one conversation session.
+
+Caution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/")
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)
@@ -106,8 +110,11 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-messages",
 			Short: "List AI agent session messages",
-			Long:  `Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.`,
+			Long: `Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.
+
+Caution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/")
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)

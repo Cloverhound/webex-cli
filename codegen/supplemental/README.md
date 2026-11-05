@@ -22,6 +22,10 @@ exercised against a live organization before it was added. Add only routes
 that work with a Webex OAuth token; routes that need Studio's own browser login
 belong elsewhere.
 
+- Cisco does not document or support these routes. `generate_cli.py` lists
+  them in `PRIVATE_API_ROUTES`, so every command they generate carries that
+  caution in `--help` and prints it once per user when first run
+  (`aiagent.PrivateAPINotice`). A route added here gets both automatically.
 - `generate_cli.py` sends routes under `/api/` to `config.AiAgentBaseURL` and
   passes their responses through `aiagent.RedactSecrets`.
 - A request header named `bot-access-token` becomes a required `--agent-id`

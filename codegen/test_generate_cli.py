@@ -130,9 +130,24 @@ class AiAgentStudioTest(unittest.TestCase):
 
     def test_other_cc_routes_are_unchanged(self):
         code = self.group([{'command': 'list', 'method': 'GET', 'path': '/organization/{orgId}/v2/site',
-                            'path_params': [{'name': 'orgId'}]}])
+                            'path_params': [{'name': 'orgId'}],
+                            'description': 'Lists sites.'}])
         self.assertIn('client.NewRequest(config.CcBaseURL,', code)
         self.assertNotIn('aiagent', code)
+        self.assertNotIn('supported by Cisco', code)
+
+    def test_private_routes_warn_in_help_and_when_run(self):
+        code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/',
+                            'description': 'Exports the agent.'}])
+        long_help = code[code.index('Long:'):code.index('RunE:')]
+        self.assertIn('Exports the agent.', long_help)
+        self.assertIn('not documented or supported by Cisco', long_help)
+        run = code[code.index('RunE:'):]
+        self.assertEqual(run.splitlines()[1].strip(), 'aiagent.PrivateAPINotice()')
+
+    def test_private_route_without_description_still_warns(self):
+        code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/'}])
+        self.assertIn('not documented or supported by Cisco', code)
 
     def test_agent_token_header_is_resolved_from_agent_id(self):
         code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/',

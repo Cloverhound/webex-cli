@@ -56,6 +56,19 @@ REDACTED_ROUTES = {
     "Webex Contact Center": ("/api/",),
 }
 
+# Routes on APIs that Cisco neither documents nor supports. Their commands carry
+# PRIVATE_API_NOTE in --help and show aiagent.PrivateAPINotice once when run.
+# Collection name → URL path prefixes.
+PRIVATE_API_ROUTES = {
+    "Webex Contact Center": ("/api/",),
+}
+
+PRIVATE_API_NOTE = (
+    "Caution: this command uses Webex AI Agent Studio's private API, which is not "
+    "documented or supported by Cisco and can change or stop working without notice. "
+    "Do not build production automation on it."
+)
+
 # AI Agent Studio selects the agent of a v1 call by the agent's runtime token.
 # The CLI looks the token up from --agent-id, so users never pass or see it.
 AGENT_TOKEN_HEADER = 'bot-access-token'
@@ -63,6 +76,10 @@ AGENT_TOKEN_HEADER = 'bot-access-token'
 
 def redacts_secrets(collection_name, path):
     return any(path.startswith(p) for p in REDACTED_ROUTES.get(collection_name, ()))
+
+
+def is_private_api(collection_name, path):
+    return any(path.startswith(p) for p in PRIVATE_API_ROUTES.get(collection_name, ()))
 
 
 def uses_agent_token(ep):
@@ -209,6 +226,7 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
         if any(p['name'] == 'from' for p in ep.get('query_params', [])):
             needs_timeutil = True
     needs_aiagent = any(redacts_secrets(collection_name, ep['path']) or uses_agent_token(ep)
+                        or is_private_api(collection_name, ep['path'])
                         for ep in endpoints)
 
     if needs_strconv:
@@ -262,7 +280,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
             continue
         ep_base_url = resolve_base_url(collection_name, ep['path'], base_url_const)
         lines.extend(generate_command(ep, group_var, ep_base_url, is_calling,
-                                      redact=redacts_secrets(collection_name, ep['path'])))
+                                      redact=redacts_secrets(collection_name, ep['path']),
+                                      private=is_private_api(collection_name, ep['path'])))
         lines.append('')
 
     lines.append('}')
@@ -301,7 +320,7 @@ def pagination_hints(cmd_name, query_names, is_calling):
     return None
 
 
-def generate_command(ep, group_var, base_url_expr, is_calling, redact=False):
+def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, private=False):
     """Generate Go source for one command within a group's init()."""
     lines = []
     indent = '\t'
@@ -315,6 +334,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling, redact=False):
     complex_body = ep.get('complex_body', False)
     has_body = ep.get('has_body', False)
     description = ep.get('description', '')
+    if private:
+        description = f'{description}\n\n{PRIVATE_API_NOTE}' if description else PRIVATE_API_NOTE
     extra_headers = ep.get('extra_headers', [])
     original_name = ep.get('original_name', cmd_name)
     has_from = any(p['name'] == 'from' for p in query_params)
@@ -436,6 +457,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling, redact=False):
     lines.append(f'{indent2}\tRunE: func(cmd *cobra.Command, args []string) error {{')
     indent3 = indent2 + '\t\t'
 
+    if private:
+        lines.append(f'{indent3}aiagent.PrivateAPINotice()')
     lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
 
     # This endpoint returns a non-JSON deletion acknowledgement. Restricting

@@ -22,7 +22,7 @@ var _ = strings.Join
 
 var aiAgentCmd = &cobra.Command{
 	Use:   "ai-agent",
-	Short: "AI Agent Studio agents: configuration, tools, publishing, export (private API)",
+	Short: "AI Agent Studio agents, tools, publishing, export (unsupported private API)",
 }
 
 func init() {
@@ -35,8 +35,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list",
 			Short: "List AI agents",
-			Long:  "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.",
+			Long:  "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/")
 				req.PathParam("orgid", orgid)
 				req.QueryParam("limit", limit)
@@ -70,8 +71,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get",
 			Short: "Get AI agent",
-			Long:  "Gets an AI agent's settings. `bot_metadata.ai_engine` here is the engine family; the exact engine is `bot_metadata.engine_identifier`.",
+			Long:  "Gets an AI agent's settings. `bot_metadata.ai_engine` here is the engine family; the exact engine is `bot_metadata.engine_identifier`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/bot/{agentId}/")
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
@@ -98,8 +100,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create",
 			Short: "Create AI agent",
-			Long:  "Creates an AI agent. `bot_unique_name` must be unique; Studio's own UI uses the name followed by `-` and 8 random letters and digits. Turning transparency off needs a `disable_reason`. Every new agent gets the system \"Agent handover\" tool.",
+			Long:  "Creates an AI agent. `bot_unique_name` must be unique; Studio's own UI uses the name followed by `-` and 8 random letters and digits. Turning transparency off needs a `disable_reason`. Every new agent gets the system \"Agent handover\" tool.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/bot/")
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
@@ -128,8 +131,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update",
 			Short: "Update AI agent",
-			Long:  "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
+			Long:  "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "PUT", "/api/v1/bot/{agentId}/")
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
@@ -164,8 +168,11 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete",
 			Short: "Delete AI agent",
-			Long:  `Deletes an AI agent.`,
+			Long: `Deletes an AI agent.
+
+Caution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "DELETE", "/api/v1/bot/{agentId}/")
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
@@ -191,8 +198,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "get-configuration",
 			Short: "Get AI agent configuration",
-			Long:  "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
+			Long:  "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/getdefault/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -220,8 +228,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "list-versions",
 			Short: "List AI agent versions",
-			Long:  "Lists the draft and the published versions (`state: live`) of the agent's configuration.",
+			Long:  "Lists the draft and the published versions (`state: live`) of the agent's configuration.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/")
 				req.QueryParam("order_by", order_by)
 				req.QueryParam("limit", limit)
@@ -261,8 +270,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "export",
 			Short: "Export AI agent",
-			Long:  "Exports the agent's draft configuration and tools as one JSON document (`bot_type`, `configuration`, `tools`).",
+			Long:  "Exports the agent's draft configuration and tools as one JSON document (`bot_type`, `configuration`, `tools`).\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/export/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -290,8 +300,11 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "publish",
 			Short: "Publish AI agent",
-			Long:  `Publishes the agent's draft, so live calls use it. The description labels the version in the history.`,
+			Long: `Publishes the agent's draft, so live calls use it. The description labels the version in the history.
+
+Caution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/makelive/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -330,8 +343,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "create-tool",
 			Short: "Create AI agent tool",
-			Long:  "Adds a tool (action) to the agent's draft. `input_entities` is required, in JSON Schema form, even when the tool takes no input. Copy a working tool from `get-configuration` for the fulfillment of flow and MCP tools.",
+			Long:  "Adds a tool (action) to the agent's draft. `input_entities` is required, in JSON Schema form, even when the tool takes no input. Copy a working tool from `get-configuration` for the fulfillment of flow and MCP tools.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/create/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -367,8 +381,9 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "update-tool",
 			Short: "Update AI agent tool",
-			Long:  "Updates a tool in the agent's draft. Send the whole tool as `get-configuration` returns it, with `tool_id` set to its `id`.",
+			Long:  "Updates a tool in the agent's draft. Send the whole tool as `get-configuration` returns it, with `tool_id` set to its `id`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/update/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -405,8 +420,11 @@ func init() {
 		cmd := &cobra.Command{
 			Use:   "delete-tool",
 			Short: "Delete AI agent tool",
-			Long:  `Deletes a tool from the agent's draft.`,
+			Long: `Deletes a tool from the agent's draft.
+
+Caution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.`,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/delete/")
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {

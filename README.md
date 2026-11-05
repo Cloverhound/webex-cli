@@ -48,7 +48,8 @@ webex cc team list
 webex cc contact-service-queue list
 webex cc entry-point list
 
-# AI Agent Studio (private API; may change without notice)
+# AI Agent Studio: unsupported private API that can change or break without notice;
+# not for production automation (see the Contact Center docs)
 webex cc ai-agent list
 webex cc ai-agent export --agent-id <id>
 
