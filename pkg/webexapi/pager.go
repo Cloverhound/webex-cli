@@ -15,6 +15,41 @@ const (
 	offsetPageSize = 100
 )
 
+// Paging says how a list is read to its end.
+type Paging struct {
+	// CC lists page with page and SizeParam, pageSize when empty, and wrap items in
+	// {data, meta} or {data, pageInfo}, or send a bare array.
+	CC        bool
+	SizeParam string
+
+	// Start and Size name an offset list's parameters. An empty Start means the list
+	// pages only through Link headers, and an empty Size sends no page size. First is
+	// the first item's offset, 1 for SCIM.
+	Start, Size string
+	First       int
+
+	// ArrayKey names the array in an offset list's response. When empty, a bare
+	// array, "items" or "Resources" is read, or else the response's only array.
+	ArrayKey string
+}
+
+// List reads a list to its end, passing each page to visit. A list that cannot be
+// read to its end gives ErrIncompleteList: a silently short list would look like
+// deletions.
+func (c *Client) List(ctx context.Context, listURL string, p Paging, visit func([]json.RawMessage) error) error {
+	if p.CC {
+		size := p.SizeParam
+		if size == "" {
+			size = "pageSize"
+		}
+		return c.listCC(ctx, listURL, size, visit)
+	}
+	if p.Start != "" && p.Size == "" {
+		return fmt.Errorf("offset paging by %s needs a page size parameter", p.Start)
+	}
+	return c.listOffset(ctx, listURL, p, visit)
+}
+
 // ListCC reads a Contact Center list to its end, passing each page to visit.
 //
 // CC endpoints wrap items in {data, meta}, or return a bare array with no page
@@ -22,9 +57,13 @@ const (
 // another request. An endpoint that repeats a full page, or a later page that is not
 // a list, gives ErrIncompleteList: a silently short list would look like deletions.
 func (c *Client) ListCC(ctx context.Context, listURL string, visit func([]json.RawMessage) error) error {
+	return c.listCC(ctx, listURL, "pageSize", visit)
+}
+
+func (c *Client) listCC(ctx context.Context, listURL, sizeParam string, visit func([]json.RawMessage) error) error {
 	var previousFirst json.RawMessage
 	for page := 0; ; page++ {
-		pageURL, err := withQuery(listURL, map[string]string{"page": strconv.Itoa(page), "pageSize": strconv.Itoa(ccPageSize)})
+		pageURL, err := withQuery(listURL, map[string]string{"page": strconv.Itoa(page), sizeParam: strconv.Itoa(ccPageSize)})
 		if err != nil {
 			return err
 		}
@@ -87,14 +126,25 @@ type ccMeta struct {
 // names the array in the response, which differs per endpoint. A Link rel="next"
 // header is followed when present. See ListCC for why failures are not silent.
 func (c *Client) ListOffset(ctx context.Context, listURL, arrayKey string, visit func([]json.RawMessage) error) error {
+	return c.listOffset(ctx, listURL, Paging{Start: "start", Size: "max", ArrayKey: arrayKey}, visit)
+}
+
+func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit func([]json.RawMessage) error) error {
 	var previousFirst json.RawMessage
 	next := ""
-	for start := 0; ; {
+	seen := 0
+	for start := p.First; ; {
 		pageURL := next
 		if pageURL == "" {
+			params := map[string]string{}
+			if p.Start != "" {
+				params[p.Start] = strconv.Itoa(start)
+			}
+			if p.Size != "" {
+				params[p.Size] = strconv.Itoa(offsetPageSize)
+			}
 			var err error
-			pageURL, err = withQuery(listURL, map[string]string{"start": strconv.Itoa(start), "max": strconv.Itoa(offsetPageSize)})
-			if err != nil {
+			if pageURL, err = withQuery(listURL, params); err != nil {
 				return err
 			}
 		}
@@ -104,10 +154,10 @@ func (c *Client) ListOffset(ctx context.Context, listURL, arrayKey string, visit
 		}
 		// Several Calling lists answer {} when they hold nothing at all, which only
 		// means that on the first page.
-		if start == 0 && next == "" && bytes.Equal(bytes.TrimSpace(resp.Body), []byte("{}")) {
+		if start == p.First && next == "" && bytes.Equal(bytes.TrimSpace(resp.Body), []byte("{}")) {
 			return nil
 		}
-		items, err := namedArray(resp.Body, arrayKey)
+		items, total, err := pageArray(resp.Body, p.ArrayKey)
 		if err != nil {
 			return fmt.Errorf("%w: %s: %v", ErrIncompleteList, listURL, err)
 		}
@@ -120,22 +170,61 @@ func (c *Client) ListOffset(ctx context.Context, listURL, arrayKey string, visit
 			}
 			previousFirst = items[0]
 		}
+		seen += len(items)
 		if link := NextLink(resp.Header, listURL); link != "" {
 			next = link
 			continue
 		}
-		if next != "" || len(items) < offsetPageSize {
+		if next != "" || p.Start == "" || len(items) < offsetPageSize || (total > 0 && seen >= total) {
 			return nil
 		}
 		start += len(items)
 	}
 }
 
-func namedArray(body []byte, key string) ([]json.RawMessage, error) {
+// pageArray finds a page's items. total is SCIM's totalResults when present.
+func pageArray(body []byte, key string) (items []json.RawMessage, total int, err error) {
+	if key == "" {
+		if json.Unmarshal(body, &items) == nil {
+			return items, 0, nil
+		}
+	}
 	var result map[string]json.RawMessage
 	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
+	if raw, ok := result["totalResults"]; ok {
+		json.Unmarshal(raw, &total)
+	}
+	if key != "" {
+		items, err := namedArray(result, key)
+		return items, total, err
+	}
+	for _, k := range []string{"items", "Resources"} {
+		if _, ok := result[k]; ok {
+			items, err := namedArray(result, k)
+			return items, total, err
+		}
+	}
+	var found []string
+	for k, raw := range result {
+		var probe []json.RawMessage
+		if json.Unmarshal(raw, &probe) == nil {
+			found = append(found, k)
+			items = probe
+		}
+	}
+	switch len(found) {
+	case 1:
+		return items, total, nil
+	case 0:
+		return nil, 0, fmt.Errorf("response has no array")
+	default:
+		return nil, 0, fmt.Errorf("response has several arrays; name one")
+	}
+}
+
+func namedArray(result map[string]json.RawMessage, key string) ([]json.RawMessage, error) {
 	raw, ok := result[key]
 	if !ok {
 		return nil, fmt.Errorf("response has no %q array", key)

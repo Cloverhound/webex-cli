@@ -9,6 +9,7 @@ package webexops
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
@@ -278,6 +279,35 @@ func (o *Operation) URL(hosts webexapi.Hosts, args Args) (string, error) {
 		u += "?" + encoded
 	}
 	return u, nil
+}
+
+// List reads a paging operation to its end, passing each page's items to visit.
+// Paging parameters are set here, so args leave them out. A list that cannot be read
+// to its end fails rather than ending short.
+func List(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Operation, args Args, visit func([]json.RawMessage) error) error {
+	if op.Paging == nil {
+		return fmt.Errorf("%s does not page", op.Name())
+	}
+	query := map[string]string{}
+	for k, v := range args.Query {
+		query[k] = v
+	}
+	for k, v := range op.Paging.Query {
+		query[k] = v
+	}
+	args.Query = query
+	u, err := op.URL(hosts, args)
+	if err != nil {
+		return err
+	}
+	p := webexapi.Paging{Start: "start", Size: "max"}
+	switch o := op.Paging.Offset; {
+	case o != nil:
+		p = webexapi.Paging{Start: o.Start, Size: o.Size, First: o.First}
+	case op.Area == "cc":
+		p = webexapi.Paging{CC: true, SizeParam: op.Paging.SizeParam}
+	}
+	return c.List(ctx, u, p, visit)
 }
 
 // Call sends the operation. Header values in args are sent as given; resolving an

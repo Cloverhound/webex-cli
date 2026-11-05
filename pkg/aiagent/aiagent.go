@@ -10,10 +10,9 @@ package aiagent
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 	"regexp"
-	"strconv"
 
 	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 	"github.com/Cloverhound/webex-cli/pkg/webexops"
@@ -23,62 +22,41 @@ import (
 // agent's runtime token.
 var agentList = webexops.CCAiAgentList
 
-const pageSize = 100
+// errFound stops the list once the agent is found.
+var errFound = errors.New("found")
 
 // BotToken returns the runtime token of an AI agent in an org.
 func BotToken(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, orgUUID, agentID string) (string, error) {
 	if orgUUID == "" {
 		return "", fmt.Errorf("no organization: log in or pass --organization")
 	}
-	for offset := 0; ; offset += pageSize {
-		u, err := agentList.URL(hosts, webexops.Args{
-			Path:  map[string]string{"orgid": orgUUID},
-			Query: map[string]string{"limit": strconv.Itoa(pageSize), "offset": strconv.Itoa(offset)},
+	var token string
+	var found bool
+	err := webexops.List(ctx, c, hosts, agentList, webexops.Args{Path: map[string]string{"orgid": orgUUID}},
+		func(page []json.RawMessage) error {
+			for _, raw := range page {
+				var a struct {
+					ID    string `json:"id"`
+					Token string `json:"bot_access_token"`
+				}
+				if json.Unmarshal(raw, &a) == nil && a.ID == agentID {
+					token, found = a.Token, true
+					return errFound
+				}
+			}
+			return nil
 		})
-		if err != nil {
-			return "", err
-		}
-		resp, err := c.Send(ctx, webexapi.Request{Method: http.MethodGet, URL: u})
-		if err != nil {
-			return "", fmt.Errorf("looking up AI agent %s: %w", agentID, err)
-		}
-		agents, err := agentPage(resp.Body)
-		if err != nil {
-			return "", fmt.Errorf("reading the AI agent list: %w", err)
-		}
-		for _, a := range agents {
-			if a.ID != agentID {
-				continue
-			}
-			if a.Token == "" {
-				return "", fmt.Errorf("AI agent %s has no runtime token", agentID)
-			}
-			return a.Token, nil
-		}
-		if len(agents) < pageSize {
-			return "", fmt.Errorf("AI agent %s not found in organization %s", agentID, orgUUID)
-		}
+	switch {
+	case errors.Is(err, errFound):
+	case err != nil:
+		return "", fmt.Errorf("looking up AI agent %s: %w", agentID, err)
+	case !found:
+		return "", fmt.Errorf("AI agent %s not found in organization %s", agentID, orgUUID)
 	}
-}
-
-type agent struct {
-	ID    string `json:"id"`
-	Token string `json:"bot_access_token"`
-}
-
-// agentPage reads one page, which Studio sends under "objects".
-func agentPage(body []byte) ([]agent, error) {
-	var bare []agent
-	if err := json.Unmarshal(body, &bare); err == nil {
-		return bare, nil
+	if token == "" {
+		return "", fmt.Errorf("AI agent %s has no runtime token", agentID)
 	}
-	var page struct {
-		Objects []agent `json:"objects"`
-	}
-	if err := json.Unmarshal(body, &page); err != nil {
-		return nil, err
-	}
-	return page.Objects, nil
+	return token, nil
 }
 
 // secretField matches a JSON string value of a Studio credential field.

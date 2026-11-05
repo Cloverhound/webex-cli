@@ -2,6 +2,7 @@ package webexops
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -60,6 +61,30 @@ func TestURLFillsPathAndQueryAndRefusesUnknownArguments(t *testing.T) {
 	}
 	if _, err := op.URL(hosts, Args{Path: map[string]string{"orgid": "o"}, Query: map[string]string{"sise": "1"}}); err == nil {
 		t.Fatal("misspelled query parameter accepted")
+	}
+}
+
+func TestListPagesAsTheOperationSays(t *testing.T) {
+	var queries []string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		queries = append(queries, r.URL.RawQuery)
+		io.WriteString(w, `{"data":[{"id":"f1"}],"pageInfo":{"totalPages":1}}`)
+	}))
+	defer srv.Close()
+	op, _ := Find("cc", "flow", "list")
+	var got []json.RawMessage
+	err := List(context.Background(), &webexapi.Client{}, webexapi.Hosts{CC: srv.URL}, op,
+		Args{Path: map[string]string{"orgid": "o1"}, Query: map[string]string{"flowType": "FLOW"}},
+		func(page []json.RawMessage) error { got = append(got, page...); return nil })
+	if err != nil || len(got) != 1 {
+		t.Fatalf("got %d, err %v", len(got), err)
+	}
+	if queries[0] != "flowType=FLOW&includePagination=true&page=0&size=100" {
+		t.Fatalf("query = %s", queries[0])
+	}
+	get, _ := Find("cc", "team", "get")
+	if err := List(context.Background(), &webexapi.Client{}, webexapi.Hosts{}, get, Args{}, nil); err == nil {
+		t.Fatal("a read that does not page was listed")
 	}
 }
 
