@@ -22,7 +22,7 @@ func BotToken(agentID string) (string, error) {
 	if orgID == "" {
 		return "", fmt.Errorf("no organization: log in or pass --organization")
 	}
-	req := client.NewRequest(baseURL, "GET", "/api/v2/organizations/{orgid}/agents/")
+	req := client.NewRequest(baseURL(), "GET", "/api/v2/organizations/{orgid}/agents/")
 	req.PathParam("orgid", orgID)
 	req.OffsetPaging("offset", "limit", 0)
 	body, _, err := req.DoPaginated(false)

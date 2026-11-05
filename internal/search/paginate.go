@@ -29,7 +29,7 @@ func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID strin
 			return nil, 0, err
 		}
 
-		req := client.NewRequest(config.CcBaseURL, "POST", "/search")
+		req := client.NewRequest(config.CcBaseURL(),"POST", "/search")
 		req.QueryParam("orgId", orgID)
 		req.Header("TrackingId", trackingID)
 		req.SetBodyRaw(body)

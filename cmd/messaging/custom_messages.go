@@ -34,7 +34,7 @@ Examples:
   webex messaging messages create --body '{"toPersonEmail":"user@example.com","files":["./guide.md"]}'
   webex messaging messages create --body-file message.json --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
-			return createMessage(config.CallingBaseURL, bodyRaw, bodyFile)
+			return createMessage(config.CallingBaseURL(),bodyRaw, bodyFile)
 		},
 	}
 	cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")

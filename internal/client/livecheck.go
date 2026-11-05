@@ -61,10 +61,10 @@ func readTarget(t changeset.Target) (map[string]any, int, error) {
 	var req *Request
 	switch t.API {
 	case changeset.APIWebex:
-		req = NewRequest(config.CallingBaseURL, http.MethodGet, t.Route)
+		req = NewRequest(config.CallingBaseURL(), http.MethodGet, t.Route)
 		req.QueryParam("orgId", config.OrgIDBase64())
 	case changeset.APIContactCenter:
-		req = NewRequest(config.CcBaseURL, http.MethodGet, "/organization/{orgid}"+t.Route)
+		req = NewRequest(config.CcBaseURL(), http.MethodGet, "/organization/{orgid}"+t.Route)
 		req.PathParam("orgid", config.OrgID())
 	default:
 		return nil, 0, fmt.Errorf("unknown api %q", t.API)

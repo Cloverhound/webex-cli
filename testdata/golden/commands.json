@@ -5,6 +5,11 @@
   "long": "A command-line interface for Webex APIs — Admin, Calling, Contact Center, Devices, Meetings, and Messaging.",
   "flags": [
    {
+    "name": "cc-region",
+    "type": "string",
+    "usage": "Contact Center data center: us1, eu1, eu2, anz1, ca1, jp1, sg1 (default us1)"
+   },
+   {
     "name": "changeset",
     "type": "string",
     "usage": "Record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)"
@@ -66438,12 +66443,12 @@
  {
   "path": "webex config get",
   "short": "Get a configuration value",
-  "long": "Get a configuration value. Valid keys: client-id, client-secret, scopes, read-only-scopes, region"
+  "long": "Get a configuration value. Valid keys: client-id, client-secret, scopes, read-only-scopes, region, cc-region"
  },
  {
   "path": "webex config set",
   "short": "Set a configuration value",
-  "long": "Set a configuration value. Valid keys: client-id, client-secret, scopes, read-only-scopes, region. read-only-scopes accepts only read scopes."
+  "long": "Set a configuration value. Valid keys: client-id, client-secret, scopes, read-only-scopes, region, cc-region. read-only-scopes accepts only read scopes."
  },
  {
   "path": "webex device",

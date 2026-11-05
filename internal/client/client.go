@@ -9,6 +9,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
@@ -85,7 +86,10 @@ func apiClient(req *Request, url string) *webexapi.Client {
 			fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), attempt, max)
 		},
 		BeforeSend: func(httpReq *http.Request) error {
-			return beforeSend(req, url, httpReq)
+			if err := beforeSend(req, url, httpReq); err != nil {
+				return err
+			}
+			return ccPacer().Wait(httpReq)
 		},
 		AfterResponse: func(status, size int) {
 			if config.Debug() {
@@ -104,6 +108,23 @@ func apiClient(req *Request, url string) *webexapi.Client {
 		}
 	}
 	return api
+}
+
+var (
+	pacerMu sync.Mutex
+	pacer   *webexapi.Pacer
+)
+
+// ccPacer is shared by every request in the process, so paging and other bulk
+// work stay under the rate Contact Center refuses.
+func ccPacer() *webexapi.Pacer {
+	pacerMu.Lock()
+	defer pacerMu.Unlock()
+	prefix := config.CcBaseURL() + "/"
+	if pacer == nil || pacer.Prefix != prefix || pacer.Interval != config.CCInterval() {
+		pacer = &webexapi.Pacer{Prefix: prefix, Interval: config.CCInterval()}
+	}
+	return pacer
 }
 
 // endpointURLPattern finds the regional endpoint Webex returns in a 451 body.

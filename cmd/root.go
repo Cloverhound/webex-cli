@@ -78,6 +78,18 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 
+		// Contact Center data center: --cc-region flag > WEBEX_CC_REGION env > config file.
+		ccRegion, _ := cmd.Flags().GetString("cc-region")
+		if ccRegion == "" {
+			ccRegion = os.Getenv("WEBEX_CC_REGION")
+		}
+		if ccRegion == "" {
+			ccRegion = cfg.CCRegion
+		}
+		if err := setCCRegion(ccRegion); err != nil {
+			return err
+		}
+
 		readOnly := readOnlyMode(cfg)
 		config.SetReadOnly(readOnly)
 
@@ -181,6 +193,16 @@ func setRegion(region string) error {
 	return nil
 }
 
+// setCCRegion validates a Contact Center data center and selects its hosts.
+func setCCRegion(dc string) error {
+	normalized := strings.ToLower(strings.TrimSpace(dc))
+	if normalized != "" && !slices.Contains(config.CCRegions, normalized) {
+		return fmt.Errorf("unknown Contact Center region %q (valid: %s)", dc, strings.Join(config.CCRegions, ", "))
+	}
+	config.SetCCRegion(normalized)
+	return nil
+}
+
 // RootCommand returns the root cobra command for external introspection.
 func RootCommand() *cobra.Command { return rootCmd }
 
@@ -235,6 +257,7 @@ func init() {
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")
+	rootCmd.PersistentFlags().String("cc-region", "", "Contact Center data center: "+strings.Join(config.CCRegions, ", ")+" (default us1)")
 	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
 	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 

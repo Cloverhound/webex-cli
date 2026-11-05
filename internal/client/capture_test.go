@@ -82,7 +82,7 @@ func run(t *testing.T, req *Request) map[string]any {
 }
 
 func huntGroupUpdate(body string) *Request {
-	req := NewRequest(config.CallingBaseURL, "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
+	req := NewRequest(config.CallingBaseURL(),"PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
 	req.PathParam("locationId", "loc1")
 	req.PathParam("huntGroupId", "hg1")
 	req.QueryParam("orgId", "b64org")
@@ -138,7 +138,7 @@ func TestCaptureCreateReturnsAPlaceholderLaterCommandsCanUse(t *testing.T) {
 		"/organization/" + testOrg + "/entry-point/ep1": `{"name":"Main","teamIds":["t0"]}`,
 	})
 
-	create := NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/team")
+	create := NewRequest(config.CcBaseURL(),"POST", "/organization/{orgid}/team")
 	create.PathParam("orgid", testOrg)
 	create.SetBodyRaw(`{"name":"Boulder Desk","siteId":"s1"}`)
 	out := run(t, create)
@@ -146,13 +146,13 @@ func TestCaptureCreateReturnsAPlaceholderLaterCommandsCanUse(t *testing.T) {
 		t.Fatalf("output = %v", out)
 	}
 
-	rename := NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/team/{id}")
+	rename := NewRequest(config.CcBaseURL(),"PUT", "/organization/{orgid}/team/{id}")
 	rename.PathParam("orgid", testOrg)
 	rename.PathParam("id", "new:boulder-desk")
 	rename.SetBodyRaw(`{"capacity":4}`)
 	run(t, rename)
 
-	ep := NewRequest(config.CcBaseURL, "PUT", "/organization/{orgid}/entry-point/{id}")
+	ep := NewRequest(config.CcBaseURL(),"PUT", "/organization/{orgid}/entry-point/{id}")
 	ep.PathParam("orgid", testOrg)
 	ep.PathParam("id", "ep1")
 	ep.SetBodyRaw(`{"name":"Main","teamIds":["t0","new:boulder-desk"]}`)
@@ -183,12 +183,12 @@ func TestCaptureCreateReturnsAPlaceholderLaterCommandsCanUse(t *testing.T) {
 
 func TestCaptureDeleteOfANewObjectWithdrawsItsCreate(t *testing.T) {
 	_, path := setupCapture(t, nil)
-	create := NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/skill")
+	create := NewRequest(config.CcBaseURL(),"POST", "/organization/{orgid}/skill")
 	create.PathParam("orgid", testOrg)
 	create.SetBodyRaw(`{"name":"Spanish"}`)
 	run(t, create)
 
-	del := NewRequest(config.CcBaseURL, "DELETE", "/organization/{orgid}/skill/{id}")
+	del := NewRequest(config.CcBaseURL(),"DELETE", "/organization/{orgid}/skill/{id}")
 	del.PathParam("orgid", testOrg)
 	del.PathParam("id", "new:spanish")
 	run(t, del)
@@ -200,7 +200,7 @@ func TestCaptureDeleteOfANewObjectWithdrawsItsCreate(t *testing.T) {
 
 func TestCaptureActionPostIsAnInvoke(t *testing.T) {
 	_, path := setupCapture(t, nil)
-	bulk := NewRequest(config.CcBaseURL, "POST", "/organization/{orgid}/team/bulk")
+	bulk := NewRequest(config.CcBaseURL(),"POST", "/organization/{orgid}/team/bulk")
 	bulk.PathParam("orgid", testOrg)
 	bulk.SetBodyRaw(`{"items":[]}`)
 	if out := run(t, bulk); out["action"] != "invoke" {

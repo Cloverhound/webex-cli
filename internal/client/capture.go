@@ -134,9 +134,9 @@ func newChangeSet() (*changeset.ChangeSet, error) {
 func captureTarget(req *Request) (changeset.Target, error) {
 	var t changeset.Target
 	switch req.baseURL {
-	case config.CallingBaseURL:
+	case config.CallingBaseURL():
 		t.API = changeset.APIWebex
-	case config.CcBaseURL:
+	case config.CcBaseURL():
 		t.API = changeset.APIContactCenter
 	default:
 		return t, fmt.Errorf("requests to %s cannot be recorded in a change set", req.baseURL)

@@ -42,20 +42,7 @@ func Register(parent *cobra.Command, area string) map[string]*cobra.Command {
 }
 
 // BaseURL is the base URL of an operation's host for this run.
-func BaseURL(h webexops.Host) string {
-	switch h {
-	case webexops.HostCC:
-		return config.CcBaseURL
-	case webexops.HostAnalytics:
-		return config.AnalyticsBaseURL
-	case webexops.HostAnalyticsCalling:
-		return config.AnalyticsCallingBaseURL()
-	case webexops.HostAIAgent:
-		return config.AiAgentBaseURL
-	default:
-		return config.CallingBaseURL
-	}
-}
+func BaseURL(h webexops.Host) string { return h.URL(config.Hosts()) }
 
 // flagValues holds a command's flag values by flag name.
 type flagValues struct {

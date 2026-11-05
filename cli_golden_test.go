@@ -14,6 +14,8 @@ import (
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -89,6 +91,11 @@ func goldenEnv(t *testing.T) *recorder {
 		t.Setenv(env, "")
 	}
 	t.Chdir(t.TempDir())
+
+	// The recorder has no rate limit, and pacing 1,500 Contact Center runs would
+	// take minutes.
+	config.SetCCInterval(0)
+	t.Cleanup(func() { config.SetCCInterval(webexapi.CCInterval) })
 
 	rec := &recorder{}
 	saved := http.DefaultTransport
@@ -232,6 +239,35 @@ func TestGoldenRequests(t *testing.T) {
 	}
 	for _, area := range apiAreas {
 		compareGolden(t, filepath.Join("testdata", "golden", "requests-"+area+".json"), byArea[area])
+	}
+}
+
+func TestCCRegionSelectsContactCenterAndStudioHosts(t *testing.T) {
+	rec := goldenEnv(t)
+	root := cmd.RootCommand()
+	find := func(path string) *cobra.Command {
+		c, _, err := root.Find(strings.Fields(path))
+		if err != nil {
+			t.Fatal(err)
+		}
+		return c
+	}
+	site := run(rec, find("cc site list"), "", []string{"--cc-region=EU2"})
+	if site.Error != "" || len(site.Requests) != 1 || !strings.HasPrefix(site.Requests[0].URL, "https://api.wxcc-eu2.cisco.com/organization/") {
+		t.Fatalf("site list: %+v", site)
+	}
+	t.Setenv("WEBEX_CC_REGION", "anz1")
+	agents := run(rec, find("cc ai-agent list"), "", nil)
+	if agents.Error != "" || len(agents.Requests) == 0 || !strings.HasPrefix(agents.Requests[0].URL, "https://studio.aiagent-anz1.cisco.com/api/") {
+		t.Fatalf("ai-agent list: %+v", agents)
+	}
+	t.Setenv("WEBEX_CC_REGION", "")
+	people := run(rec, find("admin people list"), "", []string{"--cc-region=jp1"})
+	if len(people.Requests) != 1 || !strings.HasPrefix(people.Requests[0].URL, "https://webexapis.com/v1/people") {
+		t.Fatalf("people list: %+v", people)
+	}
+	if bad := run(rec, find("cc site list"), "", []string{"--cc-region=mars1"}); !strings.Contains(bad.Error, "unknown Contact Center region") || len(bad.Requests) != 0 {
+		t.Fatalf("unknown region: %+v", bad)
 	}
 }
 

@@ -26,7 +26,7 @@ func studio(t *testing.T) *httptest.Server {
 		})
 	}))
 	t.Cleanup(srv.Close)
-	baseURL = srv.URL
+	baseURL = func() string { return srv.URL }
 	t.Cleanup(func() { baseURL = config.AiAgentBaseURL })
 	config.SetOrgID("org-1")
 	t.Cleanup(func() { config.SetOrgID("") })
