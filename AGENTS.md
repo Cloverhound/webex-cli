@@ -86,27 +86,41 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 
 ## Key Files
 
-- `cmd/root.go` — Root cobra command, global flags (token, org, output, debug, dry-run, paginate, 429 retries, region)
+- `cmd/root.go` — Root cobra command, global flags (token, org, output, debug, dry-run, paginate, 429 retries, region, cc-region)
 - `cmd/auth.go` — Auth subcommand (status, list, switch, set-org, clear-org)
 - `cmd/login.go` / `cmd/logout.go` — OAuth PKCE and device login
 - `cmd/mcp.go` / `cmd/mcp/` — MCP serve/stop, tools, resources, usage log
+- `cmd/resource.go` — `webex resource`: objects by type through the SDK catalog, with guarded writes
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `pkg/webexapi/` — Public HTTP transport: send with 401 refresh and 429 Retry-After, structured errors, fail-closed list paging. Holds no process state, and other Go programs import it
-- `pkg/changeset/` — Public change set file format (types, recording rules, validation, JSON Schema). Webex Admin Studio imports it
 - `internal/client/capture.go` — `--changeset` capture: records write requests in a change set instead of sending them
-- `internal/client/` — Request builder (JSON and multipart bodies), CLI pagination, and the CLI's use of `pkg/webexapi` with its process-wide flags
+- `internal/client/` — Request builder (JSON and multipart bodies), CLI pagination, and the CLI's use of `pkg/webexapi` with its process-wide flags; `SDK()` gives SDK packages a transport set up the same way
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
-- `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)
+- `internal/config/` — Process-local flags (token, org, debug, dry-run, retry, regions and hosts)
 - `internal/output/` — JSON/table/csv/raw formatting
 - `internal/audio/` — Binary download from pre-signed URLs (no Webex token)
-- `internal/aiagent/` — AI Agent Studio support for generated commands: agent runtime token lookup and response redaction
+- `internal/aiagent/` — The private-API notice, and `pkg/aiagent` with this run's login and hosts
+
+### Go SDK (`pkg/`)
+
+Other Go programs import these, and Webex Admin Studio is built on them. They hold no process-wide state and take a context on every call. Keep CLI concerns (flags, output, the config file) out of them.
+
+- `pkg/webexapi/` — HTTP transport: 401 refresh, 429 Retry-After, structured errors, fail-closed list paging; `Hosts` for every data region and Contact Center data center; org ID conversion; the Contact Center pacer
+- `pkg/webexops/` — Generated operation table: one exported `*Operation` per API call (route, parameters, body fields, paging, CLI names), and `Call`
+- `pkg/resource/` — Object types as data: fields, JSON paths, write mode, and the operations (`Route`) each type uses. API facts only; presentation belongs to the program
+- `pkg/catalog/` — The object types. A type is `Managed` (writable) only once its writes are proven on a live tenant; its tests check every route's operation, method and parameter bindings
+- `pkg/webex/` — Reads and writes objects from their definitions
+- `pkg/guard/` — The write protocol: conflict check, read-back, stop after a failure
+- `pkg/changeset/` — Change set file format (types, recording rules, validation, JSON Schema)
+- `pkg/aiagent/` — AI Agent Studio: agent token lookup, credential redaction, `Call`
+- `pkg/fakeapi/` — The fake Webex the SDK, CLI and Studio tests run against
+
+Live Webex behavior that the catalog encodes (full-object Contact Center PUTs, read-by-filter work types, Contact Center rate limits) is recorded in Webex Admin Studio's AGENTS.md, where it was found.
 - `codegen/supplemental/` — Hand-maintained Postman collections for APIs not in Cisco's collections
 - `codegen/extract_api_outline.py` — Postman → normalized CLI names
 - `codegen/extract_api_spec.py` — Postman → enriched API spec (params, body fields)
 - `codegen/generate_cli.py` — API spec → operation table (`pkg/webexops/zz_*.go`)
-- `pkg/webexops/` — Public operation table: one exported `*Operation` per API call (route, parameters, body fields, paging, CLI names), and `Call`
 - `internal/apicmd/` — Builds `webex <area> <group> <command>` from the operation table
 - `codegen/generate_skills.py` — API spec → Command Reference blocks in `skill/<area>/SKILL.md`
 - `codegen/diff_spec.py` — Changelog between two spec snapshots (used by the weekly workflow)

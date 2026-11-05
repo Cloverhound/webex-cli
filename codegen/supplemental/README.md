@@ -32,11 +32,12 @@ that work with a Webex OAuth token; routes that need Studio's own browser login
 belong elsewhere.
 
 - Cisco does not document or support these routes. `generate_cli.py` lists
-  them in `PRIVATE_API_ROUTES`, so every command they generate carries that
-  caution in `--help` and prints it once per user when first run
-  (`aiagent.PrivateAPINotice`). A route added here gets both automatically.
-- `generate_cli.py` sends routes under `/api/` to `config.AiAgentBaseURL` and
-  passes their responses through `aiagent.RedactSecrets`.
+  them in `PRIVATE_API_ROUTES`, which marks their operations `Private`: every
+  command carries that caution in `--help` and prints it once per user when
+  first run. A route added here gets both automatically.
+- `generate_cli.py` puts routes under `/api/` on the AI Agent Studio host of
+  the selected Contact Center data center and marks them `Redact`, so responses
+  pass through `pkg/aiagent.RedactSecrets`.
 - A request header named `bot-access-token` becomes a required `--agent-id`
-  flag; the command looks up the agent's runtime token with `aiagent.BotToken`.
+  flag; the agent's runtime token is looked up with `pkg/aiagent.BotToken`.
 - `limit`/`offset` query parameters make `--paginate` page by offset.

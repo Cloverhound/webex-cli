@@ -71,6 +71,27 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
 - `--changeset <file>` — Record write requests in a change set file instead of sending them (also `$WEBEX_CHANGESET`); see [Proposing Changes](#proposing-changes)
 - `--region us|ca|eu|eun|in|au` — Data region for region-specific hosts, used by `calling reports-detailed-call-history` (default: `us`). Also settable with `webex config set region <region>` or `WEBEX_REGION`. A `451` error means the org's data lives in another region — the error names the correct one.
+- `--cc-region us1|eu1|eu2|anz1|ca1|jp1|sg1` — Contact Center data center, which picks the Contact Center and AI Agent Studio hosts (default: `us1`). Also `webex config set cc-region <dc>` or `WEBEX_CC_REGION`. Ask the user which data center the org is in if Contact Center calls fail for an org outside the US.
+
+## Changing Objects Safely
+
+To change a Webex object, prefer `webex resource set` over the raw `update` commands:
+
+```bash
+webex resource list-types                       # which types exist and which are writable
+webex resource describe cc_queue                # fields, kinds, allowed values
+webex resource get cc_queue <id>                # current values by field name
+webex resource set cc_queue <id> max_time_in_queue=900 recording_permitted=true
+webex resource set cc_team <id> --values '{"name":"Front Desk","capacity":4}'
+webex resource create cc_skill name=zz-test skill_type=BOOLEAN
+webex resource delete cc_skill <id>
+```
+
+- **A raw Contact Center `update` replaces the whole object.** `webex cc team update --id X --body '{"name":"New"}'` erases every field the body leaves out. `resource set` reads the object and sends it back whole with only the named fields changed.
+- Every `resource` write is read back, and the command fails if Webex did not keep the change. After an error that says the outcome is unknown, read the object before trying again; do not repeat the write blindly.
+- Field names come from `resource describe`, not the API's JSON names. Values outside a field's options, wrong kinds, and changes to fields fixed at creation are refused before anything is sent.
+- Only types marked `writable` in `list-types` can be changed this way. For others, use the area commands.
+- `--changeset` records `set`, `create` and `delete` instead of sending them; `--dry-run` prints the request.
 
 ## Contact Center `--orgid` Handling
 
