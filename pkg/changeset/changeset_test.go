@@ -145,6 +145,70 @@ func TestUpdatesToANewObjectFoldIntoItsCreate(t *testing.T) {
 	}
 }
 
+func TestAnUpdateThatComesToReferALaterCreateMovesAfterIt(t *testing.T) {
+	cs := New("org")
+	ep := Target{API: APIContactCenter, Route: "/entry-point/{id}", Params: map[string]string{"id": "e"}}
+	cs.AddUpdate(ep, []Change{{Path: "name", Value: "Main"}})
+	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})
+	cs.AddUpdate(Target{API: APIContactCenter, Route: "/skill/{id}", Params: map[string]string{"id": "s"}},
+		[]Change{{Path: "name", Value: "S"}})
+	id := cs.AddUpdate(ep, []Change{{Path: "teamIds", Value: []any{RefTo(h)}}})
+
+	if order := []string{cs.Operations[0].ID, cs.Operations[1].ID, cs.Operations[2].ID}; id != "op-1" ||
+		!reflect.DeepEqual(order, []string{"op-2", "op-1", "op-3"}) {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if p := Validate(cs); len(p.Errors) > 0 {
+		t.Errorf("errors = %v", p.Errors)
+	}
+}
+
+func TestACreateThatComesToReferALaterCreateMovesAfterIt(t *testing.T) {
+	cs := New("org")
+	team := Target{API: APIContactCenter, Route: "/team"}
+	_, a := cs.AddCreate(team, map[string]any{"name": "A"})
+	_, b := cs.AddCreate(team, map[string]any{"name": "B"})
+	if _, err := cs.UpdateCreate(a, []Change{{Path: "backupTeamId", Value: RefTo(b)}}); err != nil {
+		t.Fatal(err)
+	}
+	if cs.Operations[0].Handle != b || cs.Operations[1].Handle != a {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if p := Validate(cs); len(p.Errors) > 0 {
+		t.Errorf("errors = %v", p.Errors)
+	}
+
+	// c cannot move after d while an operation between them still refers to c.
+	_, c := cs.AddCreate(team, map[string]any{"name": "C"})
+	cs.AddUpdate(Target{API: APIContactCenter, Route: "/entry-point/{id}", Params: map[string]string{"id": "e"}},
+		[]Change{{Path: "teamIds", Value: []any{RefTo(c)}}})
+	_, d := cs.AddCreate(team, map[string]any{"name": "D"})
+	if _, err := cs.UpdateCreate(c, []Change{{Path: "backupTeamId", Value: RefTo(d)}}); err == nil {
+		t.Error("recorded a reference no order of operations can satisfy")
+	}
+	if p := Validate(cs); len(p.Errors) > 0 {
+		t.Errorf("a refused change was left in the change set: %v", p.Errors)
+	}
+}
+
+func TestWithdrawRemovesChangesAndEmptiedUpdates(t *testing.T) {
+	cs := New("org")
+	cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "Front"}, {Path: "enabled", Value: false}})
+	if got := cs.Withdraw(huntGroup("hg1"), []string{"name", "extension"}); !reflect.DeepEqual(got, []string{"name"}) {
+		t.Errorf("withdrawn = %v", got)
+	}
+	if got := paths(cs.Operations[0].Changes); !reflect.DeepEqual(got, []string{"enabled"}) {
+		t.Errorf("changes = %v", got)
+	}
+	cs.Withdraw(huntGroup("hg1"), []string{"enabled"})
+	if len(cs.Operations) != 0 {
+		t.Errorf("operations = %+v", cs.Operations)
+	}
+	if got := cs.Withdraw(huntGroup("hg2"), []string{"name"}); got != nil {
+		t.Errorf("withdrew from an object with no update: %v", got)
+	}
+}
+
 func TestRemoveCreateRefusesWhileReferenced(t *testing.T) {
 	cs := New("org")
 	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})

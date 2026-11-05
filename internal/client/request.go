@@ -28,6 +28,9 @@ type Request struct {
 
 	// Multipart bodies override the JSON content type and log a safe summary.
 	bodyContentType, bodySummary string
+
+	// sets names the body paths the caller means to set; see Sets.
+	sets []string
 }
 
 // NewRequest creates a new request with the given method and path.
@@ -53,6 +56,13 @@ func (r *Request) QueryParam(key, value string) {
 	if value != "" {
 		r.queryParams[key] = value
 	}
+}
+
+// Sets names the body paths a whole-object Contact Center PUT means to set. A change
+// set records a named path that matches Webex as setting it back, which withdraws an
+// earlier change to it; the body's other fields only repeat the object as read.
+func (r *Request) Sets(paths ...string) {
+	r.sets = append(r.sets, paths...)
 }
 
 func (r *Request) Header(key, value string) {

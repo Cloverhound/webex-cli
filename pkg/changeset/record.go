@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 )
@@ -78,14 +79,18 @@ func (cs *ChangeSet) ResolvePlaceholders(v any) (any, error) {
 // already in the change set merge into its operation: the latest value wins and
 // the first precondition is kept. It returns the operation's ID.
 func (cs *ChangeSet) AddUpdate(target Target, changes []Change) string {
-	if op := cs.find(target.Key()); op != nil && op.Action == Update {
+	if i := cs.index(target.Key()); i >= 0 && cs.Operations[i].Action == Update {
+		op := &cs.Operations[i]
 		for _, c := range changes {
 			mergeChange(op, c)
 		}
 		if target.Display != "" {
 			op.Target.Display = target.Display
 		}
-		return op.ID
+		id := op.ID
+		// An update creates nothing, so nothing it moves past can refer to it.
+		_, _ = cs.moveAfter(i, cs.lastCreate(i, changes))
+		return id
 	}
 	op := Operation{ID: cs.nextID(), Action: Update, Target: target, Changes: changes}
 	cs.Operations = append(cs.Operations, op)
@@ -121,10 +126,15 @@ func (cs *ChangeSet) AddCreate(target Target, body map[string]any) (string, stri
 
 // UpdateCreate merges changes into a pending create's body.
 func (cs *ChangeSet) UpdateCreate(handle string, changes []Change) (string, error) {
-	op := cs.create(handle)
-	if op == nil {
+	i := slices.IndexFunc(cs.Operations, func(op Operation) bool { return op.Action == Create && op.Handle == handle })
+	if i < 0 {
 		return "", fmt.Errorf("%s%s does not match an object created in this change set", NewIDPrefix, handle)
 	}
+	i, err := cs.moveAfter(i, cs.lastCreate(i, changes))
+	if err != nil {
+		return "", err
+	}
+	op := &cs.Operations[i]
 	body, _ := op.Body.(map[string]any)
 	if body == nil {
 		body = map[string]any{}
@@ -134,6 +144,69 @@ func (cs *ChangeSet) UpdateCreate(handle string, changes []Change) (string, erro
 	}
 	op.Body = body
 	return op.ID, nil
+}
+
+// lastCreate returns the index of the last create after operation i that changes
+// refer to, or i when there is none.
+func (cs *ChangeSet) lastCreate(i int, changes []Change) int {
+	last := i
+	for _, c := range changes {
+		for _, h := range Refs(c.Value) {
+			if j := slices.IndexFunc(cs.Operations, func(op Operation) bool { return op.Action == Create && op.Handle == h }); j > last {
+				last = j
+			}
+		}
+	}
+	return last
+}
+
+// moveAfter moves operation i to just after operation last, because a reference
+// must name an earlier create, and returns its new index. It fails, changing
+// nothing, when an operation it would move past refers to the object it creates.
+func (cs *ChangeSet) moveAfter(i, last int) (int, error) {
+	if last <= i {
+		return i, nil
+	}
+	op := cs.Operations[i]
+	if op.Handle != "" {
+		for _, between := range cs.Operations[i+1 : last+1] {
+			if refersTo(between, op.Handle) {
+				return i, fmt.Errorf("%s refers to %s%s, so %s%s cannot refer to an object created after %s",
+					between.ID, NewIDPrefix, op.Handle, NewIDPrefix, op.Handle, between.ID)
+			}
+		}
+	}
+	copy(cs.Operations[i:last], cs.Operations[i+1:last+1])
+	cs.Operations[last] = op
+	return last, nil
+}
+
+// Withdraw removes the pending changes at paths from the update to target, for
+// fields set back to the value Webex holds. An update left with no changes is
+// removed. It returns the paths it removed.
+func (cs *ChangeSet) Withdraw(target Target, paths []string) []string {
+	i := cs.index(target.Key())
+	if i < 0 || cs.Operations[i].Action != Update {
+		return nil
+	}
+	op := &cs.Operations[i]
+	var removed []string
+	var kept []Change
+	for _, c := range op.Changes {
+		if slices.Contains(paths, c.Path) {
+			removed = append(removed, c.Path)
+		} else {
+			kept = append(kept, c)
+		}
+	}
+	if removed == nil {
+		return nil
+	}
+	op.Changes = kept
+	if len(kept) == 0 {
+		cs.Operations = slices.Delete(cs.Operations, i, i+1)
+	}
+	return removed
 }
 
 // AddDelete records deleting an existing object. It replaces any update to
@@ -206,13 +279,10 @@ func refersTo(op Operation, handle string) bool {
 	return false
 }
 
-func (cs *ChangeSet) find(key string) *Operation {
-	for i := range cs.Operations {
-		if cs.Operations[i].Action != Create && cs.Operations[i].Target.Key() == key {
-			return &cs.Operations[i]
-		}
-	}
-	return nil
+// index returns the index of the first operation other than a create on the object
+// key names, or -1.
+func (cs *ChangeSet) index(key string) int {
+	return slices.IndexFunc(cs.Operations, func(op Operation) bool { return op.Action != Create && op.Target.Key() == key })
 }
 
 func (cs *ChangeSet) create(handle string) *Operation {

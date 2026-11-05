@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
@@ -71,7 +72,7 @@ func capture(req *Request, path string) ([]byte, error) {
 		if err != nil {
 			return err
 		}
-		result, err = record(cs, req.method, target, resolved, current, handle, isNew)
+		result, err = record(cs, req.method, target, resolved, current, handle, isNew, req.sets)
 		if err == nil {
 			result["changeset"] = path
 		}
@@ -83,8 +84,10 @@ func capture(req *Request, path string) ([]byte, error) {
 	return json.Marshal(result)
 }
 
+// record adds one write to cs. sets names the body paths the write means to set, as
+// Request.Sets does.
 func record(cs *changeset.ChangeSet, method string, target changeset.Target, body any, current map[string]any,
-	handle string, isNew bool) (map[string]any, error) {
+	handle string, isNew bool, sets []string) (map[string]any, error) {
 	fields, isObject := body.(map[string]any)
 
 	switch {
@@ -101,14 +104,28 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 
 	case (method == http.MethodPut || method == http.MethodPatch) && isObject:
 		changes := changeset.Leaves(fields)
+		var withdrawn []string
 		if current != nil {
 			changes = changeset.Diff(current, fields)
+			// Webex API bodies carry only the fields being set, unlike Contact Center's
+			// whole-object PUTs.
+			if target.API == changeset.APIWebex {
+				sets = append(sets, paths(changeset.Leaves(fields))...)
+			}
+			withdrawn = cs.Withdraw(target, unchangedPaths(sets, changes))
 		}
 		if len(changes) == 0 {
+			if len(withdrawn) > 0 {
+				return map[string]any{"recorded": nil, "withdrawn": withdrawn}, nil
+			}
 			return map[string]any{"recorded": nil, "unchanged": true}, nil
 		}
 		id := cs.AddUpdate(target, changes)
-		return map[string]any{"recorded": id, "action": changeset.Update, "changes": paths(changes)}, nil
+		result := map[string]any{"recorded": id, "action": changeset.Update, "changes": paths(changes)}
+		if len(withdrawn) > 0 {
+			result["withdrawn"] = withdrawn
+		}
+		return result, nil
 
 	case method == http.MethodPost && isObject && isCollection(target.Route):
 		if target.Display == "" {
@@ -142,14 +159,27 @@ func captureTarget(req *Request) (changeset.Target, error) {
 		return t, fmt.Errorf("requests to %s cannot be recorded in a change set", req.baseURL)
 	}
 
+	// The change set's scope names the org, and its targets leave the org out.
+	var org string
 	t.Route = req.path
 	if t.API == changeset.APIContactCenter {
-		if m := ccOrgPrefix.FindStringSubmatch(t.Route); m != nil {
-			t.Route = t.Route[len(m[0]):]
+		m := ccOrgPrefix.FindStringSubmatch(t.Route)
+		if m == nil {
+			return t, fmt.Errorf("%s is not under /organization/{orgid}, so it cannot be recorded in a change set", req.path)
 		}
+		org = req.pathParams[m[1]]
+		t.Route = t.Route[len(m[0]):]
 		if t.Route == "" {
 			t.Route = "/"
 		}
+	}
+	for k, v := range req.queryParams {
+		if strings.EqualFold(k, "orgId") {
+			org = config.DecodeOrgID(v)
+		}
+	}
+	if org != "" && org != config.OrgID() {
+		return t, fmt.Errorf("this request is for org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
 	}
 	for _, name := range changeset.Placeholders(t.Route) {
 		if t.Params == nil {
@@ -213,6 +243,18 @@ func label(object map[string]any) string {
 		}
 	}
 	return ""
+}
+
+// unchangedPaths returns the paths in sets that changes leaves out: the fields a
+// write sets to the value Webex already holds.
+func unchangedPaths(sets []string, changes []changeset.Change) []string {
+	var out []string
+	for _, p := range sets {
+		if !slices.ContainsFunc(changes, func(c changeset.Change) bool { return c.Path == p }) {
+			out = append(out, p)
+		}
+	}
+	return out
 }
 
 func paths(changes []changeset.Change) []string {

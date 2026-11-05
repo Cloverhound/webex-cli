@@ -458,11 +458,9 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 	if !t.Routes.Create.Defined() {
 		return resource.Key{}, fmt.Errorf("%s cannot be created through the API", t.Plural)
 	}
-	body := t.CreateBody(desired)
-	if t.CopyOnCreate != nil {
-		if err := c.copyInto(ctx, t, body); err != nil {
-			return resource.Key{}, err
-		}
+	body, err := c.CreateBody(ctx, t, desired)
+	if err != nil {
+		return resource.Key{}, err
 	}
 	target, err := c.url(t.Routes.Create, key, nil)
 	if err != nil {
@@ -480,6 +478,18 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 	}
 	key.ID = created.ID
 	return key, nil
+}
+
+// CreateBody returns the body Create sends for desired, including what the type
+// copies from an existing object.
+func (c *Client) CreateBody(ctx context.Context, t resource.Type, desired resource.Values) (map[string]any, error) {
+	body := t.CreateBody(desired)
+	if t.CopyOnCreate != nil {
+		if err := c.copyInto(ctx, t, body); err != nil {
+			return nil, err
+		}
+	}
+	return body, nil
 }
 
 // copyInto fills body's missing CopyOnCreate keys from the first matching object, read

@@ -14,6 +14,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/Cloverhound/webex-cli/pkg/catalog"
+	"github.com/Cloverhound/webex-cli/pkg/changeset"
 	"github.com/Cloverhound/webex-cli/pkg/guard"
 	"github.com/Cloverhound/webex-cli/pkg/resource"
 	"github.com/Cloverhound/webex-cli/pkg/webex"
@@ -153,6 +154,11 @@ var resourceSetCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		recording := config.ChangesetPath() != ""
+		if _, isNew := changeset.HandleOf(key.ID); isNew && recording {
+			// The object exists only in the change set, which folds this into its create.
+			return sendRaw(t.Routes.Update, key, t.PatchBody(changes))
+		}
 		fresh, err := c.Read(ctx, t, key)
 		if err != nil {
 			return readError(t, key, err)
@@ -165,7 +171,9 @@ var resourceSetCmd = &cobra.Command{
 			planned[k] = v
 		}
 		changed := t.Unmet(fresh.Values, planned)
-		if len(changed) == 0 {
+		// A field set back to its value in Webex still goes to the change set, which
+		// withdraws the change it holds for that field.
+		if len(changed) == 0 && !recording {
 			return printValue(writeResult{Type: t.Name, Key: key, Label: fresh.Label, Changed: []string{}, Values: fresh.Values})
 		}
 		delta := resource.Values{}
@@ -176,8 +184,12 @@ var resourceSetCmd = &cobra.Command{
 		if t.Write == resource.WriteFull {
 			body = t.FullBody(fresh.Raw, delta)
 		}
-		if config.ChangesetPath() != "" || config.DryRun() {
-			return sendRaw(t.Routes.Update, key, body)
+		if recording || config.DryRun() {
+			var sets []string
+			for _, c := range changeset.Leaves(t.PatchBody(changes)) {
+				sets = append(sets, c.Path)
+			}
+			return sendRaw(t.Routes.Update, key, body, sets...)
 		}
 		if err := refuseReadOnly(); err != nil {
 			return err
@@ -214,8 +226,12 @@ var resourceCreateCmd = &cobra.Command{
 			}
 		}
 		if config.ChangesetPath() != "" || config.DryRun() {
+			body, err := objectClient().CreateBody(cmd.Context(), t, desired)
+			if err != nil {
+				return err
+			}
 			parent, _ := desired[t.ParentField].(string)
-			return sendRaw(t.Routes.Create, resource.Key{Parent: parent}, t.CreateBody(desired))
+			return sendRaw(t.Routes.Create, resource.Key{Parent: parent}, body)
 		}
 		if err := refuseReadOnly(); err != nil {
 			return err
@@ -501,9 +517,11 @@ func firstItem(f resource.Field) string {
 }
 
 // sendRaw sends one write through the CLI's request path, so --changeset records
-// it and --dry-run prints it like any other write command.
-func sendRaw(r resource.Route, key resource.Key, body map[string]any) error {
+// it and --dry-run prints it like any other write command. sets names the body
+// paths the write means to set (see client.Request.Sets).
+func sendRaw(r resource.Route, key resource.Key, body map[string]any, sets ...string) error {
 	req := client.NewRequest(r.Op.Host.URL(config.Hosts()), r.Op.Method, r.Op.Path)
+	req.Sets(sets...)
 	for _, p := range r.Op.Params {
 		switch {
 		case p.Value != "":

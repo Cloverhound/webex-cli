@@ -220,6 +220,70 @@ func TestResourceSetIsRecordedInAChangeSet(t *testing.T) {
 	}
 }
 
+func TestResourceSetOfARecordedCreateFoldsIntoIt(t *testing.T) {
+	fakeWebex(t)
+	path := filepath.Join(t.TempDir(), "proposal.changeset.json")
+	out, err := runResource(t, "create", "cc_skill", "name=zz-review", "skill_type=BOOLEAN", "--changeset", path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var created struct{ ID string }
+	decode(t, out, &created)
+	if created.ID != "new:zz-review" {
+		t.Fatalf("create output = %s", out)
+	}
+	if _, err := runResource(t, "set", "cc_skill", created.ID, "name=zz-revised", "--changeset", path); err != nil {
+		t.Fatal(err)
+	}
+	cs, err := changeset.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cs.Operations) != 1 || cs.Operations[0].Body.(map[string]any)["name"] != "zz-revised" {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestResourceSetBackToTheLiveValueWithdrawsOnlyThatChange(t *testing.T) {
+	fakeWebex(t)
+	path := filepath.Join(t.TempDir(), "proposal.changeset.json")
+	for _, args := range [][]string{{"name=zz-proposed"}, {"capacity=4"}, {"name=t-team1"}} {
+		if _, err := runResource(t, append(append([]string{"set", "cc_team", "team1"}, args...), "--changeset", path)...); err != nil {
+			t.Fatal(err)
+		}
+	}
+	cs, err := changeset.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cs.Operations) != 1 {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if changes := cs.Operations[0].Changes; len(changes) != 1 || changes[0].Path != "capacity" {
+		t.Fatalf("changes = %+v", changes)
+	}
+}
+
+func TestResourceCreateRecordsTheBodyTheSDKWouldSend(t *testing.T) {
+	fake := fakeWebex(t)
+	for _, o := range fake.Objects("cc_desktop_layout") {
+		o["global"] = false
+		fake.Put("cc_desktop_layout", o)
+	}
+	fake.Put("cc_desktop_layout", map[string]any{"id": "global1", "name": "Global", "global": true, "jsonFileContent": `{"layout":1}`})
+	path := filepath.Join(t.TempDir(), "proposal.changeset.json")
+	if _, err := runResource(t, "create", "cc_desktop_layout", "name=zz-layout", "--changeset", path); err != nil {
+		t.Fatal(err)
+	}
+	cs, err := changeset.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if body := cs.Operations[0].Body.(map[string]any); body["jsonFileContent"] != `{"layout":1}` {
+		t.Fatalf("recorded body = %v", body)
+	}
+}
+
 // Read-only mode refuses --token, so this checks the guard the write commands call
 // and the transport underneath it.
 func TestResourceWritesAreRefusedInReadOnlyMode(t *testing.T) {

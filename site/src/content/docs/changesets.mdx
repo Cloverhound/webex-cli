@@ -33,10 +33,12 @@ webex --changeset desk.changeset.json cc team create \
 - **Creates:** a create prints a placeholder ID such as `new:boulder-desk`. Later commands in the same change set can use it in flags and bodies.
   - An update to the new object folds into its create.
   - A delete withdraws the create.
-- **Repeat edits:** edits to one object merge into one operation. The latest value wins, and the first precondition is kept.
-- **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded.
+- **Repeat edits:** edits to one object merge into one operation. The latest value wins, and the first precondition is kept. A later create that an edit refers to moves ahead of the edit.
+- **Setting a field back:** a Webex Calling update, or `webex resource set`, that sets a field back to its current value withdraws the change recorded for it.
+- **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded. Fields it repeats from the current object leave earlier changes in place.
+- **Org:** a request for an org other than the change set's is refused.
 - **Other writes:** bulk saves, purges, and action endpoints are recorded as `invoke` operations, which an engine cannot review field by field.
-- **Uploads:** file uploads cannot be recorded.
+- **Not recorded:** file uploads, and Contact Center routes outside `/organization/{orgid}`, such as flow drafts.
 
 ## Commands
 
@@ -44,7 +46,7 @@ webex --changeset desk.changeset.json cc team create \
 |---|---|
 | `webex changeset new <file>` | Starts a change set for the current org, with optional `--title`, `--rationale`, `--author`, `--on-behalf-of` and `--link name=url` |
 | `webex changeset show <file>` | Summarizes operations by intent, with before → after values |
-| `webex changeset validate <file> [--live]` | Checks the structure. With `--live`, it also re-reads every updated or deleted object and reports drifted preconditions and missing objects |
+| `webex changeset validate <file> [--live]` | Checks the structure. With `--live`, it also re-reads every updated or deleted object and reports drifted preconditions, missing objects, and objects it could not read; any of them makes the file invalid |
 | `webex changeset intent <file> <id> <summary> [op-id…]` | Adds or rewords a plain-language intent and assigns operations to it |
 | `webex changeset schema` | Prints the JSON Schema |
 

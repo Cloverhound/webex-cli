@@ -295,7 +295,7 @@ webex changeset validate desk.changeset.json --live   # report values that chang
 
 A create prints a placeholder ID such as `new:boulder-desk`, which later commands in the same change set can use in flags and bodies. Repeat edits to one object merge. `webex changeset intent` groups operations under a plain-language summary, and `webex changeset schema` prints the JSON Schema. The [Change Sets](https://cloverhound.github.io/webex-cli/changesets/) page describes the file format.
 
-Limits: writes other than a plain create, update or delete, such as bulk saves and purges, are recorded as `invoke` operations with no field-level review. File uploads cannot be recorded.
+Limits: writes other than a plain create, update or delete, such as bulk saves and purges, are recorded as `invoke` operations with no field-level review. File uploads, requests for another org, and Contact Center routes outside `/organization/{orgid}` (such as flow drafts) cannot be recorded.
 
 ## Configuration
 

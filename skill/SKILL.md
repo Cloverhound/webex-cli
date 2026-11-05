@@ -180,10 +180,10 @@ webex changeset validate boulder.changeset.json --live
 
 - Send the body you would send for a real write. For a Contact Center PUT that is the full object; fields you did not change are not recorded.
 - A create prints a placeholder ID such as `new:boulder-desk`. Use it in flags or bodies of later commands in the same change set. An update to it folds into the create, and a delete withdraws it.
-- Repeat edits to one object merge into one operation. A change that matches the current value is not recorded.
-- `validate --live` re-reads every object and reports values that changed since you recorded them. Run it before handing the file over.
+- Repeat edits to one object merge into one operation. A change that matches the current value is not recorded. To undo a recorded change, set the field back with `webex resource set` or a Calling update; a Contact Center PUT body cannot undo one.
+- `validate --live` re-reads every object and reports values that changed since you recorded them, and objects it could not read. Run it before handing the file over.
 - Writes that are not a plain create, update or delete (bulk saves, purges, actions) are recorded as `invoke` operations. Studio refuses them, so prefer per-object commands.
-- File uploads cannot be recorded.
+- File uploads and Contact Center flow drafts cannot be recorded.
 - Give the user the file path when you are done. `webex changeset schema` prints the file format.
 
 ## Using as an MCP Server

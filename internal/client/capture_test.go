@@ -85,7 +85,7 @@ func huntGroupUpdate(body string) *Request {
 	req := NewRequest(config.CallingBaseURL(), "PUT", "/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}")
 	req.PathParam("locationId", "loc1")
 	req.PathParam("huntGroupId", "hg1")
-	req.QueryParam("orgId", "b64org")
+	req.QueryParam("orgId", config.EncodeOrgID(testOrg))
 	req.SetBodyRaw(body)
 	return req
 }
@@ -221,6 +221,93 @@ func TestCaptureRefusesAnotherOrgsFile(t *testing.T) {
 	}
 	if _, _, err := huntGroupUpdate(`{"name":"x"}`).Do(); err == nil {
 		t.Error("recorded into another org's change set")
+	}
+}
+
+func TestCaptureRefusesARequestForAnotherOrg(t *testing.T) {
+	const other = "99999999-8888-7777-6666-555555555555"
+	_, path := setupCapture(t, map[string]string{
+		"/v1/telephony/config/locations/loc1/huntGroups/hg1": `{"name":"Desk"}`,
+	})
+	create := NewRequest(config.CcBaseURL(), "POST", "/organization/{orgid}/skill")
+	create.PathParam("orgid", other)
+	create.SetBodyRaw(`{"name":"Spanish"}`)
+	if _, _, err := create.Do(); err == nil {
+		t.Error("recorded a Contact Center create for another org")
+	}
+	update := huntGroupUpdate(`{"name":"Front"}`)
+	update.QueryParam("orgId", config.EncodeOrgID(other))
+	if _, _, err := update.Do(); err == nil {
+		t.Error("recorded a Webex update for another org")
+	}
+	if cs, err := changeset.Load(path); err == nil && len(cs.Operations) != 0 {
+		t.Errorf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestCaptureRefusesContactCenterRoutesOutsideTheOrgPath(t *testing.T) {
+	setupCapture(t, nil)
+	patch := NewRequest(config.CcBaseURL(), "PATCH", "/{orgid}/project/{projectId}/v2/flows/{flowId}")
+	patch.PathParam("orgid", testOrg)
+	patch.PathParam("projectId", "p1")
+	patch.PathParam("flowId", "f1")
+	patch.SetBodyRaw(`{"name":"x"}`)
+	if _, _, err := patch.Do(); err == nil {
+		t.Error("recorded a route the change set format cannot name")
+	}
+}
+
+func TestCaptureSettingAFieldBackWithdrawsItsPendingChange(t *testing.T) {
+	_, path := setupCapture(t, map[string]string{
+		"/v1/telephony/config/locations/loc1/huntGroups/hg1": `{"name":"Desk","enabled":true}`,
+	})
+	run(t, huntGroupUpdate(`{"name":"Front","enabled":false}`))
+	out := run(t, huntGroupUpdate(`{"name":"Desk"}`))
+	if !reflect.DeepEqual(out["withdrawn"], []any{"name"}) {
+		t.Errorf("output = %v", out)
+	}
+	cs, _ := changeset.Load(path)
+	if len(cs.Operations) != 1 || len(cs.Operations[0].Changes) != 1 || cs.Operations[0].Changes[0].Path != "enabled" {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+
+	run(t, huntGroupUpdate(`{"enabled":true}`))
+	if cs, _ := changeset.Load(path); len(cs.Operations) != 0 {
+		t.Errorf("an update with no changes left was kept: %+v", cs.Operations)
+	}
+}
+
+// A Contact Center PUT carries the whole object as read, so fields it repeats from
+// Webex do not undo changes recorded earlier.
+func TestCaptureWholeObjectPutKeepsEarlierChanges(t *testing.T) {
+	_, path := setupCapture(t, map[string]string{
+		"/organization/" + testOrg + "/team/t1": `{"name":"Desk","capacity":2}`,
+	})
+	put := func(body string, sets ...string) {
+		req := NewRequest(config.CcBaseURL(), "PUT", "/organization/{orgid}/team/{id}")
+		req.PathParam("orgid", testOrg)
+		req.PathParam("id", "t1")
+		req.SetBodyRaw(body)
+		req.Sets(sets...)
+		run(t, req)
+	}
+	put(`{"name":"Front","capacity":2}`)
+	put(`{"name":"Desk","capacity":4}`)
+	cs, _ := changeset.Load(path)
+	if got := paths(cs.Operations[0].Changes); !reflect.DeepEqual(got, []string{"name", "capacity"}) {
+		t.Fatalf("changes = %v", got)
+	}
+
+	put(`{"name":"Desk","capacity":4}`, "name")
+	cs, _ = changeset.Load(path)
+	if got := paths(cs.Operations[0].Changes); !reflect.DeepEqual(got, []string{"capacity"}) {
+		t.Fatalf("changes after setting name back = %v", got)
+	}
+}
+
+func TestLiveCheckIsNotOKWhenAnObjectCannotBeRead(t *testing.T) {
+	if (LiveReport{Unreadable: []string{"op-1: HTTP 500"}}).OK() {
+		t.Error("a check that could not read an object passed")
 	}
 }
 

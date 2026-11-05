@@ -25,7 +25,10 @@ type LiveReport struct {
 	Unreadable []string `json:"unreadable,omitempty"`
 }
 
-func (r LiveReport) OK() bool { return len(r.Drift) == 0 && len(r.Missing) == 0 }
+// OK reports whether every precondition was checked and holds.
+func (r LiveReport) OK() bool {
+	return len(r.Drift) == 0 && len(r.Missing) == 0 && len(r.Unreadable) == 0
+}
 
 // CheckLive re-reads every object the change set updates or deletes and
 // reports preconditions that have drifted and objects that are gone.
