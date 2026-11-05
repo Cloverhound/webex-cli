@@ -108,6 +108,10 @@ func retryAfterDuration(header string) time.Duration {
 // redactHeader replaces a credential value with its length, which is enough to
 // tell a missing or truncated token from a present one without printing it.
 func redactHeader(key, value string) string {
+	// An AI agent's runtime token lets anyone talk to that agent.
+	if strings.EqualFold(key, "Bot-Access-Token") {
+		return fmt.Sprintf("<%d chars>", len(value))
+	}
 	if !strings.EqualFold(key, "Authorization") {
 		return value
 	}

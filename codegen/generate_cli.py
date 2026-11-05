@@ -43,7 +43,30 @@ BASE_URL_OVERRIDES = {
         # deliberately has no version segment.
         "/v1/analytics/": "config.AnalyticsBaseURL",
     },
+    "Webex Contact Center": {
+        # AI Agent Studio, from codegen/supplemental.
+        "/api/": "config.AiAgentBaseURL",
+    },
 }
+
+# Routes whose responses carry AI agent runtime tokens, which are credentials
+# and must not reach the terminal or an agent transcript.
+# Collection name → URL path prefixes.
+REDACTED_ROUTES = {
+    "Webex Contact Center": ("/api/",),
+}
+
+# AI Agent Studio selects the agent of a v1 call by the agent's runtime token.
+# The CLI looks the token up from --agent-id, so users never pass or see it.
+AGENT_TOKEN_HEADER = 'bot-access-token'
+
+
+def redacts_secrets(collection_name, path):
+    return any(path.startswith(p) for p in REDACTED_ROUTES.get(collection_name, ()))
+
+
+def uses_agent_token(ep):
+    return any(h['name'] == AGENT_TOKEN_HEADER for h in ep.get('extra_headers', []))
 
 
 def resolve_base_url(collection_name, path, default):
@@ -185,6 +208,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
                 needs_strings = True
         if any(p['name'] == 'from' for p in ep.get('query_params', [])):
             needs_timeutil = True
+    needs_aiagent = any(redacts_secrets(collection_name, ep['path']) or uses_agent_token(ep)
+                        for ep in endpoints)
 
     if needs_strconv:
         lines.append('\t"strconv"')
@@ -193,6 +218,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
 
     lines.append('')
     lines.append('\tcmd "github.com/Cloverhound/webex-cli/cmd"')
+    if needs_aiagent:
+        lines.append('\t"github.com/Cloverhound/webex-cli/internal/aiagent"')
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/client"')
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/config"')
     lines.append('\t"github.com/Cloverhound/webex-cli/internal/output"')
@@ -234,7 +261,8 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
             print(f"    Skipping command '{ep['command']}' (custom override)")
             continue
         ep_base_url = resolve_base_url(collection_name, ep['path'], base_url_const)
-        lines.extend(generate_command(ep, group_var, ep_base_url, is_calling))
+        lines.extend(generate_command(ep, group_var, ep_base_url, is_calling,
+                                      redact=redacts_secrets(collection_name, ep['path'])))
         lines.append('')
 
     lines.append('}')
@@ -248,6 +276,9 @@ def pagination_hints(cmd_name, query_names, is_calling):
     GET would otherwise print only an array pulled out of it)."""
     is_list = cmd_name == 'list' or cmd_name.startswith('list-')
     if not is_calling:
+        # AI Agent Studio lists page by limit/offset under "objects".
+        if {'limit', 'offset'} <= query_names:
+            return ['req.OffsetPaging("offset", "limit", 0)']
         if not is_list and not query_names & {'page', 'pageSize', 'size'}:
             return None
         hints = []
@@ -270,7 +301,7 @@ def pagination_hints(cmd_name, query_names, is_calling):
     return None
 
 
-def generate_command(ep, group_var, base_url_expr, is_calling):
+def generate_command(ep, group_var, base_url_expr, is_calling, redact=False):
     """Generate Go source for one command within a group's init()."""
     lines = []
     indent = '\t'
@@ -337,6 +368,14 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
             lines.append(f'{indent2}var {var} string')
 
     for h in extra_headers:
+        if h['name'] == AGENT_TOKEN_HEADER:
+            # Shares the variable with an {agentId} path parameter when there is one.
+            if 'agentId' not in declared_vars:
+                declared_vars.add('agentId')
+                declared_flags.add('agent-id')
+                all_flags.append(('agentId', 'string', 'agent-id', h.get('description', ''), True, 'agentId'))
+                lines.append(f'{indent2}var agentId string')
+            continue
         var = kebab_to_go_var(camel_to_kebab(h['name']))
         flag = camel_to_kebab(h['name'])
         if var not in declared_vars:
@@ -432,6 +471,13 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
 
     # Extra headers
     for h in extra_headers:
+        if h['name'] == AGENT_TOKEN_HEADER:
+            lines.append(f'{indent3}botToken, err := aiagent.BotToken(agentId)')
+            lines.append(f'{indent3}if err != nil {{')
+            lines.append(f'{indent3}\treturn err')
+            lines.append(f'{indent3}}}')
+            lines.append(f'{indent3}req.Header("{AGENT_TOKEN_HEADER}", botToken)')
+            continue
         var = kebab_to_go_var(camel_to_kebab(h['name']))
         lines.append(f'{indent3}req.Header("{h["name"]}", {var})')
 
@@ -469,6 +515,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
         lines.append(f'{indent3}\tif err != nil {{')
         lines.append(f'{indent3}\t\treturn err')
         lines.append(f'{indent3}\t}}')
+        if redact:
+            lines.append(f'{indent3}\tresp = aiagent.RedactSecrets(resp)')
         lines.append(f'{indent3}\treturn output.Print(resp, statusCode)')
         lines.append(f'{indent3}}}')
 
@@ -476,6 +524,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling):
     lines.append(f'{indent3}if err != nil {{')
     lines.append(f'{indent3}\treturn err')
     lines.append(f'{indent3}}}')
+    if redact:
+        lines.append(f'{indent3}resp = aiagent.RedactSecrets(resp)')
     lines.append(f'{indent3}return output.Print(resp, statusCode)')
 
     lines.append(f'{indent2}\t}},')

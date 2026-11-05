@@ -283,6 +283,10 @@ GROUP_DESCRIPTIONS = {
     'Webex Contact Center': {
         'call-monitor': 'Live call monitoring sessions: start, barge in, coach, hold, and end',
         'call-monitoring-config': 'Saved call monitoring configurations',
+        # From codegen/supplemental; the names must say these are not ai-assistant or ai-feature.
+        'ai-agent': 'AI Agent Studio agents: configuration, tools, publishing, export (private API)',
+        'ai-agent-session': 'AI Agent Studio conversation sessions and messages (private API)',
+        'ai-agent-transcript': 'AI Agent Studio audited transcript reads (private API)',
     },
 }
 

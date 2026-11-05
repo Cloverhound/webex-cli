@@ -1,0 +1,333 @@
+{
+  "info": {
+    "name": "Webex Contact Center",
+    "description": "Hand-maintained. Private Webex AI Agent Studio routes that accept a regular Webex OAuth token. They are not in Cisco's published Postman collections; see codegen/supplemental/README.md.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AI Agent",
+      "item": [
+        {
+          "name": "List AI agents",
+          "request": {
+            "method": "GET",
+            "description": "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/organizations/:orgId/agents/?limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "organizations", ":orgId", "agents", ""],
+              "query": [
+                {"key": "limit", "value": "100", "description": "Maximum number of agents to return."},
+                {"key": "offset", "value": "0", "description": "Number of agents to skip."}
+              ],
+              "variable": [{"key": "orgId", "description": "Organization ID."}]
+            }
+          }
+        },
+        {
+          "name": "Get AI agent",
+          "request": {
+            "method": "GET",
+            "description": "Gets an AI agent's settings. `bot_metadata.ai_engine` here is the engine family; the exact engine is `bot_metadata.engine_identifier`.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bot/:agentId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bot", ":agentId", ""],
+              "variable": [{"key": "agentId", "description": "AI agent ID."}]
+            }
+          }
+        },
+        {
+          "name": "Create AI agent",
+          "request": {
+            "method": "POST",
+            "description": "Creates an AI agent. `bot_unique_name` must be unique; Studio's own UI uses the name followed by `-` and 8 random letters and digits. Turning transparency off needs a `disable_reason`. Every new agent gets the system \"Agent handover\" tool.",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"<string>\", \"bot_unique_name\": \"<string>\", \"bot_type\": \"virtualagent\", \"description\": \"<string>\", \"first_message\": \"<string>\", \"language\": \"en\", \"allow_agent_handover\": false, \"allow_feedback\": false, \"bot_metadata\": {\"llm_model\": \"1.0.0\", \"ai_engine\": \"PRO_2_0_0\"}, \"transparency_configuration\": {\"enabled\": false, \"disable_reason\": \"<string>\"}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bot/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bot", ""]
+            }
+          }
+        },
+        {
+          "name": "Update AI agent",
+          "request": {
+            "method": "PUT",
+            "description": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"<string>\", \"description\": \"<string>\", \"instruction\": \"<string>\", \"first_message\": \"<string>\", \"bot_metadata\": {\"ai_engine\": \"<string>\"}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bot/:agentId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bot", ":agentId", ""],
+              "variable": [{"key": "agentId", "description": "AI agent ID."}]
+            }
+          }
+        },
+        {
+          "name": "Delete AI agent",
+          "request": {
+            "method": "DELETE",
+            "description": "Deletes an AI agent.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bot/:agentId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "bot", ":agentId", ""],
+              "variable": [{"key": "agentId", "description": "AI agent ID."}]
+            }
+          }
+        },
+        {
+          "name": "Get AI agent configuration",
+          "request": {
+            "method": "GET",
+            "description": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/getdefault/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "getdefault", ""]
+            }
+          }
+        },
+        {
+          "name": "List AI agent versions",
+          "request": {
+            "method": "GET",
+            "description": "Lists the draft and the published versions (`state: live`) of the agent's configuration.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/?order_by=-updated_at&limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", ""],
+              "query": [
+                {"key": "order_by", "value": "-updated_at", "description": "Sort field; prefix with - for descending, for example -updated_at."},
+                {"key": "limit", "value": "100", "description": "Maximum number of versions to return."},
+                {"key": "offset", "value": "0", "description": "Number of versions to skip."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export AI agent",
+          "request": {
+            "method": "GET",
+            "description": "Exports the agent's draft configuration and tools as one JSON document (`bot_type`, `configuration`, `tools`).",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/export/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "export", ""]
+            }
+          }
+        },
+        {
+          "name": "Publish AI agent",
+          "request": {
+            "method": "POST",
+            "description": "Publishes the agent's draft, so live calls use it. The description labels the version in the history.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {"mode": "raw", "raw": "{\"description\": \"<string>\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/makelive/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "makelive", ""]
+            }
+          }
+        },
+        {
+          "name": "Create AI agent tool",
+          "request": {
+            "method": "POST",
+            "description": "Adds a tool (action) to the agent's draft. `input_entities` is required, in JSON Schema form, even when the tool takes no input. Copy a working tool from `get-configuration` for the fulfillment of flow and MCP tools.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"<string>\", \"description\": \"<string>\", \"enabled\": true, \"system_tool\": false, \"slots_view\": \"table\", \"capability\": \"slot_filling\", \"slots\": [], \"fulfillment\": {}, \"input_entities\": {\"parameters\": {\"type\": \"object\", \"properties\": {}, \"required\": [], \"secure\": []}}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/tool/create/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "tool", "create", ""]
+            }
+          }
+        },
+        {
+          "name": "Update AI agent tool",
+          "request": {
+            "method": "POST",
+            "description": "Updates a tool in the agent's draft. Send the whole tool as `get-configuration` returns it, with `tool_id` set to its `id`.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tool_id\": \"<string>\", \"name\": \"<string>\", \"description\": \"<string>\", \"enabled\": true, \"system_tool\": false, \"capability\": \"slot_filling\", \"fulfillment\": {}, \"input_entities\": {\"parameters\": {\"type\": \"object\", \"properties\": {}, \"required\": [], \"secure\": []}}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/tool/update/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "tool", "update", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete AI agent tool",
+          "request": {
+            "method": "POST",
+            "description": "Deletes a tool from the agent's draft.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {"mode": "raw", "raw": "{\"tool_id\": \"<string>\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/llmagent/tool/delete/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "llmagent", "tool", "delete", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Agent Session",
+      "item": [
+        {
+          "name": "List AI agent sessions",
+          "request": {
+            "method": "GET",
+            "description": "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/organizations/:orgId/agents/:agentId/sessions/?limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "organizations", ":orgId", "agents", ":agentId", "sessions", ""],
+              "query": [
+                {"key": "limit", "value": "100", "description": "Maximum number of sessions to return."},
+                {"key": "offset", "value": "0", "description": "Number of sessions to skip."}
+              ],
+              "variable": [
+                {"key": "orgId", "description": "Organization ID."},
+                {"key": "agentId", "description": "AI agent ID."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get AI agent session",
+          "request": {
+            "method": "GET",
+            "description": "Gets one conversation session.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/organizations/:orgId/agents/:agentId/sessions/:sessionId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "organizations", ":orgId", "agents", ":agentId", "sessions", ":sessionId", ""],
+              "variable": [
+                {"key": "orgId", "description": "Organization ID."},
+                {"key": "agentId", "description": "AI agent ID."},
+                {"key": "sessionId", "description": "Session ID."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "List AI agent session messages",
+          "request": {
+            "method": "GET",
+            "description": "Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v2/organizations/:orgId/agents/:agentId/sessions/:sessionId/messages/?limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v2", "organizations", ":orgId", "agents", ":agentId", "sessions", ":sessionId", "messages", ""],
+              "query": [
+                {"key": "limit", "value": "100", "description": "Maximum number of messages to return."},
+                {"key": "offset", "value": "0", "description": "Number of messages to skip."}
+              ],
+              "variable": [
+                {"key": "orgId", "description": "Organization ID."},
+                {"key": "agentId", "description": "AI agent ID."},
+                {"key": "sessionId", "description": "Session ID."}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Agent Transcript",
+      "item": [
+        {
+          "name": "Create transcript audit record",
+          "request": {
+            "method": "POST",
+            "description": "Records a compliance audit entry for reading a session's transcript, as Studio does before it shows one. `room_id` is the session ID and `message` the reason. The entry is permanent and names the caller, so create one only with a real reason. With a regular Webex login, the messages of an encrypted session stay encrypted after the audit.",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
+            ],
+            "body": {"mode": "raw", "raw": "{\"room_id\": \"<string>\", \"decrypt_audit_type\": \"room\", \"message\": \"<string>\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/decrypt_audit/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "decrypt_audit", ""]
+            }
+          }
+        },
+        {
+          "name": "Get transcript session",
+          "request": {
+            "method": "GET",
+            "description": "Gets a session's full record, including `data_encrypted` and its channels.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/room/?id=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "room", ""],
+              "query": [{"key": "id", "value": "", "description": "Session ID."}]
+            }
+          }
+        },
+        {
+          "name": "List transcript messages",
+          "request": {
+            "method": "GET",
+            "description": "Lists a session's messages with full detail: tool calls, classification and `data_encrypted`. For an encrypted session, create an audit record first.",
+            "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/message/?room_id=&order_by=created_at&limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "message", ""],
+              "query": [
+                {"key": "room_id", "value": "", "description": "Session ID."},
+                {"key": "order_by", "value": "created_at", "description": "Sort field; prefix with - for descending."},
+                {"key": "limit", "value": "100", "description": "Maximum number of messages to return."},
+                {"key": "offset", "value": "0", "description": "Number of messages to skip."}
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

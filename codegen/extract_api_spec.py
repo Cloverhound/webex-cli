@@ -119,7 +119,7 @@ def parse_body_fields(raw_body):
 
 # ── URL path normalization ───────────────────────────────────────────
 
-def normalize_url_path(path_segments):
+def normalize_url_path(path_segments, keep_trailing_slash=False):
     """Convert Postman path segments to a clean URL path.
 
     :var → {var} style path parameters.
@@ -127,6 +127,7 @@ def normalize_url_path(path_segments):
     {{var}}:action → {var}:action (preserves action suffixes like :export).
     Strips {{baseUrl}} prefix.
     """
+    trailing = '/' if keep_trailing_slash and path_segments and path_segments[-1] == '' else ''
     parts = []
     for seg in path_segments:
         if not seg:
@@ -143,7 +144,7 @@ def normalize_url_path(path_segments):
             parts.append('{' + seg[1:] + '}')
         else:
             parts.append(seg)
-    return '/' + '/'.join(parts)
+    return '/' + '/'.join(parts) + trailing
 
 
 def extract_path_version(path_segments):
@@ -166,7 +167,7 @@ def extract_scopes(description):
 
 # ── Endpoint extraction ──────────────────────────────────────────────
 
-def extract_endpoint(item):
+def extract_endpoint(item, keep_trailing_slash=False):
     """Extract full endpoint spec from a Postman item."""
     req = item.get('request', {})
     if not req:
@@ -175,7 +176,7 @@ def extract_endpoint(item):
     method = req.get('method', 'GET').upper()
     url = req.get('url', {})
     path_segments = url.get('path', [])
-    url_path = normalize_url_path(path_segments)
+    url_path = normalize_url_path(path_segments, keep_trailing_slash)
     version = extract_path_version(path_segments)
 
     # Path params
@@ -300,7 +301,7 @@ def dedup_cc_versions(endpoints, folder_name):
 
 # ── Main extraction ──────────────────────────────────────────────────
 
-def extract_collection(filepath):
+def extract_collection(filepath, keep_trailing_slash=False):
     """Extract all groups and endpoints from a Postman collection."""
     with open(filepath) as f:
         data = json.load(f)
@@ -320,7 +321,7 @@ def extract_collection(filepath):
         for child in item['item']:
             if 'request' not in child:
                 continue
-            ep = extract_endpoint(child)
+            ep = extract_endpoint(child, keep_trailing_slash)
             if ep:
                 endpoints.append(ep)
 
@@ -427,17 +428,51 @@ def apply_naming_overrides(collection_name, folders):
     return list(merged.values())
 
 
-def main():
-    pattern = os.path.join(SCRIPT_DIR, "postman", "*.postman_collection.json")
-    files = sorted(glob.glob(pattern))
+def add_supplemental(name, folders, extra_folders):
+    """Append hand-maintained folders to a downloaded collection.
 
-    if not files:
+    Supplemental collections describe APIs that Cisco has not published in
+    Postman. Once a download documents the same method and route, the downloaded
+    definition is the one kept.
+    """
+    published = {(e['method'], e['path'].rstrip('/')) for f in folders for e in f['endpoints']}
+    for folder in extra_folders:
+        kept = []
+        for ep in folder['endpoints']:
+            if (ep['method'], ep['path'].rstrip('/')) in published:
+                print(f"  {name}: {ep['method']} {ep['path']} is now in the downloaded collection; "
+                      "remove it from codegen/supplemental")
+                continue
+            kept.append(ep)
+        if kept:
+            folders.append(dict(folder, endpoints=kept))
+
+
+def load_collections(postman_dir, supplemental_dir):
+    """Return raw folders per collection name, with supplemental folders merged in."""
+    collections = {}
+    for filepath in sorted(glob.glob(os.path.join(postman_dir, "*.postman_collection.json"))):
+        name, raw_folders = extract_collection(filepath)
+        collections[name] = raw_folders
+    # Studio routes end in "/" and are refused without it, so keep the slash.
+    for filepath in sorted(glob.glob(os.path.join(supplemental_dir, "*.postman_collection.json"))):
+        name, raw_folders = extract_collection(filepath, keep_trailing_slash=True)
+        if name not in collections:
+            raise ValueError(f"{os.path.basename(filepath)} names collection {name!r}, "
+                             "which no downloaded collection has")
+        add_supplemental(name, collections[name], raw_folders)
+    return collections
+
+
+def main():
+    collections = load_collections(os.path.join(SCRIPT_DIR, "postman"),
+                                   os.path.join(SCRIPT_DIR, "supplemental"))
+    if not collections:
         print("No Postman collection files found.")
         return
 
     result = {}
-    for filepath in files:
-        name, raw_folders = extract_collection(filepath)
+    for name, raw_folders in collections.items():
         folders = merge_folders(raw_folders)
         folders = apply_naming_overrides(name, folders)
         result[name] = folders

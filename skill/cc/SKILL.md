@@ -161,6 +161,27 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 **Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
 
+## AI Agent Studio (private API)
+
+`ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's undocumented API with the regular Webex login. Expect it to change without notice.
+
+```bash
+webex cc ai-agent list --paginate                       # ids for --agent-id
+webex cc ai-agent get-configuration --agent-id <id>     # draft prompt, tools, state
+webex cc ai-agent export --agent-id <id>                # configuration + tools snapshot
+webex cc ai-agent update --agent-id <id> --body-file changes.json
+webex cc ai-agent publish --agent-id <id> --description "<what changed>"
+webex cc ai-agent-session list --agent-id <id> --paginate
+```
+
+- Pass the agent's `id` as `--agent-id`; the CLI looks up the agent's runtime token itself and redacts tokens from output. Never try to print or reuse them.
+- Edits change the draft (`state: saved`); live calls use them only after `publish`. Publishing changes production behavior, so publish only when the user asks.
+- `update` keeps top-level fields that are left out. `get` reports `bot_metadata.ai_engine` as the family (`PRO`); send `engine_identifier` (`PRO_2_0_0`) as `ai_engine`, or the agent's engine changes.
+- `create` needs a unique `bot_unique_name`, and `transparency_configuration.disable_reason` when transparency is off. Tools need `input_entities` in JSON Schema form; copy one from `get-configuration`.
+- To test writes, create a `zz-` agent, work only on it, and delete it afterwards.
+- `ai-agent-transcript create-audit-record` writes a permanent compliance entry under the user's name. Run it only for a reason the user gives, never in a loop. With a Webex login, messages of encrypted (Advanced Data Protection) sessions stay encrypted after the audit; preview sessions are never encrypted.
+- A voice session's `interaction_id` is the task ID for `webex cc captures list`.
+
 ## Other refreshed Contact Center APIs
 
 | Group | Purpose |
@@ -1129,5 +1150,38 @@ Group aliases: `flows`.
 | `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size` |
 | `get` | `--id` *(required)* |
 | `update` | `--id` *(required)*, `--timeout-rona-chat-seconds`, `--timeout-rona-email-seconds`, `--timeout-rona-social-seconds`, `--timeout-rona-telephony-seconds`, `--organization-id`, `--version`, `--outdial-enabled`, `--central-log-level`, `--auto-wrap-up-interval`, `--local-disk-log-level`, `--dn-other-description`, `--dn-default-description`, `--not-responding-to-available-timeout`, `--heart-beat-interval`, `--call-variables-suppressed`, `--end-call-enabled`, `--incident-reporting-enabled`, `--watson-analytics-password`, `--system-recovery-msg`, `--watson-analytics-base-url`, `--dn-target-strip-chars`, `--watson-analytics-user-name`, `--dn-other-regex`, `--configuration-version`, `--call-variables-base-url`, `--lost-connection-recovery-timeout`, `--diagnostics-post-url`, `--dn-default-regex`, `--aps-url`, `--end-consult-enabled`, `--reject-duplicate-dn`, `--dn-target-regex`, `--force-default-dn`, `--dn-default-prefix`, `--privacy-shield-visible`, `--console-log-level`, `--dn-target-prefix`, `--auto-base-url`, `--dn-other-prefix`, `--dn-default-strip-chars`, `--missed-heart-beats-allowed`, `--dn-other-strip-chars`, `--aps-enabled`, `--timeout-desktop-inactivity-enabled`, `--timeout-desktop-inactivity-mins`, `--timeout-rona-work-item-seconds`, `--timeout-rona-custom-messaging-seconds`, `--system-default`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
+
+### ai-agent
+
+| Command | Flags |
+|---|---|
+| `list` | `--limit`, `--offset` |
+| `get` | `--agent-id` *(required)* |
+| `get-configuration` | — |
+| `list-versions` | `--order_by`, `--limit`, `--offset` |
+| `export` | — |
+| `create` | `--body`, `--body-file` |
+| `publish` | `--description`, `--body`, `--body-file` |
+| `create-tool` | `--body`, `--body-file` |
+| `update-tool` | `--body`, `--body-file` |
+| `delete-tool` | `--tool_id`, `--body`, `--body-file` |
+| `update` | `--agent-id` *(required)*, `--body`, `--body-file` |
+| `delete` | `--agent-id` *(required)* |
+
+### ai-agent-session
+
+| Command | Flags |
+|---|---|
+| `list` | `--agent-id` *(required)*, `--limit`, `--offset` |
+| `get` | `--agent-id` *(required)*, `--session-id` *(required)* |
+| `list-messages` | `--agent-id` *(required)*, `--session-id` *(required)*, `--limit`, `--offset` |
+
+### ai-agent-transcript
+
+| Command | Flags |
+|---|---|
+| `get-session` | `--id` |
+| `list-messages` | `--room_id`, `--order_by`, `--limit`, `--offset` |
+| `create-audit-record` | `--room_id`, `--decrypt_audit_type`, `--message`, `--body`, `--body-file` |
 
 <!-- codegen:end -->

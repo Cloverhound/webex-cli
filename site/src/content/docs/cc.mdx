@@ -24,6 +24,9 @@ The `webex cc` subcommand provides access to the Webex Contact Center API. The `
 | `agent-summaries` | Agent summary reports |
 | `agent-wellbeing` | Agent wellbeing configuration |
 | `agents` | Agent state operations (login, logout, state change) |
+| `ai-agent` | AI Agent Studio agents: configuration, tools, publishing, export (private API) |
+| `ai-agent-session` | AI Agent Studio conversation sessions and messages (private API) |
+| `ai-agent-transcript` | AI Agent Studio audited transcript reads (private API) |
 | `ai-assistant` | AI assistant configuration |
 | `ai-feature` | AI feature management |
 | `audio-files` | IVR prompts and audio files |
@@ -183,6 +186,27 @@ Bodies must be supplied with `--body` or `--body-file`; these generated commands
 Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
 **Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
+
+## AI Agent Studio
+
+The `ai-agent`, `ai-agent-session` and `ai-agent-transcript` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document this API, so it can change without notice.
+
+```bash
+webex cc ai-agent list --paginate
+webex cc ai-agent get-configuration --agent-id <agent-id>
+webex cc ai-agent export --agent-id <agent-id> > agent.json
+webex cc ai-agent update --agent-id <agent-id> --body-file changes.json
+webex cc ai-agent publish --agent-id <agent-id> --description "Shorter greeting"
+webex cc ai-agent-session list --agent-id <agent-id> --paginate
+```
+
+- `--agent-id` is the `id` from `ai-agent list`. Studio selects an agent by its runtime token, which the CLI looks up from the ID. Tokens never appear in output, and `--debug` shows only their length.
+- Edits change the agent's draft. Callers get them only after `publish`, and `list-versions` shows the draft and the published versions.
+- `update` keeps top-level fields you leave out. `get` reports `bot_metadata.ai_engine` as the engine family; send the exact engine (`engine_identifier`) back, or the agent's engine changes.
+- A tool needs `input_entities` in JSON Schema form even when it takes no input. Start from a tool in `get-configuration`.
+- In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
+- A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
+- The Studio host is the US data center's, as for the rest of `webex cc`.
 
 ## Other refreshed Contact Center APIs
 

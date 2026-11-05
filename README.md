@@ -48,6 +48,10 @@ webex cc team list
 webex cc contact-service-queue list
 webex cc entry-point list
 
+# AI Agent Studio (private API; may change without notice)
+webex cc ai-agent list
+webex cc ai-agent export --agent-id <id>
+
 # Admin
 webex admin people list
 webex admin licenses list
