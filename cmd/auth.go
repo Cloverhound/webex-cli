@@ -158,9 +158,12 @@ var authStatusCmd = &cobra.Command{
 			return fmt.Errorf("loading config: %w", err)
 		}
 
+		// Status reports the login that other commands would use, so it honors
+		// the same user selection.
+		flagUser, envUser := requestedUser(cmd)
+		email := firstNonEmpty(flagUser, envUser, cfg.DefaultUser)
+
 		if jsonOutputRequested(cmd) {
-			flagUser, envUser := requestedUser(cmd)
-			email := firstNonEmpty(flagUser, envUser, cfg.DefaultUser)
 			for _, user := range authUsers(cfg) {
 				if user.Email == email {
 					return printJSON(user)
@@ -169,7 +172,6 @@ var authStatusCmd = &cobra.Command{
 			return fmt.Errorf("no authenticated user — run: webex login")
 		}
 
-		email := cfg.DefaultUser
 		envSet := false
 		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
 			if os.Getenv(env) == "" {

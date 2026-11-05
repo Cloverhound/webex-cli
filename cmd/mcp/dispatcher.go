@@ -250,8 +250,8 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 }
 
 // runCLI runs the CLI binary with args, logs the call and returns its output.
-// allOutput adds stderr on success and stdout on failure, for commands that
-// warn on stderr or report a failed check on stdout.
+// allOutput adds stdout to a failure, for commands that report a failed check
+// on stdout.
 func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string, allOutput bool) *mcplib.CallToolResult {
 	exe, err := os.Executable()
 	if err != nil {
@@ -297,11 +297,7 @@ func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr st
 			"Error running 'webex %s': %s", command, errText,
 		))
 	}
-	out := strings.TrimSpace(stdout.String())
-	if allOutput {
-		out = strings.TrimSpace(out + "\n" + stderr.String())
-	}
-	return mcplib.NewToolResultText(out)
+	return successResult(stdout.String(), stderr.String())
 }
 
 // changesetPath checks a change set path from a tool call and makes it absolute,
@@ -354,6 +350,17 @@ func makeChangesetHandler(lg *usageLogger) func(context.Context, mcplib.CallTool
 		}
 		return runCLI(ctx, lg, "webex_changeset", "changeset "+action, "", args, true), nil
 	}
+}
+
+// successResult returns a command's output, and its stderr as a second text
+// item when there is any. Notices such as the private-API caution are printed
+// there once, so dropping stderr would leave agents never seeing them.
+func successResult(stdout, stderr string) *mcplib.CallToolResult {
+	result := mcplib.NewToolResultText(strings.TrimSpace(stdout))
+	if note := strings.TrimSpace(stderr); note != "" {
+		result.Content = append(result.Content, mcplib.NewTextContent(note))
+	}
+	return result
 }
 
 // commandPath returns the command the CLI will run for args, without the binary

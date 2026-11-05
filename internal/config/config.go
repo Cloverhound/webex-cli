@@ -72,6 +72,10 @@ const (
 	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
 	// endpoints already carry their own /v1 segment.
 	AnalyticsBaseURL = "https://analytics.webexapis.com"
+
+	// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL;
+	// each Contact Center data center has its own Studio host.
+	AiAgentBaseURL = "https://studio.aiagent-us1.cisco.com"
 )
 
 // analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.

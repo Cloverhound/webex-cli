@@ -140,9 +140,11 @@ func (r *Request) Do() ([]byte, int, error) {
 }
 
 // DoPaginated fetches all pages and returns the merged items array.
-// isCalling selects the pagination strategy (Calling: start/max, CC: page/pageSize).
+// isCalling selects the pagination strategy (Calling: start/max, CC: page/pageSize);
+// a request that named its offset parameters with OffsetPaging pages by offset
+// in either area.
 func (r *Request) DoPaginated(isCalling bool) ([]byte, int, error) {
-	if isCalling {
+	if isCalling || r.offsetSet {
 		start, size, first := "start", "max", 0
 		if r.offsetSet {
 			start, size, first = r.offsetStart, r.offsetSize, r.offsetFirst

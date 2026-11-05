@@ -107,3 +107,61 @@ class OffsetPaginationTest(unittest.TestCase):
 
     def test_cc_get_with_page_params_is_paginated(self):
         self.assertIn('DoPaginated', self.generate('get', ['pageSize'], is_calling=False))
+
+    def test_cc_limit_and_offset_page_by_offset(self):
+        code = self.generate('list', ['limit', 'offset'], is_calling=False)
+        block = code[code.index('if config.Paginate()'):code.index('req.DoPaginated')]
+        self.assertIn('req.OffsetPaging("offset", "limit", 0)', block)
+
+
+class AiAgentStudioTest(unittest.TestCase):
+    """AI Agent Studio routes come from codegen/supplemental and live on their own host."""
+
+    def group(self, endpoints):
+        return generate_group_file('ai-agent', endpoints, 'cc', 'cmd.CcCmd',
+                                   'config.CcBaseURL', False, 'Webex Contact Center')
+
+    def test_studio_routes_use_the_studio_host_and_redact_secrets(self):
+        code = self.group([{'command': 'list', 'method': 'GET', 'path': '/api/v2/organizations/{orgId}/agents/',
+                            'path_params': [{'name': 'orgId'}]}])
+        self.assertIn('client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/")', code)
+        self.assertIn('"github.com/Cloverhound/webex-cli/internal/aiagent"', code)
+        self.assertEqual(code.count('resp = aiagent.RedactSecrets(resp)'), 2)
+
+    def test_other_cc_routes_are_unchanged(self):
+        code = self.group([{'command': 'list', 'method': 'GET', 'path': '/organization/{orgId}/v2/site',
+                            'path_params': [{'name': 'orgId'}],
+                            'description': 'Lists sites.'}])
+        self.assertIn('client.NewRequest(config.CcBaseURL,', code)
+        self.assertNotIn('aiagent', code)
+        self.assertNotIn('supported by Cisco', code)
+
+    def test_private_routes_warn_in_help_and_when_run(self):
+        code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/',
+                            'description': 'Exports the agent.'}])
+        long_help = code[code.index('Long:'):code.index('RunE:')]
+        self.assertIn('Exports the agent.', long_help)
+        self.assertIn('not documented or supported by Cisco', long_help)
+        run = code[code.index('RunE:'):]
+        self.assertEqual(run.splitlines()[1].strip(), 'aiagent.PrivateAPINotice()')
+
+    def test_private_route_without_description_still_warns(self):
+        code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/'}])
+        self.assertIn('not documented or supported by Cisco', code)
+
+    def test_agent_token_header_is_resolved_from_agent_id(self):
+        code = self.group([{'command': 'export', 'method': 'GET', 'path': '/api/v1/llmagent/export/',
+                            'extra_headers': [{'name': 'bot-access-token', 'description': 'AI agent ID.'}]}])
+        self.assertIn('cmd.Flags().StringVar(&agentId, "agent-id", "", "AI agent ID.")', code)
+        self.assertIn('cmd.MarkFlagRequired("agent-id")', code)
+        self.assertIn('botToken, err := aiagent.BotToken(agentId)', code)
+        self.assertIn('req.Header("bot-access-token", botToken)', code)
+        self.assertNotIn('"bot-access-token", "",', code)
+
+    def test_agent_token_header_shares_the_agent_id_path_flag(self):
+        code = self.group([{'command': 'get', 'method': 'GET', 'path': '/api/v1/bot/{agentId}/',
+                            'path_params': [{'name': 'agentId', 'description': 'AI agent ID.'}],
+                            'extra_headers': [{'name': 'bot-access-token', 'description': 'AI agent ID.'}]}])
+        self.assertEqual(code.count('"agent-id", "",'), 1)
+        self.assertIn('req.PathParam("agentId", agentId)', code)
+        self.assertIn('aiagent.BotToken(agentId)', code)
