@@ -157,14 +157,13 @@ class NamingOverridesTest(unittest.TestCase):
             self.assertIn('/members/me/', ep['path'])
 
     def test_metrics_move_preserves_analytics_host(self):
-        from generate_cli import resolve_base_url
+        from generate_cli import resolve_host
         spec = json.loads((Path(__file__).parent / 'api_spec.json').read_text())
         self.assertFalse(any(g['group'] in ('metrics', 'calling-metrics') for g in spec['Webex Admin']))
         group = next(g for g in spec['Webex Cloud Calling'] if g['group'] == 'metrics')
         ep = group['endpoints'][0]
         self.assertEqual(ep['command'], 'get-call-quality-stats')
-        self.assertEqual(resolve_base_url('Webex Cloud Calling', ep['path'], 'wrong-host'),
-                         'config.AnalyticsBaseURL')
+        self.assertEqual(resolve_host('Webex Cloud Calling', ep['path'], 'wrong-host'), 'analytics')
 
     def test_queue_names_keep_selection_method_without_parameter_suffixes(self):
         for name in ['list-agent-based', 'list-skill-based', 'list-team-based',
