@@ -86,7 +86,7 @@ func registerCommonFlags(c *cobra.Command, f *searchFlags) {
 
 // buildAndExecute parses flags, builds the GraphQL query, and executes it.
 func buildAndExecute(f *searchFlags, queryType search.QueryType) error {
-	req := client.NewRequest(config.CcBaseURL(),"POST", "/search")
+	req := client.NewRequest(config.CcBaseURL(), "POST", "/search")
 	req.QueryParam("orgId", f.orgID)
 	req.Header("TrackingId", f.trackingID)
 
@@ -205,7 +205,7 @@ Examples:
   webex cc search raw --body '{"query":"{ task(from:1700000000000 to:1700100000000) { tasks { id status } } }"}'
   webex cc search raw --body-file my_query.json`,
 		RunE: func(c *cobra.Command, args []string) error {
-			req := client.NewRequest(config.CcBaseURL(),"POST", "/search")
+			req := client.NewRequest(config.CcBaseURL(), "POST", "/search")
 			req.QueryParam("orgId", orgID)
 			req.Header("TrackingId", trackingID)
 			if bodyFile != "" {
