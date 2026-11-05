@@ -46,7 +46,14 @@ var authStatusCmd = &cobra.Command{
 			return fmt.Errorf("loading config: %w", err)
 		}
 
+		// Status reports the login that other commands would use, so it honors
+		// the same user selection.
 		email := cfg.DefaultUser
+		if flagUser, envUser := requestedUser(cmd); flagUser != "" {
+			email = flagUser
+		} else if envUser != "" {
+			email = envUser
+		}
 		envSet := false
 		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
 			if os.Getenv(env) == "" {
