@@ -11,6 +11,8 @@ import os
 import re
 import sys
 
+from generate_cli import AGENT_TOKEN_HEADER
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)
 SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
@@ -88,6 +90,11 @@ def format_flags(ep):
         if flag not in seen:
             seen.add(flag)
             parts.append(f"`--{flag}` *(required)*")
+
+    # generate_cli turns the agent token header into a required --agent-id.
+    if any(h['name'] == AGENT_TOKEN_HEADER for h in ep.get('extra_headers', [])) and 'agent-id' not in seen:
+        seen.add('agent-id')
+        parts.append("`--agent-id` *(required)*")
 
     for p in ep.get('query_params', []):
         flag = camel_to_kebab(p['name'])

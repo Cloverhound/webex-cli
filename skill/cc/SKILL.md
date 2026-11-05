@@ -1157,14 +1157,14 @@ Group aliases: `flows`.
 |---|---|
 | `list` | `--limit`, `--offset` |
 | `get` | `--agent-id` *(required)* |
-| `get-configuration` | — |
-| `list-versions` | `--order_by`, `--limit`, `--offset` |
-| `export` | — |
+| `get-configuration` | `--agent-id` *(required)* |
+| `list-versions` | `--agent-id` *(required)*, `--order_by`, `--limit`, `--offset` |
+| `export` | `--agent-id` *(required)* |
 | `create` | `--body`, `--body-file` |
-| `publish` | `--description`, `--body`, `--body-file` |
-| `create-tool` | `--body`, `--body-file` |
-| `update-tool` | `--body`, `--body-file` |
-| `delete-tool` | `--tool_id`, `--body`, `--body-file` |
+| `publish` | `--agent-id` *(required)*, `--description`, `--body`, `--body-file` |
+| `create-tool` | `--agent-id` *(required)*, `--body`, `--body-file` |
+| `update-tool` | `--agent-id` *(required)*, `--body`, `--body-file` |
+| `delete-tool` | `--agent-id` *(required)*, `--tool_id`, `--body`, `--body-file` |
 | `update` | `--agent-id` *(required)*, `--body`, `--body-file` |
 | `delete` | `--agent-id` *(required)* |
 
@@ -1180,8 +1180,8 @@ Group aliases: `flows`.
 
 | Command | Flags |
 |---|---|
-| `get-session` | `--id` |
-| `list-messages` | `--room_id`, `--order_by`, `--limit`, `--offset` |
-| `create-audit-record` | `--room_id`, `--decrypt_audit_type`, `--message`, `--body`, `--body-file` |
+| `get-session` | `--agent-id` *(required)*, `--id` |
+| `list-messages` | `--agent-id` *(required)*, `--room_id`, `--order_by`, `--limit`, `--offset` |
+| `create-audit-record` | `--agent-id` *(required)*, `--room_id`, `--decrypt_audit_type`, `--message`, `--body`, `--body-file` |
 
 <!-- codegen:end -->
