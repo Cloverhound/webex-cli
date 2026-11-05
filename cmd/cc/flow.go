@@ -149,7 +149,6 @@ func init() {
 	{ // publish
 		var orgid string
 		var flowId string
-		var skipValidation string
 		var flowType string
 		var trackingId string
 		var comment string
@@ -165,7 +164,6 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				req.PathParam("flowId", flowId)
-				req.QueryParam("skipValidation", skipValidation)
 				req.QueryParam("flowType", flowType)
 				req.Header("TrackingId", trackingId)
 				if bodyFile != "" {
@@ -189,7 +187,6 @@ func init() {
 		cmd.MarkFlagRequired("orgid")
 		cmd.Flags().StringVar(&flowId, "flow-id", "", "")
 		cmd.MarkFlagRequired("flow-id")
-		cmd.Flags().StringVar(&skipValidation, "skip-validation", "", "If true, the flow's pre-publish validation is skipped. Use with care.")
 		cmd.Flags().StringVar(&flowType, "flow-type", "", "Either of 'FLOW' or 'SUBFLOW'.")
 		cmd.Flags().StringVar(&trackingId, "tracking-id", "", "ID for tracking.")
 		cmd.Flags().StringVar(&comment, "comment", "", "")
