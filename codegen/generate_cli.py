@@ -464,7 +464,7 @@ def main():
             print(f"Skipping unknown collection: {collection_name}")
             continue
         area = COLLECTIONS[collection_name][0]
-        # Command packages used to hold generated code; only handwritten files remain.
+        # Area command packages hold only handwritten files.
         remove_generated_go(os.path.join(CLI_DIR, "cmd", area))
         source, count = generate_area_file(collection_name, groups, taken)
         with open(os.path.join(OPS_DIR, f'zz_{area}.go'), 'w') as f:
