@@ -147,6 +147,7 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
 	page := 0
 	pageSize := 100
+	var previousFirst json.RawMessage
 
 	for {
 		r := NewRequest(baseURL, method, path)
@@ -167,11 +168,19 @@ func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, h
 			return nil, err
 		}
 
-		// A bare array carries no page metadata, so it is the only page.
+		// A bare array carries no page metadata. A full one may have more after it,
+		// unless the endpoint ignores page and answers the same array again.
 		var bare []json.RawMessage
 		if err := json.Unmarshal(body, &bare); err == nil {
-			visit(bare)
-			return nil, nil
+			if len(bare) > 0 && bytes.Equal(bare[0], previousFirst) {
+				return nil, nil
+			}
+			if !visit(bare) || len(bare) < pageSize {
+				return nil, nil
+			}
+			previousFirst = bare[0]
+			page++
+			continue
 		}
 
 		var result map[string]json.RawMessage

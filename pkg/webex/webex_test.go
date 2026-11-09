@@ -2,9 +2,13 @@ package webex
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -378,6 +382,35 @@ func TestANewLayoutCopiesTheGlobalLayoutsFile(t *testing.T) {
 	got := fake.Object("cc_desktop_layout", key.ID)
 	if got["jsonFileContent"] != `{"layout":1}` || got["name"] != "New" || got["global"] != false {
 		t.Fatalf("created = %v", got)
+	}
+}
+
+// The operation table records lists that take no paging parameters, which answer
+// in one response however many items they hold.
+func TestAListWithoutPagingParametersIsReadInOneRequest(t *testing.T) {
+	var queries []string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		queries = append(queries, r.URL.RawQuery)
+		if len(queries) > 3 { // stops a pager that pages a list that does not page
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		var list []map[string]any
+		for i := 0; i < 150; i++ {
+			list = append(list, map[string]any{"id": fmt.Sprintf("p%d", i), "name": fmt.Sprintf("Playlist %d", i)})
+		}
+		json.NewEncoder(w).Encode(map[string]any{"playlists": list})
+	}))
+	defer srv.Close()
+	c := &Client{API: &webexapi.Client{Token: func(context.Context) (string, error) { return "tok", nil }},
+		Hosts: fakeapi.Hosts(srv.URL), OrgUUID: fakeapi.OrgUUID}
+
+	objects, err := c.List(context.Background(), typeOf(t, "announcement_playlist"))
+	if err != nil || len(objects) != 150 {
+		t.Fatalf("got %d, err %v", len(objects), err)
+	}
+	if len(queries) != 1 || strings.Contains(queries[0], "start=") {
+		t.Fatalf("queries = %v", queries)
 	}
 }
 

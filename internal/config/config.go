@@ -2,6 +2,7 @@ package config
 
 import (
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/pkg/webexapi"
@@ -20,8 +21,20 @@ var (
 	maxRetryTimer int // max total seconds allowed across all 429 waits (0 = unlimited)
 )
 
-func SetToken(t string) { token = t }
-func Token() string     { return token }
+// tokenMu guards token, which SDK reads running in parallel refresh after a 401.
+var tokenMu sync.RWMutex
+
+func SetToken(t string) {
+	tokenMu.Lock()
+	defer tokenMu.Unlock()
+	token = t
+}
+
+func Token() string {
+	tokenMu.RLock()
+	defer tokenMu.RUnlock()
+	return token
+}
 
 func SetMaxRetry(n int) { maxRetry = n }
 func MaxRetry() int     { return maxRetry }

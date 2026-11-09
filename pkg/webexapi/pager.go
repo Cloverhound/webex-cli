@@ -75,7 +75,7 @@ func (c *Client) listCC(ctx context.Context, listURL, sizeParam string, visit fu
 		if err != nil {
 			return fmt.Errorf("%w: page %d of %s: %v", ErrIncompleteList, page, listURL, err)
 		}
-		if len(items) == ccPageSize && bytes.Equal(items[0], previousFirst) {
+		if repeats(items, previousFirst) {
 			return fmt.Errorf("%w: %s repeated page %d", ErrIncompleteList, listURL, page)
 		}
 		if len(items) > 0 {
@@ -161,7 +161,7 @@ func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit
 		if err != nil {
 			return fmt.Errorf("%w: %s: %v", ErrIncompleteList, listURL, err)
 		}
-		if len(items) == offsetPageSize && bytes.Equal(items[0], previousFirst) {
+		if repeats(items, previousFirst) {
 			return fmt.Errorf("%w: %s repeated a page", ErrIncompleteList, listURL)
 		}
 		if len(items) > 0 {
@@ -180,6 +180,12 @@ func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit
 		}
 		start += len(items)
 	}
+}
+
+// repeats reports whether a page starts with the previous page's first item: the
+// endpoint ignored the paging parameters, whatever size of page it answers with.
+func repeats(items []json.RawMessage, previousFirst json.RawMessage) bool {
+	return len(items) > 0 && previousFirst != nil && bytes.Equal(items[0], previousFirst)
 }
 
 // pageArray finds a page's items. total is SCIM's totalResults when present.
@@ -209,7 +215,7 @@ func pageArray(body []byte, key string) (items []json.RawMessage, total int, err
 	var found []string
 	for k, raw := range result {
 		var probe []json.RawMessage
-		if json.Unmarshal(raw, &probe) == nil {
+		if json.Unmarshal(raw, &probe) == nil && probe != nil {
 			found = append(found, k)
 			items = probe
 		}

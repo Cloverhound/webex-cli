@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
@@ -35,16 +36,35 @@ func SDK() *webexapi.Client {
 		},
 	}
 	if config.TokenRefresher != nil {
-		api.Refresh = func(context.Context) error {
-			newToken, err := config.TokenRefresher()
-			if err != nil {
-				return err
-			}
-			config.SetToken(newToken)
-			return nil
-		}
+		api.Refresh = refreshToken
 	}
 	return api
+}
+
+var (
+	refreshMu   sync.Mutex
+	refreshedAt time.Time
+)
+
+// refreshTokenWindow is how recent a refresh must be for a 401 to retry with its
+// token instead of refreshing again.
+const refreshTokenWindow = 30 * time.Second
+
+// refreshToken gets a new token after a 401. Parallel requests fail together when
+// a token expires, and the first refresh serves them all.
+func refreshToken(context.Context) error {
+	refreshMu.Lock()
+	defer refreshMu.Unlock()
+	if time.Since(refreshedAt) < refreshTokenWindow {
+		return nil
+	}
+	newToken, err := config.TokenRefresher()
+	if err != nil {
+		return err
+	}
+	config.SetToken(newToken)
+	refreshedAt = time.Now()
+	return nil
 }
 
 // sdkBeforeSend applies debug output, read-only mode and dry-run to each attempt.

@@ -39,8 +39,8 @@ func Do(req *Request) ([]byte, int, error) {
 // doWithHeaders is Do, also returning the final response's headers.
 func doWithHeaders(req *Request) ([]byte, int, http.Header, error) {
 	// Capture runs before read-only checks: it never writes to Webex, so a
-	// read-only login can propose changes.
-	if path := config.ChangesetPath(); path != "" && !readOnlyAllows(req.method, req.path) {
+	// read-only login can propose changes. A dry run records nothing either.
+	if path := config.ChangesetPath(); path != "" && !config.DryRun() && !readOnlyAllows(req.method, req.path) {
 		body, err := capture(req, path)
 		if err != nil {
 			return nil, 0, nil, err
@@ -98,14 +98,7 @@ func apiClient(req *Request, url string) *webexapi.Client {
 		},
 	}
 	if config.TokenRefresher != nil {
-		api.Refresh = func(context.Context) error {
-			newToken, err := config.TokenRefresher()
-			if err != nil {
-				return err
-			}
-			config.SetToken(newToken)
-			return nil
-		}
+		api.Refresh = refreshToken
 	}
 	return api
 }

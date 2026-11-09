@@ -264,6 +264,24 @@ func TestResourceSetBackToTheLiveValueWithdrawsOnlyThatChange(t *testing.T) {
 	}
 }
 
+// Some types cannot be read back from their item route (work types answer 406), so
+// the change set diffs against the object set already read.
+func TestResourceSetRecordsOnlyItsChangesWhenTheItemRouteCannotBeRead(t *testing.T) {
+	fake := fakeWebex(t)
+	fake.AddFault(fakeapi.Fault{Method: "GET", Path: "/team/team1$", Mode: fakeapi.Fail500NoCommit, Skip: 1})
+	path := filepath.Join(t.TempDir(), "proposal.changeset.json")
+	if _, err := runResource(t, "set", "cc_team", "team1", "name=zz-proposed", "--changeset", path); err != nil {
+		t.Fatal(err)
+	}
+	cs, err := changeset.Load(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if changes := cs.Operations[0].Changes; len(changes) != 1 || changes[0].Path != "name" || !changes[0].HasBefore {
+		t.Fatalf("changes = %+v", changes)
+	}
+}
+
 func TestResourceCreateRecordsTheBodyTheSDKWouldSend(t *testing.T) {
 	fake := fakeWebex(t)
 	for _, o := range fake.Objects("cc_desktop_layout") {

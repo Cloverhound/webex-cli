@@ -199,7 +199,7 @@ The CLI includes a built-in MCP server exposing these tools:
 | `webex_help` | — | Discover commands and flags |
 | `webex_usage` | — | View recent MCP command history |
 
-In read-only mode the server does not register `webex_write`. `webex_propose` and `webex_changeset` stay available, because they never write to Webex.
+In read-only mode the server does not register `webex_write`. `webex_propose` and `webex_changeset` stay available, because they never write to Webex. `webex_propose` accepts only write commands of the API areas and `resource`.
 
 **Claude Code / stdio clients** — no server process needed:
 ```bash

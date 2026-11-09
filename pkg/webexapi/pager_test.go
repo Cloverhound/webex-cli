@@ -238,6 +238,49 @@ func TestOffsetPagerFailsWithoutTheNamedArray(t *testing.T) {
 	}
 }
 
+// An endpoint that ignores the paging parameters and holds more than a page answers
+// every request with the same oversized page.
+func TestPagersFailRatherThanLoopOnARepeatedOversizedPage(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		if requests > 5 { // a pager that does not notice the repeat would loop forever
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprintf(w, `{"data":%s,"items":%s}`, items(0, 150), items(0, 150))
+	}))
+	defer srv.Close()
+
+	c := &Client{Token: staticToken("tok")}
+	for name, list := range map[string]func(func([]json.RawMessage) error) error{
+		"offset": func(v func([]json.RawMessage) error) error {
+			return c.ListOffset(context.Background(), srv.URL, "items", v)
+		},
+		"cc": func(v func([]json.RawMessage) error) error { return c.ListCC(context.Background(), srv.URL, v) },
+	} {
+		requests = 0
+		if _, err := collect(t, list); !errors.Is(err, ErrIncompleteList) || requests > 2 {
+			t.Errorf("%s: err = %v after %d requests", name, err, requests)
+		}
+	}
+}
+
+func TestOffsetPagerIgnoresNullFieldsWhenFindingTheArray(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, `{"objects":%s,"next":null}`, items(0, 3))
+	}))
+	defer srv.Close()
+
+	c := &Client{Token: staticToken("tok")}
+	got, err := collect(t, func(v func([]json.RawMessage) error) error {
+		return c.List(context.Background(), srv.URL, Paging{}, v)
+	})
+	if err != nil || len(got) != 3 {
+		t.Fatalf("got %d, err %v", len(got), err)
+	}
+}
+
 func TestOffsetPagerFailsWhenAFullPageRepeats(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		size, _ := strconv.Atoi(r.URL.Query().Get("max"))

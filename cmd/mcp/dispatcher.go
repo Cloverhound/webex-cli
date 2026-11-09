@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -32,6 +33,9 @@ var blockedPrefixes = []string{
 	"update",
 	"mcp",
 }
+
+// proposeAreas are the command groups whose writes a change set can record.
+var proposeAreas = []string{"admin", "calling", "cc", "device", "meetings", "messaging", "resource"}
 
 // dangerousChars are rejected in any command token to prevent shell-style injection.
 // exec.Command does not shell-eval, but these characters indicate misuse.
@@ -197,8 +201,12 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			)), nil
 		}
 
-		// Injection guard: reject tokens containing shell-special characters.
+		// Injection guard: reject tokens containing shell-special characters, and "--",
+		// after which the flags the server adds would be read as arguments.
 		for _, arg := range args {
+			if arg == "--" {
+				return mcplib.NewToolResultText("Error: command contains disallowed characters."), nil
+			}
 			for _, ch := range dangerousChars {
 				if strings.Contains(arg, ch) {
 					return mcplib.NewToolResultText(
@@ -218,6 +226,14 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 		case modePropose:
 			if strings.HasPrefix(commandPath(args), "changeset") {
 				return mcplib.NewToolResultText("Error: use the webex_changeset tool to manage the file."), nil
+			}
+			// Only API writes are recorded; anything else would run as it is, even on
+			// a read-only server, which offers this tool.
+			area, _, _ := strings.Cut(commandPath(args), " ")
+			if !slices.Contains(proposeAreas, area) || action == area || readonly.IsReadAction(action) {
+				return mcplib.NewToolResultText(fmt.Sprintf(
+					"Error: webex_propose records write commands of %s. Use webex_read for reads.", strings.Join(proposeAreas, ", "),
+				)), nil
 			}
 			path, errText := changesetPath(req.GetString("changeset", ""))
 			if errText != "" {
@@ -255,11 +271,15 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 	}
 }
 
+// executable is the CLI binary the tools run. Tests replace it: under go test
+// os.Executable is the test binary, which would run the tests again.
+var executable = os.Executable
+
 // runCLI runs the CLI binary with args, logs the call and returns its output.
 // allOutput adds stdout to a failure, for commands that report a failed check
 // on stdout.
 func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string, allOutput bool) *mcplib.CallToolResult {
-	exe, err := os.Executable()
+	exe, err := executable()
 	if err != nil {
 		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error())
 	}
@@ -409,7 +429,7 @@ func actionToken(args []string) string {
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	command := strings.TrimSpace(req.GetString("command", ""))
 
-	exe, err := os.Executable()
+	exe, err := executable()
 	if err != nil {
 		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
 	}

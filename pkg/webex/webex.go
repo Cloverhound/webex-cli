@@ -200,15 +200,24 @@ func (c *Client) listUnder(ctx context.Context, t resource.Type, location string
 		}
 		return nil
 	}
-	if t.Area == resource.ContactCenter {
-		err = c.API.ListCC(ctx, listURL, visit)
-	} else {
-		err = c.API.ListOffset(ctx, listURL, t.Routes.ArrayKey, visit)
-	}
-	if err != nil {
+	if err := c.listPages(ctx, t, listURL, visit); err != nil {
 		return nil, fmt.Errorf("listing %s: %w", t.Plural, err)
 	}
 	return c.resolve(ctx, t, items, known)
+}
+
+// listPages reads a type's list to its end. Outside Contact Center it pages with
+// start and max, unless the operation table records other parameters, Link headers
+// only, or none at all.
+func (c *Client) listPages(ctx context.Context, t resource.Type, listURL string, visit func([]json.RawMessage) error) error {
+	if t.Area == resource.ContactCenter {
+		return c.API.ListCC(ctx, listURL, visit)
+	}
+	p := webexapi.Paging{Start: "start", Size: "max", ArrayKey: t.Routes.ArrayKey}
+	if pg := t.Routes.List.Op.Paging; pg != nil && pg.Offset != nil {
+		p.Start, p.Size, p.First = pg.Offset.Start, pg.Offset.Size, pg.Offset.First
+	}
+	return c.API.List(ctx, listURL, p, visit)
 }
 
 // perLocationKey carries the location a per-location list was read from, for lists
@@ -346,12 +355,7 @@ func (c *Client) ListKeys(ctx context.Context, t resource.Type) ([]resource.Key,
 		}
 		return nil
 	}
-	if t.Area == resource.ContactCenter {
-		err = c.API.ListCC(ctx, listURL, visit)
-	} else {
-		err = c.API.ListOffset(ctx, listURL, t.Routes.ArrayKey, visit)
-	}
-	if err != nil {
+	if err = c.listPages(ctx, t, listURL, visit); err != nil {
 		return nil, fmt.Errorf("listing %s: %w", t.Plural, err)
 	}
 	return keys, nil

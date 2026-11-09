@@ -245,6 +245,66 @@ func TestCaptureRefusesARequestForAnotherOrg(t *testing.T) {
 	}
 }
 
+func TestCaptureRefusesAnotherOrgInAWebexPath(t *testing.T) {
+	setupCapture(t, nil)
+	req := NewRequest(config.CallingBaseURL(), "PUT", "/contacts/organizations/{orgid}/contacts/{contactId}")
+	req.PathParam("orgid", "99999999-8888-7777-6666-555555555555")
+	req.PathParam("contactId", "c1")
+	req.SetBodyRaw(`{"displayName":"x"}`)
+	if _, _, err := req.Do(); err == nil {
+		t.Error("recorded a Webex update for another org")
+	}
+}
+
+func TestCaptureBulkDeleteIsAnInvokeWithItsBody(t *testing.T) {
+	_, path := setupCapture(t, nil)
+	for _, number := range []string{"+15550100", "+15550101"} {
+		del := NewRequest(config.CallingBaseURL(), "DELETE", "/telephony/config/locations/{locationId}/numbers")
+		del.PathParam("locationId", "loc1")
+		del.SetBodyRaw(`{"phoneNumbers":["` + number + `"]}`)
+		if out := run(t, del); out["action"] != "invoke" {
+			t.Fatalf("output = %v", out)
+		}
+	}
+	cs, _ := changeset.Load(path)
+	if len(cs.Operations) != 2 || cs.Operations[1].Method != "DELETE" ||
+		!reflect.DeepEqual(cs.Operations[1].Body, map[string]any{"phoneNumbers": []any{"+15550101"}}) {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if p := changeset.Validate(cs); len(p.Errors) > 0 {
+		t.Errorf("errors = %v", p.Errors)
+	}
+}
+
+func TestCaptureDiffsAgainstTheObjectTheCallerRead(t *testing.T) {
+	_, path := setupCapture(t, nil) // the item route cannot be read
+	req := NewRequest(config.CcBaseURL(), "PUT", "/organization/{orgid}/work-type/{id}")
+	req.PathParam("orgid", testOrg)
+	req.PathParam("id", "w1")
+	req.SetBodyRaw(`{"name":"Wrap","description":"new"}`)
+	req.Current(map[string]any{"name": "Wrap", "description": "old"})
+	out := run(t, req)
+	if !reflect.DeepEqual(out["changes"], []any{"description"}) {
+		t.Fatalf("output = %v", out)
+	}
+	cs, _ := changeset.Load(path)
+	if c := cs.Operations[0].Changes[0]; !c.HasBefore || c.Before != "old" {
+		t.Errorf("change = %+v", c)
+	}
+}
+
+func TestDryRunWithAChangeSetRecordsNothing(t *testing.T) {
+	fake, path := setupCapture(t, map[string]string{
+		"/v1/telephony/config/locations/loc1/huntGroups/hg1": `{"name":"Desk"}`,
+	})
+	config.SetDryRun(true)
+	t.Cleanup(func() { config.SetDryRun(false) })
+	huntGroupUpdate(`{"name":"Front"}`).Do()
+	if _, err := changeset.Load(path); err == nil || fake.writes != 0 {
+		t.Errorf("dry run recorded or sent a change (writes %d)", fake.writes)
+	}
+}
+
 func TestCaptureRefusesContactCenterRoutesOutsideTheOrgPath(t *testing.T) {
 	setupCapture(t, nil)
 	patch := NewRequest(config.CcBaseURL(), "PATCH", "/{orgid}/project/{projectId}/v2/flows/{flowId}")

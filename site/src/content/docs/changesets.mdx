@@ -37,8 +37,9 @@ webex --changeset desk.changeset.json cc team create \
 - **Setting a field back:** a Webex Calling update, or `webex resource set`, that sets a field back to its current value withdraws the change recorded for it.
 - **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded. Fields it repeats from the current object leave earlier changes in place.
 - **Org:** a request for an org other than the change set's is refused.
-- **Other writes:** bulk saves, purges, and action endpoints are recorded as `invoke` operations, which an engine cannot review field by field.
-- **Not recorded:** file uploads, and Contact Center routes outside `/organization/{orgid}`, such as flow drafts.
+- **Deletes:** an update to an object the change set deletes is refused.
+- **Other writes:** bulk saves, purges, action endpoints, and deletes that name no single object (such as removing numbers from a location) are recorded as `invoke` operations with their body, which an engine cannot review field by field.
+- **Not recorded:** file uploads, and Contact Center routes outside `/organization/{orgid}`, such as flow drafts. With `--dry-run`, nothing is recorded: the request is printed instead.
 
 ## Commands
 
@@ -50,7 +51,7 @@ webex --changeset desk.changeset.json cc team create \
 | `webex changeset intent <file> <id> <summary> [op-id…]` | Adds or rewords a plain-language intent and assigns operations to it |
 | `webex changeset schema` | Prints the JSON Schema |
 
-The MCP server offers the same features through `webex_propose` and `webex_changeset`. Both are available in read-only mode.
+The MCP server offers the same features through `webex_propose` and `webex_changeset`. Both are available in read-only mode. `webex_propose` accepts only write commands of the API areas and `resource`.
 
 ## File format
 

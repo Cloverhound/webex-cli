@@ -77,9 +77,14 @@ func (cs *ChangeSet) ResolvePlaceholders(v any) (any, error) {
 
 // AddUpdate records field changes to an existing object. Changes to an object
 // already in the change set merge into its operation: the latest value wins and
-// the first precondition is kept. It returns the operation's ID.
-func (cs *ChangeSet) AddUpdate(target Target, changes []Change) string {
-	if i := cs.index(target.Key()); i >= 0 && cs.Operations[i].Action == Update {
+// the first precondition is kept. It returns the operation's ID, and fails for an
+// object the change set deletes.
+func (cs *ChangeSet) AddUpdate(target Target, changes []Change) (string, error) {
+	i := cs.index(target.Key())
+	if i >= 0 && cs.Operations[i].Action == Delete {
+		return "", fmt.Errorf("%s deletes this object, so it cannot also be updated", cs.Operations[i].ID)
+	}
+	if i >= 0 {
 		op := &cs.Operations[i]
 		for _, c := range changes {
 			mergeChange(op, c)
@@ -90,11 +95,11 @@ func (cs *ChangeSet) AddUpdate(target Target, changes []Change) string {
 		id := op.ID
 		// An update creates nothing, so nothing it moves past can refer to it.
 		_, _ = cs.moveAfter(i, cs.lastCreate(i, changes))
-		return id
+		return id, nil
 	}
 	op := Operation{ID: cs.nextID(), Action: Update, Target: target, Changes: changes}
 	cs.Operations = append(cs.Operations, op)
-	return op.ID
+	return op.ID, nil
 }
 
 func mergeChange(op *Operation, c Change) {
@@ -279,10 +284,12 @@ func refersTo(op Operation, handle string) bool {
 	return false
 }
 
-// index returns the index of the first operation other than a create on the object
-// key names, or -1.
+// index returns the index of the update or delete of the object key names, or -1.
+// A change set holds at most one of them per object.
 func (cs *ChangeSet) index(key string) int {
-	return slices.IndexFunc(cs.Operations, func(op Operation) bool { return op.Action != Create && op.Target.Key() == key })
+	return slices.IndexFunc(cs.Operations, func(op Operation) bool {
+		return (op.Action == Update || op.Action == Delete) && op.Target.Key() == key
+	})
 }
 
 func (cs *ChangeSet) create(handle string) *Operation {

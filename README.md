@@ -337,7 +337,7 @@ The server exposes 6 tools:
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex. `webex_propose` accepts only write commands of the API areas and `resource`.
 
 And 2 MCP resources:
 

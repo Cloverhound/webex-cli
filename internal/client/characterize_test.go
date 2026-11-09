@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
@@ -38,6 +39,7 @@ func resetClientConfig(t *testing.T) {
 	reset := func() {
 		config.SetToken("tok-1")
 		config.TokenRefresher = nil
+		refreshedAt = time.Time{}
 		config.SetMaxRetry(3)
 		config.SetMaxRetryTimer(0)
 		config.SetDryRun(false)

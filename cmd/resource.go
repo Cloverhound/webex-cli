@@ -157,7 +157,7 @@ var resourceSetCmd = &cobra.Command{
 		recording := config.ChangesetPath() != ""
 		if _, isNew := changeset.HandleOf(key.ID); isNew && recording {
 			// The object exists only in the change set, which folds this into its create.
-			return sendRaw(t.Routes.Update, key, t.PatchBody(changes))
+			return sendRaw(t.Routes.Update, key, t.PatchBody(changes), nil)
 		}
 		fresh, err := c.Read(ctx, t, key)
 		if err != nil {
@@ -189,7 +189,7 @@ var resourceSetCmd = &cobra.Command{
 			for _, c := range changeset.Leaves(t.PatchBody(changes)) {
 				sets = append(sets, c.Path)
 			}
-			return sendRaw(t.Routes.Update, key, body, sets...)
+			return sendRaw(t.Routes.Update, key, body, fresh.Raw, sets...)
 		}
 		if err := refuseReadOnly(); err != nil {
 			return err
@@ -231,7 +231,7 @@ var resourceCreateCmd = &cobra.Command{
 				return err
 			}
 			parent, _ := desired[t.ParentField].(string)
-			return sendRaw(t.Routes.Create, resource.Key{Parent: parent}, body)
+			return sendRaw(t.Routes.Create, resource.Key{Parent: parent}, body, nil)
 		}
 		if err := refuseReadOnly(); err != nil {
 			return err
@@ -266,7 +266,7 @@ var resourceDeleteCmd = &cobra.Command{
 			return err
 		}
 		if config.ChangesetPath() != "" || config.DryRun() {
-			return sendRaw(t.Routes.Delete, key, nil)
+			return sendRaw(t.Routes.Delete, key, nil, nil)
 		}
 		if err := refuseReadOnly(); err != nil {
 			return err
@@ -517,10 +517,12 @@ func firstItem(f resource.Field) string {
 }
 
 // sendRaw sends one write through the CLI's request path, so --changeset records
-// it and --dry-run prints it like any other write command. sets names the body
-// paths the write means to set (see client.Request.Sets).
-func sendRaw(r resource.Route, key resource.Key, body map[string]any, sets ...string) error {
+// it and --dry-run prints it like any other write command. current is the object as
+// read, if it was (see client.Request.Current), and sets names the body paths the
+// write means to set (see client.Request.Sets).
+func sendRaw(r resource.Route, key resource.Key, body, current map[string]any, sets ...string) error {
 	req := client.NewRequest(r.Op.Host.URL(config.Hosts()), r.Op.Method, r.Op.Path)
+	req.Current(current)
 	req.Sets(sets...)
 	for _, p := range r.Op.Params {
 		switch {

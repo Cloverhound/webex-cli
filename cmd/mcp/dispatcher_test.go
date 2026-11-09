@@ -1,10 +1,15 @@
 package mcp
 
 import (
+	"context"
+	"errors"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	_ "github.com/Cloverhound/webex-cli/cmd/calling"
+	_ "github.com/Cloverhound/webex-cli/cmd/cc"
+	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
 
@@ -56,6 +61,39 @@ func TestReadOnlyServerOmitsWriteTool(t *testing.T) {
 			if s.GetTool(name) == nil {
 				t.Errorf("readOnly=%v: %s missing", readOnly, name)
 			}
+		}
+	}
+}
+
+func propose(t *testing.T, command string) string {
+	t.Helper()
+	saved := executable
+	executable = func() (string, error) { return "", errors.New("test: the command was not refused") }
+	t.Cleanup(func() { executable = saved })
+	var req mcplib.CallToolRequest
+	req.Params.Arguments = map[string]any{"command": command, "changeset": filepath.Join(t.TempDir(), "p.changeset.json")}
+	res, err := makeDispatchHandler(nil, modePropose)(context.Background(), req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return res.Content[0].(mcplib.TextContent).Text
+}
+
+func TestProposeRefusesWhatItCannotRecord(t *testing.T) {
+	for _, command := range []string{
+		"cc team delete --id=team1 --", // flags after -- would be arguments, so nothing turns capture on
+		"auth token",
+		"auth set-folder-default someone",
+		"calling people list",
+		"calling", // resolves to no command
+	} {
+		if got := propose(t, command); !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
+			t.Errorf("%q was run: %s", command, got)
+		}
+	}
+	for _, command := range []string{"cc team delete --id=team1", "resource set cc_team team1 name=x"} {
+		if got := propose(t, command); !strings.Contains(got, "was not refused") {
+			t.Errorf("%q was refused: %s", command, got)
 		}
 	}
 }

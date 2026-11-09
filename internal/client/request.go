@@ -31,6 +31,8 @@ type Request struct {
 
 	// sets names the body paths the caller means to set; see Sets.
 	sets []string
+	// current is the object as the caller read it; see Current.
+	current map[string]any
 }
 
 // NewRequest creates a new request with the given method and path.
@@ -63,6 +65,13 @@ func (r *Request) QueryParam(key, value string) {
 // earlier change to it; the body's other fields only repeat the object as read.
 func (r *Request) Sets(paths ...string) {
 	r.sets = append(r.sets, paths...)
+}
+
+// Current gives the object a write changes, as the caller read it. A change set
+// diffs against it instead of reading the write's URL, which some types cannot be
+// read from (work types answer 406).
+func (r *Request) Current(object map[string]any) {
+	r.current = object
 }
 
 func (r *Request) Header(key, value string) {

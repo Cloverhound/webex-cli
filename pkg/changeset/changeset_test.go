@@ -81,8 +81,8 @@ func TestGetAndSet(t *testing.T) {
 
 func TestRepeatUpdatesMergeKeepingTheFirstBefore(t *testing.T) {
 	cs := New("org")
-	first := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "B", Before: "A", HasBefore: true}})
-	second := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "C", Before: "B", HasBefore: true}, {Path: "enabled", Value: false}})
+	first, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "B", Before: "A", HasBefore: true}})
+	second, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "C", Before: "B", HasBefore: true}, {Path: "enabled", Value: false}})
 	if first != second || len(cs.Operations) != 1 {
 		t.Fatalf("expected one operation, got %+v", cs.Operations)
 	}
@@ -94,8 +94,8 @@ func TestRepeatUpdatesMergeKeepingTheFirstBefore(t *testing.T) {
 
 func TestPlaceholderNamesDoNotSplitTargets(t *testing.T) {
 	cs := New("org")
-	a := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{id}", Params: map[string]string{"id": "t1"}}, []Change{{Path: "name", Value: "x"}})
-	b := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{teamId}", Params: map[string]string{"teamId": "t1"}}, []Change{{Path: "capacity", Value: 2}})
+	a, _ := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{id}", Params: map[string]string{"id": "t1"}}, []Change{{Path: "name", Value: "x"}})
+	b, _ := cs.AddUpdate(Target{API: APIContactCenter, Route: "/team/{teamId}", Params: map[string]string{"teamId": "t1"}}, []Change{{Path: "capacity", Value: 2}})
 	if a != b {
 		t.Errorf("same object recorded twice: %s, %s", a, b)
 	}
@@ -106,6 +106,27 @@ func TestDeleteReplacesUpdate(t *testing.T) {
 	cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}})
 	cs.AddDelete(huntGroup("hg1"))
 	if len(cs.Operations) != 1 || cs.Operations[0].Action != Delete || cs.Operations[0].Changes != nil {
+		t.Errorf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestAnUpdateToADeletedObjectIsRefused(t *testing.T) {
+	cs := New("org")
+	cs.AddDelete(huntGroup("hg1"))
+	if _, err := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}}); err == nil {
+		t.Error("recorded an update to an object the change set deletes")
+	}
+	if len(cs.Operations) != 1 {
+		t.Errorf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestAnUpdateMergesPastAnInvokeOnTheSameObject(t *testing.T) {
+	cs := New("org")
+	cs.AddInvoke("PUT", huntGroup("hg1"), "raw")
+	first, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}})
+	second, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "enabled", Value: true}})
+	if first != second || len(cs.Operations) != 2 {
 		t.Errorf("operations = %+v", cs.Operations)
 	}
 }
@@ -152,7 +173,7 @@ func TestAnUpdateThatComesToReferALaterCreateMovesAfterIt(t *testing.T) {
 	_, h := cs.AddCreate(Target{API: APIContactCenter, Route: "/team"}, map[string]any{"name": "T"})
 	cs.AddUpdate(Target{API: APIContactCenter, Route: "/skill/{id}", Params: map[string]string{"id": "s"}},
 		[]Change{{Path: "name", Value: "S"}})
-	id := cs.AddUpdate(ep, []Change{{Path: "teamIds", Value: []any{RefTo(h)}}})
+	id, _ := cs.AddUpdate(ep, []Change{{Path: "teamIds", Value: []any{RefTo(h)}}})
 
 	if order := []string{cs.Operations[0].ID, cs.Operations[1].ID, cs.Operations[2].ID}; id != "op-1" ||
 		!reflect.DeepEqual(order, []string{"op-2", "op-1", "op-3"}) {

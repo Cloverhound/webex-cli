@@ -54,8 +54,10 @@ func capture(req *Request, path string) ([]byte, error) {
 	}
 
 	// Read the object before taking the file lock, which other recorders wait on.
-	var current map[string]any
-	if !isNew && req.method != http.MethodPost {
+	current := req.current
+	if current != nil {
+		target.Display = label(current)
+	} else if !isNew && req.method != http.MethodPost {
 		if current, err = fetchCurrent(req); err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: could not read %s (%v); recording without preconditions\n", target.Path(), err)
 		} else {
@@ -95,7 +97,9 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 		id, err := cs.RemoveCreate(handle)
 		return map[string]any{"recorded": id, "action": "removed create"}, err
 
-	case method == http.MethodDelete:
+	// A DELETE to a route that names no object, such as removing numbers from a
+	// location, is a bulk action, recorded with its body below.
+	case method == http.MethodDelete && target.ID() != "":
 		return map[string]any{"recorded": cs.AddDelete(target), "action": changeset.Delete}, nil
 
 	case (method == http.MethodPut || method == http.MethodPatch) && isObject && isNew:
@@ -120,7 +124,10 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 			}
 			return map[string]any{"recorded": nil, "unchanged": true}, nil
 		}
-		id := cs.AddUpdate(target, changes)
+		id, err := cs.AddUpdate(target, changes)
+		if err != nil {
+			return nil, err
+		}
 		result := map[string]any{"recorded": id, "action": changeset.Update, "changes": paths(changes)}
 		if len(withdrawn) > 0 {
 			result["withdrawn"] = withdrawn
@@ -159,27 +166,25 @@ func captureTarget(req *Request) (changeset.Target, error) {
 		return t, fmt.Errorf("requests to %s cannot be recorded in a change set", req.baseURL)
 	}
 
-	// The change set's scope names the org, and its targets leave the org out.
-	var org string
+	// The change set's scope names the org, so every org the request names, in its
+	// path or query, must be that org.
+	for _, params := range []map[string]string{req.queryParams, req.pathParams} {
+		for k, v := range params {
+			if org := config.DecodeOrgID(v); strings.EqualFold(k, "orgId") && org != config.OrgID() {
+				return t, fmt.Errorf("this request is for org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
+			}
+		}
+	}
 	t.Route = req.path
 	if t.API == changeset.APIContactCenter {
 		m := ccOrgPrefix.FindStringSubmatch(t.Route)
 		if m == nil {
 			return t, fmt.Errorf("%s is not under /organization/{orgid}, so it cannot be recorded in a change set", req.path)
 		}
-		org = req.pathParams[m[1]]
 		t.Route = t.Route[len(m[0]):]
 		if t.Route == "" {
 			t.Route = "/"
 		}
-	}
-	for k, v := range req.queryParams {
-		if strings.EqualFold(k, "orgId") {
-			org = config.DecodeOrgID(v)
-		}
-	}
-	if org != "" && org != config.OrgID() {
-		return t, fmt.Errorf("this request is for org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
 	}
 	for _, name := range changeset.Placeholders(t.Route) {
 		if t.Params == nil {

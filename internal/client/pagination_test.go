@@ -112,6 +112,50 @@ func TestDoPaginatedAcceptsPlainArray(t *testing.T) {
 	}
 }
 
+func TestDoPaginatedPagesFullBareArrays(t *testing.T) {
+	var pages []string
+	srv := flowStore(250, &pages)
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/flows")
+	req.PageSizeParam("size")
+	body, _, err := req.DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 250 || got[249] != "f249" {
+		t.Fatalf("got %d items, want 250 ending in f249", len(got))
+	}
+	if fmt.Sprint(pages) != "[0 1 2]" {
+		t.Fatalf("requested pages %v, want [0 1 2]", pages)
+	}
+}
+
+func TestDoPaginatedStopsWhenABareArrayRepeats(t *testing.T) {
+	var hits int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		hits++
+		if hits > 3 { // stops a pager that does not notice the repeat
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		var data []map[string]string
+		for i := 0; i < 100; i++ {
+			data = append(data, map[string]string{"name": fmt.Sprintf("s%d", i)})
+		}
+		json.NewEncoder(w).Encode(data)
+	}))
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/skill").DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 100 || hits != 2 {
+		t.Fatalf("got %d items in %d requests, want 100 in 2", len(got), hits)
+	}
+}
+
 func TestDoPaginatedLeavesNonListResponseAlone(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{"id":"s1","name":"Language_EN-US"}`))
