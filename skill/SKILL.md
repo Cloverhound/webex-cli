@@ -89,7 +89,7 @@ webex resource delete cc_skill <id>
 
 - **A raw Contact Center `update` replaces the whole object.** `webex cc team update --id X --body '{"name":"New"}'` erases every field the body leaves out. `resource set` reads the object and sends it back whole with only the named fields changed.
 - Every `resource` write is read back, and the command fails if Webex did not keep the change. After an error that says the outcome is unknown, read the object before trying again; do not repeat the write blindly.
-- Field names come from `resource describe`, not the API's JSON names. Values outside a field's options, wrong kinds, and changes to fields fixed at creation are refused before anything is sent.
+- Field names come from `resource describe`, not the API's JSON names. Values outside a field's options, text that breaks a field's `pattern` (such as a global variable name with a hyphen), wrong kinds, and changes to fields fixed at creation are refused before anything is sent.
 - Only types marked `writable` in `list-types` can be changed this way. For others, use the area commands.
 - `--changeset` records `set`, `create` and `delete` instead of sending them; `--dry-run` prints the request.
 

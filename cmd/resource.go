@@ -144,7 +144,12 @@ var resourceSetCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		changes, err := fieldValues(cmd, t, args[2:], false)
+		recording := config.ChangesetPath() != ""
+		// An object that exists only in the change set takes this into its create, so
+		// fields fixed at creation can still be set.
+		_, isNew := changeset.HandleOf(args[1][strings.LastIndex(args[1], "/")+1:])
+		folds := isNew && recording
+		changes, err := fieldValues(cmd, t, args[2:], folds)
 		if err != nil {
 			return err
 		}
@@ -154,9 +159,7 @@ var resourceSetCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		recording := config.ChangesetPath() != ""
-		if _, isNew := changeset.HandleOf(key.ID); isNew && recording {
-			// The object exists only in the change set, which folds this into its create.
+		if folds {
 			return sendRaw(t.Routes.Update, key, t.PatchBody(changes), nil)
 		}
 		fresh, err := c.Read(ctx, t, key)
@@ -498,6 +501,9 @@ func parseValue(f resource.Field, text string) (any, error) {
 		if err := checkOption(f, text); err != nil {
 			return nil, err
 		}
+		if err := f.Check(text); err != nil {
+			return nil, err
+		}
 		return text, nil
 	}
 }
@@ -586,6 +592,8 @@ type fieldDescription struct {
 	Options      []string           `json:"options,omitempty"`
 	OptionSource string             `json:"optionSource,omitempty"`
 	Format       string             `json:"format,omitempty"`
+	Pattern      string             `json:"pattern,omitempty"`
+	PatternHint  string             `json:"patternHint,omitempty"`
 	Needs        string             `json:"needs,omitempty"`
 	Item         []fieldDescription `json:"item,omitempty"`
 }
@@ -594,7 +602,8 @@ func describeField(f resource.Field) fieldDescription {
 	kinds := map[resource.Kind]string{resource.String: "string", resource.Bool: "bool", resource.Int: "int",
 		resource.StringList: "list", resource.ObjectList: "rows"}
 	d := fieldDescription{Name: f.Name, Path: f.Path, Kind: kinds[f.Kind], Required: f.Required, Immutable: f.Immutable,
-		Ref: f.Ref, Options: f.Options, OptionSource: f.OptionSource, Format: f.Format, Needs: f.Needs}
+		Ref: f.Ref, Options: f.Options, OptionSource: f.OptionSource, Format: f.Format,
+		Pattern: f.Pattern, PatternHint: f.PatternHint, Needs: f.Needs}
 	for _, sub := range f.Item {
 		d.Item = append(d.Item, describeField(sub))
 	}

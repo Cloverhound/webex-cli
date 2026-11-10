@@ -20,6 +20,26 @@ var sample = Type{
 	CreateDefaults: map[string]any{"policy": map[string]any{"mode": "CIRCULAR"}, "agents": []any{}},
 }
 
+func TestCheckHoldsTextToTheWholePattern(t *testing.T) {
+	typ := Type{Title: "Variable", Fields: []Field{
+		{Name: "name", Path: "name", Pattern: `[a-z_]+`, PatternHint: "Only a-z and _ are allowed"},
+		{Name: "label", Path: "label"},
+	}}
+	if err := typ.Check(Values{"name": "ok_name", "label": "any thing!"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := typ.Check(Values{"name": ""}); err != nil {
+		t.Fatalf("empty text is Required's rule: %v", err)
+	}
+	err := typ.Check(Values{"name": "bad-name"})
+	if err == nil || err.Error() != `Variable name: "bad-name": Only a-z and _ are allowed` {
+		t.Fatalf("err = %v", err)
+	}
+	if typ.Check(Values{"name": "ok_name-"}) == nil {
+		t.Fatal("the pattern must match the whole text")
+	}
+}
+
 func TestProjectReadsNestedPathsAndParent(t *testing.T) {
 	raw := map[string]any{"name": "a", "enabled": true, "policy": map[string]any{"noAnswer": map[string]any{"rings": 5.0}}, "tags": []any{"x"}, "hidden": "kept"}
 	got := sample.Project("loc1", raw)

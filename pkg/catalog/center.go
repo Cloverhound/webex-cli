@@ -84,6 +84,11 @@ func unique(f resource.Field) resource.Field {
 	return f
 }
 
+func matching(f resource.Field, pattern, hint string) resource.Field {
+	f.Pattern, f.PatternHint = pattern, hint
+	return f
+}
+
 func needs(f resource.Field, other string) resource.Field {
 	f.Needs = other
 	return f
@@ -170,9 +175,11 @@ var ccSite = managedCC("cc_site", "Site", "Sites",
 	ccRoutes(webexops.CCSiteListV1, webexops.CCSiteCreate, webexops.CCSiteGet, webexops.CCSiteUpdate, webexops.CCSiteDelete),
 	append(basics(), required(ref("multimedia_profile_id", "multimediaProfileId", "cc_multimedia_profile"))))
 
+// Webex refuses an update that changes a skill's name.
 var ccSkill = managedCC("cc_skill", "Skill", "Skills",
 	ccRoutes(webexops.CCSkillListV1, webexops.CCSkillCreate, webexops.CCSkillGet, webexops.CCSkillUpdate, webexops.CCSkillDelete),
-	append(basics(), required(fixed(choice("skill_type", "skillType", skillTypes))),
+	append(append([]resource.Field{fixed(text("name", "name"))}, basics()[1:]...),
+		required(fixed(choice("skill_type", "skillType", skillTypes))),
 		number("service_level_threshold", "serviceLevelThreshold")))
 
 var ccSkillProfile = func() resource.Type {
@@ -406,9 +413,13 @@ var ccAuxiliaryCode = withDefaults(managedCC("cc_auxiliary_code", "Idle or Wrap-
 		flag("default_code", "defaultCode"), choice("burnout_inclusion", "burnoutInclusion", burnoutInclusion)),
 ), map[string]any{"defaultCode": false, "isSystemCode": false})
 
+// Webex refuses a global variable name longer than 80 characters or with any
+// character other than an ASCII letter, digit or underscore.
 var ccGlobalVariable = withDefaults(managedCC("cc_global_variable", "Global Variable", "Global Variables",
 	ccRoutes(webexops.CCGlobalVariablesList, webexops.CCGlobalVariablesCreate, webexops.CCGlobalVariablesGet, webexops.CCGlobalVariablesUpdate, webexops.CCGlobalVariablesDelete),
-	append(basics(),
+	append(append([]resource.Field{matching(text("name", "name"), `[A-Za-z0-9_]{1,80}`,
+		"Use only letters A–Z, digits and _, up to 80 characters")},
+		basics()[1:]...),
 		required(fixed(choice("variable_type", "variableType", variableTypes))), text("default_value", "defaultValue"),
 		text("desktop_label", "desktopLabel")),
 	fields(flag("agent_viewable", "agentViewable"), flag("agent_editable", "agentEditable"),

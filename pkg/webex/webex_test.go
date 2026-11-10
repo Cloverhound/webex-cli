@@ -134,6 +134,41 @@ func TestCreateReturnsKeyWithParent(t *testing.T) {
 	}
 }
 
+func TestAValueWebexWouldRefuseIsNeverSent(t *testing.T) {
+	c, fake := newClient(t)
+	typ := typeOf(t, "cc_global_variable")
+	_, err := c.Create(context.Background(), typ, resource.Values{"name": "zz-studio-live-var", "variable_type": "String"})
+	if err == nil || !strings.Contains(err.Error(), "Global Variable name") {
+		t.Fatalf("create err = %v", err)
+	}
+	err = c.Update(context.Background(), typ, resource.Key{ID: "gv1"}, map[string]any{"id": "gv1"}, resource.Values{"name": "zz bad"})
+	if err == nil || !strings.Contains(err.Error(), "Use only letters A–Z, digits and _") {
+		t.Fatalf("update err = %v", err)
+	}
+	if m := fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
+	}
+}
+
+func TestAnUpdateToAFixedFieldIsNeverSent(t *testing.T) {
+	c, fake := newClient(t)
+	typ := typeOf(t, "cc_skill")
+	got, err := c.Read(context.Background(), typ, resource.Key{ID: "skill1"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = c.Update(context.Background(), typ, got.Key, got.Raw, resource.Values{"name": "zz renamed"})
+	if err == nil || err.Error() != "Skill name: cannot be changed after the object is created" {
+		t.Fatalf("err = %v", err)
+	}
+	if Classify(err) != Rejected {
+		t.Fatal("a write refused before sending changed nothing")
+	}
+	if m := fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
+	}
+}
+
 func TestDeltaWriteSendsOnlyChangedFields(t *testing.T) {
 	c, fake := newClient(t)
 	typ := typeOf(t, "hunt_group")

@@ -161,6 +161,7 @@ func TestResourceSetRefusesWhatItCannotDoSafely(t *testing.T) {
 	}{
 		{[]string{"set", "cc_team", "team1", "nickname=x"}, `has no field "nickname"`},
 		{[]string{"set", "cc_skill", "skill1", "skill_type=TEXT"}, "cannot be changed after the object is created"},
+		{[]string{"set", "cc_skill", "skill1", "name=zz renamed"}, "cc_skill.name cannot be changed after the object is created"},
 		{[]string{"set", "cc_team", "team1", "team_type=BIG"}, `"BIG" is not one of AGENT, CAPACITY`},
 		{[]string{"set", "cc_team", "team1", "capacity=many"}, "want a whole number"},
 		{[]string{"set", "location", "loc1", "name=x"}, "Locations are read-only"},
@@ -170,6 +171,21 @@ func TestResourceSetRefusesWhatItCannotDoSafely(t *testing.T) {
 		if _, err := runResource(t, tc.args...); err == nil || !strings.Contains(err.Error(), tc.want) {
 			t.Errorf("%v: err = %v, want %q", tc.args, err, tc.want)
 		}
+	}
+}
+
+func TestResourceRefusesANameWebexWouldRefuseBeforeSendingIt(t *testing.T) {
+	fake := fakeWebex(t)
+	_, err := runResource(t, "create", "cc_global_variable", "name=zz-cli-var", "variable_type=String")
+	if err == nil || !strings.Contains(err.Error(), `name: "zz-cli-var": Use only letters A–Z, digits and _, up to 80 characters`) {
+		t.Fatalf("err = %v", err)
+	}
+	_, err = runResource(t, "create", "cc_global_variable", "--values", `{"name":"zz cli var","variable_type":"String"}`)
+	if err == nil || !strings.Contains(err.Error(), "Use only letters A–Z, digits and _") {
+		t.Fatalf("--values err = %v", err)
+	}
+	if m := fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
 	}
 }
 
@@ -241,6 +257,10 @@ func TestResourceSetOfARecordedCreateFoldsIntoIt(t *testing.T) {
 	}
 	if len(cs.Operations) != 1 || cs.Operations[0].Body.(map[string]any)["name"] != "zz-revised" {
 		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if _, err := runResource(t, "set", "cc_skill", created.ID, "name=zz-live"); err == nil ||
+		!strings.Contains(err.Error(), "cannot be changed after the object is created") {
+		t.Fatalf("outside the change set: %v", err)
 	}
 }
 

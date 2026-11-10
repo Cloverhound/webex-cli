@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -68,6 +69,11 @@ type Field struct {
 	// Format is the layout of a String holding a date or time. Webex stores these as
 	// text, not timestamps.
 	Format string
+
+	// Pattern is a regular expression that a String's whole text must match, where
+	// Webex limits the characters it accepts. PatternHint states the rule for people.
+	Pattern     string
+	PatternHint string
 
 	// Required fields must be set to create an object, because Webex has no default
 	// for them.
@@ -355,6 +361,59 @@ func (t Type) Field(name string) (Field, bool) {
 		}
 	}
 	return Field{}, false
+}
+
+// Check reports a value Webex would refuse because of the field's Pattern. Empty text
+// passes: whether a field may be empty is Required's rule.
+func (f Field) Check(v any) error {
+	s, ok := v.(string)
+	if f.Pattern == "" || !ok || s == "" {
+		return nil
+	}
+	re, err := regexp.Compile(`^(?:` + f.Pattern + `)$`)
+	if err != nil {
+		return fmt.Errorf("pattern %q: %w", f.Pattern, err)
+	}
+	if re.MatchString(s) {
+		return nil
+	}
+	if f.PatternHint != "" {
+		return fmt.Errorf("%q: %s", s, f.PatternHint)
+	}
+	return fmt.Errorf("%q does not match %s", s, f.Pattern)
+}
+
+// Invalid is a value refused before any request, so nothing was written.
+type Invalid struct {
+	Type, Field, Reason string
+}
+
+func (e *Invalid) Error() string { return fmt.Sprintf("%s %s: %s", e.Type, e.Field, e.Reason) }
+
+// Check reports the first value Webex would refuse, so a write can be stopped before
+// it is sent.
+func (t Type) Check(values Values) error {
+	for _, f := range t.Fields {
+		v, set := values[f.Name]
+		if !set {
+			continue
+		}
+		if err := f.Check(v); err != nil {
+			return &Invalid{t.Title, f.Name, err.Error()}
+		}
+	}
+	return nil
+}
+
+// CheckUpdate is Check for the fields an update changes, which also must not be
+// Immutable.
+func (t Type) CheckUpdate(delta Values) error {
+	for _, f := range t.Fields {
+		if _, set := delta[f.Name]; set && f.Immutable {
+			return &Invalid{t.Title, f.Name, "cannot be changed after the object is created"}
+		}
+	}
+	return t.Check(delta)
 }
 
 // Project extracts the modelled fields from a raw Webex object.

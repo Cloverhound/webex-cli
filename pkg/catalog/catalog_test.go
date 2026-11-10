@@ -156,6 +156,63 @@ func TestFormatsAreKnownAndOnText(t *testing.T) {
 	}
 }
 
+func TestPatternsCompileAndExplainThemselves(t *testing.T) {
+	for _, typ := range All() {
+		for _, f := range append(append([]resource.Field{}, typ.Fields...), itemFields(typ)...) {
+			if f.Pattern == "" && f.PatternHint == "" {
+				continue
+			}
+			if f.Kind != resource.String || f.Options != nil || f.PatternHint == "" {
+				t.Errorf("%s.%s: a pattern needs a plain text field and a hint", typ.Name, f.Name)
+			}
+			if err := f.Check("x"); err != nil && strings.HasPrefix(err.Error(), "pattern ") {
+				t.Errorf("%s.%s: %v", typ.Name, f.Name, err)
+			}
+		}
+	}
+}
+
+func TestGlobalVariableNamesTakeOnlyLettersDigitsAndUnderscores(t *testing.T) {
+	typ, _ := ByName("cc_global_variable")
+	name, _ := typ.Field("name")
+	// Accepted and refused by Webex on a live tenant.
+	for _, ok := range []string{"zz_live_Var2", "9zz", "_", "12345", strings.Repeat("a", 80)} {
+		if err := name.Check(ok); err != nil {
+			t.Errorf("%q: %v", ok, err)
+		}
+	}
+	for _, bad := range []string{"zz-live-var", "zz var", "zz.var", "zz_probé", "zz_π", "zz_日本", "zz_٣", strings.Repeat("a", 81)} {
+		if name.Check(bad) == nil {
+			t.Errorf("%q was allowed", bad)
+		}
+	}
+	for _, f := range []string{"description", "active"} {
+		if _, ok := typ.Field(f); !ok {
+			t.Errorf("lost %s", f)
+		}
+	}
+	other, _ := ByName("cc_skill")
+	if f, _ := other.Field("name"); f.Pattern != "" {
+		t.Fatal("the rule is the global variable's alone")
+	}
+}
+
+func TestASkillKeepsItsNameButATeamDoesNot(t *testing.T) {
+	skill, _ := ByName("cc_skill")
+	if f, ok := skill.Field("name"); !ok || f.Path != "name" || !f.Immutable {
+		t.Fatalf("skill name = %+v", f)
+	}
+	for _, f := range []string{"description", "active", "skill_type"} {
+		if _, ok := skill.Field(f); !ok {
+			t.Errorf("lost %s", f)
+		}
+	}
+	team, _ := ByName("cc_team")
+	if f, _ := team.Field("name"); f.Immutable {
+		t.Fatal("only the skill's name has been seen to be fixed")
+	}
+}
+
 func TestReferencesPointAtKnownTypes(t *testing.T) {
 	for _, typ := range All() {
 		for _, f := range append(append([]resource.Field{}, typ.Fields...), itemFields(typ)...) {

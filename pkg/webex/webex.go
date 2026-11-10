@@ -36,11 +36,16 @@ const (
 	Unknown
 )
 
-// Classify says what a write error means. Only a 4xx is a definite refusal: a 5xx or
-// a broken connection can follow a committed write.
+// Classify says what a write error means. Only a 4xx, or a value refused before it was
+// sent, is a definite refusal: a 5xx or a broken connection can follow a committed
+// write.
 func Classify(err error) Outcome {
 	var apiErr *webexapi.APIError
 	if errors.As(err, &apiErr) && apiErr.Status >= 400 && apiErr.Status < 500 {
+		return Rejected
+	}
+	var invalid *resource.Invalid
+	if errors.As(err, &invalid) {
 		return Rejected
 	}
 	return Unknown
@@ -467,6 +472,9 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 	if !t.Routes.Create.Defined() {
 		return resource.Key{}, fmt.Errorf("%s cannot be created through the API", t.Plural)
 	}
+	if err := t.Check(desired); err != nil {
+		return resource.Key{}, err
+	}
 	body, err := c.CreateBody(ctx, t, desired)
 	if err != nil {
 		return resource.Key{}, err
@@ -540,6 +548,9 @@ func matches(raw, want map[string]any) bool {
 func (c *Client) Update(ctx context.Context, t resource.Type, key resource.Key, raw map[string]any, delta resource.Values) error {
 	if !t.Routes.Update.Defined() {
 		return fmt.Errorf("%s cannot be changed through the API", t.Plural)
+	}
+	if err := t.CheckUpdate(delta); err != nil {
+		return err
 	}
 	body := t.PatchBody(delta)
 	if t.Write == resource.WriteFull {
