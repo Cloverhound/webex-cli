@@ -284,13 +284,18 @@ func (c *Client) locationIDs(ctx context.Context) ([]string, error) {
 }
 
 // IsUnavailable reports an error meaning this org or login cannot read a route, as
-// with a missing license, rather than a failed read.
+// with a missing license, rather than a failed read. Contact Center answers 412 for a
+// feature the org does not have, such as Generated Summaries.
 func IsUnavailable(err error) bool {
 	var apiErr *webexapi.APIError
 	if !errors.As(err, &apiErr) {
 		return false
 	}
-	return apiErr.Status == http.StatusBadRequest || apiErr.Status == http.StatusForbidden || apiErr.Status == http.StatusNotFound
+	switch apiErr.Status {
+	case http.StatusBadRequest, http.StatusForbidden, http.StatusNotFound, http.StatusPreconditionFailed:
+		return true
+	}
+	return false
 }
 
 // resolve turns list items into objects, keeping list order so snapshots are stable.

@@ -231,6 +231,9 @@ func TestPermissionErrorsAreUnavailableButServerErrorsAreNot(t *testing.T) {
 	if !IsUnavailable(&webexapi.APIError{Status: 403}) || !IsUnavailable(&webexapi.APIError{Status: 404}) {
 		t.Fatal("a 403 or 404 means the org cannot read this route")
 	}
+	if !IsUnavailable(&webexapi.APIError{Status: 412}) {
+		t.Fatal("a 412 means the feature is not available for this org")
+	}
 	if IsUnavailable(&webexapi.APIError{Status: 500}) || IsUnavailable(errors.New("reset")) || IsUnavailable(nil) {
 		t.Fatal("anything else is a failed read")
 	}
