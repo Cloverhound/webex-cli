@@ -24,7 +24,6 @@ export default defineConfig({
 					{ label: 'Messaging Commands', slug: 'messaging' },
 				]},
 				{ label: 'Integrations', items: [
-					{ label: 'Resource Commands', slug: 'resources' },
 					{ label: 'Coding Agent Skill', slug: 'agent-skill' },
 					{ label: 'Change Sets', slug: 'changesets' },
 					{ label: 'Go SDK', slug: 'sdk' },

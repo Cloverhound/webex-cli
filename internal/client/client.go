@@ -86,10 +86,7 @@ func apiClient(req *Request, url string) *webexapi.Client {
 			fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), attempt, max)
 		},
 		BeforeSend: func(httpReq *http.Request) error {
-			if err := beforeSend(req, url, httpReq); err != nil {
-				return err
-			}
-			return ccPacer().Wait(httpReq)
+			return beforeSend(req, url, httpReq)
 		},
 		AfterResponse: func(status, size int) {
 			if config.Debug() {
@@ -108,8 +105,8 @@ var (
 	pacer   *webexapi.Pacer
 )
 
-// ccPacer is shared by every request in the process, so paging and other bulk
-// work stay under the rate Contact Center refuses.
+// ccPacer is shared by every SDK request in the process, so its bulk reads stay
+// under the rate Contact Center refuses.
 func ccPacer() *webexapi.Pacer {
 	pacerMu.Lock()
 	defer pacerMu.Unlock()

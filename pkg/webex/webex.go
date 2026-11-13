@@ -475,7 +475,7 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 	if err := t.Check(desired); err != nil {
 		return resource.Key{}, err
 	}
-	body, err := c.CreateBody(ctx, t, desired)
+	body, err := c.createBody(ctx, t, desired)
 	if err != nil {
 		return resource.Key{}, err
 	}
@@ -497,9 +497,9 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 	return key, nil
 }
 
-// CreateBody returns the body Create sends for desired, including what the type
+// createBody returns the body Create sends for desired, including what the type
 // copies from an existing object.
-func (c *Client) CreateBody(ctx context.Context, t resource.Type, desired resource.Values) (map[string]any, error) {
+func (c *Client) createBody(ctx context.Context, t resource.Type, desired resource.Values) (map[string]any, error) {
 	body := t.CreateBody(desired)
 	if t.CopyOnCreate != nil {
 		if err := c.copyInto(ctx, t, body); err != nil {

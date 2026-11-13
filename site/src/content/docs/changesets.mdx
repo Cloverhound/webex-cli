@@ -34,7 +34,7 @@ webex --changeset desk.changeset.json cc team create \
   - An update to the new object folds into its create.
   - A delete withdraws the create.
 - **Repeat edits:** edits to one object merge into one operation. The latest value wins, and the first precondition is kept. A later create that an edit refers to moves ahead of the edit.
-- **Setting a field back:** a Webex Calling update, or `webex resource set`, that sets a field back to its current value withdraws the change recorded for it.
+- **Setting a field back:** a Webex Calling update that sets a field back to its current value withdraws the change recorded for it.
 - **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded. Fields it repeats from the current object leave earlier changes in place.
 - **Org:** a request for an org other than the change set's is refused, whether its path, query or body names it.
 - **Deletes:** an update to an object the change set deletes is refused.
@@ -52,7 +52,7 @@ webex --changeset desk.changeset.json cc team create \
 | `webex changeset intent <file> <id> <summary> [op-id…]` | Adds or rewords a plain-language intent and assigns operations to it |
 | `webex changeset schema` | Prints the JSON Schema |
 
-The MCP server offers the same features through `webex_propose` and `webex_changeset`. Both are available in read-only mode. `webex_propose` accepts only write commands of the API areas and `resource`.
+The MCP server offers the same features through `webex_propose` and `webex_changeset`. Both are available in read-only mode. `webex_propose` accepts only `calling` and `cc` write commands.
 
 ## File format
 

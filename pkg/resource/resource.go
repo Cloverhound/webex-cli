@@ -1,8 +1,8 @@
 // Package resource describes Webex object types as data: their fields, the JSON
 // paths those fields live at, and the operations that read and write them. Reading
-// and writing (package webex), the write protocol (package guard), the CLI's
-// resource commands and Webex Admin Studio all work from these definitions, so
-// adding a type means adding a definition, not new code paths.
+// and writing (package webex), the write protocol (package guard), change set
+// recording and Webex Admin Studio all work from these definitions, so adding a type
+// means adding a definition, not new code paths.
 //
 // Definitions hold API facts only. How a program presents a type, such as its
 // sidebar folder or form sections, belongs to that program.

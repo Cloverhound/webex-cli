@@ -363,23 +363,6 @@ func TestCaptureBulkDeleteIsAnInvokeWithItsBody(t *testing.T) {
 	}
 }
 
-func TestCaptureDiffsAgainstTheObjectTheCallerRead(t *testing.T) {
-	_, path := setupCapture(t, nil) // the item route cannot be read
-	req := NewRequest(config.CcBaseURL(), "PUT", "/organization/{orgid}/work-type/{id}")
-	req.PathParam("orgid", testOrg)
-	req.PathParam("id", "w1")
-	req.SetBodyRaw(`{"name":"Wrap","description":"new"}`)
-	req.Current(map[string]any{"name": "Wrap", "description": "old"})
-	out := run(t, req)
-	if !reflect.DeepEqual(out["changes"], []any{"description"}) {
-		t.Fatalf("output = %v", out)
-	}
-	cs, _ := changeset.Load(path)
-	if c := cs.Operations[0].Changes[0]; !c.HasBefore || c.Before != "old" {
-		t.Errorf("change = %+v", c)
-	}
-}
-
 func TestDryRunWithAChangeSetRecordsNothing(t *testing.T) {
 	fake, path := setupCapture(t, map[string]string{
 		"/v1/telephony/config/locations/loc1/huntGroups/hg1": `{"name":"Desk"}`,
@@ -430,12 +413,11 @@ func TestCaptureWholeObjectPutKeepsEarlierChanges(t *testing.T) {
 	_, path := setupCapture(t, map[string]string{
 		"/organization/" + testOrg + "/team/t1": `{"name":"Desk","capacity":2}`,
 	})
-	put := func(body string, sets ...string) {
+	put := func(body string) {
 		req := NewRequest(config.CcBaseURL(), "PUT", "/organization/{orgid}/team/{id}")
 		req.PathParam("orgid", testOrg)
 		req.PathParam("id", "t1")
 		req.SetBodyRaw(body)
-		req.Sets(sets...)
 		run(t, req)
 	}
 	put(`{"name":"Front","capacity":2}`)
@@ -443,12 +425,6 @@ func TestCaptureWholeObjectPutKeepsEarlierChanges(t *testing.T) {
 	cs, _ := changeset.Load(path)
 	if got := paths(cs.Operations[0].Changes); !reflect.DeepEqual(got, []string{"name", "capacity"}) {
 		t.Fatalf("changes = %v", got)
-	}
-
-	put(`{"name":"Desk","capacity":4}`, "name")
-	cs, _ = changeset.Load(path)
-	if got := paths(cs.Operations[0].Changes); !reflect.DeepEqual(got, []string{"capacity"}) {
-		t.Fatalf("changes after setting name back = %v", got)
 	}
 }
 

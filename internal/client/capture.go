@@ -61,10 +61,8 @@ func capture(req *Request, path string) ([]byte, error) {
 	}
 
 	// Read the object before taking the file lock, which other recorders wait on.
-	current := req.current
-	if current != nil {
-		target.Display = label(current)
-	} else if !isNew && req.method != http.MethodPost {
+	var current map[string]any
+	if !isNew && req.method != http.MethodPost {
 		if current, err = fetchCurrent(req); err != nil {
 			fmt.Fprintf(os.Stderr, "Warning: could not read %s (%v); recording without preconditions\n", target.Path(), err)
 		} else {
@@ -81,7 +79,7 @@ func capture(req *Request, path string) ([]byte, error) {
 		if err != nil {
 			return err
 		}
-		result, err = record(cs, req.method, target, resolved, current, handle, isNew, req.sets)
+		result, err = record(cs, req.method, target, resolved, current, handle, isNew)
 		if err == nil {
 			result["changeset"] = path
 		}
@@ -93,10 +91,9 @@ func capture(req *Request, path string) ([]byte, error) {
 	return json.Marshal(result)
 }
 
-// record adds one write to cs. sets names the body paths the write means to set, as
-// Request.Sets does.
+// record adds one write to cs.
 func record(cs *changeset.ChangeSet, method string, target changeset.Target, body any, current map[string]any,
-	handle string, isNew bool, sets []string) (map[string]any, error) {
+	handle string, isNew bool) (map[string]any, error) {
 	fields, isObject := body.(map[string]any)
 
 	switch {
@@ -123,9 +120,8 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 			// Webex API bodies carry only the fields being set, unlike Contact Center's
 			// whole-object PUTs.
 			if target.API == changeset.APIWebex {
-				sets = append(sets, paths(changeset.Leaves(fields))...)
+				withdrawn = cs.Withdraw(target, unchangedPaths(paths(changeset.Leaves(fields)), changes))
 			}
-			withdrawn = cs.Withdraw(target, unchangedPaths(sets, changes))
 		}
 		if len(changes) == 0 {
 			if len(withdrawn) > 0 {

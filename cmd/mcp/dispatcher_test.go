@@ -86,12 +86,14 @@ func TestProposeRefusesWhatItCannotRecord(t *testing.T) {
 		"auth set-folder-default someone",
 		"calling people list",
 		"calling", // resolves to no command
+		"resource set cc_team team1 name=x",
+		"admin people update --person-id=p1", // no type Studio applies lives outside calling and cc
 	} {
 		if got := propose(t, command); !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
 			t.Errorf("%q was run: %s", command, got)
 		}
 	}
-	for _, command := range []string{"cc team delete --id=team1", "resource set cc_team team1 name=x"} {
+	for _, command := range []string{"cc team delete --id=team1", "calling hunt-group update --location-id=l1 --hunt-group-id=h1"} {
 		if got := propose(t, command); !strings.Contains(got, "was not refused") {
 			t.Errorf("%q was refused: %s", command, got)
 		}

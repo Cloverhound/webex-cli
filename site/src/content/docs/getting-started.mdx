@@ -92,7 +92,7 @@ webex messaging <resource> <action> [flags]   # Webex Messaging APIs
 | `--region <region>` | Data region for region-specific hosts (Detailed Call History) |
 | `--cc-region <dc>` | Contact Center data center: `us1` (default), `eu1`, `eu2`, `anz1`, `ca1`, `jp1`, `sg1` |
 
-To change an object without erasing the fields you leave out, use the [resource commands](/webex-cli/resources/).
+A Contact Center update replaces the whole object: fields the body leaves out are cleared. Get the object first and send the full body back with your changes.
 
 ## Admin Examples
 

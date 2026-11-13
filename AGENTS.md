@@ -90,7 +90,6 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/auth.go` — Auth subcommand (status, list, switch, set-org, clear-org)
 - `cmd/login.go` / `cmd/logout.go` — OAuth PKCE and device login
 - `cmd/mcp.go` / `cmd/mcp/` — MCP serve/stop, tools, resources, usage log
-- `cmd/resource.go` — `webex resource`: objects by type through the SDK catalog, with guarded writes
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts

@@ -178,7 +178,7 @@ webex auth token               # Print the access token
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
 
-`webex auth status`, `auth list`, and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
+`webex auth list` and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
 
 ### Headless and Unattended Use
 
@@ -255,31 +255,7 @@ webex cc users list --output csv > users.csv
 | `--region us\|ca\|eu\|eun\|in\|au` | Data region for region-specific hosts (Detailed Call History) |
 | `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1` | Contact Center data center, which selects the Contact Center and AI Agent Studio hosts (default `us1`; also `$WEBEX_CC_REGION` or `webex config set cc-region`) |
 
-Contact Center requests in one run are spaced to 15 a second, below the rate Webex refuses, so paging and bulk work do not stall on 429s.
-
-## Resource Commands
-
-`webex resource` reads and changes Webex objects by type, using a catalog of what each type's fields are, where they live in the API's JSON, and how a write must be sent:
-
-```bash
-webex resource list-types                   # types, and which can be written
-webex resource describe cc_queue            # fields, kinds, options, and the API commands used
-webex resource list cc_team                 # every object, with fields named
-webex resource get hunt_group <id>          # one object (--raw adds the API's own JSON)
-webex resource set cc_queue <id> max_time_in_queue=900 recording_permitted=true
-webex resource set cc_team <id> --values '{"name":"Front Desk","capacity":4}'
-webex resource create cc_skill name=zz-test skill_type=BOOLEAN
-webex resource delete cc_skill <id>
-```
-
-Writes are safer than the raw API commands:
-
-- **Only the named fields change.** A Contact Center PUT replaces the whole object, so `cc team update` with a partial body erases the fields it leaves out. `resource set` reads the object first and sends it back whole with only the named fields changed.
-- **Every write is read back.** Webex can accept a write and change nothing; the command fails if the result is not what was asked.
-- **Nothing is retried after a failure that may have committed**, such as a 5xx or a dropped connection, and the error says the outcome is unknown.
-- Values are checked against the catalog: unknown fields, wrong kinds, values outside a field's options, and changes to fields that are fixed after creation are refused before anything is sent.
-
-Writes work on types proven on a live tenant (`writable` in `list-types`); the rest are read-only. With `--changeset`, `set`, `create`, and `delete` are recorded instead of sent, and `--dry-run` prints them. A type with a parent, such as a hunt group in a location, takes `<parent>/<id>`; a bare ID is looked up.
+A Contact Center update (`PUT`) replaces the whole object: fields the body leaves out are cleared. Get the object first and send the full body back with your changes.
 
 ## Change Sets
 
@@ -337,7 +313,7 @@ The server exposes 6 tools:
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex. `webex_propose` accepts only write commands of the API areas and `resource`.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex. `webex_propose` accepts only `calling` and `cc` write commands.
 
 And 2 MCP resources:
 
@@ -346,7 +322,7 @@ And 2 MCP resources:
 | `webex://commands` | JSON array of all available CLI commands with short descriptions |
 | `webex://usage` | Last 50 raw lines of the usage log |
 
-Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added. The tool descriptions point agents at [`resource set`](#resource-commands) for changing objects, so they do not erase fields with a partial Contact Center update.
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added. The `webex_write` description warns that a Contact Center update replaces the whole object, so agents send the full body.
 
 Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
 
