@@ -36,9 +36,9 @@ webex --changeset desk.changeset.json cc team create \
 - **Repeat edits:** edits to one object merge into one operation. The latest value wins, and the first precondition is kept. A later create that an edit refers to moves ahead of the edit.
 - **Setting a field back:** a Webex Calling update, or `webex resource set`, that sets a field back to its current value withdraws the change recorded for it.
 - **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded. Fields it repeats from the current object leave earlier changes in place.
-- **Org:** a request for an org other than the change set's is refused.
+- **Org:** a request for an org other than the change set's is refused, whether its path, query or body names it.
 - **Deletes:** an update to an object the change set deletes is refused.
-- **Other writes:** bulk saves, purges, action endpoints, and deletes that name no single object (such as removing numbers from a location) are recorded as `invoke` operations with their body, which an engine cannot review field by field. A POST counts as a create only when the API also has a route to one object under it; a POST such as answering a call or adding access codes is an `invoke`.
+- **Other writes:** bulk saves, purges, action endpoints, deletes that name no single object (such as removing numbers from a location), and deletes with a body (such as a recording's reason) are recorded as `invoke` operations with their body, which an engine cannot review field by field. A POST counts as a create only when the API also has a route to one object under it; a POST such as answering a call or adding access codes is an `invoke`.
 - **Files:** a new change set file can be read only by its owner, because it can hold credentials that a write sends. Saving keeps the mode of an existing file.
 - **Not recorded:** file uploads, and Contact Center routes outside `/organization/{orgid}`, such as flow drafts. With `--dry-run`, nothing is recorded: the request is printed instead.
 
