@@ -9,8 +9,6 @@
 package resource
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -306,42 +304,6 @@ type Copy struct {
 type Key struct {
 	Parent string `json:"parent,omitempty"`
 	ID     string `json:"id"`
-}
-
-// ImportID is the string Terraform import uses for this object.
-func (k Key) ImportID() string {
-	if k.Parent != "" {
-		return k.Parent + "/" + k.ID
-	}
-	return k.ID
-}
-
-// ParseImportID reverses Key.ImportID for a Type.
-func (t Type) ParseImportID(s string) (Key, error) {
-	if t.ParentField == "" {
-		return Key{ID: s}, nil
-	}
-	parent, id, ok := strings.Cut(s, "/")
-	if !ok || parent == "" || id == "" {
-		return Key{}, fmt.Errorf("import ID %q must be <parent>/<id>", s)
-	}
-	return Key{Parent: parent, ID: id}, nil
-}
-
-// TerraformType is the type's resource name in Terraform config, as Webex Admin
-// Studio writes it.
-func (t Type) TerraformType() string { return "webex_" + t.Name }
-
-// ResourceName derives the Terraform name from the Webex ID, so a rename in Webex is
-// an edit to the same resource and never a replacement.
-func ResourceName(id string) string {
-	sum := sha256.Sum256([]byte(id))
-	return "id_" + hex.EncodeToString(sum[:6])
-}
-
-// Address is the full Terraform address for an object of this Type.
-func (t Type) Address(id string) string {
-	return t.TerraformType() + "." + ResourceName(id)
 }
 
 // FieldNames lists the Type's field names in definition order.

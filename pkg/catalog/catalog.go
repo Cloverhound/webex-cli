@@ -169,13 +169,3 @@ func ByName(name string) (resource.Type, error) {
 	}
 	return resource.Type{}, fmt.Errorf("unknown object type %q", name)
 }
-
-// ByTerraformType finds a type by its name in Terraform config.
-func ByTerraformType(name string) (resource.Type, error) {
-	for _, t := range All() {
-		if t.TerraformType() == name {
-			return t, nil
-		}
-	}
-	return resource.Type{}, fmt.Errorf("unknown resource type %q", name)
-}

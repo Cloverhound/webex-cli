@@ -226,39 +226,6 @@ func TestReferencesPointAtKnownTypes(t *testing.T) {
 	}
 }
 
-// Single references to managed objects become Terraform references, so they must not
-// form a cycle. List references stay literal IDs and are exempt.
-func TestSingleReferencesHaveNoCycle(t *testing.T) {
-	edges := map[string][]string{}
-	for _, typ := range Managed() {
-		for _, f := range typ.Fields {
-			if f.Ref != "" && f.Kind == resource.String {
-				edges[typ.Name] = append(edges[typ.Name], f.Ref)
-			}
-		}
-	}
-	const visiting, done = 1, 2
-	state := map[string]int{}
-	var visit func(name string, path []string)
-	visit = func(name string, path []string) {
-		switch state[name] {
-		case visiting:
-			t.Errorf("reference cycle: %s", strings.Join(append(path, name), " → "))
-			return
-		case done:
-			return
-		}
-		state[name] = visiting
-		for _, next := range edges[name] {
-			visit(next, append(path, name))
-		}
-		state[name] = done
-	}
-	for name := range edges {
-		visit(name, nil)
-	}
-}
-
 func itemFields(typ resource.Type) []resource.Field {
 	var out []resource.Field
 	for _, f := range typ.Fields {

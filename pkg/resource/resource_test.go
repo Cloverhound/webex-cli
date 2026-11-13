@@ -104,32 +104,6 @@ func TestChangedKeepsListOrder(t *testing.T) {
 	}
 }
 
-func TestImportIDRoundTrip(t *testing.T) {
-	key := Key{Parent: "loc1", ID: "abc"}
-	got, err := sample.ParseImportID(key.ImportID())
-	if err != nil || got != key {
-		t.Fatalf("got %v err %v", got, err)
-	}
-	if _, err := sample.ParseImportID("noslash"); err == nil {
-		t.Fatal("expected an error")
-	}
-	flat := Type{}
-	got, err = flat.ParseImportID("abc")
-	if err != nil || got != (Key{ID: "abc"}) {
-		t.Fatalf("got %v err %v", got, err)
-	}
-}
-
-func TestAddressIsStableAndValidHCL(t *testing.T) {
-	a := sample.Address("Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVA")
-	if a != sample.Address("Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVA") {
-		t.Fatal("address must be deterministic")
-	}
-	if ResourceName("a")[:3] != "id_" || ResourceName("a") == ResourceName("b") {
-		t.Fatalf("names = %s %s", ResourceName("a"), ResourceName("b"))
-	}
-}
-
 var withRows = Type{
 	Name: "profile",
 	Fields: []Field{
