@@ -43,6 +43,15 @@ func capture(req *Request, path string) ([]byte, error) {
 			return nil, fmt.Errorf("the request body is not JSON: %w", err)
 		}
 	}
+	// A body can name the org too, as a person's create does.
+	if fields, ok := body.(map[string]any); ok {
+		for k, v := range fields {
+			s, isText := v.(string)
+			if org := config.DecodeOrgID(s); isText && s != "" && (strings.EqualFold(k, "orgId") || strings.EqualFold(k, "organizationId")) && org != config.OrgID() {
+				return nil, fmt.Errorf("the request body names org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
+			}
+		}
+	}
 
 	handle, isNew := changeset.HandleOf(target.ID())
 	for name, value := range target.Params {
@@ -96,8 +105,10 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 		return map[string]any{"recorded": id, "action": "removed create"}, err
 
 	// A DELETE to a route that names no object, such as removing numbers from a
-	// location, is a bulk action, recorded with its body below.
-	case method == http.MethodDelete && target.ID() != "":
+	// location, is a bulk action, and a DELETE with a body, such as a recording's
+	// reason, carries more than a delete records. Both are recorded with their body
+	// below.
+	case method == http.MethodDelete && target.ID() != "" && body == nil:
 		return map[string]any{"recorded": cs.AddDelete(target), "action": changeset.Delete}, nil
 
 	case (method == http.MethodPut || method == http.MethodPatch) && isObject && isNew:

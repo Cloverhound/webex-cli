@@ -281,6 +281,25 @@ func TestOffsetPagerIgnoresNullFieldsWhenFindingTheArray(t *testing.T) {
 	}
 }
 
+func TestPagersFailOnANullList(t *testing.T) {
+	for name, body := range map[string]string{"bare": `null`, "named": `{"items":null}`} {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, body) }))
+		c := &Client{Token: staticToken("tok")}
+		lists := map[string]func(func([]json.RawMessage) error) error{
+			"offset": func(v func([]json.RawMessage) error) error { return c.List(context.Background(), srv.URL, Paging{}, v) },
+		}
+		if name == "bare" {
+			lists["cc"] = func(v func([]json.RawMessage) error) error { return c.ListCC(context.Background(), srv.URL, v) }
+		}
+		for pager, list := range lists {
+			if _, err := collect(t, list); !errors.Is(err, ErrIncompleteList) {
+				t.Errorf("%s pager, %s null: err = %v", pager, name, err)
+			}
+		}
+		srv.Close()
+	}
+}
+
 func TestOffsetPagerFailsWhenAFullPageRepeats(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		size, _ := strconv.Atoi(r.URL.Query().Get("max"))

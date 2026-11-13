@@ -74,6 +74,33 @@ func failureKind(t *testing.T, err error) Kind {
 	return f.Kind
 }
 
+// stopDuringRead stands in for another write failing while this one reads.
+type stopDuringRead struct {
+	API
+	guard *Guard
+}
+
+func (s stopDuringRead) Read(ctx context.Context, t resource.Type, key resource.Key) (webex.Object, error) {
+	s.guard.stop("another write failed")
+	return s.API.Read(ctx, t, key)
+}
+
+func TestAFailureDuringTheReadStopsTheWrite(t *testing.T) {
+	f := newFixture(t)
+	prior := f.prior(t)
+	f.guard.API = stopDuringRead{f.api, f.guard}
+	if _, err := f.guard.Update(context.Background(), f.hg, hg1, prior, with(prior, "no_answer_rings", 7)); failureKind(t, err) != Stopped {
+		t.Fatalf("update err = %v", err)
+	}
+	f.guard.stopped = ""
+	if err := f.guard.Delete(context.Background(), f.hg, hg1, prior); failureKind(t, err) != Stopped {
+		t.Fatalf("delete err = %v", err)
+	}
+	if m := f.fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
+	}
+}
+
 func TestUpdateWritesOnlyChangedFieldsAndVerifies(t *testing.T) {
 	f := newFixture(t)
 	prior := f.prior(t)

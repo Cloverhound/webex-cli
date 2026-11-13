@@ -266,6 +266,39 @@ func TestCapturePostToARouteWithNoItemsIsAnInvoke(t *testing.T) {
 	}
 }
 
+func TestCaptureChecksTheOrgABodyNames(t *testing.T) {
+	_, path := setupCapture(t, nil)
+	person := func(org string) *Request {
+		req := NewRequest(config.CallingBaseURL(), "POST", "/people")
+		req.SetBodyRaw(`{"emails":["a@example.com"],"orgId":"` + org + `"}`)
+		return req
+	}
+	if _, _, err := person(config.EncodeOrgID("99999999-2222-3333-4444-555555555555")).Do(); err == nil {
+		t.Fatal("a body naming another org was recorded")
+	}
+	if out := run(t, person(config.EncodeOrgID(testOrg))); out["action"] != "create" {
+		t.Fatalf("the change set's own org was refused: %v", out)
+	}
+	if cs, _ := changeset.Load(path); len(cs.Operations) != 1 {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+}
+
+// Some deletes carry a reason in their body, which the delete action has no room for.
+func TestCaptureDeleteWithABodyIsAnInvoke(t *testing.T) {
+	_, path := setupCapture(t, nil)
+	del := NewRequest(config.CallingBaseURL(), "DELETE", "/convergedRecordings/{recordingId}")
+	del.PathParam("recordingId", "r1")
+	del.SetBodyRaw(`{"reason":"audit","comment":"duplicate"}`)
+	if out := run(t, del); out["action"] != "invoke" {
+		t.Fatalf("output = %v", out)
+	}
+	cs, _ := changeset.Load(path)
+	if op := cs.Operations[0]; op.Method != "DELETE" || op.Body.(map[string]any)["comment"] != "duplicate" {
+		t.Fatalf("operation = %+v", op)
+	}
+}
+
 func TestCaptureRefusesAnotherOrgsFile(t *testing.T) {
 	_, path := setupCapture(t, map[string]string{
 		"/v1/telephony/config/locations/loc1/huntGroups/hg1": `{"name":"Desk"}`,

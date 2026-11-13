@@ -95,8 +95,19 @@ func (c *Client) listCC(ctx context.Context, listURL string, p Paging, visit fun
 	}
 }
 
+// array decodes a JSON array. null decodes into a nil slice without error, but
+// reading it as no items would make a failed page look like the end of the list.
+func array(raw []byte) ([]json.RawMessage, error) {
+	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return nil, fmt.Errorf("null, not an array")
+	}
+	var items []json.RawMessage
+	err := json.Unmarshal(raw, &items)
+	return items, err
+}
+
 func ccPage(body []byte) (items []json.RawMessage, totalPages int, err error) {
-	if err := json.Unmarshal(body, &items); err == nil {
+	if items, err := array(body); err == nil {
 		return items, 0, nil
 	}
 	var result struct {
@@ -193,7 +204,7 @@ func repeats(items []json.RawMessage, previousFirst json.RawMessage) bool {
 // pageArray finds a page's items. total is SCIM's totalResults when present.
 func pageArray(body []byte, key string) (items []json.RawMessage, total int, err error) {
 	if key == "" {
-		if json.Unmarshal(body, &items) == nil {
+		if items, err := array(body); err == nil {
 			return items, 0, nil
 		}
 	}
@@ -237,8 +248,8 @@ func namedArray(result map[string]json.RawMessage, key string) ([]json.RawMessag
 	if !ok {
 		return nil, fmt.Errorf("response has no %q array", key)
 	}
-	var items []json.RawMessage
-	if err := json.Unmarshal(raw, &items); err != nil {
+	items, err := array(raw)
+	if err != nil {
 		return nil, fmt.Errorf("%q is not an array: %w", key, err)
 	}
 	return items, nil

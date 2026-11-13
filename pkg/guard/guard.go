@@ -81,15 +81,24 @@ func (g *Guard) admit(ctx context.Context) error {
 	if !g.Writable {
 		return &Failure{Refused, "Refused: this run may not write to Webex", "writes happen only during a reviewed apply"}
 	}
+	if err := g.halted(); err != nil {
+		return err
+	}
+	if err := ctx.Err(); err != nil {
+		g.stop("the run was cancelled")
+		return &Failure{Stopped, "Stopped: the run was cancelled", err.Error()}
+	}
+	return nil
+}
+
+// halted reports a stop. Writes check it again just before sending, because another
+// write can fail while this one reads.
+func (g *Guard) halted() error {
 	g.mu.Lock()
 	reason := g.stopped
 	g.mu.Unlock()
 	if reason != "" {
 		return &Failure{Stopped, "Stopped: an earlier failure blocks further writes", reason}
-	}
-	if err := ctx.Err(); err != nil {
-		g.stop("the run was cancelled")
-		return &Failure{Stopped, "Stopped: the run was cancelled", err.Error()}
 	}
 	return nil
 }
@@ -137,6 +146,9 @@ func (g *Guard) Update(ctx context.Context, t resource.Type, key resource.Key, p
 }
 
 func (g *Guard) write(ctx context.Context, t resource.Type, key resource.Key, raw map[string]any, baseline, planned, delta resource.Values) (resource.Values, error) {
+	if err := g.halted(); err != nil {
+		return baseline, err
+	}
 	if err := g.API.Update(ctx, t, key, raw, delta); err != nil {
 		actual := g.observe(t, key, baseline)
 		return actual, g.fail(writeFailure(err, "The write", observed(actual, baseline, planned, t)))
@@ -255,6 +267,9 @@ func (g *Guard) Delete(ctx context.Context, t resource.Type, key resource.Key, p
 	}
 	if d := resource.Changed(fresh.Values, prior, t.FieldNames()); len(d) > 0 {
 		return g.fail(&Failure{Conflict, "Conflict: this object changed after the plan was made", strings.Join(d, ", ")})
+	}
+	if err := g.halted(); err != nil {
+		return err
 	}
 	if err := g.API.Delete(ctx, t, key); err != nil {
 		return g.fail(writeFailure(err, "The delete", ""))
