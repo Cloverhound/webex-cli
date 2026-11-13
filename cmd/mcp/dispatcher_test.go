@@ -145,6 +145,37 @@ func TestChangesetToolBuildsEachAction(t *testing.T) {
 	}
 }
 
+// The change set path reaches the CLI in its environment, which no token of the
+// command can override or swallow, so a propose can never become a live write.
+func TestProposeAlwaysRecords(t *testing.T) {
+	script := filepath.Join(t.TempDir(), "echo-env")
+	if err := os.WriteFile(script, []byte("#!/bin/sh\necho \"changeset=$WEBEX_CHANGESET args=$*\"\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	saved := executable
+	executable = func() (string, error) { return script, nil }
+	t.Cleanup(func() { executable = saved })
+	path := filepath.Join(t.TempDir(), "p.changeset.json")
+	run := func(command string) string {
+		var req mcplib.CallToolRequest
+		req.Params.Arguments = map[string]any{"command": command, "changeset": path, "flags": `{"id":"team1"}`}
+		res, err := makeDispatchHandler(nil, modePropose)(context.Background(), req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return res.Content[0].(mcplib.TextContent).Text
+	}
+	// A trailing value flag would swallow a --changeset flag added after it.
+	if got := run("cc team delete --output"); !strings.Contains(got, "changeset="+path+" ") {
+		t.Errorf("the change set was not in the environment: %s", got)
+	}
+	for _, command := range []string{"cc team delete --changeset=", "cc team delete --changeset=/tmp/other.json", "cc team delete --changeset"} {
+		if got := run(command); !strings.HasPrefix(got, "Error:") {
+			t.Errorf("%q ran: %s", command, got)
+		}
+	}
+}
+
 func TestChangesetPath(t *testing.T) {
 	if _, errText := changesetPath("notes.txt"); errText == "" {
 		t.Error("accepted a path that is not .json")

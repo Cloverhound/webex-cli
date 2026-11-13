@@ -222,6 +222,7 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			}
 		}
 
+		var changesetEnv string
 		switch action := actionToken(args); mode {
 		case modeRead:
 			if action != "" && !readonly.IsReadAction(action) {
@@ -245,7 +246,16 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			if errText != "" {
 				return mcplib.NewToolResultText(errText), nil
 			}
-			args = append(args, "--changeset="+path)
+			// The path goes in the environment, not a flag: a trailing value flag could
+			// swallow a flag, and a --changeset in the command would override it, either
+			// of which would send the write. Only an empty flag falls back to the
+			// environment, so the command may not name one at all.
+			for _, arg := range args {
+				if strings.HasPrefix(strings.TrimLeft(arg, "-"), "changeset") && strings.HasPrefix(arg, "-") {
+					return mcplib.NewToolResultText("Error: the changeset parameter names the file; do not pass --changeset."), nil
+				}
+			}
+			changesetEnv = "WEBEX_CHANGESET=" + path
 		}
 
 		// Force JSON output.
@@ -273,7 +283,10 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			}
 		}
 
-		return runCLI(ctx, lg, toolName, command, flagsStr, args, mode == modePropose), nil
+		if changesetEnv != "" {
+			return runCLI(ctx, lg, toolName, command, flagsStr, args, true, changesetEnv), nil
+		}
+		return runCLI(ctx, lg, toolName, command, flagsStr, args, false), nil
 	}
 }
 
@@ -283,8 +296,8 @@ var executable = os.Executable
 
 // runCLI runs the CLI binary with args, logs the call and returns its output.
 // allOutput adds stdout to a failure, for commands that report a failed check
-// on stdout.
-func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string, allOutput bool) *mcplib.CallToolResult {
+// on stdout. env adds NAME=value variables to the child's environment.
+func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string, allOutput bool, env ...string) *mcplib.CallToolResult {
 	exe, err := executable()
 	if err != nil {
 		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error())
@@ -296,6 +309,9 @@ func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr st
 	var stdout, stderr bytes.Buffer
 	//nolint:gosec // args are validated by the callers; exec.Command does not invoke a shell
 	c := exec.CommandContext(runCtx, exe, args...)
+	if len(env) > 0 {
+		c.Env = append(os.Environ(), env...)
+	}
 	c.Stdout = &stdout
 	c.Stderr = &stderr
 
