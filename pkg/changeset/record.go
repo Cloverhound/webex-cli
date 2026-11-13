@@ -80,7 +80,7 @@ func (cs *ChangeSet) ResolvePlaceholders(v any) (any, error) {
 // the first precondition is kept. It returns the operation's ID, and fails for an
 // object the change set deletes.
 func (cs *ChangeSet) AddUpdate(target Target, changes []Change) (string, error) {
-	i := cs.index(target.Key())
+	i := cs.index(target)
 	if i >= 0 && cs.Operations[i].Action == Delete {
 		return "", fmt.Errorf("%s deletes this object, so it cannot also be updated", cs.Operations[i].ID)
 	}
@@ -190,7 +190,7 @@ func (cs *ChangeSet) moveAfter(i, last int) (int, error) {
 // fields set back to the value Webex holds. An update left with no changes is
 // removed. It returns the paths it removed.
 func (cs *ChangeSet) Withdraw(target Target, paths []string) []string {
-	i := cs.index(target.Key())
+	i := cs.index(target)
 	if i < 0 || cs.Operations[i].Action != Update {
 		return nil
 	}
@@ -217,10 +217,10 @@ func (cs *ChangeSet) Withdraw(target Target, paths []string) []string {
 // AddDelete records deleting an existing object. It replaces any update to
 // that object, whose changes would no longer mean anything.
 func (cs *ChangeSet) AddDelete(target Target) string {
-	key := target.Key()
+	key := cs.keyOf(target)
 	for i := range cs.Operations {
 		op := &cs.Operations[i]
-		if op.Target.Key() != key {
+		if op.Action == Create || op.Action == Invoke || cs.keyOf(op.Target) != key {
 			continue
 		}
 		if op.Action == Delete {
@@ -261,11 +261,12 @@ func (cs *ChangeSet) RemoveCreate(handle string) (string, error) {
 	return id, nil
 }
 
-// AddInvoke records a write with no field-level meaning.
-func (cs *ChangeSet) AddInvoke(method string, target Target, body any) string {
-	op := Operation{ID: cs.nextID(), Action: Invoke, Method: method, Target: target, Body: body}
-	cs.Operations = append(cs.Operations, op)
-	return op.ID
+// CreateOf returns the pending create with handle.
+func (cs *ChangeSet) CreateOf(handle string) (Operation, bool) {
+	if op := cs.create(handle); op != nil {
+		return *op, true
+	}
+	return Operation{}, false
 }
 
 func refersTo(op Operation, handle string) bool {
@@ -284,11 +285,12 @@ func refersTo(op Operation, handle string) bool {
 	return false
 }
 
-// index returns the index of the update or delete of the object key names, or -1.
-// A change set holds at most one of them per object.
-func (cs *ChangeSet) index(key string) int {
+// index returns the index of the update or delete of the object target names, or
+// -1. A change set holds at most one of them per object.
+func (cs *ChangeSet) index(target Target) int {
+	key := cs.keyOf(target)
 	return slices.IndexFunc(cs.Operations, func(op Operation) bool {
-		return (op.Action == Update || op.Action == Delete) && op.Target.Key() == key
+		return (op.Action == Update || op.Action == Delete) && cs.keyOf(op.Target) == key
 	})
 }
 

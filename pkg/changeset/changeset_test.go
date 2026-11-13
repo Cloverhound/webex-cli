@@ -154,11 +154,28 @@ func TestAnUpdateToADeletedObjectIsRefused(t *testing.T) {
 
 func TestAnUpdateMergesPastAnInvokeOnTheSameObject(t *testing.T) {
 	cs := New("org")
-	cs.AddInvoke("PUT", huntGroup("hg1"), "raw")
+	cs.Operations = append(cs.Operations, Operation{ID: "op-1", Action: Invoke, Method: "PUT", Target: huntGroup("hg1"), Body: "raw"})
 	first, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}})
 	second, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "enabled", Value: true}})
 	if first != second || len(cs.Operations) != 2 {
 		t.Errorf("operations = %+v", cs.Operations)
+	}
+}
+
+// A queue is updated and deleted through different routes; an identity that knows
+// that makes the delete replace the pending update.
+func TestAnIdentityJoinsTwoRoutesToOneObject(t *testing.T) {
+	cs := New("org")
+	cs.SetIdentity(func(t Target) string { return t.Params["id"] })
+	update := Target{API: APIContactCenter, Route: "/v2/contact-service-queue/{id}", Params: map[string]string{"id": "q1"}}
+	del := Target{API: APIContactCenter, Route: "/contact-service-queue/{id}", Params: map[string]string{"id": "q1"}}
+	cs.AddUpdate(update, []Change{{Path: "name", Value: "x"}})
+	cs.AddDelete(del)
+	if len(cs.Operations) != 1 || cs.Operations[0].Action != Delete {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+	if _, err := cs.AddUpdate(update, []Change{{Path: "name", Value: "y"}}); err == nil {
+		t.Error("an update to a deleted queue was recorded")
 	}
 }
 

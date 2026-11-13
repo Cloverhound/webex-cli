@@ -1,13 +1,13 @@
 package client
 
 import (
-	"bytes"
-	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 
-	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/catalog"
 	"github.com/Cloverhound/webex-cli/pkg/changeset"
+	"github.com/Cloverhound/webex-cli/pkg/resource"
+	"github.com/Cloverhound/webex-cli/pkg/webex"
 )
 
 // Drift is a precondition that no longer holds.
@@ -31,16 +31,17 @@ func (r LiveReport) OK() bool {
 }
 
 // CheckLive re-reads every object the change set updates or deletes and
-// reports preconditions that have drifted and objects that are gone.
+// reports preconditions that have drifted and objects that are gone. A delete keeps
+// no preconditions, so for one it reports only whether the object is gone.
 func CheckLive(cs *changeset.ChangeSet) LiveReport {
 	var report LiveReport
 	for _, op := range cs.Operations {
 		if op.Action != changeset.Update && op.Action != changeset.Delete {
 			continue
 		}
-		live, status, err := readTarget(op.Target)
+		live, err := readTarget(op.Target)
 		switch {
-		case status == http.StatusNotFound:
+		case errors.Is(err, webex.ErrNotFound):
 			report.Missing = append(report.Missing, op.ID)
 			continue
 		case err != nil:
@@ -60,33 +61,17 @@ func CheckLive(cs *changeset.ChangeSet) LiveReport {
 	return report
 }
 
-func readTarget(t changeset.Target) (map[string]any, int, error) {
-	var req *Request
-	switch t.API {
-	case changeset.APIWebex:
-		req = NewRequest(config.CallingBaseURL(), http.MethodGet, t.Route)
-		req.QueryParam("orgId", config.OrgIDBase64())
-	case changeset.APIContactCenter:
-		req = NewRequest(config.CcBaseURL(), http.MethodGet, "/organization/{orgid}"+t.Route)
-		req.PathParam("orgid", config.OrgID())
-	default:
-		return nil, 0, fmt.Errorf("unknown api %q", t.API)
+// readTarget reads the object a target names, through its catalog type, as
+// recording does.
+func readTarget(t changeset.Target) (map[string]any, error) {
+	area := resource.Calling
+	if t.API == changeset.APIContactCenter {
+		area = resource.ContactCenter
 	}
-	for k, v := range t.Params {
-		req.PathParam(k, v)
+	typ, r, ok := catalog.ResolveTarget(area, t.Route, false)
+	if !ok {
+		return nil, fmt.Errorf("%s %s is not a route of a type Webex Admin Studio knows", t.API, t.Route)
 	}
-	for k, v := range t.Query {
-		req.QueryParam(k, v)
-	}
-	data, status, err := Do(req)
-	if err != nil {
-		return nil, status, err
-	}
-	var live map[string]any
-	d := json.NewDecoder(bytes.NewReader(data))
-	d.UseNumber()
-	if err := d.Decode(&live); err != nil {
-		return nil, status, fmt.Errorf("the response is not a JSON object")
-	}
-	return live, status, nil
+	o, err := readCurrentObject(typ, catalog.KeyOf(r, t.Route, t.Params))
+	return o.Raw, err
 }

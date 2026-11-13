@@ -44,6 +44,21 @@ type ChangeSet struct {
 	Intents    []Intent    `json:"intents,omitempty"`
 	Operations []Operation `json:"operations"`
 	Review     *Review     `json:"review,omitempty"`
+
+	// identity names the object a target addresses; see SetIdentity.
+	identity func(Target) string
+}
+
+// SetIdentity sets how operations find the object they address. Without it, a
+// target's Key is its identity, which splits an object written through two routes,
+// as a Contact Center queue's update and delete are.
+func (cs *ChangeSet) SetIdentity(f func(Target) string) { cs.identity = f }
+
+func (cs *ChangeSet) keyOf(t Target) string {
+	if cs.identity != nil {
+		return cs.identity(t)
+	}
+	return t.Key()
 }
 
 type Metadata struct {

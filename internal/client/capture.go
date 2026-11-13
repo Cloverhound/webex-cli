@@ -1,19 +1,20 @@
 package client
 
 import (
-	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
-	"os"
 	"regexp"
 	"slices"
 	"strings"
-	"sync"
+	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/catalog"
 	"github.com/Cloverhound/webex-cli/pkg/changeset"
+	"github.com/Cloverhound/webex-cli/pkg/resource"
+	"github.com/Cloverhound/webex-cli/pkg/webex"
 	"github.com/Cloverhound/webex-cli/pkg/webexops"
 )
 
@@ -21,14 +22,23 @@ import (
 // Change set routes are relative to it.
 var ccOrgPrefix = regexp.MustCompile(`^/organization/\{([^}]+)\}`)
 
+// readTimeout bounds the read of the object a write changes.
+const readTimeout = 30 * time.Second
+
 // capture records a write request in the change set at path instead of sending
-// it, and returns the JSON the command prints.
+// it, and returns the JSON the command prints. Only creates, updates and deletes of
+// the types Webex Admin Studio applies are recorded, because Studio refuses a whole
+// file over one operation it cannot apply.
 func capture(req *Request, path string) ([]byte, error) {
 	if req.bodySummary != "" {
 		return nil, errors.New("file uploads cannot be recorded in a change set")
 	}
 	if req.rawURL != "" {
 		return nil, errors.New("this request cannot be recorded in a change set")
+	}
+	w, err := captureWrite(req)
+	if err != nil {
+		return nil, err
 	}
 	target, err := captureTarget(req)
 	if err != nil {
@@ -43,31 +53,36 @@ func capture(req *Request, path string) ([]byte, error) {
 			return nil, fmt.Errorf("the request body is not JSON: %w", err)
 		}
 	}
+	fields, isObject := body.(map[string]any)
+	switch {
+	case w.Action != catalog.Delete && !isObject:
+		return nil, fmt.Errorf("a %s %s needs its fields as a JSON object in --body", w.Type.Title, w.Action)
+	case w.Action == catalog.Delete && body != nil:
+		return nil, errors.New("a delete with a body cannot be recorded in a change set")
+	}
 	// A body can name the org too, as a person's create does.
-	if fields, ok := body.(map[string]any); ok {
-		for k, v := range fields {
-			s, isText := v.(string)
-			if org := config.DecodeOrgID(s); isText && s != "" && (strings.EqualFold(k, "orgId") || strings.EqualFold(k, "organizationId")) && org != config.OrgID() {
-				return nil, fmt.Errorf("the request body names org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
-			}
+	for k, v := range fields {
+		s, isText := v.(string)
+		if org := config.DecodeOrgID(s); isText && s != "" && (strings.EqualFold(k, "orgId") || strings.EqualFold(k, "organizationId")) && org != config.OrgID() {
+			return nil, fmt.Errorf("the request body names org %s, but change sets record changes for the --organization org (%s)", org, config.OrgID())
 		}
 	}
 
-	handle, isNew := changeset.HandleOf(target.ID())
+	key := resource.Key{Parent: req.pathParams[w.Route.Parent], ID: req.pathParams[w.Route.ID]}
+	handle, isNew := changeset.HandleOf(key.ID)
 	for name, value := range target.Params {
-		if _, ok := changeset.HandleOf(value); ok && (!isNew || value != target.ID()) {
+		if _, ok := changeset.HandleOf(value); ok && (!isNew || value != key.ID) {
 			return nil, fmt.Errorf("--%s %s: requests under an object this change set creates cannot be recorded", name, value)
 		}
 	}
 
 	// Read the object before taking the file lock, which other recorders wait on.
-	var current map[string]any
-	if !isNew && req.method != http.MethodPost {
-		if current, err = fetchCurrent(req); err != nil {
-			fmt.Fprintf(os.Stderr, "Warning: could not read %s (%v); recording without preconditions\n", target.Path(), err)
-		} else {
-			target.Display = label(current)
+	var current webex.Object
+	if !isNew && w.Action != catalog.Create {
+		if current, err = readCurrent(w.Type, key); err != nil {
+			return nil, err
 		}
+		target.Display = current.Label
 	}
 
 	var result map[string]any
@@ -75,11 +90,17 @@ func capture(req *Request, path string) ([]byte, error) {
 		if org := config.OrgID(); org != "" && cs.Scope.OrgID != org {
 			return fmt.Errorf("%s is for org %s, but this command is for org %s", path, cs.Scope.OrgID, org)
 		}
+		cs.SetIdentity(objectIdentity)
 		resolved, err := cs.ResolvePlaceholders(body)
 		if err != nil {
 			return err
 		}
-		result, err = record(cs, req.method, target, resolved, current, handle, isNew)
+		if isNew {
+			if err := sameCreate(cs, handle, w, key); err != nil {
+				return err
+			}
+		}
+		result, err = record(cs, w, target, resolved, current.Raw, handle, isNew)
 		if err == nil {
 			result["changeset"] = path
 		}
@@ -91,66 +112,135 @@ func capture(req *Request, path string) ([]byte, error) {
 	return json.Marshal(result)
 }
 
-// record adds one write to cs.
-func record(cs *changeset.ChangeSet, method string, target changeset.Target, body any, current map[string]any,
+// captureWrite finds the catalog type and action a request writes, and refuses
+// what Studio cannot apply.
+func captureWrite(req *Request) (catalog.Write, error) {
+	var host webexops.Host
+	switch req.baseURL {
+	case config.CallingBaseURL():
+		host = webexops.HostWebex
+	case config.CcBaseURL():
+		host = webexops.HostCC
+	default:
+		return catalog.Write{}, fmt.Errorf("requests to %s cannot be recorded in a change set", req.baseURL)
+	}
+	w, ok := catalog.WriteFor(host, req.method, req.path)
+	switch {
+	case !ok || !w.Type.Managed:
+		return w, fmt.Errorf("%s %s is not a create, update or delete of a type Webex Admin Studio can apply, so it cannot be recorded; see 'webex changeset types'", req.method, req.path)
+	case w.Action == catalog.Create && w.Type.NoCreate:
+		return w, fmt.Errorf("%s cannot be created in a change set", w.Type.Plural)
+	case w.Action == catalog.Delete && w.Type.NoDelete:
+		return w, fmt.Errorf("%s cannot be deleted in a change set", w.Type.Plural)
+	}
+	return w, nil
+}
+
+// readCurrent reads the object a write changes, through the catalog's reader, which
+// knows each type's read route, including types read by filter.
+func readCurrent(t resource.Type, key resource.Key) (webex.Object, error) {
+	o, err := readCurrentObject(t, key)
+	switch {
+	case errors.Is(err, webex.ErrNotFound):
+		return o, fmt.Errorf("%s %s is not in Webex, so nothing was recorded", t.Title, key.ID)
+	case err != nil:
+		return o, fmt.Errorf("reading %s %s: %w; nothing was recorded", t.Title, key.ID, err)
+	}
+	return o, nil
+}
+
+func readCurrentObject(t resource.Type, key resource.Key) (webex.Object, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), readTimeout)
+	defer cancel()
+	c := &webex.Client{API: SDK(), Hosts: config.Hosts(), OrgUUID: config.OrgID(), OrgID: config.OrgIDBase64()}
+	return c.Read(ctx, t, key)
+}
+
+// sameCreate checks that a new:<handle> ID names a pending create of the type the
+// request writes, under the same parent.
+func sameCreate(cs *changeset.ChangeSet, handle string, w catalog.Write, key resource.Key) error {
+	op, ok := cs.CreateOf(handle)
+	if !ok {
+		return fmt.Errorf("%s%s does not match an object created in this change set", changeset.NewIDPrefix, handle)
+	}
+	create := w.Type.Routes.Create
+	if changeset.NormalizeRoute(op.Target.Route) != changeset.NormalizeRoute(create.Template()) {
+		return fmt.Errorf("%s%s is not a new %s", changeset.NewIDPrefix, handle, w.Type.Title)
+	}
+	if create.Parent != "" && op.Target.Params[create.Parent] != key.Parent {
+		return fmt.Errorf("%s%s is created under %s, not %s", changeset.NewIDPrefix, handle, op.Target.Params[create.Parent], key.Parent)
+	}
+	return nil
+}
+
+// objectIdentity names the object a target addresses by its catalog type and key,
+// so writes to one object through different routes merge.
+func objectIdentity(t changeset.Target) string {
+	area := resource.Calling
+	if t.API == changeset.APIContactCenter {
+		area = resource.ContactCenter
+	}
+	typ, r, ok := catalog.ResolveTarget(area, t.Route, false)
+	if !ok {
+		return t.Key()
+	}
+	key := catalog.KeyOf(r, t.Route, t.Params)
+	return typ.Name + "\x00" + key.Parent + "\x00" + key.ID
+}
+
+// record adds one write to cs. current is the object as Webex holds it, for an
+// update or delete of an existing object.
+func record(cs *changeset.ChangeSet, w catalog.Write, target changeset.Target, body any, current map[string]any,
 	handle string, isNew bool) (map[string]any, error) {
-	fields, isObject := body.(map[string]any)
+	fields, _ := body.(map[string]any)
 
 	switch {
-	case method == http.MethodDelete && isNew:
+	case w.Action == catalog.Delete && isNew:
 		id, err := cs.RemoveCreate(handle)
 		return map[string]any{"recorded": id, "action": "removed create"}, err
 
-	// A DELETE to a route that names no object, such as removing numbers from a
-	// location, is a bulk action, and a DELETE with a body, such as a recording's
-	// reason, carries more than a delete records. Both are recorded with their body
-	// below.
-	case method == http.MethodDelete && target.ID() != "" && body == nil:
+	case w.Action == catalog.Delete:
 		return map[string]any{"recorded": cs.AddDelete(target), "action": changeset.Delete}, nil
 
-	case (method == http.MethodPut || method == http.MethodPatch) && isObject && isNew:
+	case w.Action == catalog.Update && isNew:
 		id, err := cs.UpdateCreate(handle, changeset.Leaves(fields))
 		return map[string]any{"recorded": id, "action": changeset.Create, "id": changeset.NewIDPrefix + handle}, err
 
-	case (method == http.MethodPut || method == http.MethodPatch) && isObject:
-		changes := changeset.Leaves(fields)
+	case w.Action == catalog.Update:
+		owned, ignored := w.Type.Split(fields)
+		changes := changeset.Diff(current, owned)
 		var withdrawn []string
-		if current != nil {
-			changes = changeset.Diff(current, fields)
-			// Webex API bodies carry only the fields being set, unlike Contact Center's
-			// whole-object PUTs.
-			if target.API == changeset.APIWebex {
-				withdrawn = cs.Withdraw(target, unchangedPaths(paths(changeset.Leaves(fields)), changes))
-			}
+		// A body that holds only the fields being set can set one back, which withdraws
+		// its pending change. A whole-object body repeats every field, so it cannot.
+		if w.Type.Write != resource.WriteFull {
+			withdrawn = cs.Withdraw(target, unchangedPaths(paths(changeset.Leaves(owned)), changes))
+		}
+		result := map[string]any{"recorded": nil}
+		if len(ignored) > 0 {
+			result["ignored"] = ignored
+		}
+		if len(withdrawn) > 0 {
+			result["withdrawn"] = withdrawn
 		}
 		if len(changes) == 0 {
-			if len(withdrawn) > 0 {
-				return map[string]any{"recorded": nil, "withdrawn": withdrawn}, nil
+			if len(withdrawn) == 0 {
+				result["unchanged"] = true
 			}
-			return map[string]any{"recorded": nil, "unchanged": true}, nil
+			return result, nil
 		}
 		id, err := cs.AddUpdate(target, changes)
 		if err != nil {
 			return nil, err
 		}
-		result := map[string]any{"recorded": id, "action": changeset.Update, "changes": paths(changes)}
-		if len(withdrawn) > 0 {
-			result["withdrawn"] = withdrawn
-		}
+		result["recorded"], result["action"], result["changes"] = id, changeset.Update, paths(changes)
 		return result, nil
-
-	case method == http.MethodPost && isObject && isCollection(target):
-		if target.Display == "" {
-			target.Display = label(fields)
-		}
-		id, handle := cs.AddCreate(target, fields)
-		return map[string]any{"recorded": id, "action": changeset.Create, "id": changeset.NewIDPrefix + handle}, nil
 	}
 
-	if isNew {
-		return nil, fmt.Errorf("%s %s cannot be recorded against an object this change set creates", method, target.Route)
+	if target.Display == "" {
+		target.Display = label(fields)
 	}
-	return map[string]any{"recorded": cs.AddInvoke(method, target, body), "action": changeset.Invoke}, nil
+	id, handle := cs.AddCreate(target, fields)
+	return map[string]any{"recorded": id, "action": changeset.Create, "id": changeset.NewIDPrefix + handle}, nil
 }
 
 func newChangeSet() (*changeset.ChangeSet, error) {
@@ -160,15 +250,13 @@ func newChangeSet() (*changeset.ChangeSet, error) {
 	return changeset.New(config.OrgID()), nil
 }
 
+// captureTarget names the request's object in change set terms. Query parameters
+// are refused, except the org and a repeat of a path parameter: Studio applies a
+// change from the target's route and the recorded fields, so a query would be lost.
 func captureTarget(req *Request) (changeset.Target, error) {
-	var t changeset.Target
-	switch req.baseURL {
-	case config.CallingBaseURL():
-		t.API = changeset.APIWebex
-	case config.CcBaseURL():
+	t := changeset.Target{API: changeset.APIWebex, Route: req.path}
+	if req.baseURL == config.CcBaseURL() {
 		t.API = changeset.APIContactCenter
-	default:
-		return t, fmt.Errorf("requests to %s cannot be recorded in a change set", req.baseURL)
 	}
 
 	// The change set's scope names the org, so every org the request names, in its
@@ -180,7 +268,12 @@ func captureTarget(req *Request) (changeset.Target, error) {
 			}
 		}
 	}
-	t.Route = req.path
+	for k, v := range req.queryParams {
+		if v == "" || strings.EqualFold(k, "orgId") || req.pathParams[k] == v {
+			continue
+		}
+		return t, fmt.Errorf("query parameter %s cannot be recorded in a change set; put the fields in --body", k)
+	}
 	if t.API == changeset.APIContactCenter {
 		m := ccOrgPrefix.FindStringSubmatch(t.Route)
 		if m == nil {
@@ -197,78 +290,7 @@ func captureTarget(req *Request) (changeset.Target, error) {
 		}
 		t.Params[name] = req.pathParams[name]
 	}
-	for k, v := range req.queryParams {
-		if v == "" || strings.EqualFold(k, "orgId") {
-			continue
-		}
-		if t.Query == nil {
-			t.Query = map[string]string{}
-		}
-		t.Query[k] = v
-	}
 	return t, nil
-}
-
-// itemRoutes holds the normalized routes, keyed by API, that the operation table
-// reaches one object at. Contact Center routes are relative to /organization/{orgid}.
-var itemRoutes = sync.OnceValue(func() map[string][]string {
-	out := map[string][]string{}
-	for _, area := range webexops.Areas {
-		for _, op := range webexops.Operations(area) {
-			path := strings.TrimRight(op.Path, "/")
-			if !strings.HasSuffix(path, "}") {
-				continue
-			}
-			switch op.Host {
-			case webexops.HostWebex:
-				out[changeset.APIWebex] = append(out[changeset.APIWebex], changeset.NormalizeRoute(path))
-			case webexops.HostCC:
-				if m := ccOrgPrefix.FindStringSubmatch(path); m != nil {
-					out[changeset.APIContactCenter] = append(out[changeset.APIContactCenter], changeset.NormalizeRoute(path[len(m[0]):]))
-				}
-			}
-		}
-	}
-	return out
-})
-
-// isCollection reports whether a POST to the target creates an object: whether the
-// API has a route to one object under it. A POST that names an action, such as
-// answering a call or a bulk save, has none.
-func isCollection(t changeset.Target) bool {
-	item := changeset.NormalizeRoute(t.Route) + "/{}"
-	for _, r := range itemRoutes()[t.API] {
-		if r == item || strings.HasPrefix(r, item+"/") {
-			return true
-		}
-	}
-	return false
-}
-
-// fetchCurrent reads the object a write names, from the same URL. The query goes
-// too, since it can select the object, as userEmail selects whose preferences.
-func fetchCurrent(req *Request) (map[string]any, error) {
-	get := NewRequest(req.baseURL, http.MethodGet, req.path)
-	for k, v := range req.pathParams {
-		get.PathParam(k, v)
-	}
-	for k, v := range req.queryParams {
-		get.QueryParam(k, v)
-	}
-	data, status, err := Do(get)
-	if err != nil {
-		return nil, err
-	}
-	if status < 200 || status > 299 {
-		return nil, fmt.Errorf("HTTP %d", status)
-	}
-	var current map[string]any
-	d := json.NewDecoder(bytes.NewReader(data))
-	d.UseNumber()
-	if err := d.Decode(&current); err != nil {
-		return nil, fmt.Errorf("the response is not a JSON object")
-	}
-	return current, nil
 }
 
 func label(object map[string]any) string {
