@@ -61,7 +61,13 @@ func Save(path string, cs *ChangeSet) error {
 	if err := tmp.Close(); err != nil {
 		return err
 	}
-	if err := os.Chmod(tmp.Name(), 0o644); err != nil {
+	// A change set can hold credentials a write sends, such as a trunk's password, so a
+	// new file is owner-only and a replaced one keeps its mode.
+	mode := os.FileMode(0o600)
+	if info, err := os.Stat(path); err == nil {
+		mode = info.Mode().Perm()
+	}
+	if err := os.Chmod(tmp.Name(), mode); err != nil {
 		return err
 	}
 	return os.Rename(tmp.Name(), path)

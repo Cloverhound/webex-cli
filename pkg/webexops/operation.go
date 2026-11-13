@@ -11,6 +11,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -306,6 +307,10 @@ func List(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Ope
 		p = webexapi.Paging{Start: o.Start, Size: o.Size, First: o.First}
 	case op.Area == "cc":
 		p = webexapi.Paging{CC: true, SizeParam: op.Paging.SizeParam}
+	}
+	p.Header = http.Header{}
+	for name, v := range args.Header {
+		p.Header.Set(name, v)
 	}
 	return c.List(ctx, u, p, visit)
 }

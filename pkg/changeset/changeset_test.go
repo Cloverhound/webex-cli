@@ -101,6 +101,37 @@ func TestPlaceholderNamesDoNotSplitTargets(t *testing.T) {
 	}
 }
 
+func TestTargetsThatDifferOnlyInTheirQueryAreDifferentObjects(t *testing.T) {
+	cs := New("org")
+	audio := func(user string) Target {
+		return Target{API: APIWebex, Route: "/meetingPreferences/audio", Query: map[string]string{"userEmail": user}}
+	}
+	a, _ := cs.AddUpdate(audio("a@example.com"), []Change{{Path: "defaultAudioType", Value: "VOIP"}})
+	b, _ := cs.AddUpdate(audio("b@example.com"), []Change{{Path: "defaultAudioType", Value: "PSTN"}})
+	if a == b || len(cs.Operations) != 2 || cs.Operations[1].Target.Query["userEmail"] != "b@example.com" {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+}
+
+func TestSaveKeepsChangeSetsOwnerOnly(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "x.changeset.json")
+	if err := Save(path, New("org")); err != nil {
+		t.Fatal(err)
+	}
+	if info, _ := os.Stat(path); info.Mode().Perm() != 0o600 {
+		t.Fatalf("new file mode = %v", info.Mode().Perm())
+	}
+	if err := os.Chmod(path, 0o640); err != nil {
+		t.Fatal(err)
+	}
+	if err := Save(path, New("org")); err != nil {
+		t.Fatal(err)
+	}
+	if info, _ := os.Stat(path); info.Mode().Perm() != 0o640 {
+		t.Fatalf("an existing file's mode became %v", info.Mode().Perm())
+	}
+}
+
 func TestDeleteReplacesUpdate(t *testing.T) {
 	cs := New("org")
 	cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}})

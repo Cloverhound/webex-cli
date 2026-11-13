@@ -226,12 +226,21 @@ func Placeholders(route string) []string {
 	return out
 }
 
-// Key identifies the object a target names: its API, normalized route and
-// parameter values in route order.
+// Key identifies the object a target names: its API, normalized route, parameter
+// values in route order, and query, which can select the object as userEmail
+// selects whose preferences.
 func (t Target) Key() string {
 	parts := []string{t.API, NormalizeRoute(t.Route)}
 	for _, name := range Placeholders(t.Route) {
 		parts = append(parts, t.Params[name])
+	}
+	names := make([]string, 0, len(t.Query))
+	for name := range t.Query {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		parts = append(parts, name+"="+t.Query[name])
 	}
 	return strings.Join(parts, "\x00")
 }

@@ -33,7 +33,14 @@ func (f *fakeWebex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	body, ok := f.objects[r.URL.Path]
+	// Objects are keyed by path, and by path and query where the query selects one;
+	// the org is the same for every request.
+	q := r.URL.Query()
+	q.Del("orgId")
+	body, ok := f.objects[r.URL.Path+"?"+q.Encode()]
+	if !ok {
+		body, ok = f.objects[r.URL.Path]
+	}
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -209,6 +216,53 @@ func TestCaptureActionPostIsAnInvoke(t *testing.T) {
 	cs, _ := changeset.Load(path)
 	if op := cs.Operations[0]; op.Method != "POST" || op.Target.Route != "/team/bulk" {
 		t.Errorf("operation = %+v", op)
+	}
+}
+
+// A query parameter can select the object, as userEmail selects whose preferences.
+func TestCaptureAndLiveCheckReadTheObjectTheQuerySelects(t *testing.T) {
+	objects := map[string]string{
+		"/v1/meetingPreferences/audio":                           `{"defaultAudioType":"PSTN"}`,
+		"/v1/meetingPreferences/audio?userEmail=b%40example.com": `{"defaultAudioType":"VOIP"}`,
+	}
+	_, path := setupCapture(t, objects)
+	req := NewRequest(config.CallingBaseURL(), "PUT", "/meetingPreferences/audio")
+	req.QueryParam("userEmail", "b@example.com")
+	req.SetBodyRaw(`{"defaultAudioType":"PSTN"}`)
+	if out := run(t, req); out["action"] != "update" {
+		t.Fatalf("output = %v", out)
+	}
+	cs, _ := changeset.Load(path)
+	if c := cs.Operations[0].Changes[0]; !changeset.Equal(c.Before, "VOIP") {
+		t.Fatalf("change = %+v", c)
+	}
+	if r := CheckLive(cs); !r.OK() {
+		t.Fatalf("live check read another object: %+v", r)
+	}
+	objects["/v1/meetingPreferences/audio?userEmail=b%40example.com"] = `{"defaultAudioType":"WEBEX"}`
+	if r := CheckLive(cs); len(r.Drift) != 1 {
+		t.Fatalf("drift on the selected object went unseen: %+v", r)
+	}
+}
+
+// Call control and other verbs under /telephony/calls answer a POST without making
+// an object that can be read back.
+func TestCapturePostToARouteWithNoItemsIsAnInvoke(t *testing.T) {
+	_, path := setupCapture(t, nil)
+	answer := NewRequest(config.CallingBaseURL(), "POST", "/telephony/calls/answer")
+	answer.SetBodyRaw(`{"callId":"c1"}`)
+	if out := run(t, answer); out["action"] != "invoke" {
+		t.Errorf("answer = %v", out)
+	}
+	hg := NewRequest(config.CallingBaseURL(), "POST", "/telephony/config/locations/{locationId}/huntGroups")
+	hg.PathParam("locationId", "loc1")
+	hg.SetBodyRaw(`{"name":"Desk"}`)
+	if out := run(t, hg); out["action"] != "create" {
+		t.Errorf("hunt group = %v", out)
+	}
+	cs, _ := changeset.Load(path)
+	if len(cs.Operations) != 2 {
+		t.Fatalf("operations = %+v", cs.Operations)
 	}
 }
 

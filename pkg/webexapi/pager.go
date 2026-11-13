@@ -31,6 +31,9 @@ type Paging struct {
 	// ArrayKey names the array in an offset list's response. When empty, a bare
 	// array, "items" or "Resources" is read, or else the response's only array.
 	ArrayKey string
+
+	// Header is sent with every page request.
+	Header http.Header
 }
 
 // List reads a list to its end, passing each page to visit. A list that cannot be
@@ -38,11 +41,10 @@ type Paging struct {
 // deletions.
 func (c *Client) List(ctx context.Context, listURL string, p Paging, visit func([]json.RawMessage) error) error {
 	if p.CC {
-		size := p.SizeParam
-		if size == "" {
-			size = "pageSize"
+		if p.SizeParam == "" {
+			p.SizeParam = "pageSize"
 		}
-		return c.listCC(ctx, listURL, size, visit)
+		return c.listCC(ctx, listURL, p, visit)
 	}
 	if p.Start != "" && p.Size == "" {
 		return fmt.Errorf("offset paging by %s needs a page size parameter", p.Start)
@@ -57,17 +59,17 @@ func (c *Client) List(ctx context.Context, listURL string, p Paging, visit func(
 // another request. An endpoint that repeats a full page, or a later page that is not
 // a list, gives ErrIncompleteList: a silently short list would look like deletions.
 func (c *Client) ListCC(ctx context.Context, listURL string, visit func([]json.RawMessage) error) error {
-	return c.listCC(ctx, listURL, "pageSize", visit)
+	return c.listCC(ctx, listURL, Paging{CC: true, SizeParam: "pageSize"}, visit)
 }
 
-func (c *Client) listCC(ctx context.Context, listURL, sizeParam string, visit func([]json.RawMessage) error) error {
+func (c *Client) listCC(ctx context.Context, listURL string, p Paging, visit func([]json.RawMessage) error) error {
 	var previousFirst json.RawMessage
 	for page := 0; ; page++ {
-		pageURL, err := withQuery(listURL, map[string]string{"page": strconv.Itoa(page), sizeParam: strconv.Itoa(ccPageSize)})
+		pageURL, err := withQuery(listURL, map[string]string{"page": strconv.Itoa(page), p.SizeParam: strconv.Itoa(ccPageSize)})
 		if err != nil {
 			return err
 		}
-		resp, err := c.Send(ctx, Request{Method: http.MethodGet, URL: pageURL})
+		resp, err := c.Send(ctx, Request{Method: http.MethodGet, URL: pageURL, Header: p.Header.Clone()})
 		if err != nil {
 			return err
 		}
@@ -148,7 +150,7 @@ func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit
 				return err
 			}
 		}
-		resp, err := c.Send(ctx, Request{Method: http.MethodGet, URL: pageURL})
+		resp, err := c.Send(ctx, Request{Method: http.MethodGet, URL: pageURL, Header: p.Header.Clone()})
 		if err != nil {
 			return err
 		}

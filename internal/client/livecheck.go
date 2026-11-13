@@ -75,6 +75,9 @@ func readTarget(t changeset.Target) (map[string]any, int, error) {
 	for k, v := range t.Params {
 		req.PathParam(k, v)
 	}
+	for k, v := range t.Query {
+		req.QueryParam(k, v)
+	}
 	data, status, err := Do(req)
 	if err != nil {
 		return nil, status, err

@@ -38,7 +38,8 @@ webex --changeset desk.changeset.json cc team create \
 - **Full-object bodies:** a Contact Center PUT sends the whole object, but only the fields that differ from the current object are recorded. Fields it repeats from the current object leave earlier changes in place.
 - **Org:** a request for an org other than the change set's is refused.
 - **Deletes:** an update to an object the change set deletes is refused.
-- **Other writes:** bulk saves, purges, action endpoints, and deletes that name no single object (such as removing numbers from a location) are recorded as `invoke` operations with their body, which an engine cannot review field by field.
+- **Other writes:** bulk saves, purges, action endpoints, and deletes that name no single object (such as removing numbers from a location) are recorded as `invoke` operations with their body, which an engine cannot review field by field. A POST counts as a create only when the API also has a route to one object under it; a POST such as answering a call or adding access codes is an `invoke`.
+- **Files:** a new change set file can be read only by its owner, because it can hold credentials that a write sends. Saving keeps the mode of an existing file.
 - **Not recorded:** file uploads, and Contact Center routes outside `/organization/{orgid}`, such as flow drafts. With `--dry-run`, nothing is recorded: the request is printed instead.
 
 ## Commands
@@ -101,7 +102,7 @@ The MCP server offers the same features through `webex_propose` and `webex_chang
   - A create route names the collection.
   - Placeholder names do not matter when routes are compared.
 - **`params`** gives a value for every placeholder.
-- **`query`** holds any other query parameters the command sent.
+- **`query`** holds any other query parameters the command sent. It is part of the target, because it can select the object, as `userEmail` selects whose meeting preferences.
 - **`display`** is a label for people.
 
 ### Operations

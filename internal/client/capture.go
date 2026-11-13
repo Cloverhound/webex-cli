@@ -10,18 +10,16 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/pkg/changeset"
+	"github.com/Cloverhound/webex-cli/pkg/webexops"
 )
 
 // ccOrgPrefix is the org segment every Contact Center route starts with.
 // Change set routes are relative to it.
 var ccOrgPrefix = regexp.MustCompile(`^/organization/\{([^}]+)\}`)
-
-// actionSegment matches route segments that name an action rather than a
-// collection, so a POST to them is not a create.
-var actionSegment = regexp.MustCompile(`(?i)^(bulk.*|purge.*|actions?|invoke|search|query|export|import|validate|test|reset|copy|move|apply|generate.*|sync|upload.*)$`)
 
 // capture records a write request in the change set at path instead of sending
 // it, and returns the JSON the command prints.
@@ -134,7 +132,7 @@ func record(cs *changeset.ChangeSet, method string, target changeset.Target, bod
 		}
 		return result, nil
 
-	case method == http.MethodPost && isObject && isCollection(target.Route):
+	case method == http.MethodPost && isObject && isCollection(target):
 		if target.Display == "" {
 			target.Display = label(fields)
 		}
@@ -204,26 +202,51 @@ func captureTarget(req *Request) (changeset.Target, error) {
 	return t, nil
 }
 
-// isCollection reports whether a POST to route creates an object.
-func isCollection(route string) bool {
-	if strings.Contains(route, "/actions/") {
-		return false
+// itemRoutes holds the normalized routes, keyed by API, that the operation table
+// reaches one object at. Contact Center routes are relative to /organization/{orgid}.
+var itemRoutes = sync.OnceValue(func() map[string][]string {
+	out := map[string][]string{}
+	for _, area := range webexops.Areas {
+		for _, op := range webexops.Operations(area) {
+			path := strings.TrimRight(op.Path, "/")
+			if !strings.HasSuffix(path, "}") {
+				continue
+			}
+			switch op.Host {
+			case webexops.HostWebex:
+				out[changeset.APIWebex] = append(out[changeset.APIWebex], changeset.NormalizeRoute(path))
+			case webexops.HostCC:
+				if m := ccOrgPrefix.FindStringSubmatch(path); m != nil {
+					out[changeset.APIContactCenter] = append(out[changeset.APIContactCenter], changeset.NormalizeRoute(path[len(m[0]):]))
+				}
+			}
+		}
 	}
-	segments := strings.Split(strings.Trim(route, "/"), "/")
-	last := segments[len(segments)-1]
-	return last != "" && !strings.HasPrefix(last, "{") && !actionSegment.MatchString(last)
+	return out
+})
+
+// isCollection reports whether a POST to the target creates an object: whether the
+// API has a route to one object under it. A POST that names an action, such as
+// answering a call or a bulk save, has none.
+func isCollection(t changeset.Target) bool {
+	item := changeset.NormalizeRoute(t.Route) + "/{}"
+	for _, r := range itemRoutes()[t.API] {
+		if r == item || strings.HasPrefix(r, item+"/") {
+			return true
+		}
+	}
+	return false
 }
 
-// fetchCurrent reads the object a write names, from the same URL.
+// fetchCurrent reads the object a write names, from the same URL. The query goes
+// too, since it can select the object, as userEmail selects whose preferences.
 func fetchCurrent(req *Request) (map[string]any, error) {
 	get := NewRequest(req.baseURL, http.MethodGet, req.path)
 	for k, v := range req.pathParams {
 		get.PathParam(k, v)
 	}
 	for k, v := range req.queryParams {
-		if strings.EqualFold(k, "orgId") {
-			get.QueryParam(k, v)
-		}
+		get.QueryParam(k, v)
 	}
 	data, status, err := Do(get)
 	if err != nil {

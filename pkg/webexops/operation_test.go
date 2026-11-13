@@ -88,6 +88,28 @@ func TestListPagesAsTheOperationSays(t *testing.T) {
 	}
 }
 
+func TestListSendsTheCallersHeadersOnEveryPage(t *testing.T) {
+	var hostEmails []string
+	var srv *httptest.Server
+	srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		hostEmails = append(hostEmails, r.Header.Get("hostEmail"))
+		if len(hostEmails) > 3 { // stops a pager that loops
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if r.URL.Query().Get("cursor") == "" {
+			w.Header().Set("Link", `<`+srv.URL+`/group/recordings?cursor=2>; rel="next"`)
+		}
+		io.WriteString(w, `{"items":[{"id":"`+r.URL.Query().Get("cursor")+`"}]}`)
+	}))
+	defer srv.Close()
+	err := List(context.Background(), &webexapi.Client{}, webexapi.Hosts{Webex: srv.URL}, MeetingsRecordingsListGroup,
+		Args{Header: map[string]string{"hostEmail": "a@example.com"}}, func([]json.RawMessage) error { return nil })
+	if err != nil || len(hostEmails) != 2 || hostEmails[0] != "a@example.com" || hostEmails[1] != "a@example.com" {
+		t.Fatalf("hostEmail per page = %q, err %v", hostEmails, err)
+	}
+}
+
 func TestCallSendsTheOperation(t *testing.T) {
 	var got *http.Request
 	var body string
