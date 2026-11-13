@@ -101,6 +101,40 @@ func TestAFailureDuringTheReadStopsTheWrite(t *testing.T) {
 	}
 }
 
+// failingUpdate fails every update and, on the read that observes the failure,
+// records whether another write would still be admitted.
+type failingUpdate struct {
+	API
+	guard    *Guard
+	reads    int
+	admitted *bool
+}
+
+func (f *failingUpdate) Read(ctx context.Context, t resource.Type, key resource.Key) (webex.Object, error) {
+	f.reads++
+	if f.reads == 2 {
+		*f.admitted = f.guard.admit(ctx) == nil
+	}
+	return f.API.Read(ctx, t, key)
+}
+
+func (f *failingUpdate) Update(context.Context, resource.Type, resource.Key, map[string]any, resource.Values) error {
+	return errors.New("connection reset")
+}
+
+func TestAFailedUpdateStopsOtherWritesBeforeItIsObserved(t *testing.T) {
+	f := newFixture(t)
+	prior := f.prior(t)
+	var admitted bool
+	f.guard.API = &failingUpdate{API: f.api, guard: f.guard, admitted: &admitted}
+	if _, err := f.guard.Update(context.Background(), f.hg, hg1, prior, with(prior, "no_answer_rings", 7)); failureKind(t, err) != OutcomeUnknown {
+		t.Fatalf("err = %v", err)
+	}
+	if admitted {
+		t.Fatal("another write was admitted while the failed update was being observed")
+	}
+}
+
 func TestUpdateWritesOnlyChangedFieldsAndVerifies(t *testing.T) {
 	f := newFixture(t)
 	prior := f.prior(t)

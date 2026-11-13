@@ -150,6 +150,8 @@ func (g *Guard) write(ctx context.Context, t resource.Type, key resource.Key, ra
 		return baseline, err
 	}
 	if err := g.API.Update(ctx, t, key, raw, delta); err != nil {
+		// Other writes stop now, not after the read below, which can take seconds.
+		g.stop(writeFailure(err, "The write", "").Summary)
 		actual := g.observe(t, key, baseline)
 		return actual, g.fail(writeFailure(err, "The write", observed(actual, baseline, planned, t)))
 	}
