@@ -3,6 +3,7 @@ package mcp
 import (
 	"context"
 	"errors"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -97,6 +98,50 @@ func TestProposeRefusesWhatItCannotRecord(t *testing.T) {
 		if got := propose(t, command); !strings.Contains(got, "was not refused") {
 			t.Errorf("%q was refused: %s", command, got)
 		}
+	}
+}
+
+// changesetArgs runs the webex_changeset tool against a script that prints the
+// arguments it was given, never the test binary.
+func changesetArgs(t *testing.T, arguments map[string]any) string {
+	t.Helper()
+	script := filepath.Join(t.TempDir(), "echo-args")
+	if err := os.WriteFile(script, []byte("#!/bin/sh\necho \"$@\"\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	saved := executable
+	executable = func() (string, error) { return script, nil }
+	t.Cleanup(func() { executable = saved })
+	var req mcplib.CallToolRequest
+	req.Params.Arguments = arguments
+	res, err := makeChangesetHandler(nil)(context.Background(), req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return res.Content[0].(mcplib.TextContent).Text
+}
+
+func TestChangesetToolBuildsEachAction(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "p.changeset.json")
+	if got := changesetArgs(t, map[string]any{"action": "types", "type": "cc_team"}); got != "changeset types cc_team" {
+		t.Errorf("types = %q", got)
+	}
+	got := changesetArgs(t, map[string]any{"action": "drop", "path": path, "op": "op-3", "paths": "name enabled"})
+	if got != "changeset drop "+path+" op-3 name enabled" {
+		t.Errorf("drop = %q", got)
+	}
+	if got := changesetArgs(t, map[string]any{"action": "drop", "path": path}); !strings.HasPrefix(got, "Error:") {
+		t.Errorf("drop without op = %q", got)
+	}
+	got = changesetArgs(t, map[string]any{"action": "meta", "path": path, "rationale": ""})
+	if got != "changeset meta "+path+" --rationale=" {
+		t.Errorf("meta clearing the rationale = %q", got)
+	}
+	if got := changesetArgs(t, map[string]any{"action": "show"}); !strings.HasPrefix(got, "Error:") {
+		t.Errorf("show without a path = %q", got)
+	}
+	if got := changesetArgs(t, map[string]any{"action": "apply", "path": path}); !strings.HasPrefix(got, "Error:") {
+		t.Errorf("unknown action = %q", got)
 	}
 }
 

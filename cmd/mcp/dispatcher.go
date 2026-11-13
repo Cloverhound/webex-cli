@@ -94,19 +94,25 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 			mcplib.WithDescription(
 				"Manage a change set file: \"new\" starts one for the current org, \"show\" summarizes it, "+
 					"\"validate\" checks it (live=true also re-reads Webex and reports values that changed since they were recorded), "+
-					"and \"intent\" adds a plain-language summary and assigns operations to it.",
+					"\"intent\" adds a plain-language summary and assigns operations to it, "+
+					"\"drop\" removes an operation (reverting what it proposes) or, with paths, some field changes from an update, "+
+					"\"meta\" changes the title, rationale or on_behalf_of (an empty value clears one), "+
+					"and \"types\" lists the object types a change set can record and their commands "+
+					"(with type, that type's fields; it needs no path).",
 			),
 			mcplib.WithString("action",
 				mcplib.Required(),
-				mcplib.Enum("new", "show", "validate", "intent"),
+				mcplib.Enum("new", "show", "validate", "intent", "drop", "meta", "types"),
 			),
 			mcplib.WithString("path",
-				mcplib.Required(),
-				mcplib.Description("Path of the change set file, ending in .json"),
+				mcplib.Description("Path of the change set file, ending in .json; every action but types needs it"),
 			),
-			mcplib.WithString("title", mcplib.Description("new: a short title")),
-			mcplib.WithString("rationale", mcplib.Description("new: why these changes are needed")),
-			mcplib.WithString("on_behalf_of", mcplib.Description("new: the person you are working for")),
+			mcplib.WithString("title", mcplib.Description("new, meta: a short title")),
+			mcplib.WithString("rationale", mcplib.Description("new, meta: why these changes are needed")),
+			mcplib.WithString("on_behalf_of", mcplib.Description("new, meta: the person you are working for")),
+			mcplib.WithString("op", mcplib.Description("drop: the operation ID, such as \"op-3\"")),
+			mcplib.WithString("paths", mcplib.Description("drop: space-separated field paths to remove from an update; omit to drop the whole operation")),
+			mcplib.WithString("type", mcplib.Description("types: a type name, such as \"cc_team\", to list its fields")),
 			mcplib.WithBoolean("live", mcplib.Description("validate: also compare preconditions with Webex")),
 			mcplib.WithString("intent_id", mcplib.Description("intent: a short ID such as \"front-desk\"")),
 			mcplib.WithString("summary", mcplib.Description("intent: what the operations achieve, in plain words")),
@@ -343,19 +349,35 @@ func changesetPath(path string) (string, string) {
 func makeChangesetHandler(lg *usageLogger) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 		action := req.GetString("action", "")
+		if action == "types" {
+			args := []string{"changeset", "types"}
+			if t := req.GetString("type", ""); t != "" {
+				args = append(args, t)
+			}
+			return runCLI(ctx, lg, "webex_changeset", "changeset types", "", args, true), nil
+		}
 		path, errText := changesetPath(req.GetString("path", ""))
 		if errText != "" {
 			return mcplib.NewToolResultText(errText), nil
 		}
 		args := []string{"changeset", action, path}
+		metaFlags := map[string]string{"title": "title", "rationale": "rationale", "on-behalf-of": "on_behalf_of"}
 		switch action {
 		case "new":
-			for flag, param := range map[string]string{"title": "title", "rationale": "rationale", "on-behalf-of": "on_behalf_of"} {
+			for flag, param := range metaFlags {
 				if v := req.GetString(param, ""); v != "" {
 					args = append(args, "--"+flag+"="+v)
 				}
 			}
 			args = append(args, "--author=webex-mcp")
+		case "meta":
+			// A field given empty clears it, so presence decides, not the value.
+			given := req.GetArguments()
+			for flag, param := range metaFlags {
+				if _, ok := given[param]; ok {
+					args = append(args, "--"+flag+"="+req.GetString(param, ""))
+				}
+			}
 		case "show":
 		case "validate":
 			if req.GetBool("live", false) {
@@ -368,8 +390,15 @@ func makeChangesetHandler(lg *usageLogger) func(context.Context, mcplib.CallTool
 			}
 			args = append(args, id, summary)
 			args = append(args, strings.Fields(req.GetString("ops", ""))...)
+		case "drop":
+			op := req.GetString("op", "")
+			if op == "" {
+				return mcplib.NewToolResultText("Error: drop needs op."), nil
+			}
+			args = append(args, op)
+			args = append(args, strings.Fields(req.GetString("paths", ""))...)
 		default:
-			return mcplib.NewToolResultText(`Error: action must be "new", "show", "validate" or "intent".`), nil
+			return mcplib.NewToolResultText(`Error: action must be "new", "show", "validate", "intent", "drop", "meta" or "types".`), nil
 		}
 		return runCLI(ctx, lg, "webex_changeset", "changeset "+action, "", args, true), nil
 	}

@@ -11,7 +11,9 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/catalog"
 	"github.com/Cloverhound/webex-cli/pkg/changeset"
+	"github.com/Cloverhound/webex-cli/pkg/resource"
 	"github.com/spf13/cobra"
 )
 
@@ -74,6 +76,49 @@ func init() {
 		RunE:  runChangesetIntent,
 	}
 
+	dropCmd := &cobra.Command{
+		Use:   "drop <file> <op-id> [<path>...]",
+		Short: "Remove an operation, or some field changes from an update",
+		Long: `Remove an operation from a change set, which reverts the create, update or
+delete it proposes. With paths, remove only those field changes from an update;
+an update with none left is removed.
+
+A create that another operation refers to by its new: ID cannot be dropped
+until that operation is dropped too.`,
+		Args: cobra.MinimumNArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return editChangeSet(args[0], func(cs *changeset.ChangeSet) error {
+				return cs.Drop(args[1], args[2:]...)
+			})
+		},
+	}
+
+	metaCmd := &cobra.Command{
+		Use:   "meta <file>",
+		Short: "Change a change set's title, rationale, author or links",
+		Long: `Change the details a change set was started with. Only the flags given change;
+an empty value clears one, and --link name= removes that link.`,
+		Args: cobra.ExactArgs(1),
+		RunE: runChangesetMeta,
+	}
+	metaCmd.Flags().String("title", "", "Short title")
+	metaCmd.Flags().String("rationale", "", "Why these changes are needed")
+	metaCmd.Flags().String("author", "", "Who or what is proposing the changes")
+	metaCmd.Flags().String("author-type", "", "agent or human")
+	metaCmd.Flags().String("on-behalf-of", "", "The person an agent is working for")
+	metaCmd.Flags().StringArray("link", nil, "A link as name=url; name= removes it")
+
+	typesCmd := &cobra.Command{
+		Use:   "types [<type>]",
+		Short: "List the object types a change set can record",
+		Long: `List the object types Webex Admin Studio can apply from a change set, with the
+commands that record each one's creates, updates and deletes. Given a type, list
+its fields: the JSON paths an update records, which ones a create needs, and which
+are fixed once the object exists. Paths outside these are ignored.`,
+		Args: cobra.MaximumNArgs(1),
+		RunE: runChangesetTypes,
+	}
+
 	schemaCmd := &cobra.Command{
 		Use:   "schema",
 		Short: "Print the change set JSON Schema",
@@ -84,7 +129,7 @@ func init() {
 		},
 	}
 
-	changesetCmd.AddCommand(newCmd, showCmd, validateCmd, intentCmd, schemaCmd)
+	changesetCmd.AddCommand(newCmd, showCmd, validateCmd, intentCmd, dropCmd, metaCmd, typesCmd, schemaCmd)
 	rootCmd.AddCommand(changesetCmd)
 }
 
@@ -123,11 +168,136 @@ func runChangesetNew(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runChangesetIntent(cmd *cobra.Command, args []string) error {
-	path, id, summary, ops := args[0], args[1], args[2], args[3:]
+// editChangeSet changes an existing change set file under its lock.
+func editChangeSet(path string, change func(*changeset.ChangeSet) error) error {
 	return changeset.Edit(path, func() (*changeset.ChangeSet, error) {
 		return nil, fmt.Errorf("%s does not exist", path)
-	}, func(cs *changeset.ChangeSet) error {
+	}, change)
+}
+
+func runChangesetMeta(cmd *cobra.Command, args []string) error {
+	flags := cmd.Flags()
+	links, _ := flags.GetStringArray("link")
+	for _, link := range links {
+		if name, _, ok := strings.Cut(link, "="); !ok || name == "" {
+			return fmt.Errorf("--link %q: expected name=url, or name= to remove it", link)
+		}
+	}
+	return editChangeSet(args[0], func(cs *changeset.ChangeSet) error {
+		m := &cs.Metadata
+		if flags.Changed("title") {
+			m.Title, _ = flags.GetString("title")
+		}
+		if flags.Changed("rationale") {
+			m.Rationale, _ = flags.GetString("rationale")
+		}
+		if flags.Changed("author") || flags.Changed("author-type") || flags.Changed("on-behalf-of") {
+			a := changeset.Author{Type: "agent"}
+			if m.Author != nil {
+				a = *m.Author
+			}
+			if flags.Changed("author") {
+				a.ID, _ = flags.GetString("author")
+			}
+			if flags.Changed("author-type") {
+				a.Type, _ = flags.GetString("author-type")
+			}
+			if flags.Changed("on-behalf-of") {
+				a.OnBehalfOf, _ = flags.GetString("on-behalf-of")
+			}
+			m.Author = &a
+			if a.ID == "" && a.OnBehalfOf == "" {
+				m.Author = nil
+			}
+		}
+		for _, link := range links {
+			name, url, _ := strings.Cut(link, "=")
+			if url == "" {
+				delete(m.Links, name)
+				continue
+			}
+			if m.Links == nil {
+				m.Links = map[string]string{}
+			}
+			m.Links[name] = url
+		}
+		if len(m.Links) == 0 {
+			m.Links = nil
+		}
+		return nil
+	})
+}
+
+type recordableType struct {
+	Name      string            `json:"name"`
+	Title     string            `json:"title"`
+	WriteMode string            `json:"writeMode"`
+	Commands  map[string]string `json:"commands"`
+	Fields    []recordableField `json:"fields,omitempty"`
+}
+
+type recordableField struct {
+	Path     string            `json:"path"`
+	Kind     string            `json:"kind"`
+	Required bool              `json:"required,omitempty"`
+	Fixed    bool              `json:"fixed,omitempty"`
+	Options  []string          `json:"options,omitempty"`
+	Item     []recordableField `json:"item,omitempty"`
+}
+
+func runChangesetTypes(cmd *cobra.Command, args []string) error {
+	var out []recordableType
+	for _, t := range catalog.Managed() {
+		if len(args) == 1 && t.Name != args[0] {
+			continue
+		}
+		rt := recordableType{Name: t.Name, Title: t.Title, WriteMode: writeModes[t.Write], Commands: map[string]string{}}
+		for action, r := range map[string]resource.Route{"create": t.Routes.Create, "update": t.Routes.Update, "delete": t.Routes.Delete} {
+			if r.Op == nil || (action == "create" && t.NoCreate) || (action == "delete" && t.NoDelete) {
+				continue
+			}
+			rt.Commands[action] = "webex " + r.Op.Name()
+		}
+		if len(args) == 1 {
+			rt.Fields = recordableFields(t.Fields)
+		}
+		out = append(out, rt)
+	}
+	if len(args) == 1 && len(out) == 0 {
+		return fmt.Errorf("%s is not a type a change set can record; run 'webex changeset types' for the list", args[0])
+	}
+	enc := json.NewEncoder(cmd.OutOrStdout())
+	enc.SetIndent("", "  ")
+	if len(args) == 1 {
+		return enc.Encode(out[0])
+	}
+	return enc.Encode(out)
+}
+
+var writeModes = map[resource.WriteMode]string{
+	resource.WriteDelta: "changed fields",
+	resource.WriteFull:  "whole object",
+	resource.WritePatch: "changed fields, by PATCH",
+}
+
+var fieldKinds = map[resource.Kind]string{resource.String: "string", resource.Bool: "bool", resource.Int: "int",
+	resource.StringList: "list", resource.ObjectList: "rows"}
+
+func recordableFields(fields []resource.Field) []recordableField {
+	var out []recordableField
+	for _, f := range fields {
+		if f.Path == "" {
+			continue
+		}
+		out = append(out, recordableField{Path: f.Path, Kind: fieldKinds[f.Kind], Required: f.Required,
+			Fixed: f.Immutable, Options: f.Options, Item: recordableFields(f.Item)})
+	}
+	return out
+}
+
+func runChangesetIntent(cmd *cobra.Command, args []string) error {
+	path, id, summary, ops := args[0], args[1], args[2], args[3:]
+	return editChangeSet(path, func(cs *changeset.ChangeSet) error {
 		found := false
 		for i := range cs.Intents {
 			if cs.Intents[i].ID == id {

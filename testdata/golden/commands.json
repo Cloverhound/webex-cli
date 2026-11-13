@@ -66527,8 +66527,51 @@
   "long": "A change set file holds proposed Webex changes instead of sending them.\n\nRecord changes by running ordinary write commands with --changeset <file>\n(or $WEBEX_CHANGESET). Each write is read against the live object and saved as\nthe fields it changes, with the values it saw as preconditions. Nothing is sent\nto Webex, so this also works in read-only mode.\n\nA create returns a placeholder ID such as \"new:boulder-desk\". Use it in later\ncommands in this change set, in flags or bodies, to refer to the new object.\n\nWebex Admin Studio imports change set files for review and apply."
  },
  {
+  "path": "webex changeset drop",
+  "short": "Remove an operation, or some field changes from an update",
+  "long": "Remove an operation from a change set, which reverts the create, update or\ndelete it proposes. With paths, remove only those field changes from an update;\nan update with none left is removed.\n\nA create that another operation refers to by its new: ID cannot be dropped\nuntil that operation is dropped too."
+ },
+ {
   "path": "webex changeset intent",
   "short": "Add or reword an intent and assign operations to it"
+ },
+ {
+  "path": "webex changeset meta",
+  "short": "Change a change set's title, rationale, author or links",
+  "long": "Change the details a change set was started with. Only the flags given change;\nan empty value clears one, and --link name= removes that link.",
+  "flags": [
+   {
+    "name": "author",
+    "type": "string",
+    "usage": "Who or what is proposing the changes"
+   },
+   {
+    "name": "author-type",
+    "type": "string",
+    "usage": "agent or human"
+   },
+   {
+    "name": "link",
+    "type": "stringArray",
+    "default": "[]",
+    "usage": "A link as name=url; name= removes it"
+   },
+   {
+    "name": "on-behalf-of",
+    "type": "string",
+    "usage": "The person an agent is working for"
+   },
+   {
+    "name": "rationale",
+    "type": "string",
+    "usage": "Why these changes are needed"
+   },
+   {
+    "name": "title",
+    "type": "string",
+    "usage": "Short title"
+   }
+  ]
  },
  {
   "path": "webex changeset new",
@@ -66575,6 +66618,11 @@
  {
   "path": "webex changeset show",
   "short": "Summarize a change set"
+ },
+ {
+  "path": "webex changeset types",
+  "short": "List the object types a change set can record",
+  "long": "List the object types Webex Admin Studio can apply from a change set, with the\ncommands that record each one's creates, updates and deletes. Given a type, list\nits fields: the JSON paths an update records, which ones a create needs, and which\nare fixed once the object exists. Paths outside these are ignored."
  },
  {
   "path": "webex changeset validate",

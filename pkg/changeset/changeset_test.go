@@ -179,6 +179,38 @@ func TestAnIdentityJoinsTwoRoutesToOneObject(t *testing.T) {
 	}
 }
 
+func TestDropRemovesOperationsAndChanges(t *testing.T) {
+	cs := New("org")
+	team := Target{API: APIContactCenter, Route: "/team"}
+	create, handle := cs.AddCreate(team, map[string]any{"name": "Desk"})
+	update, _ := cs.AddUpdate(huntGroup("hg1"), []Change{{Path: "name", Value: "x"}, {Path: "enabled", Value: false}})
+	ref, _ := cs.AddUpdate(huntGroup("hg2"), []Change{{Path: "team", Value: RefTo(handle)}})
+
+	if err := cs.Drop(create); err == nil || !strings.Contains(err.Error(), ref+" refers to new:desk") {
+		t.Fatalf("dropping a referenced create: %v", err)
+	}
+	if err := cs.Drop(update, "name"); err != nil || len(cs.Operations) != 3 || len(cs.Operations[1].Changes) != 1 {
+		t.Fatalf("err %v, operations %+v", err, cs.Operations)
+	}
+	if err := cs.Drop(update, "name"); err == nil {
+		t.Error("dropped a change the update does not hold")
+	}
+	if err := cs.Drop(create, "name"); err == nil {
+		t.Error("dropped a path from a create")
+	}
+	if err := cs.Drop(update, "enabled"); err != nil || len(cs.Operations) != 2 {
+		t.Fatalf("an update with no changes left was kept: %v %+v", err, cs.Operations)
+	}
+	for _, id := range []string{ref, create} {
+		if err := cs.Drop(id); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if len(cs.Operations) != 0 || cs.Drop("op-9") == nil {
+		t.Fatalf("operations = %+v", cs.Operations)
+	}
+}
+
 func TestCreatesGetHandlesThatReferencesResolveTo(t *testing.T) {
 	cs := New("org")
 	team := Target{API: APIContactCenter, Route: "/team"}

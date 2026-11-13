@@ -261,6 +261,45 @@ func (cs *ChangeSet) RemoveCreate(handle string) (string, error) {
 	return id, nil
 }
 
+// Drop removes an operation from the change set or, given paths, those changes from
+// an update, which is removed when none are left. A create that another operation
+// refers to is refused until that operation is dropped too.
+func (cs *ChangeSet) Drop(opID string, paths ...string) error {
+	i := slices.IndexFunc(cs.Operations, func(op Operation) bool { return op.ID == opID })
+	if i < 0 {
+		return fmt.Errorf("no operation %s", opID)
+	}
+	op := &cs.Operations[i]
+	if len(paths) == 0 {
+		if op.Action == Create {
+			for _, other := range cs.Operations {
+				if other.ID != op.ID && refersTo(other, op.Handle) {
+					return fmt.Errorf("%s refers to %s%s; drop it first", other.ID, NewIDPrefix, op.Handle)
+				}
+			}
+		}
+		cs.Operations = slices.Delete(cs.Operations, i, i+1)
+		return nil
+	}
+	if op.Action != Update {
+		return fmt.Errorf("%s is a %s; only an update's changes can be dropped by path", opID, op.Action)
+	}
+	kept := slices.Clone(op.Changes)
+	for _, p := range paths {
+		j := slices.IndexFunc(kept, func(c Change) bool { return c.Path == p })
+		if j < 0 {
+			return fmt.Errorf("%s does not change %s", opID, p)
+		}
+		kept = slices.Delete(kept, j, j+1)
+	}
+	if len(kept) == 0 {
+		cs.Operations = slices.Delete(cs.Operations, i, i+1)
+		return nil
+	}
+	op.Changes = kept
+	return nil
+}
+
 // CreateOf returns the pending create with handle.
 func (cs *ChangeSet) CreateOf(handle string) (Operation, bool) {
 	if op := cs.create(handle); op != nil {
