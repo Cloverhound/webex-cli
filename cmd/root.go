@@ -253,7 +253,7 @@ func init() {
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
 	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
 	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
-	rootCmd.PersistentFlags().String("changeset", "", "Record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)")
+	rootCmd.PersistentFlags().String("changeset", "", "Beta: record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")

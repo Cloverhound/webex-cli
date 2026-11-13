@@ -19,18 +19,23 @@ import (
 
 var changesetCmd = &cobra.Command{
 	Use:   "changeset",
-	Short: "Propose changes as a portable change set file",
-	Long: `A change set file holds proposed Webex changes instead of sending them.
+	Short: "Propose changes for Webex Admin Studio in a change set file (beta)",
+	Long: `Beta. A change set file holds proposed Webex changes instead of sending them.
+Webex Admin Studio imports it for review and apply.
 
 Record changes by running ordinary write commands with --changeset <file>
-(or $WEBEX_CHANGESET). Each write is read against the live object and saved as
-the fields it changes, with the values it saw as preconditions. Nothing is sent
-to Webex, so this also works in read-only mode.
+(or $WEBEX_CHANGESET). Nothing is sent to Webex, so this also works in
+read-only mode. Only creates, updates and deletes of the types Studio applies
+can be recorded; 'webex changeset types' lists them and their commands.
+
+With --changeset, an update body describes proposed changes. Send only the
+fields you intend to change: omitted fields stay as they are, and lists are
+replaced whole. Values equal to Webex add no change, and fields Studio does
+not model are ignored. Do not apply a proposal by removing --changeset: a
+direct Contact Center update needs the complete object.
 
 A create returns a placeholder ID such as "new:boulder-desk". Use it in later
-commands in this change set, in flags or bodies, to refer to the new object.
-
-Webex Admin Studio imports change set files for review and apply.`,
+commands in this change set, in flags or bodies, to refer to the new object.`,
 }
 
 func init() {
@@ -165,6 +170,7 @@ func runChangesetNew(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	fmt.Fprintf(cmd.ErrOrStderr(), "Started %s for org %s. Record changes with --changeset %s\n", path, cs.Scope.OrgID, path)
+	fmt.Fprintln(cmd.ErrOrStderr(), "Change sets are in beta: Studio may refuse operations it cannot apply.")
 	return nil
 }
 

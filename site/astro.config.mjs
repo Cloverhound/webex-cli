@@ -25,7 +25,7 @@ export default defineConfig({
 				]},
 				{ label: 'Integrations', items: [
 					{ label: 'Coding Agent Skill', slug: 'agent-skill' },
-					{ label: 'Change Sets', slug: 'changesets' },
+					{ label: 'Change Sets', slug: 'changesets', badge: { text: 'Beta', variant: 'caution' } },
 					{ label: 'Go SDK', slug: 'sdk' },
 				]},
 			],

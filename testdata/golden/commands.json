@@ -12,7 +12,7 @@
    {
     "name": "changeset",
     "type": "string",
-    "usage": "Record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)"
+    "usage": "Beta: record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)"
    },
    {
     "name": "debug",
@@ -66523,8 +66523,8 @@
  },
  {
   "path": "webex changeset",
-  "short": "Propose changes as a portable change set file",
-  "long": "A change set file holds proposed Webex changes instead of sending them.\n\nRecord changes by running ordinary write commands with --changeset <file>\n(or $WEBEX_CHANGESET). Each write is read against the live object and saved as\nthe fields it changes, with the values it saw as preconditions. Nothing is sent\nto Webex, so this also works in read-only mode.\n\nA create returns a placeholder ID such as \"new:boulder-desk\". Use it in later\ncommands in this change set, in flags or bodies, to refer to the new object.\n\nWebex Admin Studio imports change set files for review and apply."
+  "short": "Propose changes for Webex Admin Studio in a change set file (beta)",
+  "long": "Beta. A change set file holds proposed Webex changes instead of sending them.\nWebex Admin Studio imports it for review and apply.\n\nRecord changes by running ordinary write commands with --changeset <file>\n(or $WEBEX_CHANGESET). Nothing is sent to Webex, so this also works in\nread-only mode. Only creates, updates and deletes of the types Studio applies\ncan be recorded; 'webex changeset types' lists them and their commands.\n\nWith --changeset, an update body describes proposed changes. Send only the\nfields you intend to change: omitted fields stay as they are, and lists are\nreplaced whole. Values equal to Webex add no change, and fields Studio does\nnot model are ignored. Do not apply a proposal by removing --changeset: a\ndirect Contact Center update needs the complete object.\n\nA create returns a placeholder ID such as \"new:boulder-desk\". Use it in later\ncommands in this change set, in flags or bodies, to refer to the new object."
  },
  {
   "path": "webex changeset drop",

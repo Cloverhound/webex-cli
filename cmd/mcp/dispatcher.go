@@ -68,11 +68,14 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 	s.AddTool(
 		mcplib.NewTool("webex_propose",
 			mcplib.WithDescription(
-				"Record a Webex CLI write command (create, update, delete) in a change set file instead of running it. "+
-					"Nothing is sent to Webex. The CLI reads the object, records only the fields the command changes, "+
-					"and keeps the values it saw as preconditions. A create returns a placeholder ID like \"new:sales-team\" "+
-					"that later proposals can use in flags or bodies. Start the file with webex_changeset action \"new\", "+
-					"then give the file to the person, who can review and apply it in Webex Admin Studio.",
+				"Beta. Record a Webex CLI create, update or delete in a change set file instead of running it, "+
+					"for the person to review and apply in Webex Admin Studio. Nothing is sent to Webex. "+
+					"Only the types Studio applies can be recorded: webex_changeset action \"types\" lists them and their commands. "+
+					"An update body describes the proposed changes: send only the fields you intend to change, "+
+					"even for a Contact Center update; values equal to Webex add no change, and fields Studio does not model "+
+					"are ignored. The CLI keeps the values it read as preconditions. A create returns a placeholder ID like "+
+					"\"new:sales-team\" that later proposals can use in flags or bodies. Start the file with webex_changeset "+
+					"action \"new\", and give the person the file path when you are done.",
 			),
 			mcplib.WithString("changeset",
 				mcplib.Required(),
@@ -92,7 +95,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 	s.AddTool(
 		mcplib.NewTool("webex_changeset",
 			mcplib.WithDescription(
-				"Manage a change set file: \"new\" starts one for the current org, \"show\" summarizes it, "+
+				"Beta. Manage a change set file: \"new\" starts one for the current org, \"show\" summarizes it, "+
 					"\"validate\" checks it (live=true also re-reads Webex and reports values that changed since they were recorded), "+
 					"\"intent\" adds a plain-language summary and assigns operations to it, "+
 					"\"drop\" removes an operation (reverting what it proposes) or, with paths, some field changes from an update, "+
