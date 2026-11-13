@@ -57,7 +57,8 @@ func Diff(current, desired map[string]any) []Change {
 				walk(path+".", curMap, wantMap)
 				continue
 			}
-			if present && Equal(curValue, wantValue) {
+			// An absent field already reads as null.
+			if (present && Equal(curValue, wantValue)) || (!present && wantValue == nil) {
 				continue
 			}
 			out = append(out, Change{Path: path, Value: wantValue, Before: curValue, HasBefore: true})

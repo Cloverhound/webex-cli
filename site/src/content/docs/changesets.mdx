@@ -46,6 +46,7 @@ webex --changeset desk.changeset.json cc team create \
 - **Org:** a request for an org other than the change set's is refused, whether its path, query or body names it.
 - **Deletes:** an update to an object the change set deletes is refused. A delete records no snapshot of the object, so `validate --live` can only report that it is gone.
 - **Refused:** anything that is not a create, update or delete of a type Studio applies, such as a bulk save, a purge, an action like answering a call, or a read-only type like a person. Also refused: query parameters other than the org (put the fields in `--body`), a create or update without a JSON body, a delete with a body, a write to an object that cannot be read, and file uploads. With `--dry-run`, nothing is recorded: the request is printed instead.
+- **Not checked here:** field rules are left to Studio's import, which refuses a change to a field that is fixed once the object exists, a cleared field, a create missing a required field (see `webex changeset types <type>`), and a value Webex does not accept. Studio's import preview lists any such operation.
 - **Files:** a new change set file can be read only by its owner. Saving keeps the mode of an existing file.
 
 ## Commands
@@ -126,7 +127,7 @@ The MCP server offers the same features through `webex_propose` and `webex_chang
 Each change carries a `path` and a `value`:
 
 - **`path`** is a dotted path into the object's API JSON. Lists are replaced whole, as Webex replaces them.
-- **`value`** is the new value. `null` clears a value.
+- **`value`** is the new value. `null` clears a value; Studio does not apply clears yet.
 - **`before`** is optional. It is the value the author saw, and `null` means the field was absent. An engine should not apply a change whose `before` no longer matches.
 
 Any value `{"$ref": "<handle>"}`, in a body or a change, means the ID of the object that the create with that handle makes. A create must come before the operations that refer to it.

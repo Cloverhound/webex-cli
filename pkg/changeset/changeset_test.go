@@ -49,6 +49,23 @@ func TestDiffReportsOnlyChangedPathsWithBefore(t *testing.T) {
 	}
 }
 
+func TestTextThatStartsWithNewIsNotAPlaceholder(t *testing.T) {
+	cs := New("org")
+	got, err := cs.ResolvePlaceholders(map[string]any{"description": "new: desk for Boulder"})
+	if err != nil || got.(map[string]any)["description"] != "new: desk for Boulder" {
+		t.Fatalf("got %v, err %v", got, err)
+	}
+	if _, err := cs.ResolvePlaceholders("new:missing-desk"); err == nil {
+		t.Error("an unknown handle resolved")
+	}
+}
+
+func TestDiffSkipsNullForAnAbsentField(t *testing.T) {
+	if changes := Diff(doc(t, `{"name":"a"}`), doc(t, `{"name":"a","description":null}`)); len(changes) != 0 {
+		t.Errorf("changes = %+v", changes)
+	}
+}
+
 func TestDiffIgnoresNumberSpelling(t *testing.T) {
 	if changes := Diff(doc(t, `{"n":20}`), doc(t, `{"n":2e1}`)); len(changes) != 0 {
 		t.Errorf("changes = %+v", changes)

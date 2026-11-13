@@ -223,7 +223,7 @@ func record(cs *changeset.ChangeSet, w catalog.Write, target changeset.Target, b
 			result["withdrawn"] = withdrawn
 		}
 		if len(changes) == 0 {
-			if len(withdrawn) == 0 {
+			if len(withdrawn) == 0 && len(ignored) == 0 {
 				result["unchanged"] = true
 			}
 			return result, nil

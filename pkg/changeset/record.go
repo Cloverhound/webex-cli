@@ -38,13 +38,17 @@ func HandleOf(id string) (string, bool) {
 	return strings.TrimPrefix(id, NewIDPrefix), true
 }
 
+// handlePattern is the shape of every handle AddCreate makes. Text such as
+// "new: desk for Boulder" does not have it, so it stays text.
+var handlePattern = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
+
 // ResolvePlaceholders replaces every "new:<handle>" string in v with a
 // reference, and fails on a handle no create in the change set has.
 func (cs *ChangeSet) ResolvePlaceholders(v any) (any, error) {
 	switch t := v.(type) {
 	case string:
 		handle, ok := HandleOf(t)
-		if !ok {
+		if !ok || !handlePattern.MatchString(handle) {
 			return t, nil
 		}
 		if cs.create(handle) == nil {

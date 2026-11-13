@@ -93,7 +93,7 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `internal/client/capture.go` — `--changeset` capture (beta): records a create, update or delete of a writable catalog type in a change set instead of sending it, and refuses everything else, because Webex Admin Studio refuses a whole file over one operation it cannot apply
+- `internal/client/capture.go` — `--changeset` capture (beta): records a create, update or delete of a writable catalog type in a change set instead of sending it, and refuses every other request, because Webex Admin Studio refuses a whole file over one operation it cannot apply. Field-level checks (fixed fields, required fields, value rules) are left to Studio's import
 - `internal/client/` — Request builder (JSON and multipart bodies), CLI pagination, and the CLI's use of `pkg/webexapi` with its process-wide flags; `SDK()` gives SDK packages a transport set up the same way
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry, regions and hosts)

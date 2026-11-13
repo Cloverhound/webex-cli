@@ -277,6 +277,16 @@ func TestCaptureIgnoresFieldsStudioDoesNotModel(t *testing.T) {
 	}
 }
 
+// A body of fields Studio does not model changes nothing Studio applies, which is not
+// the same as matching Webex.
+func TestCaptureOnlyIgnoredFieldsIsNotUnchanged(t *testing.T) {
+	_, _ = setupCapture(t)
+	out := run(t, write(t, "cc_team", catalog.Update, map[string]string{"id": "team1"}, `{"futureField":"x"}`))
+	if out["unchanged"] != nil || !reflect.DeepEqual(out["ignored"], []any{"futureField"}) || out["recorded"] != nil {
+		t.Errorf("output = %v", out)
+	}
+}
+
 // Work types have no route to read one, so recording reads them by filter.
 func TestCaptureReadsAWorkTypeByFilter(t *testing.T) {
 	_, path := setupCapture(t)
