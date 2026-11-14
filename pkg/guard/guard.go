@@ -232,7 +232,13 @@ func (g *Guard) Create(ctx context.Context, t resource.Type, desired resource.Va
 	if err := g.admit(ctx); err != nil {
 		return resource.Key{}, nil, err
 	}
-	key, err := g.API.Create(ctx, t, desired)
+	// A create that copies from an existing object reads first, and a failure
+	// elsewhere during those reads must still stop its POST.
+	key, err := g.API.Create(webex.WithBeforeWrite(ctx, g.halted), t, desired)
+	var stopped *Failure
+	if errors.As(err, &stopped) {
+		return resource.Key{}, nil, err
+	}
 	if err != nil {
 		return resource.Key{}, nil, g.fail(writeFailure(err, "The create", ""))
 	}

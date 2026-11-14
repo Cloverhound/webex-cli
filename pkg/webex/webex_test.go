@@ -423,6 +423,25 @@ func TestANewLayoutCopiesTheGlobalLayoutsFile(t *testing.T) {
 	}
 }
 
+// A create that copies from another object checks just before its POST, after the
+// reads, so a stop that arrives during them still prevents the write.
+func TestBeforeWriteRunsAfterTheCopyReadsAndCanStopTheCreate(t *testing.T) {
+	c, fake := newClient(t)
+	fake.Put("cc_desktop_layout", map[string]any{"id": "global1", "name": "Global", "global": true, "jsonFileContent": `{"layout":1}`})
+	var readsBefore int
+	stop := errors.New("stopped")
+	ctx := WithBeforeWrite(context.Background(), func() error {
+		readsBefore = len(fake.Log())
+		return stop
+	})
+	if _, err := c.Create(ctx, typeOf(t, "cc_desktop_layout"), resource.Values{"name": "New"}); !errors.Is(err, stop) {
+		t.Fatalf("err = %v", err)
+	}
+	if readsBefore == 0 || len(fake.Mutations()) != 0 {
+		t.Fatalf("check ran after %d requests; writes %v", readsBefore, fake.Mutations())
+	}
+}
+
 // The operation table records lists that take no paging parameters, which answer
 // in one response however many items they hold.
 func TestAListWithoutPagingParametersIsReadInOneRequest(t *testing.T) {

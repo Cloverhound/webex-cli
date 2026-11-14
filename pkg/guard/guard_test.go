@@ -135,6 +135,30 @@ func TestAFailedUpdateStopsOtherWritesBeforeItIsObserved(t *testing.T) {
 	}
 }
 
+// stopBeforeSend stands in for a create whose reads take long enough for another
+// write to fail before its POST.
+type stopBeforeSend struct {
+	API
+	guard *Guard
+}
+
+func (s stopBeforeSend) Create(ctx context.Context, t resource.Type, desired resource.Values) (resource.Key, error) {
+	s.guard.stop("another write failed")
+	return s.API.Create(ctx, t, desired)
+}
+
+func TestAStopDuringACreatesReadsStopsItsPost(t *testing.T) {
+	f := newFixture(t)
+	f.guard.API = stopBeforeSend{f.api, f.guard}
+	_, _, err := f.guard.Create(context.Background(), f.team, resource.Values{"name": "zz", "site_id": "site1"})
+	if failureKind(t, err) != Stopped {
+		t.Fatalf("err = %v", err)
+	}
+	if m := f.fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
+	}
+}
+
 func TestUpdateWritesOnlyChangedFieldsAndVerifies(t *testing.T) {
 	f := newFixture(t)
 	prior := f.prior(t)
