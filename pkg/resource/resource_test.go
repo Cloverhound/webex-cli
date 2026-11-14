@@ -104,30 +104,6 @@ func TestChangedKeepsListOrder(t *testing.T) {
 	}
 }
 
-func TestSplitKeepsOnlyThePathsFieldsOwn(t *testing.T) {
-	body := map[string]any{
-		"name":   "A",
-		"policy": map[string]any{"noAnswer": map[string]any{"rings": 5, "max": 20}, "mode": "X"},
-		"links":  map[string]any{"self": "x"},
-		"tags":   []any{"a"},
-		"empty":  map[string]any{},
-		"ref":    map[string]any{"$ref": "h"},
-		"groups": []any{map[string]any{"agentGroups": []any{}}},
-	}
-	owned, unowned := sample.Split(body)
-	want := map[string]any{"name": "A", "policy": map[string]any{"noAnswer": map[string]any{"rings": 5}}, "tags": []any{"a"}}
-	if !reflect.DeepEqual(owned, want) {
-		t.Errorf("owned = %v", owned)
-	}
-	if got := []string{"empty", "groups", "links.self", "policy.mode", "policy.noAnswer.max", "ref"}; !reflect.DeepEqual(unowned, got) {
-		t.Errorf("unowned = %v", unowned)
-	}
-	// A list mapped with "[]" owns its whole list.
-	if owned, unowned := withRows.Split(map[string]any{"groups": []any{map[string]any{"order": 1}}}); len(unowned) != 0 || owned["groups"] == nil {
-		t.Errorf("rows: owned %v, unowned %v", owned, unowned)
-	}
-}
-
 var withRows = Type{
 	Name: "profile",
 	Fields: []Field{

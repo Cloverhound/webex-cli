@@ -251,29 +251,10 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
-| `--changeset <file>` | Beta: record write requests in a [change set](#change-sets-beta) file instead of sending them (or `$WEBEX_CHANGESET`) |
 | `--region us\|ca\|eu\|eun\|in\|au` | Data region for region-specific hosts (Detailed Call History) |
 | `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1` | Contact Center data center, which selects the Contact Center and AI Agent Studio hosts (default `us1`; also `$WEBEX_CC_REGION` or `webex config set cc-region`) |
 
 A Contact Center update (`PUT`) replaces the whole object: fields the body leaves out are cleared. Get the object first and send the full body back with your changes.
-
-## Change Sets (beta)
-
-A change set file proposes Webex changes for Webex Admin Studio to review, plan and apply, without making them. An AI agent, or a person, runs ordinary write commands with `--changeset <file>`. For each write the CLI reads the object, records only the fields the command changes, and keeps the values it saw as preconditions. Nothing is sent to Webex, so this works in [read-only mode](#read-only-mode) too.
-
-```bash
-webex changeset new desk.changeset.json --title "Front desk ring count" --rationale "Ticket IT-4812"
-webex changeset types                                 # what can be recorded, and the commands
-webex --changeset desk.changeset.json calling hunt-group update \
-  --location-id <loc> --hunt-group-id <hg> --body '{"callPolicies":{"noAnswer":{"numberOfRings":5}}}'
-webex changeset show desk.changeset.json
-webex changeset drop desk.changeset.json op-1         # revert an operation, or some of its fields
-webex changeset validate desk.changeset.json --live   # report values that changed since recording
-```
-
-Only creates, updates and deletes of the types Studio applies can be recorded; anything else is refused. With `--changeset`, an update body describes the proposed changes: send only the fields you intend to change, even for a Contact Center update, and do not apply it by removing `--changeset`. Fields the type does not model are listed as `ignored`.
-
-A create prints a placeholder ID such as `new:boulder-desk`, which later commands in the same change set can use in flags and bodies. Repeat edits to one object merge. `webex changeset intent` groups operations under a plain-language summary, `webex changeset meta` changes the title and other details, and `webex changeset schema` prints the JSON Schema. The [Change Sets](https://cloverhound.github.io/webex-cli/changesets/) page describes the rules and the file format.
 
 ## Configuration
 
@@ -304,18 +285,16 @@ claude mcp add webex -- webex mcp serve
 claude mcp add webex -- /path/to/webex mcp serve
 ```
 
-The server exposes 6 tools:
+The server exposes 4 tools:
 
 | Tool | API methods | Description |
 |---|---|---|
 | `webex_read` | GET | Execute a read-only CLI command (list, get, download, export, search) |
 | `webex_write` | POST / PUT / PATCH / DELETE | Execute a command that creates, updates, or deletes a resource |
-| `webex_propose` | GET | Beta: record a write command in a [change set](#change-sets-beta) file instead of running it |
-| `webex_changeset` | GET | Beta: start, show, validate, annotate or edit a change set file, and list what it can record |
 | `webex_help` | — | Get help text for any command or command group |
 | `webex_usage` | — | Query the MCP usage log (recent commands, timing, status) |
 
-Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`; `webex_propose` and `webex_changeset` stay, because they never write to Webex. `webex_propose` accepts only `calling` and `cc` write commands.
+Read and write operations are split into separate tools so that `webex_read` can be auto-approved in permissions while `webex_write` always prompts for confirmation. In [read-only mode](#read-only-mode) the server does not register `webex_write`.
 
 And 2 MCP resources:
 
@@ -395,7 +374,7 @@ The CLI is built on a Go SDK in `pkg/`, which other programs import as `github.c
 | `catalog` | The object types, and which can be written. |
 | `webex` | Reads and writes objects by type: lists that read items in parallel where a list leaves fields out, full or partial writes as the route needs. |
 | `guard` | The write protocol: conflict check before a write, read-back after it, and stop after a failure. |
-| `changeset` | The portable change set file format. |
+| `changeset` | The change set file format that Webex Admin Studio imports and exports. |
 | `aiagent` | AI Agent Studio's private routes: agent token lookup and credential redaction. |
 | `fakeapi` | A fake Webex for tests, with fault injection. |
 

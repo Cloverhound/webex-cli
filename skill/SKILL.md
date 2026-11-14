@@ -46,7 +46,7 @@ Token resolution order: `--token` flag > `WEBEX_TOKEN` env var > `WEBEX_REFRESH_
 
 Org resolution order: `--organization` flag > `auth set-org` override > login user's home org.
 
-**Read-only mode:** When `webex auth status` shows `Mode: read-only`, the stored login has read scopes only. Write requests fail with `read-only mode`, `--token`/`$WEBEX_TOKEN`/`$WEBEX_REFRESH_TOKEN` are refused, and only users marked `(read-only)` in `webex auth list` can be used. Do not try to leave read-only mode or work around it; tell the user which change you need and let them decide, or record it in a change set (see [Proposing Changes](#proposing-changes-beta)). Leaving it requires the user to run `webex login` in an interactive terminal.
+**Read-only mode:** When `webex auth status` shows `Mode: read-only`, the stored login has read scopes only. Write requests fail with `read-only mode`, `--token`/`$WEBEX_TOKEN`/`$WEBEX_REFRESH_TOKEN` are refused, and only users marked `(read-only)` in `webex auth list` can be used. Do not try to leave read-only mode or work around it; tell the user which change you need and let them decide. Leaving it requires the user to run `webex login` in an interactive terminal.
 
 ## Command Structure
 
@@ -69,7 +69,6 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--debug` — Show HTTP request/response details
 - `--paginate` — Auto-paginate list results
 - `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
-- `--changeset <file>` — Beta: record write requests in a change set file instead of sending them (also `$WEBEX_CHANGESET`); see [Proposing Changes](#proposing-changes-beta)
 - `--region us|ca|eu|eun|in|au` — Data region for region-specific hosts, used by `calling reports-detailed-call-history` (default: `us`). Also settable with `webex config set region <region>` or `WEBEX_REGION`. A `451` error means the org's data lives in another region — the error names the correct one.
 - `--cc-region us1|eu1|eu2|anz1|ca1|jp1|sg1` — Contact Center data center, which picks the Contact Center and AI Agent Studio hosts (default: `us1`). Also `webex config set cc-region <dc>` or `WEBEX_CC_REGION`. Ask the user which data center the org is in if Contact Center calls fail for an org outside the US.
 
@@ -139,57 +138,18 @@ All other CC resources (site, team, users, global-variables, business-hour, audi
    webex <api> <resource> --help
    ```
 
-## Proposing Changes (beta)
-
-When the user wants changes reviewed before they are made, or you are in read-only mode, record them in a **change set** file instead of sending them. Run the same write commands you would otherwise run, with `--changeset <file>`. Nothing is sent to Webex. For each write the CLI reads the object, records only the fields the command changes, and keeps the values it saw as preconditions. The user reviews and applies the file in Webex Admin Studio, or hands it to someone who will. Change sets are in beta.
-
-```bash
-webex changeset new boulder.changeset.json --title "Boulder front desk" \
-  --rationale "Ticket IT-4812: local front desk for the Boulder office" --on-behalf-of user@example.com
-webex changeset types              # the types you can record, with their commands
-webex changeset types cc_queue     # a type's fields: JSON paths, required, fixed
-
-# Ordinary write commands, recorded instead of sent; the body holds only the changes
-webex --changeset boulder.changeset.json calling hunt-group update \
-  --location-id <loc> --hunt-group-id <hg> --body '{"callPolicies":{"noAnswer":{"numberOfRings":5}}}'
-webex --changeset boulder.changeset.json cc team create --body '{"name":"Boulder Desk","siteId":"<site>","teamType":"AGENT","teamStatus":"IN_SERVICE","active":true}'
-# → {"recorded":"op-2","action":"create","id":"new:boulder-desk",...}
-
-# Use the placeholder ID in later commands in the same change set. A list is
-# replaced whole, so send the queue's full callDistributionGroups with the new team added.
-webex --changeset boulder.changeset.json cc contact-service-queue update --id <queue> \
-  --body '{"callDistributionGroups":[{"order":1,"agentGroups":[{"teamId":"<team>"},{"teamId":"new:boulder-desk"}]}]}'
-
-webex changeset intent boulder.changeset.json front-desk "Create a Boulder front desk team" op-1 op-2
-webex changeset show boulder.changeset.json
-webex changeset drop boulder.changeset.json op-1                       # revert an operation
-webex changeset drop boulder.changeset.json op-1 callPolicies.noAnswer.numberOfRings   # or one field
-webex changeset validate boulder.changeset.json --live
-```
-
-- **Only what Studio applies is recorded:** creates, updates and deletes of the types `webex changeset types` lists. Anything else is refused, so check `types` before planning the change.
-- **An update body holds only the fields you intend to change**, even for a Contact Center update; omitted fields stay as they are, and lists are replaced whole. Fields the type does not model are listed as `ignored`. Do not apply a proposal by removing `--changeset`: a direct Contact Center update needs the complete object.
-- Put the fields in `--body`. Query parameters other than the org are refused.
-- A create prints a placeholder ID such as `new:boulder-desk`. Use it in flags or bodies of later commands in the same change set. An update to it folds into the create, and a delete withdraws it.
-- Repeat edits to one object merge into one operation. A change that matches the current value is not recorded. To undo a recorded change, use `webex changeset drop`.
-- `validate --live` re-reads every object and reports values that changed since you recorded them, and objects it could not read. Run it before handing the file over.
-- `webex changeset meta` changes the title, rationale or links later.
-- Give the user the file path when you are done. `webex changeset schema` prints the file format.
-
 ## Using as an MCP Server
 
-The CLI includes a built-in MCP server exposing these tools:
+The CLI includes a built-in MCP server exposing four tools:
 
 | Tool | API methods | When to use |
 |---|---|---|
 | `webex_read` | GET | List, get, download, export — auto-approvable |
 | `webex_write` | POST / PUT / PATCH / DELETE | Create, update, delete — prompts for confirmation |
-| `webex_propose` | GET only | Beta: record a write command in a change set file instead of running it |
-| `webex_changeset` | GET only (`validate` with `live`) | Beta: start, show, validate, annotate or edit a change set file, and list what it can record |
 | `webex_help` | — | Discover commands and flags |
 | `webex_usage` | — | View recent MCP command history |
 
-In read-only mode the server does not register `webex_write`. `webex_propose` and `webex_changeset` stay available, because they never write to Webex. `webex_propose` accepts only `calling` and `cc` write commands.
+In read-only mode the server does not register `webex_write`.
 
 **Claude Code / stdio clients** — no server process needed:
 ```bash

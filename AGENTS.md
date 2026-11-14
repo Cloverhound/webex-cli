@@ -93,7 +93,6 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `internal/client/capture.go` — `--changeset` capture (beta): records a create, update or delete of a writable catalog type in a change set instead of sending it, and refuses every other request, because Webex Admin Studio refuses a whole file over one operation it cannot apply. Field-level checks (fixed fields, required fields, value rules) are left to Studio's import
 - `internal/client/` — Request builder (JSON and multipart bodies), CLI pagination, and the CLI's use of `pkg/webexapi` with its process-wide flags; `SDK()` gives SDK packages a transport set up the same way
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry, regions and hosts)
@@ -108,10 +107,10 @@ Other Go programs import these, and Webex Admin Studio is built on them. They ho
 - `pkg/webexapi/` — HTTP transport: 401 refresh, 429 Retry-After, structured errors, fail-closed list paging; `Hosts` for every data region and Contact Center data center; org ID conversion; the Contact Center pacer
 - `pkg/webexops/` — Generated operation table: one exported `*Operation` per API call (route, parameters, body fields, paging, CLI names), and `Call`
 - `pkg/resource/` — Object types as data: fields, JSON paths, write mode, and the operations (`Route`) each type uses. API facts only; presentation belongs to the program
-- `pkg/catalog/` — The object types. A type is `Managed` (writable) only once its writes are proven on a live tenant; its tests check every route's operation, method and parameter bindings. `match.go` finds the type a write request or a change set target names. How Studio names types in Terraform config lives in Studio, not here
+- `pkg/catalog/` — The object types. A type is `Managed` (writable) only once its writes are proven on a live tenant; its tests check every route's operation, method and parameter bindings. How Studio names types in Terraform config lives in Studio, not here
 - `pkg/webex/` — Reads and writes objects from their definitions
 - `pkg/guard/` — The write protocol: conflict check, read-back, stop after a failure
-- `pkg/changeset/` — Change set file format (types, recording rules, validation, JSON Schema)
+- `pkg/changeset/` — The change set file format Webex Admin Studio imports and exports: types, validation, JSON Schema
 - `pkg/aiagent/` — AI Agent Studio: agent token lookup, credential redaction, `Call`
 - `pkg/fakeapi/` — The fake Webex the SDK, CLI and Studio tests run against
 

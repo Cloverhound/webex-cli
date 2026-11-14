@@ -3,8 +3,6 @@ package mcp
 import (
 	"context"
 	"errors"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -58,129 +56,40 @@ func TestReadOnlyServerOmitsWriteTool(t *testing.T) {
 		if hasWrite := s.GetTool("webex_write") != nil; hasWrite == readOnly {
 			t.Errorf("readOnly=%v: webex_write registered = %v", readOnly, hasWrite)
 		}
-		for _, name := range []string{"webex_propose", "webex_changeset"} {
-			if s.GetTool(name) == nil {
-				t.Errorf("readOnly=%v: %s missing", readOnly, name)
-			}
-		}
 	}
 }
 
-func propose(t *testing.T, command string) string {
+// stubExecutable makes any attempt to run the CLI fail visibly, so a test sees
+// whether a tool call was refused before it ran anything.
+func stubExecutable(t *testing.T) {
 	t.Helper()
 	saved := executable
 	executable = func() (string, error) { return "", errors.New("test: the command was not refused") }
 	t.Cleanup(func() { executable = saved })
-	var req mcplib.CallToolRequest
-	req.Params.Arguments = map[string]any{"command": command, "changeset": filepath.Join(t.TempDir(), "p.changeset.json")}
-	res, err := makeDispatchHandler(nil, modePropose)(context.Background(), req)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return res.Content[0].(mcplib.TextContent).Text
 }
 
-func TestProposeRefusesWhatItCannotRecord(t *testing.T) {
-	for _, command := range []string{
-		"cc team delete --id=team1 --", // flags after -- would be arguments, so nothing turns capture on
-		"auth token",
-		"auth set-folder-default someone",
-		"calling people list",
-		"calling", // resolves to no command
-		"resource set cc_team team1 name=x",
-		"admin people update --person-id=p1", // no type Studio applies lives outside calling and cc
-	} {
-		if got := propose(t, command); !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
-			t.Errorf("%q was run: %s", command, got)
-		}
-	}
-	for _, command := range []string{"cc team delete --id=team1", "calling hunt-group update --location-id=l1 --hunt-group-id=h1"} {
-		if got := propose(t, command); !strings.Contains(got, "was not refused") {
-			t.Errorf("%q was refused: %s", command, got)
-		}
-	}
-}
-
-// changesetArgs runs the webex_changeset tool against a script that prints the
-// arguments it was given, never the test binary.
-func changesetArgs(t *testing.T, arguments map[string]any) string {
-	t.Helper()
-	script := filepath.Join(t.TempDir(), "echo-args")
-	if err := os.WriteFile(script, []byte("#!/bin/sh\necho \"$@\"\n"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	saved := executable
-	executable = func() (string, error) { return script, nil }
-	t.Cleanup(func() { executable = saved })
-	var req mcplib.CallToolRequest
-	req.Params.Arguments = arguments
-	res, err := makeChangesetHandler(nil)(context.Background(), req)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return res.Content[0].(mcplib.TextContent).Text
-}
-
-func TestChangesetToolBuildsEachAction(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "p.changeset.json")
-	if got := changesetArgs(t, map[string]any{"action": "types", "type": "cc_team"}); got != "changeset types cc_team" {
-		t.Errorf("types = %q", got)
-	}
-	got := changesetArgs(t, map[string]any{"action": "drop", "path": path, "op": "op-3", "paths": "name enabled"})
-	if got != "changeset drop "+path+" op-3 name enabled" {
-		t.Errorf("drop = %q", got)
-	}
-	if got := changesetArgs(t, map[string]any{"action": "drop", "path": path}); !strings.HasPrefix(got, "Error:") {
-		t.Errorf("drop without op = %q", got)
-	}
-	got = changesetArgs(t, map[string]any{"action": "meta", "path": path, "rationale": ""})
-	if got != "changeset meta "+path+" --rationale=" {
-		t.Errorf("meta clearing the rationale = %q", got)
-	}
-	if got := changesetArgs(t, map[string]any{"action": "show"}); !strings.HasPrefix(got, "Error:") {
-		t.Errorf("show without a path = %q", got)
-	}
-	if got := changesetArgs(t, map[string]any{"action": "apply", "path": path}); !strings.HasPrefix(got, "Error:") {
-		t.Errorf("unknown action = %q", got)
-	}
-}
-
-// The change set path reaches the CLI in its environment, which no token of the
-// command can override or swallow, so a propose can never become a live write.
-func TestProposeAlwaysRecords(t *testing.T) {
-	script := filepath.Join(t.TempDir(), "echo-env")
-	if err := os.WriteFile(script, []byte("#!/bin/sh\necho \"changeset=$WEBEX_CHANGESET args=$*\"\n"), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	saved := executable
-	executable = func() (string, error) { return script, nil }
-	t.Cleanup(func() { executable = saved })
-	path := filepath.Join(t.TempDir(), "p.changeset.json")
-	run := func(command string) string {
+func TestReadRefusesWritesAndDoubleDash(t *testing.T) {
+	stubExecutable(t)
+	for _, command := range []string{"cc team delete --id=team1", "calling people list --"} {
 		var req mcplib.CallToolRequest
-		req.Params.Arguments = map[string]any{"command": command, "changeset": path, "flags": `{"id":"team1"}`}
-		res, err := makeDispatchHandler(nil, modePropose)(context.Background(), req)
+		req.Params.Arguments = map[string]any{"command": command}
+		res, err := makeDispatchHandler(nil, modeRead)(context.Background(), req)
 		if err != nil {
 			t.Fatal(err)
 		}
-		return res.Content[0].(mcplib.TextContent).Text
-	}
-	// A trailing value flag would swallow a --changeset flag added after it.
-	if got := run("cc team delete --output"); !strings.Contains(got, "changeset="+path+" ") {
-		t.Errorf("the change set was not in the environment: %s", got)
-	}
-	for _, command := range []string{"cc team delete --changeset=", "cc team delete --changeset=/tmp/other.json", "cc team delete --changeset"} {
-		if got := run(command); !strings.HasPrefix(got, "Error:") {
-			t.Errorf("%q ran: %s", command, got)
+		if got := res.Content[0].(mcplib.TextContent).Text; !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
+			t.Errorf("%q was run: %s", command, got)
 		}
 	}
 }
 
-func TestChangesetPath(t *testing.T) {
-	if _, errText := changesetPath("notes.txt"); errText == "" {
-		t.Error("accepted a path that is not .json")
-	}
-	if path, errText := changesetPath("x.changeset.json"); errText != "" || !filepath.IsAbs(path) {
-		t.Errorf("path = %q, err = %q", path, errText)
+// A trailing value flag would swallow --help and run the command.
+func TestHelpRefusesFlags(t *testing.T) {
+	stubExecutable(t)
+	var req mcplib.CallToolRequest
+	req.Params.Arguments = map[string]any{"command": "cc team delete --id x --output"}
+	res, _ := handleHelp(context.Background(), req)
+	if got := res.Content[0].(mcplib.TextContent).Text; !strings.HasPrefix(got, "Error: give the command without flags") {
+		t.Errorf("help = %q", got)
 	}
 }

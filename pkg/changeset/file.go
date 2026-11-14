@@ -3,11 +3,9 @@ package changeset
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 // Parse decodes a change set, keeping numbers exact.
@@ -71,53 +69,4 @@ func Save(path string, cs *ChangeSet) error {
 		return err
 	}
 	return os.Rename(tmp.Name(), path)
-}
-
-// Edit loads the change set at path, or starts one with create when there is
-// no file, applies change and saves the result. A lock file keeps concurrent
-// recorders from losing each other's operations.
-func Edit(path string, create func() (*ChangeSet, error), change func(*ChangeSet) error) error {
-	unlock, err := lock(path)
-	if err != nil {
-		return err
-	}
-	defer unlock()
-
-	cs, err := Load(path)
-	if errors.Is(err, os.ErrNotExist) {
-		cs, err = create()
-	}
-	if err != nil {
-		return err
-	}
-	if err := change(cs); err != nil {
-		return err
-	}
-	return Save(path, cs)
-}
-
-// A lock older than this belongs to a recorder that died.
-const staleLock = 30 * time.Second
-
-func lock(path string) (func(), error) {
-	name := path + ".lock"
-	deadline := time.Now().Add(10 * time.Second)
-	for {
-		f, err := os.OpenFile(name, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o600)
-		if err == nil {
-			f.Close()
-			return func() { os.Remove(name) }, nil
-		}
-		if !errors.Is(err, os.ErrExist) {
-			return nil, err
-		}
-		if info, statErr := os.Stat(name); statErr == nil && time.Since(info.ModTime()) > staleLock {
-			os.Remove(name)
-			continue
-		}
-		if time.Now().After(deadline) {
-			return nil, fmt.Errorf("%s is locked by another recorder; remove %s if none is running", path, name)
-		}
-		time.Sleep(25 * time.Millisecond)
-	}
 }

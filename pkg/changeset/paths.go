@@ -39,44 +39,6 @@ func Set(doc map[string]any, path string, v any) {
 	cur[keys[len(keys)-1]] = v
 }
 
-// Diff returns the changes that turn current into desired, for the paths
-// desired sets. A path desired leaves out is not a change, because a full-object
-// PUT names fields it does not mean to change. Objects are compared key by key
-// and lists whole.
-func Diff(current, desired map[string]any) []Change {
-	var out []Change
-	var walk func(prefix string, cur, want map[string]any)
-	walk = func(prefix string, cur, want map[string]any) {
-		for _, key := range sortedKeys(want) {
-			path := prefix + key
-			wantValue := want[key]
-			curValue, present := cur[key]
-			wantMap, wantIsMap := wantValue.(map[string]any)
-			if _, isRef := Ref(wantValue); wantIsMap && !isRef && len(wantMap) > 0 {
-				curMap, _ := curValue.(map[string]any)
-				walk(path+".", curMap, wantMap)
-				continue
-			}
-			// An absent field already reads as null.
-			if (present && Equal(curValue, wantValue)) || (!present && wantValue == nil) {
-				continue
-			}
-			out = append(out, Change{Path: path, Value: wantValue, Before: curValue, HasBefore: true})
-		}
-	}
-	walk("", current, desired)
-	return out
-}
-
-// Leaves lists every path a body sets, with no precondition.
-func Leaves(body map[string]any) []Change {
-	out := Diff(map[string]any{}, body)
-	for i := range out {
-		out[i].Before, out[i].HasBefore = nil, false
-	}
-	return out
-}
-
 // Equal compares two decoded JSON values. Numbers compare by value whether they
 // were decoded as json.Number or float64.
 func Equal(a, b any) bool {

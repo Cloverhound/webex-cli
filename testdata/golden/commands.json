@@ -10,11 +10,6 @@
     "usage": "Contact Center data center: us1, eu1, eu2, anz1, ca1, jp1, sg1 (default us1)"
    },
    {
-    "name": "changeset",
-    "type": "string",
-    "usage": "Beta: record write requests in this change set file instead of sending them (or $WEBEX_CHANGESET)"
-   },
-   {
     "name": "debug",
     "type": "bool",
     "default": "false",
@@ -66522,121 +66517,6 @@
   ]
  },
  {
-  "path": "webex changeset",
-  "short": "Propose changes for Webex Admin Studio in a change set file (beta)",
-  "long": "Beta. A change set file holds proposed Webex changes instead of sending them.\nWebex Admin Studio imports it for review and apply.\n\nRecord changes by running ordinary write commands with --changeset <file>\n(or $WEBEX_CHANGESET). Nothing is sent to Webex, so this also works in\nread-only mode. Only creates, updates and deletes of the types Studio applies\ncan be recorded; 'webex changeset types' lists them and their commands.\n\nWith --changeset, an update body describes proposed changes. Send only the\nfields you intend to change: omitted fields stay as they are, and lists are\nreplaced whole. Values equal to Webex add no change, and fields Studio does\nnot model are ignored. Do not apply a proposal by removing --changeset: a\ndirect Contact Center update needs the complete object.\n\nA create returns a placeholder ID such as \"new:boulder-desk\". Use it in later\ncommands in this change set, in flags or bodies, to refer to the new object."
- },
- {
-  "path": "webex changeset drop",
-  "short": "Remove an operation, or some field changes from an update",
-  "long": "Remove an operation from a change set, which reverts the create, update or\ndelete it proposes. With paths, remove only those field changes from an update;\nan update with none left is removed.\n\nA create that another operation refers to by its new: ID cannot be dropped\nuntil that operation is dropped too."
- },
- {
-  "path": "webex changeset intent",
-  "short": "Add or reword an intent and assign operations to it"
- },
- {
-  "path": "webex changeset meta",
-  "short": "Change a change set's title, rationale, author or links",
-  "long": "Change the details a change set was started with. Only the flags given change;\nan empty value clears one, and --link name= removes that link.",
-  "flags": [
-   {
-    "name": "author",
-    "type": "string",
-    "usage": "Who or what is proposing the changes"
-   },
-   {
-    "name": "author-type",
-    "type": "string",
-    "usage": "agent or human"
-   },
-   {
-    "name": "link",
-    "type": "stringArray",
-    "default": "[]",
-    "usage": "A link as name=url; name= removes it"
-   },
-   {
-    "name": "on-behalf-of",
-    "type": "string",
-    "usage": "The person an agent is working for"
-   },
-   {
-    "name": "rationale",
-    "type": "string",
-    "usage": "Why these changes are needed"
-   },
-   {
-    "name": "title",
-    "type": "string",
-    "usage": "Short title"
-   }
-  ]
- },
- {
-  "path": "webex changeset new",
-  "short": "Start a change set for the current org",
-  "flags": [
-   {
-    "name": "author",
-    "type": "string",
-    "usage": "Who or what is proposing the changes"
-   },
-   {
-    "name": "author-type",
-    "type": "string",
-    "default": "agent",
-    "usage": "agent or human"
-   },
-   {
-    "name": "link",
-    "type": "stringArray",
-    "default": "[]",
-    "usage": "A link as name=url, such as ticket=https://..."
-   },
-   {
-    "name": "on-behalf-of",
-    "type": "string",
-    "usage": "The person an agent is working for"
-   },
-   {
-    "name": "rationale",
-    "type": "string",
-    "usage": "Why these changes are needed"
-   },
-   {
-    "name": "title",
-    "type": "string",
-    "usage": "Short title"
-   }
-  ]
- },
- {
-  "path": "webex changeset schema",
-  "short": "Print the change set JSON Schema"
- },
- {
-  "path": "webex changeset show",
-  "short": "Summarize a change set"
- },
- {
-  "path": "webex changeset types",
-  "short": "List the object types a change set can record",
-  "long": "List the object types Webex Admin Studio can apply from a change set, with the\ncommands that record each one's creates, updates and deletes. Given a type, list\nits fields: the JSON paths an update records, which ones a create needs, and which\nare fixed once the object exists. Paths outside these are ignored."
- },
- {
-  "path": "webex changeset validate",
-  "short": "Check a change set, and with --live compare its preconditions with Webex",
-  "flags": [
-   {
-    "name": "live",
-    "type": "bool",
-    "default": "false",
-    "usage": "Re-read every updated or deleted object and report drift"
-   }
-  ]
- },
- {
   "path": "webex completion",
   "short": "Generate the autocompletion script for the specified shell",
   "long": "Generate the autocompletion script for webex for the specified shell.\nSee each sub-command's help for details on how to use the generated script.\n"
@@ -70565,7 +70445,7 @@
  {
   "path": "webex mcp serve",
   "short": "Start an MCP server exposing Webex tools to AI clients",
-  "long": "Start a Model Context Protocol (MCP) server.\n\nDefaults to stdio transport (Claude Code, Codex, Cursor):\n  webex mcp serve\n\nUse --http for HTTP transport (Claude Desktop and other HTTP-based clients):\n  webex mcp serve --http\n\nThe HTTP server binds to loopback only and cannot be exposed on public interfaces.\nUse 'webex mcp stop' to stop a running HTTP server.\n\nAuthentication is shared with the CLI — run 'webex login' once and the server\nuses the same stored credentials with automatic token refresh.\n\nTools:\n  webex_read   Execute a read-only CLI command (list, get, download, export)\n  webex_write      Execute a command that creates, updates, or deletes a resource\n  webex_propose    Record a write command in a change set file instead of running it\n  webex_changeset  Start, show, validate, or annotate a change set file\n  webex_help       Get help text for any command or command group\n  webex_usage      Query the MCP usage log (recent commands, timing)\n\nIn read-only mode (webex login --read-only, or WEBEX_READ_ONLY=1) the server\ndoes not register webex_write. webex_propose stays available because it never\nwrites to Webex.\n\nResources:\n  webex://commands  JSON array of all available CLI commands\n  webex://usage     Last 50 lines of the raw usage log\n\nHTTP transport flags:\n  --http            Enable HTTP transport instead of stdio\n  --http-addr       Listen address — must be loopback (default 127.0.0.1:47890)\n\nUsage log flags:\n  --log-path        Path for the usage log (default ~/.webex-mcp/usage.log)\n  --log-max-size    Max log file size in bytes before rotation (default 5MB)\n  --log-max-files   Number of rotated log files to keep (default 3)",
+  "long": "Start a Model Context Protocol (MCP) server.\n\nDefaults to stdio transport (Claude Code, Codex, Cursor):\n  webex mcp serve\n\nUse --http for HTTP transport (Claude Desktop and other HTTP-based clients):\n  webex mcp serve --http\n\nThe HTTP server binds to loopback only and cannot be exposed on public interfaces.\nUse 'webex mcp stop' to stop a running HTTP server.\n\nAuthentication is shared with the CLI — run 'webex login' once and the server\nuses the same stored credentials with automatic token refresh.\n\nTools:\n  webex_read   Execute a read-only CLI command (list, get, download, export)\n  webex_write  Execute a command that creates, updates, or deletes a resource\n  webex_help   Get help text for any command or command group\n  webex_usage  Query the MCP usage log (recent commands, timing)\n\nIn read-only mode (webex login --read-only, or WEBEX_READ_ONLY=1) the server\ndoes not register webex_write.\n\nResources:\n  webex://commands  JSON array of all available CLI commands\n  webex://usage     Last 50 lines of the raw usage log\n\nHTTP transport flags:\n  --http            Enable HTTP transport instead of stdio\n  --http-addr       Listen address — must be loopback (default 127.0.0.1:47890)\n\nUsage log flags:\n  --log-path        Path for the usage log (default ~/.webex-mcp/usage.log)\n  --log-max-size    Max log file size in bytes before rotation (default 5MB)\n  --log-max-files   Number of rotated log files to keep (default 3)",
   "flags": [
    {
     "name": "http",
