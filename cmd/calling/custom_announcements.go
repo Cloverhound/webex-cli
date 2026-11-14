@@ -40,7 +40,7 @@ func registerAnnouncementCmd(use, short, long string, method string,
 				return fmt.Errorf("reading audio file: %w", err)
 			}
 
-			req := client.NewRequest(config.CallingBaseURL(), method, buildPath(locationID, announcementID))
+			req := client.NewRequest(config.CallingBaseURL, method, buildPath(locationID, announcementID))
 			req.QueryParam("orgId", orgID)
 			if err := req.SetMultipart([]client.MultipartPart{
 				{

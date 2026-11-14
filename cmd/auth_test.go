@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"io"
 	"os"
 	"strings"
@@ -26,57 +25,6 @@ func captureStdout(t *testing.T, fn func()) string {
 	w.Close()
 	out, _ := io.ReadAll(r)
 	return string(out)
-}
-
-func TestAuthUsersAreSortedAndCarryState(t *testing.T) {
-	dir := t.TempDir()
-	t.Setenv("XDG_CONFIG_HOME", dir)
-	t.Setenv(auth.TokenStoreEnv, auth.StoreFile)
-
-	expires := time.Now().Add(time.Hour).UTC().Truncate(time.Second)
-	if err := auth.SaveToken("b@example.com", &auth.StoredToken{AccessToken: "secret-token", ExpiresAt: expires, IssuedAt: time.Now()}); err != nil {
-		t.Fatal(err)
-	}
-	cfg := &appconfig.Config{
-		DefaultUser: "b@example.com",
-		Users: map[string]appconfig.UserInfo{
-			"b@example.com": {DisplayName: "B", OrgID: "org-b", OrgName: "Org B"},
-			"a@example.com": {DisplayName: "A", OrgID: "org-a"},
-		},
-	}
-
-	users := authUsers(cfg)
-	if len(users) != 2 || users[0].Email != "a@example.com" || users[1].Email != "b@example.com" {
-		t.Fatalf("users = %+v", users)
-	}
-	if users[0].Status != "no token" || users[0].Default {
-		t.Fatalf("users[0] = %+v", users[0])
-	}
-	b := users[1]
-	if b.Status != "active" || !b.Default || b.OrgID != "org-b" || b.OrgName != "Org B" {
-		t.Fatalf("users[1] = %+v", b)
-	}
-	if b.ExpiresAt == nil || !b.ExpiresAt.Equal(expires) {
-		t.Fatalf("expiresAt = %v", b.ExpiresAt)
-	}
-
-	out, err := json.Marshal(users)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if strings.Contains(string(out), "secret-token") {
-		t.Fatal("user list must not contain tokens")
-	}
-}
-
-func TestTokenJSONOmitsUnknownExpiry(t *testing.T) {
-	out, err := json.Marshal(tokenInfo{Token: "t", Email: "a@example.com", OrgID: "o"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if string(out) != `{"token":"t","email":"a@example.com","orgId":"o"}` {
-		t.Fatalf("json = %s", out)
-	}
 }
 
 func TestAuthStatusReportsEnvTokenWithoutStoredLogin(t *testing.T) {

@@ -345,7 +345,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--page`, `--page-size` |
 | `get` (aliases: `get-id`) | `--id` *(required)* |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `create` | `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |
@@ -451,7 +450,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `list-team-csqs-team-id` | `--id` *(required)* |
 | `list-agent-csqs-ci-user-id` | `--ci-user-id` *(required)* |
 | `list-skill-csqs-ci-user-id` | `--id` *(required)* |
-| `list-v2` | `--page`, `--page-size` |
 | `create` | `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `delete-references` (aliases: `delete-csq-references`) | `--body`, `--body-file` |
@@ -529,7 +527,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--type`, `--page`, `--page-size` |
 | `get` (aliases: `get-id`) | `--id` *(required)*, `--include-names` |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `create` | `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `purge-inactive` | `--next-start-id` |
@@ -593,7 +590,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--page`, `--page-size` |
 | `get` (aliases: `get-id`) | `--id` *(required)* |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `create` | `--active`, `--multimedia-profile-id`, `--name`, `--organization-id`, `--id`, `--version`, `--description`, `--system-default`, `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `purge-inactive` | `--next-start-id` |
@@ -608,7 +604,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--page`, `--page-size` |
 | `get` (aliases: `get-id`) | `--id` *(required)* |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `create` | `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `purge-inactive` | `--next-start-id` |
@@ -637,7 +632,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `bulk-export` | `--page`, `--page-size` |
 | `get` (aliases: `get-id`) | `--id` *(required)* |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `create` | `--active`, `--name`, `--rank-queues-for-team`, `--site-id`, `--team-status`, `--team-type`, `--organization-id`, `--id`, `--version`, `--dialed-number`, `--capacity`, `--desktop-layout-id`, `--skill-profile-id`, `--multi-media-profile-id`, `--user-ids`, `--description`, `--system-default`, `--queue-rankings`, `--created-time`, `--last-updated-time`, `--body`, `--body-file` |
 | `bulk-save` | `--body`, `--body-file` |
 | `purge-inactive` | `--next-start-id` |
@@ -672,7 +666,6 @@ webex cc address-book delete-entry-id --id <entryId>
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
 | `get-dynamic-skill-id` | `--skill-id` *(required)*, `--search`, `--page`, `--page-size` |
 | `list-by-call-monitoring-config` (aliases: `list-call-monitoring-id`) | `--id` *(required)*, `--page`, `--page-size` |
-| `list-v1` | `--page`, `--page-size` |
 | `get-agents-matching-skill-requirements` | `--search`, `--page`, `--page-size`, `--body`, `--body-file` |
 | `list-by-ids` (aliases: `get-ids`) | `--page`, `--page-size`, `--user-ids`, `--search`, `--queue-id`, `--body`, `--body-file` |
 | `update` (aliases: `update-id`) | `--id` *(required)*, `--body`, `--body-file` |

@@ -37,7 +37,7 @@ Examples:
   webex cc audio-files download --id <audio-file-id> --output /tmp/greeting.wav --debug`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET metadata with includeUrl=true
-			req := client.NewRequest(config.CcBaseURL(), "GET", "/organization/{orgid}/audio-file/{id}")
+			req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/audio-file/{id}")
 			req.PathParam("orgid", orgid)
 			req.PathParam("id", id)
 			req.QueryParam("includeUrl", "true")
@@ -99,7 +99,7 @@ Examples:
   webex cc audio-files upload --file prompt.wav --dry-run
   webex cc audio-files upload --file prompt.wav --debug`,
 		RunE: func(c *cobra.Command, args []string) error {
-			return uploadAudioFile(config.CcBaseURL(), orgid, filePath, name, description)
+			return uploadAudioFile(config.CcBaseURL, orgid, filePath, name, description)
 		},
 	}
 

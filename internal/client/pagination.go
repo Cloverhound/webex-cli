@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	urlpkg "net/url"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
-	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
 // PaginateCalling auto-paginates a Calling API list endpoint.
@@ -70,7 +72,7 @@ func paginateOffset(baseURL, method, path, startParam, sizeParam string, firstIn
 		prevFirst = items[0]
 		allItems = append(allItems, items...)
 
-		if link := webexapi.NextLink(respHeaders, baseURL); link != "" {
+		if link := nextLink(respHeaders, baseURL); link != "" {
 			next = link
 			continue
 		}
@@ -116,6 +118,30 @@ func listItems(body []byte) ([]json.RawMessage, int, error) {
 	return nil, total, nil
 }
 
+// nextLink returns the rel="next" URL from a Link header, but only when it
+// points at the same host as baseURL, so the bearer token is never sent elsewhere.
+func nextLink(h http.Header, baseURL string) string {
+	base, err := urlpkg.Parse(baseURL)
+	if err != nil {
+		return ""
+	}
+	for _, value := range h.Values("Link") {
+		for _, part := range strings.Split(value, ",") {
+			target, params, ok := strings.Cut(part, ";")
+			if !ok || !strings.Contains(strings.ReplaceAll(params, " ", ""), `rel="next"`) {
+				continue
+			}
+			target = strings.Trim(strings.TrimSpace(target), "<>")
+			u, err := urlpkg.Parse(target)
+			if err != nil || u.Scheme != base.Scheme || u.Host != base.Host {
+				return ""
+			}
+			return target
+		}
+	}
+	return ""
+}
+
 // PaginateCC auto-paginates a Contact Center API list endpoint.
 // CC uses page/pageSize with meta.totalPages.
 func PaginateCC(baseURL, method, path string, pathParams, queryParams, headers map[string]string) ([]json.RawMessage, error) {
@@ -147,7 +173,6 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
 	page := 0
 	pageSize := 100
-	var previousFirst json.RawMessage
 
 	for {
 		r := NewRequest(baseURL, method, path)
@@ -168,19 +193,11 @@ func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, h
 			return nil, err
 		}
 
-		// A bare array carries no page metadata. A full one may have more after it,
-		// unless the endpoint ignores page and answers the same array again.
+		// A bare array carries no page metadata, so it is the only page.
 		var bare []json.RawMessage
 		if err := json.Unmarshal(body, &bare); err == nil {
-			if len(bare) > 0 && bytes.Equal(bare[0], previousFirst) {
-				return nil, nil
-			}
-			if !visit(bare) || len(bare) < pageSize {
-				return nil, nil
-			}
-			previousFirst = bare[0]
-			page++
-			continue
+			visit(bare)
+			return nil, nil
 		}
 
 		var result map[string]json.RawMessage

@@ -1,10 +1,8 @@
 package config
 
 import (
+	"encoding/base64"
 	"strings"
-	"sync"
-
-	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
 var (
@@ -20,20 +18,8 @@ var (
 	maxRetryTimer int // max total seconds allowed across all 429 waits (0 = unlimited)
 )
 
-// tokenMu guards token, which SDK reads running in parallel refresh after a 401.
-var tokenMu sync.RWMutex
-
-func SetToken(t string) {
-	tokenMu.Lock()
-	defer tokenMu.Unlock()
-	token = t
-}
-
-func Token() string {
-	tokenMu.RLock()
-	defer tokenMu.RUnlock()
-	return token
-}
+func SetToken(t string) { token = t }
+func Token() string     { return token }
 
 func SetMaxRetry(n int) { maxRetry = n }
 func MaxRetry() int     { return maxRetry }
@@ -72,63 +58,104 @@ func SetOrgID(id string) {
 func OrgID() string       { return orgID }
 func OrgIDBase64() string { return orgIDBase64 }
 
-// Regions lists the supported --region values.
-var Regions = webexapi.DataRegions
+const (
+	CallingBaseURL = "https://webexapis.com/v1"
+	CcBaseURL      = "https://api.wxcc-us1.cisco.com"
 
-// CCRegions lists the supported --cc-region values: Contact Center data centers.
-var CCRegions = webexapi.CCDataCenters
+	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
+	// endpoints already carry their own /v1 segment.
+	AnalyticsBaseURL = "https://analytics.webexapis.com"
 
-var (
-	region, ccRegion string
-	hosts, _         = webexapi.NewHosts("", "")
+	// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL;
+	// each Contact Center data center has its own Studio host.
+	AiAgentBaseURL = "https://studio.aiagent-us1.cisco.com"
 )
+
+// analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.
+// Calls to the default host are routed to the nearest region; if that region does
+// not hold the org's data the API returns HTTP 451 with the correct endpoint.
+var analyticsCallingHosts = map[string]string{
+	"us":  "https://analytics-calling.webexapis.com",
+	"ca":  "https://analytics-calling.webexapis.com",
+	"eu":  "https://analytics-calling-eu.webexapis.com",
+	"eun": "https://analytics-calling-eu.webexapis.com",
+	"in":  "https://analytics-calling-in.webexapis.com",
+	"au":  "https://analytics-calling-au.webexapis.com",
+}
+
+// Regions lists the supported --region values.
+var Regions = []string{"us", "ca", "eu", "eun", "in", "au"}
+
+var region string
 
 // SetRegion stores the org's data region (us, ca, eu, eun, in, au).
 // Empty means "use the default host and let Webex route by geography".
-// An unknown region keeps the default host; callers validate first.
-func SetRegion(r string) {
-	region = strings.ToLower(strings.TrimSpace(r))
-	updateHosts()
-}
-func Region() string { return region }
-
-// SetCCRegion stores the org's Contact Center data center (us1, eu1, ...),
-// which selects the Contact Center and AI Agent Studio hosts. Empty means us1.
-func SetCCRegion(r string) {
-	ccRegion = strings.ToLower(strings.TrimSpace(r))
-	updateHosts()
-}
-func CCRegion() string { return ccRegion }
-
-func updateHosts() {
-	if h, err := webexapi.NewHosts(ccRegion, region); err == nil {
-		hosts = h
-	}
-}
-
-// Hosts returns the API base URLs for this run's regions.
-func Hosts() webexapi.Hosts { return hosts }
-
-func CallingBaseURL() string { return hosts.Webex }
-func CcBaseURL() string      { return hosts.CC }
-
-// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
-// endpoints already carry their own /v1 segment.
-func AnalyticsBaseURL() string { return hosts.Analytics }
-
-// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL.
-func AiAgentBaseURL() string { return hosts.AIAgent }
+func SetRegion(r string) { region = strings.ToLower(strings.TrimSpace(r)) }
+func Region() string     { return region }
 
 // AnalyticsCallingBaseURL returns the Detailed Call History base URL for the
-// configured region. Calls to the default host are routed to the nearest
-// region; if that region does not hold the org's data the API returns HTTP 451
-// with the correct endpoint.
-func AnalyticsCallingBaseURL() string { return hosts.AnalyticsCalling }
+// configured region, falling back to the US/Canada host.
+func AnalyticsCallingBaseURL() string {
+	host, ok := analyticsCallingHosts[region]
+	if !ok {
+		host = analyticsCallingHosts["us"]
+	}
+	return host + "/v1"
+}
 
 // DecodeOrgID converts a base64-encoded Webex org ID (ciscospark://us/ORGANIZATION/<uuid>)
 // to the raw UUID. If the input is already a UUID or unrecognized, it is returned as-is.
-func DecodeOrgID(id string) string { return webexapi.OrgUUID(id) }
+func DecodeOrgID(id string) string {
+	if id == "" {
+		return id
+	}
 
-// EncodeOrgID converts a UUID to the base64-encoded Webex org ID format,
-// unpadded as Webex issues it. Anything else is returned as-is.
-func EncodeOrgID(id string) string { return webexapi.OrgIDFromUUID(id) }
+	// If it already looks like a UUID, return as-is
+	if strings.Count(id, "-") == 4 && len(id) == 36 {
+		return id
+	}
+
+	// Try all base64 variants (Webex IDs may or may not have padding)
+	encodings := []*base64.Encoding{
+		base64.StdEncoding,
+		base64.RawStdEncoding,
+		base64.URLEncoding,
+		base64.RawURLEncoding,
+	}
+
+	for _, enc := range encodings {
+		decoded, err := enc.DecodeString(id)
+		if err != nil {
+			continue
+		}
+		s := string(decoded)
+		if strings.HasPrefix(s, "ciscospark://") {
+			parts := strings.Split(s, "/")
+			if len(parts) > 0 {
+				uuid := parts[len(parts)-1]
+				if uuid != "" {
+					return uuid
+				}
+			}
+		}
+	}
+
+	return id
+}
+
+// EncodeOrgID converts a UUID to the base64-encoded Webex org ID format:
+// base64("ciscospark://us/ORGANIZATION/<uuid>"), unpadded as Webex issues it.
+// Calling multipart upload endpoints never respond to a padded orgId.
+// If the input is empty, returns empty. If the input is already base64-encoded, returns as-is.
+func EncodeOrgID(id string) string {
+	if id == "" {
+		return ""
+	}
+	// If it looks like a UUID, encode it
+	if strings.Count(id, "-") == 4 && len(id) == 36 {
+		uri := "ciscospark://us/ORGANIZATION/" + id
+		return base64.RawStdEncoding.EncodeToString([]byte(uri))
+	}
+	// Already base64 or unknown format — return as-is
+	return id
+}

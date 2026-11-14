@@ -1,14 +1,12 @@
 package cmd
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 	"time"
 
@@ -28,125 +26,15 @@ var authCmd = &cobra.Command{
 var authTokenCmd = &cobra.Command{
 	Use:   "token",
 	Short: "Print the current access token",
-	Long: `Print the access token for the active user, refreshing it if expired. Useful for making manual API calls with curl.
-
---output json prints the token with its expiry, user and organization. --min-ttl
-refreshes the token if less than that time remains, for handing it to a
-long-running process. It needs a stored login.`,
+	Long:  "Print the access token for the active user, refreshing it if expired. Useful for making manual API calls with curl.",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		tok := config.Token()
 		if tok == "" {
 			return fmt.Errorf("no access token available; run: webex login")
 		}
-		minTTL, _ := cmd.Flags().GetDuration("min-ttl")
-		asJSON := jsonOutputRequested(cmd)
-		if minTTL == 0 && !asJSON {
-			fmt.Println(tok)
-			return nil
-		}
-
-		info := tokenInfo{Token: tok, OrgID: config.OrgIDBase64()}
-		if tokenFromStoredLogin(cmd) {
-			cfg, err := appconfig.Load()
-			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
-			}
-			flagUser, envUser := requestedUser(cmd)
-			email := firstNonEmpty(flagUser, envUser, cfg.DefaultUser)
-			stored, err := auth.EnsureMinTTL(email, minTTL, cfg)
-			if err != nil {
-				return err
-			}
-			info.Token, info.Email, info.ExpiresAt = stored.AccessToken, email, &stored.ExpiresAt
-		} else if minTTL > 0 {
-			return fmt.Errorf("--min-ttl needs a stored login; this token came from --token or the environment")
-		}
-
-		if !asJSON {
-			fmt.Println(info.Token)
-			return nil
-		}
-		return printJSON(info)
+		fmt.Println(tok)
+		return nil
 	},
-}
-
-// tokenInfo is the --output json form of auth token.
-type tokenInfo struct {
-	Token     string     `json:"token"`
-	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
-	Email     string     `json:"email,omitempty"`
-	OrgID     string     `json:"orgId,omitempty"`
-}
-
-// authUser describes a stored login. It never carries a token.
-type authUser struct {
-	Email     string     `json:"email"`
-	Name      string     `json:"name,omitempty"`
-	OrgID     string     `json:"orgId,omitempty"`
-	OrgName   string     `json:"orgName,omitempty"`
-	Status    string     `json:"status"`
-	Default   bool       `json:"default"`
-	ReadOnly  bool       `json:"readOnly"`
-	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
-}
-
-// authUsers lists stored logins, sorted by email.
-func authUsers(cfg *appconfig.Config) []authUser {
-	users := make([]authUser, 0, len(cfg.Users))
-	for email, info := range cfg.Users {
-		user := authUser{
-			Email:   email,
-			Name:    info.DisplayName,
-			OrgID:   info.OrgID,
-			OrgName: info.OrgName,
-			Default: email == cfg.DefaultUser,
-		}
-		tok, err := auth.LoadToken(email)
-		switch {
-		case err != nil:
-			user.Status = "no token"
-		case !tok.IsExpired():
-			user.Status = "active"
-		case tok.IsRefreshExpired():
-			user.Status = "expired"
-		default:
-			user.Status = "refreshable"
-		}
-		if err == nil {
-			user.ReadOnly = tok.ReadOnly
-			user.ExpiresAt = &tok.ExpiresAt
-		}
-		users = append(users, user)
-	}
-	sort.Slice(users, func(i, j int) bool { return users[i].Email < users[j].Email })
-	return users
-}
-
-// jsonOutputRequested reports an explicit --output json. The flag's default is also
-// json, which must not change the human-readable output of auth commands.
-func jsonOutputRequested(cmd *cobra.Command) bool {
-	format, _ := cmd.Flags().GetString("output")
-	return cmd.Flags().Changed("output") && format == "json"
-}
-
-func tokenFromStoredLogin(cmd *cobra.Command) bool {
-	flagToken, _ := cmd.Flags().GetString("token")
-	return flagToken == "" && os.Getenv("WEBEX_TOKEN") == "" && os.Getenv(auth.RefreshTokenEnv) == ""
-}
-
-func firstNonEmpty(values ...string) string {
-	for _, v := range values {
-		if v != "" {
-			return v
-		}
-	}
-	return ""
-}
-
-func printJSON(v any) error {
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	return enc.Encode(v)
 }
 
 var authStatusCmd = &cobra.Command{
@@ -160,9 +48,12 @@ var authStatusCmd = &cobra.Command{
 
 		// Status reports the login that other commands would use, so it honors
 		// the same user selection.
-		flagUser, envUser := requestedUser(cmd)
-		email := firstNonEmpty(flagUser, envUser, cfg.DefaultUser)
-
+		email := cfg.DefaultUser
+		if flagUser, envUser := requestedUser(cmd); flagUser != "" {
+			email = flagUser
+		} else if envUser != "" {
+			email = envUser
+		}
 		envSet := false
 		for _, env := range []string{"WEBEX_TOKEN", auth.RefreshTokenEnv} {
 			if os.Getenv(env) == "" {
@@ -348,10 +239,6 @@ var authListCmd = &cobra.Command{
 			return fmt.Errorf("loading config: %w", err)
 		}
 
-		if jsonOutputRequested(cmd) {
-			return printJSON(authUsers(cfg))
-		}
-
 		if len(cfg.Users) == 0 {
 			fmt.Println("No authenticated users. Run: webex login")
 			return nil
@@ -360,26 +247,40 @@ var authListCmd = &cobra.Command{
 		fmt.Printf("%-30s  %-20s  %-25s  %-10s  %s\n", "EMAIL", "NAME", "ORG", "STATUS", "")
 		fmt.Printf("%-30s  %-20s  %-25s  %-10s  %s\n", "-----", "----", "---", "------", "")
 
-		for _, user := range authUsers(cfg) {
+		for email, info := range cfg.Users {
+			status := "unknown"
+			tok, err := auth.LoadToken(email)
+			if err != nil {
+				status = "no token"
+			} else if tok.IsExpired() {
+				if tok.IsRefreshExpired() {
+					status = "expired"
+				} else {
+					status = "refreshable"
+				}
+			} else {
+				status = "active"
+			}
+
 			var markers []string
-			if user.Default {
+			if email == cfg.DefaultUser {
 				markers = append(markers, "(default)")
 			}
-			if user.ReadOnly {
+			if err == nil && tok.ReadOnly {
 				markers = append(markers, "(read-only)")
 			}
 			marker := strings.Join(markers, " ")
 
-			name := user.Name
+			name := info.DisplayName
 			if len(name) > 20 {
 				name = name[:17] + "..."
 			}
-			org := user.OrgName
+			org := info.OrgName
 			if len(org) > 25 {
 				org = org[:22] + "..."
 			}
 
-			fmt.Printf("%-30s  %-20s  %-25s  %-10s  %s\n", user.Email, name, org, user.Status, marker)
+			fmt.Printf("%-30s  %-20s  %-25s  %-10s  %s\n", email, name, org, status, marker)
 		}
 
 		return nil
@@ -563,7 +464,6 @@ var authClearFolderDefaultCmd = &cobra.Command{
 }
 
 func init() {
-	authTokenCmd.Flags().Duration("min-ttl", 0, "Refresh the token if less than this time remains (e.g. 30m)")
 	authCmd.AddCommand(authTokenCmd)
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authListCmd)
