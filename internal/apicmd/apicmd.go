@@ -154,7 +154,7 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 				resp, statusCode, err := req.DoPaginated(isCalling)
 				if err != nil {
-					return err
+					return redactError(op, err)
 				}
 				if op.Redact {
 					resp = aiagent.RedactSecrets(resp)
@@ -163,7 +163,7 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 			}
 			resp, statusCode, err := req.Do()
 			if err != nil {
-				return err
+				return redactError(op, err)
 			}
 			if op.Redact {
 				resp = aiagent.RedactSecrets(resp)
@@ -213,6 +213,15 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 		flags.StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 	}
 	return c
+}
+
+// redactError keeps credentials out of the error a failed redacting operation
+// prints, which repeats the response.
+func redactError(op *webexops.Operation, err error) error {
+	if op.Redact {
+		return aiagent.RedactError(err)
+	}
+	return err
 }
 
 func setBodyFields(cmd *cobra.Command, req *client.Request, fields []webexops.BodyField, values *flagValues) {

@@ -3,6 +3,7 @@ package aiagent
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -71,6 +72,27 @@ func TestCallSendsTheAgentTokenAndRedactsTheResponse(t *testing.T) {
 	}
 	if strings.Contains(string(resp.Body), "token-1") || !strings.Contains(string(resp.Body), `"name":"One"`) {
 		t.Fatalf("body = %s", resp.Body)
+	}
+}
+
+// A failed call's error repeats the response, so it is redacted too.
+func TestCallRedactsTheErrorOfAFailedCall(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/v2/organizations/org-1/agents/" {
+			json.NewEncoder(w).Encode(map[string]any{"objects": []map[string]string{{"id": "a1", "bot_access_token": "token-1"}}})
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"error":"bad","auth_token":"secret-token"}`))
+	}))
+	defer srv.Close()
+	_, err := Call(context.Background(), &webexapi.Client{}, webexapi.Hosts{AIAgent: srv.URL}, "org-1", webexops.CCAiAgentExport, webexops.Args{}, "a1")
+	var apiErr *webexapi.APIError
+	if !errors.As(err, &apiErr) || apiErr.Status != 400 {
+		t.Fatalf("err = %v", err)
+	}
+	if strings.Contains(err.Error(), "secret-token") || strings.Contains(string(apiErr.Body), "secret-token") {
+		t.Fatalf("credential in the error: %v", err)
 	}
 }
 

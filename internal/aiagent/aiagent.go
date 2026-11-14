@@ -17,3 +17,6 @@ func BotToken(agentID string) (string, error) {
 
 // RedactSecrets replaces Studio credentials in a JSON response.
 func RedactSecrets(body []byte) []byte { return sdk.RedactSecrets(body) }
+
+// RedactError replaces Studio credentials in the response an API error repeats.
+func RedactError(err error) error { return sdk.RedactError(err) }

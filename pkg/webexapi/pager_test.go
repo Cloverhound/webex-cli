@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -297,6 +298,55 @@ func TestPagersFailOnANullList(t *testing.T) {
 			}
 		}
 		srv.Close()
+	}
+}
+
+func TestWithBodyRebuildsTheMessage(t *testing.T) {
+	e := newAPIError(&Response{Status: 400, Header: http.Header{}, Body: []byte(`{"auth_token":"secret"}`)})
+	r := e.WithBody([]byte(`{"auth_token":"<redacted>"}`))
+	if strings.Contains(r.Error(), "secret") || string(r.Body) != `{"auth_token":"<redacted>"}` || r.Status != 400 || !strings.Contains(e.Error(), "secret") {
+		t.Fatalf("redacted %q from %q", r.Error(), e.Error())
+	}
+	limited := rateLimited(&Response{Status: 429, Header: http.Header{}}, "retry later")
+	if got := limited.WithBody(nil).Error(); got != limited.Error() {
+		t.Errorf("rate-limit message changed: %q", got)
+	}
+}
+
+// SCIM states its total, and a short page does not end the list before it.
+func TestOffsetPagerReadsToAStatedTotal(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start, _ := strconv.Atoi(r.URL.Query().Get("startIndex"))
+		if start > 3 { // stops a pager that loops
+			fmt.Fprint(w, `{"totalResults":2,"Resources":[]}`)
+			return
+		}
+		fmt.Fprintf(w, `{"totalResults":2,"Resources":%s}`, items(start, 1))
+	}))
+	defer srv.Close()
+
+	c := &Client{Token: staticToken("tok")}
+	scim := Paging{Start: "startIndex", Size: "count", First: 1}
+	got, err := collect(t, func(v func([]json.RawMessage) error) error { return c.List(context.Background(), srv.URL, scim, v) })
+	if err != nil || len(got) != 2 {
+		t.Fatalf("got %d items, err %v", len(got), err)
+	}
+}
+
+func TestOffsetPagerFailsWhenItStopsShortOfItsTotal(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("startIndex") == "1" {
+			fmt.Fprintf(w, `{"totalResults":5,"Resources":%s}`, items(1, 1))
+			return
+		}
+		fmt.Fprint(w, `{"totalResults":5,"Resources":[]}`)
+	}))
+	defer srv.Close()
+
+	c := &Client{Token: staticToken("tok")}
+	scim := Paging{Start: "startIndex", Size: "count", First: 1}
+	if _, err := collect(t, func(v func([]json.RawMessage) error) error { return c.List(context.Background(), srv.URL, scim, v) }); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v", err)
 	}
 }
 

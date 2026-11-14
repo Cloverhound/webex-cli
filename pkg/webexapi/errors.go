@@ -18,10 +18,23 @@ type APIError struct {
 	Body       []byte
 
 	message string
+	// fromBody marks a message built from Body, which WithBody rebuilds.
+	fromBody bool
 }
 
 func (e *APIError) Error() string {
 	return e.message
+}
+
+// WithBody returns a copy of the error that carries body instead, with its message
+// rebuilt from it, as when a caller must redact what the response held.
+func (e *APIError) WithBody(body []byte) *APIError {
+	c := *e
+	c.Body = body
+	if c.fromBody {
+		c.message = bodyMessage(c.Status, body)
+	}
+	return &c
 }
 
 func newAPIError(resp *Response) *APIError {
@@ -29,13 +42,18 @@ func newAPIError(resp *Response) *APIError {
 		Status:     resp.Status,
 		TrackingID: resp.Header.Get("Trackingid"),
 		Body:       resp.Body,
-		message:    fmt.Sprintf("API error %d: %s", resp.Status, truncate(string(resp.Body), errorBodyLimit)),
+		message:    bodyMessage(resp.Status, resp.Body),
+		fromBody:   true,
 	}
+}
+
+func bodyMessage(status int, body []byte) string {
+	return fmt.Sprintf("API error %d: %s", status, truncate(string(body), errorBodyLimit))
 }
 
 func rateLimited(resp *Response, detail string) *APIError {
 	e := newAPIError(resp)
-	e.message = "rate limited (429): " + detail
+	e.message, e.fromBody = "rate limited (429): "+detail, false
 	return e
 }
 

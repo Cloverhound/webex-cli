@@ -188,7 +188,17 @@ func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit
 			next = link
 			continue
 		}
-		if next != "" || p.Start == "" || len(items) < offsetPageSize || (total > 0 && seen >= total) {
+		if next != "" || p.Start == "" {
+			return nil
+		}
+		// A stated total ends the list only when reached; a short page can be a
+		// server's own page size.
+		switch {
+		case total > 0 && seen >= total:
+			return nil
+		case total > 0 && len(items) == 0:
+			return fmt.Errorf("%w: %s ended at %d of %d items", ErrIncompleteList, listURL, seen, total)
+		case total == 0 && len(items) < offsetPageSize:
 			return nil
 		}
 		start += len(items)

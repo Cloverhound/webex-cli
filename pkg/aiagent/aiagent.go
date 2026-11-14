@@ -68,6 +68,16 @@ func RedactSecrets(body []byte) []byte {
 	return secretField.ReplaceAll(body, []byte(`$1"<redacted>"`))
 }
 
+// RedactError replaces Studio credentials in an API error's body and message, which
+// repeat the response a failed call returned.
+func RedactError(err error) error {
+	var apiErr *webexapi.APIError
+	if errors.As(err, &apiErr) {
+		return apiErr.WithBody(RedactSecrets(apiErr.Body))
+	}
+	return err
+}
+
 // Call sends a Studio operation. An operation that selects its agent by token gets
 // the token of agentID, and a response that can carry credentials comes back with
 // them redacted.
@@ -88,8 +98,11 @@ func Call(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, orgUUID
 		args.Header = header
 	}
 	resp, err := webexops.Call(ctx, c, hosts, op, args)
-	if resp != nil && op.Redact {
-		resp.Body = RedactSecrets(resp.Body)
+	if op.Redact {
+		if resp != nil {
+			resp.Body = RedactSecrets(resp.Body)
+		}
+		err = RedactError(err)
 	}
 	return resp, err
 }
