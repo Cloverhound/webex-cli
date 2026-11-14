@@ -87,6 +87,19 @@ webex messaging <resource> <action> [flags]   # Webex Messaging APIs
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
+| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1\|in1` | Contact Center data center for `cc` commands (default: the organization's saved region, else `us1`) |
+
+## Contact Center data center
+
+Each organization's Contact Center, and its AI Agent Studio, is in one data center. `cc` commands use, in order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. Save an organization's region once:
+
+```bash
+webex config set cc-region eu1                       # the current organization
+webex config set cc-region anz1 --organization <id>  # another organization
+webex config get cc-region
+```
+
+`--cc-region` on its own applies to one command and saves nothing.
 
 ## Admin Examples
 

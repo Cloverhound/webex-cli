@@ -123,7 +123,7 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ### Contact Center (`webex cc`)
 
-64 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
+64 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more. For an organization outside the US data center, see [Contact Center data center](#contact-center-data-center).
 
 ### Admin (`webex admin`)
 
@@ -248,6 +248,7 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
+| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1\|in1` | Contact Center data center for `cc` commands (default: the organization's saved region, else `us1`) |
 
 ## Configuration
 
@@ -256,10 +257,15 @@ webex config set client-id <id>          # Use custom OAuth client ID
 webex config set client-secret <secret>  # Use custom OAuth client secret
 webex config set scopes <scopes>         # Override OAuth scopes
 webex config set read-only-scopes <scopes>  # Override scopes for login --read-only
+webex config set cc-region <region>      # Save the current organization's Contact Center data center
 webex config get client-id               # View current value
 ```
 
 Config is stored in `~/.webex-cli/config.json`.
+
+### Contact Center data center
+
+Each organization's Contact Center, and its AI Agent Studio, is in one data center: `us1`, `eu1`, `eu2`, `anz1`, `ca1`, `jp1`, `sg1` or `in1`. `cc` commands use, in order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. `webex config set cc-region eu1` saves the region for the current organization (or the one named with `--organization`), so organizations in different data centers each keep their own. `--cc-region` alone saves nothing.
 
 ## MCP Server
 

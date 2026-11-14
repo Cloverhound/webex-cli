@@ -68,6 +68,7 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--paginate` — Auto-paginate list results
 - `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
 - `--region us|ca|eu|eun|in|au` — Data region for region-specific hosts, used by `calling reports-detailed-call-history` (default: `us`). Also settable with `webex config set region <region>` or `WEBEX_REGION`. A `451` error means the org's data lives in another region — the error names the correct one.
+- `--cc-region us1|eu1|eu2|anz1|ca1|jp1|sg1|in1` — Contact Center data center for `cc` commands, including AI Agent Studio. Order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. A person saves it once per organization in a terminal with `webex config set cc-region <region>` (add `--organization <id>` for another org); the flag alone saves nothing. The MCP server does not run `config set`: pass `cc-region` in `flags` instead.
 
 ## Contact Center `--orgid` Handling
 

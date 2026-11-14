@@ -45,6 +45,10 @@ type Config struct {
 	ReadOnly       bool                `json:"read_only,omitempty"`
 	ReadOnlyScopes string              `json:"read_only_scopes,omitempty"`
 
+	// CCRegions holds each org's Contact Center data center, keyed by org UUID:
+	// orgs one login manages can live in different data centers.
+	CCRegions map[string]string `json:"cc_regions,omitempty"`
+
 	path string // file path, not serialized
 }
 

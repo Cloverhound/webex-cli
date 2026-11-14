@@ -5,6 +5,8 @@ description: Webex Contact Center API commands reference.
 
 The `webex cc` subcommand provides access to the Webex Contact Center API. The `--orgid` flag is auto-populated from your login, so you typically don't need to pass it.
 
+Requests go to the organization's Contact Center data center: the one saved with `webex config set cc-region <region>`, else `us1`. `--cc-region` overrides it for one command. See [Contact Center data center](../getting-started/#contact-center-data-center).
+
 ## Resource Groups
 
 | Resource | Description |
@@ -208,7 +210,7 @@ webex cc ai-agent-session list --agent-id <agent-id> --paginate
 - A tool needs `input_entities` in JSON Schema form even when it takes no input. Start from a tool in `get-configuration`.
 - In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
 - A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
-- The Studio host is the US data center's, as for the rest of `webex cc`.
+- Studio is in the organization's Contact Center data center, which `--cc-region` or `webex config set cc-region` selects, as for the rest of `webex cc`.
 
 ## Other refreshed Contact Center APIs
 

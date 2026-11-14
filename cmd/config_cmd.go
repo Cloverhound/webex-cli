@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const configKeys = "client-id, client-secret, scopes, read-only-scopes, region"
+const configKeys = "client-id, client-secret, scopes, read-only-scopes, region, cc-region"
 
 var configCmd = &cobra.Command{
 	Use:   "config",
@@ -24,14 +24,18 @@ To use your own Webex Integration instead of the built-in default:
   3. Add the OAuth scopes required for the APIs you plan to use
   4. Run:  webex config set client-id <your-client-id>
            webex config set client-secret <your-client-secret>
-           webex config set scopes "spark:all spark-admin:all <additional-scopes>"`,
+           webex config set scopes "spark:all spark-admin:all <additional-scopes>"
+
+For an organization whose Contact Center is outside the US data center, save its
+region once:  webex config set cc-region eu1  (add --organization <id> for another org)`,
 }
 
 var configSetCmd = &cobra.Command{
 	Use:   "set <key> <value>",
 	Short: "Set a configuration value",
-	Long:  "Set a configuration value. Valid keys: " + configKeys + ". read-only-scopes accepts only read scopes.",
-	Args:  cobra.ExactArgs(2),
+	Long: "Set a configuration value. Valid keys: " + configKeys + ". read-only-scopes accepts only read scopes. " +
+		"cc-region is saved for the current organization (or --organization), since each org's Contact Center is in one data center.",
+	Args: cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		key := args[0]
 		value := args[1]
@@ -41,6 +45,7 @@ var configSetCmd = &cobra.Command{
 			return fmt.Errorf("loading config: %w", err)
 		}
 
+		done := "Set " + key
 		switch key {
 		case "client-id":
 			cfg.ClientID = value
@@ -58,6 +63,26 @@ var configSetCmd = &cobra.Command{
 				return err
 			}
 			cfg.Region = config.Region()
+		case "cc-region":
+			region, err := normalizeCCRegion(value)
+			if err != nil {
+				return err
+			}
+			if region == "" {
+				return fmt.Errorf("cc-region needs a value (valid: %s)", strings.Join(config.CCRegions, ", "))
+			}
+			org := configuredOrgID(cmd, cfg)
+			if org == "" {
+				return fmt.Errorf("no organization to save cc-region for: log in, or pass --organization")
+			}
+			if !orgUUID.MatchString(org) {
+				return fmt.Errorf("%q is not an organization ID", org)
+			}
+			if cfg.CCRegions == nil {
+				cfg.CCRegions = map[string]string{}
+			}
+			cfg.CCRegions[org] = region
+			done = fmt.Sprintf("Set cc-region to %s for organization %s", region, org)
 		default:
 			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)
 		}
@@ -66,7 +91,7 @@ var configSetCmd = &cobra.Command{
 			return fmt.Errorf("saving config: %w", err)
 		}
 
-		fmt.Printf("Set %s\n", key)
+		fmt.Println(done)
 		return nil
 	},
 }
@@ -128,6 +153,16 @@ var configGetCmd = &cobra.Command{
 				fmt.Printf("%s (custom)\n", cfg.Region)
 			} else {
 				fmt.Println("us (default)")
+			}
+		case "cc-region":
+			org := configuredOrgID(cmd, cfg)
+			switch region := cfg.CCRegions[org]; {
+			case org == "":
+				fmt.Printf("%s (default; no organization found: log in, or pass --organization)\n", config.DefaultCCRegion)
+			case region != "":
+				fmt.Printf("%s (saved for organization %s)\n", region, org)
+			default:
+				fmt.Printf("%s (default)\n", config.DefaultCCRegion)
 			}
 		default:
 			return fmt.Errorf("unknown config key: %s (valid: %s)", key, configKeys)

@@ -1,0 +1,272 @@
+package cmd
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/Cloverhound/webex-cli/internal/appconfig"
+	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/spf13/cobra"
+)
+
+const (
+	euOrg = "11111111-1111-1111-1111-111111111111"
+	usOrg = "22222222-2222-2222-2222-222222222222"
+)
+
+// isolate gives a test its own config file and resets what it changes.
+func isolate(t *testing.T) {
+	t.Helper()
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home)
+	for _, env := range []string{"WEBEX_CC_REGION", "WEBEX_USER", "WEBEX_TOKEN", "WEBEX_REFRESH_TOKEN", "WEBEX_REGION", readOnlyEnv} {
+		t.Setenv(env, "")
+	}
+	t.Cleanup(func() {
+		for _, flag := range []string{"organization", "cc-region", "token"} {
+			rootCmd.PersistentFlags().Set(flag, "")
+		}
+		rootCmd.SetArgs(nil)
+		config.SetToken("")
+		config.SetOrgID("")
+		if err := setCCRegion(""); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func run(t *testing.T, args ...string) (string, error) {
+	t.Helper()
+	rootCmd.SetArgs(args)
+	var err error
+	out := captureStdout(t, func() { err = rootCmd.Execute() })
+	return out, err
+}
+
+func TestConfigSetCCRegionSavesItForTheOrganization(t *testing.T) {
+	isolate(t)
+	if _, err := run(t, "config", "set", "cc-region", "eu1", "--organization", config.EncodeOrgID(euOrg)); err != nil {
+		t.Fatal(err)
+	}
+	cfg, err := appconfig.Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := cfg.CCRegions[euOrg]; got != "eu1" {
+		t.Errorf("saved region for %s = %q, want eu1 (saved: %v)", euOrg, got, cfg.CCRegions)
+	}
+	if got, ok := cfg.CCRegions[usOrg]; ok {
+		t.Errorf("another organization got region %q", got)
+	}
+}
+
+func TestConfigSetCCRegionUsesTheDefaultUsersOrganization(t *testing.T) {
+	isolate(t)
+	cfg, _ := appconfig.Load()
+	cfg.DefaultUser = "me@example.com"
+	cfg.Users["me@example.com"] = appconfig.UserInfo{OrgID: euOrg}
+	if err := cfg.Save(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := run(t, "config", "set", "cc-region", "anz1"); err != nil {
+		t.Fatal(err)
+	}
+	cfg, _ = appconfig.Load()
+	if got := cfg.CCRegions[euOrg]; got != "anz1" {
+		t.Errorf("saved region = %q, want anz1", got)
+	}
+}
+
+func TestConfigSetCCRegionNeedsAnOrganization(t *testing.T) {
+	isolate(t)
+	if _, err := run(t, "config", "set", "cc-region", "eu1"); err == nil || !strings.Contains(err.Error(), "organization") {
+		t.Errorf("err = %v, want one asking for an organization", err)
+	}
+}
+
+func TestConfigSetCCRegionRefusesAnUnknownRegion(t *testing.T) {
+	isolate(t)
+	if _, err := run(t, "config", "set", "cc-region", "eu9", "--organization", euOrg); err == nil || !strings.Contains(err.Error(), "eu9") {
+		t.Errorf("err = %v, want one naming eu9", err)
+	}
+}
+
+func TestConfigGetCCRegionShowsTheOrganizationsRegion(t *testing.T) {
+	isolate(t)
+	cfg, _ := appconfig.Load()
+	cfg.CCRegions = map[string]string{euOrg: "eu2"}
+	if err := cfg.Save(); err != nil {
+		t.Fatal(err)
+	}
+	out, err := run(t, "config", "get", "cc-region", "--organization", euOrg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "eu2") || !strings.Contains(out, euOrg) {
+		t.Errorf("output = %q, want eu2 for %s", out, euOrg)
+	}
+	out, err = run(t, "config", "get", "cc-region", "--organization", usOrg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "us1 (default)") {
+		t.Errorf("output = %q, want us1 (default)", out)
+	}
+}
+
+func TestTheSavedRegionSelectsTheOrganizationsHosts(t *testing.T) {
+	isolate(t)
+	cfg := &appconfig.Config{CCRegions: map[string]string{euOrg: "eu1"}}
+
+	if err := resolveCCRegion("", euOrg, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-eu1.cisco.com" || config.AiAgentBaseURL != "https://studio.aiagent-eu1.cisco.com" {
+		t.Errorf("hosts = %s, %s; want eu1's", config.CcBaseURL, config.AiAgentBaseURL)
+	}
+
+	if err := resolveCCRegion("", usOrg, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-us1.cisco.com" || config.AiAgentBaseURL != "https://studio.aiagent-us1.cisco.com" {
+		t.Errorf("hosts = %s, %s; want us1's for an organization with no saved region", config.CcBaseURL, config.AiAgentBaseURL)
+	}
+}
+
+func TestAnExplicitOrgidSelectsThatOrganizationsRegion(t *testing.T) {
+	isolate(t)
+	t.Setenv("WEBEX_TOKEN", "")
+	cfg, _ := appconfig.Load()
+	cfg.CCRegions = map[string]string{euOrg: "eu1"}
+	if err := cfg.Save(); err != nil {
+		t.Fatal(err)
+	}
+	var host string
+	probe := &cobra.Command{Use: "region-probe", RunE: func(*cobra.Command, []string) error {
+		host = config.CcBaseURL
+		return nil
+	}}
+	probe.Flags().String("orgid", "", "")
+	CcCmd.AddCommand(probe)
+	t.Cleanup(func() { CcCmd.RemoveCommand(probe) })
+
+	if _, err := run(t, "cc", "region-probe", "--token", "dummy", "--orgid="+config.EncodeOrgID(euOrg)); err != nil {
+		t.Fatal(err)
+	}
+	if host != "https://api.wxcc-eu1.cisco.com" {
+		t.Errorf("CC host for --orgid=%s = %s, want eu1's", euOrg, host)
+	}
+}
+
+// regionFor runs a cc command that names its org with orgFlag and returns the CC
+// host it would send to.
+func regionFor(t *testing.T, orgFlag, org string) string {
+	t.Helper()
+	var host string
+	probe := &cobra.Command{Use: "region-probe-" + orgFlag, RunE: func(*cobra.Command, []string) error {
+		host = config.CcBaseURL
+		return nil
+	}}
+	probe.Flags().String(orgFlag, "", "")
+	CcCmd.AddCommand(probe)
+	t.Cleanup(func() { CcCmd.RemoveCommand(probe) })
+	if _, err := run(t, "cc", probe.Use, "--token", "dummy", "--"+orgFlag+"="+org); err != nil {
+		t.Fatal(err)
+	}
+	return host
+}
+
+func TestEveryWayACommandNamesItsOrgSelectsThatOrgsRegion(t *testing.T) {
+	for _, flag := range []string{"orgid", "org-id", "x-organization-id", "organization-id"} {
+		t.Run(flag, func(t *testing.T) {
+			isolate(t)
+			cfg, _ := appconfig.Load()
+			cfg.CCRegions = map[string]string{euOrg: "eu1"}
+			if err := cfg.Save(); err != nil {
+				t.Fatal(err)
+			}
+			if got := regionFor(t, flag, config.EncodeOrgID(euOrg)); got != "https://api.wxcc-eu1.cisco.com" {
+				t.Errorf("CC host for --%s=%s = %s, want eu1's", flag, euOrg, got)
+			}
+		})
+	}
+}
+
+func TestIndiaIsADataCenter(t *testing.T) {
+	isolate(t)
+	if err := resolveCCRegion("in1", euOrg, &appconfig.Config{}); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-in1.cisco.com" || config.AiAgentBaseURL != "https://studio.aiagent-in1.cisco.com" {
+		t.Errorf("hosts = %s, %s; want in1's", config.CcBaseURL, config.AiAgentBaseURL)
+	}
+}
+
+func TestAnOrgIsSavedAndFoundWhateverTheCaseOfItsID(t *testing.T) {
+	isolate(t)
+	const org = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+	if _, err := run(t, "config", "set", "cc-region", "eu2", "--organization", strings.ToUpper(org)); err != nil {
+		t.Fatal(err)
+	}
+	cfg, _ := appconfig.Load()
+	if err := resolveCCRegion("", org, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-eu2.cisco.com" {
+		t.Errorf("region saved for the upper-case org ID was not found for the lower-case one: %v", cfg.CCRegions)
+	}
+}
+
+func TestConfigSetCCRegionRefusesSomethingThatIsNotAnOrgID(t *testing.T) {
+	isolate(t)
+	if _, err := run(t, "config", "set", "cc-region", "eu1", "--organization", "Acme"); err == nil {
+		t.Error("an organization that is not an org ID was accepted")
+	}
+}
+
+func TestABlankRegionDoesNotHideTheSavedOne(t *testing.T) {
+	isolate(t)
+	t.Setenv("WEBEX_CC_REGION", " ")
+	if err := resolveCCRegion(" ", euOrg, &appconfig.Config{CCRegions: map[string]string{euOrg: "eu1"}}); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-eu1.cisco.com" {
+		t.Errorf("CC host = %s, want the saved eu1", config.CcBaseURL)
+	}
+}
+
+func TestConfigGetCCRegionSaysWhenThereIsNoOrganization(t *testing.T) {
+	isolate(t)
+	out, err := run(t, "config", "get", "cc-region")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(out, "no organization") {
+		t.Errorf("output = %q, want it to say no organization was found", out)
+	}
+}
+
+func TestTheFlagAndEnvironmentOverrideTheSavedRegion(t *testing.T) {
+	isolate(t)
+	cfg := &appconfig.Config{CCRegions: map[string]string{euOrg: "eu1"}}
+
+	t.Setenv("WEBEX_CC_REGION", "ca1")
+	if err := resolveCCRegion("", euOrg, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-ca1.cisco.com" {
+		t.Errorf("with WEBEX_CC_REGION=ca1, CC host = %s", config.CcBaseURL)
+	}
+
+	if err := resolveCCRegion("JP1", euOrg, cfg); err != nil {
+		t.Fatal(err)
+	}
+	if config.CcBaseURL != "https://api.wxcc-jp1.cisco.com" {
+		t.Errorf("with --cc-region JP1, CC host = %s", config.CcBaseURL)
+	}
+
+	if err := resolveCCRegion("mars", euOrg, cfg); err == nil {
+		t.Error("an unknown region was accepted")
+	}
+}

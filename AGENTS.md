@@ -79,7 +79,7 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 
 ## Key Files
 
-- `cmd/root.go` — Root cobra command, global flags (token, org, output, debug, dry-run, paginate, 429 retries, region)
+- `cmd/root.go` — Root cobra command, global flags (token, org, output, debug, dry-run, paginate, 429 retries, region, cc-region)
 - `cmd/auth.go` — Auth subcommand (status, list, switch, set-org, clear-org)
 - `cmd/login.go` / `cmd/logout.go` — OAuth PKCE and device login
 - `cmd/mcp.go` / `cmd/mcp/` — MCP serve/stop, tools, resources, usage log

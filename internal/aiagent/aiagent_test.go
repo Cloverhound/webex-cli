@@ -26,8 +26,9 @@ func studio(t *testing.T) *httptest.Server {
 		})
 	}))
 	t.Cleanup(srv.Close)
-	baseURL = srv.URL
-	t.Cleanup(func() { baseURL = config.AiAgentBaseURL })
+	old := studioURL
+	studioURL = func() string { return srv.URL }
+	t.Cleanup(func() { studioURL = old })
 	config.SetOrgID("org-1")
 	t.Cleanup(func() { config.SetOrgID("") })
 	return srv
@@ -38,6 +39,21 @@ func TestBotTokenFindsTheAgent(t *testing.T) {
 	got, err := BotToken("a1")
 	if err != nil || got != "token-1" {
 		t.Fatalf("BotToken = %q, %v", got, err)
+	}
+}
+
+// The region is chosen after startup, so BotToken must reach the Studio host
+// selected then, which a fake stands in for here.
+func TestBotTokenUsesTheSelectedRegionsStudio(t *testing.T) {
+	srv := studio(t)
+	old := studioURL
+	t.Cleanup(func() { studioURL = old })
+	studioURL = func() string { return config.AiAgentBaseURL }
+	config.SetCCRegion("eu1")
+	config.AiAgentBaseURL = srv.URL
+	t.Cleanup(func() { config.SetCCRegion("") })
+	if got, err := BotToken("a1"); err != nil || got != "token-1" {
+		t.Fatalf("BotToken = %q, %v; it did not reach the selected Studio", got, err)
 	}
 }
 

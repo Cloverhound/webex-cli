@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -119,6 +120,15 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
+		ccOrg := requestOrgID(cmd)
+		if ccOrg == "" {
+			ccOrg = orgKey(config.OrgID())
+		}
+		ccRegionFlag, _ := cmd.Flags().GetString("cc-region")
+		if err := resolveCCRegion(ccRegionFlag, ccOrg, cfg); err != nil {
+			return err
+		}
+
 		// Auto-populate --org-id on non-CC commands from base64 org ID.
 		// These APIs require base64 format, so convert if needed.
 		if f := cmd.Flags().Lookup("org-id"); f != nil {
@@ -164,6 +174,76 @@ func setRegion(region string) error {
 	}
 	config.SetRegion(normalized)
 	return nil
+}
+
+// resolveCCRegion selects the Contact Center data center for orgID:
+// --cc-region flag > WEBEX_CC_REGION env > the region saved for the org > us1.
+func resolveCCRegion(flag, orgID string, cfg *appconfig.Config) error {
+	region := strings.TrimSpace(flag)
+	if region == "" {
+		region = strings.TrimSpace(os.Getenv("WEBEX_CC_REGION"))
+	}
+	if region == "" {
+		region = cfg.CCRegions[orgKey(orgID)]
+	}
+	return setCCRegion(region)
+}
+
+// requestOrgID returns the org a command names with a flag of its own, which can
+// differ from the resolved org. Contact Center commands name it in the path
+// (--orgid), the body (--org-id, --organization-id) or a header
+// (--x-organization-id).
+func requestOrgID(cmd *cobra.Command) string {
+	for _, name := range []string{"orgid", "org-id", "x-organization-id", "organization-id"} {
+		if f := cmd.Flags().Lookup(name); f != nil && f.Changed && f.Value.String() != "" {
+			return orgKey(f.Value.String())
+		}
+	}
+	return ""
+}
+
+// orgKey is the form saved regions are keyed by: the lower-case UUID, whichever
+// form the org ID was given in.
+func orgKey(id string) string { return strings.ToLower(config.DecodeOrgID(strings.TrimSpace(id))) }
+
+var orgUUID = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
+
+// setCCRegion validates a Contact Center data center and points requests at it.
+func setCCRegion(region string) error {
+	normalized, err := normalizeCCRegion(region)
+	if err != nil {
+		return err
+	}
+	config.SetCCRegion(normalized)
+	return nil
+}
+
+func normalizeCCRegion(region string) (string, error) {
+	normalized := strings.ToLower(strings.TrimSpace(region))
+	if normalized != "" && !slices.Contains(config.CCRegions, normalized) {
+		return "", fmt.Errorf("unknown Contact Center region %q (valid: %s)", region, strings.Join(config.CCRegions, ", "))
+	}
+	return normalized, nil
+}
+
+// configuredOrgID returns the org a command would use, from the flag and the config
+// file alone, for commands that run without a login.
+func configuredOrgID(cmd *cobra.Command, cfg *appconfig.Config) string {
+	if org, _ := cmd.Flags().GetString("organization"); org != "" {
+		return orgKey(org)
+	}
+	if cfg.DefaultOrgID != "" {
+		return orgKey(cfg.DefaultOrgID)
+	}
+	flagUser, envUser := requestedUser(cmd)
+	user := flagUser
+	if user == "" {
+		user = envUser
+	}
+	if user == "" {
+		user = cfg.DefaultUser
+	}
+	return orgKey(cfg.Users[user].OrgID)
 }
 
 // RootCommand returns the root cobra command for external introspection.
@@ -219,6 +299,7 @@ func init() {
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")
+	rootCmd.PersistentFlags().String("cc-region", "", "Contact Center data center: "+strings.Join(config.CCRegions, ", ")+" (default: the organization's saved region, else us1)")
 	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
 	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 

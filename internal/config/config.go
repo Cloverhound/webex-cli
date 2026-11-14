@@ -60,16 +60,38 @@ func OrgIDBase64() string { return orgIDBase64 }
 
 const (
 	CallingBaseURL = "https://webexapis.com/v1"
-	CcBaseURL      = "https://api.wxcc-us1.cisco.com"
 
 	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
 	// endpoints already carry their own /v1 segment.
 	AnalyticsBaseURL = "https://analytics.webexapis.com"
-
-	// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL;
-	// each Contact Center data center has its own Studio host.
-	AiAgentBaseURL = "https://studio.aiagent-us1.cisco.com"
 )
+
+// CCRegions lists the Contact Center data centers. An org's Contact Center lives
+// in one of them, and each has its own API and AI Agent Studio host.
+var CCRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1", "in1"}
+
+// DefaultCCRegion is used when no region is given or saved for the org.
+const DefaultCCRegion = "us1"
+
+var (
+	CcBaseURL = ccHost(DefaultCCRegion)
+
+	// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL.
+	AiAgentBaseURL = aiAgentHost(DefaultCCRegion)
+)
+
+func ccHost(region string) string      { return "https://api.wxcc-" + region + ".cisco.com" }
+func aiAgentHost(region string) string { return "https://studio.aiagent-" + region + ".cisco.com" }
+
+// SetCCRegion points Contact Center and AI Agent Studio requests at a data center
+// from CCRegions. Empty means DefaultCCRegion.
+func SetCCRegion(region string) {
+	if region == "" {
+		region = DefaultCCRegion
+	}
+	CcBaseURL = ccHost(region)
+	AiAgentBaseURL = aiAgentHost(region)
+}
 
 // analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.
 // Calls to the default host are routed to the nearest region; if that region does
