@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/Cloverhound/webex-cli/cmd"
 	"github.com/Cloverhound/webex-cli/internal/readonly"
+	"github.com/Cloverhound/webex-cli/pkg/webexops"
 	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -160,6 +162,14 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 				"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
 			)), nil
 		}
+		// A command's verb can read like a read while its request writes, as
+		// 'calling call-controls get' POSTs to retrieve a parked call, so a generated
+		// command is judged by its method.
+		if op, ok := operationOf(args); mode == modeRead && ok && op.Method != http.MethodGet && !readonly.IsQueryPOST(op.Path) {
+			return mcplib.NewToolResultText(fmt.Sprintf(
+				"Error: '%s' sends a %s request. Use the webex_write tool instead.", commandPath(args), op.Method,
+			)), nil
+		}
 
 		// Force JSON output.
 		args = append(args, "--output=json")
@@ -273,6 +283,15 @@ func blockedCommand(args []string) string {
 		}
 	}
 	return ""
+}
+
+// operationOf finds the API operation a generated command sends.
+func operationOf(args []string) (*webexops.Operation, bool) {
+	words := strings.Fields(commandPath(args))
+	if len(words) != 3 {
+		return nil, false
+	}
+	return webexops.Find(words[0], words[1], words[2])
 }
 
 // actionToken returns the action verb from the command args: "list" for

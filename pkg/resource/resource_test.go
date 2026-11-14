@@ -40,6 +40,19 @@ func TestCheckHoldsTextToTheWholePattern(t *testing.T) {
 	}
 }
 
+// A body writes only []any lists; any other slice would become an empty list.
+func TestCheckRefusesAListThatIsNotAnySlice(t *testing.T) {
+	if err := sample.Check(Values{"tags": []string{"a"}}); err == nil {
+		t.Error("a []string list was accepted")
+	}
+	if err := sample.Check(Values{"tags": []any{"a"}}); err != nil {
+		t.Error(err)
+	}
+	if err := sample.Check(Values{"tags": nil}); err != nil {
+		t.Errorf("clearing a list: %v", err)
+	}
+}
+
 func TestProjectReadsNestedPathsAndParent(t *testing.T) {
 	raw := map[string]any{"name": "a", "enabled": true, "policy": map[string]any{"noAnswer": map[string]any{"rings": 5.0}}, "tags": []any{"x"}, "hidden": "kept"}
 	got := sample.Project("loc1", raw)

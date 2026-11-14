@@ -313,6 +313,35 @@ func TestWithBodyRebuildsTheMessage(t *testing.T) {
 	}
 }
 
+func TestAnEmptySCIMListWithoutResourcesHasNoItems(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, `{"schemas":["urn:ietf:params:scim:api:messages:2.0:ListResponse"],"totalResults":0}`)
+	}))
+	defer srv.Close()
+	c := &Client{Token: staticToken("tok")}
+	scim := Paging{Start: "startIndex", Size: "count", First: 1}
+	got, err := collect(t, func(v func([]json.RawMessage) error) error { return c.List(context.Background(), srv.URL, scim, v) })
+	if err != nil || len(got) != 0 {
+		t.Fatalf("got %d items %v, err %v", len(got), got, err)
+	}
+}
+
+// The token goes only to the API's own host, so a next page elsewhere is a list that
+// cannot be read to its end.
+func TestAPagerFailsOnANextPageOnAnotherHost(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Link", `<https://other.example.com/people?cursor=2>; rel="next"`)
+		fmt.Fprintf(w, `{"items":%s}`, items(0, 2))
+	}))
+	defer srv.Close()
+	c := &Client{Token: staticToken("tok")}
+	if _, err := collect(t, func(v func([]json.RawMessage) error) error {
+		return c.List(context.Background(), srv.URL, Paging{}, v)
+	}); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v", err)
+	}
+}
+
 // SCIM states its total, and a short page does not end the list before it.
 func TestOffsetPagerReadsToAStatedTotal(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

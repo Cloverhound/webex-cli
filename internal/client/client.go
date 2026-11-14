@@ -9,7 +9,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
@@ -89,23 +88,6 @@ func apiClient(req *Request, url string) *webexapi.Client {
 		api.Refresh = refreshToken
 	}
 	return api
-}
-
-var (
-	pacerMu sync.Mutex
-	pacer   *webexapi.Pacer
-)
-
-// ccPacer is shared by every SDK request in the process, so its bulk reads stay
-// under the rate Contact Center refuses.
-func ccPacer() *webexapi.Pacer {
-	pacerMu.Lock()
-	defer pacerMu.Unlock()
-	prefix := config.CcBaseURL() + "/"
-	if pacer == nil || pacer.Prefix != prefix || pacer.Interval != config.CCInterval() {
-		pacer = &webexapi.Pacer{Prefix: prefix, Interval: config.CCInterval()}
-	}
-	return pacer
 }
 
 // endpointURLPattern finds the regional endpoint Webex returns in a 451 body.

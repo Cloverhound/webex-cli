@@ -112,7 +112,7 @@ Other Go programs import these, and Webex Admin Studio is built on them. They ho
 - `pkg/guard/` — The write protocol: conflict check, read-back, stop after a failure
 - `pkg/changeset/` — The change set file format Webex Admin Studio imports and exports: types, validation, JSON Schema
 - `pkg/aiagent/` — AI Agent Studio: agent token lookup, credential redaction, `Call`
-- `pkg/fakeapi/` — The fake Webex the SDK, CLI and Studio tests run against
+- `pkg/fakeapi/` — The fake Webex the SDK's and Studio's tests run against
 
 Live Webex behavior that the catalog encodes (full-object Contact Center PUTs, read-by-filter work types, Contact Center rate limits) is recorded in Webex Admin Studio's AGENTS.md, where it was found.
 - `codegen/supplemental/` — Hand-maintained Postman collections for APIs not in Cisco's collections

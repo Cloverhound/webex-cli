@@ -70,7 +70,8 @@ func stubExecutable(t *testing.T) {
 
 func TestReadRefusesWritesAndDoubleDash(t *testing.T) {
 	stubExecutable(t)
-	for _, command := range []string{"cc team delete --id=team1", "calling people list --"} {
+	// call-controls get POSTs to retrieve a parked call, though its verb reads.
+	for _, command := range []string{"cc team delete --id=team1", "calling people list --", "calling call-controls get"} {
 		var req mcplib.CallToolRequest
 		req.Params.Arguments = map[string]any{"command": command}
 		res, err := makeDispatchHandler(nil, modeRead)(context.Background(), req)
@@ -79,6 +80,22 @@ func TestReadRefusesWritesAndDoubleDash(t *testing.T) {
 		}
 		if got := res.Content[0].(mcplib.TextContent).Text; !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
 			t.Errorf("%q was run: %s", command, got)
+		}
+	}
+}
+
+// A GET, and a POST that only queries, are reads.
+func TestReadAllowsGETsAndQueryPOSTs(t *testing.T) {
+	stubExecutable(t)
+	for _, command := range []string{"cc team list", "cc search query"} {
+		var req mcplib.CallToolRequest
+		req.Params.Arguments = map[string]any{"command": command}
+		res, err := makeDispatchHandler(nil, modeRead)(context.Background(), req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got := res.Content[0].(mcplib.TextContent).Text; !strings.Contains(got, "was not refused") {
+			t.Errorf("%q was refused: %s", command, got)
 		}
 	}
 }

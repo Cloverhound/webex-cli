@@ -184,7 +184,11 @@ func (c *Client) listOffset(ctx context.Context, listURL string, p Paging, visit
 			previousFirst = items[0]
 		}
 		seen += len(items)
-		if link := NextLink(resp.Header, listURL); link != "" {
+		link, refused := nextLink(resp.Header, listURL)
+		if refused {
+			return fmt.Errorf("%w: %s gave a next page on another host", ErrIncompleteList, listURL)
+		}
+		if link != "" {
 			next = link
 			continue
 		}
@@ -222,8 +226,9 @@ func pageArray(body []byte, key string) (items []json.RawMessage, total int, err
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, 0, err
 	}
-	if raw, ok := result["totalResults"]; ok {
-		json.Unmarshal(raw, &total)
+	rawTotal, scim := result["totalResults"]
+	if scim {
+		json.Unmarshal(rawTotal, &total)
 	}
 	if key != "" {
 		items, err := namedArray(result, key)
@@ -237,6 +242,10 @@ func pageArray(body []byte, key string) (items []json.RawMessage, total int, err
 	}
 	var found []string
 	for k, raw := range result {
+		// SCIM's schemas array names the response type, not items.
+		if k == "schemas" {
+			continue
+		}
 		var probe []json.RawMessage
 		if json.Unmarshal(raw, &probe) == nil && probe != nil {
 			found = append(found, k)
@@ -247,6 +256,10 @@ func pageArray(body []byte, key string) (items []json.RawMessage, total int, err
 	case 1:
 		return items, total, nil
 	case 0:
+		// SCIM may leave out Resources when there are none.
+		if scim && total == 0 {
+			return nil, 0, nil
+		}
 		return nil, 0, fmt.Errorf("response has no array")
 	default:
 		return nil, 0, fmt.Errorf("response has several arrays; name one")

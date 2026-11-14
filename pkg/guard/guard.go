@@ -242,9 +242,7 @@ func (g *Guard) Create(ctx context.Context, t resource.Type, desired resource.Va
 	if err != nil {
 		return resource.Key{}, nil, g.fail(writeFailure(err, "The create", ""))
 	}
-	rctx, cancel := recoveryContext()
-	defer cancel()
-	obj, err := g.API.Read(rctx, t, key)
+	obj, err := g.readBack(t, key, func(err error) bool { return err == nil })
 	if err != nil {
 		return key, desired, g.fail(&Failure{Unverified, "The object was created but could not be verified", err.Error()})
 	}
@@ -282,9 +280,7 @@ func (g *Guard) Delete(ctx context.Context, t resource.Type, key resource.Key, p
 	if err := g.API.Delete(ctx, t, key); err != nil {
 		return g.fail(writeFailure(err, "The delete", ""))
 	}
-	rctx, cancel := recoveryContext()
-	defer cancel()
-	_, err = g.API.Read(rctx, t, key)
+	_, err = g.readBack(t, key, func(err error) bool { return errors.Is(err, webex.ErrNotFound) })
 	switch {
 	case errors.Is(err, webex.ErrNotFound):
 		return nil
@@ -293,4 +289,23 @@ func (g *Guard) Delete(ctx context.Context, t resource.Type, key resource.Key, p
 	default:
 		return g.fail(&Failure{Divergent, "The observed state differs from the approved plan", "object still exists"})
 	}
+}
+
+// readBack reads the object after a write until done accepts the result, up to
+// verifyAttempts reads apart, because Webex can answer a read with the state before
+// the write. It returns the last read.
+func (g *Guard) readBack(t resource.Type, key resource.Key, done func(error) bool) (webex.Object, error) {
+	ctx, cancel := recoveryContext()
+	defer cancel()
+	var obj webex.Object
+	var err error
+	for i := 0; i < verifyAttempts; i++ {
+		if i > 0 {
+			time.Sleep(g.VerifyDelay)
+		}
+		if obj, err = g.API.Read(ctx, t, key); done(err) {
+			break
+		}
+	}
+	return obj, err
 }

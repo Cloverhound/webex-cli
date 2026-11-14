@@ -96,5 +96,5 @@ func sdkBeforeSend(r *http.Request) error {
 		}
 		return ErrDryRun
 	}
-	return ccPacer().Wait(r)
+	return nil
 }

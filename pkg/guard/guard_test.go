@@ -159,6 +159,50 @@ func TestAStopDuringACreatesReadsStopsItsPost(t *testing.T) {
 	}
 }
 
+// staleFirstRead answers the first read after a write with the state before it, as
+// Webex's read-after-write lag can.
+type staleFirstRead struct {
+	API
+	wrote, stale bool
+}
+
+func (s *staleFirstRead) Create(ctx context.Context, t resource.Type, desired resource.Values) (resource.Key, error) {
+	s.wrote = true
+	return s.API.Create(ctx, t, desired)
+}
+
+func (s *staleFirstRead) Delete(ctx context.Context, t resource.Type, key resource.Key) error {
+	s.wrote = true
+	return s.API.Delete(ctx, t, key)
+}
+
+func (s *staleFirstRead) Read(ctx context.Context, t resource.Type, key resource.Key) (webex.Object, error) {
+	if s.wrote && !s.stale {
+		s.stale = true
+		if key.ID == "team2" {
+			return webex.Object{Values: resource.Values{"name": "t-team2"}}, nil
+		}
+		return webex.Object{}, webex.ErrNotFound
+	}
+	return s.API.Read(ctx, t, key)
+}
+
+func TestCreateAndDeleteReadBackThroughLag(t *testing.T) {
+	f := newFixture(t)
+	f.guard.API = &staleFirstRead{API: f.api}
+	if _, _, err := f.guard.Create(context.Background(), f.team, resource.Values{"name": "zz", "site_id": "site1", "team_type": "AGENT"}); err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	f.guard.API = &staleFirstRead{API: f.api}
+	prior, err := f.api.Read(context.Background(), f.team, resource.Key{ID: "team2"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := f.guard.Delete(context.Background(), f.team, resource.Key{ID: "team2"}, prior.Values); err != nil {
+		t.Fatalf("delete: %v", err)
+	}
+}
+
 func TestUpdateWritesOnlyChangedFieldsAndVerifies(t *testing.T) {
 	f := newFixture(t)
 	prior := f.prior(t)

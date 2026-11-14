@@ -62,6 +62,12 @@ func TestURLFillsPathAndQueryAndRefusesUnknownArguments(t *testing.T) {
 	if _, err := op.URL(hosts, Args{Path: map[string]string{"orgid": "o"}, Query: map[string]string{"sise": "1"}}); err == nil {
 		t.Fatal("misspelled query parameter accepted")
 	}
+	if _, err := op.URL(hosts, Args{Path: map[string]string{"orgid": "o"}, Header: map[string]string{"Trakking-Id": "x"}}); err == nil {
+		t.Fatal("undeclared header accepted")
+	}
+	if _, err := MeetingsRecordingsListGroup.URL(hosts, Args{Header: map[string]string{"HostEmail": "a@example.com"}}); err != nil {
+		t.Fatalf("a declared header, in another case: %v", err)
+	}
 }
 
 func TestListPagesAsTheOperationSays(t *testing.T) {

@@ -1,8 +1,8 @@
 // Package resource describes Webex object types as data: their fields, the JSON
 // paths those fields live at, and the operations that read and write them. Reading
-// and writing (package webex), the write protocol (package guard), change set
-// recording and Webex Admin Studio all work from these definitions, so adding a type
-// means adding a definition, not new code paths.
+// and writing (package webex), the write protocol (package guard) and Webex Admin
+// Studio all work from these definitions, so adding a type means adding a
+// definition, not new code paths.
 //
 // Definitions hold API facts only. How a program presents a type, such as its
 // sidebar folder or form sections, belongs to that program.
@@ -325,9 +325,16 @@ func (t Type) Field(name string) (Field, bool) {
 	return Field{}, false
 }
 
-// Check reports a value Webex would refuse because of the field's Pattern. Empty text
-// passes: whether a field may be empty is Required's rule.
+// Check reports a value Webex would refuse because of the field's Pattern, and a
+// list given as anything but []any, which bodies would write as an empty list. Empty
+// text passes: whether a field may be empty is Required's rule.
 func (f Field) Check(v any) error {
+	if f.Kind == StringList || f.Kind == ObjectList {
+		if _, ok := v.([]any); v != nil && !ok {
+			return fmt.Errorf("want a list as []any, not %T", v)
+		}
+		return nil
+	}
 	s, ok := v.(string)
 	if f.Pattern == "" || !ok || s == "" {
 		return nil

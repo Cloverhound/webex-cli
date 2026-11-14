@@ -171,6 +171,8 @@ func (s *Server) Delete(kind, id string) {
 	defer s.mu.Unlock()
 	if kind == "hg" {
 		delete(s.hg, id)
+	} else if objects, ok := s.objects[kind]; ok {
+		delete(objects, id)
 	} else {
 		delete(s.team, id)
 	}
@@ -505,6 +507,12 @@ func (s *Server) serveAPI(w http.ResponseWriter, r *http.Request) {
 		s.mu.Unlock()
 		time.Sleep(time.Duration(f.DelayMS) * time.Millisecond)
 		s.mu.Lock()
+	}
+	if op == nil {
+		// A commit-type fault on a route with no item handler has nothing to commit.
+		s.mu.Unlock()
+		write(w, problem(404, 0, "no route"))
+		return
 	}
 	res, committed := op()
 	e.Committed = committed

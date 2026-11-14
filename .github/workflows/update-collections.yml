@@ -45,6 +45,11 @@ jobs:
       - name: Update golden files
         run: make golden
 
+      # CI does not run on a PR this workflow pushes with GITHUB_TOKEN, so the tests
+      # run here: a refresh that breaks a catalog binding fails before a PR opens.
+      - name: Run tests
+        run: make test
+
       - name: Generate changelog
         run: python3 codegen/diff_spec.py /tmp/old_spec.json codegen/api_spec.json > /tmp/spec_diff.md
 

@@ -423,6 +423,32 @@ func TestANewLayoutCopiesTheGlobalLayoutsFile(t *testing.T) {
 	}
 }
 
+// A commit-type fault on a route with no item handler must not wedge the fake for
+// every later request.
+func TestTheFakeSurvivesAFaultOnAListRoute(t *testing.T) {
+	fake := fakeapi.New()
+	srv := httptest.NewServer(fake)
+	defer srv.Close()
+	fake.AddFault(fakeapi.Fault{Method: "GET", Path: "huntGroups$", Mode: fakeapi.LoseResponse})
+	client := &http.Client{Timeout: 5 * time.Second}
+	if resp, err := client.Get(srv.URL + "/v1/telephony/config/locations/loc1/huntGroups"); err == nil {
+		resp.Body.Close()
+	}
+	resp, err := client.Get(srv.URL + "/v1/telephony/config/locations/loc1/huntGroups/hg1")
+	if err != nil {
+		t.Fatalf("the fake stopped answering: %v", err)
+	}
+	resp.Body.Close()
+}
+
+func TestTheFakeDeletesFromEveryCollection(t *testing.T) {
+	c, fake := newClient(t)
+	fake.Delete("cc_skill", "skill1")
+	if _, err := c.Read(context.Background(), typeOf(t, "cc_skill"), resource.Key{ID: "skill1"}); !errors.Is(err, ErrNotFound) {
+		t.Fatalf("err = %v", err)
+	}
+}
+
 // A create that copies from another object checks just before its POST, after the
 // reads, so a stop that arrives during them still prevents the write.
 func TestBeforeWriteRunsAfterTheCopyReadsAndCanStopTheCreate(t *testing.T) {

@@ -3,7 +3,6 @@ package config
 import (
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
@@ -106,12 +105,6 @@ func updateHosts() {
 		hosts = h
 	}
 }
-
-var ccInterval = webexapi.CCInterval
-
-// SetCCInterval spaces Contact Center requests; zero sends them unpaced.
-func SetCCInterval(d time.Duration) { ccInterval = d }
-func CCInterval() time.Duration     { return ccInterval }
 
 // Hosts returns the API base URLs for this run's regions.
 func Hosts() webexapi.Hosts { return hosts }

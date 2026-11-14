@@ -197,9 +197,16 @@ func RetryAfter(header string) time.Duration {
 // NextLink returns the rel="next" URL from a Link header, but only when it points at
 // the same host as baseURL, so the bearer token is never sent elsewhere.
 func NextLink(h http.Header, baseURL string) string {
+	link, _ := nextLink(h, baseURL)
+	return link
+}
+
+// nextLink is NextLink, also reporting a next link it refused, which means the
+// list has more pages it will not read.
+func nextLink(h http.Header, baseURL string) (link string, refused bool) {
 	base, err := url.Parse(baseURL)
 	if err != nil {
-		return ""
+		return "", false
 	}
 	for _, value := range h.Values("Link") {
 		for _, part := range strings.Split(value, ",") {
@@ -210,10 +217,10 @@ func NextLink(h http.Header, baseURL string) string {
 			target = strings.Trim(strings.TrimSpace(target), "<>")
 			u, err := url.Parse(target)
 			if err != nil || u.Scheme != base.Scheme || u.Host != base.Host {
-				return ""
+				return "", true
 			}
-			return target
+			return target, false
 		}
 	}
-	return ""
+	return "", false
 }

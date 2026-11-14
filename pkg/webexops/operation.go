@@ -266,6 +266,15 @@ func (o *Operation) URL(hosts webexapi.Hosts, args Args) (string, error) {
 			return "", fmt.Errorf("%s has no path parameter %s", o.Name(), name)
 		}
 	}
+	for name := range args.Header {
+		known := false
+		for _, p := range o.Params {
+			known = known || ((p.In == InHeader || p.In == InAgentToken) && strings.EqualFold(p.Name, name))
+		}
+		if !known {
+			return "", fmt.Errorf("%s has no header %s", o.Name(), name)
+		}
+	}
 	query := url.Values{}
 	for name, v := range args.Query {
 		if !declared[InQuery][name] {

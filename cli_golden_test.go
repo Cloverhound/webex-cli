@@ -14,8 +14,6 @@ import (
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/cmd"
-	"github.com/Cloverhound/webex-cli/internal/config"
-	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -87,15 +85,10 @@ func goldenEnv(t *testing.T) *recorder {
 	t.Helper()
 	home := t.TempDir()
 	t.Setenv("HOME", home)
-	for _, env := range []string{"WEBEX_TOKEN", "WEBEX_REFRESH_TOKEN", "WEBEX_USER", "WEBEX_REGION", "WEBEX_CHANGESET", "WEBEX_READ_ONLY", "WEBEX_ORG", "WEBEX_CC_REGION"} {
+	for _, env := range []string{"WEBEX_TOKEN", "WEBEX_REFRESH_TOKEN", "WEBEX_USER", "WEBEX_REGION", "WEBEX_READ_ONLY", "WEBEX_ORG", "WEBEX_CC_REGION"} {
 		t.Setenv(env, "")
 	}
 	t.Chdir(t.TempDir())
-
-	// The recorder has no rate limit, and pacing 1,500 Contact Center runs would
-	// take minutes.
-	config.SetCCInterval(0)
-	t.Cleanup(func() { config.SetCCInterval(webexapi.CCInterval) })
 
 	rec := &recorder{}
 	saved := http.DefaultTransport
