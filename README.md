@@ -173,9 +173,12 @@ webex auth switch <email>      # Switch default user
 webex auth set-org <org-id>    # Set a persistent org override
 webex auth clear-org           # Clear the org override
 webex auth export              # Print the refresh token for $WEBEX_REFRESH_TOKEN
+webex auth token               # Print the access token
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
+
+`webex auth list` and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
 
 ### Headless and Unattended Use
 
@@ -248,6 +251,10 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
+| `--region us\|ca\|eu\|eun\|in\|au` | Data region for region-specific hosts (Detailed Call History) |
+| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1` | Contact Center data center, which selects the Contact Center and AI Agent Studio hosts (default `us1`; also `$WEBEX_CC_REGION` or `webex config set cc-region`) |
+
+A Contact Center update (`PUT`) replaces the whole object: fields the body leaves out are cleared. Get the object first and send the full body back with your changes.
 
 ## Configuration
 
@@ -256,6 +263,8 @@ webex config set client-id <id>          # Use custom OAuth client ID
 webex config set client-secret <secret>  # Use custom OAuth client secret
 webex config set scopes <scopes>         # Override OAuth scopes
 webex config set read-only-scopes <scopes>  # Override scopes for login --read-only
+webex config set region <region>         # Data region for Detailed Call History
+webex config set cc-region <dc>          # Contact Center data center (us1, eu1, ...)
 webex config get client-id               # View current value
 ```
 
@@ -294,7 +303,7 @@ And 2 MCP resources:
 | `webex://commands` | JSON array of all available CLI commands with short descriptions |
 | `webex://usage` | Last 50 raw lines of the usage log |
 
-Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added.
+Rather than exposing fixed per-API tools, the dispatcher pattern lets AI clients invoke the full CLI surface via `webex_read` and `webex_write` — the command tree expands automatically as new commands are added. The `webex_write` description warns that a Contact Center update replaces the whole object, so agents send the full body.
 
 Auth is shared with the CLI — run `webex login` once and the MCP server uses the same stored credentials. Token refresh is handled automatically.
 
@@ -353,11 +362,45 @@ Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
 
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
+## Go SDK
+
+The CLI is built on a Go SDK in `pkg/`, which other programs import as `github.com/Cloverhound/webex-cli/pkg/...`. Webex Admin Studio is built on it too.
+
+| Package | What it is |
+|---|---|
+| `webexapi` | HTTP transport: 401 refresh, 429 retry, structured errors, lists that fail instead of ending short, hosts for every region, org ID conversion, Contact Center pacing. No process-wide state; every call takes a context. |
+| `webexops` | Every API operation as data, generated from Cisco's Postman collections: route, parameters, body fields, paging. `Call` sends one. |
+| `resource` | Object types as data: fields, JSON paths, write mode, and the operations each type uses. |
+| `catalog` | The object types, and which can be written. |
+| `webex` | Reads and writes objects by type: lists that read items in parallel where a list leaves fields out, full or partial writes as the route needs. |
+| `guard` | The write protocol: conflict check before a write, read-back after it, and stop after a failure. |
+| `changeset` | The change set file format that Webex Admin Studio imports and exports. |
+| `aiagent` | AI Agent Studio's private routes: agent token lookup and credential redaction. |
+| `fakeapi` | A fake Webex for tests, with fault injection. |
+
+```go
+hosts, _ := webexapi.NewHosts("us1", "us")
+api := &webexapi.Client{Token: func(context.Context) (string, error) { return token, nil }, MaxRetries: 3}
+
+// One operation.
+resp, err := webexops.Call(ctx, api, hosts, webexops.CCTeamGet, webexops.Args{
+	Path: map[string]string{"orgid": orgUUID, "id": teamID},
+})
+
+// Objects by type, with safe writes.
+c := &webex.Client{API: api, Hosts: hosts, OrgUUID: orgUUID}
+team, _ := catalog.ByName("cc_team")
+g := &guard.Guard{API: c, Writable: true}
+values, err := g.Update(ctx, team, key, before, after)
+```
+
+Each operation is an exported variable, so a program that uses one fails to build when a Postman refresh drops or renames it.
+
 ## Development
 
 See [AGENTS.md](AGENTS.md) for project structure and development workflow.
 
-Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
+API commands are built at startup from the operation table in `pkg/webexops`, which is **generated** from Postman collections — do not edit it by hand. Run `make refresh` to re-download collections, regenerate the table, update skill documentation, and rebuild. `testdata/golden/` records every command's flags and the request each one sends; run `make golden` after an intended change and review the diff. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
 
 ## License
 

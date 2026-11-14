@@ -172,7 +172,7 @@ func registerGreetingUpload(parentCmd *cobra.Command, use, short, long string,
 				return fmt.Errorf("reading audio file: %w", err)
 			}
 
-			req := client.NewRequest(config.CallingBaseURL, "POST", path)
+			req := client.NewRequest(config.CallingBaseURL(), "POST", path)
 			req.QueryParam("orgId", orgID)
 			if err := req.SetMultipart([]client.MultipartPart{
 				{

@@ -42,6 +42,7 @@ type Config struct {
 	DefaultOrgID   string              `json:"default_org_id,omitempty"`
 	DefaultOrgName string              `json:"default_org_name,omitempty"`
 	Region         string              `json:"region,omitempty"`
+	CCRegion       string              `json:"cc_region,omitempty"`
 	ReadOnly       bool                `json:"read_only,omitempty"`
 	ReadOnlyScopes string              `json:"read_only_scopes,omitempty"`
 
