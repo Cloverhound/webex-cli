@@ -1,4 +1,4 @@
-.PHONY: build download codegen refresh check golden test clean extension skill
+.PHONY: build download codegen refresh check clean extension skill
 
 build:
 	go build -o webex .
@@ -15,14 +15,6 @@ refresh: download codegen build
 
 check: build
 	go vet ./...
-
-test:
-	go test ./...
-	python3 -m unittest discover -s codegen -p 'test_*.py'
-
-# Rewrite testdata/golden after an intended change to commands or requests.
-golden:
-	go test -run Golden -update .
 
 extension: build
 	cd extension && zip -r ../webex-mcp.dxt manifest.json icon.png

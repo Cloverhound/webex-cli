@@ -1,14 +1,9 @@
 package mcp
 
 import (
-	"context"
-	"errors"
 	"strings"
 	"testing"
 
-	_ "github.com/Cloverhound/webex-cli/cmd/calling"
-	_ "github.com/Cloverhound/webex-cli/cmd/cc"
-	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
 
@@ -56,57 +51,5 @@ func TestReadOnlyServerOmitsWriteTool(t *testing.T) {
 		if hasWrite := s.GetTool("webex_write") != nil; hasWrite == readOnly {
 			t.Errorf("readOnly=%v: webex_write registered = %v", readOnly, hasWrite)
 		}
-	}
-}
-
-// stubExecutable makes any attempt to run the CLI fail visibly, so a test sees
-// whether a tool call was refused before it ran anything.
-func stubExecutable(t *testing.T) {
-	t.Helper()
-	saved := executable
-	executable = func() (string, error) { return "", errors.New("test: the command was not refused") }
-	t.Cleanup(func() { executable = saved })
-}
-
-func TestReadRefusesWritesAndDoubleDash(t *testing.T) {
-	stubExecutable(t)
-	// call-controls get POSTs to retrieve a parked call, though its verb reads.
-	for _, command := range []string{"cc team delete --id=team1", "calling people list --", "calling call-controls get"} {
-		var req mcplib.CallToolRequest
-		req.Params.Arguments = map[string]any{"command": command}
-		res, err := makeDispatchHandler(nil, modeRead)(context.Background(), req)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if got := res.Content[0].(mcplib.TextContent).Text; !strings.HasPrefix(got, "Error:") || strings.Contains(got, "was not refused") {
-			t.Errorf("%q was run: %s", command, got)
-		}
-	}
-}
-
-// A GET, and a POST that only queries, are reads.
-func TestReadAllowsGETsAndQueryPOSTs(t *testing.T) {
-	stubExecutable(t)
-	for _, command := range []string{"cc team list", "cc search query"} {
-		var req mcplib.CallToolRequest
-		req.Params.Arguments = map[string]any{"command": command}
-		res, err := makeDispatchHandler(nil, modeRead)(context.Background(), req)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if got := res.Content[0].(mcplib.TextContent).Text; !strings.Contains(got, "was not refused") {
-			t.Errorf("%q was refused: %s", command, got)
-		}
-	}
-}
-
-// A trailing value flag would swallow --help and run the command.
-func TestHelpRefusesFlags(t *testing.T) {
-	stubExecutable(t)
-	var req mcplib.CallToolRequest
-	req.Params.Arguments = map[string]any{"command": "cc team delete --id x --output"}
-	res, _ := handleHelp(context.Background(), req)
-	if got := res.Content[0].(mcplib.TextContent).Text; !strings.HasPrefix(got, "Error: give the command without flags") {
-		t.Errorf("help = %q", got)
 	}
 }

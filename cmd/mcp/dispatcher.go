@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/Cloverhound/webex-cli/cmd"
 	"github.com/Cloverhound/webex-cli/internal/readonly"
-	"github.com/Cloverhound/webex-cli/pkg/webexops"
 	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -57,7 +55,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 				mcplib.Description(`Optional flags as a JSON object string (e.g. {"max": "10", "paginate": "true"}). Keys are flag names without '--'.`),
 			),
 		),
-		makeDispatchHandler(lg, modeRead),
+		makeDispatchHandler(lg, true),
 	)
 
 	if !readOnly {
@@ -68,8 +66,6 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 						"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
 						"Provide the command without the 'webex' prefix "+
 						"(e.g. 'messaging messages create'). "+
-						"A Contact Center update replaces the whole object: fields you leave out are cleared. "+
-						"Get the object first and send the full body. "+
 						"Use webex_read for list/get/download/export operations.",
 				),
 				mcplib.WithString("command",
@@ -80,7 +76,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 					mcplib.Description(`Optional flags as a JSON object string (e.g. {"room-id": "xxx", "text": "Hello"}). Keys are flag names without '--'.`),
 				),
 			),
-			makeDispatchHandler(lg, modeWrite),
+			makeDispatchHandler(lg, false),
 		)
 	}
 
@@ -115,18 +111,12 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 	)
 }
 
-type dispatchMode int
-
-const (
-	modeRead dispatchMode = iota
-	modeWrite
-)
-
-var toolNames = map[dispatchMode]string{modeRead: "webex_read", modeWrite: "webex_write"}
-
-// makeDispatchHandler returns the handler for webex_read or webex_write.
-func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
-	toolName := toolNames[mode]
+// makeDispatchHandler returns a handler for either webex_read (readOnly=true) or webex_write (readOnly=false).
+func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
+	toolName := "webex_write"
+	if readOnly {
+		toolName = "webex_read"
+	}
 
 	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 		command := strings.TrimSpace(req.GetString("command", ""))
@@ -142,12 +132,8 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			)), nil
 		}
 
-		// Injection guard: reject tokens containing shell-special characters, and "--",
-		// after which the flags the server adds would be read as arguments.
+		// Injection guard: reject tokens containing shell-special characters.
 		for _, arg := range args {
-			if arg == "--" {
-				return mcplib.NewToolResultText("Error: command contains disallowed characters."), nil
-			}
 			for _, ch := range dangerousChars {
 				if strings.Contains(arg, ch) {
 					return mcplib.NewToolResultText(
@@ -157,18 +143,14 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			}
 		}
 
-		if action := actionToken(args); mode == modeRead && action != "" && !readonly.IsReadAction(action) {
-			return mcplib.NewToolResultText(fmt.Sprintf(
-				"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
-			)), nil
-		}
-		// A command's verb can read like a read while its request writes, as
-		// 'calling call-controls get' POSTs to retrieve a parked call, so a generated
-		// command is judged by its method.
-		if op, ok := operationOf(args); mode == modeRead && ok && op.Method != http.MethodGet && !readonly.IsQueryPOST(op.Path) {
-			return mcplib.NewToolResultText(fmt.Sprintf(
-				"Error: '%s' sends a %s request. Use the webex_write tool instead.", commandPath(args), op.Method,
-			)), nil
+		// Read-only enforcement for webex_read.
+		if readOnly {
+			action := actionToken(args)
+			if action != "" && !readonly.IsReadAction(action) {
+				return mcplib.NewToolResultText(fmt.Sprintf(
+					"Error: '%s' is a write operation (POST/PUT/PATCH/DELETE). Use the webex_write tool instead.", action,
+				)), nil
+			}
 		}
 
 		// Force JSON output.
@@ -193,58 +175,49 @@ func makeDispatchHandler(lg *usageLogger, mode dispatchMode) func(context.Contex
 			}
 		}
 
-		return runCLI(ctx, lg, toolName, command, flagsStr, args), nil
-	}
-}
-
-// executable is the CLI binary the tools run. Tests replace it: under go test
-// os.Executable is the test binary, which would run the tests again.
-var executable = os.Executable
-
-// runCLI runs the CLI binary with args, logs the call and returns its output.
-func runCLI(ctx context.Context, lg *usageLogger, toolName, command, flagsStr string, args []string) *mcplib.CallToolResult {
-	exe, err := executable()
-	if err != nil {
-		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error())
-	}
-
-	runCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
-	defer cancel()
-
-	var stdout, stderr bytes.Buffer
-	//nolint:gosec // args are validated by the callers; exec.Command does not invoke a shell
-	c := exec.CommandContext(runCtx, exe, args...)
-	c.Stdout = &stdout
-	c.Stderr = &stderr
-
-	start := time.Now()
-	runErr := c.Run()
-	elapsed := time.Since(start).Milliseconds()
-
-	status := "ok"
-	if runErr != nil {
-		status = "error"
-	}
-
-	_ = lg.Write(usageEntry{
-		Time:    time.Now().UTC().Format(time.RFC3339),
-		Tool:    toolName,
-		Command: command,
-		Flags:   flagsStr,
-		Status:  status,
-		Ms:      elapsed,
-	})
-
-	if runErr != nil {
-		errText := strings.TrimSpace(stderr.String())
-		if errText == "" {
-			errText = runErr.Error()
+		exe, err := os.Executable()
+		if err != nil {
+			return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
 		}
-		return mcplib.NewToolResultText(fmt.Sprintf(
-			"Error running 'webex %s': %s", command, errText,
-		))
+
+		runCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
+		defer cancel()
+
+		var stdout, stderr bytes.Buffer
+		//nolint:gosec // args are validated above; exec.Command does not invoke a shell
+		c := exec.CommandContext(runCtx, exe, args...)
+		c.Stdout = &stdout
+		c.Stderr = &stderr
+
+		start := time.Now()
+		runErr := c.Run()
+		elapsed := time.Since(start).Milliseconds()
+
+		status := "ok"
+		if runErr != nil {
+			status = "error"
+		}
+
+		_ = lg.Write(usageEntry{
+			Time:    time.Now().UTC().Format(time.RFC3339),
+			Tool:    toolName,
+			Command: command,
+			Flags:   flagsStr,
+			Status:  status,
+			Ms:      elapsed,
+		})
+
+		if runErr != nil {
+			errText := strings.TrimSpace(stderr.String())
+			if errText == "" {
+				errText = runErr.Error()
+			}
+			return mcplib.NewToolResultText(fmt.Sprintf(
+				"Error running 'webex %s': %s", command, errText,
+			)), nil
+		}
+		return successResult(stdout.String(), stderr.String()), nil
 	}
-	return successResult(stdout.String(), stderr.String())
 }
 
 // successResult returns a command's output, and its stderr as a second text
@@ -285,15 +258,6 @@ func blockedCommand(args []string) string {
 	return ""
 }
 
-// operationOf finds the API operation a generated command sends.
-func operationOf(args []string) (*webexops.Operation, bool) {
-	words := strings.Fields(commandPath(args))
-	if len(words) != 3 {
-		return nil, false
-	}
-	return webexops.Find(words[0], words[1], words[2])
-}
-
 // actionToken returns the action verb from the command args: "list" for
 // "calling people list" and "status" for "auth status".
 func actionToken(args []string) string {
@@ -307,20 +271,16 @@ func actionToken(args []string) string {
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	command := strings.TrimSpace(req.GetString("command", ""))
 
-	// Only command words: a trailing value flag would swallow --help, and the
-	// command would run.
-	args := strings.Fields(command)
-	for _, arg := range args {
-		if strings.HasPrefix(arg, "-") {
-			return mcplib.NewToolResultText("Error: give the command without flags, such as 'cc team update'."), nil
-		}
-	}
-	args = append(args, "--help")
-
-	exe, err := executable()
+	exe, err := os.Executable()
 	if err != nil {
 		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
 	}
+
+	var args []string
+	if command != "" {
+		args = append(args, strings.Fields(command)...)
+	}
+	args = append(args, "--help")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()

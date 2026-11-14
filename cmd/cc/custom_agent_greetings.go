@@ -37,7 +37,7 @@ Examples:
   webex cc agent-personal-greeting-files download --orgid <org-id> --id <greeting-id> --output /tmp/greeting.wav --debug`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET metadata with includeUrl=true
-			req := client.NewRequest(config.CcBaseURL(), "GET", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
+			req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/v2/agent-personal-greeting/{id}")
 			req.PathParam("orgid", orgid)
 			req.PathParam("id", id)
 			req.QueryParam("includeUrl", "true")
@@ -100,7 +100,7 @@ Examples:
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --greeting-purpose-id <id>
   webex cc agent-personal-greeting-files upload --agent-id <agent-id> --file greeting.wav --dry-run`,
 		RunE: func(c *cobra.Command, args []string) error {
-			return uploadAgentGreeting(config.CcBaseURL(), orgid, filePath, name, agentID, greetingPurposeID)
+			return uploadAgentGreeting(config.CcBaseURL, orgid, filePath, name, agentID, greetingPurposeID)
 		},
 	}
 

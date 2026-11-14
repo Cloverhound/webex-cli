@@ -1,10 +1,8 @@
 # Code generation
 
-Run `make codegen` from the repository root to extract API specifications, generate the operation table, and refresh skill command references. Run `make refresh` to download collections first.
+Run `make codegen` from the repository root to extract API specifications, generate Go commands, and refresh skill command references. Run `make refresh` to download collections first.
 
-`generate_cli.py` writes `pkg/webexops/zz_<area>.go`: one exported `*Operation` per API call, holding its route, parameters, body fields, paging and CLI names. The CLI builds its commands from that table at startup (`internal/apicmd`), and other Go programs call the same operations. The generated files must not be edited by hand. Change `generate_cli.py` for what the table holds, `internal/apicmd` for how operations become commands, or use `custom_*.go` with the generator skip lists for handwritten request implementations.
-
-`testdata/golden/` at the repository root records every command's flags and help, and the request each API command sends. Run `make golden` after an intended change and review the diff.
+Generated files in the six command area packages must not be edited by hand. Change `generate_cli.py` for generation behavior or use `custom_*.go` with the generator skip lists for handwritten request implementations.
 
 ## Supplemental collections
 

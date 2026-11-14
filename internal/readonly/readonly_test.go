@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/Cloverhound/webex-cli/pkg/webexops"
 )
 
 func TestIsReadScope(t *testing.T) {
@@ -82,9 +80,8 @@ func TestIsQueryPOST(t *testing.T) {
 	}
 }
 
-// Query paths must match a POST operation's path, or a handwritten request,
-// exactly, or read-only mode blocks the command. Regenerated operations can
-// rename path parameters.
+// Query paths must match a POST request template exactly, or read-only mode
+// blocks the command. Regenerated commands can rename path parameters.
 func TestQueryPOSTPathsMatchRequests(t *testing.T) {
 	var src strings.Builder
 	for _, dir := range []string{"../../cmd", "../../internal"} {
@@ -100,16 +97,8 @@ func TestQueryPOSTPathsMatchRequests(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	posts := map[string]bool{}
-	for _, area := range webexops.Areas {
-		for _, op := range webexops.Operations(area) {
-			if op.Method == "POST" && !op.Handwritten {
-				posts[op.Path] = true
-			}
-		}
-	}
 	for _, p := range queryPOSTPaths {
-		if !posts[p] && !strings.Contains(src.String(), `"POST", "`+p+`")`) {
+		if !strings.Contains(src.String(), `"POST", "`+p+`")`) {
 			t.Errorf("no POST request uses %q", p)
 		}
 	}

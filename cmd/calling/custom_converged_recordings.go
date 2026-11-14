@@ -39,7 +39,7 @@ Examples:
   webex calling converged-recordings download --recording-id <id> --output call.vtt --type transcript`,
 		RunE: func(c *cobra.Command, args []string) error {
 			// Step 1: GET recording metadata
-			req := client.NewRequest(config.CallingBaseURL(), "GET", "/convergedRecordings/{recordingId}")
+			req := client.NewRequest(config.CallingBaseURL, "GET", "/convergedRecordings/{recordingId}")
 			req.PathParam("recordingId", recordingID)
 
 			resp, statusCode, err := req.Do()
