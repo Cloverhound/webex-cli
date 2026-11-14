@@ -107,11 +107,6 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
-		ccRegionFlag, _ := cmd.Flags().GetString("cc-region")
-		if err := resolveCCRegion(ccRegionFlag, cfg); err != nil {
-			return err
-		}
-
 		// Auto-populate --orgid on CC commands from the resolved org.
 		// CC API uses UUID format, so decode any base64 values.
 		if f := cmd.Flags().Lookup("orgid"); f != nil {
@@ -122,6 +117,17 @@ var rootCmd = &cobra.Command{
 			} else {
 				cmd.Flags().Set("orgid", config.DecodeOrgID(f.Value.String()))
 			}
+		}
+
+		// The data center is the one of the org the request names, which --orgid
+		// can set apart from the resolved org.
+		ccOrg := config.OrgID()
+		if f := cmd.Flags().Lookup("orgid"); f != nil && f.Value.String() != "" {
+			ccOrg = f.Value.String()
+		}
+		ccRegionFlag, _ := cmd.Flags().GetString("cc-region")
+		if err := resolveCCRegion(ccRegionFlag, ccOrg, cfg); err != nil {
+			return err
 		}
 
 		// Auto-populate --org-id on non-CC commands from base64 org ID.
@@ -171,15 +177,15 @@ func setRegion(region string) error {
 	return nil
 }
 
-// resolveCCRegion selects the Contact Center data center for the resolved org:
+// resolveCCRegion selects the Contact Center data center for orgID (a UUID):
 // --cc-region flag > WEBEX_CC_REGION env > the region saved for the org > us1.
-func resolveCCRegion(flag string, cfg *appconfig.Config) error {
+func resolveCCRegion(flag, orgID string, cfg *appconfig.Config) error {
 	region := flag
 	if region == "" {
 		region = os.Getenv("WEBEX_CC_REGION")
 	}
 	if region == "" {
-		region = cfg.CCRegions[config.OrgID()]
+		region = cfg.CCRegions[orgID]
 	}
 	return setCCRegion(region)
 }

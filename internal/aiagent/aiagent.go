@@ -11,8 +11,9 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
 
-// baseURL is a variable so tests can point it at a fake Studio.
-var baseURL = config.AiAgentBaseURL
+// studioURL is read at call time, after the command has chosen the org's data
+// center, and is a variable so tests can point it at a fake Studio.
+var studioURL = func() string { return config.AiAgentBaseURL }
 
 // BotToken returns the runtime token of an AI agent in the current
 // organization. Studio's v1 API selects the agent of a call by this token, and
@@ -22,7 +23,7 @@ func BotToken(agentID string) (string, error) {
 	if orgID == "" {
 		return "", fmt.Errorf("no organization: log in or pass --organization")
 	}
-	req := client.NewRequest(baseURL, "GET", "/api/v2/organizations/{orgid}/agents/")
+	req := client.NewRequest(studioURL(), "GET", "/api/v2/organizations/{orgid}/agents/")
 	req.PathParam("orgid", orgID)
 	req.OffsetPaging("offset", "limit", 0)
 	body, _, err := req.DoPaginated(false)

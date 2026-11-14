@@ -26,8 +26,9 @@ func studio(t *testing.T) *httptest.Server {
 		})
 	}))
 	t.Cleanup(srv.Close)
-	baseURL = srv.URL
-	t.Cleanup(func() { baseURL = config.AiAgentBaseURL })
+	old := studioURL
+	studioURL = func() string { return srv.URL }
+	t.Cleanup(func() { studioURL = old })
 	config.SetOrgID("org-1")
 	t.Cleanup(func() { config.SetOrgID("") })
 	return srv
@@ -38,6 +39,14 @@ func TestBotTokenFindsTheAgent(t *testing.T) {
 	got, err := BotToken("a1")
 	if err != nil || got != "token-1" {
 		t.Fatalf("BotToken = %q, %v", got, err)
+	}
+}
+
+func TestBotTokenUsesTheSelectedRegionsStudio(t *testing.T) {
+	config.SetCCRegion("eu1")
+	t.Cleanup(func() { config.SetCCRegion("") })
+	if got := studioURL(); got != "https://studio.aiagent-eu1.cisco.com" {
+		t.Errorf("BotToken's Studio host = %s, want eu1's", got)
 	}
 }
 
