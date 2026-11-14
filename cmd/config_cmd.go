@@ -75,6 +75,9 @@ var configSetCmd = &cobra.Command{
 			if org == "" {
 				return fmt.Errorf("no organization to save cc-region for: log in, or pass --organization")
 			}
+			if !orgUUID.MatchString(org) {
+				return fmt.Errorf("%q is not an organization ID", org)
+			}
 			if cfg.CCRegions == nil {
 				cfg.CCRegions = map[string]string{}
 			}
@@ -153,9 +156,12 @@ var configGetCmd = &cobra.Command{
 			}
 		case "cc-region":
 			org := configuredOrgID(cmd, cfg)
-			if region := cfg.CCRegions[org]; org != "" && region != "" {
+			switch region := cfg.CCRegions[org]; {
+			case org == "":
+				fmt.Printf("%s (default; no organization found: log in, or pass --organization)\n", config.DefaultCCRegion)
+			case region != "":
 				fmt.Printf("%s (saved for organization %s)\n", region, org)
-			} else {
+			default:
 				fmt.Printf("%s (default)\n", config.DefaultCCRegion)
 			}
 		default:

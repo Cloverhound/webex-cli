@@ -248,7 +248,7 @@ webex cc users list --output csv > users.csv
 | `--debug` | Show HTTP request/response details |
 | `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
 | `--dry-run` | Print write requests without executing them |
-| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1` | Contact Center data center for `cc` commands (default: the organization's saved region, else `us1`) |
+| `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1\|in1` | Contact Center data center for `cc` commands (default: the organization's saved region, else `us1`) |
 
 ## Configuration
 
@@ -265,7 +265,7 @@ Config is stored in `~/.webex-cli/config.json`.
 
 ### Contact Center data center
 
-Each organization's Contact Center, and its AI Agent Studio, is in one data center: `us1`, `eu1`, `eu2`, `anz1`, `ca1`, `jp1` or `sg1`. `cc` commands use, in order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. `webex config set cc-region eu1` saves the region for the current organization (or the one named with `--organization`), so organizations in different data centers each keep their own. `--cc-region` alone saves nothing.
+Each organization's Contact Center, and its AI Agent Studio, is in one data center: `us1`, `eu1`, `eu2`, `anz1`, `ca1`, `jp1`, `sg1` or `in1`. `cc` commands use, in order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. `webex config set cc-region eu1` saves the region for the current organization (or the one named with `--organization`), so organizations in different data centers each keep their own. `--cc-region` alone saves nothing.
 
 ## MCP Server
 

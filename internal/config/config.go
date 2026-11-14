@@ -68,12 +68,10 @@ const (
 
 // CCRegions lists the Contact Center data centers. An org's Contact Center lives
 // in one of them, and each has its own API and AI Agent Studio host.
-var CCRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1"}
+var CCRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1", "in1"}
 
 // DefaultCCRegion is used when no region is given or saved for the org.
 const DefaultCCRegion = "us1"
-
-var ccRegion = DefaultCCRegion
 
 var (
 	CcBaseURL = ccHost(DefaultCCRegion)
@@ -91,12 +89,9 @@ func SetCCRegion(region string) {
 	if region == "" {
 		region = DefaultCCRegion
 	}
-	ccRegion = region
 	CcBaseURL = ccHost(region)
 	AiAgentBaseURL = aiAgentHost(region)
 }
-
-func CCRegion() string { return ccRegion }
 
 // analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.
 // Calls to the default host are routed to the nearest region; if that region does
