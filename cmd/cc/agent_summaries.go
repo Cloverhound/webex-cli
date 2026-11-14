@@ -65,6 +65,7 @@ func init() {
 
 	{ // list-2
 		var orgId string
+		var interactionId string
 		var searchType string
 		var bodyRaw string
 		var bodyFile string
@@ -82,6 +83,7 @@ func init() {
 					req.SetBodyRaw(bodyRaw)
 				} else {
 					req.BodyString("orgId", orgId)
+					req.BodyString("interactionId", interactionId)
 					req.BodyString("searchType", searchType)
 				}
 				resp, statusCode, err := req.Do()
@@ -92,6 +94,7 @@ func init() {
 			},
 		}
 		cmd.Flags().StringVar(&orgId, "org-id", "", "")
+		cmd.Flags().StringVar(&interactionId, "interaction-id", "", "")
 		cmd.Flags().StringVar(&searchType, "search-type", "", "")
 		cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
