@@ -24,7 +24,10 @@ To use your own Webex Integration instead of the built-in default:
   3. Add the OAuth scopes required for the APIs you plan to use
   4. Run:  webex config set client-id <your-client-id>
            webex config set client-secret <your-client-secret>
-           webex config set scopes "spark:all spark-admin:all <additional-scopes>"`,
+           webex config set scopes "spark:all spark-admin:all <additional-scopes>"
+
+For an organization whose Contact Center is outside the US data center, save its
+region once:  webex config set cc-region eu1  (add --organization <id> for another org)`,
 }
 
 var configSetCmd = &cobra.Command{

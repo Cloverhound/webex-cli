@@ -5,6 +5,8 @@ description: Webex Contact Center API commands reference.
 
 The `webex cc` subcommand provides access to the Webex Contact Center API. The `--orgid` flag is auto-populated from your login, so you typically don't need to pass it.
 
+Requests go to the organization's Contact Center data center: the one saved with `webex config set cc-region <region>`, else `us1`. `--cc-region` overrides it for one command. See [Contact Center data center](../getting-started/#contact-center-data-center).
+
 ## Resource Groups
 
 | Resource | Description |

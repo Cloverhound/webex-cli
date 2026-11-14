@@ -123,7 +123,7 @@ All upload commands support `--dry-run` to preview the request without sending i
 
 ### Contact Center (`webex cc`)
 
-64 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more.
+64 resource groups including sites, queues, entry points, teams, flows, skills, desktop layouts, global variables, business hours, auxiliary codes, campaigns, callbacks, realtime stats, AI assistant, journey analytics, subscriptions, and more. For an organization outside the US data center, see [Contact Center data center](#contact-center-data-center).
 
 ### Admin (`webex admin`)
 

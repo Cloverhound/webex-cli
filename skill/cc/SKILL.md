@@ -10,6 +10,8 @@ Alias: `webex contact-center <resource> <action>`
 
 **`--orgid` is auto-populated from the logged-in user's org.** Use `--orgid=<uuid>` (with `=`) only when overriding. Both UUID and base64 org ID formats are accepted.
 
+**Data center:** `cc` commands, including `ai-agent*`, go to the org's saved Contact Center data center, else `us1`. For an org outside the US, check `webex config get cc-region`; save it once with `webex config set cc-region <us1|eu1|eu2|anz1|ca1|jp1|sg1>`, or pass `--cc-region` for one command.
+
 ## Resources
 
 | Resource | Common operations |
