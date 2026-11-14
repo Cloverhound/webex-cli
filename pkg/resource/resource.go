@@ -330,8 +330,23 @@ func (t Type) Field(name string) (Field, bool) {
 // text passes: whether a field may be empty is Required's rule.
 func (f Field) Check(v any) error {
 	if f.Kind == StringList || f.Kind == ObjectList {
-		if _, ok := v.([]any); v != nil && !ok {
+		list, ok := v.([]any)
+		if v != nil && !ok {
 			return fmt.Errorf("want a list as []any, not %T", v)
+		}
+		if f.Kind != ObjectList {
+			return nil
+		}
+		for i, e := range list {
+			row, ok := e.(map[string]any)
+			if !ok {
+				return fmt.Errorf("row %d: want map[string]any, not %T", i+1, e)
+			}
+			for _, sub := range f.Item {
+				if err := sub.Check(row[sub.Name]); err != nil {
+					return fmt.Errorf("row %d %s: %w", i+1, sub.Name, err)
+				}
+			}
 		}
 		return nil
 	}
@@ -575,6 +590,8 @@ func (t Type) Unmet(have, planned Values) []string {
 		if p == nil {
 			continue
 		}
+		// have comes from Project, which normalizes; a caller's plan may not be.
+		p = f.Normalize(p)
 		if f.Kind == ObjectList {
 			if !rowsMeet(have[f.Name], p) {
 				out = append(out, f.Name)

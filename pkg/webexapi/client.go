@@ -112,7 +112,23 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 	return resp, err
 }
 
+type writeCheckKey struct{}
+
+// WithWriteCheck returns a context whose writes (any method but GET and HEAD) call
+// check before every attempt, retries included; an error from check stops the write
+// unsent.
+func WithWriteCheck(ctx context.Context, check func() error) context.Context {
+	return context.WithValue(ctx, writeCheckKey{}, check)
+}
+
 func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		if check, ok := ctx.Value(writeCheckKey{}).(func() error); ok {
+			if err := check(); err != nil {
+				return nil, err
+			}
+		}
+	}
 	var body io.Reader
 	if len(r.Body) > 0 {
 		body = bytes.NewReader(r.Body)

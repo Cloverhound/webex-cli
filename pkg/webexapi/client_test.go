@@ -70,6 +70,34 @@ func TestErrorStatusIsStructuredAndKeepsBody(t *testing.T) {
 	}
 }
 
+// A write's check runs before every attempt, so a stop during a 429 wait prevents
+// the retry. Reads are not checked.
+func TestAWriteCheckRunsBeforeEachAttempt(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		w.Header().Set("Retry-After", "1")
+		w.WriteHeader(http.StatusTooManyRequests)
+	}))
+	defer srv.Close()
+	c := &Client{Token: staticToken("tok"), MaxRetries: 3, Sleep: noSleep}
+	stop := errors.New("stopped")
+	checks := 0
+	ctx := WithWriteCheck(context.Background(), func() error {
+		if checks++; checks > 1 {
+			return stop
+		}
+		return nil
+	})
+	if _, err := c.Send(ctx, Request{Method: "PUT", URL: srv.URL}); !errors.Is(err, stop) || requests != 1 {
+		t.Fatalf("err = %v after %d requests", err, requests)
+	}
+	checks = 1
+	if _, err := c.Send(ctx, Request{Method: "GET", URL: srv.URL}); errors.Is(err, stop) {
+		t.Fatal("a read was checked")
+	}
+}
+
 func TestRefreshesOnceOn401ThenHandles429(t *testing.T) {
 	statuses := []int{401, 429, 200}
 	var auth []string

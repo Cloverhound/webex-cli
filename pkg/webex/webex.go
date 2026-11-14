@@ -577,20 +577,14 @@ func (c *Client) Delete(ctx context.Context, t resource.Type, key resource.Key) 
 	return err
 }
 
-type beforeWriteKey struct{}
-
-// WithBeforeWrite returns a context whose writes call check just before they are
-// sent, after any reads the write needs first; an error from check stops the write.
+// WithBeforeWrite returns a context whose writes call check just before each attempt
+// is sent: after any reads the write needs first, and again before a retry. An error
+// from check stops the write.
 func WithBeforeWrite(ctx context.Context, check func() error) context.Context {
-	return context.WithValue(ctx, beforeWriteKey{}, check)
+	return webexapi.WithWriteCheck(ctx, check)
 }
 
 func (c *Client) send(ctx context.Context, method, target string, body map[string]any) (*webexapi.Response, error) {
-	if check, ok := ctx.Value(beforeWriteKey{}).(func() error); ok {
-		if err := check(); err != nil {
-			return nil, err
-		}
-	}
 	data, err := json.Marshal(body)
 	if err != nil {
 		return nil, fmt.Errorf("encoding body: %w", err)

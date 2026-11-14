@@ -147,6 +147,34 @@ func (s stopBeforeSend) Create(ctx context.Context, t resource.Type, desired res
 	return s.API.Create(ctx, t, desired)
 }
 
+func (s stopBeforeSend) Update(ctx context.Context, t resource.Type, key resource.Key, raw map[string]any, delta resource.Values) error {
+	s.guard.stop("another write failed")
+	return s.API.Update(ctx, t, key, raw, delta)
+}
+
+func (s stopBeforeSend) Delete(ctx context.Context, t resource.Type, key resource.Key) error {
+	s.guard.stop("another write failed")
+	return s.API.Delete(ctx, t, key)
+}
+
+// The stop is checked by the transport at each attempt, so one that lands after the
+// guard's own checks, as during a 429 wait, still keeps the write unsent.
+func TestAStopAtSendStopsAnUpdateAndADelete(t *testing.T) {
+	f := newFixture(t)
+	prior := f.prior(t)
+	f.guard.API = stopBeforeSend{f.api, f.guard}
+	if _, err := f.guard.Update(context.Background(), f.hg, hg1, prior, with(prior, "no_answer_rings", 7)); failureKind(t, err) != Stopped {
+		t.Fatalf("update err = %v", err)
+	}
+	f.guard.stopped = ""
+	if err := f.guard.Delete(context.Background(), f.hg, hg1, prior); failureKind(t, err) != Stopped {
+		t.Fatalf("delete err = %v", err)
+	}
+	if m := f.fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
+	}
+}
+
 func TestAStopDuringACreatesReadsStopsItsPost(t *testing.T) {
 	f := newFixture(t)
 	f.guard.API = stopBeforeSend{f.api, f.guard}

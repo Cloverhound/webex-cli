@@ -51,6 +51,13 @@ func TestCheckRefusesAListThatIsNotAnySlice(t *testing.T) {
 	if err := sample.Check(Values{"tags": nil}); err != nil {
 		t.Errorf("clearing a list: %v", err)
 	}
+	// Inside rows too: a []string list in a row would also be written as empty.
+	if err := withRows.Check(Values{"groups": []any{map[string]any{"order": 1, "team_ids": []string{"t1"}}}}); err == nil {
+		t.Error("a []string list inside a row was accepted")
+	}
+	if err := withRows.Check(Values{"groups": []any{map[string]any{"order": 1, "team_ids": []any{"t1"}}}}); err != nil {
+		t.Error(err)
+	}
 }
 
 func TestProjectReadsNestedPathsAndParent(t *testing.T) {
@@ -214,6 +221,15 @@ func TestUnmetLeavesUnknownValuesToWebex(t *testing.T) {
 	planned["skills"] = []any{}
 	if got := withRows.Unmet(have, planned); !reflect.DeepEqual(got, []string{"name", "skills"}) {
 		t.Fatalf("an emptied list must count: got %v", got)
+	}
+}
+
+// A plan may list an unordered field in any order; what Webex holds is sorted.
+func TestUnmetComparesUnorderedListsAsSets(t *testing.T) {
+	have := withRows.Project("", map[string]any{"name": "a", "codes": []any{"x", "y"}})
+	planned := Values{"codes": []any{"y", "x"}}
+	if got := withRows.Unmet(have, planned); len(got) != 0 {
+		t.Fatalf("got %v", got)
 	}
 }
 

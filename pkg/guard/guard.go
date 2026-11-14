@@ -149,7 +149,12 @@ func (g *Guard) write(ctx context.Context, t resource.Type, key resource.Key, ra
 	if err := g.halted(); err != nil {
 		return baseline, err
 	}
-	if err := g.API.Update(ctx, t, key, raw, delta); err != nil {
+	// Each attempt checks again, as a 429 retry can come after another write failed.
+	if err := g.API.Update(webex.WithBeforeWrite(ctx, g.halted), t, key, raw, delta); err != nil {
+		var stopped *Failure
+		if errors.As(err, &stopped) {
+			return baseline, err
+		}
 		// Other writes stop now, not after the read below, which can take seconds.
 		g.stop(writeFailure(err, "The write", "").Summary)
 		actual := g.observe(t, key, baseline)
@@ -277,7 +282,11 @@ func (g *Guard) Delete(ctx context.Context, t resource.Type, key resource.Key, p
 	if err := g.halted(); err != nil {
 		return err
 	}
-	if err := g.API.Delete(ctx, t, key); err != nil {
+	if err := g.API.Delete(webex.WithBeforeWrite(ctx, g.halted), t, key); err != nil {
+		var stopped *Failure
+		if errors.As(err, &stopped) {
+			return err
+		}
 		return g.fail(writeFailure(err, "The delete", ""))
 	}
 	_, err = g.readBack(t, key, func(err error) bool { return errors.Is(err, webex.ErrNotFound) })
