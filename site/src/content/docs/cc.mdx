@@ -208,7 +208,7 @@ webex cc ai-agent-session list --agent-id <agent-id> --paginate
 - A tool needs `input_entities` in JSON Schema form even when it takes no input. Start from a tool in `get-configuration`.
 - In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
 - A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
-- The Studio host is the US data center's, as for the rest of `webex cc`.
+- Studio is in the organization's Contact Center data center, which `--cc-region` or `webex config set cc-region` selects, as for the rest of `webex cc`.
 
 ## Other refreshed Contact Center APIs
 

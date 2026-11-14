@@ -107,6 +107,11 @@ var rootCmd = &cobra.Command{
 			}
 		}
 
+		ccRegionFlag, _ := cmd.Flags().GetString("cc-region")
+		if err := resolveCCRegion(ccRegionFlag, cfg); err != nil {
+			return err
+		}
+
 		// Auto-populate --orgid on CC commands from the resolved org.
 		// CC API uses UUID format, so decode any base64 values.
 		if f := cmd.Flags().Lookup("orgid"); f != nil {
@@ -166,6 +171,57 @@ func setRegion(region string) error {
 	return nil
 }
 
+// resolveCCRegion selects the Contact Center data center for the resolved org:
+// --cc-region flag > WEBEX_CC_REGION env > the region saved for the org > us1.
+func resolveCCRegion(flag string, cfg *appconfig.Config) error {
+	region := flag
+	if region == "" {
+		region = os.Getenv("WEBEX_CC_REGION")
+	}
+	if region == "" {
+		region = cfg.CCRegions[config.OrgID()]
+	}
+	return setCCRegion(region)
+}
+
+// setCCRegion validates a Contact Center data center and points requests at it.
+func setCCRegion(region string) error {
+	normalized, err := normalizeCCRegion(region)
+	if err != nil {
+		return err
+	}
+	config.SetCCRegion(normalized)
+	return nil
+}
+
+func normalizeCCRegion(region string) (string, error) {
+	normalized := strings.ToLower(strings.TrimSpace(region))
+	if normalized != "" && !slices.Contains(config.CCRegions, normalized) {
+		return "", fmt.Errorf("unknown Contact Center region %q (valid: %s)", region, strings.Join(config.CCRegions, ", "))
+	}
+	return normalized, nil
+}
+
+// configuredOrgID returns the org a command would use, from the flag and the config
+// file alone, for commands that run without a login.
+func configuredOrgID(cmd *cobra.Command, cfg *appconfig.Config) string {
+	if org, _ := cmd.Flags().GetString("organization"); org != "" {
+		return config.DecodeOrgID(org)
+	}
+	if cfg.DefaultOrgID != "" {
+		return config.DecodeOrgID(cfg.DefaultOrgID)
+	}
+	flagUser, envUser := requestedUser(cmd)
+	user := flagUser
+	if user == "" {
+		user = envUser
+	}
+	if user == "" {
+		user = cfg.DefaultUser
+	}
+	return config.DecodeOrgID(cfg.Users[user].OrgID)
+}
+
 // RootCommand returns the root cobra command for external introspection.
 func RootCommand() *cobra.Command { return rootCmd }
 
@@ -219,6 +275,7 @@ func init() {
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
 	rootCmd.PersistentFlags().String("region", "", "Data region for region-specific APIs: "+strings.Join(config.Regions, ", ")+" (default us)")
+	rootCmd.PersistentFlags().String("cc-region", "", "Contact Center data center: "+strings.Join(config.CCRegions, ", ")+" (default: the organization's saved region, else us1)")
 	rootCmd.PersistentFlags().Int("max-retry", 3, "Max number of 429 retries before giving up (0 = no retries)")
 	rootCmd.PersistentFlags().Int("max-retry-timer", 60, "Max total seconds to wait across all 429 retries (0 = unlimited)")
 
