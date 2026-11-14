@@ -441,6 +441,26 @@ func TestTheFakeSurvivesAFaultOnAListRoute(t *testing.T) {
 	resp.Body.Close()
 }
 
+func TestTheFakeRefusesAWriteWithoutABody(t *testing.T) {
+	fake := fakeapi.New()
+	srv := httptest.NewServer(fake)
+	defer srv.Close()
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Post(srv.URL+"/organization/"+fakeapi.OrgUUID+"/team", "application/json", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Fatalf("status = %d", resp.StatusCode)
+	}
+	if resp, err := client.Get(srv.URL + "/organization/" + fakeapi.OrgUUID + "/team/team1"); err != nil {
+		t.Fatalf("the fake stopped answering: %v", err)
+	} else {
+		resp.Body.Close()
+	}
+}
+
 func TestTheFakeDeletesFromEveryCollection(t *testing.T) {
 	c, fake := newClient(t)
 	fake.Delete("cc_skill", "skill1")

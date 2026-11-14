@@ -121,13 +121,20 @@ func WithWriteCheck(ctx context.Context, check func() error) context.Context {
 	return context.WithValue(ctx, writeCheckKey{}, check)
 }
 
+// writeCheck runs the context's write check for a write.
+func writeCheck(ctx context.Context, method string) error {
+	if method == http.MethodGet || method == http.MethodHead {
+		return nil
+	}
+	if check, ok := ctx.Value(writeCheckKey{}).(func() error); ok {
+		return check()
+	}
+	return nil
+}
+
 func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
-	if r.Method != http.MethodGet && r.Method != http.MethodHead {
-		if check, ok := ctx.Value(writeCheckKey{}).(func() error); ok {
-			if err := check(); err != nil {
-				return nil, err
-			}
-		}
+	if err := writeCheck(ctx, r.Method); err != nil {
+		return nil, err
 	}
 	var body io.Reader
 	if len(r.Body) > 0 {
@@ -159,6 +166,11 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 
 	if c.BeforeSend != nil {
 		if err := c.BeforeSend(httpReq); err != nil {
+			return nil, err
+		}
+		// BeforeSend can wait, as a pacer does, long enough for the check's answer to
+		// change.
+		if err := writeCheck(ctx, r.Method); err != nil {
 			return nil, err
 		}
 	}

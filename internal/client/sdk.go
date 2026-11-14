@@ -16,7 +16,7 @@ import (
 
 // SDK returns a transport for the SDK packages, set up from this run's flags like
 // every other request: the token and its refresh, 429 retries, debug output,
-// read-only mode, dry-run and Contact Center pacing.
+// read-only mode and dry-run.
 func SDK() *webexapi.Client {
 	api := &webexapi.Client{
 		HTTP: http.DefaultClient,

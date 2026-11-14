@@ -459,6 +459,11 @@ func (s *Server) serveAPI(w http.ResponseWriter, r *http.Request) {
 	raw, _ := io.ReadAll(r.Body)
 	var body map[string]any
 	_ = json.Unmarshal(raw, &body)
+	// The handlers write into the body, so a write without one is refused here.
+	if body == nil && (r.Method == http.MethodPost || r.Method == http.MethodPut || r.Method == http.MethodPatch) {
+		write(w, problem(400, 0, "the body must be a JSON object"))
+		return
+	}
 
 	s.mu.Lock()
 	e := &LogEntry{Seq: len(s.log) + 1, Method: r.Method, Path: r.URL.Path}

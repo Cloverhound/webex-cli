@@ -98,6 +98,24 @@ func TestAWriteCheckRunsBeforeEachAttempt(t *testing.T) {
 	}
 }
 
+// A pacer in BeforeSend can wait; a stop during that wait still keeps the write unsent.
+func TestAWriteCheckRunsAfterBeforeSend(t *testing.T) {
+	var requests int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { requests++ }))
+	defer srv.Close()
+	stopped := false
+	c := &Client{Token: staticToken("tok"), BeforeSend: func(*http.Request) error { stopped = true; return nil }}
+	ctx := WithWriteCheck(context.Background(), func() error {
+		if stopped {
+			return errors.New("stopped")
+		}
+		return nil
+	})
+	if _, err := c.Send(ctx, Request{Method: "PUT", URL: srv.URL}); err == nil || requests != 0 {
+		t.Fatalf("err = %v after %d requests", err, requests)
+	}
+}
+
 func TestRefreshesOnceOn401ThenHandles429(t *testing.T) {
 	statuses := []int{401, 429, 200}
 	var auth []string

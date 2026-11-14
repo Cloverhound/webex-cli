@@ -195,6 +195,11 @@ func observed(actual, baseline, planned resource.Values, t resource.Type) string
 }
 
 func writeFailure(err error, what, seen string) *Failure {
+	var unsent *webex.NotSent
+	var invalid *resource.Invalid
+	if errors.As(err, &unsent) || errors.As(err, &invalid) {
+		return &Failure{Rejected, what + " was not sent", err.Error()}
+	}
 	if webex.Classify(err) == webex.Rejected {
 		return &Failure{Rejected, "Webex rejected " + strings.ToLower(what), err.Error()}
 	}

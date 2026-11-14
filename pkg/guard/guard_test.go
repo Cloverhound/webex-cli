@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -228,6 +229,20 @@ func TestCreateAndDeleteReadBackThroughLag(t *testing.T) {
 	}
 	if err := f.guard.Delete(context.Background(), f.team, resource.Key{ID: "team2"}, prior.Values); err != nil {
 		t.Fatalf("delete: %v", err)
+	}
+}
+
+// A write that fails before its request, here for want of the location its route
+// needs, changed nothing; it is not an unknown outcome.
+func TestAWriteThatWasNeverSentIsNotAnUnknownOutcome(t *testing.T) {
+	f := newFixture(t)
+	_, _, err := f.guard.Create(context.Background(), f.hg, resource.Values{"name": "zz", "extension": "4100"})
+	var failure *Failure
+	if !errors.As(err, &failure) || failure.Kind != Rejected || !strings.Contains(failure.Summary, "was not sent") {
+		t.Fatalf("err = %v", err)
+	}
+	if m := f.fake.Mutations(); len(m) != 0 {
+		t.Fatalf("sent %v", m)
 	}
 }
 

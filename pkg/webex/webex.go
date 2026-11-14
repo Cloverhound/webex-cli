@@ -45,7 +45,8 @@ func Classify(err error) Outcome {
 		return Rejected
 	}
 	var invalid *resource.Invalid
-	if errors.As(err, &invalid) {
+	var unsent *NotSent
+	if errors.As(err, &invalid) || errors.As(err, &unsent) {
 		return Rejected
 	}
 	return Unknown
@@ -470,18 +471,18 @@ func (c *Client) Create(ctx context.Context, t resource.Type, desired resource.V
 		key.Parent, _ = desired[t.ParentField].(string)
 	}
 	if !t.Routes.Create.Defined() {
-		return resource.Key{}, fmt.Errorf("%s cannot be created through the API", t.Plural)
+		return resource.Key{}, notSent(fmt.Errorf("%s cannot be created through the API", t.Plural))
 	}
 	if err := t.Check(desired); err != nil {
 		return resource.Key{}, err
 	}
 	body, err := c.createBody(ctx, t, desired)
 	if err != nil {
-		return resource.Key{}, err
+		return resource.Key{}, notSent(err)
 	}
 	target, err := c.url(t.Routes.Create, key, nil)
 	if err != nil {
-		return resource.Key{}, err
+		return resource.Key{}, notSent(err)
 	}
 	resp, err := c.send(ctx, http.MethodPost, target, body)
 	if err != nil {
@@ -547,7 +548,7 @@ func matches(raw, want map[string]any) bool {
 // whole object need.
 func (c *Client) Update(ctx context.Context, t resource.Type, key resource.Key, raw map[string]any, delta resource.Values) error {
 	if !t.Routes.Update.Defined() {
-		return fmt.Errorf("%s cannot be changed through the API", t.Plural)
+		return notSent(fmt.Errorf("%s cannot be changed through the API", t.Plural))
 	}
 	if err := t.CheckUpdate(delta); err != nil {
 		return err
@@ -558,7 +559,7 @@ func (c *Client) Update(ctx context.Context, t resource.Type, key resource.Key, 
 	}
 	target, err := c.url(t.Routes.Update, key, nil)
 	if err != nil {
-		return err
+		return notSent(err)
 	}
 	_, err = c.send(ctx, t.Routes.Update.Op.Method, target, body)
 	return err
@@ -567,11 +568,11 @@ func (c *Client) Update(ctx context.Context, t resource.Type, key resource.Key, 
 // Delete removes an object.
 func (c *Client) Delete(ctx context.Context, t resource.Type, key resource.Key) error {
 	if !t.Routes.Delete.Defined() {
-		return fmt.Errorf("%s cannot be deleted through the API", t.Plural)
+		return notSent(fmt.Errorf("%s cannot be deleted through the API", t.Plural))
 	}
 	target, err := c.url(t.Routes.Delete, key, nil)
 	if err != nil {
-		return err
+		return notSent(err)
 	}
 	_, err = c.API.Send(ctx, webexapi.Request{Method: http.MethodDelete, URL: target})
 	return err
@@ -587,7 +588,15 @@ func WithBeforeWrite(ctx context.Context, check func() error) context.Context {
 func (c *Client) send(ctx context.Context, method, target string, body map[string]any) (*webexapi.Response, error) {
 	data, err := json.Marshal(body)
 	if err != nil {
-		return nil, fmt.Errorf("encoding body: %w", err)
+		return nil, notSent(fmt.Errorf("encoding body: %w", err))
 	}
 	return c.API.Send(ctx, webexapi.Request{Method: method, URL: target, Body: data})
 }
+
+// NotSent is a write that failed before its request was sent, so nothing changed.
+type NotSent struct{ Err error }
+
+func (e *NotSent) Error() string { return e.Err.Error() }
+func (e *NotSent) Unwrap() error { return e.Err }
+
+func notSent(err error) error { return &NotSent{Err: err} }
