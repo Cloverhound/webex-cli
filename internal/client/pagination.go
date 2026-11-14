@@ -3,6 +3,7 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	urlpkg "net/url"
@@ -12,6 +13,10 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 )
+
+// ErrIncompleteList means --paginate could not read a list to its end. It fails
+// rather than returning the pages it has, which would look like the whole list.
+var ErrIncompleteList = errors.New("incomplete list")
 
 // PaginateCalling auto-paginates a Calling API list endpoint.
 // Calling uses startIndex/itemsPerPage with items array.
@@ -24,8 +29,7 @@ func PaginateCalling(baseURL, method, path string, pathParams, queryParams, head
 // ignore offsets. Without one, it advances startParam by the items received,
 // or stops when startParam is empty.
 func paginateOffset(baseURL, method, path, startParam, sizeParam string, firstIndex int, pathParams, queryParams, headers map[string]string) ([]json.RawMessage, error) {
-	var allItems []json.RawMessage
-	var prevFirst json.RawMessage
+	var allItems, prev []json.RawMessage
 	start := firstIndex
 	pageSize := 100
 	next := ""
@@ -63,16 +67,22 @@ func paginateOffset(baseURL, method, path, startParam, sizeParam string, firstIn
 			return allItems, err
 		}
 		if len(items) == 0 {
+			if total > len(allItems) {
+				return allItems, fmt.Errorf("%w: %s ended at %d of %d items", ErrIncompleteList, path, len(allItems), total)
+			}
 			return allItems, nil
 		}
-		// An endpoint that ignores the offset returns the same page again.
-		if prevFirst != nil && bytes.Equal(items[0], prevFirst) {
-			return allItems, nil
+		if done, err := repeated(path, items, prev, pageSize); done || err != nil {
+			return allItems, err
 		}
-		prevFirst = items[0]
+		prev = items
 		allItems = append(allItems, items...)
 
-		if link := nextLink(respHeaders, baseURL); link != "" {
+		link, refused := nextLink(respHeaders, baseURL)
+		if refused {
+			return allItems, fmt.Errorf("%w: %s gave its next page on another host", ErrIncompleteList, path)
+		}
+		if link != "" {
 			next = link
 			continue
 		}
@@ -80,10 +90,32 @@ func paginateOffset(baseURL, method, path, startParam, sizeParam string, firstIn
 			return allItems, nil
 		}
 		start += len(items)
-		if len(items) < pageSize || (total > 0 && len(allItems) >= total) {
+		// A stated total (SCIM) ends the list only once reached, since a short page
+		// can be the server's own page size.
+		if total > 0 {
+			if len(allItems) >= total {
+				return allItems, nil
+			}
+			continue
+		}
+		if len(items) < pageSize {
 			return allItems, nil
 		}
 	}
+}
+
+// repeated checks a page that starts like the previous one, from an endpoint that
+// ignores the paging parameters. If the previous page was longer than the page
+// asked for, the endpoint ignored the size as well and sent the whole list, so the
+// list is done. Otherwise it may hold more than one page that cannot be reached.
+func repeated(path string, items, prev []json.RawMessage, pageSize int) (done bool, err error) {
+	if len(prev) == 0 || len(items) == 0 || !bytes.Equal(items[0], prev[0]) {
+		return false, nil
+	}
+	if len(prev) > pageSize {
+		return true, nil
+	}
+	return true, fmt.Errorf("%w: %s returned the same page again", ErrIncompleteList, path)
 }
 
 // listItems extracts a page's items: a bare array, or the "items" (Webex) or
@@ -120,10 +152,11 @@ func listItems(body []byte) ([]json.RawMessage, int, error) {
 
 // nextLink returns the rel="next" URL from a Link header, but only when it
 // points at the same host as baseURL, so the bearer token is never sent elsewhere.
-func nextLink(h http.Header, baseURL string) string {
+// refused reports a next page that is somewhere else.
+func nextLink(h http.Header, baseURL string) (link string, refused bool) {
 	base, err := urlpkg.Parse(baseURL)
 	if err != nil {
-		return ""
+		return "", false
 	}
 	for _, value := range h.Values("Link") {
 		for _, part := range strings.Split(value, ",") {
@@ -134,12 +167,12 @@ func nextLink(h http.Header, baseURL string) string {
 			target = strings.Trim(strings.TrimSpace(target), "<>")
 			u, err := urlpkg.Parse(target)
 			if err != nil || u.Scheme != base.Scheme || u.Host != base.Host {
-				return ""
+				return "", true
 			}
-			return target
+			return target, false
 		}
 	}
-	return ""
+	return "", false
 }
 
 // PaginateCC auto-paginates a Contact Center API list endpoint.
@@ -169,10 +202,12 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 // visitCC pages with page and sizeParam. Most CC endpoints wrap items in
 // {data, meta}; the flow store and functions use {data, pageInfo}, and the
 // flow store returns a bare array unless includePagination=true. A first
-// response that is neither is returned as single and not visited.
+// response that is neither is returned as single and not visited. Without page
+// metadata nothing shows the list ended, so a full page leads to another request.
 func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
 	page := 0
 	pageSize := 100
+	var prev []json.RawMessage
 
 	for {
 		r := NewRequest(baseURL, method, path)
@@ -193,44 +228,46 @@ func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, h
 			return nil, err
 		}
 
-		// A bare array carries no page metadata, so it is the only page.
-		var bare []json.RawMessage
-		if err := json.Unmarshal(body, &bare); err == nil {
-			visit(bare)
-			return nil, nil
-		}
-
-		var result map[string]json.RawMessage
-		if err := json.Unmarshal(body, &result); err != nil {
-			return nil, fmt.Errorf("parsing page: %w", err)
-		}
-
 		var items []json.RawMessage
-		data, hasData := result["data"]
-		if hasData && json.Unmarshal(data, &items) != nil {
-			hasData = false
-		}
-		if !hasData {
-			if page == 0 {
-				return body, nil
+		var metaRaw json.RawMessage
+		hasMeta := false
+		if err := json.Unmarshal(body, &items); err != nil {
+			var result map[string]json.RawMessage
+			if err := json.Unmarshal(body, &result); err != nil {
+				return nil, fmt.Errorf("parsing page: %w", err)
 			}
-			return nil, nil
+			data, hasData := result["data"]
+			if hasData && json.Unmarshal(data, &items) != nil {
+				hasData = false
+			}
+			if !hasData {
+				if page == 0 {
+					return body, nil
+				}
+				return nil, nil
+			}
+			metaRaw, hasMeta = result["meta"]
+			if !hasMeta {
+				metaRaw, hasMeta = result["pageInfo"]
+			}
 		}
-		if !visit(items) {
+
+		if done, err := repeated(path, items, prev, pageSize); done || err != nil {
+			return nil, err
+		}
+		prev = items
+		if !visit(items) || len(items) == 0 {
 			return nil, nil
 		}
 
-		metaRaw, ok := result["meta"]
-		if !ok {
-			metaRaw, ok = result["pageInfo"]
-		}
-		if !ok || len(items) == 0 {
-			return nil, nil
-		}
-		var meta struct {
-			TotalPages int `json:"totalPages"`
-		}
-		if err := json.Unmarshal(metaRaw, &meta); err != nil || page+1 >= meta.TotalPages {
+		if hasMeta {
+			var meta struct {
+				TotalPages int `json:"totalPages"`
+			}
+			if err := json.Unmarshal(metaRaw, &meta); err != nil || page+1 >= meta.TotalPages {
+				return nil, nil
+			}
+		} else if len(items) < pageSize {
 			return nil, nil
 		}
 

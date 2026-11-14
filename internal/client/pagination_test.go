@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -167,7 +168,9 @@ func TestDoPaginatedFollowsLinkHeader(t *testing.T) {
 	}
 }
 
-func TestDoPaginatedIgnoresLinkToAnotherHost(t *testing.T) {
+// The token is never sent to another host, and the pages there are missing from the
+// list, so the list fails rather than looking complete.
+func TestDoPaginatedFailsOnALinkToAnotherHost(t *testing.T) {
 	var hits int
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		hits++
@@ -178,11 +181,30 @@ func TestDoPaginatedIgnoresLinkToAnotherHost(t *testing.T) {
 
 	req := NewRequest(srv.URL, "GET", "/rooms")
 	req.OffsetPaging("", "max", 0)
-	if _, _, err := req.DoPaginated(true); err != nil {
-		t.Fatalf("DoPaginated: %v", err)
+	if _, _, err := req.DoPaginated(true); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, want ErrIncompleteList", err)
 	}
 	if hits != 1 {
 		t.Fatalf("server hits = %d, want 1", hits)
+	}
+}
+
+func TestDoPaginatedFailsOnALinkToAnotherHostAfterTheFirstPage(t *testing.T) {
+	var srv *httptest.Server
+	srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		next := srv.URL + "/rooms?cursor=1"
+		if r.URL.Query().Get("cursor") == "1" {
+			next = "https://elsewhere.example/rooms?cursor=2"
+		}
+		w.Header().Set("Link", "<"+next+`>; rel="next"`)
+		json.NewEncoder(w).Encode(map[string]any{"items": []map[string]string{{"name": "r" + r.URL.Query().Get("cursor")}}})
+	}))
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/rooms")
+	req.OffsetPaging("", "max", 0)
+	if _, _, err := req.DoPaginated(true); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, want ErrIncompleteList", err)
 	}
 }
 
@@ -212,24 +234,160 @@ func TestDoPaginatedStopsWithoutLinkWhenNoOffsetParam(t *testing.T) {
 	}
 }
 
-func TestDoPaginatedStopsWhenOffsetIsIgnored(t *testing.T) {
-	var hits int
-	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		hits++
-		items := make([]map[string]string, 100)
+// sameItems answers every request with the same n items, as an endpoint that
+// ignores the paging parameters does.
+func sameItems(n int, hits *int, wrap bool) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		*hits++
+		items := make([]map[string]string, n)
 		for i := range items {
 			items[i] = map[string]string{"name": fmt.Sprintf("p%d", i)}
 		}
-		json.NewEncoder(w).Encode(map[string]any{"items": items})
+		if wrap {
+			json.NewEncoder(w).Encode(map[string]any{"items": items})
+			return
+		}
+		json.NewEncoder(w).Encode(items)
 	}))
+}
+
+// A repeated page as long as the page asked for may be the first page of a longer
+// list that the endpoint will not page through.
+func TestDoPaginatedFailsWhenAFullPageRepeats(t *testing.T) {
+	var hits int
+	srv := sameItems(100, &hits, true)
+	defer srv.Close()
+
+	if _, _, err := NewRequest(srv.URL, "GET", "/people").DoPaginated(true); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, want ErrIncompleteList", err)
+	}
+	if hits != 2 {
+		t.Fatalf("server hits = %d, want 2", hits)
+	}
+}
+
+// A page longer than the page asked for shows the endpoint ignored the size and
+// returned everything, so its repeat ends the list.
+func TestDoPaginatedTakesALongerRepeatedPageAsTheWholeList(t *testing.T) {
+	var hits int
+	srv := sameItems(150, &hits, true)
 	defer srv.Close()
 
 	body, _, err := NewRequest(srv.URL, "GET", "/people").DoPaginated(true)
 	if err != nil {
 		t.Fatalf("DoPaginated: %v", err)
 	}
-	if got := names(t, body); len(got) != 100 || hits != 2 {
-		t.Fatalf("got %d items in %d requests, want 100 in 2", len(got), hits)
+	if got := names(t, body); len(got) != 150 {
+		t.Fatalf("got %d items, want 150", len(got))
+	}
+}
+
+// scimUsers serves a SCIM list of total users, at most perPage at a time whatever
+// count asks for.
+func scimUsers(total, perPage int) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start, _ := strconv.Atoi(r.URL.Query().Get("startIndex"))
+		count, _ := strconv.Atoi(r.URL.Query().Get("count"))
+		count = min(count, perPage)
+		var items []map[string]string
+		for i := start; i < start+count && i <= total; i++ {
+			items = append(items, map[string]string{"name": fmt.Sprintf("u%d", i)})
+		}
+		json.NewEncoder(w).Encode(map[string]any{
+			"totalResults": total, "startIndex": start, "itemsPerPage": len(items), "Resources": items,
+		})
+	}))
+}
+
+func TestDoPaginatedReadsSCIMToItsTotalThroughSmallerPages(t *testing.T) {
+	srv := scimUsers(250, 50)
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/Users")
+	req.OffsetPaging("startIndex", "count", 1)
+	body, _, err := req.DoPaginated(true)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 250 || got[249] != "u250" {
+		t.Fatalf("got %d items, want u1..u250", len(got))
+	}
+}
+
+func TestDoPaginatedFailsWhenSCIMEndsBeforeItsTotal(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var items []map[string]string
+		if r.URL.Query().Get("startIndex") == "1" {
+			items = []map[string]string{{"name": "u1"}}
+		}
+		json.NewEncoder(w).Encode(map[string]any{"totalResults": 5, "Resources": items})
+	}))
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/Users")
+	req.OffsetPaging("startIndex", "count", 1)
+	if _, _, err := req.DoPaginated(true); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, want ErrIncompleteList", err)
+	}
+}
+
+func TestDoPaginatedPagesAFullPlainArray(t *testing.T) {
+	var pages []string
+	srv := flowStore(250, &pages)
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/flows")
+	req.PageSizeParam("size")
+	body, _, err := req.DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 250 || got[249] != "f249" {
+		t.Fatalf("got %d items, want 250 ending in f249", len(got))
+	}
+}
+
+func TestDoPaginatedFailsWhenAFullPlainArrayRepeats(t *testing.T) {
+	var hits int
+	srv := sameItems(100, &hits, false)
+	defer srv.Close()
+
+	if _, _, err := NewRequest(srv.URL, "GET", "/functions").DoPaginated(false); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, want ErrIncompleteList", err)
+	}
+}
+
+func TestDoPaginatedTakesALongerPlainArrayAsTheWholeList(t *testing.T) {
+	var hits int
+	srv := sameItems(150, &hits, false)
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/functions").DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 150 {
+		t.Fatalf("got %d items, want 150", len(got))
+	}
+}
+
+func TestDoPaginatedPagesDataWithoutPageMetadata(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+		var data []map[string]string
+		for i := page * 100; i < (page+1)*100 && i < 130; i++ {
+			data = append(data, map[string]string{"name": fmt.Sprintf("d%d", i)})
+		}
+		json.NewEncoder(w).Encode(map[string]any{"data": data})
+	}))
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/things").DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 130 || got[129] != "d129" {
+		t.Fatalf("got %d items, want 130 ending in d129", len(got))
 	}
 }
 

@@ -294,7 +294,7 @@ func init() {
 	rootCmd.PersistentFlags().String("token", "", "Webex API token (overrides stored login)")
 	rootCmd.PersistentFlags().String("output", "json", "Output format: json, table, csv, raw")
 	rootCmd.PersistentFlags().Bool("debug", false, "Enable debug logging of HTTP requests")
-	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results")
+	rootCmd.PersistentFlags().Bool("paginate", false, "Auto-paginate list results; fails with \"incomplete list\" rather than returning part of a list it cannot read to its end")
 	rootCmd.PersistentFlags().Bool("dry-run", false, "Print write requests without executing them")
 	rootCmd.PersistentFlags().String("user", "", "Use a specific authenticated user (email)")
 	rootCmd.PersistentFlags().String("organization", "", "Override organization ID for this command")
