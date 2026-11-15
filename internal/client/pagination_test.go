@@ -331,6 +331,59 @@ func TestDoPaginatedFailsWhenSCIMEndsBeforeItsTotal(t *testing.T) {
 	}
 }
 
+const scimListSchema = "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+
+func TestDoPaginatedFailsWhenSCIMEndsWithAnEmptyResourcesPage(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		items := []map[string]string{}
+		if r.URL.Query().Get("startIndex") == "1" {
+			items = []map[string]string{{"name": "u1"}}
+		}
+		json.NewEncoder(w).Encode(map[string]any{
+			"schemas": []string{scimListSchema}, "totalResults": 2, "Resources": items,
+		})
+	}))
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/Users")
+	req.OffsetPaging("startIndex", "count", 1)
+	if body, _, err := req.DoPaginated(true); !errors.Is(err, ErrIncompleteList) {
+		t.Fatalf("err = %v, body = %s; want ErrIncompleteList", err, body)
+	}
+}
+
+func TestDoPaginatedReturnsNoItemsForAnEmptySCIMList(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(map[string]any{"schemas": []string{scimListSchema}, "totalResults": 0})
+	}))
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/Users")
+	req.OffsetPaging("startIndex", "count", 1)
+	body, _, err := req.DoPaginated(true)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 0 {
+		t.Fatalf("got %s, want no items", body)
+	}
+}
+
+func TestDoPaginatedReturnsNoItemsForAnEmptyItemsArray(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(map[string]any{"items": []any{}, "notFoundIds": []string{"x"}})
+	}))
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/people").DoPaginated(true)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 0 {
+		t.Fatalf("got %s, want no items", body)
+	}
+}
+
 func TestDoPaginatedPagesAFullPlainArray(t *testing.T) {
 	var pages []string
 	srv := flowStore(250, &pages)

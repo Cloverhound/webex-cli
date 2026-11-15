@@ -119,8 +119,9 @@ func repeated(path string, items, prev []json.RawMessage, pageSize int) (done bo
 }
 
 // listItems extracts a page's items: a bare array, or the "items" (Webex) or
-// "Resources" (SCIM) array, or else the first array field by name. total is
-// SCIM's totalResults when present.
+// "Resources" (SCIM) array even when empty, or else the first non-empty array
+// field by name other than SCIM's "schemas". total is SCIM's totalResults when
+// present.
 func listItems(body []byte) ([]json.RawMessage, int, error) {
 	var bare []json.RawMessage
 	if err := json.Unmarshal(body, &bare); err == nil {
@@ -135,15 +136,22 @@ func listItems(body []byte) ([]json.RawMessage, int, error) {
 		json.Unmarshal(raw, &total)
 	}
 
+	for _, k := range []string{"items", "Resources"} {
+		var items []json.RawMessage
+		if v, ok := result[k]; ok && json.Unmarshal(v, &items) == nil {
+			return items, total, nil
+		}
+	}
 	keys := make([]string, 0, len(result))
 	for k := range result {
-		keys = append(keys, k)
+		if k != "schemas" {
+			keys = append(keys, k)
+		}
 	}
 	sort.Strings(keys)
-	keys = append([]string{"items", "Resources"}, keys...)
 	for _, k := range keys {
 		var items []json.RawMessage
-		if v, ok := result[k]; ok && json.Unmarshal(v, &items) == nil && len(items) > 0 {
+		if json.Unmarshal(result[k], &items) == nil && len(items) > 0 {
 			return items, total, nil
 		}
 	}
