@@ -39,6 +39,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -69,6 +70,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -421,6 +423,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -451,6 +454,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err

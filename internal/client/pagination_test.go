@@ -528,3 +528,112 @@ func TestDoPaginatedFollowsMetaWithPageSize(t *testing.T) {
 		t.Fatalf("got %s, want [s0 s1]", got)
 	}
 }
+
+// ccPages serves total items a page at a time from page/pageSize, wrapped by wrap.
+// It fails the test after 50 requests so a pager that never stops ends.
+func ccPages(t *testing.T, total int, item func(i int) map[string]any, wrap func(page, totalPages int, data []map[string]any) any) (*httptest.Server, *int) {
+	hits := new(int)
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if *hits++; *hits > 50 {
+			t.Errorf("more than 50 requests")
+			http.Error(w, "too many", http.StatusTeapot)
+			return
+		}
+		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+		size, _ := strconv.Atoi(r.URL.Query().Get("pageSize"))
+		data := []map[string]any{}
+		for i := page * size; i < (page+1)*size && i < total; i++ {
+			data = append(data, item(i))
+		}
+		json.NewEncoder(w).Encode(wrap(page, (total+size-1)/size, data))
+	})), hits
+}
+
+func named(i int) map[string]any { return map[string]any{"name": fmt.Sprintf("d%d", i)} }
+
+func TestDoPaginatedPagesMetaWithoutTotalPages(t *testing.T) {
+	srv, _ := ccPages(t, 250, named, func(_, _ int, data []map[string]any) any {
+		return map[string]any{"meta": map[string]string{"orgId": "o"}, "data": data}
+	})
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/activities").DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 250 || got[249] != "d249" {
+		t.Fatalf("got %d items, want 250 ending in d249", len(got))
+	}
+}
+
+// Rows can be identical when --attributes selects fields without an ID.
+func TestDoPaginatedReadsIdenticalRowsToTotalPages(t *testing.T) {
+	srv, hits := ccPages(t, 250, func(int) map[string]any { return map[string]any{"active": true} },
+		func(page, totalPages int, data []map[string]any) any {
+			return map[string]any{"meta": map[string]int{"page": page, "totalPages": totalPages}, "data": data}
+		})
+	defer srv.Close()
+
+	body, _, err := NewRequest(srv.URL, "GET", "/skill").DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	var items []any
+	json.Unmarshal(body, &items)
+	if len(items) != 250 || *hits != 3 {
+		t.Fatalf("got %d items in %d requests, want 250 in 3", len(items), *hits)
+	}
+}
+
+func TestDoPaginatedTakesAPageWithoutTotalPagesAsTheWholeListWithoutPageParams(t *testing.T) {
+	for name, wrap := range map[string]func(int, int, []map[string]any) any{
+		"bare array": func(_, _ int, data []map[string]any) any { return data },
+		"data":       func(_, _ int, data []map[string]any) any { return map[string]any{"data": data} },
+		"meta, no total": func(_, _ int, data []map[string]any) any {
+			return map[string]any{"data": data, "meta": map[string]string{"orgId": "o"}}
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			var hits int
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if hits++; hits > 50 {
+					http.Error(w, "too many", http.StatusTeapot)
+					return
+				}
+				data := make([]map[string]any, 100)
+				for i := range data {
+					data[i] = map[string]any{"name": fmt.Sprintf("n%d", i), "secondsInState": hits}
+				}
+				json.NewEncoder(w).Encode(wrap(0, 0, data))
+			}))
+			defer srv.Close()
+
+			req := NewRequest(srv.URL, "GET", "/numbers")
+			req.NoPageParams()
+			body, _, err := req.DoPaginated(false)
+			if err != nil {
+				t.Fatalf("DoPaginated: %v", err)
+			}
+			if got := names(t, body); len(got) != 100 || hits != 1 {
+				t.Fatalf("got %d items in %d requests, want 100 in 1", len(got), hits)
+			}
+		})
+	}
+}
+
+func TestDoPaginatedFollowsTotalPagesWithoutPageParams(t *testing.T) {
+	srv, _ := ccPages(t, 250, named, func(page, totalPages int, data []map[string]any) any {
+		return map[string]any{"meta": map[string]int{"page": page, "totalPages": totalPages}, "data": data}
+	})
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/queues")
+	req.NoPageParams()
+	body, _, err := req.DoPaginated(false)
+	if err != nil {
+		t.Fatalf("DoPaginated: %v", err)
+	}
+	if got := names(t, body); len(got) != 250 {
+		t.Fatalf("got %d items, want 250", len(got))
+	}
+}

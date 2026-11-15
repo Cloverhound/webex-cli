@@ -298,8 +298,10 @@ def pagination_hints(cmd_name, query_names, is_calling):
         # AI Agent Studio lists page by limit/offset under "objects".
         if {'limit', 'offset'} <= query_names:
             return ['req.OffsetPaging("offset", "limit", 0)']
-        if not is_list and not query_names & {'page', 'pageSize', 'size'}:
-            return None
+        if not query_names & {'page', 'pageSize', 'size'}:
+            if not is_list:
+                return None
+            return ['req.NoPageParams()']
         hints = []
         if 'size' in query_names and 'pageSize' not in query_names:
             hints.append('req.PageSizeParam("size")')

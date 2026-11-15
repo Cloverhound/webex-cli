@@ -186,21 +186,21 @@ func nextLink(h http.Header, baseURL string) (link string, refused bool) {
 // PaginateCC auto-paginates a Contact Center API list endpoint.
 // CC uses page/pageSize with meta.totalPages.
 func PaginateCC(baseURL, method, path string, pathParams, queryParams, headers map[string]string) ([]json.RawMessage, error) {
-	items, _, err := paginateCC(baseURL, method, path, "pageSize", pathParams, queryParams, headers)
+	items, _, err := paginateCC(baseURL, method, path, "pageSize", false, pathParams, queryParams, headers)
 	return items, err
 }
 
 // VisitCC pages a Contact Center list endpoint like PaginateCC, passing each
 // page's items to visit and stopping as soon as visit returns false.
 func VisitCC(baseURL, method, path string, pathParams, queryParams map[string]string, visit func(items []json.RawMessage) bool) error {
-	_, err := visitCC(baseURL, method, path, "pageSize", pathParams, queryParams, nil, visit)
+	_, err := visitCC(baseURL, method, path, "pageSize", false, pathParams, queryParams, nil, visit)
 	return err
 }
 
 // paginateCC pages with page and sizeParam. A first response that is not a
 // list is returned as single, to be printed unchanged.
-func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string) (items []json.RawMessage, single []byte, err error) {
-	single, err = visitCC(baseURL, method, path, sizeParam, pathParams, queryParams, headers, func(page []json.RawMessage) bool {
+func paginateCC(baseURL, method, path, sizeParam string, noPageParams bool, pathParams, queryParams, headers map[string]string) (items []json.RawMessage, single []byte, err error) {
+	single, err = visitCC(baseURL, method, path, sizeParam, noPageParams, pathParams, queryParams, headers, func(page []json.RawMessage) bool {
 		items = append(items, page...)
 		return true
 	})
@@ -210,9 +210,10 @@ func paginateCC(baseURL, method, path, sizeParam string, pathParams, queryParams
 // visitCC pages with page and sizeParam. Most CC endpoints wrap items in
 // {data, meta}; the flow store and functions use {data, pageInfo}, and the
 // flow store returns a bare array unless includePagination=true. A first
-// response that is neither is returned as single and not visited. Without page
-// metadata nothing shows the list ended, so a full page leads to another request.
-func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
+// response that is neither is returned as single and not visited. Without a
+// totalPages nothing shows the list ended, so a full page leads to another
+// request, unless noPageParams says the endpoint has no pages to ask for.
+func visitCC(baseURL, method, path, sizeParam string, noPageParams bool, pathParams, queryParams, headers map[string]string, visit func(items []json.RawMessage) bool) (single []byte, err error) {
 	page := 0
 	pageSize := 100
 	var prev []json.RawMessage
@@ -237,8 +238,9 @@ func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, h
 		}
 
 		var items []json.RawMessage
-		var metaRaw json.RawMessage
-		hasMeta := false
+		var meta struct {
+			TotalPages *int `json:"totalPages"`
+		}
 		if err := json.Unmarshal(body, &items); err != nil {
 			var result map[string]json.RawMessage
 			if err := json.Unmarshal(body, &result); err != nil {
@@ -254,28 +256,30 @@ func visitCC(baseURL, method, path, sizeParam string, pathParams, queryParams, h
 				}
 				return nil, nil
 			}
-			metaRaw, hasMeta = result["meta"]
-			if !hasMeta {
-				metaRaw, hasMeta = result["pageInfo"]
+			metaRaw, ok := result["meta"]
+			if !ok {
+				metaRaw = result["pageInfo"]
 			}
+			json.Unmarshal(metaRaw, &meta)
 		}
 
-		if done, err := repeated(path, items, prev, pageSize); done || err != nil {
-			return nil, err
+		// totalPages bounds the list, and its pages may hold identical rows
+		// (--attributes without an ID), so only a list without it is checked.
+		if meta.TotalPages == nil {
+			if done, err := repeated(path, items, prev, pageSize); done || err != nil {
+				return nil, err
+			}
 		}
 		prev = items
 		if !visit(items) || len(items) == 0 {
 			return nil, nil
 		}
 
-		if hasMeta {
-			var meta struct {
-				TotalPages int `json:"totalPages"`
-			}
-			if err := json.Unmarshal(metaRaw, &meta); err != nil || page+1 >= meta.TotalPages {
+		if meta.TotalPages != nil {
+			if page+1 >= *meta.TotalPages {
 				return nil, nil
 			}
-		} else if len(items) < pageSize {
+		} else if noPageParams || len(items) < pageSize {
 			return nil, nil
 		}
 

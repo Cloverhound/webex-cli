@@ -65,6 +65,15 @@ class ContactCenterPaginationTest(unittest.TestCase):
         block = self.paginated_block(['page', 'pageSize'])
         self.assertNotIn('PageSizeParam', block)
 
+    def test_list_without_paging_params_is_marked(self):
+        self.assertIn('req.NoPageParams()', self.paginated_block([]))
+        self.assertIn('req.NoPageParams()', self.paginated_block(['name']))
+
+    def test_list_with_paging_params_is_not_marked(self):
+        for params in (['page'], ['pageSize'], ['page', 'size']):
+            with self.subTest(params=params):
+                self.assertNotIn('NoPageParams', self.paginated_block(params))
+
     def test_calling_endpoint_skips_cc_hints(self):
         block = self.paginated_block(['max', 'start', 'size', 'includePagination'], is_calling=True)
         self.assertNotIn('PageSizeParam', block)

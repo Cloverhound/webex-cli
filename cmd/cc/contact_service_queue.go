@@ -228,6 +228,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -699,6 +700,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -731,6 +733,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -763,6 +766,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("ciUserId", ciUserId)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err
@@ -861,6 +865,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("id", id)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err

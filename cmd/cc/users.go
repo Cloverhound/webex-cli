@@ -293,6 +293,7 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/organization/{orgid}/user/with-user-profile")
 				req.PathParam("orgid", orgid)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err

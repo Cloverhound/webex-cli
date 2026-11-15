@@ -19,6 +19,7 @@ type Request struct {
 	// pageSizeParam is the query parameter Contact Center auto-pagination
 	// sets the page size with; empty means "pageSize".
 	pageSizeParam string
+	noPageParams  bool
 	// offset paging for every other area; see OffsetPaging.
 	offsetSet               bool
 	offsetStart, offsetSize string
@@ -65,6 +66,12 @@ func (r *Request) Header(key, value string) {
 // endpoints that do not use "pageSize" (the flow store and functions use "size").
 func (r *Request) PageSizeParam(name string) {
 	r.pageSizeParam = name
+}
+
+// NoPageParams marks a Contact Center list whose API documents no paging
+// parameters: a page without meta.totalPages is then the whole list.
+func (r *Request) NoPageParams() {
+	r.noPageParams = true
 }
 
 // OffsetPaging names the offset and page-size query parameters for non-CC
@@ -160,7 +167,7 @@ func (r *Request) DoPaginated(isCalling bool) ([]byte, int, error) {
 	if sizeParam == "" {
 		sizeParam = "pageSize"
 	}
-	items, single, err := paginateCC(r.baseURL, r.method, r.path, sizeParam, r.pathParams, r.queryParams, r.headers)
+	items, single, err := paginateCC(r.baseURL, r.method, r.path, sizeParam, r.noPageParams, r.pathParams, r.queryParams, r.headers)
 	if err != nil {
 		return nil, 0, err
 	}

@@ -417,6 +417,7 @@ func init() {
 				req.QueryParam("language", language)
 				req.QueryParam("runtime", runtime)
 				if config.Paginate() {
+					req.NoPageParams()
 					resp, statusCode, err := req.DoPaginated(false)
 					if err != nil {
 						return err

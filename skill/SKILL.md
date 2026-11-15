@@ -276,7 +276,7 @@ webex admin people list --paginate
 webex meetings recordings list --paginate
 ```
 
-`--paginate` sets the page size itself (100 per request), so `--page-size`, `--size` and `--max` have no effect with it. Commands that return a single object ignore it. It follows `Link: rel="next"` headers where the API sends them. When it cannot read a list to its end (a page repeats, a SCIM list stops short of its `totalResults`, or the next page is on another host), the command fails with `incomplete list` rather than returning part of the list. Known gaps: `cc tasks get` and the Slido `list-compliance-events` commands return only the first page.
+`--paginate` sets the page size itself (100 per request), so `--page-size`, `--size` and `--max` have no effect with it. Commands that return a single object ignore it. It follows `Link: rel="next"` headers where the API sends them. When it cannot read a list to its end (a page repeats, a SCIM list stops short of its `totalResults`, or the next page is on another host), the command fails with `incomplete list` rather than returning part of the list. Known gaps, which return only the first page without an error: `cc tasks get`, the Slido `list-compliance-events` commands, the `cc … bulk-export` commands, and `cc campaign-group list`. A list that gives no page count, total or `Link` header also ends early without an error if its server sends fewer than 100 items per page.
 
 Or paginate manually (CC):
 ```bash
