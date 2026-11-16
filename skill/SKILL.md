@@ -65,7 +65,7 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--organization <orgId>` — Override org ID for this command
 - `--output json|table|csv|raw` — Output format (default: json)
 - `--debug` — Show HTTP request/response details
-- `--paginate` — Auto-paginate list results
+- `--paginate` — Return every item in a list, reading all its pages; fails with `incomplete list` rather than return part of a list
 - `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
 - `--region us|ca|eu|eun|in|au` — Data region for region-specific hosts, used by `calling reports-detailed-call-history` (default: `us`). Also settable with `webex config set region <region>` or `WEBEX_REGION`. A `451` error means the org's data lives in another region — the error names the correct one.
 - `--cc-region us1|eu1|eu2|anz1|ca1|jp1|sg1|in1` — Contact Center data center for `cc` commands, including AI Agent Studio. Order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. A person saves it once per organization in a terminal with `webex config set cc-region <region>` (add `--organization <id>` for another org); the flag alone saves nothing. The MCP server does not run `config set`: pass `cc-region` in `flags` instead.
@@ -269,7 +269,7 @@ webex cc site list --filter='name=="Site A"'
 webex cc team list --search="Sales"
 ```
 
-Use `--paginate` to auto-paginate and get all results:
+Use `--paginate` to get every item in a list:
 ```bash
 webex cc entry-point list --paginate
 webex admin people list --paginate
@@ -290,11 +290,13 @@ webex cc entry-point list --page=0 --page-size=100
 webex cc entry-point list --page=1 --page-size=100
 ```
 
-Or paginate manually (Calling/Admin/Device/Meetings/Messaging — offset/max style):
+Or read one page at a time in Calling, which takes a zero-based `--start`:
 ```bash
-webex admin people list --max=100
-webex messaging rooms list --max=100
+webex calling hunt-group list --max=100 --start=0
+webex calling hunt-group list --max=100 --start=100
 ```
+
+Most other Webex lists (Admin, Device, Meetings, Messaging) take no start parameter. They page by a link in the `Link` response header, which only `--paginate` follows. Without it, `--max` sets the size of the first page and the command returns only that page.
 
 ## Output Handling
 
