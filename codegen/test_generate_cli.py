@@ -99,6 +99,7 @@ class AiAgentStudioTest(unittest.TestCase):
         self.assertIn('client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/")', code)
         self.assertIn('"github.com/Cloverhound/webex-cli/internal/aiagent"', code)
         self.assertEqual(code.count('resp = aiagent.RedactSecrets(resp)'), 2)
+        self.assertIn('req.RedactErrors(aiagent.RedactSecrets)', code)
 
     def test_other_cc_routes_are_unchanged(self):
         code = self.group([{'command': 'list', 'method': 'GET', 'path': '/organization/{orgId}/v2/site',

@@ -222,7 +222,11 @@ func doOnce(req *Request) ([]byte, int, http.Header, error) {
 	}
 
 	if resp.StatusCode >= 400 {
-		return body, resp.StatusCode, resp.Header, fmt.Errorf("API error %d: %s", resp.StatusCode, truncate(string(body), 500))
+		shown := body
+		if req.redactError != nil {
+			shown = req.redactError(body)
+		}
+		return body, resp.StatusCode, resp.Header, fmt.Errorf("API error %d: %s", resp.StatusCode, truncate(string(shown), 500))
 	}
 
 	return body, resp.StatusCode, resp.Header, nil

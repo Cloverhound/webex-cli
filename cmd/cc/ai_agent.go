@@ -39,6 +39,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("orgid", orgid)
 				req.QueryParam("limit", limit)
 				req.QueryParam("offset", offset)
@@ -74,6 +75,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/bot/{agentId}/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -103,6 +105,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/bot/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				if bodyFile != "" {
 					if err := req.SetBodyFile(bodyFile); err != nil {
 						return err
@@ -134,6 +137,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "PUT", "/api/v1/bot/{agentId}/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -173,6 +177,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "DELETE", "/api/v1/bot/{agentId}/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("agentId", agentId)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -201,6 +206,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/getdefault/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -231,6 +237,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.QueryParam("order_by", order_by)
 				req.QueryParam("limit", limit)
 				req.QueryParam("offset", offset)
@@ -272,6 +279,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/llmagent/export/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -304,6 +312,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/makelive/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -345,6 +354,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/create/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -383,6 +393,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/update/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -424,6 +435,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/llmagent/tool/delete/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err

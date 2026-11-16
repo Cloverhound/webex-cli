@@ -75,3 +75,21 @@ func TestRedactSecretsKeepsTheRest(t *testing.T) {
 		t.Fatalf("got  %s\nwant %s", got, want)
 	}
 }
+
+func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"objects":[{"id":"a1","bot_access_token":"token-1"}]}`))
+	}))
+	t.Cleanup(srv.Close)
+	old := studioURL
+	studioURL = func() string { return srv.URL }
+	t.Cleanup(func() { studioURL = old })
+	config.SetOrgID("org-1")
+	t.Cleanup(func() { config.SetOrgID("") })
+
+	_, err := BotToken("a1")
+	if err == nil || strings.Contains(err.Error(), "token-1") {
+		t.Fatalf("err = %v, want an error without the token", err)
+	}
+}
