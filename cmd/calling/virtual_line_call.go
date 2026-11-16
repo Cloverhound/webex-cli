@@ -65,7 +65,7 @@ func init() {
 				req.QueryParam("hasExtensionAssigned", hasExtensionAssigned)
 				req.QueryParam("hasDnAssigned", hasDnAssigned)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "virtualLines", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -400,8 +400,7 @@ func init() {
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "devices", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -432,8 +431,7 @@ func init() {
 				req.PathParam("virtualLineId", virtualLineId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "dectNetworks", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1843,7 +1841,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1888,7 +1886,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1931,7 +1929,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1973,7 +1971,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("ownerName", ownerName)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2019,7 +2017,7 @@ This API requires a full, user or read-only administrator auth token with a scop
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

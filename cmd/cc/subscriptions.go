@@ -39,7 +39,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "data"})
 					if err != nil {
 						return err
 					}
@@ -69,7 +69,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "data"})
 					if err != nil {
 						return err
 					}
@@ -421,7 +421,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "data"})
 					if err != nil {
 						return err
 					}
@@ -451,7 +451,7 @@ func init() {
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "data"})
 					if err != nil {
 						return err
 					}

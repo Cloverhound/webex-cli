@@ -105,7 +105,7 @@ func init() {
 				req.QueryParam("locationId", locationId)
 				req.QueryParam("orgLevelOnly", orgLevelOnly)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "virtualExtensions", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -388,7 +388,7 @@ func init() {
 				req.QueryParam("locationId", locationId)
 				req.QueryParam("orgLevelOnly", orgLevelOnly)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "virtualExtensionRanges", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

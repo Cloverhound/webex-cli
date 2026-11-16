@@ -243,7 +243,7 @@ func init() {
 				req.QueryParam("includedTelephonyTypes", includedTelephonyTypes)
 				req.QueryParam("serviceNumber", serviceNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -292,7 +292,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -424,7 +424,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -43,8 +43,7 @@ func init() {
 				req.QueryParam("limit", limit)
 				req.QueryParam("offset", offset)
 				if config.Paginate() {
-					req.OffsetPaging("offset", "limit", 0)
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
 					if err != nil {
 						return err
 					}
@@ -122,8 +121,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 				req.QueryParam("limit", limit)
 				req.QueryParam("offset", offset)
 				if config.Paginate() {
-					req.OffsetPaging("offset", "limit", 0)
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
 					if err != nil {
 						return err
 					}

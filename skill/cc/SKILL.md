@@ -57,7 +57,7 @@ webex cc site list --search="Sales"
 
 # Pagination
 webex cc site list --page=0 --page-size=100
-webex cc site list --paginate   # auto-paginate
+webex cc site list --paginate   # every site, from all pages
 ```
 
 **Filter value gotcha:** values with spaces must be quoted. Use `--filter=` (with `=`) to avoid shell quoting issues.

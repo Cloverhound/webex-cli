@@ -65,7 +65,7 @@ Aliases: `devices` for `device`, `meeting` for `meetings`, `msg` for `messaging`
 - `--organization <orgId>` — Override org ID for this command
 - `--output json|table|csv|raw` — Output format (default: json)
 - `--debug` — Show HTTP request/response details
-- `--paginate` — Auto-paginate list results
+- `--paginate` — Return every item in a list, reading all its pages; fails with `incomplete list` rather than return part of a list
 - `--dry-run` — Print write requests (POST/PUT/DELETE/PATCH) without executing them; read operations still run normally
 - `--region us|ca|eu|eun|in|au` — Data region for region-specific hosts, used by `calling reports-detailed-call-history` (default: `us`). Also settable with `webex config set region <region>` or `WEBEX_REGION`. A `451` error means the org's data lives in another region — the error names the correct one.
 - `--cc-region us1|eu1|eu2|anz1|ca1|jp1|sg1|in1` — Contact Center data center for `cc` commands, including AI Agent Studio. Order: `--cc-region`, `WEBEX_CC_REGION`, the region saved for the organization, then `us1`. A person saves it once per organization in a terminal with `webex config set cc-region <region>` (add `--organization <id>` for another org); the flag alone saves nothing. The MCP server does not run `config set`: pass `cc-region` in `flags` instead.
@@ -269,14 +269,20 @@ webex cc site list --filter='name=="Site A"'
 webex cc team list --search="Sales"
 ```
 
-Use `--paginate` to auto-paginate and get all results:
+Use `--paginate` to get every item in a list:
 ```bash
 webex cc entry-point list --paginate
 webex admin people list --paginate
 webex meetings recordings list --paginate
 ```
 
-`--paginate` sets the page size itself (100 per request), so `--page-size`, `--size` and `--max` have no effect with it. Commands that return a single object ignore it. It follows `Link: rel="next"` headers where the API sends them. Known gaps: `cc tasks get` and the Slido `list-compliance-events` commands return only the first page.
+`--paginate` returns every item in a list as one JSON array, reading as many pages as it takes. It always reads the whole list, so paging flags such as `--max`, `--start` and `--page` are ignored with it. If it cannot read the whole list, it fails with `incomplete list` rather than return part of it.
+
+Details:
+- Each list is read the way its API pages. Webex lists follow `Link: rel="next"` headers. Contact Center lists are read to their page count, and SCIM and AI Agent Studio lists to their stated total. Lists that return everything in one response are read once.
+- It asks for 100 items per page, or fewer where an API allows fewer. The paging flags it ignores are `--page`, `--page-size`, `--size`, `--start`, `--start-index`, `--offset`, `--max`, `--count` and `--limit`.
+- It fails on an error on a later page, a missing page count or total, a page that repeats, a list that ends before its total, or a next page on another host.
+- Commands that return a single object ignore it. So do `cc tasks get`, `cc call-monitor list-sessions`, `calling emergency-services get-org-compliance-status-location-status-list` and the Slido `list-compliance-events` commands, whose paging is not known.
 
 Or paginate manually (CC):
 ```bash
@@ -284,11 +290,13 @@ webex cc entry-point list --page=0 --page-size=100
 webex cc entry-point list --page=1 --page-size=100
 ```
 
-Or paginate manually (Calling/Admin/Device/Meetings/Messaging — offset/max style):
+Or read one page at a time in Calling, which takes a zero-based `--start`:
 ```bash
-webex admin people list --max=100
-webex messaging rooms list --max=100
+webex calling hunt-group list --max=100 --start=0
+webex calling hunt-group list --max=100 --start=100
 ```
+
+Most other Webex lists (Admin, Device, Meetings, Messaging) take no start parameter. They page by a link in the `Link` response header, which only `--paginate` follows. Without it, `--max` sets the size of the first page and the command returns only that page.
 
 ## Output Handling
 

@@ -43,75 +43,47 @@ class UsageReportNegotiationTest(unittest.TestCase):
                 self.assertEqual('req.Header("Accept", "*/*")' in code, expected)
 
 
-class ContactCenterPaginationTest(unittest.TestCase):
-    def paginated_block(self, query_params, is_calling=False):
+class PaginationTest(unittest.TestCase):
+    def paging_call(self, base, command, query_params, example=None, path='/things'):
         endpoint = {
-            'command': 'list', 'method': 'GET', 'path': '/things',
-            'query_params': [{'name': n} for n in query_params],
+            'command': command, 'method': 'GET', 'path': path,
+            'query_params': [{'name': n} for n in query_params], 'example_list': example,
         }
-        code = '\n'.join(generate_command(endpoint, 'exampleCmd', 'config.CcBaseURL', is_calling))
-        return code[code.index('if config.Paginate()'):code.index('req.DoPaginated')]
-
-    def test_size_endpoint_names_its_page_size_param(self):
-        block = self.paginated_block(['page', 'size'])
-        self.assertIn('req.PageSizeParam("size")', block)
-        self.assertNotIn('includePagination', block)
-
-    def test_include_pagination_is_forced_on(self):
-        block = self.paginated_block(['page', 'size', 'includePagination'])
-        self.assertIn('req.QueryParam("includePagination", "true")', block)
-
-    def test_page_size_endpoint_keeps_default(self):
-        block = self.paginated_block(['page', 'pageSize'])
-        self.assertNotIn('PageSizeParam', block)
-
-    def test_calling_endpoint_skips_cc_hints(self):
-        block = self.paginated_block(['max', 'start', 'size', 'includePagination'], is_calling=True)
-        self.assertNotIn('PageSizeParam', block)
-        self.assertNotIn('includePagination', block)
-
-
-class OffsetPaginationTest(unittest.TestCase):
-    def generate(self, command, query_params, is_calling=True):
-        endpoint = {
-            'command': command, 'method': 'GET', 'path': '/things',
-            'query_params': [{'name': n} for n in query_params],
-        }
-        return '\n'.join(generate_command(endpoint, 'exampleCmd', 'config.CallingBaseURL', is_calling))
-
-    def paging_call(self, command, query_params):
-        code = self.generate(command, query_params)
-        block = code[code.index('if config.Paginate()'):code.index('req.DoPaginated')]
-        calls = [l.strip() for l in block.splitlines() if 'OffsetPaging' in l]
+        code = '\n'.join(generate_command(endpoint, 'exampleCmd', base, base != 'config.CcBaseURL', paging_overrides={}))
+        calls = [l.strip() for l in code.splitlines() if 'DoPaginated' in l]
         return calls[0] if calls else None
 
-    def test_start_and_max_use_the_default(self):
-        self.assertIsNone(self.paging_call('list', ['start', 'max']))
+    def test_contact_center_list(self):
+        self.assertEqual(self.paging_call('config.CcBaseURL', 'list', ['page', 'pageSize'], {'items': 'data'}),
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})')
 
-    def test_max_only_follows_links(self):
-        self.assertEqual(self.paging_call('list', ['max']), 'req.OffsetPaging("", "max", 0)')
+    def test_webex_list(self):
+        self.assertEqual(self.paging_call('config.CallingBaseURL', 'list', ['start', 'max'], {'items': 'huntGroups'}),
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "huntGroups", OmitEmpty: true})')
 
-    def test_offset_and_max(self):
-        self.assertEqual(self.paging_call('list-events', ['offset', 'max']), 'req.OffsetPaging("offset", "max", 0)')
+    def test_scim_list(self):
+        self.assertEqual(self.paging_call('config.CallingBaseURL', 'search', ['startIndex', 'count'], {'items': 'Resources'}, path='/identity/scim/{orgId}/v2/Users'),
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "startIndex", First: 1, Size: "count", Items: "Resources", TotalItems: "totalResults"})')
 
-    def test_scim_start_index_and_count(self):
-        self.assertEqual(self.paging_call('search', ['startIndex', 'count']), 'req.OffsetPaging("startIndex", "count", 1)')
+    def test_list_without_paging_params_is_one_request(self):
+        self.assertEqual(self.paging_call('config.CcBaseURL', 'list-all', [], {'items': ''}),
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})')
 
-    def test_list_without_params_follows_links(self):
-        self.assertEqual(self.paging_call('list', []), 'req.OffsetPaging("", "", 0)')
+    def test_query_the_paging_needs_is_sent(self):
+        self.assertEqual(self.paging_call('config.CcBaseURL', 'list', ['page', 'size', 'includePagination'], {'items': 'data'}),
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages", Query: map[string]string{"includePagination": "true"}})')
 
-    def test_get_without_paging_params_is_not_paginated(self):
-        for is_calling in (True, False):
-            with self.subTest(is_calling=is_calling):
-                self.assertNotIn('DoPaginated', self.generate('get', ['id'], is_calling))
+    def test_an_override_is_used(self):
+        endpoint = {'command': 'list-jobs', 'method': 'GET', 'path': '/jobs', 'query_params': [{'name': 'start'}, {'name': 'max'}], 'example_list': {'items': 'items'}}
+        code = '\n'.join(generate_command(endpoint, 'exampleCmd', 'config.CallingBaseURL', True,
+                                          paging_overrides={'GET /jobs': {'mode': 'offset', 'start': 'start', 'size': 'max', 'items': 'items', 'omitEmpty': True, 'pageSize': 50}}))
+        self.assertIn('req.DoPaginated(client.Paging{Mode: client.Offset, Start: "start", Size: "max", PageSize: 50, Items: "items", OmitEmpty: true})', code)
 
-    def test_cc_get_with_page_params_is_paginated(self):
-        self.assertIn('DoPaginated', self.generate('get', ['pageSize'], is_calling=False))
+    def test_get_that_is_not_a_list_is_not_paginated(self):
+        self.assertIsNone(self.paging_call('config.CallingBaseURL', 'get', ['id']))
 
-    def test_cc_limit_and_offset_page_by_offset(self):
-        code = self.generate('list', ['limit', 'offset'], is_calling=False)
-        block = code[code.index('if config.Paginate()'):code.index('req.DoPaginated')]
-        self.assertIn('req.OffsetPaging("offset", "limit", 0)', block)
+    def test_list_without_a_known_item_field_is_not_paginated(self):
+        self.assertIsNone(self.paging_call('config.CallingBaseURL', 'list', ['max']))
 
 
 class AiAgentStudioTest(unittest.TestCase):

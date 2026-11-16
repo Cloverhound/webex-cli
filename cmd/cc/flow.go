@@ -118,9 +118,7 @@ func init() {
 				req.QueryParam("includePagination", includePagination)
 				req.QueryParam("isValidation", isValidation)
 				if config.Paginate() {
-					req.PageSizeParam("size")
-					req.QueryParam("includePagination", "true")
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages", Query: map[string]string{"includePagination": "true"}})
 					if err != nil {
 						return err
 					}
@@ -529,8 +527,7 @@ func init() {
 				req.QueryParam("size", size)
 				req.QueryParam("keyValueFilter", keyValueFilter)
 				if config.Paginate() {
-					req.PageSizeParam("size")
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages"})
 					if err != nil {
 						return err
 					}

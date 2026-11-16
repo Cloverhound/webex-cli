@@ -49,7 +49,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "dialPatterns", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -90,7 +90,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "locations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -215,8 +215,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/updateRoutingPrefix")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -611,7 +610,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "routeIdentities", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -656,7 +655,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("personId", personId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -701,7 +700,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("ownerName", ownerName)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -743,7 +742,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -786,7 +785,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("ownerName", ownerName)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -832,7 +831,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -903,8 +902,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "directories", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1064,7 +1062,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("ownerName", ownerName)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1142,7 +1140,7 @@ Searching and viewing locations in your organization requires an administrator a
 				req.QueryParam("max", max)
 				req.QueryParam("start", start)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

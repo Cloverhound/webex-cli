@@ -35,7 +35,7 @@ func init() {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/templates")
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}

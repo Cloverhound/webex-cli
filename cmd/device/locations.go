@@ -43,8 +43,7 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -188,8 +187,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/locations/{locationId}/floors")
 				req.PathParam("locationId", locationId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -786,8 +786,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls")
 				req.QueryParam("lineOwnerId", lineOwnerId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -838,8 +837,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/calls/history")
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

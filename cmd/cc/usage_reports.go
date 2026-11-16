@@ -33,7 +33,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CcBaseURL, "GET", "/v1/usage-reports/resource-types")
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}
@@ -101,7 +101,7 @@ func init() {
 				req.QueryParam("createdAfter", createdAfter)
 				req.QueryParam("createdBefore", createdBefore)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}

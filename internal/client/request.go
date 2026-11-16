@@ -16,13 +16,6 @@ type Request struct {
 	headers     map[string]string
 	bodyJSON    map[string]any
 	bodyRaw     string
-	// pageSizeParam is the query parameter Contact Center auto-pagination
-	// sets the page size with; empty means "pageSize".
-	pageSizeParam string
-	// offset paging for every other area; see OffsetPaging.
-	offsetSet               bool
-	offsetStart, offsetSize string
-	offsetFirst             int
 	// rawURL, when set, is sent verbatim in place of path and query params.
 	rawURL string
 
@@ -59,21 +52,6 @@ func (r *Request) Header(key, value string) {
 	if value != "" {
 		r.headers[key] = value
 	}
-}
-
-// PageSizeParam names the page-size query parameter for Contact Center
-// endpoints that do not use "pageSize" (the flow store and functions use "size").
-func (r *Request) PageSizeParam(name string) {
-	r.pageSizeParam = name
-}
-
-// OffsetPaging names the offset and page-size query parameters for non-CC
-// auto-pagination, which otherwise uses start/max. An empty startParam means
-// the endpoint pages only through Link headers; firstIndex is the offset of
-// the first item (1 for SCIM).
-func (r *Request) OffsetPaging(startParam, sizeParam string, firstIndex int) {
-	r.offsetSet = true
-	r.offsetStart, r.offsetSize, r.offsetFirst = startParam, sizeParam, firstIndex
 }
 
 func (r *Request) BodyString(key, value string) {
@@ -137,36 +115,4 @@ func (r *Request) Finalize() {
 func (r *Request) Do() ([]byte, int, error) {
 	r.Finalize()
 	return Do(r)
-}
-
-// DoPaginated fetches all pages and returns the merged items array.
-// isCalling selects the pagination strategy (Calling: start/max, CC: page/pageSize);
-// a request that named its offset parameters with OffsetPaging pages by offset
-// in either area.
-func (r *Request) DoPaginated(isCalling bool) ([]byte, int, error) {
-	if isCalling || r.offsetSet {
-		start, size, first := "start", "max", 0
-		if r.offsetSet {
-			start, size, first = r.offsetStart, r.offsetSize, r.offsetFirst
-		}
-		items, err := paginateOffset(r.baseURL, r.method, r.path, start, size, first, r.pathParams, r.queryParams, r.headers)
-		if err != nil {
-			return nil, 0, err
-		}
-		data, err := json.Marshal(items)
-		return data, 200, err
-	}
-	sizeParam := r.pageSizeParam
-	if sizeParam == "" {
-		sizeParam = "pageSize"
-	}
-	items, single, err := paginateCC(r.baseURL, r.method, r.path, sizeParam, r.pathParams, r.queryParams, r.headers)
-	if err != nil {
-		return nil, 0, err
-	}
-	if single != nil {
-		return single, 200, nil
-	}
-	data, err := json.Marshal(items)
-	return data, 200, err
 }

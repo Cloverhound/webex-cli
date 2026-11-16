@@ -127,8 +127,7 @@ func init() {
 				}
 				req.Header("bot-access-token", botToken)
 				if config.Paginate() {
-					req.OffsetPaging("offset", "limit", 0)
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
 					if err != nil {
 						return err
 					}

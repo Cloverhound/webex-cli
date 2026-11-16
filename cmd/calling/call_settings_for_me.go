@@ -104,8 +104,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/settings/availablePreferredAnswerEndpoints")
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "endpoints", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -553,8 +552,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/people/me/endpoints")
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "endpoints", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2922,7 +2920,7 @@ func init() {
 				req.QueryParam("extension", extension)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -4578,7 +4576,7 @@ func init() {
 				req.QueryParam("extension", extension)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -5722,7 +5720,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "hosts", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -37,8 +37,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/cxEssentials/wrapup/reasons")
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "wrapupReasons", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -396,8 +395,7 @@ func init() {
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -165,6 +165,50 @@ def extract_scopes(description):
     return re.findall(r'spark(?:-admin)?:\w+', description)
 
 
+# ── Example list responses ───────────────────────────────────────────
+
+# When an example holds more than one array, the item array is the first of these.
+ITEM_KEYS = ('items', 'Resources', 'data', 'objects', 'resources')
+# Fields that state a list's size: the number of pages, or of items.
+TOTAL_PAGES = ('meta.totalPages', 'pageInfo.totalPages', 'pagination.totalPages')
+TOTAL_ITEMS = ('totalResults', 'totalResources', 'meta.total_count')
+
+
+def example_list(responses):
+    """The item array of the first successful example response, and the field
+    that states the list's size, or None when that example is not a list.
+
+    {'items': ''} is a bare array."""
+    for resp in responses:
+        if not 200 <= (resp.get('code') or 0) < 300:
+            continue
+        try:
+            body = json.loads(resp.get('body') or '')
+        except ValueError:
+            return None
+        if isinstance(body, list):
+            return {'items': ''}
+        if not isinstance(body, dict):
+            return None
+        arrays = [k for k, v in body.items() if isinstance(v, list) and k != 'schemas']
+        items = next((k for k in ITEM_KEYS if k in arrays), arrays[0] if len(arrays) == 1 else None)
+        if items is None:
+            return None
+        shape = {'items': items}
+        for kind, paths in (('totalPages', TOTAL_PAGES), ('totalItems', TOTAL_ITEMS)):
+            for path in paths:
+                head, _, tail = path.partition('.')
+                value = body.get(head)
+                if tail:
+                    value = value.get(tail) if isinstance(value, dict) else None
+                # Postman examples often hold a type placeholder instead of a number.
+                if isinstance(value, int) or value in ('<integer>', '<long>'):
+                    shape[kind] = path
+                    break
+        return shape
+    return None
+
+
 # ── Endpoint extraction ──────────────────────────────────────────────
 
 def extract_endpoint(item, keep_trailing_slash=False):
@@ -244,6 +288,7 @@ def extract_endpoint(item, keep_trailing_slash=False):
         'description': description,
         'scopes': scopes,
         'response_code': response_code,
+        'example_list': example_list(responses) if method == 'GET' else None,
         'extra_headers': extra_headers,
     }
 

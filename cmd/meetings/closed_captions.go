@@ -35,8 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/meetingClosedCaptions")
 				req.QueryParam("meetingId", meetingId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -65,8 +64,7 @@ func init() {
 				req.PathParam("closedCaptionId", closedCaptionId)
 				req.QueryParam("meetingId", meetingId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

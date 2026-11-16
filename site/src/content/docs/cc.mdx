@@ -113,13 +113,22 @@ webex cc site list --filter='name=="Site A"'
 webex cc team list --search="Sales"
 ```
 
-Auto-paginate to get all results:
+Get every item in a list:
 
 ```bash
 webex cc entry-point list --paginate
 ```
 
-`--paginate` requests 100 items per page and overrides `--page-size` or `--size`. Commands that return a single object ignore it. `cc tasks get` returns only the first page because the API does not report a page count.
+`--paginate` returns every item in the list, reading all its pages, and ignores paging flags such as `--page` and `--page-size`. If it cannot read the whole list, it fails with `incomplete list` rather than return part of it.
+
+How each kind of list is read, 100 items per page:
+
+- Most lists are read to their page count, and `bulk-export` lists to their `totalResources`.
+- Lists that take no paging parameters return everything in one response and are read once.
+- Customer Journey lists state no total, so they end at a page shorter than asked, or at a page that is not found.
+- AI Agent Studio lists (`cc ai-agent*`) are read by offset to their stated total.
+
+Commands that return a single object ignore it, and so do `cc tasks get` and `cc call-monitor list-sessions`, whose paging is not known.
 
 Manual pagination:
 

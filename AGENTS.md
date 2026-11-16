@@ -39,6 +39,8 @@ and the generator skip lists when the request itself needs handwritten handling.
 
 No API key is required — collections are fetched from the Webex Public Workspace via Postman's public gateway (`codegen/download_collections.py`).
 
+`--paginate` reads each list as `codegen/paging.py` says: each API family's paging, derived from the endpoint's parameters and example response. `codegen/paging_overrides.json` holds only endpoints whose live paging differs from that derivation, each measured against a live organization. `make codegen` warns about a list whose item field is unknown and about an override that matches its derivation or that no command uses. Measure a new list before overriding it, and keep the override file to corrections.
+
 APIs missing from those collections are described by hand in `codegen/supplemental/`, which downloads never touch. Each file joins the downloaded collection its `info.name` names, and a route the download also documents is taken from the download. The private AI Agent Studio routes behind `cc ai-agent*` live there; see `codegen/supplemental/README.md` before adding to them.
 
 A weekly GitHub Actions workflow (`.github/workflows/update-collections.yml`) downloads collections, regenerates commands and skills, and opens or updates a PR. It also has `workflow_dispatch`. If GitHub has disabled it for inactivity, re-enable it under Actions after merging workflow fixes.
@@ -86,7 +88,7 @@ gh release edit v0.X.0 --title "v0.X.0" --notes "## Improvements
 - `cmd/update.go` / `cmd/postinstall.go` / `cmd/skillupdate.go` — self-update and skill install
 - `internal/auth/` — Token storage (OS keyring, credentials file fallback), OAuth, device login, org resolution
 - `npm/` — npm wrapper package, staging, and publish scripts
-- `internal/client/` — HTTP client, request builder (JSON and multipart bodies), pagination, 429 Retry-After
+- `internal/client/` — HTTP client, request builder (JSON and multipart bodies), the `Paging` each list command passes to `--paginate`, 429 Retry-After
 - `internal/appconfig/` — Config file (`~/.webex-cli/config.json`)
 - `internal/config/` — Process-local flags (token, org, debug, dry-run, retry)
 - `internal/output/` — JSON/table/csv/raw formatting

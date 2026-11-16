@@ -287,7 +287,7 @@ If the header is not present in the request or if gzip is not listed as one of t
 				req.QueryParam("orgId", orgid)
 				req.Header("TrackingId", trackingId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}

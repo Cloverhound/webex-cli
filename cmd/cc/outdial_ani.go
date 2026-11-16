@@ -50,7 +50,7 @@ func init() {
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("singleObjectResponse", singleObjectResponse)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}
@@ -152,7 +152,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "resources", TotalItems: "totalResources"})
 					if err != nil {
 						return err
 					}
@@ -193,7 +193,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}
@@ -323,7 +323,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}
@@ -588,7 +588,7 @@ func init() {
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}

@@ -36,7 +36,7 @@ func init() {
 				req.PathParam("orgid", orgid)
 				req.PathParam("projectId", "5e5c9ad6d61f870d6d778c1b")
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "specifications"})
 					if err != nil {
 						return err
 					}

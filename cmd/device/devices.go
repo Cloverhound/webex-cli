@@ -77,7 +77,7 @@ func init() {
 				req.QueryParam("devicePlatform", devicePlatform)
 				req.QueryParam("plannedMaintenance", plannedMaintenance)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

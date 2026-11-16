@@ -246,7 +246,7 @@ webex cc users list --output csv > users.csv
 | `--organization <orgId>` | Override org ID |
 | `--output json\|table\|csv\|raw` | Output format (default: json) |
 | `--debug` | Show HTTP request/response details |
-| `--paginate` | Auto-paginate list results (ignored by commands that return one object) |
+| `--paginate` | Return every item in a list as one array, reading all its pages. Fails with `incomplete list` rather than return part of a list. Commands that return one object ignore it |
 | `--dry-run` | Print write requests without executing them |
 | `--cc-region us1\|eu1\|eu2\|anz1\|ca1\|jp1\|sg1\|in1` | Contact Center data center for `cc` commands (default: the organization's saved region, else `us1`) |
 

@@ -111,8 +111,7 @@ This API can be used by a partner full admin, a read-only partner, or an partner
 				req.QueryParam("tags", tags)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -179,8 +178,7 @@ This API can be used by partner full admins, partner admins and admin read-only 
 				req.QueryParam("tags", tags)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

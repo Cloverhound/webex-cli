@@ -36,14 +36,6 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/deviceConfigurations")
 				req.QueryParam("deviceId", deviceId)
 				req.QueryParam("key", key)
-				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

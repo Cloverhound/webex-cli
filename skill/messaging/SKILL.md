@@ -38,7 +38,7 @@ Flags:
 - `--before-message` — list messages sent before this message ID
 - `--mentioned-people` — filter by person ID; use `me` for current user. **Bots must include this flag to list messages in group spaces.**
 - `--parent-id` — list threaded replies under a parent message
-- `--paginate` — auto-fetch all pages
+- `--paginate` — return every item, reading all pages
 
 ### List direct (1:1) messages
 ```bash

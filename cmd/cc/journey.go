@@ -389,7 +389,7 @@ For a more information on Patch Requests, see this  [JSON PATCH guide](https://j
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}
@@ -468,7 +468,7 @@ For a more information on Patch Requests, see this  [JSON PATCH guide](https://j
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}
@@ -546,7 +546,7 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}
@@ -730,7 +730,7 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}
@@ -797,7 +797,7 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}
@@ -1243,7 +1243,7 @@ If not, this will return ALL the Persons within the organization and workspace. 
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", First: 1, Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}

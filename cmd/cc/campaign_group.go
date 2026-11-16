@@ -41,7 +41,7 @@ func init() {
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("campaignStatus", campaignStatus)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "campaigns", TotalPages: "pagination.totalPages"})
 					if err != nil {
 						return err
 					}

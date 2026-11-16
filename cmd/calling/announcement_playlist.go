@@ -37,8 +37,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcements/playlists")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "playlists", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -195,8 +194,7 @@ func init() {
 				req.PathParam("playlistId", playlistId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "locations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

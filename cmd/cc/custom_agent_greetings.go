@@ -175,8 +175,10 @@ func uploadAgentGreeting(baseURL, orgid, filePath, name, agentID, greetingPurpos
 // defaultGreetingPurpose returns the ID of the org's system default greeting purpose.
 func defaultGreetingPurpose(baseURL, orgid string) (string, error) {
 	var id string
-	err := client.VisitCC(baseURL, "GET", "/organization/{orgid}/v2/greeting-purpose",
-		map[string]string{"orgid": orgid}, nil, func(items []json.RawMessage) bool {
+	req := client.NewRequest(baseURL, "GET", "/organization/{orgid}/v2/greeting-purpose")
+	req.PathParam("orgid", orgid)
+	err := req.Visit(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"},
+		func(items []json.RawMessage) bool {
 			for _, item := range items {
 				var p struct {
 					ID            string `json:"id"`
