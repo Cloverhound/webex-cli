@@ -88,7 +88,7 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 					"Use this to explore what commands exist before calling webex_read or webex_write.",
 			),
 			mcplib.WithString("command",
-				mcplib.Description("Command path to get help for (e.g. 'calling people', 'cc site'). Omit for top-level CLI help."),
+				mcplib.Description("Command path to get help for, without flags (e.g. 'calling people', 'cc site'). Omit for top-level CLI help."),
 			),
 		),
 		handleHelp,
@@ -175,7 +175,7 @@ func makeDispatchHandler(lg *usageLogger, readOnly bool) func(context.Context, m
 			}
 		}
 
-		exe, err := os.Executable()
+		exe, err := executable()
 		if err != nil {
 			return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
 		}
@@ -268,19 +268,26 @@ func actionToken(args []string) string {
 	return strings.ToLower(words[len(words)-1])
 }
 
+// executable is the CLI binary the tools run, replaced in tests.
+var executable = os.Executable
+
 func handleHelp(_ context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	command := strings.TrimSpace(req.GetString("command", ""))
 
-	exe, err := os.Executable()
+	// Only command words: a trailing value flag would take --help as its value,
+	// and the command would run.
+	args := strings.Fields(command)
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "-") {
+			return mcplib.NewToolResultText("Error: give the command without flags, such as 'cc team update'."), nil
+		}
+	}
+	args = append(args, "--help")
+
+	exe, err := executable()
 	if err != nil {
 		return mcplib.NewToolResultText("Error: cannot resolve binary path: " + err.Error()), nil
 	}
-
-	var args []string
-	if command != "" {
-		args = append(args, strings.Fields(command)...)
-	}
-	args = append(args, "--help")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
