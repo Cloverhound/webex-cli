@@ -38,6 +38,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)
 				req.QueryParam("limit", limit)
@@ -80,6 +81,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)
 				req.PathParam("sessionId", sessionId)
@@ -115,6 +117,7 @@ Caution: this command uses Webex AI Agent Studio's private API, which is not doc
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.PathParam("orgid", orgid)
 				req.PathParam("agentId", agentId)
 				req.PathParam("sessionId", sessionId)

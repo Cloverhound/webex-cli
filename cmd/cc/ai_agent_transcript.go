@@ -40,6 +40,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "POST", "/api/v1/decrypt_audit/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
 					return err
@@ -84,6 +85,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/room/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.QueryParam("id", id)
 				botToken, err := aiagent.BotToken(agentId)
 				if err != nil {
@@ -117,6 +119,7 @@ func init() {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				aiagent.PrivateAPINotice()
 				req := client.NewRequest(config.AiAgentBaseURL, "GET", "/api/v1/message/")
+				req.RedactErrors(aiagent.RedactSecrets)
 				req.QueryParam("room_id", room_id)
 				req.QueryParam("order_by", order_by)
 				req.QueryParam("limit", limit)

@@ -21,6 +21,10 @@ type Request struct {
 
 	// Multipart bodies override the JSON content type and log a safe summary.
 	bodyContentType, bodySummary string
+
+	// redactError removes credentials from a failed response before its error
+	// repeats the body.
+	redactError func([]byte) []byte
 }
 
 // NewRequest creates a new request with the given method and path.
@@ -99,6 +103,12 @@ func (r *Request) SetBodyFile(path string) error {
 	}
 	r.SetBodyRaw(string(data))
 	return nil
+}
+
+// RedactErrors sets how a failed response's body is redacted before the error
+// message repeats it.
+func (r *Request) RedactErrors(redact func([]byte) []byte) {
+	r.redactError = redact
 }
 
 // Finalize builds the body JSON if no raw body is set.

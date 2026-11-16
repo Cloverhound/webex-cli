@@ -1,9 +1,11 @@
 package client
 
 import (
+	"bytes"
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
@@ -52,5 +54,27 @@ func TestReadOnlyBlocksWritesBeforeSending(t *testing.T) {
 	config.SetReadOnly(false)
 	if _, _, err := Do(NewRequest(srv.URL, "DELETE", "/things/1")); err != nil {
 		t.Fatalf("DELETE outside read-only mode: %v", err)
+	}
+}
+
+// The secret straddles the point where the error message cuts the body, so a
+// body cut before it is redacted would keep the secret's first part.
+func TestRedactErrorsRemovesSecretsBeforeTheErrorRepeatsTheBody(t *testing.T) {
+	secret := "SECRET-0123456789-0123456789"
+	body := `{"error":"` + strings.Repeat("x", 480) + `","token":"` + secret + `"}`
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(body))
+	}))
+	defer srv.Close()
+
+	req := NewRequest(srv.URL, "GET", "/things")
+	req.RedactErrors(func(b []byte) []byte { return bytes.ReplaceAll(b, []byte(secret), []byte("<redacted>")) })
+	_, _, err := req.Do()
+	if err == nil || strings.Contains(err.Error(), "SECRET") {
+		t.Fatalf("err = %v, want an API error without the secret", err)
+	}
+	if !strings.Contains(err.Error(), "API error 400") {
+		t.Fatalf("err = %v, want the status", err)
 	}
 }

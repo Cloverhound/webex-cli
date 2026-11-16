@@ -469,6 +469,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, pri
     if private:
         lines.append(f'{indent3}aiagent.PrivateAPINotice()')
     lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
+    if redact:
+        lines.append(f'{indent3}req.RedactErrors(aiagent.RedactSecrets)')
 
     # This endpoint returns a non-JSON deletion acknowledgement. Restricting
     # Accept to application/json causes the service to reject it with HTTP 406.
