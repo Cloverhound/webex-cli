@@ -42,10 +42,14 @@ class DeriveTest(unittest.TestCase):
     def test_webex_lists_follow_links(self):
         self.assertEqual(paging.derive(ep('/people', ['max'], {'items': 'items'}), 'webex'),
                          {'mode': 'link', 'size': 'max', 'items': 'items', 'omitEmpty': True})
+
+    def test_link_names_the_index_parameter_it_leaves_out(self):
         self.assertEqual(paging.derive(ep('/telephony/config/locations/{locationId}/huntGroups', ['start', 'max'], {'items': 'huntGroups'}), 'webex'),
-                         {'mode': 'link', 'size': 'max', 'items': 'huntGroups', 'omitEmpty': True})
+                         {'mode': 'link', 'start': 'start', 'size': 'max', 'items': 'huntGroups', 'omitEmpty': True})
         self.assertEqual(paging.derive(ep('/groups/{groupId}/members', ['startIndex', 'count'], {'items': 'members'}), 'webex'),
-                         {'mode': 'link', 'size': 'count', 'items': 'members', 'omitEmpty': True})
+                         {'mode': 'link', 'start': 'startIndex', 'size': 'count', 'items': 'members', 'omitEmpty': True})
+        self.assertEqual(paging.derive(ep('/adminAudit/events', ['from', 'to', 'max', 'offset'], {'items': 'items'}), 'webex'),
+                         {'mode': 'link', 'start': 'offset', 'size': 'max', 'items': 'items', 'omitEmpty': True})
 
     def test_scim_reads_to_total_results(self):
         self.assertEqual(paging.derive(ep('/identity/scim/{orgId}/v2/Users', ['startIndex', 'count'], {'items': 'Resources'}), 'webex'),
@@ -71,6 +75,13 @@ class OverrideTest(unittest.TestCase):
         overrides = {'GET /telephony/config/jobs/numbers/manageNumbers': {'mode': 'offset', 'start': 'start', 'size': 'max', 'items': 'items', 'pageSize': 50}}
         got = paging.paging(ep('/telephony/config/jobs/numbers/manageNumbers', ['start', 'max'], {'items': 'items'}), 'webex', overrides)
         self.assertEqual(got, {'mode': 'offset', 'start': 'start', 'size': 'max', 'items': 'items', 'pageSize': 50})
+
+    def test_a_link_override_leaves_out_the_endpoints_index_parameter(self):
+        overrides = {'GET /telephony/config/jobs/updateRoutingPrefix': {'mode': 'link', 'size': 'max', 'items': 'items', 'omitEmpty': True}}
+        got = paging.paging(ep('/telephony/config/jobs/updateRoutingPrefix', ['start'], {'items': 'items'}), 'webex', overrides)
+        self.assertEqual(got, {'mode': 'link', 'start': 'start', 'size': 'max', 'items': 'items', 'omitEmpty': True})
+        self.assertEqual(overrides['GET /telephony/config/jobs/updateRoutingPrefix'],
+                         {'mode': 'link', 'size': 'max', 'items': 'items', 'omitEmpty': True})
 
     def test_an_override_that_matches_every_derivation_is_redundant(self):
         override = {'mode': 'single', 'items': 'devices', 'omitEmpty': True}

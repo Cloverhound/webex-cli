@@ -320,7 +320,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("standardUserOnly", standardUserOnly)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "members", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -436,7 +436,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("standardUserOnly", standardUserOnly)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "members", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -472,7 +472,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("start", start)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -62,7 +62,7 @@ Long result sets will be split into [pages](/docs/basics#pagination).
 				req.QueryParam("eventCategories", eventCategories)
 				req.QueryParam("eventCategories", eventCategories)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "offset", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

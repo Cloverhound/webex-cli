@@ -51,7 +51,7 @@ func init() {
 				req.QueryParam("mediaFileType", mediaFileType)
 				req.QueryParam("name", name)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "announcements", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "announcements", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

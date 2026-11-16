@@ -1212,7 +1212,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("name", name)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "schedules", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "schedules", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1678,7 +1678,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1785,7 +1785,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2433,7 +2433,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("order", order)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "members", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2858,7 +2858,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2899,7 +2899,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2944,7 +2944,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2989,7 +2989,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("licenseType", licenseType)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -3032,7 +3032,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("ownerName", ownerName)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -3078,7 +3078,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -3273,7 +3273,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("order", order)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "features", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "features", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -4166,7 +4166,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "members", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -4678,7 +4678,7 @@ This API requires a full or user administrator or location administrator auth to
 				req.QueryParam("name", name)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "assistants", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "assistants", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

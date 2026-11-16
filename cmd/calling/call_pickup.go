@@ -49,7 +49,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("name", name)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "callPickups", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "callPickups", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -252,7 +252,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

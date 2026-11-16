@@ -75,6 +75,21 @@ func TestLinkFollowsNextUntilThereIsNone(t *testing.T) {
 	}
 }
 
+func TestLinkReadsFromTheStartWhateverStartTheCallerSet(t *testing.T) {
+	srv, queries := server(t, func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(map[string]any{"items": named(0, 3)})
+	})
+	req := NewRequest(srv.URL, "GET", "/huntGroups")
+	req.QueryParam("start", "100")
+	req.QueryParam("name", "x")
+	if _, _, err := req.DoPaginated(Paging{Mode: Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true}); err != nil {
+		t.Fatal(err)
+	}
+	if want := "[/huntGroups?max=100&name=x]"; fmt.Sprint(*queries) != want {
+		t.Fatalf("requests %v, want %s", *queries, want)
+	}
+}
+
 func TestLinkResolvesARelativeNext(t *testing.T) {
 	srv, _ := server(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("page") == "" {

@@ -39,7 +39,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("offset", offset)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "offset", Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -193,7 +193,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("start", start)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "voicemailGroups", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "voicemailGroups", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -364,7 +364,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -405,7 +405,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -446,7 +446,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

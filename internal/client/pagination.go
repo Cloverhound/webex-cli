@@ -37,7 +37,8 @@ const (
 type Paging struct {
 	Mode PagingMode
 	// Page (Pages) and Start (Offset) name the index parameter; First is the
-	// index of the first page or item.
+	// index of the first page or item. In Link mode, Start names the endpoint's
+	// index parameter, which is left out so the list is read from its start.
 	Page, Start string
 	First       int
 	// Size names the page-size parameter; empty sends none. PageSize is the size
@@ -110,10 +111,19 @@ func (r *Request) visitLinks(p Paging, size int, visit func([]json.RawMessage) b
 	if p.Size != "" {
 		query[p.Size] = strconv.Itoa(size)
 	}
+	first := *r
+	if p.Start != "" {
+		first.queryParams = make(map[string]string, len(r.queryParams))
+		for k, v := range r.queryParams {
+			if k != p.Start {
+				first.queryParams[k] = v
+			}
+		}
+	}
 	next := ""
 	seen := map[string]bool{}
 	for {
-		body, header, err := r.fetch(p, query, next)
+		body, header, err := first.fetch(p, query, next)
 		if err != nil {
 			return err
 		}

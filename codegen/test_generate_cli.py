@@ -59,7 +59,7 @@ class PaginationTest(unittest.TestCase):
 
     def test_webex_list(self):
         self.assertEqual(self.paging_call('config.CallingBaseURL', 'list', ['start', 'max'], {'items': 'huntGroups'}),
-                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "huntGroups", OmitEmpty: true})')
+                         'resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "huntGroups", OmitEmpty: true})')
 
     def test_scim_list(self):
         self.assertEqual(self.paging_call('config.CallingBaseURL', 'search', ['startIndex', 'count'], {'items': 'Resources'}, path='/identity/scim/{orgId}/v2/Users'),

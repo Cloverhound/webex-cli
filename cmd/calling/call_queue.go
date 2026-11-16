@@ -53,7 +53,7 @@ func init() {
 				req.QueryParam("departmentName", departmentName)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "queues", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "queues", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -781,7 +781,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -822,7 +822,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("phoneNumber", phoneNumber)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -867,7 +867,7 @@ func init() {
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -913,7 +913,7 @@ func init() {
 				req.QueryParam("phoneNumber", phoneNumber)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -958,7 +958,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "supervisors", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "supervisors", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1101,7 +1101,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1186,7 +1186,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "supervisors", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "supervisors", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1231,7 +1231,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1282,7 +1282,7 @@ func init() {
 				req.QueryParam("hasCxEssentials", hasCxEssentials)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "agents", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "agents", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1326,7 +1326,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.QueryParam("start", start)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "queues", OmitEmpty: true})
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Start: "start", Size: "max", Items: "queues", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
