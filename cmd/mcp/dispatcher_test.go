@@ -1,11 +1,41 @@
 package mcp
 
 import (
+	"context"
+	"errors"
 	"strings"
 	"testing"
 
+	mcplib "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
+
+func help(t *testing.T, command string) string {
+	t.Helper()
+	saved := executable
+	executable = func() (string, error) { return "", errors.New("the CLI was run") }
+	t.Cleanup(func() { executable = saved })
+	var req mcplib.CallToolRequest
+	req.Params.Arguments = map[string]any{"command": command}
+	res, _ := handleHelp(context.Background(), req)
+	return strings.Join(texts(t, res), "\n")
+}
+
+// A trailing value flag would take --help as its value, and the command would run.
+func TestHelpRefusesFlags(t *testing.T) {
+	for _, command := range []string{
+		"messaging messages delete --message-id",
+		"cc team delete --id x --output",
+		"--debug cc team",
+	} {
+		if got := help(t, command); !strings.HasPrefix(got, "Error: give the command without flags") {
+			t.Errorf("help(%q) = %q", command, got)
+		}
+	}
+	if got := help(t, "cc team"); !strings.Contains(got, "the CLI was run") {
+		t.Errorf("help(%q) = %q, want the CLI run", "cc team", got)
+	}
+}
 
 func TestBlockedCommand(t *testing.T) {
 	cases := map[string]string{
