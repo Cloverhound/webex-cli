@@ -92,8 +92,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("locationId", locationId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "dectNetworks", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -277,8 +276,7 @@ func init() {
 				req.PathParam("dectNetworkId", dectNetworkId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "baseStations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -458,8 +456,7 @@ func init() {
 				req.QueryParam("basestationId", basestationId)
 				req.QueryParam("memberId", memberId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "handsets", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -696,8 +693,7 @@ func init() {
 				req.PathParam("personId", personId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "dectNetworks", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -728,8 +724,7 @@ func init() {
 				req.PathParam("workspaceId", workspaceId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "dectNetworks", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -776,7 +771,7 @@ func init() {
 				req.QueryParam("excludeVirtualLine", excludeVirtualLine)
 				req.QueryParam("usageType", usageType)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "start", Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

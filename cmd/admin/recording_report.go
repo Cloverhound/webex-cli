@@ -55,8 +55,7 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -95,8 +94,7 @@ func init() {
 				req.QueryParam("max", max)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -142,8 +140,7 @@ func init() {
 				req.QueryParam("siteUrl", siteUrl)
 				req.Header("timezone", timezone)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", PageSize: 99, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

@@ -89,8 +89,7 @@ func init() {
 				req.QueryParam("includeGroupDetails", includeGroupDetails)
 				req.QueryParam("groupUsageTypes", groupUsageTypes)
 				if config.Paginate() {
-					req.OffsetPaging("startIndex", "count", 1)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "startIndex", First: 1, Size: "count", Items: "Resources", TotalItems: "totalResults"})
 					if err != nil {
 						return err
 					}

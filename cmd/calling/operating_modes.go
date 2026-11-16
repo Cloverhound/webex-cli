@@ -47,7 +47,7 @@ func init() {
 				req.QueryParam("order", order)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "operatingModes", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -326,8 +326,7 @@ func init() {
 				req.PathParam("locationId", locationId)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "operatingModes", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -369,7 +368,7 @@ func init() {
 				req.QueryParam("ownerName", ownerName)
 				req.QueryParam("extension", extension)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "phoneNumbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

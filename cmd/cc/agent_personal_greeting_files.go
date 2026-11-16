@@ -249,7 +249,7 @@ func init() {
 				req.QueryParam("pageSize", pageSize)
 				req.QueryParam("includeAgentDetails", includeAgentDetails)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"})
 					if err != nil {
 						return err
 					}

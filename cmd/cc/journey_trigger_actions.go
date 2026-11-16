@@ -47,7 +47,7 @@ Role and Scope: Requires id full admin or any role with cjp:config_write or cjp:
 				req.QueryParam("page", page)
 				req.QueryParam("pageSize", pageSize)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "pageSize", Items: "data", NotFoundEnds: true})
 					if err != nil {
 						return err
 					}

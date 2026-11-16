@@ -35,8 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/admin/meeting/config/trackingCodes")
 				req.QueryParam("siteUrl", siteUrl)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

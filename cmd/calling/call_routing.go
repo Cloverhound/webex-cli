@@ -97,7 +97,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("name", name)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "dialPlans", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -284,7 +284,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "dialPlans", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -509,7 +509,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "trunks", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -706,8 +706,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/premisePstn/trunks/trunkTypes")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "trunkTypes", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -742,7 +741,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "routeGroups", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -921,7 +920,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "locations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -964,7 +963,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "dialPlans", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1007,7 +1006,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "locations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1050,7 +1049,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "routeLists", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1095,7 +1094,7 @@ func init() {
 				req.QueryParam("locationId", locationId)
 				req.QueryParam("locationId", locationId)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "routeLists", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1303,7 +1302,7 @@ func init() {
 				req.QueryParam("number", number)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "numbers", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1347,7 +1346,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("name", name)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "locations", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1435,7 +1434,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("matchingPattern", matchingPattern)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "translationPatterns", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

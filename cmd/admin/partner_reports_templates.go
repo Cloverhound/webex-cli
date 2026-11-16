@@ -57,8 +57,7 @@ func init() {
 				req.QueryParam("regionId", regionId)
 				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}
@@ -183,8 +182,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/partner/reports/templates")
 				req.QueryParam("onBehalfOfSubPartnerOrgId", onBehalfOfSubPartnerOrgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}

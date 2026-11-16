@@ -45,8 +45,7 @@ Use query parameters to filter the response.`,
 				req.QueryParam("status", status)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -158,8 +157,7 @@ Use query parameters to filter the response.`,
 				req.QueryParam("type", typeVal)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true, LinkQueryOnly: true})
 					if err != nil {
 						return err
 					}

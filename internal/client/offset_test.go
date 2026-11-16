@@ -30,8 +30,7 @@ func TestOffsetPagingAppliesOutsideCalling(t *testing.T) {
 	defer srv.Close()
 
 	req := NewRequest(srv.URL, "GET", "/api/v2/organizations/o/agents/")
-	req.OffsetPaging("offset", "limit", 0)
-	body, _, err := req.DoPaginated(false)
+	body, _, err := req.DoPaginated(Paging{Mode: Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
 	if err != nil {
 		t.Fatal(err)
 	}

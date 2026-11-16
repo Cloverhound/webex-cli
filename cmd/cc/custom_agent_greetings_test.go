@@ -72,7 +72,7 @@ func writeGreeting(t *testing.T) string {
 func TestAgentGreetingUploadDefaultsToSystemPurpose(t *testing.T) {
 	url, infos := agentGreetingServer(t, `{"data":[
 		{"id":"custom","name":"Sales","systemDefault":false},
-		{"id":"default-purpose","name":"Default","systemDefault":true}]}`)
+		{"id":"default-purpose","name":"Default","systemDefault":true}],"meta":{"page":0,"totalPages":1}}`)
 	if err := uploadAgentGreeting(url, "org1", writeGreeting(t), "", "agent1", ""); err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func TestAgentGreetingUploadKeepsExplicitPurpose(t *testing.T) {
 }
 
 func TestAgentGreetingUploadWithoutDefaultPurposeSendsNothing(t *testing.T) {
-	url, infos := agentGreetingServer(t, `{"data":[{"id":"custom","name":"Sales","systemDefault":false}]}`)
+	url, infos := agentGreetingServer(t, `{"data":[{"id":"custom","name":"Sales","systemDefault":false}],"meta":{"page":0,"totalPages":1}}`)
 	err := uploadAgentGreeting(url, "org1", writeGreeting(t), "", "agent1", "")
 	if err == nil || !strings.Contains(err.Error(), "--greeting-purpose-id") || len(*infos) != 0 {
 		t.Errorf("err=%v uploads=%d", err, len(*infos))

@@ -45,8 +45,7 @@ func init() {
 				req.QueryParam("countryCode", countryCode)
 				req.QueryParam("cityName", cityName)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -226,8 +225,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/workspaceLocations/{locationId}/floors")
 				req.PathParam("locationId", locationId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

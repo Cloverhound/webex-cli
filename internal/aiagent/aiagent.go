@@ -25,8 +25,7 @@ func BotToken(agentID string) (string, error) {
 	}
 	req := client.NewRequest(studioURL(), "GET", "/api/v2/organizations/{orgid}/agents/")
 	req.PathParam("orgid", orgID)
-	req.OffsetPaging("offset", "limit", 0)
-	body, _, err := req.DoPaginated(false)
+	body, _, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
 	if err != nil {
 		return "", fmt.Errorf("looking up AI agent %s: %w", agentID, err)
 	}

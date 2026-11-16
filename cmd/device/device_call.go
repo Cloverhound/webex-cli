@@ -116,7 +116,7 @@ func init() {
 				req.QueryParam("usageType", usageType)
 				req.QueryParam("order", order)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "members", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -461,8 +461,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "devices", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -542,8 +541,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/lineKeyTemplates")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "lineKeyTemplates", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -715,8 +713,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/applyLineKeyTemplate")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -901,7 +898,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -957,7 +954,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1082,8 +1079,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/jobs/devices/rebuildPhones")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1284,8 +1280,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/devices/backgroundImages")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "backgroundImages", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1475,8 +1470,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "devices", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1743,7 +1737,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1799,7 +1793,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1834,8 +1828,7 @@ func init() {
 				req.QueryParam("allowConfigureLayoutEnabled", allowConfigureLayoutEnabled)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "devices", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2079,7 +2072,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -2135,7 +2128,7 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

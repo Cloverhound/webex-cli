@@ -1,0 +1,24 @@
+{
+  "_comment": "Endpoints whose live paging differs from codegen/paging.py's derivation, keyed by method and collection path. null means --paginate does not apply. See codegen/paging.py for the fields.",
+
+  "GET /telephony/config/devices/availableMembers": {"mode": "offset", "start": "start", "size": "max", "items": "members", "omitEmpty": true},
+  "GET /telephony/config/jobs/numbers/manageNumbers": {"mode": "offset", "start": "start", "size": "max", "items": "items", "omitEmpty": true},
+  "GET /telephony/config/locations/{locationId}/cxEssentials/agents/availableAgents": {"mode": "link", "size": "max", "items": "agents", "omitEmpty": true},
+  "GET /telephony/config/jobs/updateRoutingPrefix": {"mode": "link", "size": "max", "items": "items", "omitEmpty": true},
+  "GET /telephony/config/premisePstn/routeGroups/{routeGroupId}/usageDialPlan": {"mode": "link", "size": "max", "items": "dialPlans", "omitEmpty": true},
+  "GET /telephony/config/premisePstn/routeGroups/{routeGroupId}/usageRouteList": {"mode": "link", "size": "max", "items": "routeLists", "omitEmpty": true},
+  "GET /telephony/config/supportedDevices": {"mode": "single", "items": "devices", "omitEmpty": true},
+  "GET /telephony/config/redSky/complianceStatus": null,
+  "GET /deviceConfigurations": null,
+  "GET /hybrid/clusters": {"mode": "single", "items": ""},
+  "GET /hybrid/connectors": {"mode": "single", "items": ""},
+  "GET /partner/reports": {"mode": "single", "items": ""},
+  "GET /partner/reports/templates": {"mode": "single", "items": ""},
+  "GET /report/templates": {"mode": "single", "items": "items", "omitEmpty": true},
+  "GET /reports": {"mode": "single", "items": "items", "omitEmpty": true},
+  "GET /resourceGroup/memberships/v2": {"mode": "link", "size": "max", "items": "items", "omitEmpty": true, "linkQueryOnly": true},
+  "GET /recordingReport/meetingArchiveSummaries": {"mode": "link", "size": "max", "pageSize": 99, "items": "items", "omitEmpty": true},
+
+  "GET /v1/{orgId}/functions/options": {"mode": "single", "items": "langsAndRuntimes"},
+  "GET /v1/api/events/workspace-id/{workspaceId}": {"mode": "pages", "page": "page", "first": 1, "size": "pageSize", "items": "data", "notFoundEnds": true}
+}

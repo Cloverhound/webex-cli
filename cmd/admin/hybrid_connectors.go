@@ -35,8 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hybrid/connectors")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single})
 					if err != nil {
 						return err
 					}

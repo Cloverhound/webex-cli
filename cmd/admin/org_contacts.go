@@ -164,8 +164,7 @@ func init() {
 				req.QueryParam("groupIds", groupIds)
 				req.QueryParam("groupIds", groupIds)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "limit", Items: "result", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

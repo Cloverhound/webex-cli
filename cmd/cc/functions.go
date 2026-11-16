@@ -61,8 +61,7 @@ func init() {
 				req.QueryParam("fields", fields)
 				req.QueryParam("isValidation", isValidation)
 				if config.Paginate() {
-					req.PageSizeParam("size")
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages"})
 					if err != nil {
 						return err
 					}
@@ -417,8 +416,7 @@ func init() {
 				req.QueryParam("language", language)
 				req.QueryParam("runtime", runtime)
 				if config.Paginate() {
-					req.NoPageParams()
-					resp, statusCode, err := req.DoPaginated(false)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "langsAndRuntimes"})
 					if err != nil {
 						return err
 					}

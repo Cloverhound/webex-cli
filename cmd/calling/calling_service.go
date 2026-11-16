@@ -37,8 +37,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/announcementLanguages")
 				req.QueryParam("ttsLanguage", ttsLanguage)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "languages", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

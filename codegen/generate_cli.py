@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import textwrap
+import paging
 from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -289,40 +290,46 @@ def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_ca
     return '\n'.join(lines) + '\n'
 
 
-def pagination_hints(cmd_name, query_names, is_calling):
-    """Return the Go calls that configure --paginate for a GET, or None when
-    the endpoint has no paging parameters and is not a list (a single-object
-    GET would otherwise print only an array pulled out of it)."""
-    is_list = cmd_name == 'list' or cmd_name.startswith('list-')
-    if not is_calling:
-        # AI Agent Studio lists page by limit/offset under "objects".
-        if {'limit', 'offset'} <= query_names:
-            return ['req.OffsetPaging("offset", "limit", 0)']
-        if not query_names & {'page', 'pageSize', 'size'}:
-            if not is_list:
-                return None
-            return ['req.NoPageParams()']
-        hints = []
-        if 'size' in query_names and 'pageSize' not in query_names:
-            hints.append('req.PageSizeParam("size")')
-        # Without it the flow store returns a bare array with no page count.
-        if 'includePagination' in query_names:
-            hints.append('req.QueryParam("includePagination", "true")')
-        return hints
-    if {'start', 'max'} <= query_names:
-        return []
-    if {'offset', 'max'} <= query_names:
-        return ['req.OffsetPaging("offset", "max", 0)']
-    if {'startIndex', 'count'} <= query_names:
-        return ['req.OffsetPaging("startIndex", "count", 1)']
-    if 'max' in query_names:
-        return ['req.OffsetPaging("", "max", 0)']
-    if is_list:
-        return ['req.OffsetPaging("", "", 0)']
-    return None
+PAGING_FAMILY = {'config.CcBaseURL': 'cc', 'config.AiAgentBaseURL': 'aiagent'}
+PAGING_MODES_GO = {'single': 'client.Single', 'link': 'client.Link', 'pages': 'client.Pages', 'offset': 'client.Offset'}
+# Field order of the generated client.Paging literal.
+PAGING_FIELDS_GO = (('page', 'Page'), ('start', 'Start'), ('first', 'First'), ('size', 'Size'), ('pageSize', 'PageSize'),
+                    ('items', 'Items'), ('omitEmpty', 'OmitEmpty'), ('totalPages', 'TotalPages'),
+                    ('totalItems', 'TotalItems'), ('linkQueryOnly', 'LinkQueryOnly'), ('query', 'Query'),
+                    ('notFoundEnds', 'NotFoundEnds'))
+UNPAGED_LISTS = []
+PAGED_ENDPOINTS = []
 
 
-def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, private=False):
+def paging_literal(ep, base_url_expr, overrides):
+    """The client.Paging literal --paginate reads this endpoint with, or None
+    when it is not a list or its item field is unknown."""
+    family = PAGING_FAMILY.get(base_url_expr, 'webex')
+    PAGED_ENDPOINTS.append((ep, family))
+    spec = paging.paging(ep, family, overrides)
+    if spec is None:
+        return None
+    if spec.get('items') is None:
+        UNPAGED_LISTS.append(f"{ep['method']} {ep['path']}")
+        return None
+    fields = [f"Mode: {PAGING_MODES_GO[spec['mode']]}"]
+    for key, name in PAGING_FIELDS_GO:
+        value = spec.get(key)
+        if value in (None, '', 0, False, {}):
+            continue
+        if value is True:
+            fields.append(f'{name}: true')
+        elif isinstance(value, int):
+            fields.append(f'{name}: {value}')
+        elif isinstance(value, dict):
+            pairs = ', '.join(f'{escape_go_double_quoted(k)}: {escape_go_double_quoted(v)}' for k, v in value.items())
+            fields.append(f'{name}: map[string]string{{{pairs}}}')
+        else:
+            fields.append(f'{name}: {escape_go_double_quoted(value)}')
+    return 'client.Paging{' + ', '.join(fields) + '}'
+
+
+def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, private=False, paging_overrides=None):
     """Generate Go source for one command within a group's init()."""
     lines = []
     indent = '\t'
@@ -529,14 +536,10 @@ def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, pri
                     lines.append(f'{indent3}\treq.BodyStringSlice("{orig_name}", {var})')
         lines.append(f'{indent3}}}')
 
-    # Pagination-aware Do for GET commands
-    paging_hints = pagination_hints(cmd_name, {p['name'] for p in query_params}, is_calling) if method == 'GET' else None
-    if paging_hints is not None:
-        is_calling_go = 'true' if is_calling else 'false'
+    paging_go = paging_literal(ep, base_url_expr, paging_overrides)
+    if paging_go is not None:
         lines.append(f'{indent3}if config.Paginate() {{')
-        for hint in paging_hints:
-            lines.append(f'{indent3}\t{hint}')
-        lines.append(f'{indent3}\tresp, statusCode, err := req.DoPaginated({is_calling_go})')
+        lines.append(f'{indent3}\tresp, statusCode, err := req.DoPaginated({paging_go})')
         lines.append(f'{indent3}\tif err != nil {{')
         lines.append(f'{indent3}\t\treturn err')
         lines.append(f'{indent3}\t}}')
@@ -656,6 +659,18 @@ def main():
             print(f"gofmt error in {pkg}: {result.stderr}")
         else:
             print(f"  gofmt {pkg}/ OK")
+
+    if UNPAGED_LISTS:
+        print("\nWARNING: --paginate is off for these lists, whose item field neither the collection nor")
+        print("codegen/paging_overrides.json gives. Measure them and add an override:")
+        for route in sorted(set(UNPAGED_LISTS)):
+            print(f"  {route}")
+    redundant = paging.redundant_overrides(PAGED_ENDPOINTS)
+    if redundant:
+        print("\nWARNING: these codegen/paging_overrides.json entries match the derivation, or no")
+        print("command uses them. Remove them:")
+        for route in redundant:
+            print(f"  {route}")
 
     print("\nDone. Run 'go build ./...' in webex-cli/ to verify.")
 

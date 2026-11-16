@@ -35,8 +35,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/teams")
 				req.QueryParam("max", max)
 				if config.Paginate() {
-					req.OffsetPaging("", "max", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

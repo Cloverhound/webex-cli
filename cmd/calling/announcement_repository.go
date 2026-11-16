@@ -51,7 +51,7 @@ func init() {
 				req.QueryParam("mediaFileType", mediaFileType)
 				req.QueryParam("name", name)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "announcements", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -319,8 +319,7 @@ func init() {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/telephony/config/textToSpeech/voices")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "voices", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

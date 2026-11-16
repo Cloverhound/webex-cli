@@ -206,13 +206,6 @@ func init() {
 				req.QueryParam("start", start)
 				req.QueryParam("max", max)
 				req.QueryParam("order", order)
-				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
-					if err != nil {
-						return err
-					}
-					return output.Print(resp, statusCode)
-				}
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err

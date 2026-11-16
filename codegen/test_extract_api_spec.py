@@ -4,7 +4,7 @@ import os
 import tempfile
 import unittest
 
-from extract_api_spec import load_collections
+from extract_api_spec import example_list, load_collections
 
 
 def collection(name, folders):
@@ -55,6 +55,50 @@ class SupplementalCollectionTest(unittest.TestCase):
             'AI Agent': [('Export AI agent', 'GET', '/api/v1/llmagent/export/')]}))
         with self.assertRaises(ValueError):
             load_collections(self.downloaded, self.supplemental)
+
+
+class ExampleListTest(unittest.TestCase):
+    """The item array and total that an endpoint's example response shows."""
+
+    def shape(self, body, code=200):
+        return example_list([{'code': code, 'body': json.dumps(body) if not isinstance(body, str) else body}])
+
+    def test_bare_array(self):
+        self.assertEqual(self.shape([{'id': 'a'}]), {'items': ''})
+
+    def test_named_array(self):
+        self.assertEqual(self.shape({'items': [{'id': 'a'}], 'notFoundIds': []}), {'items': 'items'})
+        self.assertEqual(self.shape({'trunks': [{'id': 'a'}]}), {'items': 'trunks'})
+
+    def test_page_count(self):
+        self.assertEqual(self.shape({'data': [], 'meta': {'page': 0, 'totalPages': 3}}),
+                         {'items': 'data', 'totalPages': 'meta.totalPages'})
+        self.assertEqual(self.shape({'data': [], 'pageInfo': {'totalPages': 3}}),
+                         {'items': 'data', 'totalPages': 'pageInfo.totalPages'})
+
+    def test_placeholder_totals(self):
+        self.assertEqual(self.shape({'campaigns': [], 'pagination': {'page': '<integer>', 'totalPages': '<integer>'}}),
+                         {'items': 'campaigns', 'totalPages': 'pagination.totalPages'})
+        self.assertEqual(self.shape({'resources': [], 'totalResources': '<long>'}),
+                         {'items': 'resources', 'totalItems': 'totalResources'})
+
+    def test_item_count(self):
+        self.assertEqual(self.shape({'schemas': ['urn'], 'totalResults': 2, 'Resources': []}),
+                         {'items': 'Resources', 'totalItems': 'totalResults'})
+        self.assertEqual(self.shape({'resources': [], 'totalResources': 9}),
+                         {'items': 'resources', 'totalItems': 'totalResources'})
+        self.assertEqual(self.shape({'objects': [], 'meta': {'total_count': 9}}),
+                         {'items': 'objects', 'totalItems': 'meta.total_count'})
+
+    def test_no_list(self):
+        self.assertIsNone(self.shape({'id': 'a', 'name': 'b'}))
+        self.assertIsNone(self.shape({'a': [], 'b': []}))
+        self.assertIsNone(self.shape('not json'))
+        self.assertIsNone(example_list([]))
+
+    def test_first_success_example_is_used(self):
+        self.assertEqual(example_list([{'code': 400, 'body': '{"errors": []}'},
+                                       {'code': 200, 'body': '{"items": []}'}]), {'items': 'items'})
 
 
 if __name__ == '__main__':

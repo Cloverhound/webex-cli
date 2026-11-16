@@ -87,8 +87,7 @@ func init() {
 				req.QueryParam("includeMembers", includeMembers)
 				req.QueryParam("memberType", memberType)
 				if config.Paginate() {
-					req.OffsetPaging("startIndex", "count", 1)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "startIndex", First: 1, Size: "count", Items: "Resources", TotalItems: "totalResults"})
 					if err != nil {
 						return err
 					}
@@ -258,8 +257,7 @@ func init() {
 				req.QueryParam("count", count)
 				req.QueryParam("memberType", memberType)
 				if config.Paginate() {
-					req.OffsetPaging("startIndex", "count", 1)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "startIndex", First: 1, Size: "count", Items: "members", TotalItems: "totalResults"})
 					if err != nil {
 						return err
 					}

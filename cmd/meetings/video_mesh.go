@@ -51,8 +51,7 @@ func init() {
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -130,8 +129,7 @@ func init() {
 				req.QueryParam("to", to)
 				req.QueryParam("clusterId", clusterId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -219,8 +217,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -355,8 +352,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -398,8 +394,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -476,8 +471,7 @@ On-demand test results can be obtained along with the periodic tests that are ex
 				req.QueryParam("to", to)
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -568,8 +562,7 @@ Changes in V2:
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -700,8 +693,7 @@ Changes in V2:
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/videoMesh/clusters")
 				req.QueryParam("orgId", orgId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -885,8 +877,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("from", from)
 				req.QueryParam("to", to)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1017,8 +1008,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("to", to)
 				req.QueryParam("deviceType", deviceType)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "items", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -1093,8 +1083,7 @@ The test is run on a maximum of 10 nodes present in the cluster, chosen at rando
 				req.QueryParam("orgId", orgId)
 				req.QueryParam("eventScope", eventScope)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "eventThresholds", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

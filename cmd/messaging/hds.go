@@ -236,8 +236,7 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/tenants")
 				req.PathParam("organizationId", organizationId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "tenants", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -266,8 +265,7 @@ To obtain the Cluster ID needed for this API, use the [List clusters for an HDS 
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/clusters/{clusterId}/nodes")
 				req.PathParam("clusterId", clusterId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "nodes", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
@@ -296,8 +294,7 @@ To obtain the Organization ID needed for this API, use the [Organizations API](<
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/hds/organizations/{organizationId}/clusters")
 				req.PathParam("organizationId", organizationId)
 				if config.Paginate() {
-					req.OffsetPaging("", "", 0)
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Single, Items: "clusters", OmitEmpty: true})
 					if err != nil {
 						return err
 					}

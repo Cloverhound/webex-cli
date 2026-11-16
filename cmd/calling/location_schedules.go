@@ -45,7 +45,7 @@ func init() {
 				req.QueryParam("name", name)
 				req.QueryParam("type", typeVal)
 				if config.Paginate() {
-					resp, statusCode, err := req.DoPaginated(true)
+					resp, statusCode, err := req.DoPaginated(client.Paging{Mode: client.Link, Size: "max", Items: "schedules", OmitEmpty: true})
 					if err != nil {
 						return err
 					}
