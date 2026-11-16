@@ -119,14 +119,16 @@ Auto-paginate to get all results:
 webex cc entry-point list --paginate
 ```
 
-`--paginate` requests 100 items per page from the first page, and overrides `--page` and `--page-size` or `--size`. It reads each list the way its API pages:
+`--paginate` returns every item in the list, reading all its pages, and ignores paging flags such as `--page` and `--page-size`. If it cannot read the whole list, it fails with `incomplete list` rather than return part of it.
+
+How each kind of list is read, 100 items per page:
 
 - Most lists are read to their page count, and `bulk-export` lists to their `totalResources`.
 - Lists that take no paging parameters return everything in one response and are read once.
 - Customer Journey lists state no total, so they end at a page shorter than asked, or at a page that is not found.
-- AI Agent Studio lists (`cc ai-agent*`) are read by `--offset` and `--limit`, which `--paginate` overrides, to their stated total.
+- AI Agent Studio lists (`cc ai-agent*`) are read by offset to their stated total.
 
-It fails with `incomplete list` if a page count or total is missing, or the list ends before it. Commands that return a single object ignore it, and so do `cc tasks get` and `cc call-monitor list-sessions`, whose paging is not known.
+Commands that return a single object ignore it, and so do `cc tasks get` and `cc call-monitor list-sessions`, whose paging is not known.
 
 Manual pagination:
 

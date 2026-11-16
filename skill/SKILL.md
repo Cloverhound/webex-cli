@@ -276,7 +276,13 @@ webex admin people list --paginate
 webex meetings recordings list --paginate
 ```
 
-`--paginate` reads each list the way its API pages it, and prints the items of every page as one JSON array. Webex lists follow `Link: rel="next"` headers, Contact Center lists read to their page count, SCIM and AI Agent Studio lists to their stated total, and lists that return everything in one response are read once. It always starts at the first item and sets the page size itself (100 per request, or less where an API allows less), so `--page`, `--page-size`, `--size`, `--start`, `--start-index`, `--offset`, `--max`, `--count` and `--limit` have no effect with it. When a list does not page as its API is known to (an error on a later page, a missing page count or total, a page that repeats, a list that ends before its total, or a next page on another host), the command fails with `incomplete list` rather than returning part of the list. Commands that return a single object ignore it, and so do `cc tasks get`, `cc call-monitor list-sessions`, `calling emergency-services get-org-compliance-status-location-status-list` and the Slido `list-compliance-events` commands, whose paging is not known.
+`--paginate` returns every item in a list as one JSON array, reading as many pages as it takes. It always reads the whole list, so paging flags such as `--max`, `--start` and `--page` are ignored with it. If it cannot read the whole list, it fails with `incomplete list` rather than return part of it.
+
+Details:
+- Each list is read the way its API pages. Webex lists follow `Link: rel="next"` headers. Contact Center lists are read to their page count, and SCIM and AI Agent Studio lists to their stated total. Lists that return everything in one response are read once.
+- It asks for 100 items per page, or fewer where an API allows fewer. The paging flags it ignores are `--page`, `--page-size`, `--size`, `--start`, `--start-index`, `--offset`, `--max`, `--count` and `--limit`.
+- It fails on an error on a later page, a missing page count or total, a page that repeats, a list that ends before its total, or a next page on another host.
+- Commands that return a single object ignore it. So do `cc tasks get`, `cc call-monitor list-sessions`, `calling emergency-services get-org-compliance-status-location-status-list` and the Slido `list-compliance-events` commands, whose paging is not known.
 
 Or paginate manually (CC):
 ```bash
