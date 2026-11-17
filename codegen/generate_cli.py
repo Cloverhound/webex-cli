@@ -43,8 +43,9 @@ BASE_URL_OVERRIDES = {
         # Analytics reports. These paths already include /v1, so the base URL
         # deliberately has no version segment.
         "/v1/analytics/": "config.AnalyticsBaseURL",
-        # SCIM is served without the /v1 segment.
+        # SCIM and archived users are served without the /v1 segment.
         "/identity/scim/": "config.IdentityBaseURL",
+        "/identity/organizations/{orgId}/v1/": "config.IdentityBaseURL",
     },
     "Webex Contact Center": {
         # AI Agent Studio, from codegen/supplemental.
@@ -497,8 +498,8 @@ def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, pri
             lines.append(f'{indent3}req.PathParam("{p["name"]}", "{val}")')
         else:
             var = kebab_to_go_var(camel_to_kebab(p['name']))
-            # SCIM takes the org UUID, but --org-id is filled with the base64 org ID.
-            if p['name'] == 'orgId' and path.startswith('/identity/scim/'):
+            # Identity routes take the org UUID, but --org-id is filled with the base64 org ID.
+            if p['name'] == 'orgId' and path.startswith(('/identity/scim/', '/identity/organizations/')):
                 var = f'config.DecodeOrgID({var})'
             lines.append(f'{indent3}req.PathParam("{p["name"]}", {var})')
 

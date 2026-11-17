@@ -33,7 +33,7 @@ func init() {
 			Long:  "Initiate a bulk activation email resend job that sends an activation email to all eligible users in an organization. Only a single instance of the job can be running for an organization.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "POST", "/identity/organizations/{orgId}/jobs/sendActivationEmails")
-				req.PathParam("orgId", orgId)
+				req.PathParam("orgId", config.DecodeOrgID(orgId))
 				resp, statusCode, err := req.Do()
 				if err != nil {
 					return err
@@ -55,7 +55,7 @@ func init() {
 			Long:  "Get the details of an activation email resend job by its job ID.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only administrator auth token with a scope of `spark-admin:people_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/jobs/sendActivationEmails/{jobId}/status")
-				req.PathParam("orgId", orgId)
+				req.PathParam("orgId", config.DecodeOrgID(orgId))
 				req.PathParam("jobId", jobId)
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -81,7 +81,7 @@ func init() {
 			Long:  "Get errors of an activation email resend job by its job ID.\n\nRequires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only administrator auth token with a scope of `spark-admin:people_read`.",
 			RunE: func(cmd *cobra.Command, args []string) error {
 				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/jobs/sendActivationEmails/{jobId}/errors")
-				req.PathParam("orgId", orgId)
+				req.PathParam("orgId", config.DecodeOrgID(orgId))
 				req.PathParam("jobId", jobId)
 				req.QueryParam("max", max)
 				if config.Paginate() {

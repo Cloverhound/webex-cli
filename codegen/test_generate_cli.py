@@ -86,10 +86,10 @@ class PaginationTest(unittest.TestCase):
         self.assertIsNone(self.paging_call('config.CallingBaseURL', 'list', ['max']))
 
 
-class ScimTest(unittest.TestCase):
-    def group(self, endpoints):
-        return generate_group_file('scim-2-users', endpoints, 'admin', 'cmd.AdminCmd',
-                                   'config.CallingBaseURL', True, 'Webex Admin')
+class IdentityTest(unittest.TestCase):
+    def group(self, endpoints, collection='Webex Admin'):
+        return generate_group_file('identity', endpoints, 'admin', 'cmd.AdminCmd',
+                                   'config.CallingBaseURL', True, collection)
 
     def test_scim_routes_use_the_identity_host_and_the_org_uuid(self):
         code = self.group([{'command': 'search', 'method': 'GET', 'path': '/identity/scim/{orgId}/v2/Users',
@@ -102,8 +102,30 @@ class ScimTest(unittest.TestCase):
         code = self.group([{'command': 'get-me', 'method': 'GET', 'path': '/identity/scim/v2/Users/me'}])
         self.assertIn('client.NewRequest(config.IdentityBaseURL, "GET", "/identity/scim/v2/Users/me")', code)
 
-    def test_other_admin_routes_are_unchanged(self):
+    def test_archived_users_use_the_identity_host_and_the_org_uuid(self):
+        code = self.group([{'command': 'query', 'method': 'GET',
+                            'path': '/identity/organizations/{orgId}/v1/ArchivedUser',
+                            'path_params': [{'name': 'orgId'}]}])
+        self.assertIn('client.NewRequest(config.IdentityBaseURL, "GET", '
+                      '"/identity/organizations/{orgId}/v1/ArchivedUser")', code)
+        self.assertIn('req.PathParam("orgId", config.DecodeOrgID(orgId))', code)
+
+    def test_identity_org_routes_keep_the_v1_host_and_use_the_org_uuid(self):
         code = self.group([{'command': 'get', 'method': 'GET', 'path': '/identity/organizations/{orgId}',
+                            'path_params': [{'name': 'orgId'}]}])
+        self.assertIn('client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}")', code)
+        self.assertIn('req.PathParam("orgId", config.DecodeOrgID(orgId))', code)
+        self.assertIn('"org-id"', code)
+
+    def test_calling_identity_org_routes_use_the_org_uuid(self):
+        code = self.group([{'command': 'send', 'method': 'POST',
+                            'path': '/identity/organizations/{orgId}/jobs/sendActivationEmails',
+                            'path_params': [{'name': 'orgId'}]}], collection='Webex Cloud Calling')
+        self.assertIn('client.NewRequest(config.CallingBaseURL,', code)
+        self.assertIn('req.PathParam("orgId", config.DecodeOrgID(orgId))', code)
+
+    def test_other_admin_routes_are_unchanged(self):
+        code = self.group([{'command': 'get', 'method': 'GET', 'path': '/organizations/{orgId}',
                             'path_params': [{'name': 'orgId'}]}])
         self.assertIn('client.NewRequest(config.CallingBaseURL,', code)
         self.assertIn('req.PathParam("orgId", orgId)', code)
