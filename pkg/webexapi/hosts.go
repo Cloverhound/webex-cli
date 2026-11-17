@@ -28,10 +28,15 @@ type Hosts struct {
 	CC, AIAgent string
 }
 
-// Regions are the data regions, and CCRegions the Contact Center data centers.
+// ccRegions are the Contact Center data centers HostsFor accepts; a list callers
+// cannot change.
+var ccRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1", "in1"}
+
+// Regions are the data regions, and CCRegions the Contact Center data centers, for
+// display. HostsFor checks against its own copy.
 var (
 	Regions   = []string{"us", "ca", "eu", "eun", "in", "au"}
-	CCRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1", "in1"}
+	CCRegions = slices.Clone(ccRegions)
 )
 
 // DefaultCCRegion is the Contact Center data center used when none is given.
@@ -57,8 +62,8 @@ func HostsFor(region, ccRegion string) (Hosts, error) {
 	if ccRegion == "" {
 		ccRegion = DefaultCCRegion
 	}
-	if !slices.Contains(CCRegions, ccRegion) {
-		return Hosts{}, fmt.Errorf("unknown Contact Center data center %q; use one of %s", ccRegion, strings.Join(CCRegions, ", "))
+	if !slices.Contains(ccRegions, ccRegion) {
+		return Hosts{}, fmt.Errorf("unknown Contact Center data center %q; use one of %s", ccRegion, strings.Join(ccRegions, ", "))
 	}
 	return Hosts{
 		Webex:            "https://webexapis.com/v1",

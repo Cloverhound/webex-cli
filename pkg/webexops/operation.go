@@ -167,6 +167,10 @@ type Args struct {
 	// Params are the parameter values by API name. Empty values are not sent.
 	Params map[string]string
 
+	// Query gives a query parameter's values when it is sent more than once, in
+	// place of its value in Params.
+	Query url.Values
+
 	// Body is sent when the operation has a Body; ContentType defaults to
 	// application/json.
 	Body        []byte
@@ -213,6 +217,9 @@ func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 			header.Set(p.Name, v)
 		}
 	}
+	for k, vs := range args.Query {
+		query[k] = vs
+	}
 	l := webexapi.List{
 		Method: op.Method,
 		URL:    webexapi.FillPath(op.Host.URL(hosts)+op.Path, path),
@@ -258,7 +265,13 @@ func Areas() []string {
 }
 
 // Groups lists an area's groups, in collection order. The list is a copy.
-func Groups(areaName string) []Group { return slices.Clone(areas[areaName].groups) }
+func Groups(areaName string) []Group {
+	groups := slices.Clone(areas[areaName].groups)
+	for i := range groups {
+		groups[i].Aliases = slices.Clone(groups[i].Aliases)
+	}
+	return groups
+}
 
 // Operations lists an area's operations, in collection order. The list is a copy;
 // the operations it points to are shared and must not be changed.

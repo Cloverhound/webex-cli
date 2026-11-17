@@ -137,9 +137,9 @@ class FlagTest(unittest.TestCase):
         op = operation({'command': 'list', 'method': 'GET', 'path': '/organization/{orgId}/team',
                         'path_params': [{'name': 'orgId'}], 'query_params': [{'name': 'orgId'}]},
                        'Webex Contact Center', 'cc', False)
-        self.assertEqual(op['path'], '/organization/{orgid}/team')
+        self.assertEqual(op['path'], '/organization/{orgId}/team')
         self.assertEqual([(p['name'], p['flag'], p.get('orgUUID')) for p in op['params']],
-                         [('orgid', 'orgid', True), ('orgId', 'orgid', True)])
+                         [('orgId', 'orgid', True), ('orgId', 'orgid', True)])
 
     def test_from_gets_a_time_range(self):
         for path, expected in [('/v1/tasks', 'TimeEpochMs'), ('/v1/events', 'TimeISO')]:
@@ -197,7 +197,7 @@ class AiAgentStudioTest(unittest.TestCase):
 
     def test_studio_routes_use_the_studio_host_and_redact_secrets(self):
         op = self.op({'command': 'list', 'path': '/api/v2/organizations/{orgId}/agents/', 'path_params': [{'name': 'orgId'}]})
-        self.assertEqual((op['host'], op['path'], op['redact']), ('ai-agent', '/api/v2/organizations/{orgid}/agents/', True))
+        self.assertEqual((op['host'], op['path'], op['redact']), ('ai-agent', '/api/v2/organizations/{orgId}/agents/', True))
 
     def test_other_cc_routes_are_unchanged(self):
         op = self.op({'command': 'list', 'path': '/organization/{orgId}/v2/site', 'path_params': [{'name': 'orgId'}],

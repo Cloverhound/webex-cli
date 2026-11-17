@@ -182,6 +182,44 @@ func TestARedactorThatEditsItsArgumentLeavesTheResponse(t *testing.T) {
 	}
 }
 
+func TestA451NamesOnlyWhatTheRedactorLeaves(t *testing.T) {
+	srv, _ := statusServer(t, []int{451}, `{"message":"use https://analytics-calling-eu.webexapis.com"}`, nil)
+	resp, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL, Redact: func([]byte) []byte { return nil }})
+	var wrong *WrongRegionError
+	if !errors.As(err, &wrong) || wrong.Endpoint != "" || strings.Contains(err.Error(), "webexapis") {
+		t.Fatalf("err %v", err)
+	}
+	if !strings.Contains(string(resp.Body), "webexapis") {
+		t.Fatal("the response lost its body")
+	}
+}
+
+func TestA429WhoseBodyCannotBeReadKeepsTheReadError(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", "100")
+		w.WriteHeader(http.StatusTooManyRequests)
+		w.Write([]byte("short"))
+	}))
+	t.Cleanup(srv.Close)
+	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL})
+	var limited *RateLimitError
+	if err == nil || errors.As(err, &limited) || !strings.Contains(err.Error(), "reading response") {
+		t.Fatalf("err %v", err)
+	}
+}
+
+func TestChangingCCRegionsDoesNotChangeWhatHostsForAccepts(t *testing.T) {
+	saved := CCRegions[0]
+	CCRegions[0] = "changed"
+	t.Cleanup(func() { CCRegions[0] = saved })
+	if _, err := HostsFor("", ""); err != nil {
+		t.Fatalf("the default data center was refused: %v", err)
+	}
+	if _, err := HostsFor("", "changed"); err == nil {
+		t.Fatal("a data center added to CCRegions was accepted")
+	}
+}
+
 func TestAnExhaustedRateLimitStillUnwrapsToTheAPIError(t *testing.T) {
 	srv, _ := statusServer(t, []int{429}, `{"message":"slow down"}`, http.Header{"Retry-After": {"1"}})
 	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL})

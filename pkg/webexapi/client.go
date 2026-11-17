@@ -98,14 +98,20 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 	var waited time.Duration
 	for retries := 0; resp != nil && resp.Status == http.StatusTooManyRequests; retries++ {
 		wait := RetryAfter(resp.Header.Get("Retry-After"))
-		apiErr, _ := err.(*APIError)
+		limit := ""
 		if retries >= c.MaxRetries {
-			return resp, &RateLimitError{err: apiErr, msg: fmt.Sprintf("rate limited (429): retry limit reached after %d attempts — try again after %s",
-				retries, wait.Round(time.Second))}
+			limit = fmt.Sprintf("retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
+		} else if c.MaxRetryWait > 0 && waited+wait > c.MaxRetryWait {
+			limit = fmt.Sprintf("retry wait of %s would exceed max-retry-timer of %s — try again after %s",
+				(waited + wait).Round(time.Second), c.MaxRetryWait.Round(time.Second), wait.Round(time.Second))
 		}
-		if c.MaxRetryWait > 0 && waited+wait > c.MaxRetryWait {
-			return resp, &RateLimitError{err: apiErr, msg: fmt.Sprintf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s",
-				(waited + wait).Round(time.Second), c.MaxRetryWait.Round(time.Second), wait.Round(time.Second))}
+		if limit != "" {
+			apiErr, ok := err.(*APIError)
+			if !ok {
+				// The 429's body could not be read; that error says why.
+				return resp, err
+			}
+			return resp, &RateLimitError{err: apiErr, msg: "rate limited (429): " + limit}
 		}
 		if c.OnRetry != nil {
 			c.OnRetry(wait, retries+1, c.MaxRetries)
@@ -118,7 +124,12 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 	}
 
 	if resp != nil && resp.Status == http.StatusUnavailableForLegalReasons {
-		return resp, newWrongRegionError(resp.Body)
+		apiErr, ok := err.(*APIError)
+		if !ok {
+			return resp, err
+		}
+		// The endpoint is read from what the request's Redact leaves.
+		return resp, newWrongRegionError(resp.Body, apiErr.shownBody())
 	}
 	return resp, err
 }

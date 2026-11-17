@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"regexp"
 	"strings"
 	"testing"
@@ -59,6 +60,42 @@ func TestListingsAreCopies(t *testing.T) {
 	ops[0], groups[0] = nil, Group{}
 	if Operations(area)[0] != first || Groups(area)[0].Name != firstGroup.Name {
 		t.Fatal("changing a listing changed the table")
+	}
+	for _, g := range Groups("cc") {
+		if g.Name == "flow" {
+			g.Aliases[0] = "changed"
+		}
+	}
+	for _, g := range Groups("cc") {
+		if g.Name == "flow" && g.Aliases[0] != "flows" {
+			t.Fatalf("changing a listed alias changed the table: %v", g.Aliases)
+		}
+	}
+}
+
+func TestParametersHaveTheirAPINames(t *testing.T) {
+	var org *Param
+	for i, p := range AdminOrgContactsGet.Params {
+		if p.In == InPath && p.Flag == "orgid" {
+			org = &AdminOrgContactsGet.Params[i]
+		}
+	}
+	if org == nil || org.Name != "orgId" || !strings.Contains(AdminOrgContactsGet.Path, "{orgId}") {
+		t.Fatalf("org parameter %+v in %s", org, AdminOrgContactsGet.Path)
+	}
+}
+
+func TestAQueryParameterCanBeSentMoreThanOnce(t *testing.T) {
+	op := &Operation{Method: "GET", Path: "/adminAudit/events", Params: []Param{
+		{Name: "eventCategories", In: InQuery, Flag: "event-categories"},
+		{Name: "max", In: InQuery, Flag: "max"},
+	}}
+	got := op.Request(testHosts, Args{
+		Params: map[string]string{"eventCategories": "ignored", "max": "5"},
+		Query:  url.Values{"eventCategories": {"a", "b"}},
+	}).URL
+	if got != "https://w/v1/adminAudit/events?eventCategories=a&eventCategories=b&max=5" {
+		t.Fatalf("URL %s", got)
 	}
 }
 

@@ -17,11 +17,15 @@ type APIError struct {
 }
 
 func (e *APIError) Error() string {
-	shown := e.Body
+	return fmt.Sprintf("API error %d: %s", e.Status, truncate(string(e.shownBody()), 500))
+}
+
+// shownBody is the body as errors may repeat it.
+func (e *APIError) shownBody() []byte {
 	if e.redacted {
-		shown = e.shown
+		return e.shown
 	}
-	return fmt.Sprintf("API error %d: %s", e.Status, truncate(string(shown), 500))
+	return e.Body
 }
 
 // RateLimitError is a 429 that was not retried further, because of MaxRetries or
@@ -57,8 +61,10 @@ func (e *WrongRegionError) Error() string {
 // endpointURL finds the regional endpoint Webex returns in a 451 body.
 var endpointURL = regexp.MustCompile(`https?://[a-zA-Z0-9.\-]+`)
 
-func newWrongRegionError(body []byte) *WrongRegionError {
-	return &WrongRegionError{Endpoint: string(endpointURL.Find(body)), Body: body}
+// newWrongRegionError finds the endpoint in shown, the body as errors may repeat
+// it, and keeps the body as received.
+func newWrongRegionError(body, shown []byte) *WrongRegionError {
+	return &WrongRegionError{Endpoint: string(endpointURL.Find(shown)), Body: body}
 }
 
 func truncate(s string, n int) string {

@@ -6099,14 +6099,14 @@ var CcCampaignManagerStopRequest = &Operation{
 	},
 }
 
-// CcCampaignManagerGetValidTimes is "Get Valid Campaign Times": GET /v1/organization/{orgid}/getValidCampaignTimes.
+// CcCampaignManagerGetValidTimes is "Get Valid Campaign Times": GET /v1/organization/{orgId}/getValidCampaignTimes.
 var CcCampaignManagerGetValidTimes = &Operation{
 	ID: "CcCampaignManagerGetValidTimes", Area: "cc", Group: "campaign-manager", Command: "get-valid-times",
 	Summary:     "Get Valid Campaign Times",
 	Description: "Gets valid campaign times for a campaign and agent. This request is accepted for asynchronous processing. Requires 'cjp:user','cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
-	Method:      "GET", Host: HostCC, Path: "/v1/organization/{orgid}/getValidCampaignTimes",
+	Method:      "GET", Host: HostCC, Path: "/v1/organization/{orgId}/getValidCampaignTimes",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which valid campaign times are being requested."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which valid campaign times are being requested."},
 		{Name: "campaignId", In: InQuery, Flag: "campaign-id", Usage: "The campaign ID for which valid campaign times are being requested."},
 		{Name: "interactionId", In: InQuery, Flag: "interaction-id", Usage: "The unique identifier of the interaction associated with this request."},
 		{Name: "agentId", In: InQuery, Flag: "agent-id", Usage: "The agent ID for whom valid campaign times are being requested."},
@@ -6123,28 +6123,28 @@ var CcCapturesList = &Operation{
 	Body: &Body{},
 }
 
-// CcFlowExportLegacy is "Export a Flow or Subflow": GET /flow-store/{orgid}/project/{projectId}/flows/{flowId}:export.
+// CcFlowExportLegacy is "Export a Flow or Subflow": GET /flow-store/{orgId}/project/{projectId}/flows/{flowId}:export.
 var CcFlowExportLegacy = &Operation{
 	ID: "CcFlowExportLegacy", Area: "cc", Group: "flow", Command: "export-legacy",
 	Summary:     "Export a Flow or Subflow",
 	Description: "Returns the exported flow/subflow in response.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
-	Method:      "GET", Host: HostCC, Path: "/flow-store/{orgid}/project/{projectId}/flows/{flowId}:export",
+	Method:      "GET", Host: HostCC, Path: "/flow-store/{orgId}/project/{projectId}/flows/{flowId}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Version ID. Possible values are 'draft', 'latest' or version ID like '64b92c004ccd9f3d1c680709'. Defaulted to 'latest'."},
 	},
 }
 
-// CcFlowImportLegacy is "Import a Flow or Subflow": POST /flow-store/{orgid}/project/{projectId}/flows:import.
+// CcFlowImportLegacy is "Import a Flow or Subflow": POST /flow-store/{orgId}/project/{projectId}/flows:import.
 var CcFlowImportLegacy = &Operation{
 	ID: "CcFlowImportLegacy", Area: "cc", Group: "flow", Command: "import-legacy",
 	Summary:     "Import a Flow or Subflow",
 	Description: "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
-	Method:      "POST", Host: HostCC, Path: "/flow-store/{orgid}/project/{projectId}/flows:import",
+	Method:      "POST", Host: HostCC, Path: "/flow-store/{orgId}/project/{projectId}/flows:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "Determines whether to overwrite the existing flow or not. Possible values: yes/no."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6152,14 +6152,14 @@ var CcFlowImportLegacy = &Operation{
 	},
 }
 
-// CcFlowList is "List Flows or Subflows": GET /{orgid}/project/{projectId}/flows.
+// CcFlowList is "List Flows or Subflows": GET /{orgId}/project/{projectId}/flows.
 var CcFlowList = &Operation{
 	ID: "CcFlowList", Area: "cc", Group: "flow", Command: "list",
 	Summary:     "List Flows or Subflows",
 	Description: "Returns a list of flows in response. Channel-based filtering can be applied with the `searchBy` query parameter (for example, `channelType|telephony`, `channelType|workItem`, `channelType|customMessaging`, `channelType|genericAction`). Channel visibility may be constrained by organization feature flags. If associatedChannels key is missing or empty, it will be treated as telephony flow.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
 		{Name: "ids", In: InQuery, Flag: "ids", Usage: "Filters results based on a comma-separated list of flow IDs. If provided, only flows with those IDs will be fetched in the response."},
@@ -6174,14 +6174,14 @@ var CcFlowList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages", Query: map[string]string{"includePagination": "true"}},
 }
 
-// CcFlowPublish is "Publish a Flow or Subflow": POST /{orgid}/project/{projectId}/flows/{flowId}:publish.
+// CcFlowPublish is "Publish a Flow or Subflow": POST /{orgId}/project/{projectId}/flows/{flowId}:publish.
 var CcFlowPublish = &Operation{
 	ID: "CcFlowPublish", Area: "cc", Group: "flow", Command: "publish",
 	Summary:     "Publish a Flow or Subflow",
 	Description: "Returns the published flow in response.\n\nThe Publish API validates the basic structure of the flows. We recommend manually verifying the published flows before proceeding with live traffic.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:publish",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows/{flowId}:publish",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "skipValidation", In: InQuery, Flag: "skip-validation", Usage: "If true, the flow's pre-publish validation is skipped. Use with care."},
@@ -6194,55 +6194,55 @@ var CcFlowPublish = &Operation{
 	}},
 }
 
-// CcFlowLock is "Lock a Flow or Subflow": POST /{orgid}/project/{projectId}/flows/{flowId}:lock.
+// CcFlowLock is "Lock a Flow or Subflow": POST /{orgId}/project/{projectId}/flows/{flowId}:lock.
 var CcFlowLock = &Operation{
 	ID: "CcFlowLock", Area: "cc", Group: "flow", Command: "lock",
 	Summary:     "Lock a Flow or Subflow",
 	Description: "Lock a flow to prevent concurrent edits by other users. Locks expire after 15 minutes of inactivity.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:lock",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows/{flowId}:lock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
 	},
 }
 
-// CcFlowUnlock is "Unlock a Flow or Subflow": POST /{orgid}/project/{projectId}/flows/{flowId}:unlock.
+// CcFlowUnlock is "Unlock a Flow or Subflow": POST /{orgId}/project/{projectId}/flows/{flowId}:unlock.
 var CcFlowUnlock = &Operation{
 	ID: "CcFlowUnlock", Area: "cc", Group: "flow", Command: "unlock",
 	Summary:     "Unlock a Flow or Subflow",
 	Description: "Release the lock on a flow to allow other users to edit it.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:unlock",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows/{flowId}:unlock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
 	},
 }
 
-// CcFlowValidate is "Validate a Flow or Subflow": POST /{orgid}/project/{projectId}/v2/flows:validate.
+// CcFlowValidate is "Validate a Flow or Subflow": POST /{orgId}/project/{projectId}/v2/flows:validate.
 var CcFlowValidate = &Operation{
 	ID: "CcFlowValidate", Area: "cc", Group: "flow", Command: "validate",
 	Summary:     "Validate a Flow or Subflow",
 	Description: "Dry-run validate a flow/subflow definition without persisting it. Use this to check correctness before importing. Include `associatedChannels` to preserve the channel metadata that import and export payloads round-trip. Validation requests where `associatedChannels` is missing or empty are treated as telephony flows, and dry-run validation does not derive the effective channel from `associatedChannels`.\n\nNote: validation is more lenient than import. A flow that passes `:validate` can still be rejected by `:import` (for example, a missing start activity), so a successful validation does not guarantee a successful import.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows:validate",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows:validate",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Body: &Body{},
 }
 
-// CcFlowImport is "Import a Flow or Subflow": POST /{orgid}/project/{projectId}/v2/flows:import.
+// CcFlowImport is "Import a Flow or Subflow": POST /{orgId}/project/{projectId}/v2/flows:import.
 var CcFlowImport = &Operation{
 	ID: "CcFlowImport", Area: "cc", Group: "flow", Command: "import",
 	Summary:     "Import a Flow or Subflow",
 	Description: "Import a new flow/subflow from a flow definition. Creates the flow/subflow in draft state and returns the assigned flow metadata, including `flowId`. Include `associatedChannels` in the payload when the flow contains channel-specific activities (for example, `customMessaging`) so channel references can be resolved correctly during import. If `associatedChannels` is missing or empty, the import is treated as a telephony flow. For `FLOW` imports, blank or whitespace-only `associatedChannels[].channelType` values are rejected.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows:import",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "If true, replaces an existing flow with the same name. Defaults to false."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6250,28 +6250,28 @@ var CcFlowImport = &Operation{
 	Body: &Body{},
 }
 
-// CcFlowGet is "Get a Flow or Subflow": GET /{orgid}/project/{projectId}/v2/flows/{flowId}.
+// CcFlowGet is "Get a Flow or Subflow": GET /{orgId}/project/{projectId}/v2/flows/{flowId}.
 var CcFlowGet = &Operation{
 	ID: "CcFlowGet", Area: "cc", Group: "flow", Command: "get",
 	Summary:     "Get a Flow or Subflow",
 	Description: "Retrieve the current draft of a flow/subflow as a flow document. To fetch a specific published version, use the `:export` endpoint. The response includes channel metadata (for example, `associatedChannels`) used by channel-specific activities such as `customMessaging`. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
 	},
 }
 
-// CcFlowSaveDraft is "Save a Flow or Subflow Draft": POST /{orgid}/project/{projectId}/v2/flows/{flowId}.
+// CcFlowSaveDraft is "Save a Flow or Subflow Draft": POST /{orgId}/project/{projectId}/v2/flows/{flowId}.
 var CcFlowSaveDraft = &Operation{
 	ID: "CcFlowSaveDraft", Area: "cc", Group: "flow", Command: "save-draft",
 	Summary:     "Save a Flow or Subflow Draft",
 	Description: "Save a complete flow/subflow document as the current draft, replacing the existing draft. Submitted `associatedChannels` values are not persisted on save; the draft preserves the existing stored channel metadata. Omitting `associatedChannels` does not default an existing flow to telephony. Pass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
+	Method:      "POST", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "expectedVersion", In: InQuery, Flag: "expected-version", Usage: "Expected current draft version for optimistic locking. The request fails with 409 Conflict if the server-side version does not match. Omit to skip the check."},
@@ -6280,14 +6280,14 @@ var CcFlowSaveDraft = &Operation{
 	Body: &Body{},
 }
 
-// CcFlowPatchDraft is "Patch a Flow or Subflow Draft": PATCH /{orgid}/project/{projectId}/v2/flows/{flowId}.
+// CcFlowPatchDraft is "Patch a Flow or Subflow Draft": PATCH /{orgId}/project/{projectId}/v2/flows/{flowId}.
 var CcFlowPatchDraft = &Operation{
 	ID: "CcFlowPatchDraft", Area: "cc", Group: "flow", Command: "patch-draft",
 	Summary:     "Patch a Flow or Subflow Draft",
 	Description: "Apply partial updates to an existing flow/subflow draft without replacing the entire document. The patch body is a Patch Draft Contract — server-side merge, idempotent, and re-validated after the merge. The patch is rejected if the merged document fails validation, so the draft is never left in a broken state. The body may also include top-level overrides such as `name` and `description`. Submitted `associatedChannels` values are not persisted on patch; the draft preserves the existing stored channel metadata.\n\nPass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
-	Method:      "PATCH", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
+	Method:      "PATCH", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "expectedVersion", In: InQuery, Flag: "expected-version", Usage: "Expected current draft version for optimistic locking. The request fails with 409 Conflict if the server-side version does not match. Omit to skip the check."},
@@ -6296,14 +6296,14 @@ var CcFlowPatchDraft = &Operation{
 	Body: &Body{},
 }
 
-// CcFlowValidateDraft is "Validate an Existing Flow or Subflow Draft": GET /{orgid}/project/{projectId}/v2/flows/{flowId}:validate.
+// CcFlowValidateDraft is "Validate an Existing Flow or Subflow Draft": GET /{orgId}/project/{projectId}/v2/flows/{flowId}:validate.
 var CcFlowValidateDraft = &Operation{
 	ID: "CcFlowValidateDraft", Area: "cc", Group: "flow", Command: "validate-draft",
 	Summary:     "Validate an Existing Flow or Subflow Draft",
 	Description: "Validate the current draft of an existing flow/subflow (read-only operation). Validation reads the draft as stored. Drafts where `associatedChannels` is missing or empty are treated as telephony flows, and validation does not derive the effective channel from `associatedChannels`.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:validate",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows/{flowId}:validate",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "versionId", In: InQuery, Flag: "version-id", Usage: "Version to validate. Use 'draft' for the current draft, or a specific version ObjectId."},
@@ -6311,14 +6311,14 @@ var CcFlowValidateDraft = &Operation{
 	},
 }
 
-// CcFlowExport is "Export a Flow or Subflow": GET /{orgid}/project/{projectId}/v2/flows/{flowId}:export.
+// CcFlowExport is "Export a Flow or Subflow": GET /{orgId}/project/{projectId}/v2/flows/{flowId}:export.
 var CcFlowExport = &Operation{
 	ID: "CcFlowExport", Area: "cc", Group: "flow", Command: "export",
 	Summary:     "Export a Flow or Subflow",
 	Description: "Export a flow/subflow as a flow document for backup, migration, or version control. The exported payload includes `associatedChannels` metadata to preserve channel-specific activity behavior (for example, `customMessaging`) during re-import. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:export",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/flows/{flowId}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Version to export. Use 'latest' for the most recent published version, 'draft' for the working copy, or a specific version ObjectId."},
@@ -6326,14 +6326,14 @@ var CcFlowExport = &Operation{
 	},
 }
 
-// CcFlowSearch is "Search Flows": GET /{orgid}/project/{projectId}/flows:search.
+// CcFlowSearch is "Search Flows": GET /{orgId}/project/{projectId}/flows:search.
 var CcFlowSearch = &Operation{
 	ID: "CcFlowSearch", Area: "cc", Group: "flow", Command: "search",
 	Summary:     "Search Flows",
 	Description: "Returns a list of flows in response. The search is case-sensitive.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows:search",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows:search",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "query", In: InQuery, Flag: "query", Usage: "Searches for flows with the given query. The search is case-sensitive."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW' or 'ALL'. Default value is 'ALL'."},
@@ -6344,14 +6344,14 @@ var CcFlowSearch = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages"},
 }
 
-// CcFlowDelete is "Delete a Flow or Subflow": DELETE /{orgid}/project/{projectId}/flows/{flowId}.
+// CcFlowDelete is "Delete a Flow or Subflow": DELETE /{orgId}/project/{projectId}/flows/{flowId}.
 var CcFlowDelete = &Operation{
 	ID: "CcFlowDelete", Area: "cc", Group: "flow", Command: "delete",
 	Summary:     "Delete a Flow or Subflow",
 	Description: "Permanently deletes a flow or subflow. Flows deleted via this API are removed permanently and cannot be recovered.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
-	Method:      "DELETE", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}",
+	Method:      "DELETE", Host: HostCC, Path: "/{orgId}/project/{projectId}/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "ID of the flow/subflow to delete."},
 		{Name: "force", In: InQuery, Flag: "force", Usage: "If 'yes', the flow is deleted even if it is still referenced by other entities. Defaults to 'no'."},
@@ -6360,14 +6360,14 @@ var CcFlowDelete = &Operation{
 	},
 }
 
-// CcCallbacksSchedule is "Schedule a Callback": POST /v1/callbacks/organization/{orgid}/scheduled-callback.
+// CcCallbacksSchedule is "Schedule a Callback": POST /v1/callbacks/organization/{orgId}/scheduled-callback.
 var CcCallbacksSchedule = &Operation{
 	ID: "CcCallbacksSchedule", Area: "cc", Group: "callbacks", Command: "schedule",
 	Summary:     "Schedule a Callback",
 	Description: "Creates a new callback request for a customer. Authorization requires the cjp:user scope. The callback default endpoint (EP) and default ANI must be configured as mandatory settings to successfully make API calls.",
-	Method:      "POST", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback",
+	Method:      "POST", Host: HostCC, Path: "/v1/callbacks/organization/{orgId}/scheduled-callback",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "customerName", Flag: "customer-name", Type: "string"},
@@ -6383,14 +6383,14 @@ var CcCallbacksSchedule = &Operation{
 	}},
 }
 
-// CcCallbacksGetScheduled is "Get scheduled callbacks": GET /v1/callbacks/organization/{orgid}/scheduled-callback.
+// CcCallbacksGetScheduled is "Get scheduled callbacks": GET /v1/callbacks/organization/{orgId}/scheduled-callback.
 var CcCallbacksGetScheduled = &Operation{
 	ID: "CcCallbacksGetScheduled", Area: "cc", Group: "callbacks", Command: "get-scheduled",
 	Summary:     "Get scheduled callbacks",
 	Description: "Allows the user to list scheduled callbacks for a given customer number or assignee agent, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
-	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback",
+	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgId}/scheduled-callback",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "callbackNumber", In: InQuery, Flag: "callback-number", Usage: "The callback customer number to filter the scheduled callbacks. Only an exact match will yield the result. Allows an optional country code followed by digits (0-9) and the special characters: space, hyphen -, parentheses ( and ), and period ., ensuring the total length is between 7 and 15 characters."},
 		{Name: "assigneeAgent", In: InQuery, Flag: "assignee-agent", Usage: "The unique identifier of the agent assigned to handle the callback. Must be in UUID format. This parameter is optional, but at least one of assigneeAgent or callbackNumber must be provided."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "The page number to retrieve."},
@@ -6401,26 +6401,26 @@ var CcCallbacksGetScheduled = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"},
 }
 
-// CcCallbacksGetScheduledId is "Get scheduled callback by Id": GET /v1/callbacks/organization/{orgid}/scheduled-callback/{id}.
+// CcCallbacksGetScheduledId is "Get scheduled callback by Id": GET /v1/callbacks/organization/{orgId}/scheduled-callback/{id}.
 var CcCallbacksGetScheduledId = &Operation{
 	ID: "CcCallbacksGetScheduledId", Area: "cc", Group: "callbacks", Command: "get-scheduled-id",
 	Summary:     "Get scheduled callback by Id",
 	Description: "Retrieve an existing scheduled callback by Id, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
-	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
+	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 }
 
-// CcCallbacksUpdateScheduledId is "Update scheduled callback by Id": PUT /v1/callbacks/organization/{orgid}/scheduled-callback/{id}.
+// CcCallbacksUpdateScheduledId is "Update scheduled callback by Id": PUT /v1/callbacks/organization/{orgId}/scheduled-callback/{id}.
 var CcCallbacksUpdateScheduledId = &Operation{
 	ID: "CcCallbacksUpdateScheduledId", Area: "cc", Group: "callbacks", Command: "update-scheduled-id",
 	Summary:     "Update scheduled callback by Id",
 	Description: "Update an existing scheduled callback by Id,those whose scheduled trigger time has already passed cannot be updated. Requires 'cjp:user' scope for authorization.",
-	Method:      "PUT", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
+	Method:      "PUT", Host: HostCC, Path: "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -6438,14 +6438,14 @@ var CcCallbacksUpdateScheduledId = &Operation{
 	}},
 }
 
-// CcCallbacksDeleteScheduledId is "Delete scheduled callback by Id": DELETE /v1/callbacks/organization/{orgid}/scheduled-callback/{id}.
+// CcCallbacksDeleteScheduledId is "Delete scheduled callback by Id": DELETE /v1/callbacks/organization/{orgId}/scheduled-callback/{id}.
 var CcCallbacksDeleteScheduledId = &Operation{
 	ID: "CcCallbacksDeleteScheduledId", Area: "cc", Group: "callbacks", Command: "delete-scheduled-id",
 	Summary:     "Delete scheduled callback by Id",
 	Description: "Delete an existing scheduled callback by Id, those whose scheduled trigger time has already passed cannot be deleted. Requires 'cjp:user' scope for authorization.",
-	Method:      "DELETE", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
+	Method:      "DELETE", Host: HostCC, Path: "/v1/callbacks/organization/{orgId}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 }
@@ -7480,40 +7480,40 @@ var CcAiAssistantGetSuggestions = &Operation{
 	Body: &Body{},
 }
 
-// CcActivitiesListDefinitions is "List Activity Definitions": GET /{orgid}/project/{projectId}/v2/activities.
+// CcActivitiesListDefinitions is "List Activity Definitions": GET /{orgId}/project/{projectId}/v2/activities.
 var CcActivitiesListDefinitions = &Operation{
 	ID: "CcActivitiesListDefinitions", Area: "cc", Group: "activities", Command: "list-definitions",
 	Summary:     "List Activity Definitions",
 	Description: "List all available activity types with their full schemas, including inputs, outputs, ports, and descriptions. The response is sufficient on its own to construct nodes — there is no separate schema endpoint.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/activities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single},
 }
 
-// CcActivitiesDescribe is "Describe an Activity": GET /{orgid}/project/{projectId}/v2/activities/{activityName}.
+// CcActivitiesDescribe is "Describe an Activity": GET /{orgId}/project/{projectId}/v2/activities/{activityName}.
 var CcActivitiesDescribe = &Operation{
 	ID: "CcActivitiesDescribe", Area: "cc", Group: "activities", Command: "describe",
 	Summary:     "Describe an Activity",
 	Description: "Retrieve a single activity's full definition, including inputs, outputs, named ports, and the JSON Schema for its inputs — all returned inline.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/activities/{activityName}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "activityName", In: InPath, Flag: "activity-name", Required: true, Usage: "Activity type name (e.g., `play-message`, `queue-contact`)."},
 	},
 }
 
-// CcActivitiesGetInputChoices is "Get Activity Input Choices": GET /{orgid}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices.
+// CcActivitiesGetInputChoices is "Get Activity Input Choices": GET /{orgId}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices.
 var CcActivitiesGetInputChoices = &Operation{
 	ID: "CcActivitiesGetInputChoices", Area: "cc", Group: "activities", Command: "get-input-choices",
 	Summary:     "Get Activity Input Choices",
 	Description: "Resolve choices for an activity input. Use this when an activity input requires a value from a predefined or dynamically resolved set (e.g., available queues, audio files, agents).\n\nThis endpoint is only valid for inputs that expose choices (an input whose definition includes `allowedValues` or a `choicesEndpoint`, as returned by `describeActivity`). Calling it for an input that does not support choices returns 400.\n\nPass `search` to filter the choices (type-ahead). Add `validate=true` together with `search` to do a point-lookup of a single value instead of filtering — the match is against the choice's `value` (its ID), not its display `name`. For a cascading input whose allowed values depend on a sibling input, supply the parent with `parentInputName` and `parentValue`; otherwise a cascading input returns 400.\n\nFiltering and validation apply only to dynamic (`choicesEndpoint`-backed) inputs. A static input always returns its full enumerated list regardless of `search`/`validate`.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "activityName", In: InPath, Flag: "activity-name", Required: true, Usage: "Activity type name."},
 		{Name: "inputName", In: InPath, Flag: "input-name", Required: true, Usage: "Input field name. Must be an input that exposes choices (has `allowedValues` or a `choicesEndpoint`)."},
@@ -7524,27 +7524,27 @@ var CcActivitiesGetInputChoices = &Operation{
 	},
 }
 
-// CcEventsListSpecifications is "List Event Specifications": GET /{orgid}/project/{projectId}/v2/event-specifications.
+// CcEventsListSpecifications is "List Event Specifications": GET /{orgId}/project/{projectId}/v2/event-specifications.
 var CcEventsListSpecifications = &Operation{
 	ID: "CcEventsListSpecifications", Area: "cc", Group: "events", Command: "list-specifications",
 	Summary:     "List Event Specifications",
 	Description: "List the event types available for use in `event_flows[]`. Each entry describes the event name, payload schema, and any contextual metadata bound when the event fires.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/event-specifications",
+	Method:      "GET", Host: HostCC, Path: "/{orgId}/project/{projectId}/v2/event-specifications",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "specifications"},
 }
 
-// CcFunctionsList is "List Custom Functions": GET /v1/{orgid}/functions.
+// CcFunctionsList is "List Custom Functions": GET /v1/{orgId}/functions.
 var CcFunctionsList = &Operation{
 	ID: "CcFunctionsList", Area: "cc", Group: "functions", Command: "list",
 	Summary:     "List Custom Functions",
 	Description: "List or search custom functions in the organization. Without filters, returns all custom functions. Supports filtering by name, language, and status, plus sorting and pagination.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions",
+	Method:      "GET", Host: HostCC, Path: "/v1/{orgId}/functions",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "isPartialMatch", In: InQuery, Flag: "is-partial-match", Usage: "Whether to search with partial matches. If `false`, search/filter is based on exact match."},
 		{Name: "isCaseSensitive", In: InQuery, Flag: "is-case-sensitive", Usage: "Whether the search should be case-sensitive. Currently applicable only to the `name` field."},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Filter by function name."},
@@ -7560,117 +7560,117 @@ var CcFunctionsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "size", Items: "data", TotalPages: "pageInfo.totalPages"},
 }
 
-// CcFunctionsCreate is "Create a Custom Function": POST /v1/{orgid}/functions.
+// CcFunctionsCreate is "Create a Custom Function": POST /v1/{orgId}/functions.
 var CcFunctionsCreate = &Operation{
 	ID: "CcFunctionsCreate", Area: "cc", Group: "functions", Command: "create",
 	Summary:     "Create a Custom Function",
 	Description: "Create a new custom function. The source code is provided as an escaped string and the runtime defaults to the highest supported runtime for the given language.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 	},
 	Body: &Body{},
 }
 
-// CcFunctionsGet is "Get a Custom Function": GET /v1/{orgid}/functions/{id}.
+// CcFunctionsGet is "Get a Custom Function": GET /v1/{orgId}/functions/{id}.
 var CcFunctionsGet = &Operation{
 	ID: "CcFunctionsGet", Area: "cc", Group: "functions", Command: "get",
 	Summary:     "Get a Custom Function",
 	Description: "Retrieve a custom function by its ID. Use `versionOrTag` to fetch a specific published version, or omit it to get the draft.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
+	Method:      "GET", Host: HostCC, Path: "/v1/{orgId}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID. Hexadecimal ObjectId returned by the create or list APIs."},
 		{Name: "versionOrTag", In: InQuery, Flag: "version-or-tag", Usage: "Version number or publish tag of the source code to return (for example, `Dev`, `Live`, or `2`). If omitted, the draft version is returned."},
 		{Name: "metaDataOnly", In: InQuery, Flag: "meta-data-only", Usage: "If `true`, returns only metadata and excludes source code. If `false` or omitted, returns both metadata and source code."},
 	},
 }
 
-// CcFunctionsUpdate is "Update a Custom Function": PUT /v1/{orgid}/functions/{id}.
+// CcFunctionsUpdate is "Update a Custom Function": PUT /v1/{orgId}/functions/{id}.
 var CcFunctionsUpdate = &Operation{
 	ID: "CcFunctionsUpdate", Area: "cc", Group: "functions", Command: "update",
 	Summary:     "Update a Custom Function",
 	Description: "Update an existing custom function by ID. Replaces the draft source code and metadata with the supplied body.\n\nScope: `cjp:config_write`",
-	Method:      "PUT", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
+	Method:      "PUT", Host: HostCC, Path: "/v1/{orgId}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID."},
 	},
 	Body: &Body{},
 }
 
-// CcFunctionsDelete is "Delete a Custom Function": DELETE /v1/{orgid}/functions/{id}.
+// CcFunctionsDelete is "Delete a Custom Function": DELETE /v1/{orgId}/functions/{id}.
 var CcFunctionsDelete = &Operation{
 	ID: "CcFunctionsDelete", Area: "cc", Group: "functions", Command: "delete",
 	Summary:     "Delete a Custom Function",
 	Description: "Delete a custom function by ID. Use `isForceDeletion=true` to delete even when the function is referenced by one or more flows.\n\nScope: `cjp:config_write`",
-	Method:      "DELETE", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
+	Method:      "DELETE", Host: HostCC, Path: "/v1/{orgId}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID."},
 		{Name: "isForceDeletion", In: InQuery, Flag: "is-force-deletion", Usage: "If `true`, deletes the function regardless of its usage in flows."},
 	},
 }
 
-// CcFunctionsImport is "Import a Custom Function": POST /v1/{orgid}/functions:import.
+// CcFunctionsImport is "Import a Custom Function": POST /v1/{orgId}/functions:import.
 var CcFunctionsImport = &Operation{
 	ID: "CcFunctionsImport", Area: "cc", Group: "functions", Command: "import",
 	Summary:     "Import a Custom Function",
 	Description: "Import a custom function from a previously exported function-definition JSON file, uploaded as the multipart `file` part (not a zip or base64 envelope). Use `overwrite=true` to replace any existing function with the same name.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions:import",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "If `true`, overwrites a function with the same name if one already exists."},
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
 	},
 }
 
-// CcFunctionsUnlock is "Unlock a Custom Function": POST /v1/{orgid}/functions/{id}:unlock.
+// CcFunctionsUnlock is "Unlock a Custom Function": POST /v1/{orgId}/functions/{id}:unlock.
 var CcFunctionsUnlock = &Operation{
 	ID: "CcFunctionsUnlock", Area: "cc", Group: "functions", Command: "unlock",
 	Summary:     "Unlock a Custom Function",
 	Description: "Release the edit lock on a custom function so that other users can edit it.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:unlock",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions/{id}:unlock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 }
 
-// CcFunctionsLock is "Lock a Custom Function": POST /v1/{orgid}/functions/{id}:lock.
+// CcFunctionsLock is "Lock a Custom Function": POST /v1/{orgId}/functions/{id}:lock.
 var CcFunctionsLock = &Operation{
 	ID: "CcFunctionsLock", Area: "cc", Group: "functions", Command: "lock",
 	Summary:     "Lock a Custom Function",
 	Description: "Acquire an edit lock on a custom function to prevent concurrent writes by other users.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:lock",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions/{id}:lock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 }
 
-// CcFunctionsTest is "Test a Custom Function": POST /v1/{orgid}/functions/{id}:test.
+// CcFunctionsTest is "Test a Custom Function": POST /v1/{orgId}/functions/{id}:test.
 var CcFunctionsTest = &Operation{
 	ID: "CcFunctionsTest", Area: "cc", Group: "functions", Command: "test",
 	Summary:     "Test a Custom Function",
 	Description: "Execute a custom function with a test payload. Implicitly publishes the latest draft first, so the run uses the most recent source code.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:test",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions/{id}:test",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 	Body: &Body{},
 }
 
-// CcFunctionsPublish is "Publish a Custom Function": POST /v1/{orgid}/functions/{id}:publish.
+// CcFunctionsPublish is "Publish a Custom Function": POST /v1/{orgId}/functions/{id}:publish.
 var CcFunctionsPublish = &Operation{
 	ID: "CcFunctionsPublish", Area: "cc", Group: "functions", Command: "publish",
 	Summary:     "Publish a Custom Function",
 	Description: "Publish the latest draft of a custom function under one or more tags (`Dev`, `Test`, `Latest`, `Live`). Ensure the function has been created or updated before calling this API.\n\nScope: `cjp:config_write`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:publish",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions/{id}:publish",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -7679,27 +7679,27 @@ var CcFunctionsPublish = &Operation{
 	}},
 }
 
-// CcFunctionsExport is "Export a Custom Function": POST /v1/{orgid}/functions/{id}:export.
+// CcFunctionsExport is "Export a Custom Function": POST /v1/{orgId}/functions/{id}:export.
 var CcFunctionsExport = &Operation{
 	ID: "CcFunctionsExport", Area: "cc", Group: "functions", Command: "export",
 	Summary:     "Export a Custom Function",
 	Description: "Export a custom function for the given version or publish tag. Returns the plain function-definition JSON (name, language, runtime, description, source code, inputs, and outputs), suitable for re-importing via the import API.\n\nScope: `cjp:config_read`",
-	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:export",
+	Method:      "POST", Host: HostCC, Path: "/v1/{orgId}/functions/{id}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 		{Name: "versionOrTag", In: InQuery, Flag: "version-or-tag", Usage: "Version number or publish tag of the source code to export. If omitted, the latest published version is exported."},
 	},
 }
 
-// CcFunctionsListOptions is "List Function Options": GET /v1/{orgid}/functions/options.
+// CcFunctionsListOptions is "List Function Options": GET /v1/{orgId}/functions/options.
 var CcFunctionsListOptions = &Operation{
 	ID: "CcFunctionsListOptions", Area: "cc", Group: "functions", Command: "list-options",
 	Summary:     "List Function Options",
 	Description: "List the supported programming languages, runtimes, and corresponding wrapper code for custom functions. Filter by `language` or `runtime` to narrow the result.\n\nScope: `cjp:config_read`",
-	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions/options",
+	Method:      "GET", Host: HostCC, Path: "/v1/{orgId}/functions/options",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "language", In: InQuery, Flag: "language", Usage: "Filter by programming language (for example, `js`, `py`)."},
 		{Name: "runtime", In: InQuery, Flag: "runtime", Usage: "Filter by runtime (for example, `nodejs22.x`, `python3.13`)."},
 	},
@@ -8320,14 +8320,14 @@ var CcTenantConfigurationUpdate = &Operation{
 	}},
 }
 
-// CcAiAgentList is "List AI agents": GET /api/v2/organizations/{orgid}/agents/.
+// CcAiAgentList is "List AI agents": GET /api/v2/organizations/{orgId}/agents/.
 var CcAiAgentList = &Operation{
 	ID: "CcAiAgentList", Area: "cc", Group: "ai-agent", Command: "list",
 	Summary:     "List AI agents",
 	Description: "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.",
-	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgId}/agents/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of agents to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of agents to skip."},
 	},
@@ -8493,14 +8493,14 @@ var CcAiAgentDeleteTool = &Operation{
 	Private: true,
 }
 
-// CcAiAgentSessionList is "List AI agent sessions": GET /api/v2/organizations/{orgid}/agents/{agentId}/sessions/.
+// CcAiAgentSessionList is "List AI agent sessions": GET /api/v2/organizations/{orgId}/agents/{agentId}/sessions/.
 var CcAiAgentSessionList = &Operation{
 	ID: "CcAiAgentSessionList", Area: "cc", Group: "ai-agent-session", Command: "list",
 	Summary:     "List AI agent sessions",
 	Description: "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.",
-	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgId}/agents/{agentId}/sessions/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of sessions to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of sessions to skip."},
@@ -8510,14 +8510,14 @@ var CcAiAgentSessionList = &Operation{
 	Private: true,
 }
 
-// CcAiAgentSessionGet is "Get AI agent session": GET /api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/.
+// CcAiAgentSessionGet is "Get AI agent session": GET /api/v2/organizations/{orgId}/agents/{agentId}/sessions/{sessionId}/.
 var CcAiAgentSessionGet = &Operation{
 	ID: "CcAiAgentSessionGet", Area: "cc", Group: "ai-agent-session", Command: "get",
 	Summary:     "Get AI agent session",
 	Description: "Gets one conversation session.",
-	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgId}/agents/{agentId}/sessions/{sessionId}/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "sessionId", In: InPath, Flag: "session-id", Required: true, Usage: "Session ID."},
 	},
@@ -8525,14 +8525,14 @@ var CcAiAgentSessionGet = &Operation{
 	Private: true,
 }
 
-// CcAiAgentSessionListMessages is "List AI agent session messages": GET /api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/.
+// CcAiAgentSessionListMessages is "List AI agent session messages": GET /api/v2/organizations/{orgId}/agents/{agentId}/sessions/{sessionId}/messages/.
 var CcAiAgentSessionListMessages = &Operation{
 	ID: "CcAiAgentSessionListMessages", Area: "cc", Group: "ai-agent-session", Command: "list-messages",
 	Summary:     "List AI agent session messages",
 	Description: "Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.",
-	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgId}/agents/{agentId}/sessions/{sessionId}/messages/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
+		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "sessionId", In: InPath, Flag: "session-id", Required: true, Usage: "Session ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of messages to return."},

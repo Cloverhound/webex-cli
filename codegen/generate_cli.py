@@ -255,14 +255,10 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     # Contact Center paths, and /contacts/organizations/ in other collections
     # (Postman note: "orgId used in path are the org UUIDs"), take the org UUID.
     # Their org parameter's flag is --orgid, which the CLI fills with the UUID;
-    # the query parameter keeps its API name.
+    # the parameter keeps its API name.
     needs_uuid_orgid = not is_calling or '/contacts/organizations/' in path
     if needs_uuid_orgid:
-        path = path.replace('{orgId}', '{orgid}')
-        for p in path_params:
-            if p['name'] == 'orgId':
-                p['name'] = 'orgid'
-        for p in query_params:
+        for p in path_params + query_params:
             if p['name'] == 'orgId':
                 p['_api_name'] = 'orgId'
                 p['name'] = 'orgid'
@@ -280,7 +276,7 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
             params.append({'name': p['name'], 'in': 'InPath', 'value': HARDCODED_PATH_PARAMS[p['name']]})
             continue
         params.append({
-            'name': p['name'], 'in': 'InPath', 'flag': flag_for(p['name'], camel_to_kebab(p['name'])),
+            'name': p.get('_api_name', p['name']), 'in': 'InPath', 'flag': flag_for(p['name'], camel_to_kebab(p['name'])),
             'usage': p.get('description', ''), 'required': True,
             # Identity routes take the org UUID, but --org-id is filled with the base64 org ID.
             'orgUUID': (needs_uuid_orgid and p['name'] == 'orgid') or

@@ -61,7 +61,7 @@ func TestIsQueryPOST(t *testing.T) {
 		"/search",
 		"/recordings/query",
 		"/meetings/{meetingId}/registrants/query",
-		"/v1/{orgid}/functions/{id}:export",
+		"/v1/{orgId}/functions/{id}:export",
 	}
 	writes := []string{
 		"/telephony/calls/retrieve",
