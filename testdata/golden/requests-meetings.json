@@ -79,6 +79,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -486,6 +494,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -598,6 +614,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -704,6 +728,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -758,6 +790,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -804,6 +844,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/meetings/q_and_a?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -855,6 +903,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/meeting/qualities?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -916,6 +972,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -967,6 +1031,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/meetingReports/usage?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2410,6 +2482,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2740,6 +2820,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2845,6 +2933,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/meetings/s-meeting-id/surveyResults?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3939,6 +4035,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4299,6 +4403,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/people?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5142,6 +5254,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5251,6 +5371,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5301,6 +5429,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/recordingReport/meetingArchiveSummaries?max=99",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5418,9 +5554,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/recording?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "meetings recordings download",
@@ -5437,9 +5576,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/recording?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "meetings recordings download",
@@ -5457,9 +5599,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/recording?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "meetings recordings get",
@@ -5633,6 +5778,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5693,6 +5846,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5749,6 +5910,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/group/recordings?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -7217,6 +7386,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -7265,6 +7442,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/admin/meetingTranscripts?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -7318,6 +7503,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/meetingTranscripts/s-transcript-id/snippets?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -8937,7 +9130,7 @@
   "variant": "all-flags",
   "args": [
    "--event=s-event",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--name=s-name",
    "--owned-by=s-owned-by",
    "--resource=s-resource",
@@ -8953,7 +9146,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"event\":\"s-event\",\"filter\":\"s-filter\",\"name\":\"s-name\",\"ownedBy\":\"s-owned-by\",\"resource\":\"s-resource\",\"secret\":\"s-secret\",\"targetUrl\":\"s-target-url\"}"
+    "body": "{\"event\":\"s-event\",\"filter\":\"{\\\"golden\\\":true}\",\"name\":\"s-name\",\"ownedBy\":\"s-owned-by\",\"resource\":\"s-resource\",\"secret\":\"s-secret\",\"targetUrl\":\"s-target-url\"}"
    }
   ]
  },
@@ -9120,6 +9313,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/webhooks?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"

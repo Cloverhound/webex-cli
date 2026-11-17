@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -51,29 +52,97 @@ type recorder struct {
 	requests []recordedRequest
 }
 
+// maxRequestsPerRun stops a command that would never stop reading pages.
+const maxRequestsPerRun = 20
+
+// goldenBoundary replaces a multipart body's random boundary.
+const goldenBoundary = "golden-boundary"
+
 func (r *recorder) RoundTrip(req *http.Request) (*http.Response, error) {
 	rec := recordedRequest{Method: req.Method, URL: canonicalURL(req), Headers: map[string]string{}}
+	boundary := ""
+	if _, params, err := mime.ParseMediaType(req.Header.Get("Content-Type")); err == nil {
+		boundary = params["boundary"]
+	}
 	for k, v := range req.Header {
 		rec.Headers[k] = strings.Join(v, ", ")
+		if boundary != "" {
+			rec.Headers[k] = strings.ReplaceAll(rec.Headers[k], boundary, goldenBoundary)
+		}
 	}
 	if req.Body != nil {
 		data, _ := io.ReadAll(req.Body)
 		rec.Body = string(data)
+		if boundary != "" {
+			rec.Body = strings.ReplaceAll(rec.Body, boundary, goldenBoundary)
+		}
 	}
 	r.requests = append(r.requests, rec)
+	if len(r.requests) > maxRequestsPerRun {
+		return nil, fmt.Errorf("golden: more than %d requests in one run", maxRequestsPerRun)
+	}
 
-	body := "{}"
-	// AI Agent Studio commands look up the agent's runtime token first.
-	if strings.HasSuffix(req.URL.Path, "/agents/") {
-		body = `{"objects":[{"id":"s-agent-id","bot_access_token":"golden-bot-token"}],"meta":{"total_count":1}}`
+	header := http.Header{"Content-Type": {"application/json"}}
+	// A first page links to a second one on a different path, so a list that
+	// applies only the link's query is told apart from one that follows it.
+	if !strings.Contains(req.URL.RawQuery, "golden_page=") {
+		header.Set("Link", fmt.Sprintf(`<%s://%s/golden-next?golden_page=2>; rel="next"`, req.URL.Scheme, req.URL.Host))
 	}
 	return &http.Response{
 		StatusCode: 200,
-		Header:     http.Header{"Content-Type": {"application/json"}},
-		Body:       io.NopCloser(strings.NewReader(body)),
+		Header:     header,
+		Body:       io.NopCloser(strings.NewReader(fakeResponse)),
 		Request:    req,
 	}, nil
 }
+
+// fakeResponse answers every request. It holds one item under each item field
+// the list commands read, and totals of two, so every list reads a second page.
+// It also holds the download links the download commands follow, and the agent
+// AI Agent Studio commands look up.
+var fakeResponse = func() string {
+	body := map[string]any{
+		"objects":        []any{map[string]any{"id": "s-agent-id", "bot_access_token": "golden-bot-token"}},
+		"meta":           map[string]any{"total_count": 2, "totalPages": 2},
+		"pageInfo":       map[string]any{"totalPages": 2},
+		"pagination":     map[string]any{"totalPages": 2},
+		"totalResources": 2,
+		"totalResults":   2,
+		"url":            "https://download.golden.example/audio?sig=golden",
+		"temporaryDirectDownloadLinks": map[string]any{
+			"audioDownloadLink":      "https://download.golden.example/audio?sig=golden",
+			"recordingDownloadLink":  "https://download.golden.example/recording?sig=golden",
+			"transcriptDownloadLink": "https://download.golden.example/transcript?sig=golden",
+		},
+	}
+	for _, field := range listItemFields {
+		body[field] = []any{map[string]any{"id": "golden-1"}}
+	}
+	data, err := json.Marshal(body)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}()
+
+// listItemFields are the item fields of the paged lists. A list that reads its
+// items from another field gets one page.
+var listItemFields = []string{
+	"agents", "announcements", "assistants", "autoAttendants", "backgroundImages", "baseStations",
+	"callParkExtensions", "callParks", "callPickups", "campaigns", "clusters", "data", "dectNetworks",
+	"devices", "dialPatterns", "dialPlans", "directories", "endpoints", "eventCategories",
+	"eventThresholds", "features", "groups", "handsets", "hosts", "huntGroups", "items",
+	"langsAndRuntimes", "languages", "lineKeyTemplates", "locationPaging", "locations", "members",
+	"nodes", "numbers", "operatingModes", "phoneNumbers", "playlists", "queues", "resources",
+	"Resources", "result", "routeGroups", "routeIdentities", "routeLists", "schedules",
+	"specifications", "supervisors", "tenants", "translationPatterns", "trunks", "trunkTypes",
+	"virtualExtensionRanges", "virtualExtensions", "virtualLines", "voicemailGroups", "voices",
+	"wrapupReasons",
+}
+
+// goldenAudioFile is the upload commands' sample --file, made in each run's
+// working directory.
+const goldenAudioFile = "golden.wav"
 
 func canonicalURL(req *http.Request) string {
 	u := *req.URL
@@ -85,6 +154,7 @@ func goldenEnv(t *testing.T) *recorder {
 	t.Helper()
 	home := t.TempDir()
 	t.Setenv("HOME", home)
+	t.Setenv("USERPROFILE", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
 	for _, env := range []string{"WEBEX_TOKEN", "WEBEX_REFRESH_TOKEN", "WEBEX_USER", "WEBEX_REGION", "WEBEX_CC_REGION", "WEBEX_READ_ONLY", "WEBEX_LOGIN_MODE"} {
 		t.Setenv(env, "")
@@ -92,7 +162,11 @@ func goldenEnv(t *testing.T) *recorder {
 	// The OS keyring is shared with real logins; the file store lives in HOME.
 	t.Setenv("WEBEX_TOKEN_STORE", "file")
 	t.Setenv("WEBEX_CLI_NONINTERACTIVE", "1")
-	t.Chdir(t.TempDir())
+	work := t.TempDir()
+	t.Chdir(work)
+	if err := os.WriteFile(filepath.Join(work, goldenAudioFile), []byte("RIFF golden audio"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 
 	rec := &recorder{}
 	saved := http.DefaultTransport
@@ -137,8 +211,9 @@ func leafCommands(root *cobra.Command) []*cobra.Command {
 }
 
 // skippedFlags are left unset: orgid and org-id come from --organization, last
-// depends on the clock, and body flags replace the per-field flags.
-var skippedFlags = map[string]bool{"orgid": true, "org-id": true, "last": true, "body": true, "body-file": true}
+// depends on the clock, body flags replace the per-field flags, and help would
+// print help instead of sending a request.
+var skippedFlags = map[string]bool{"orgid": true, "org-id": true, "last": true, "body": true, "body-file": true, "help": true}
 
 func sampleValue(f *pflag.Flag) string {
 	switch f.Name {
@@ -146,6 +221,17 @@ func sampleValue(f *pflag.Flag) string {
 		return "2026-01-01T00:00:00.000Z"
 	case "to":
 		return "2026-01-02T00:00:00.000Z"
+	case "file":
+		return goldenAudioFile
+	// The Contact Center search commands parse these before building a request.
+	case "filter":
+		return `{"golden":true}`
+	case "aggregate":
+		return "s-field:count:s-name"
+	case "interval":
+		return "DAILY"
+	case "time-comparator":
+		return "createdTime"
 	}
 	switch f.Value.Type() {
 	case "bool":
@@ -239,6 +325,76 @@ func TestGoldenRequests(t *testing.T) {
 	}
 }
 
+// TestGoldenFilesExerciseEachKindOfRequest checks that the recorded runs reach
+// the requests they are meant to pin, rather than stopping at a fixture error.
+func TestGoldenFilesExerciseEachKindOfRequest(t *testing.T) {
+	var runs []goldenRun
+	for _, area := range apiAreas {
+		data, err := os.ReadFile(filepath.Join(packageDir, "testdata", "golden", "requests-"+area+".json"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		var areaRuns []goldenRun
+		if err := json.Unmarshal(data, &areaRuns); err != nil {
+			t.Fatal(err)
+		}
+		runs = append(runs, areaRuns...)
+	}
+
+	var uploads, downloads, searches, secondPages, linkQueryOnly int
+	for _, r := range runs {
+		hasArg := func(prefix string) bool {
+			for _, a := range r.Args {
+				if strings.HasPrefix(a, prefix) {
+					return true
+				}
+			}
+			return false
+		}
+		switch {
+		case r.Variant == "all-flags" && hasArg("--file="):
+			uploads++
+			if !sentMultipart(r) {
+				t.Errorf("%s: upload sent no multipart request (error %q)", r.Command, r.Error)
+			}
+		case r.Variant == "all-flags" && hasArg("--output="):
+			downloads++
+			last := r.Requests[len(r.Requests)-1]
+			if !strings.HasPrefix(last.URL, "https://download.golden.example/") {
+				t.Errorf("%s: download did not fetch the file (error %q)", r.Command, r.Error)
+			} else if last.Headers["Authorization"] != "" {
+				t.Errorf("%s: download sent the Webex token to the file's URL", r.Command)
+			}
+		case r.Variant == "all-flags" && strings.HasPrefix(r.Command, "cc search ") && hasArg("--filter="):
+			searches++
+			if len(r.Requests) == 0 || r.Requests[0].Method != http.MethodPost || r.Error != "" {
+				t.Errorf("%s: search sent no query (error %q)", r.Command, r.Error)
+			}
+		case r.Variant == "paginate" && len(r.Requests) > 1:
+			secondPages++
+			if r.Command == "admin resource-memberships list-group-v2" {
+				linkQueryOnly++
+				if strings.Contains(r.Requests[1].URL, "/golden-next") {
+					t.Errorf("%s: its next page should keep the request path", r.Command)
+				}
+			}
+		}
+	}
+	if uploads == 0 || downloads == 0 || searches == 0 || secondPages == 0 || linkQueryOnly == 0 {
+		t.Errorf("uploads=%d downloads=%d searches=%d second pages=%d link-query-only=%d; each must be recorded",
+			uploads, downloads, searches, secondPages, linkQueryOnly)
+	}
+}
+
+func sentMultipart(r goldenRun) bool {
+	for _, req := range r.Requests {
+		if strings.HasPrefix(req.Headers["Content-Type"], "multipart/form-data") && strings.Contains(req.Body, goldenBoundary) {
+			return true
+		}
+	}
+	return false
+}
+
 func hasGET(r goldenRun) bool {
 	for _, req := range r.Requests {
 		if req.Method == http.MethodGet {
@@ -260,6 +416,7 @@ type goldenFlag struct {
 
 type goldenCommand struct {
 	Path    string       `json:"path"`
+	Use     string       `json:"use"`
 	Aliases []string     `json:"aliases,omitempty"`
 	Short   string       `json:"short,omitempty"`
 	Long    string       `json:"long,omitempty"`
@@ -276,7 +433,10 @@ func TestGoldenCommandTree(t *testing.T) {
 	var out []goldenCommand
 	var walk func(c *cobra.Command)
 	walk = func(c *cobra.Command) {
-		gc := goldenCommand{Path: c.CommandPath(), Aliases: c.Aliases, Short: c.Short, Long: c.Long, Hidden: c.Hidden}
+		// Cobra adds --help when a command first runs; adding it here keeps the
+		// tree the same whichever commands ran before.
+		c.InitDefaultHelpFlag()
+		gc := goldenCommand{Path: c.CommandPath(), Use: c.Use, Aliases: c.Aliases, Short: c.Short, Long: c.Long, Hidden: c.Hidden}
 		c.LocalFlags().VisitAll(func(f *pflag.Flag) {
 			gc.Flags = append(gc.Flags, goldenFlag{
 				Name: f.Name, Shorthand: f.Shorthand, Type: f.Value.Type(), Default: f.DefValue,

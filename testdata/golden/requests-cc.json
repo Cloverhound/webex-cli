@@ -205,9 +205,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/address-book/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/address-book/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc address-book bulk-save-entry",
@@ -565,7 +572,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -573,7 +580,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/address-book?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/address-book?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -610,9 +617,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/address-book?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/address-book: its response has no \"data\""
+  ]
  },
  {
   "command": "cc address-book list-entry",
@@ -620,7 +634,7 @@
   "args": [
    "--address-book-id=s-address-book-id",
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -628,7 +642,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/address-book/s-address-book-id/entry?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/address-book/s-address-book-id/entry?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -668,9 +682,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/address-book/s-address-book-id/entry?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/address-book/{addressBookId}/entry: its response has no \"data\""
+  ]
  },
  {
   "command": "cc address-book list-references",
@@ -724,9 +745,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/address-book/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/address-book/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc address-book update",
@@ -1004,9 +1032,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files download",
@@ -1023,9 +1054,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files download",
@@ -1043,9 +1077,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files get",
@@ -1105,7 +1142,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-agent-details=s-include-agent-details",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -1114,7 +1151,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/agent-personal-greeting?attributes=s-attributes&filter=s-filter&includeAgentDetails=s-include-agent-details&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/agent-personal-greeting?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeAgentDetails=s-include-agent-details&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -1151,9 +1188,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/agent-personal-greeting?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/agent-personal-greeting: its response has no \"data\""
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files patch",
@@ -1272,22 +1316,77 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--file=s-file",
+   "--file=golden.wav",
    "--greeting-purpose-id=s-greeting-purpose-id",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-personal-greeting",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"agentPersonalGreetingInfo\"\r\nContent-Type: application/json\r\n\r\n{\"agentId\":\"s-agent-id\",\"contentType\":\"AUDIO_WAV\",\"greetingPurposeId\":\"s-greeting-purpose-id\",\"name\":\"s-name.wav\"}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files upload",
   "variant": "required",
   "args": [
    "--agent-id=s-agent-id",
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ],
+  "error": "no default greeting purpose found; pass --greeting-purpose-id"
+ },
+ {
+  "command": "cc agent-personal-greeting-files upload",
+  "variant": "paginate",
+  "args": [
+   "--agent-id=s-agent-id",
+   "--file=golden.wav",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ],
+  "error": "no default greeting purpose found; pass --greeting-purpose-id"
  },
  {
   "command": "cc agent-summaries list",
@@ -1457,14 +1556,14 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-burnout?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-burnout?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -1501,9 +1600,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-burnout?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/agent-burnout: its response has no \"data\""
+  ]
  },
  {
   "command": "cc agent-wellbeing record-realtime-burnout-events",
@@ -1792,9 +1898,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v1/agents/activities?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0&page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /v1/agents/activities: its response has no \"data\""
+  ]
  },
  {
   "command": "cc agents get-statistics",
@@ -1802,14 +1915,14 @@
   "args": [
    "--agent-ids=s-agent-ids",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/agents/statistics?agentIds=s-agent-ids&from=2026-01-01T00%3A00%3A00.000Z&interval=s-interval&orgId=6ab1d2c4-0000-4000-8000-00000000c1d0&to=2026-01-02T00%3A00%3A00.000Z",
+    "url": "https://api.wxcc-us1.cisco.com/v1/agents/statistics?agentIds=s-agent-ids&from=2026-01-01T00%3A00%3A00.000Z&interval=DAILY&orgId=6ab1d2c4-0000-4000-8000-00000000c1d0&to=2026-01-02T00%3A00%3A00.000Z",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
@@ -2114,6 +2227,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/create/",
     "headers": {
@@ -2134,6 +2255,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2161,6 +2290,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2196,6 +2333,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/create/",
     "headers": {
@@ -2222,6 +2367,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "DELETE",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/bot/s-agent-id/",
     "headers": {
@@ -2242,6 +2395,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2275,6 +2436,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "DELETE",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/bot/s-agent-id/",
     "headers": {
@@ -2296,6 +2465,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2330,6 +2507,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/delete/",
     "headers": {
@@ -2351,6 +2536,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2386,6 +2579,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/delete/",
     "headers": {
@@ -2413,6 +2614,14 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/export/",
     "headers": {
      "Accept": "application/json",
@@ -2432,6 +2641,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2459,6 +2676,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2492,6 +2717,14 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/bot/s-agent-id/",
     "headers": {
      "Accept": "application/json",
@@ -2511,6 +2744,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2538,6 +2779,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2571,6 +2820,14 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/getdefault/",
     "headers": {
      "Accept": "application/json",
@@ -2590,6 +2847,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2617,6 +2882,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2680,6 +2953,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2696,6 +2977,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2722,6 +3011,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2756,15 +3053,31 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/?limit=100&offset=0",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
      "Bot-Access-Token": "golden-bot-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Bot-Access-Token": "golden-bot-token"
+    }
    }
-  ],
-  "error": "incomplete list: /api/v1/llmagent/: its response has no \"objects\""
+  ]
  },
  {
   "command": "cc ai-agent publish",
@@ -2777,6 +3090,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2811,6 +3132,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/makelive/",
     "headers": {
@@ -2832,6 +3161,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2861,6 +3198,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2893,6 +3238,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "PUT",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/bot/s-agent-id/",
     "headers": {
@@ -2913,6 +3266,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2946,6 +3307,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "PUT",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/bot/s-agent-id/",
     "headers": {
@@ -2969,6 +3338,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3001,6 +3378,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/update/",
     "headers": {
@@ -3021,6 +3406,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3054,6 +3447,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/tool/update/",
     "headers": {
@@ -3077,6 +3478,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3199,9 +3608,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /api/v2/organizations/{orgid}/agents/{agentId}/sessions/: its response has no \"objects\""
+  ]
  },
  {
   "command": "cc ai-agent-session list-messages",
@@ -3257,9 +3673,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/s-session-id/messages/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/: its response has no \"objects\""
+  ]
  },
  {
   "command": "cc ai-agent-transcript create-audit-record",
@@ -3274,6 +3697,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3308,6 +3739,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/decrypt_audit/",
     "headers": {
@@ -3329,6 +3768,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3364,6 +3811,14 @@
     }
    },
    {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
     "method": "POST",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/decrypt_audit/",
     "headers": {
@@ -3385,6 +3840,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3418,6 +3881,14 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/room/",
     "headers": {
      "Accept": "application/json",
@@ -3438,6 +3909,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3475,6 +3954,14 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/message/?limit=s-limit&offset=s-offset&order_by=s-order_by&room_id=s-room_id",
     "headers": {
      "Accept": "application/json",
@@ -3494,6 +3981,14 @@
    {
     "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3528,15 +4023,31 @@
    },
    {
     "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
     "url": "https://studio.aiagent-us1.cisco.com/api/v1/message/?limit=100&offset=0",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
      "Bot-Access-Token": "golden-bot-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/message/?limit=100&offset=1",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Bot-Access-Token": "golden-bot-token"
+    }
    }
-  ],
-  "error": "incomplete list: /api/v1/message/: its response has no \"objects\""
+  ]
  },
  {
   "command": "cc ai-assistant get-suggestions",
@@ -3838,14 +4349,14 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3882,23 +4393,30 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/ai-feature: its response has no \"data\""
+  ]
  },
  {
   "command": "cc ai-feature list-question-mapped-autocsat",
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature/auto-csat/question?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature/auto-csat/question?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3935,9 +4453,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/ai-feature/auto-csat/question?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/ai-feature/auto-csat/question: its response has no \"data\""
+  ]
  },
  {
   "command": "cc ai-feature patch",
@@ -4184,7 +4709,7 @@
   "args": [
    "--attributes=s-attributes",
    "--exclude-epassociated=s-exclude-epassociated",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-channel-name=s-include-channel-name",
    "--include-count=s-include-count",
    "--page=s-page",
@@ -4196,7 +4721,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/asset?attributes=s-attributes&excludeEPAssociated=s-exclude-epassociated&filter=s-filter&includeChannelName=s-include-channel-name&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/asset?attributes=s-attributes&excludeEPAssociated=s-exclude-epassociated&filter=%7B%22golden%22%3Atrue%7D&includeChannelName=s-include-channel-name&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4233,9 +4758,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/asset?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/asset: its response has no \"data\""
+  ]
  },
  {
   "command": "cc asset list-references",
@@ -4289,9 +4821,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/asset/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/asset/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc asset patch",
@@ -4502,9 +5041,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc audio-files download",
@@ -4521,9 +5063,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc audio-files download",
@@ -4541,9 +5086,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no download URL in response (status 200)"
+  ]
  },
  {
   "command": "cc audio-files get",
@@ -4603,7 +5151,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -4611,7 +5159,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/audio-file?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/audio-file?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4648,9 +5196,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/audio-file?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/audio-file: its response has no \"data\""
+  ]
  },
  {
   "command": "cc audio-files list-references",
@@ -4704,9 +5259,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/audio-file/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/audio-file/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc audio-files patch",
@@ -4824,20 +5386,40 @@
   "variant": "all-flags",
   "args": [
    "--description=s-description",
-   "--file=s-file",
+   "--file=golden.wav",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/audio-file",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"contentType\":\"AUDIO_WAV\",\"description\":\"s-description\",\"name\":\"s-name.wav\",\"systemDefault\":false}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "cc audio-files upload",
   "variant": "required",
   "args": [
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/audio-file",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"contentType\":\"AUDIO_WAV\",\"name\":\"golden.wav\",\"systemDefault\":false}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "cc auto-csat bulk-save-mapped-question",
@@ -5104,14 +5686,14 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5148,9 +5730,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/auto-csat: its response has no \"data\""
+  ]
  },
  {
   "command": "cc auto-csat list-mapped-question",
@@ -5158,14 +5747,14 @@
   "args": [
    "--attributes=s-attributes",
    "--auto-csat-id=s-auto-csat-id",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat/s-auto-csat-id/question?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat/s-auto-csat-id/question?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5205,9 +5794,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auto-csat/s-auto-csat-id/question?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/auto-csat/{autoCsatId}/question: its response has no \"data\""
+  ]
  },
  {
   "command": "cc auto-csat update",
@@ -5322,9 +5918,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/auxiliary-code/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/auxiliary-code/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc auxiliary-code bulk-partial-update",
@@ -5580,7 +6183,7 @@
   "args": [
    "--attributes=s-attributes",
    "--desktop-profile-filter=s-desktop-profile-filter",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search",
@@ -5589,7 +6192,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auxiliary-code?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search&supervisedUserId=s-supervised-user-id",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auxiliary-code?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search&supervisedUserId=s-supervised-user-id",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5626,9 +6229,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/auxiliary-code?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/auxiliary-code: its response has no \"data\""
+  ]
  },
  {
   "command": "cc auxiliary-code list-references",
@@ -5682,9 +6292,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/auxiliary-code/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/auxiliary-code/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc auxiliary-code purge-inactive",
@@ -5834,9 +6451,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/business-hours/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/business-hours/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc business-hour bulk-save",
@@ -6027,7 +6651,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-count=s-include-count",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -6038,7 +6662,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/business-hours?attributes=s-attributes&filter=s-filter&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/business-hours?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6075,9 +6699,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/business-hours?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/business-hours: its response has no \"data\""
+  ]
  },
  {
   "command": "cc business-hour list-references",
@@ -6131,9 +6762,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/business-hours/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/business-hours/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc business-hour update",
@@ -6691,7 +7329,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-filters-count=s-include-filters-count",
    "--include-total-call-monitoring-count-in-org=s-include-total-call-monitoring-count-in-org",
    "--include-user-details=s-include-user-details",
@@ -6702,7 +7340,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/call-monitoring?attributes=s-attributes&filter=s-filter&includeFiltersCount=s-include-filters-count&includeTotalCallMonitoringCountInOrg=s-include-total-call-monitoring-count-in-org&includeUserDetails=s-include-user-details&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/call-monitoring?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeFiltersCount=s-include-filters-count&includeTotalCallMonitoringCountInOrg=s-include-total-call-monitoring-count-in-org&includeUserDetails=s-include-user-details&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6739,9 +7377,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/call-monitoring?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/call-monitoring: its response has no \"data\""
+  ]
  },
  {
   "command": "cc call-monitoring-config patch",
@@ -6936,9 +7581,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v1/callbacks/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/scheduled-callback?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /v1/callbacks/organization/{orgid}/scheduled-callback: its response has no \"data\""
+  ]
  },
  {
   "command": "cc callbacks get-scheduled-id",
@@ -7174,9 +7826,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v3/campaign-management/campaign-groups/s-campaign-group-name/campaigns?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /v3/campaign-management/campaign-groups/{campaignGroupName}/campaigns: its response has no \"campaigns\""
+  ]
  },
  {
   "command": "cc campaign-manager get-valid-times",
@@ -7606,7 +8265,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-count=s-include-count",
    "--include-logo-url-versioned=s-include-logo-url-versioned",
    "--page=s-page",
@@ -7618,7 +8277,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/channel?attributes=s-attributes&filter=s-filter&includeCount=s-include-count&includeLogoUrlVersioned=s-include-logo-url-versioned&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/channel?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeCount=s-include-count&includeLogoUrlVersioned=s-include-logo-url-versioned&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -7655,9 +8314,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/channel?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/channel: its response has no \"data\""
+  ]
  },
  {
   "command": "cc channel list-references",
@@ -7711,9 +8377,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/channel/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc channel patch",
@@ -8211,9 +8884,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/contact-number/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-number/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc contact-number bulk-save",
@@ -8411,7 +9091,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -8419,7 +9099,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-number?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-number?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -8456,9 +9136,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-number?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/contact-number: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-number list-all",
@@ -8617,9 +9304,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/contact-service-queue/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc contact-service-queue bulk-partial-update",
@@ -8968,7 +9662,7 @@
   "args": [
    "--attributes=s-attributes",
    "--desktop-profile-filter=s-desktop-profile-filter",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--provisioning-view=s-provisioning-view",
@@ -8978,7 +9672,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/contact-service-queue?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=s-filter&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/contact-service-queue?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -9015,9 +9709,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/contact-service-queue?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/contact-service-queue: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-agent-based",
@@ -9071,9 +9772,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue/by-user-id/s-userid/agent-based-queues?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/agent-based-queues: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-agent-csqs-ci-user-id",
@@ -9125,8 +9833,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/by-user-ci-id/{ciUserId}/internal: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-by-dynamic-skills",
@@ -9227,8 +9934,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-by-user-skill-profile",
@@ -9329,8 +10035,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}/internal: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-manually-assignable",
@@ -9493,9 +10198,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/contact-service-queue/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-skill-based",
@@ -9549,9 +10261,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue/by-user-id/s-userid/skill-based-queues?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/skill-based-queues: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-skill-csqs-ci-user-id",
@@ -9603,8 +10322,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/skill-based-queues/by-ci-user-id/{id}/internal: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-team-based",
@@ -9658,9 +10376,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/contact-service-queue/by-user-id/s-userid/team-based-queues?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/team-based-queues: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue list-team-csqs-team-id",
@@ -9712,8 +10437,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-service-queue/by-team-id/{id}/internal: its response has no \"data\""
+  ]
  },
  {
   "command": "cc contact-service-queue purge-inactive",
@@ -10202,9 +10926,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/desktop-layout/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/desktop-layout/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc desktop-layout bulk-save",
@@ -10417,7 +11148,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--provisioning-view=s-provisioning-view",
@@ -10427,7 +11158,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/desktop-layout?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/desktop-layout?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -10464,9 +11195,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/desktop-layout?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/desktop-layout: its response has no \"data\""
+  ]
  },
  {
   "command": "cc desktop-layout list-references",
@@ -10520,9 +11258,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/desktop-layout/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/desktop-layout/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc desktop-layout purge-inactive",
@@ -10679,9 +11424,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/agent-profile/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/agent-profile/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc desktop-profile bulk-save",
@@ -10924,7 +11676,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--provisioning-view=s-provisioning-view",
@@ -10934,7 +11686,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-profile?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-profile?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -10971,9 +11723,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-profile?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/agent-profile: its response has no \"data\""
+  ]
  },
  {
   "command": "cc desktop-profile list-references",
@@ -11027,9 +11786,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/agent-profile/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/agent-profile/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc desktop-profile purge-inactive",
@@ -11214,9 +11980,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/dial-number/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/dial-number/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc dial-number bulk-save-dialed-mapping",
@@ -11504,7 +12277,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-entry-point-name=s-include-entry-point-name",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -11513,7 +12286,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/dial-number?attributes=s-attributes&filter=s-filter&includeEntryPointName=s-include-entry-point-name&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/dial-number?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeEntryPointName=s-include-entry-point-name&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -11550,9 +12323,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/dial-number?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/dial-number: its response has no \"data\""
+  ]
  },
  {
   "command": "cc dial-number list-references-dialed-mapping",
@@ -11606,9 +12386,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/dial-number/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/dial-number/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc dial-number update-dialed-mapping-id",
@@ -11730,9 +12517,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/dial-plan/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/dial-plan/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc dial-plan bulk-save",
@@ -11938,7 +12732,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -11946,7 +12740,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/dial-plan?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/dial-plan?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -11983,9 +12777,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/dial-plan?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/dial-plan: its response has no \"data\""
+  ]
  },
  {
   "command": "cc dial-plan list-references",
@@ -12039,9 +12840,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/dial-plan/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/dial-plan/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc dial-plan update",
@@ -12310,9 +13118,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/entry-point/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc entry-point bulk-save",
@@ -12505,7 +13320,7 @@
   "args": [
    "--attributes=s-attributes",
    "--desktop-profile-filter=s-desktop-profile-filter",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-count=s-include-count",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -12516,7 +13331,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/entry-point?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=s-filter&includeCount=s-include-count&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/entry-point?attributes=s-attributes&desktopProfileFilter=s-desktop-profile-filter&filter=%7B%22golden%22%3Atrue%7D&includeCount=s-include-count&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -12553,9 +13368,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/entry-point?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/entry-point: its response has no \"data\""
+  ]
  },
  {
   "command": "cc entry-point list-references",
@@ -12609,9 +13431,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/entry-point/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/entry-point/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc entry-point purge-inactive",
@@ -12798,8 +13627,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /{orgid}/project/{projectId}/v2/event-specifications: its response has no \"specifications\""
+  ]
  },
  {
   "command": "cc external-data-updates update-task-global-variables",
@@ -13192,9 +14020,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows?includePagination=true&page=1&size=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /{orgid}/project/{projectId}/flows: its response has no \"data\""
+  ]
  },
  {
   "command": "cc flow lock",
@@ -13455,9 +14290,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows:search?page=1&size=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /{orgid}/project/{projectId}/flows:search: its response has no \"data\""
+  ]
  },
  {
   "command": "cc flow unlock",
@@ -13859,9 +14701,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v1/6ab1d2c4-0000-4000-8000-00000000c1d0/functions?page=1&size=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /v1/{orgid}/functions: its response has no \"data\""
+  ]
  },
  {
   "command": "cc functions list-options",
@@ -13911,8 +14760,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/{orgid}/functions/options: its response has no \"langsAndRuntimes\""
+  ]
  },
  {
   "command": "cc functions lock",
@@ -14205,14 +15053,14 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/generated-summaries?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/generated-summaries?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -14249,9 +15097,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/generated-summaries?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/generated-summaries: its response has no \"data\""
+  ]
  },
  {
   "command": "cc generated-summaries update",
@@ -14366,9 +15221,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/cad-variable/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/cad-variable/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc global-variables bulk-save",
@@ -14623,7 +15485,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -14631,7 +15493,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/cad-variable?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/cad-variable?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -14668,9 +15530,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/cad-variable?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/cad-variable: its response has no \"data\""
+  ]
  },
  {
   "command": "cc global-variables list-references",
@@ -14724,9 +15593,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/cad-variable/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/cad-variable/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc global-variables purge-inactive",
@@ -14878,9 +15754,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/holiday-list/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/holiday-list/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc holiday-list bulk-save",
@@ -15071,7 +15954,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-count=s-include-count",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -15082,7 +15965,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/holiday-list?attributes=s-attributes&filter=s-filter&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/holiday-list?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeCount=s-include-count&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -15119,9 +16002,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/holiday-list?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/holiday-list: its response has no \"data\""
+  ]
  },
  {
   "command": "cc holiday-list list-references",
@@ -15175,9 +16065,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/holiday-list/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/holiday-list/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc holiday-list update",
@@ -16133,8 +17030,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/journey-actions/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey get-all-actions-template",
@@ -16195,7 +17091,7 @@
   "command": "cc journey get-all-person",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--person-id=s-person-id",
@@ -16206,7 +17102,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?filter=s-filter&page=s-page&pageSize=s-page-size&personId=s-person-id&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&personId=s-person-id&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -16247,14 +17143,13 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/person/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey get-all-template",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--sort=s-sort",
@@ -16264,7 +17159,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?filter=s-filter&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -16305,14 +17200,13 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/profile-view-template/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey get-all-workspaces",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--sort=s-sort",
@@ -16321,7 +17215,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?filter=s-filter&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -16359,15 +17253,14 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/workspace: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey get-historic-events",
   "variant": "all-flags",
   "args": [
    "--data=s-data",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--identity=s-identity",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -16378,7 +17271,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?data=s-data&filter=s-filter&identity=s-identity&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?data=s-data&filter=%7B%22golden%22%3Atrue%7D&identity=s-identity&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -16419,8 +17312,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/api/events/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey get-historic-profile-view",
@@ -16985,22 +17877,21 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/person/workspace-id/{workspaceId}/aliases/{aliases}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey stream-events-identity",
   "variant": "all-flags",
   "args": [
    "--data=s-data",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--identity=s-identity",
    "--workspace-id=s-workspace-id"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/stream/workspace-id/s-workspace-id/identity/s-identity?data=s-data&filter=s-filter",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/stream/workspace-id/s-workspace-id/identity/s-identity?data=s-data&filter=%7B%22golden%22%3Atrue%7D",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -17679,7 +18570,7 @@
   "command": "cc journey-customer-identification get-all-person",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--person-id=s-person-id",
@@ -17690,7 +18581,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?filter=s-filter&page=s-page&pageSize=s-page-size&personId=s-person-id&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&personId=s-person-id&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -17731,8 +18622,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/person/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-customer-identification merges-identities-primary-identity",
@@ -17851,8 +18741,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/person/workspace-id/{workspaceId}/aliases/{aliases}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-data-ingestion event-posting",
@@ -17999,7 +18888,7 @@
   "command": "cc journey-profile-creation-insights get-all-template",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--sort=s-sort",
@@ -18009,7 +18898,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?filter=s-filter&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -18050,15 +18939,14 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/profile-view-template/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-profile-creation-insights get-historic-events",
   "variant": "all-flags",
   "args": [
    "--data=s-data",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--identity=s-identity",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -18069,7 +18957,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?data=s-data&filter=s-filter&identity=s-identity&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?data=s-data&filter=%7B%22golden%22%3Atrue%7D&identity=s-identity&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -18110,8 +18998,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/api/events/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-profile-creation-insights get-historic-view",
@@ -18460,14 +19347,14 @@
   "variant": "all-flags",
   "args": [
    "--data=s-data",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--identity=s-identity",
    "--workspace-id=s-workspace-id"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/stream/workspace-id/s-workspace-id/identity/s-identity?data=s-data&filter=s-filter",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/stream/workspace-id/s-workspace-id/identity/s-identity?data=s-data&filter=%7B%22golden%22%3Atrue%7D",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -19012,8 +19899,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/journey-actions/workspace-id/{workspaceId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-trigger-actions get-all-template",
@@ -19332,7 +20218,7 @@
   "command": "cc journey-workspace-management get-all",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--sort=s-sort",
@@ -19341,7 +20227,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?filter=s-filter&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&sort=s-sort&sortBy=s-sort-by",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -19379,8 +20265,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /admin/v1/api/workspace: its response has no \"data\""
+  ]
  },
  {
   "command": "cc journey-workspace-management update",
@@ -19487,9 +20372,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/multimedia-profile/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/multimedia-profile/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc multimedia-profile bulk-save",
@@ -19680,7 +20572,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -19688,7 +20580,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/multimedia-profile?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/multimedia-profile?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -19725,9 +20617,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/multimedia-profile?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/multimedia-profile: its response has no \"data\""
+  ]
  },
  {
   "command": "cc multimedia-profile list-references",
@@ -19781,9 +20680,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/multimedia-profile/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/multimedia-profile/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc multimedia-profile purge-inactive",
@@ -19984,7 +20890,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -19992,7 +20898,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/organization-setting?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/organization-setting?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -20029,9 +20935,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/organization-setting?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/organization-setting: its response has no \"data\""
+  ]
  },
  {
   "command": "cc organization-setting patch",
@@ -20188,9 +21101,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/outdial-ani/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/outdial-ani/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc outdial-ani bulk-save",
@@ -20590,7 +21510,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search",
@@ -20599,7 +21519,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -20636,16 +21556,23 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/outdial-ani: its response has no \"data\""
+  ]
  },
  {
   "command": "cc outdial-ani list-entries",
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -20653,7 +21580,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/outdial-ani/entry?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/outdial-ani/entry?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -20690,16 +21617,23 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/outdial-ani/entry?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/outdial-ani/entry: its response has no \"data\""
+  ]
  },
  {
   "command": "cc outdial-ani list-entries-for-ani",
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--out-dial-ani-id=s-out-dial-ani-id",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -20708,7 +21642,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani/s-out-dial-ani-id/entry?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani/s-out-dial-ani-id/entry?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -20748,9 +21682,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/outdial-ani/s-out-dial-ani-id/entry?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/outdial-ani/{outDialAniId}/entry: its response has no \"data\""
+  ]
  },
  {
   "command": "cc outdial-ani list-references",
@@ -20804,9 +21745,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/outdial-ani/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/outdial-ani/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc outdial-ani update",
@@ -20977,9 +21925,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/overrides/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/overrides/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc overrides bulk-save",
@@ -21170,7 +22125,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-latest-override=s-include-latest-override",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -21181,7 +22136,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/overrides?attributes=s-attributes&filter=s-filter&includeLatestOverride=s-include-latest-override&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/overrides?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&includeLatestOverride=s-include-latest-override&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response&sort=s-sort",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -21218,9 +22173,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/overrides?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/overrides: its response has no \"data\""
+  ]
  },
  {
   "command": "cc overrides list-references",
@@ -21274,9 +22236,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/overrides/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/overrides/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc overrides update",
@@ -21337,7 +22306,7 @@
   "variant": "all-flags",
   "args": [
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--queue-ids=s-queue-ids",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
@@ -21345,7 +22314,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/v1/queues/statistics?from=2026-01-01T00%3A00%3A00.000Z&interval=s-interval&orgId=6ab1d2c4-0000-4000-8000-00000000c1d0&queueIds=s-queue-ids&to=2026-01-02T00%3A00%3A00.000Z",
+    "url": "https://api.wxcc-us1.cisco.com/v1/queues/statistics?from=2026-01-01T00%3A00%3A00.000Z&interval=DAILY&orgId=6ab1d2c4-0000-4000-8000-00000000c1d0&queueIds=s-queue-ids&to=2026-01-02T00%3A00%3A00.000Z",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
@@ -21631,7 +22600,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -21639,7 +22608,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/resource-collection?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/resource-collection?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -21676,9 +22645,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/resource-collection?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/resource-collection: its response has no \"data\""
+  ]
  },
  {
   "command": "cc resource-collection list-references",
@@ -21732,9 +22708,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/resource-collection/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/resource-collection/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc resource-collection update",
@@ -21844,24 +22827,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ agentSession(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { cursor: \\\"s-cursor\\\" }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search agent-sessions",
@@ -21894,24 +22888,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 1 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search flow-interactions",
@@ -21944,24 +22949,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 1 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search flow-trace",
@@ -22064,24 +23080,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ taskDetails(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { cursor: \\\"s-cursor\\\" }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search task-details",
@@ -22114,24 +23141,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ taskLegDetails(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { cursor: \\\"s-cursor\\\" }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search task-leg-details",
@@ -22164,24 +23202,35 @@
   "variant": "all-flags",
   "args": [
    "--agent-id=s-agent-id",
-   "--aggregate=s-aggregate-1,s-aggregate-2",
+   "--aggregate=s-field:count:s-name",
    "--channel=s-channel",
    "--cursor=s-cursor",
    "--direction=s-direction",
    "--fields=s-fields",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--from=2026-01-01T00:00:00.000Z",
-   "--interval=s-interval",
+   "--interval=DAILY",
    "--page-size=7",
    "--queue-id=s-queue-id",
    "--status=s-status",
-   "--time-comparator=s-time-comparator",
+   "--time-comparator=createdTime",
    "--timezone=s-timezone",
    "--to=2026-01-02T00:00:00.000Z",
    "--tracking-id=s-tracking-id"
   ],
-  "requests": [],
-  "error": "invalid --filter JSON: invalid character 's' looking for beginning of value"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"query\":\"{ task(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { cursor: \\\"s-cursor\\\" }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search tasks",
@@ -22308,9 +23357,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/site/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/site/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc site bulk-save",
@@ -22512,7 +23568,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -22520,7 +23576,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/site?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/site?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -22557,9 +23613,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/site?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/site: its response has no \"data\""
+  ]
  },
  {
   "command": "cc site list-references",
@@ -22613,9 +23676,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/site/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/site/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc site purge-inactive",
@@ -22761,9 +23831,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/skill/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc skill bulk-save",
@@ -22954,7 +24031,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include=s-include",
    "--page=s-page",
    "--page-size=s-page-size",
@@ -22964,7 +24041,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill?attributes=s-attributes&filter=s-filter&include=s-include&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&include=s-include&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -23001,9 +24078,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/skill: its response has no \"data\""
+  ]
  },
  {
   "command": "cc skill list-references",
@@ -23057,9 +24141,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/skill/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc skill populate-json-attributes-field-skill-id-org",
@@ -23228,9 +24319,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill-profile/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/skill-profile/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc skill-profile bulk-save",
@@ -23432,7 +24530,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search",
@@ -23441,7 +24539,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill-profile?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill-profile?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search&singleObjectResponse=s-single-object-response",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -23478,9 +24576,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/skill-profile?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/skill-profile: its response has no \"data\""
+  ]
  },
  {
   "command": "cc skill-profile list-references",
@@ -23534,9 +24639,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/skill-profile/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/skill-profile/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc skill-profile update",
@@ -23828,8 +24940,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/event-types: its response has no \"data\""
+  ]
  },
  {
   "command": "cc subscriptions list-event-types-v2",
@@ -23879,8 +24990,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v2/event-types: its response has no \"data\""
+  ]
  },
  {
   "command": "cc subscriptions list-v1",
@@ -23930,8 +25040,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/subscriptions: its response has no \"data\""
+  ]
  },
  {
   "command": "cc subscriptions list-v2",
@@ -23981,8 +25090,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v2/subscriptions: its response has no \"data\""
+  ]
  },
  {
   "command": "cc subscriptions register-v1",
@@ -25489,9 +26597,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/team/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/team/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc team bulk-save",
@@ -25703,7 +26818,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--provisioning-view=s-provisioning-view",
@@ -25714,7 +26829,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/team?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response&supervisorView=s-supervisor-view",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/team?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&provisioningView=s-provisioning-view&search=s-search&singleObjectResponse=s-single-object-response&supervisorView=s-supervisor-view",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -25751,9 +26866,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/team?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/team: its response has no \"data\""
+  ]
  },
  {
   "command": "cc team list-references",
@@ -25807,9 +26929,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/team/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/team/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc team purge-inactive",
@@ -26075,7 +27204,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -26083,7 +27212,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/tenant-configuration?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/tenant-configuration?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -26120,9 +27249,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/tenant-configuration?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/tenant-configuration: its response has no \"data\""
+  ]
  },
  {
   "command": "cc tenant-configuration update",
@@ -26572,9 +27708,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/user-profile/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/user-profile/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc user-profiles bulk-save",
@@ -26819,7 +27962,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -26827,7 +27970,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/user-profile?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/user-profile?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -26864,9 +28007,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v3/user-profile?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v3/user-profile: its response has no \"data\""
+  ]
  },
  {
   "command": "cc user-profiles list-references",
@@ -26920,9 +28070,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user-profile/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user-profile/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc user-profiles purge-inactive",
@@ -27057,9 +28214,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc users bulk-partial-update",
@@ -27435,9 +28599,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user/by-dynamic-skill-id/s-skill-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user/by-dynamic-skill-id/{skillId}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc users list",
@@ -27445,7 +28616,7 @@
   "args": [
    "--attributes=s-attributes",
    "--buddy-team-agents-only=s-buddy-team-agents-only",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-aimapping-count=s-include-aimapping-count",
    "--include-dynamic-skills-limit-reached=s-include-dynamic-skills-limit-reached",
    "--page=s-page",
@@ -27459,7 +28630,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/user?attributes=s-attributes&buddyTeamAgentsOnly=s-buddy-team-agents-only&filter=s-filter&includeAIMappingCount=s-include-aimapping-count&includeDynamicSkillsLimitReached=s-include-dynamic-skills-limit-reached&page=s-page&pageSize=s-page-size&queueId=s-queue-id&search=s-search&singleObjectResponse=s-single-object-response&supervisorManagedAgentsOnly=s-supervisor-managed-agents-only&userInQueue=s-user-in-queue",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/user?attributes=s-attributes&buddyTeamAgentsOnly=s-buddy-team-agents-only&filter=%7B%22golden%22%3Atrue%7D&includeAIMappingCount=s-include-aimapping-count&includeDynamicSkillsLimitReached=s-include-dynamic-skills-limit-reached&page=s-page&pageSize=s-page-size&queueId=s-queue-id&search=s-search&singleObjectResponse=s-single-object-response&supervisorManagedAgentsOnly=s-supervisor-managed-agents-only&userInQueue=s-user-in-queue",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -27496,9 +28667,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/user?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/user: its response has no \"data\""
+  ]
  },
  {
   "command": "cc users list-along-profile",
@@ -27599,9 +28777,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user/by-call-monitoring-id/s-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user/by-call-monitoring-id/{id}: its response has no \"data\""
+  ]
  },
  {
   "command": "cc users list-by-ids",
@@ -27712,9 +28897,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/user/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc users patch",
@@ -27928,9 +29120,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/work-type/bulk-export?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/work-type/bulk-export: its response has no \"resources\""
+  ]
  },
  {
   "command": "cc work-types bulk-save",
@@ -28132,7 +29331,7 @@
   "variant": "all-flags",
   "args": [
    "--attributes=s-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--page=s-page",
    "--page-size=s-page-size",
    "--search=s-search"
@@ -28140,7 +29339,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/work-type?attributes=s-attributes&filter=s-filter&page=s-page&pageSize=s-page-size&search=s-search",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/work-type?attributes=s-attributes&filter=%7B%22golden%22%3Atrue%7D&page=s-page&pageSize=s-page-size&search=s-search",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -28177,9 +29376,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/work-type?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/v2/work-type: its response has no \"data\""
+  ]
  },
  {
   "command": "cc work-types list-references",
@@ -28233,9 +29439,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/work-type/s-id/incoming-references?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/work-type/{id}/incoming-references: its response has no \"data\""
+  ]
  },
  {
   "command": "cc work-types purge-inactive",

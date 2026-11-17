@@ -2036,6 +2036,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2086,6 +2094,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2140,6 +2156,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2194,6 +2218,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2244,6 +2276,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2290,6 +2330,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/devices/dynamicDeviceSettings?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2696,6 +2744,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/devices/s-device-id/availableMembers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3914,6 +3970,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4388,6 +4452,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/locations?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5603,6 +5675,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/workspaces?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"

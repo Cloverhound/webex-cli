@@ -1,0 +1,2 @@
+# The golden tests compare these byte for byte with JSON the test writes with LF.
+testdata/golden/*.json text eol=lf

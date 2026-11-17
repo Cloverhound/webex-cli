@@ -836,6 +836,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -891,88 +899,168 @@
   "variant": "all-flags",
   "args": [
    "--announcement-id=s-announcement-id",
-   "--file=s-file",
+   "--file=golden.wav",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://webexapis.com/v1/telephony/config/announcements/s-announcement-id?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository update-binary-greeting",
   "variant": "required",
   "args": [
    "--announcement-id=s-announcement-id",
-   "--file=s-file",
+   "--file=golden.wav",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://webexapis.com/v1/telephony/config/announcements/s-announcement-id?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository update-binary-greeting-2",
   "variant": "all-flags",
   "args": [
    "--announcement-id=s-announcement-id",
-   "--file=s-file",
+   "--file=golden.wav",
    "--location-id=s-location-id",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/announcements/s-announcement-id?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository update-binary-greeting-2",
   "variant": "required",
   "args": [
    "--announcement-id=s-announcement-id",
-   "--file=s-file",
+   "--file=golden.wav",
    "--location-id=s-location-id",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/announcements/s-announcement-id?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository upload-binary-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/announcements?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository upload-binary-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/announcements?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository upload-binary-greeting-2",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--location-id=s-location-id",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/announcements?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling announcement-repository upload-binary-greeting-2",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--location-id=s-location-id",
    "--name=s-name"
   ],
-  "requests": [],
-  "error": "reading audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/announcements?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"name\"\r\nContent-Type: text/plain\r\n\r\ns-name\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling auto-attendant create",
@@ -1304,6 +1392,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -1416,6 +1512,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -1467,6 +1571,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/autoAttendants/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -1578,6 +1690,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/autoAttendants?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4067,6 +4187,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4119,6 +4247,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/callParks/availableRecallHuntGroups?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4234,6 +4370,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4285,6 +4429,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/callParkExtensions?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4670,6 +4822,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4722,6 +4882,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/callPickups?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5262,6 +5430,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5317,6 +5493,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5367,6 +5551,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/queues/agents/availableAgents?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5594,6 +5786,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5812,6 +6012,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5983,6 +6191,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -6036,6 +6252,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/queues/agents?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6149,6 +6373,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -6199,6 +6431,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/supervisors/availableSupervisors?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6259,6 +6499,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -6309,6 +6557,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/supervisors?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6927,6 +7183,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -7327,6 +7591,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -7382,6 +7654,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -7428,6 +7708,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/callRecording?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -8427,6 +8715,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -8479,6 +8775,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/s-route-group-id/usageCallToExtension?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -8539,6 +8843,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -8591,6 +8903,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/trunks/s-trunk-id/usageCallToExtension?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -8755,6 +9075,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -8807,6 +9135,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/s-route-group-id/usagePstnConnection?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -9019,6 +9355,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/s-route-group-id/usageRouteList?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -9288,6 +9632,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -9336,6 +9688,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/routeGroups?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -9393,6 +9753,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -9444,6 +9812,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/callRouting/translationPatterns?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -9545,6 +9921,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/premisePstn/trunks?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -12215,6 +12599,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -12269,6 +12661,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -12319,6 +12719,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/people/me/location/assignedNumbers?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -20132,37 +20540,77 @@
   "command": "calling call-settings-for-me upload-voicemail-busy-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/voicemail/actions/busyGreetingUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling call-settings-for-me upload-voicemail-busy-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/voicemail/actions/busyGreetingUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling call-settings-for-me upload-voicemail-no-answer-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/voicemail/actions/noAnswerGreetingUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling call-settings-for-me upload-voicemail-no-answer-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file"
+   "--file=golden.wav"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/voicemail/actions/noAnswerGreetingUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling caller-reputation-provider get",
@@ -21561,9 +22009,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "calling converged-recordings download",
@@ -21580,9 +22031,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "calling converged-recordings download",
@@ -21600,9 +22054,12 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://download.golden.example/audio?sig=golden"
    }
-  ],
-  "error": "no temporaryDirectDownloadLinks in response (status 200)"
+  ]
  },
  {
   "command": "calling converged-recordings get",
@@ -21768,6 +22225,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -21826,6 +22291,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/admin/convergedRecordings?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -22404,6 +22877,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/cxEssentials/agents/availableAgents?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -23043,6 +23524,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/cxEssentials/agents/availableAgents?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -26591,6 +27080,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -26641,6 +27138,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -26695,6 +27200,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -26749,6 +27262,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -26799,6 +27320,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -26845,6 +27374,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/devices/dynamicDeviceSettings?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -27251,6 +27788,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/devices/s-device-id/availableMembers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -28360,6 +28905,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/devices?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -31764,6 +32317,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -31876,6 +32437,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -31927,6 +32496,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/huntGroups/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -32038,6 +32615,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/huntGroups?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -32557,6 +33142,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -32609,6 +33202,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -32773,6 +33374,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -32930,6 +33539,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/callIntercept/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -33310,6 +33927,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -33366,6 +33991,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -33412,6 +34045,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/locations/deleteCallingLocation?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -33469,6 +34110,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/externalCallerId/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -33578,6 +34227,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -33621,6 +34278,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/updateRoutingPrefix?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -33673,6 +34338,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -35608,6 +36281,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -35983,6 +36664,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -36034,6 +36723,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/voicemailGroups/faxMessage/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -36145,6 +36842,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -36246,6 +36951,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/voicemailGroups?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -36749,6 +37462,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/locations?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -37667,6 +38388,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -37766,6 +38495,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/s-job-id/errors?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -38281,6 +39018,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -38386,6 +39131,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/operatingModes?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -38753,6 +39506,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -38802,6 +39563,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/paging?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -39357,6 +40126,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -39874,6 +40651,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -39983,6 +40768,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -40033,6 +40826,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/recordingReport/meetingArchiveSummaries?max=99",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -40284,6 +41085,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://analytics-calling.webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -40332,6 +41141,14 @@
    {
     "method": "GET",
     "url": "https://analytics-calling.webexapis.com/v1/cdr_stream?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://analytics-calling.webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -40385,6 +41202,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/identity/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/jobs/sendActivationEmails/s-job-id/errors?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -40619,6 +41444,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/locations/s-location-id/singleNumberReach/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -43062,6 +43895,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -43270,6 +44111,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/people/s-person-id/executive/availableAssistants?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -43488,6 +44337,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -43545,6 +44402,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -43598,6 +44463,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/people/s-person-id/callIntercept/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -43811,6 +44684,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -43914,6 +44795,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/people/s-person-id/secondary/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -44930,6 +45819,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -45085,6 +45982,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -45131,6 +46036,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/jobs/person/moveLocation?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -45240,6 +46153,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/people/s-person-id/features/schedules?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -45536,6 +46457,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -45591,6 +46520,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/people/s-person-id/applications/availableMembers?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -45831,21 +46768,41 @@
   "command": "calling user-call update-busy-voicemail-greeting-person",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-busy-voicemail-greeting-person",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-caller-id-person",
@@ -46434,21 +47391,41 @@
   "command": "calling user-call update-intercept-greeting-person",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/intercept/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-intercept-greeting-person",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/intercept/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-intercept-settings-person",
@@ -46562,21 +47539,41 @@
   "command": "calling user-call update-no-answer-voicemail-greeting-person",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-no-answer-voicemail-greeting-person",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--person-id=s-person-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/people/s-person-id/features/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling user-call update-person-application-services-settings",
@@ -48842,6 +49839,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -48893,6 +49898,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/virtualExtensionRanges?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -49758,6 +50771,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -50074,6 +51095,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -50125,6 +51154,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/faxMessage/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -50238,6 +51275,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -50343,6 +51388,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/callIntercept/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -50981,6 +52034,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -51441,21 +52502,41 @@
   "command": "calling virtual-line-call update-busy-voicemail-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-busy-voicemail-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-caller-id",
@@ -51864,21 +52945,41 @@
   "command": "calling virtual-line-call update-intercept-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-intercept-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-intercept-settings",
@@ -51992,21 +53093,41 @@
   "command": "calling virtual-line-call update-no-answer-voicemail-greeting",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-no-answer-voicemail-greeting",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--virtual-line-id=s-virtual-line-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/virtualLines/s-virtual-line-id/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling virtual-line-call update-outgoing-permissions-settings",
@@ -53584,6 +54705,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -53903,6 +55032,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -53954,6 +55091,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/faxMessage/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -54067,6 +55212,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -54172,6 +55325,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/callIntercept/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -54750,6 +55911,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/secondary/availableNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -55733,21 +56902,41 @@
   "command": "calling workspace-call update-busy-voicemail-greeting-place",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspace-call update-busy-voicemail-greeting-place",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/voicemail/actions/uploadBusyGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspace-call update-caller-id",
@@ -56265,21 +57454,41 @@
   "command": "calling workspace-call update-no-answer-voicemail-greeting-place",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspace-call update-no-answer-voicemail-greeting-place",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/voicemail/actions/uploadNoAnswerGreeting/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspace-call update-outgoing-permission-settings",
@@ -57542,21 +58751,41 @@
   "command": "calling workspace-call upload-intercept-announcement-file",
   "variant": "all-flags",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspace-call upload-intercept-announcement-file",
   "variant": "required",
   "args": [
-   "--file=s-file",
+   "--file=golden.wav",
    "--workspace-id=s-workspace-id"
   ],
-  "requests": [],
-  "error": "opening audio file: open s-file: no such file or directory"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://webexapis.com/v1/telephony/config/workspaces/s-workspace-id/actions/announcementUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "calling workspaces create",
@@ -57859,6 +59088,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/workspaces?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"

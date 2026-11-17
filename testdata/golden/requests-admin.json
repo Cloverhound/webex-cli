@@ -97,6 +97,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -307,12 +315,12 @@
   "command": "admin archive-users query",
   "variant": "all-flags",
   "args": [
-   "--filter=s-filter"
+   "--filter={\"golden\":true}"
   ],
   "requests": [
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/v1/ArchivedUser?filter=s-filter",
+    "url": "https://webexapis.com/identity/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/v1/ArchivedUser?filter=%7B%22golden%22%3Atrue%7D",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -1284,6 +1292,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -1474,6 +1490,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -1483,7 +1507,7 @@
   "args": [
    "--attributes=s-attributes",
    "--count=s-count",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-members=s-include-members",
    "--sort-by=s-sort-by",
    "--sort-order=s-sort-order",
@@ -1492,7 +1516,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://webexapis.com/v1/groups?attributes=s-attributes&count=s-count&filter=s-filter&includeMembers=s-include-members&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
+    "url": "https://webexapis.com/v1/groups?attributes=s-attributes&count=s-count&filter=%7B%22golden%22%3Atrue%7D&includeMembers=s-include-members&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -1525,6 +1549,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/groups?count=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2393,6 +2425,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -2679,6 +2719,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/contacts/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/contacts/search?limit=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3906,6 +3954,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4012,6 +4068,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/recordingReport/accessDetail?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4125,6 +4189,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4175,6 +4247,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/recordingReport/meetingArchiveSummaries?max=99",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4447,6 +4527,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4507,6 +4595,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -4563,6 +4659,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/group/recordings?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5427,6 +5531,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -5476,6 +5588,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/resourceGroup/memberships/v2?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/v1/resourceGroup/memberships/v2?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5880,9 +6000,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups/s-group-id/Members?count=100&startIndex=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /identity/scim/{orgId}/v2/Groups/{groupId}/Members: its response has no \"members\""
+  ]
  },
  {
   "command": "admin scim-2-groups search",
@@ -5891,7 +6018,7 @@
    "--attributes=s-attributes",
    "--count=s-count",
    "--excluded-attributes=s-excluded-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--include-members=s-include-members",
    "--member-type=s-member-type",
    "--sort-by=s-sort-by",
@@ -5901,7 +6028,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups?attributes=s-attributes&count=s-count&excludedAttributes=s-excluded-attributes&filter=s-filter&includeMembers=s-include-members&memberType=s-member-type&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups?attributes=s-attributes&count=s-count&excludedAttributes=s-excluded-attributes&filter=%7B%22golden%22%3Atrue%7D&includeMembers=s-include-members&memberType=s-member-type&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -5938,9 +6065,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups?count=100&startIndex=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /identity/scim/{orgId}/v2/Groups: its response has no \"Resources\""
+  ]
  },
  {
   "command": "admin scim-2-groups update-patch",
@@ -6385,7 +6519,7 @@
    "--attributes=s-attributes",
    "--count=s-count",
    "--excluded-attributes=s-excluded-attributes",
-   "--filter=s-filter",
+   "--filter={\"golden\":true}",
    "--group-usage-types=s-group-usage-types",
    "--include-group-details=s-include-group-details",
    "--return-groups=s-return-groups",
@@ -6396,7 +6530,7 @@
   "requests": [
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Users?attributes=s-attributes&count=s-count&excludedAttributes=s-excluded-attributes&filter=s-filter&groupUsageTypes=s-group-usage-types&includeGroupDetails=s-include-group-details&returnGroups=s-return-groups&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Users?attributes=s-attributes&count=s-count&excludedAttributes=s-excluded-attributes&filter=%7B%22golden%22%3Atrue%7D&groupUsageTypes=s-group-usage-types&includeGroupDetails=s-include-group-details&returnGroups=s-return-groups&sortBy=s-sort-by&sortOrder=s-sort-order&startIndex=s-start-index",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6433,9 +6567,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Users?count=100&startIndex=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /identity/scim/{orgId}/v2/Users: its response has no \"Resources\""
+  ]
  },
  {
   "command": "admin scim-2-users update-patch",
@@ -6595,6 +6736,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -6644,6 +6793,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/identity/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/jobs/sendActivationEmails/s-job-id/errors?max=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
