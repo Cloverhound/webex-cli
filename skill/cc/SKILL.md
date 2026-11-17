@@ -92,6 +92,8 @@ webex cc site bulk-export
 webex cc site bulk-save --body '[{...},{...}]'
 ```
 
+**`update` replaces the whole object.** This applies to every configuration object, such as a site, team, queue or user. Fields left out of the body are cleared. Get the object first and send it back whole with the changes. `ai-agent update` is the exception: it keeps fields that are left out.
+
 ## Users
 
 ```bash

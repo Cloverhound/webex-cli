@@ -104,6 +104,8 @@ webex cc <resource> delete --orgid "..." --id "..."
 webex cc <resource> list-references --orgid "..." --id "..."
 ```
 
+`update` of a configuration object, such as a site, team, queue or user, replaces the whole object, and fields you leave out are cleared. Get the object first and send it back whole with your changes. `ai-agent update` is the exception: it keeps fields you leave out.
+
 ## Filtering and Pagination
 
 CC list endpoints support RSQL filtering:

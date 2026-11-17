@@ -66,6 +66,10 @@ func registerTools(s *server.MCPServer, lg *usageLogger, readOnly bool) {
 						"Maps to POST, PUT, PATCH, or DELETE API calls — requires explicit approval. "+
 						"Provide the command without the 'webex' prefix "+
 						"(e.g. 'messaging messages create'). "+
+						"An 'update' of a Contact Center configuration object (a site, team, queue, user and so on) "+
+						"replaces the whole object: fields you leave out are cleared. "+
+						"Get the object first and send it back whole with your changes. "+
+						"'cc ai-agent update' is the exception and keeps fields you leave out. "+
 						"Use webex_read for list/get/download/export operations.",
 				),
 				mcplib.WithString("command",
