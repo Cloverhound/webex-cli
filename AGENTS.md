@@ -27,9 +27,14 @@ make codegen && make build
 
 # Download collections only:
 make download
+
+# Rewrite the golden files after an intended change to commands or requests:
+make golden
 ```
 
 `make codegen` runs `extract_api_spec.py`, `generate_cli.py`, and `generate_skills.py`.
+
+`testdata/golden/` pins the published CLI: every command's name, aliases, help and flags, and the request each API command sends for a fixed set of flags. `cli_golden_test.go` checks them with no network. A change meant to keep commands the same must pass `go test -run Golden .` unchanged; one that changes them needs `make golden` and a reviewed diff. The weekly workflow runs `make golden` after a collection refresh.
 
 For command naming exceptions, edit `codegen/naming_overrides.py`; see
 `docs/command-migration.md` for naming and compatibility conventions, and
