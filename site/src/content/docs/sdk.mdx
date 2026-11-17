@@ -1,0 +1,63 @@
+---
+title: Go SDK
+description: Call the Webex APIs from Go the way the CLI does.
+---
+
+The CLI is built on a Go SDK that other Go programs can import. It sends requests the way the CLI does: the same hosts, retries, paging and errors. It holds no process-wide state, and every call takes a context.
+
+```bash
+go get github.com/Cloverhound/webex-cli
+```
+
+| Package | What it does |
+|---|---|
+| `pkg/webexapi` | Sends requests: the bearer token, one refresh after a 401, waits for a 429's `Retry-After`, and errors that carry the failed response. Reads lists to their end, and fails rather than return part of a list. Names the hosts for each data region and Contact Center data center, and converts organization IDs. |
+| `pkg/webexops` | Every operation the CLI has, generated from Cisco's Postman collections. Each is an exported `*Operation` with its route, host, parameters, body fields and paging. `Call` sends one; `All` reads a list to its end. |
+| `pkg/aiagent` | AI Agent Studio: looks up an agent's runtime token, and removes credentials from responses. Studio's API is private, and Cisco does not support it. |
+
+The SDK has no login of its own. Give the client a token source, such as `webex auth token --output json --min-ttl 30m`.
+
+## Example
+
+List an organization's Contact Center teams:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
+	"github.com/Cloverhound/webex-cli/pkg/webexops"
+)
+
+func main() {
+	ctx := context.Background()
+	client := &webexapi.Client{
+		Token:      func(context.Context) (string, error) { return os.Getenv("WEBEX_TOKEN"), nil },
+		MaxRetries: 3,
+	}
+	hosts := webexapi.HostsFor("us", "us1")
+	org := webexapi.DecodeOrgID(os.Getenv("WEBEX_ORG"))
+
+	teams, err := webexops.All(ctx, client, hosts, webexops.CcTeamList, webexops.Args{
+		Params: map[string]string{"orgid": org},
+	})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fmt.Println(len(teams), "teams")
+}
+```
+
+`Args.Params` holds parameter values by the names the API uses. Each operation's `Params` lists them. Bodies and responses are JSON documents, not Go types, because the collections' example bodies don't match what Webex returns.
+
+## Behaviour
+
+- **Retries:** only a 401 (once, after `Refresh`) and a 429 are retried. A 5xx or a broken connection may follow a write that was carried out, so it is returned, not repeated.
+- **Paging:** each list's paging was derived from its collection and, where Webex differs, measured against a live organization. A list that can't be read to its end returns `webexapi.ErrIncompleteList`.
+- **Hooks:** `BeforeSend`, `AfterResponse` and `OnRetry` let a program log requests or stop them before they are sent. The CLI uses them for `--debug`, `--dry-run` and read-only mode.
+- **Generated names:** the operation table is regenerated when Cisco's collections change. A program that names an operation fails to build if a refresh drops or renames it.
