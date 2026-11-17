@@ -33,8 +33,8 @@ func init() {
 			Short: "Get Archive User",
 			Long:  "The `useruuid` is the unique identifier of a user in the system. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser/{useruuid}")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.IdentityBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser/{useruuid}")
+				req.PathParam("orgId", config.DecodeOrgID(orgId))
 				req.PathParam("useruuid", useruuid)
 				resp, statusCode, err := req.Do()
 				if err != nil {
@@ -58,8 +58,8 @@ func init() {
 			Short: "Query Archive User",
 			Long:  "Retrieves archived user information for the specified organization. Supported attributes are `id`, which is the unique identifier of a user in the system, and `username`. It is assigned when the user is created and can be retrieved through **GET Users** API.<br/>\n\n**Authorization**\n\nOAuth token issued by the Identity Broker.\n\nOne of the following OAuth scopes is required:\n\n- `identity:people_rw`.\n- `identity:people_read`.\n\nThe following administrators can use this API:\n\n- `Account in the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n- `Proxy account managing the specified organization with one of the following roles: id_full_admin, id_user_admin, id_readonly_admin`.\n\n<br/>",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				req := client.NewRequest(config.CallingBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser")
-				req.PathParam("orgId", orgId)
+				req := client.NewRequest(config.IdentityBaseURL, "GET", "/identity/organizations/{orgId}/v1/ArchivedUser")
+				req.PathParam("orgId", config.DecodeOrgID(orgId))
 				req.QueryParam("filter", filter)
 				resp, statusCode, err := req.Do()
 				if err != nil {

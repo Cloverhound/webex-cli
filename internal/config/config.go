@@ -61,6 +61,9 @@ func OrgIDBase64() string { return orgIDBase64 }
 const (
 	CallingBaseURL = "https://webexapis.com/v1"
 
+	// IdentityBaseURL serves SCIM and archived users, whose paths have no /v1 segment.
+	IdentityBaseURL = "https://webexapis.com"
+
 	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
 	// endpoints already carry their own /v1 segment.
 	AnalyticsBaseURL = "https://analytics.webexapis.com"
