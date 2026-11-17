@@ -2,6 +2,8 @@ package webexapi
 
 import (
 	"encoding/base64"
+	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -49,19 +51,23 @@ var analyticsCallingHosts = map[string]string{
 
 // HostsFor returns the hosts for a data region from Regions and a Contact Center
 // data center from CCRegions. An empty or unknown region uses the US hosts, and an
-// empty ccRegion DefaultCCRegion.
-func HostsFor(region, ccRegion string) Hosts {
+// empty ccRegion DefaultCCRegion. A ccRegion not in CCRegions is an error, since it
+// would be part of the host the token is sent to.
+func HostsFor(region, ccRegion string) (Hosts, error) {
 	if ccRegion == "" {
 		ccRegion = DefaultCCRegion
+	}
+	if !slices.Contains(CCRegions, ccRegion) {
+		return Hosts{}, fmt.Errorf("unknown Contact Center data center %q; use one of %s", ccRegion, strings.Join(CCRegions, ", "))
 	}
 	return Hosts{
 		Webex:            "https://webexapis.com/v1",
 		Identity:         "https://webexapis.com",
 		Analytics:        "https://analytics.webexapis.com",
 		AnalyticsCalling: AnalyticsCallingHost(region),
-		CC:               CCHost(ccRegion),
-		AIAgent:          AIAgentHost(ccRegion),
-	}
+		CC:               "https://api.wxcc-" + ccRegion + ".cisco.com",
+		AIAgent:          "https://studio.aiagent-" + ccRegion + ".cisco.com",
+	}, nil
 }
 
 // AnalyticsCallingHost is Detailed Call History's base URL for a data region.
@@ -72,12 +78,6 @@ func AnalyticsCallingHost(region string) string {
 	}
 	return host + "/v1"
 }
-
-// CCHost is Contact Center's base URL in a data center.
-func CCHost(ccRegion string) string { return "https://api.wxcc-" + ccRegion + ".cisco.com" }
-
-// AIAgentHost is AI Agent Studio's base URL in a Contact Center data center.
-func AIAgentHost(ccRegion string) string { return "https://studio.aiagent-" + ccRegion + ".cisco.com" }
 
 // DecodeOrgID converts a base64 Webex organization ID
 // (ciscospark://us/ORGANIZATION/<uuid>) to its UUID. A UUID or an unrecognized

@@ -11,15 +11,32 @@ type APIError struct {
 	Status int
 	Body   []byte
 
-	shown []byte
+	// shown is the body as Redact returned it, when the request had one.
+	shown    []byte
+	redacted bool
 }
 
 func (e *APIError) Error() string {
-	shown := e.shown
-	if shown == nil {
-		shown = e.Body
+	shown := e.Body
+	if e.redacted {
+		shown = e.shown
 	}
 	return fmt.Sprintf("API error %d: %s", e.Status, truncate(string(shown), 500))
+}
+
+// RateLimitError is a 429 that was not retried further, because of MaxRetries or
+// MaxRetryWait. It unwraps to the response's *APIError.
+type RateLimitError struct {
+	msg string
+	err *APIError
+}
+
+func (e *RateLimitError) Error() string { return e.msg }
+func (e *RateLimitError) Unwrap() error {
+	if e.err == nil {
+		return nil
+	}
+	return e.err
 }
 
 // WrongRegionError is a 451: the organization's data is held in another data

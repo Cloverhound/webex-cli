@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"maps"
+	"math"
 	"mime"
 	"mime/multipart"
 	"net/http"
@@ -127,7 +128,12 @@ func MultipartFile(fields map[string]string, fieldName, path string, limit int64
 	if strings.ContainsAny(name, "\r\n") {
 		return Multipart{}, fmt.Errorf("attachment filename must not contain newlines")
 	}
-	data, err := io.ReadAll(io.LimitReader(f, limit+1))
+	// Reading one byte past the limit shows a file that grew past it after Stat.
+	var r io.Reader = f
+	if limit < math.MaxInt64 {
+		r = io.LimitReader(f, limit+1)
+	}
+	data, err := io.ReadAll(r)
 	if err != nil {
 		return Multipart{}, fmt.Errorf("reading attachment %q: %w", path, err)
 	}

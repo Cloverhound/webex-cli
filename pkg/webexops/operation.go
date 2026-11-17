@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 	"sort"
 
 	"github.com/Cloverhound/webex-cli/pkg/aiagent"
@@ -200,11 +201,11 @@ func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 		if v == "" {
 			continue
 		}
+		if p.OrgUUID {
+			v = webexapi.DecodeOrgID(v)
+		}
 		switch p.In {
 		case InPath:
-			if p.OrgUUID {
-				v = webexapi.DecodeOrgID(v)
-			}
 			path[p.Name] = v
 		case InQuery:
 			query.Set(p.Name, v)
@@ -256,8 +257,9 @@ func Areas() []string {
 	return names
 }
 
-// Groups lists an area's groups, in collection order.
-func Groups(areaName string) []Group { return areas[areaName].groups }
+// Groups lists an area's groups, in collection order. The list is a copy.
+func Groups(areaName string) []Group { return slices.Clone(areas[areaName].groups) }
 
-// Operations lists an area's operations, in collection order.
-func Operations(areaName string) []*Operation { return areas[areaName].operations }
+// Operations lists an area's operations, in collection order. The list is a copy;
+// the operations it points to are shared and must not be changed.
+func Operations(areaName string) []*Operation { return slices.Clone(areas[areaName].operations) }

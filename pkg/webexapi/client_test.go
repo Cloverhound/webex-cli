@@ -147,13 +147,50 @@ func TestRequestHeaders(t *testing.T) {
 }
 
 func TestHostsForARegion(t *testing.T) {
-	h := HostsFor("EU", "eu2")
-	if h.AnalyticsCalling != "https://analytics-calling-eu.webexapis.com/v1" || h.CC != "https://api.wxcc-eu2.cisco.com" ||
+	h, err := HostsFor("EU", "eu2")
+	if err != nil || h.AnalyticsCalling != "https://analytics-calling-eu.webexapis.com/v1" || h.CC != "https://api.wxcc-eu2.cisco.com" ||
 		h.AIAgent != "https://studio.aiagent-eu2.cisco.com" || h.Webex != "https://webexapis.com/v1" {
-		t.Fatalf("%+v", h)
+		t.Fatalf("%+v, %v", h, err)
 	}
-	if d := HostsFor("", ""); d.CC != "https://api.wxcc-us1.cisco.com" || d.AnalyticsCalling != "https://analytics-calling.webexapis.com/v1" {
-		t.Fatalf("%+v", d)
+	if d, err := HostsFor("", ""); err != nil || d.CC != "https://api.wxcc-us1.cisco.com" || d.AnalyticsCalling != "https://analytics-calling.webexapis.com/v1" {
+		t.Fatalf("%+v, %v", d, err)
+	}
+}
+
+func TestHostsForRefusesAnUnknownContactCenterRegion(t *testing.T) {
+	for _, ccRegion := range []string{"us1.example.com/#", "xx9", "US1"} {
+		if h, err := HostsFor("us", ccRegion); err == nil {
+			t.Errorf("%q gave %+v", ccRegion, h)
+		}
+	}
+}
+
+func TestARedactorThatReturnsNothingHidesTheWholeBody(t *testing.T) {
+	srv, _ := statusServer(t, []int{400}, `{"secret":"x"}`, nil)
+	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL, Redact: func([]byte) []byte { return nil }})
+	if err == nil || err.Error() != "API error 400: " {
+		t.Fatalf("err %v", err)
+	}
+}
+
+func TestARedactorThatEditsItsArgumentLeavesTheResponse(t *testing.T) {
+	srv, _ := statusServer(t, []int{400}, `secret`, nil)
+	redact := func(b []byte) []byte { copy(b, "XXXXXX"); return b }
+	resp, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL, Redact: redact})
+	if string(resp.Body) != "secret" || err.Error() != "API error 400: XXXXXX" {
+		t.Fatalf("body %q, err %v", resp.Body, err)
+	}
+}
+
+func TestAnExhaustedRateLimitStillUnwrapsToTheAPIError(t *testing.T) {
+	srv, _ := statusServer(t, []int{429}, `{"message":"slow down"}`, http.Header{"Retry-After": {"1"}})
+	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL})
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) || apiErr.Status != 429 || string(apiErr.Body) != `{"message":"slow down"}` {
+		t.Fatalf("err %v does not unwrap to the 429", err)
+	}
+	if err.Error() != "rate limited (429): retry limit reached after 0 attempts — try again after 1s" {
+		t.Fatalf("message %q", err)
 	}
 }
 

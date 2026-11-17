@@ -52,6 +52,34 @@ func TestTheTableIsConsistent(t *testing.T) {
 	}
 }
 
+func TestListingsAreCopies(t *testing.T) {
+	area := Areas()[0]
+	ops, groups := Operations(area), Groups(area)
+	first, firstGroup := ops[0], groups[0]
+	ops[0], groups[0] = nil, Group{}
+	if Operations(area)[0] != first || Groups(area)[0].Name != firstGroup.Name {
+		t.Fatal("changing a listing changed the table")
+	}
+}
+
+func TestOrgParametersThatTakeTheUUIDAreMarked(t *testing.T) {
+	for _, op := range append(Operations("cc"), AdminOrgContactsList) {
+		for _, p := range op.Params {
+			if strings.EqualFold(p.Name, "orgid") && p.Flag == "orgid" && !p.OrgUUID {
+				t.Errorf("%s: %s parameter %s is not marked OrgUUID", op.ID, p.In, p.Name)
+			}
+		}
+	}
+	op := &Operation{Method: "GET", Host: HostCC, Path: "/organization/{orgid}/team", Params: []Param{
+		{Name: "orgid", In: InPath, Flag: "orgid", OrgUUID: true},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true},
+	}}
+	got := op.Request(testHosts, Args{Params: map[string]string{"orgid": testB64, "orgId": testB64}}).URL
+	if got != "https://cc/organization/"+testUUID+"/team?orgId="+testUUID {
+		t.Fatalf("URL %s", got)
+	}
+}
+
 func TestRequestFillsTheOperation(t *testing.T) {
 	op := &Operation{
 		Method: "PUT", Host: HostIdentity, Path: "/identity/scim/{orgId}/v2/Users/{userId}", Accept: "*/*",

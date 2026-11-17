@@ -789,7 +789,7 @@ var AdminOrgContactsCreate = &Operation{
 	Description: "Creating a new contact for a given organization requires an org admin role.\n\nAt least one of the following body parameters: `phoneNumbers`, `emails`, `sipAddresses` is required to create a new contact for source \"CH\",\n`displayName` is required to create a new contact for source \"Webex4Broadworks\".\n\nUse the optional `groupIds` field to add group IDs in an array within the organisation contact. This will become a group contact.",
 	Method:      "POST", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 	},
 	Body: &Body{},
 }
@@ -801,7 +801,7 @@ var AdminOrgContactsGet = &Operation{
 	Description: "Shows details for an organization contact by ID.\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.\n\n**NOTE**:\nThe `orgId` used in the path for this API are the org UUIDs. They follow a xxxx-xxxx-xxxx-xxxx pattern. If you have an orgId in base64 encoded format (starting with Y2.....) you need to base64 decode the id and extract the UUID from the slug, before you use it in your API call.",
 	Method:      "GET", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/{contactId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 		{Name: "contactId", In: InPath, Flag: "contact-id", Required: true, Usage: "The contact ID."},
 	},
 }
@@ -813,7 +813,7 @@ var AdminOrgContactsUpdate = &Operation{
 	Description: "Update details for contact by ID. Only an admin can update a contact.\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.\n\nUse the optional `groupIds` field to update the group IDs by changing the existing array. You can add or remove one or all groups. To remove all associated groups, pass an empty array in the `groupIds` field.",
 	Method:      "PATCH", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/{contactId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 		{Name: "contactId", In: InPath, Flag: "contact-id", Required: true, Usage: "The contact ID."},
 	},
 	Body: &Body{},
@@ -826,7 +826,7 @@ var AdminOrgContactsDelete = &Operation{
 	Description: "Remove a contact from the organization. Only an admin can remove a contact.\n\nSpecify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/{contactId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 		{Name: "contactId", In: InPath, Flag: "contact-id", Required: true, Usage: "The contact ID."},
 	},
 }
@@ -838,7 +838,7 @@ var AdminOrgContactsList = &Operation{
 	Description: "List contacts in the organization. The default limit is `100`.\n\n`keyword` can be the value of \"displayName\", \"firstName\", \"lastName\", \"email\". An empty string of `keyword` means get all contacts.\n\n`groupIds` is a comma separated list group IDs. Results are filtered based on those group IDs.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/search",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID."},
 		{Name: "keyword", In: InQuery, Flag: "keyword", Usage: "List contacts with a keyword."},
 		{Name: "source", In: InQuery, Flag: "source", Usage: "List contacts with source."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Limit the maximum number of contact in the response.\n        + Default: 100\n"},
@@ -855,7 +855,7 @@ var AdminOrgContactsBulkCreateUpdate = &Operation{
 	Description: "Create or update contacts in bulk. Update an existing contact by specifying the contact ID in the `contactId` parameter in the request body.",
 	Method:      "POST", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 	},
 	Body: &Body{},
 }
@@ -867,7 +867,7 @@ var AdminOrgContactsBulkDelete = &Operation{
 	Description: "Delete contacts in bulk.",
 	Method:      "POST", Host: HostWebex, Path: "/contacts/organizations/{orgid}/contacts/bulk/delete",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "schemas", Flag: "schemas", Type: "string"},

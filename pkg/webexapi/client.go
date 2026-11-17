@@ -98,13 +98,14 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 	var waited time.Duration
 	for retries := 0; resp != nil && resp.Status == http.StatusTooManyRequests; retries++ {
 		wait := RetryAfter(resp.Header.Get("Retry-After"))
+		apiErr, _ := err.(*APIError)
 		if retries >= c.MaxRetries {
-			return resp, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s",
-				retries, wait.Round(time.Second))
+			return resp, &RateLimitError{err: apiErr, msg: fmt.Sprintf("rate limited (429): retry limit reached after %d attempts — try again after %s",
+				retries, wait.Round(time.Second))}
 		}
 		if c.MaxRetryWait > 0 && waited+wait > c.MaxRetryWait {
-			return resp, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s",
-				(waited + wait).Round(time.Second), c.MaxRetryWait.Round(time.Second), wait.Round(time.Second))
+			return resp, &RateLimitError{err: apiErr, msg: fmt.Sprintf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s",
+				(waited + wait).Round(time.Second), c.MaxRetryWait.Round(time.Second), wait.Round(time.Second))}
 		}
 		if c.OnRetry != nil {
 			c.OnRetry(wait, retries+1, c.MaxRetries)
@@ -182,11 +183,12 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 	}
 	resp := &Response{Status: httpResp.StatusCode, Header: httpResp.Header, Body: data}
 	if resp.Status >= 400 {
-		shown := data
+		apiErr := &APIError{Status: resp.Status, Body: data}
 		if r.Redact != nil {
-			shown = r.Redact(data)
+			// A copy, so a redactor that edits its argument leaves the response as received.
+			apiErr.shown, apiErr.redacted = r.Redact(bytes.Clone(data)), true
 		}
-		return resp, &APIError{Status: resp.Status, Body: data, shown: shown}
+		return resp, apiErr
 	}
 	return resp, nil
 }

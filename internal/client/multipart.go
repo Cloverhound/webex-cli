@@ -33,7 +33,8 @@ func (r *Request) SetMultipart(parts []MultipartPart) error {
 }
 
 func (r *Request) setMultipart(body webexapi.Multipart) {
-	r.bodyRaw = string(body.Body)
+	r.bodyRaw = ""
+	r.bodyBytes = body.Body
 	r.bodyContentType = body.ContentType
 	r.bodySummary = body.Summary
 }

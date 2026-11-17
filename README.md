@@ -364,7 +364,7 @@ See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual 
 
 ## Go SDK
 
-The CLI is built on a Go SDK that other programs can import: `pkg/webexapi` (transport, paging, hosts, org IDs), `pkg/webexops` (every operation, generated from the collections) and `pkg/aiagent` (AI Agent Studio). See the [Go SDK docs](https://cloverhound.github.io/webex-cli/sdk/).
+The CLI is built on a Go SDK that other programs can import: `pkg/webexapi` (transport, paging, hosts, org IDs), `pkg/webexops` (the operations generated from the collections; the handwritten upload, download and search commands are not in it) and `pkg/aiagent` (AI Agent Studio). See the [Go SDK docs](https://cloverhound.github.io/webex-cli/sdk/).
 
 ## Development
 

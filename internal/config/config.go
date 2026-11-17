@@ -59,7 +59,7 @@ func SetOrgID(id string) {
 func OrgID() string       { return orgID }
 func OrgIDBase64() string { return orgIDBase64 }
 
-var defaultHosts = webexapi.HostsFor("", "")
+var defaultHosts, _ = webexapi.HostsFor("", "")
 
 var (
 	CallingBaseURL = defaultHosts.Webex
@@ -89,14 +89,19 @@ var (
 )
 
 // SetCCRegion points Contact Center and AI Agent Studio requests at a data center
-// from CCRegions. Empty means DefaultCCRegion.
+// from CCRegions. Empty means DefaultCCRegion; any other value keeps the current
+// one, so callers validate it first.
 func SetCCRegion(r string) {
 	if r == "" {
 		r = DefaultCCRegion
 	}
+	hosts, err := webexapi.HostsFor("", r)
+	if err != nil {
+		return
+	}
 	ccRegion = r
-	CcBaseURL = webexapi.CCHost(r)
-	AiAgentBaseURL = webexapi.AIAgentHost(r)
+	CcBaseURL = hosts.CC
+	AiAgentBaseURL = hosts.AIAgent
 }
 
 // Regions lists the supported --region values.
@@ -115,7 +120,10 @@ func AnalyticsCallingBaseURL() string { return webexapi.AnalyticsCallingHost(reg
 
 // Hosts are this run's API hosts, for its data region and Contact Center data
 // center.
-func Hosts() webexapi.Hosts { return webexapi.HostsFor(region, ccRegion) }
+func Hosts() webexapi.Hosts {
+	hosts, _ := webexapi.HostsFor(region, ccRegion) // ccRegion is always one of CCRegions
+	return hosts
+}
 
 // DecodeOrgID converts a base64 Webex org ID to its UUID; see webexapi.DecodeOrgID.
 func DecodeOrgID(id string) string { return webexapi.DecodeOrgID(id) }

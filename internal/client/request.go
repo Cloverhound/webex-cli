@@ -21,7 +21,9 @@ type Request struct {
 	bodyJSON    map[string]any
 	bodyRaw     string
 
-	// Multipart bodies override the JSON content type and log a safe summary.
+	// Multipart bodies are sent from bodyBytes, which can be large, rather than
+	// a copy; they override the JSON content type and log a safe summary.
+	bodyBytes                    []byte
 	bodyContentType, bodySummary string
 
 	// redactError removes credentials from a failed response before its error
@@ -93,6 +95,7 @@ func (r *Request) BodyStringSlice(key string, values []string) {
 // SetBodyRaw sets the raw JSON body, overriding individual fields.
 func (r *Request) SetBodyRaw(raw string) {
 	r.bodyRaw = raw
+	r.bodyBytes = nil
 	r.bodyContentType = ""
 	r.bodySummary = ""
 }
@@ -115,7 +118,7 @@ func (r *Request) RedactErrors(redact func([]byte) []byte) {
 
 // Finalize builds the body JSON if no raw body is set.
 func (r *Request) Finalize() {
-	if r.bodyRaw == "" && len(r.bodyJSON) > 0 {
+	if r.bodyRaw == "" && r.bodyBytes == nil && len(r.bodyJSON) > 0 {
 		data, err := json.Marshal(r.bodyJSON)
 		if err == nil {
 			r.bodyRaw = string(data)
@@ -159,11 +162,18 @@ func (r *Request) logBody() string {
 	return r.bodyRaw
 }
 
+func (r *Request) body() []byte {
+	if r.bodyBytes != nil {
+		return r.bodyBytes
+	}
+	return []byte(r.bodyRaw)
+}
+
 func (r *Request) sdkRequest() webexapi.Request {
 	return webexapi.Request{
 		Method:      r.method,
 		URL:         webexapi.WithQuery(r.url(), r.query()),
-		Body:        []byte(r.bodyRaw),
+		Body:        r.body(),
 		ContentType: r.bodyContentType,
 		Header:      r.header(),
 		Redact:      r.redactError,
@@ -175,7 +185,7 @@ func (r *Request) sdkList() webexapi.List {
 		Method:      r.method,
 		URL:         r.url(),
 		Query:       r.query(),
-		Body:        []byte(r.bodyRaw),
+		Body:        r.body(),
 		ContentType: r.bodyContentType,
 		Header:      r.header(),
 		Redact:      r.redactError,

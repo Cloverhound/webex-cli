@@ -1,4 +1,5 @@
 """Regression checks for service-specific operations in the table."""
+import re
 import unittest
 
 from generate_cli import generate_area_file, operation, resolve_base_url
@@ -86,6 +87,31 @@ class PaginationTest(unittest.TestCase):
         self.assertIsNone(self.paging('webex', 'list', ['max']))
 
 
+class OperationIDTest(unittest.TestCase):
+    colliding = [
+        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': '/telephony/config/people/me/settings/priorityAlert/criteria/{id}',
+         'path_params': [{'name': 'id'}]},
+        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': '/telephony/config/people/me/settings/priorityAlert'},
+    ]
+
+    def ids(self, endpoints):
+        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-settings-for-me', endpoints)
+        return dict(re.findall(r'^var (\w+) = &Operation\{.*?Path:\s+"([^"]+)"', source, re.S | re.M))
+
+    def test_colliding_operations_are_named_by_route_in_any_order(self):
+        forward, backward = self.ids(self.colliding), self.ids(list(reversed(self.colliding)))
+        self.assertEqual(forward, backward)
+        self.assertEqual(forward['CallingCallSettingsForMeGetPriorityAlert2'],
+                         '/telephony/config/people/me/settings/priorityAlert')
+        self.assertEqual(forward['CallingCallSettingsForMeGetPriorityAlertCriterion'],
+                         '/telephony/config/people/me/settings/priorityAlert/criteria/{id}')
+
+    def test_a_collision_without_route_names_stops_generation(self):
+        endpoints = [{'command': 'list', 'method': 'GET', 'path': '/a'}, {'command': 'list', 'method': 'GET', 'path': '/b'}]
+        with self.assertRaises(SystemExit):
+            area_file('calling', 'Webex Cloud Calling', 'webex', True, 'things', endpoints)
+
+
 class FlagTest(unittest.TestCase):
     def test_a_query_parameter_shares_the_flag_of_a_path_parameter_with_its_name(self):
         op = operation({'command': 'get', 'method': 'GET', 'path': '/things/{thingId}',
@@ -112,7 +138,8 @@ class FlagTest(unittest.TestCase):
                         'path_params': [{'name': 'orgId'}], 'query_params': [{'name': 'orgId'}]},
                        'Webex Contact Center', 'cc', False)
         self.assertEqual(op['path'], '/organization/{orgid}/team')
-        self.assertEqual([(p['name'], p['flag']) for p in op['params']], [('orgid', 'orgid'), ('orgId', 'orgid')])
+        self.assertEqual([(p['name'], p['flag'], p.get('orgUUID')) for p in op['params']],
+                         [('orgid', 'orgid', True), ('orgId', 'orgid', True)])
 
     def test_from_gets_a_time_range(self):
         for path, expected in [('/v1/tasks', 'TimeEpochMs'), ('/v1/events', 'TimeISO')]:

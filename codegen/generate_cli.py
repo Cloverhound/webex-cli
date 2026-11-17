@@ -11,7 +11,7 @@ import os
 import re
 import subprocess
 import paging
-from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
+from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS, OPERATION_IDS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
@@ -283,12 +283,14 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
             'name': p['name'], 'in': 'InPath', 'flag': flag_for(p['name'], camel_to_kebab(p['name'])),
             'usage': p.get('description', ''), 'required': True,
             # Identity routes take the org UUID, but --org-id is filled with the base64 org ID.
-            'orgUUID': p['name'] == 'orgId' and path.startswith(('/identity/scim/', '/identity/organizations/')),
+            'orgUUID': (needs_uuid_orgid and p['name'] == 'orgid') or
+                       (p['name'] == 'orgId' and path.startswith(('/identity/scim/', '/identity/organizations/'))),
         })
     for p in query_params:
         params.append({
             'name': p.get('_api_name', p['name']), 'in': 'InQuery',
             'flag': flag_for(p['name'], camel_to_kebab(p['name'])), 'usage': p.get('description', ''),
+            'orgUUID': needs_uuid_orgid and p['name'] == 'orgid',
         })
     for h in ep.get('extra_headers', []):
         if h['name'] == AGENT_TOKEN_HEADER:
@@ -408,11 +410,12 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
                 print(f"    Skipping command '{ep['command']}' (custom override)")
                 continue
             host_of = resolve_base_url(collection_name, ep['path'], host)
+            key = (ep['method'], ep['path'], ep['command'])
             op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
-            op_id = go_identifier(area, group, ep['command'])
-            base, n = op_id, 2
-            while op_id in used_ids:
-                op_id, n = f'{base}_{n}', n + 1
+            op_id = OPERATION_IDS.get(collection_name, {}).get(key) or go_identifier(area, group, ep['command'])
+            if op_id in used_ids:
+                raise SystemExit(f"Two {collection_name} operations would be named {op_id}; the second is {key}. "
+                                 "Name one by its route and command in OPERATION_IDS in codegen/naming_overrides.py.")
             used_ids.add(op_id)
             op_ids.append(op_id)
             decls.append('')

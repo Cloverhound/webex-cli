@@ -650,7 +650,7 @@ var CcAgentWellbeingGetBurnoutId = &Operation{
 	Description: "Retrieve an existing Agent Burnout resource by ID in a given organization. Deprecated. Use GET /ai-feature/agent-burnout/{id} instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/agent-burnout/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Agent Burnout resource."},
 	},
 }
@@ -662,7 +662,7 @@ var CcAgentWellbeingUpdateBurnoutId = &Operation{
 	Description: "Update an existing Agent Burnout resource by ID in a given organization. Deprecated. Use PUT /ai-feature/agent-burnout/{id} instead.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/agent-burnout/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Agent Burnout resource."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -684,7 +684,7 @@ var CcAgentWellbeingListBurnout = &Operation{
 	Description: "Retrieve a list of Agent Burnout resource(s) in a given organization.Only one entry per organization can exist for Agent Burnout resource. Deprecated. Use GET /v2/ai-feature/agent-burnout instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/agent-burnout",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -700,7 +700,7 @@ var CcAutoCsatCreateMappedQuestion = &Operation{
 	Description: "Create a new Auto CSAT mapped Question in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question instead.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "autoCsatId", In: InPath, Flag: "auto-csat-id", Required: true, Usage: "Resource ID of the Auto CSAT resource"},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -721,7 +721,7 @@ var CcAutoCsatBulkSaveMappedQuestion = &Operation{
 	Description: "Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization. Deprecated. Use POST /ai-feature/auto-csat/question/bulk instead.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "autoCsatId", In: InPath, Flag: "auto-csat-id", Required: true, Usage: "Resource ID of the Auto CSAT resource"},
 	},
 	Body: &Body{},
@@ -734,7 +734,7 @@ var CcAutoCsatGetMappedQuestionId = &Operation{
 	Description: "Retrieve an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/question/{id} instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "autoCsatId", In: InPath, Flag: "auto-csat-id", Required: true, Usage: "Resource ID of the Auto CSAT resource"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT mapped Question."},
 	},
@@ -747,7 +747,7 @@ var CcAutoCsatDeleteMappedQuestionId = &Operation{
 	Description: "Delete an existing Auto CSAT mapped Question by ID in a given organization. Deprecated. Use DELETE /ai-feature/auto-csat/question/{id} instead.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{autoCsatId}/question/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "autoCsatId", In: InPath, Flag: "auto-csat-id", Required: true, Usage: "Resource ID of the Auto CSAT resource"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT mapped Question."},
 	},
@@ -761,7 +761,7 @@ var CcAutoCsatGet = &Operation{
 	Description: "Retrieve an existing Auto CSAT resource by ID in a given organization. Deprecated. Use GET /ai-feature/auto-csat/{id} instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT resource."},
 	},
 }
@@ -774,7 +774,7 @@ var CcAutoCsatUpdate = &Operation{
 	Description: "Update an existing Auto CSAT resource by ID in a given organization. Deprecated. Use PUT /ai-feature/auto-csat/{id} instead.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/auto-csat/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT resource."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -797,7 +797,7 @@ var CcAutoCsatList = &Operation{
 	Description: "Retrieve a list of Auto CSAT resource(s) in a given organization.Only one entry per organization can exist for Auto CSAT resource. Deprecated. Use GET /v2/ai-feature/auto-csat instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/auto-csat",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -813,7 +813,7 @@ var CcAutoCsatListMappedQuestion = &Operation{
 	Description: "Retrieve a list of Auto CSAT mapped Question(s) in a given organization. Deprecated. Use GET /v2/ai-feature/auto-csat/question instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/auto-csat/{autoCsatId}/question",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "autoCsatId", In: InPath, Flag: "auto-csat-id", Required: true, Usage: "Resource ID of the Auto CSAT resource"},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.(id, questionId, questionnaireId)"},
@@ -831,7 +831,7 @@ var CcGeneratedSummariesGet = &Operation{
 	Description: "Retrieve an existing Generated Summaries resource by ID in a given organization. Deprecated. Use GET /ai-feature/generated-summaries/{id} instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/generated-summaries/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Generated Summaries resource."},
 	},
 }
@@ -844,7 +844,7 @@ var CcGeneratedSummariesUpdate = &Operation{
 	Description: "Update an existing Generated Summaries resource by ID in a given organization. Deprecated. Use PUT /ai-feature/generated-summaries/{id} instead.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/generated-summaries/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Generated Summaries resource."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -867,7 +867,7 @@ var CcGeneratedSummariesList = &Operation{
 	Description: "Retrieve a list of Generated Summaries resource(s) in a given organization.Only one entry per organization can exist for Generated Summaries resource. Deprecated. Use GET /v2/ai-feature/generated-summaries instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/generated-summaries",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -883,7 +883,7 @@ var CcBusinessHourList = &Operation{
 	Description: "Retrieve a list of Business Hours resources in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/business-hours",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, workingHours, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (workingHours)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -903,7 +903,7 @@ var CcBusinessHourCreate = &Operation{
 	Description: "Create a new Business Hours resource in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/business-hours",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -915,7 +915,7 @@ var CcBusinessHourBulkSave = &Operation{
 	Description: "Create, Update or delete Business Hours resources in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/business-hours/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -927,7 +927,7 @@ var CcBusinessHourBulkExport = &Operation{
 	Description: "Export all Business Hours resource(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/business-hours/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -942,7 +942,7 @@ var CcBusinessHourGet = &Operation{
 	Description: "Retrieve an existing Business Hours resource by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/business-hours/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Business Hour."},
 	},
 }
@@ -955,7 +955,7 @@ var CcBusinessHourUpdate = &Operation{
 	Description: "Update an existing Business Hours resource by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/business-hours/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Business Hour."},
 	},
 	Body: &Body{},
@@ -969,7 +969,7 @@ var CcBusinessHourDelete = &Operation{
 	Description: "Delete an existing Business Hours resource by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/business-hours/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Business Hour."},
 	},
 }
@@ -981,7 +981,7 @@ var CcBusinessHourListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Business Hours resource by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/business-hours/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -997,7 +997,7 @@ var CcHolidayListList = &Operation{
 	Description: "Retrieve a list of Holiday Lists in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/holiday-list",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, holidays, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except holidays"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -1017,7 +1017,7 @@ var CcHolidayListCreate = &Operation{
 	Description: "Create a new Holiday List in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/holiday-list",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1029,7 +1029,7 @@ var CcHolidayListBulkSave = &Operation{
 	Description: "Create, Update or delete Holiday Lists in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/holiday-list/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1041,7 +1041,7 @@ var CcHolidayListBulkExport = &Operation{
 	Description: "Export all Holiday List(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/holiday-list/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -1056,7 +1056,7 @@ var CcHolidayListGet = &Operation{
 	Description: "Retrieve an existing Holiday List by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/holiday-list/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Holiday List."},
 	},
 }
@@ -1069,7 +1069,7 @@ var CcHolidayListUpdate = &Operation{
 	Description: "Update an existing Holiday List by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/holiday-list/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Holiday List."},
 	},
 	Body: &Body{},
@@ -1083,7 +1083,7 @@ var CcHolidayListDelete = &Operation{
 	Description: "Delete an existing Holiday List by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/holiday-list/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Holiday List."},
 	},
 }
@@ -1095,7 +1095,7 @@ var CcHolidayListListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Holiday List by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/holiday-list/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -1111,7 +1111,7 @@ var CcOverridesList = &Operation{
 	Description: "Retrieve a list of Overrides resource(s) in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/overrides",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, overrides, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (overrides)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -1131,7 +1131,7 @@ var CcOverridesCreate = &Operation{
 	Description: "Create a new Overrides resource in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/overrides",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1143,7 +1143,7 @@ var CcOverridesBulkSave = &Operation{
 	Description: "Create, Update or delete Overrides resource(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/overrides/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1155,7 +1155,7 @@ var CcOverridesBulkExport = &Operation{
 	Description: "Export all Overrides resource(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/overrides/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -1170,7 +1170,7 @@ var CcOverridesGet = &Operation{
 	Description: "Retrieve an existing Overrides resource by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/overrides/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Overrides resource."},
 	},
 }
@@ -1183,7 +1183,7 @@ var CcOverridesUpdate = &Operation{
 	Description: "Update an existing Overrides resource by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/overrides/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Overrides resource."},
 	},
 	Body: &Body{},
@@ -1197,7 +1197,7 @@ var CcOverridesDelete = &Operation{
 	Description: "Delete an existing Overrides resource by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/overrides/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Overrides resource."},
 	},
 }
@@ -1209,7 +1209,7 @@ var CcOverridesListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Overrides resource by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/overrides/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -1225,7 +1225,7 @@ var CcAddressBookList = &Operation{
 	Description: "Retrieve a list of Address Book(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/address-book",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, number)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"number\");value==\"Cisco\"\n"},
@@ -1242,7 +1242,7 @@ var CcAddressBookCreate = &Operation{
 	Description: "Create a new Address Book in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v3/address-book",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
@@ -1262,7 +1262,7 @@ var CcAddressBookBulkExport = &Operation{
 	Description: "Export all Address Book(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/address-book/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -1276,7 +1276,7 @@ var CcAddressBookCreateEntry = &Operation{
 	Description: "Create a new Address Book Entry in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/address-book/{addressBookId}/entry",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -1295,7 +1295,7 @@ var CcAddressBookBulkSaveEntry = &Operation{
 	Description: "Create, Update or delete Address Book Entry(s) in bulk for an Address Book in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/address-book/{addressBookId}/entry/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 	},
 	Body: &Body{},
@@ -1308,7 +1308,7 @@ var CcAddressBookGetEntryId = &Operation{
 	Description: "Retrieve an existing Address Book Entry by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book Entry"},
 	},
@@ -1321,7 +1321,7 @@ var CcAddressBookUpdateEntryId = &Operation{
 	Description: "Update an existing Address Book Entry by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book Entry"},
 	},
@@ -1341,7 +1341,7 @@ var CcAddressBookDeleteEntryId = &Operation{
 	Description: "Delete an existing Address Book Entry by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/address-book/{addressBookId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book Entry"},
 	},
@@ -1355,7 +1355,7 @@ var CcAddressBookGet = &Operation{
 	Description: "Retrieve an existing Address Book by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/address-book/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book."},
 	},
 }
@@ -1368,7 +1368,7 @@ var CcAddressBookUpdate = &Operation{
 	Description: "Update an existing Address Book by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/v3/address-book/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -1390,7 +1390,7 @@ var CcAddressBookDelete = &Operation{
 	Description: "Delete an existing Address Book by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/v3/address-book/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Address Book."},
 	},
 }
@@ -1402,7 +1402,7 @@ var CcAddressBookListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Address Book by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/address-book/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -1418,7 +1418,7 @@ var CcAddressBookListEntry = &Operation{
 	Description: "Retrieve a list of Address Book Entry(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/address-book/{addressBookId}/entry",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "addressBookId", In: InPath, Flag: "address-book-id", Required: true, Usage: "Resource ID of the Address Book"},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
@@ -1436,7 +1436,7 @@ var CcAudioFilesCreate = &Operation{
 	Description: "Create a new Audio File in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/audio-file",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1449,7 +1449,7 @@ var CcAudioFilesGet = &Operation{
 	Description: "Retrieve an existing Audio File by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/audio-file/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Audio File."},
 		{Name: "includeUrl", In: InQuery, Flag: "include-url", Usage: "Indicates if the URL for downloading Audio Fileshould be included in the response."},
 	},
@@ -1463,7 +1463,7 @@ var CcAudioFilesUpdate = &Operation{
 	Description: "Update an existing Audio File by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/audio-file/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Audio File."},
 	},
 	Body: &Body{},
@@ -1477,7 +1477,7 @@ var CcAudioFilesDelete = &Operation{
 	Description: "Delete an existing Audio File by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/audio-file/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Audio File."},
 	},
 }
@@ -1490,7 +1490,7 @@ var CcAudioFilesPatch = &Operation{
 	Description: "Partially update Audio File by ID in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/audio-file/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Audio File."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -1505,7 +1505,7 @@ var CcAudioFilesListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Audio File by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/audio-file/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -1521,7 +1521,7 @@ var CcAudioFilesList = &Operation{
 	Description: "Retrieve a list of Audio File(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/audio-file",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported except URL"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -1538,7 +1538,7 @@ var CcAuxiliaryCodeList = &Operation{
 	Description: "Retrieve a list of Auxiliary Code(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/auxiliary-code",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime, validBurnoutForWrapUpCode, validBurnoutForIdleCode \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -1557,7 +1557,7 @@ var CcAuxiliaryCodeCreate = &Operation{
 	Description: "Create a new Auxiliary Code in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "active", Flag: "active", Type: "bool"},
@@ -1582,7 +1582,7 @@ var CcAuxiliaryCodeBulkSave = &Operation{
 	Description: "Create, Update or delete Auxiliary Code(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1594,7 +1594,7 @@ var CcAuxiliaryCodeBulkPartialUpdate = &Operation{
 	Description: "Update some or all properties for multiple Auxiliary codes in bulk in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1606,7 +1606,7 @@ var CcAuxiliaryCodeBulkExport = &Operation{
 	Description: "Export all Auxiliary Code(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -1620,7 +1620,7 @@ var CcAuxiliaryCodePurgeInactive = &Operation{
 	Description: "Purge inactive Auxiliary Code(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -1633,7 +1633,7 @@ var CcAuxiliaryCodeGet = &Operation{
 	Description: "Retrieve an existing Auxiliary Code by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auxiliary Code"},
 	},
 }
@@ -1646,7 +1646,7 @@ var CcAuxiliaryCodeUpdate = &Operation{
 	Description: "Update an existing Auxiliary Code by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auxiliary Code."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -1673,7 +1673,7 @@ var CcAuxiliaryCodeDelete = &Operation{
 	Description: "Delete an existing Auxiliary Code by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auxiliary Code."},
 	},
 }
@@ -1685,7 +1685,7 @@ var CcAuxiliaryCodeListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Auxiliary Code by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/auxiliary-code/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -1701,7 +1701,7 @@ var CcContactNumberCreate = &Operation{
 	Description: "Create a new Contact Number in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-number",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "number", Flag: "number", Type: "string"},
@@ -1718,7 +1718,7 @@ var CcContactNumberListAll = &Operation{
 	Description: "Retrieve a list of  only contact numbers(property - number) from Contact Number(s) without pagination in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-number/all-numbers",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single},
 }
@@ -1730,7 +1730,7 @@ var CcContactNumberBulkSave = &Operation{
 	Description: "Create, Update or delete Contact Number(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-number/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1742,7 +1742,7 @@ var CcContactNumberBulkExport = &Operation{
 	Description: "Export all Contact Number(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-number/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -1757,7 +1757,7 @@ var CcContactNumberGet = &Operation{
 	Description: "Retrieve an existing Contact Number by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Number."},
 	},
 }
@@ -1770,7 +1770,7 @@ var CcContactNumberUpdate = &Operation{
 	Description: "Update an existing Contact Number by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/contact-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Number."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -1789,7 +1789,7 @@ var CcContactNumberDelete = &Operation{
 	Description: "Delete an existing Contact Number by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/contact-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Number."},
 	},
 }
@@ -1801,7 +1801,7 @@ var CcContactNumberList = &Operation{
 	Description: "Retrieve a list of Contact Number(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/contact-number",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword."},
@@ -1818,7 +1818,7 @@ var CcContactServiceQueueList = &Operation{
 	Description: "Retrieve a list of Contact Service Queues in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead. Deprecated. Use GET /v2/contact-service-queue instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/contact-service-queue",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, queueSkillRequirements, xspVersion, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (callDistributionGroups,queueSkillRequirements,links)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -1838,7 +1838,7 @@ var CcContactServiceQueueCreate = &Operation{
 	Description: "Create a new Contact Service Queue in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1850,7 +1850,7 @@ var CcContactServiceQueueBulkSave = &Operation{
 	Description: "Create, Update or delete Contact Service Queues in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/v2/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1862,7 +1862,7 @@ var CcContactServiceQueueBulkPartialUpdate = &Operation{
 	Description: "Update some or all properties for multiple Contact Service Queues in bulk in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -1874,7 +1874,7 @@ var CcContactServiceQueueBulkExport = &Operation{
 	Description: "Export all Contact Service Queue(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Indicates the queue type; can be INBOUND or OUTBOUND."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
@@ -1890,7 +1890,7 @@ var CcContactServiceQueueListBySkillProfile = &Operation{
 	Description: "Retrieve a list of skill-based Contact Service Queues associated with a given skill profile ID, accessible to authorized clients in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -1904,7 +1904,7 @@ var CcContactServiceQueueDeleteReferences = &Operation{
 	Description: "Removes the references to the specified entities (such as teams, sites, or agents) from Contact Service Queues for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/delete-reference",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true},
 	},
 	Body: &Body{},
 }
@@ -1917,7 +1917,7 @@ var CcContactServiceQueueListManuallyAssignable = &Operation{
 	Description: "Retrieve a list of Contact Service Queues that are eligible for manual contact assignment based on the provided criteria in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/fetch-manually-assignable-queues",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "agentId", Flag: "agent-id", Type: "string"},
@@ -1932,7 +1932,7 @@ var CcContactServiceQueuePurgeInactive = &Operation{
 	Description: "Purge inactive Contact Service Queues older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch will be selected."},
 	},
 }
@@ -1945,7 +1945,7 @@ var CcContactServiceQueueGet = &Operation{
 	Description: "Retrieve an existing Contact Service Queue by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Service Queue."},
 		{Name: "agentsUpdatedInfo", In: InQuery, Flag: "agents-updated-info", Usage: "If `true`, returns the user details who has last updated the agents list in an agent based queue."},
 	},
@@ -1959,7 +1959,7 @@ var CcContactServiceQueueUpdate = &Operation{
 	Description: "Update an existing Contact Service Queue by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Service Queue."},
 	},
 	Body: &Body{},
@@ -1973,7 +1973,7 @@ var CcContactServiceQueueDelete = &Operation{
 	Description: "Delete an existing Contact Service Queue by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Service Queue."},
 	},
 }
@@ -1986,7 +1986,7 @@ var CcContactServiceQueueListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Contact Service Queue by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2002,7 +2002,7 @@ var CcContactServiceQueueListAgentBased = &Operation{
 	Description: "Retrieve a list of agent-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/agent-based-queues",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "userid", In: InPath, Flag: "userid", Required: true},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"lastName\");value==\"Cisco\"\n"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2018,7 +2018,7 @@ var CcContactServiceQueueListSkillBased = &Operation{
 	Description: "Retrieve a list of skill-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/skill-based-queues",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "userid", In: InPath, Flag: "userid", Required: true},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"lastName\");value==\"Cisco\"\n"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2034,7 +2034,7 @@ var CcContactServiceQueueListTeamBased = &Operation{
 	Description: "Retrieve a list of team-based Contact Service Queues by user ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/by-user-id/{userid}/team-based-queues",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "userid", In: InPath, Flag: "userid", Required: true},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"lastName\");value==\"Cisco\"\n"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2050,7 +2050,7 @@ var CcContactServiceQueueCreateRemoveAgentsUsersAgent = &Operation{
 	Description: "This API can be used by a contact center supervisor to add or remove agents to or from an agent-based queue that they can access through their user profile access rights. Additionally, the request payload should contain the user ID(s) managed by the supervisor.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/{id}/reassign-agents",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Contact Service Queue."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -2066,7 +2066,7 @@ var CcContactServiceQueueListMappingSummaryGroupedAssistantSkill = &Operation{
 	Description: "Retrieve a list of queue mapping summary for a specified list of Assistant Skills specified in a given organization. The summary currently includes mapped queue count, and the last assigned time of queue mapping.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v2/contact-service-queue/fetch-by-grouped-assistant-skill",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -2082,7 +2082,7 @@ var CcContactServiceQueueListInternalSkillCsqsProfile = &Operation{
 	Description: "Retrieve skill-based Contact Service Queues by skill profile ID for internal use in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/by-skill-profile-id/{id}/internal",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -2095,7 +2095,7 @@ var CcContactServiceQueueListTeamCsqsTeamId = &Operation{
 	Description: "Retrieve team-based Contact Service Queues by team ID for internal use in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/by-team-id/{id}/internal",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -2108,7 +2108,7 @@ var CcContactServiceQueueListAgentCsqsCiUserId = &Operation{
 	Description: "Retrieve agent-based Contact Service Queues by CI user ID for internal use in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/by-user-ci-id/{ciUserId}/internal",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "ciUserId", In: InPath, Flag: "ci-user-id", Required: true, Usage: "ciUserId"},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -2122,7 +2122,7 @@ var CcContactServiceQueueListByDynamicSkills = &Operation{
 	Description: "Retrieve a list of skill-based Contact Service Queues that match the given dynamic skills and skill profile criteria in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/fetch-by-dynamic-skills-and-skillProfile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2135,7 +2135,7 @@ var CcContactServiceQueueListByUserSkillProfile = &Operation{
 	Description: "Retrieve a list of skill-based Contact Service Queues associated with the given skill profile ID and user ID combination in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/fetch-by-userId-skillProfileId",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2147,7 +2147,7 @@ var CcContactServiceQueueListSkillCsqsCiUserId = &Operation{
 	Description: "Retrieve skill-based Contact Service Queues by CI user ID for internal use in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/contact-service-queue/skill-based-queues/by-ci-user-id/{id}/internal",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -2160,7 +2160,7 @@ var CcDesktopLayoutCreate = &Operation{
 	Description: "Create a new Desktop Layout in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/desktop-layout",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "defaultJsonModified", Flag: "default-json-modified", Type: "bool"},
@@ -2192,7 +2192,7 @@ var CcDesktopLayoutBulkSave = &Operation{
 	Description: "Create, Update or delete Desktop Layout(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2204,7 +2204,7 @@ var CcDesktopLayoutBulkExport = &Operation{
 	Description: "Export all Desktop Layout(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -2218,7 +2218,7 @@ var CcDesktopLayoutPurgeInactive = &Operation{
 	Description: "Purge inactive Desktop Layout(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -2231,7 +2231,7 @@ var CcDesktopLayoutGet = &Operation{
 	Description: "Retrieve an existing Desktop Layout by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Layout."},
 	},
 }
@@ -2244,7 +2244,7 @@ var CcDesktopLayoutUpdate = &Operation{
 	Description: "Update an existing Desktop Layout by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Layout."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -2278,7 +2278,7 @@ var CcDesktopLayoutDelete = &Operation{
 	Description: "Delete an existing Desktop Layout by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Layout."},
 	},
 }
@@ -2290,7 +2290,7 @@ var CcDesktopLayoutListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Desktop Layout by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/desktop-layout/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2306,7 +2306,7 @@ var CcDesktopLayoutList = &Operation{
 	Description: "Retrieve a list of Desktop Layout(s) in a given organization. Json file content field won't be avalible in get all even though it is showing in sample response structure. and it will be avialable only in get by id.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/desktop-layout",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, validatedTime, defaultJsonModifiedTime, modifiedTime, teamIds, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -2325,7 +2325,7 @@ var CcDesktopProfileList = &Operation{
 	Description: "Retrieve a list of Desktop Profiles in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/agent-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, autoWrapAfterSeconds, wrapUpCodes, idleCodes, queues, entryPoints, buddyTeams, dialPlans, agentDNValidationCriteria, agentDNValidationCriterions, loginVoiceOptions, viewableStatistics, thresholdRules, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except ( wrapUpCodes,queues, idleCodes,entryPoints, buddyTeams, dialPlans, loginVoiceOptions, viewableStatistics, thresholdRules,agentDNValidationCriterions ) "},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -2344,7 +2344,7 @@ var CcDesktopProfileCreate = &Operation{
 	Description: "Create a new Desktop Profile in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/agent-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "accessBuddyTeam", In: InQuery, Flag: "access-buddy-team", Usage: "Agent profile configuration data"},
 		{Name: "accessEntryPoint", In: InQuery, Flag: "access-entry-point", Usage: "Agent profile configuration data"},
 		{Name: "accessIdleCode", In: InQuery, Flag: "access-idle-code", Usage: "Agent profile configuration data"},
@@ -2407,7 +2407,7 @@ var CcDesktopProfileBulkSave = &Operation{
 	Description: "Create, Update or delete Desktop Profiles in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/agent-profile/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2419,7 +2419,7 @@ var CcDesktopProfileBulkExport = &Operation{
 	Description: "Export all Desktop Profile(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/agent-profile/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -2433,7 +2433,7 @@ var CcDesktopProfilePurgeInactive = &Operation{
 	Description: "Purge inactive Desktop Profiles older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/agent-profile/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch will be selected."},
 	},
 }
@@ -2446,7 +2446,7 @@ var CcDesktopProfileGet = &Operation{
 	Description: "Retrieve an existing Desktop Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/agent-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Profile."},
 	},
 }
@@ -2459,7 +2459,7 @@ var CcDesktopProfileUpdate = &Operation{
 	Description: "Update an existing Desktop Profile by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/agent-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Profile."},
 		{Name: "accessBuddyTeam", In: InQuery, Flag: "access-buddy-team", Usage: "Agent profile configuration data for update"},
 		{Name: "accessEntryPoint", In: InQuery, Flag: "access-entry-point", Usage: "Agent profile configuration data for update"},
@@ -2524,7 +2524,7 @@ var CcDesktopProfileDelete = &Operation{
 	Description: "Delete an existing Desktop Profile by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/agent-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Desktop Profile."},
 	},
 }
@@ -2536,7 +2536,7 @@ var CcDesktopProfileListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Desktop Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/agent-profile/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2552,7 +2552,7 @@ var CcDialNumberListDialedMapping = &Operation{
 	Description: "Retrieve a list of Dialed Number Mapping(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/dial-number",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (links)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(dialledNumber)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"dialledNumber\";value==\"Cisco\"\n- fields=in=(\"dialledNumber\");value==\"Cisco\"\n"},
@@ -2570,7 +2570,7 @@ var CcDialNumberCreateDialedMapping = &Operation{
 	Description: "Create a new Dialed Number Mapping in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/dial-number",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "entryPointId", Flag: "entry-point-id", Type: "string"},
@@ -2599,7 +2599,7 @@ var CcDialNumberDeleteAllDialedMapping = &Operation{
 	Description: "Delete all Dialed Number Mapping(s) in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/dial-number",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 }
 
@@ -2610,7 +2610,7 @@ var CcDialNumberBulkSaveDialedMapping = &Operation{
 	Description: "Create, Update or delete Dialed Number Mapping(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/dial-number/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2622,7 +2622,7 @@ var CcDialNumberBulkExportDialedMapping = &Operation{
 	Description: "Export all Dialed Number Mapping(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-number/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -2636,7 +2636,7 @@ var CcDialNumberListDialedDialedMapping = &Operation{
 	Description: "Retrieve a list of  only dialed numbers(property - dialledNumber) from Dialed Number Mapping(s) without pagination in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-number/numbers-only",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single},
 }
@@ -2648,7 +2648,7 @@ var CcDialNumberGetDialedMappingId = &Operation{
 	Description: "Retrieve an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dialed Number Mapping."},
 	},
 }
@@ -2660,7 +2660,7 @@ var CcDialNumberUpdateDialedMappingId = &Operation{
 	Description: "Update an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/dial-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dialed Number Mapping."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -2690,7 +2690,7 @@ var CcDialNumberDeleteDialedMappingId = &Operation{
 	Description: "Delete an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/dial-number/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dialed Number Mapping."},
 	},
 }
@@ -2702,7 +2702,7 @@ var CcDialNumberListReferencesDialedMapping = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Dialed Number Mapping by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-number/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2718,7 +2718,7 @@ var CcDialPlanList = &Operation{
 	Description: "Retrieve a list of Dial Plans in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/dial-plan",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -2735,7 +2735,7 @@ var CcDialPlanCreate = &Operation{
 	Description: "Create a new Dial Plan in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/dial-plan",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "active", Flag: "active", Type: "bool"},
@@ -2760,7 +2760,7 @@ var CcDialPlanBulkSave = &Operation{
 	Description: "Create, Update or delete Dial Plans in bulk in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/dial-plan/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2772,7 +2772,7 @@ var CcDialPlanBulkExport = &Operation{
 	Description: "Export all Dial Plan(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-plan/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -2787,7 +2787,7 @@ var CcDialPlanGet = &Operation{
 	Description: "Retrieve an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-plan/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dial Plan."},
 	},
 }
@@ -2800,7 +2800,7 @@ var CcDialPlanUpdate = &Operation{
 	Description: "Update an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/dial-plan/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dial Plan."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -2827,7 +2827,7 @@ var CcDialPlanDelete = &Operation{
 	Description: "Delete an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/dial-plan/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Dial Plan."},
 	},
 }
@@ -2839,7 +2839,7 @@ var CcDialPlanListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Dial Plan by ID in a given organization.\n\n**Deprecated:** Dial Plan configuration is deprecated. Dial Plan is no longer available as an Agent Profile setting, so agents can no longer  use them for agent dial number validation.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/dial-plan/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2855,7 +2855,7 @@ var CcEntryPointList = &Operation{
 	Description: "Retrieve a list of Entry Point(s) in a given organization.\n Note: Array fields are removed from List API. If all fields are required please fetch Id's and use get-by-id API.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/entry-point",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, xspVersion, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported except  (ccOneQueue, userIds, queueRankings, links) "},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -2876,7 +2876,7 @@ var CcEntryPointCreate = &Operation{
 	Description: "Create a new Entry Point in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/entry-point",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2888,7 +2888,7 @@ var CcEntryPointBulkSave = &Operation{
 	Description: "Create, Update or delete Entry Point(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/entry-point/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2900,7 +2900,7 @@ var CcEntryPointBulkExport = &Operation{
 	Description: "Export all Entry Point(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/entry-point/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Indicates the type of Entrypoint; can be INBOUND or OUTBOUND."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
@@ -2915,7 +2915,7 @@ var CcEntryPointPurgeInactive = &Operation{
 	Description: "Purge inactive Entry Point(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/entry-point/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -2928,7 +2928,7 @@ var CcEntryPointGet = &Operation{
 	Description: "Retrieve an existing Entry Point by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/entry-point/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Entry Point."},
 		{Name: "includeNames", In: InQuery, Flag: "include-names", Usage: "Specifiy whether to include flow override settings reference variable names."},
 	},
@@ -2942,7 +2942,7 @@ var CcEntryPointUpdate = &Operation{
 	Description: "Update an existing Entry Point by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/entry-point/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Entry Point."},
 	},
 	Body: &Body{},
@@ -2956,7 +2956,7 @@ var CcEntryPointDelete = &Operation{
 	Description: "Delete an existing Entry Point by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/entry-point/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Entry Point."},
 	},
 }
@@ -2968,7 +2968,7 @@ var CcEntryPointListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Entry Point by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/entry-point/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -2984,7 +2984,7 @@ var CcGlobalVariablesCreate = &Operation{
 	Description: "Create a new Global Variable in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/cad-variable",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "active", Flag: "active", Type: "bool"},
@@ -3011,7 +3011,7 @@ var CcGlobalVariablesBulkSave = &Operation{
 	Description: "Export all Global Variable(s) in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/cad-variable/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3023,7 +3023,7 @@ var CcGlobalVariablesBulkExport = &Operation{
 	Description: "Export all Global Variable(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/cad-variable/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3037,7 +3037,7 @@ var CcGlobalVariablesPurgeInactive = &Operation{
 	Description: "Purge inactive Global Variable(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/cad-variable/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -3049,7 +3049,7 @@ var CcGlobalVariablesGetReportableCount = &Operation{
 	Description: "Get count for all the reportable Global Variable(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/cad-variable/reportable-count",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 }
 
@@ -3061,7 +3061,7 @@ var CcGlobalVariablesGet = &Operation{
 	Description: "Retrieve an existing Global Variable by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/cad-variable/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the Global Variable."},
 	},
 }
@@ -3074,7 +3074,7 @@ var CcGlobalVariablesUpdate = &Operation{
 	Description: "Update an existing Global Variable by ID in a given organization. Required fields in payload are agentEditable, variableType, agentViewable, reportable, active, defaultValue.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/cad-variable/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the Global Variable."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -3103,7 +3103,7 @@ var CcGlobalVariablesDelete = &Operation{
 	Description: "Delete an existing Global Variable by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/cad-variable/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the Global Variable."},
 	},
 }
@@ -3115,7 +3115,7 @@ var CcGlobalVariablesListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Global Variable by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/cad-variable/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3131,7 +3131,7 @@ var CcGlobalVariablesList = &Operation{
 	Description: "Retrieve a list of Global Variable(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/cad-variable",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -3148,7 +3148,7 @@ var CcMultimediaProfileList = &Operation{
 	Description: "Retrieve a list of Multimedia Profile(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/multimedia-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -3165,7 +3165,7 @@ var CcMultimediaProfileCreate = &Operation{
 	Description: "Create a new Multimedia Profile in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3177,7 +3177,7 @@ var CcMultimediaProfileBulkSave = &Operation{
 	Description: "Create, Update or delete Multimedia Profile(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3189,7 +3189,7 @@ var CcMultimediaProfileBulkExport = &Operation{
 	Description: "Export all Multimedia Profile(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3203,7 +3203,7 @@ var CcMultimediaProfilePurgeInactive = &Operation{
 	Description: "Purge inactive Multimedia Profile(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -3216,7 +3216,7 @@ var CcMultimediaProfileGet = &Operation{
 	Description: "Retrieve an existing Multimedia Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Multimedia Profile."},
 	},
 }
@@ -3229,7 +3229,7 @@ var CcMultimediaProfileUpdate = &Operation{
 	Description: "Update an existing Multimedia Profile by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Multimedia Profile."},
 	},
 	Body: &Body{},
@@ -3243,7 +3243,7 @@ var CcMultimediaProfileDelete = &Operation{
 	Description: "Delete an existing Multimedia Profile by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Multimedia Profile."},
 	},
 }
@@ -3255,7 +3255,7 @@ var CcMultimediaProfileListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Multimedia Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/multimedia-profile/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3271,7 +3271,7 @@ var CcOutdialAniList = &Operation{
 	Description: "Retrieve a list of Outdial ANIs in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/outdial-ani",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, outdialANIEntries, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except outdialANIEntries"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -3289,7 +3289,7 @@ var CcOutdialAniCreate = &Operation{
 	Description: "Create a new Outdial ANI in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/outdial-ani",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3301,7 +3301,7 @@ var CcOutdialAniBulkSave = &Operation{
 	Description: "Create, Update or delete Outdial ANIs in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3313,7 +3313,7 @@ var CcOutdialAniBulkExport = &Operation{
 	Description: "Export all Outdial ANI(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3328,7 +3328,7 @@ var CcOutdialAniListEntries = &Operation{
 	Description: "Retrieve a list of Outdial ANI Entries in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/entry",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. Supported filterable fields:  id. \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -3346,7 +3346,7 @@ var CcOutdialAniGet = &Operation{
 	Description: "Retrieve an existing Outdial ANI by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Outdial ANI."},
 	},
 }
@@ -3359,7 +3359,7 @@ var CcOutdialAniUpdate = &Operation{
 	Description: "Update an existing Outdial ANI by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Outdial ANI."},
 	},
 	Body: &Body{},
@@ -3373,7 +3373,7 @@ var CcOutdialAniDelete = &Operation{
 	Description: "Delete an existing Outdial ANI by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Outdial ANI."},
 	},
 }
@@ -3385,7 +3385,7 @@ var CcOutdialAniListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Outdial ANI by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3401,7 +3401,7 @@ var CcOutdialAniCreateEntry = &Operation{
 	Description: "Create a new Outdial ANI Entry in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -3424,7 +3424,7 @@ var CcOutdialAniBulkSaveEntries = &Operation{
 	Description: "Create, Update or delete Outdial ANI Entries in bulk for an Address Book in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 	},
 	Body: &Body{},
@@ -3437,7 +3437,7 @@ var CcOutdialAniGetEntryId = &Operation{
 	Description: "Retrieve an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
@@ -3450,7 +3450,7 @@ var CcOutdialAniUpdateEntryId = &Operation{
 	Description: "Update an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
@@ -3473,7 +3473,7 @@ var CcOutdialAniDeleteEntryId = &Operation{
 	Description: "Delete an existing Outdial ANI Entry by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/outdial-ani/{outDialAniId}/entry/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
@@ -3487,7 +3487,7 @@ var CcOutdialAniListEntriesForAni = &Operation{
 	Description: "Retrieve a list of Outdial ANI Entries in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/outdial-ani/{outDialAniId}/entry",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "outDialAniId", In: InPath, Flag: "out-dial-ani-id", Required: true, Usage: "Resource ID of the Outdial ANI"},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
@@ -3505,7 +3505,7 @@ var CcSiteList = &Operation{
 	Description: "Retrieve a list of Site(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/site",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -3522,7 +3522,7 @@ var CcSiteCreate = &Operation{
 	Description: "Create a new Site in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/site",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "active", Flag: "active", Type: "bool"},
@@ -3543,7 +3543,7 @@ var CcSiteBulkSave = &Operation{
 	Description: "Create, Update or delete Site(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/site/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3555,7 +3555,7 @@ var CcSiteBulkExport = &Operation{
 	Description: "Export all Site(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/site/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3569,7 +3569,7 @@ var CcSitePurgeInactive = &Operation{
 	Description: "Purge inactive Site(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/site/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -3582,7 +3582,7 @@ var CcSiteGet = &Operation{
 	Description: "Retrieve an existing Site by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/site/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Site."},
 	},
 }
@@ -3595,7 +3595,7 @@ var CcSiteUpdate = &Operation{
 	Description: "Update an existing Site by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/site/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Site."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -3618,7 +3618,7 @@ var CcSiteDelete = &Operation{
 	Description: "Delete an existing Site by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/site/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Site."},
 	},
 }
@@ -3630,7 +3630,7 @@ var CcSiteListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Site by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/site/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3646,7 +3646,7 @@ var CcSkillList = &Operation{
 	Description: "Retrieve a list of Skills in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/skill",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, enumSkillValues, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (enumSkillValues)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -3665,7 +3665,7 @@ var CcSkillCreate = &Operation{
 	Description: "Create a new Skill in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/skill",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3677,7 +3677,7 @@ var CcSkillBulkSave = &Operation{
 	Description: "Create, Update or delete Skills in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/skill/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3689,7 +3689,7 @@ var CcSkillBulkExport = &Operation{
 	Description: "Export all Skill(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3703,7 +3703,7 @@ var CcSkillPurgeInactive = &Operation{
 	Description: "Purge inactive Skills older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/skill/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch will be selected."},
 	},
 }
@@ -3716,7 +3716,7 @@ var CcSkillGet = &Operation{
 	Description: "Retrieve an existing Skill by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill."},
 	},
 }
@@ -3729,7 +3729,7 @@ var CcSkillUpdate = &Operation{
 	Description: "Update an existing Skill by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/skill/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill."},
 	},
 	Body: &Body{},
@@ -3743,7 +3743,7 @@ var CcSkillDelete = &Operation{
 	Description: "Delete an existing Skill by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/skill/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill."},
 	},
 }
@@ -3755,7 +3755,7 @@ var CcSkillListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Skill by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3770,7 +3770,7 @@ var CcSkillPopulateJsonAttributesFieldSkillIdOrg = &Operation{
 	Summary: "Populate json-attributes field for a given skill-id of an organization",
 	Method:  "POST", Host: HostCC, Path: "/organization/{orgid}/skill/populate-json-attr/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 }
@@ -3782,7 +3782,7 @@ var CcSkillProfileList = &Operation{
 	Description: "Retrieve a list of Skill Profile(s) in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/skill-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, activeSkills, activeEnumSkills, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (activeSkills,activeEnumSkills)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -3800,7 +3800,7 @@ var CcSkillProfileCreate = &Operation{
 	Description: "Create a new Skill Profile in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/skill-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "activeSkills", In: InQuery, Flag: "active-skills", Usage: "Skill profile configuration data"},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Skill profile configuration data"},
 		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Skill profile configuration data"},
@@ -3821,7 +3821,7 @@ var CcSkillProfileBulkSave = &Operation{
 	Description: "Create, Update or delete Skill Profile(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/skill-profile/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3833,7 +3833,7 @@ var CcSkillProfileBulkExport = &Operation{
 	Description: "Export all Skill Profile(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill-profile/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3848,7 +3848,7 @@ var CcSkillProfileGet = &Operation{
 	Description: "Retrieve an existing Skill Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill Profile."},
 		{Name: "includeSkillDetails", In: InQuery, Flag: "include-skill-details", Usage: "If set to true returns skill details"},
 	},
@@ -3862,7 +3862,7 @@ var CcSkillProfileUpdate = &Operation{
 	Description: "Update an existing Skill Profile by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/skill-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill Profile."},
 		{Name: "activeSkills", In: InQuery, Flag: "active-skills", Usage: "Skill profile configuration data for update"},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Skill profile configuration data for update"},
@@ -3885,7 +3885,7 @@ var CcSkillProfileDelete = &Operation{
 	Description: "Delete an existing Skill Profile by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/skill-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill Profile."},
 	},
 }
@@ -3897,7 +3897,7 @@ var CcSkillProfileListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Skill Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/skill-profile/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -3913,7 +3913,7 @@ var CcTeamList = &Operation{
 	Description: "Retrieve a list of Teams in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/team",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, userIds, queueRankings, createdTime, lastUpdatedTime \n\nUse the userId field to filter teams associated with the provided user.\n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (userIds, queueRankings)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -3933,7 +3933,7 @@ var CcTeamCreate = &Operation{
 	Description: "Create a new Team in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/team",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "active", In: InQuery, Flag: "active"},
 		{Name: "name", In: InQuery, Flag: "name"},
 		{Name: "rankQueuesForTeam", In: InQuery, Flag: "rank-queues-for-team"},
@@ -3965,7 +3965,7 @@ var CcTeamBulkSave = &Operation{
 	Description: "Create, Update or delete Teams in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/team/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -3977,7 +3977,7 @@ var CcTeamBulkExport = &Operation{
 	Description: "Export all Team(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/team/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -3991,7 +3991,7 @@ var CcTeamPurgeInactive = &Operation{
 	Description: "Purge inactive Teams older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/team/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch will be selected."},
 	},
 }
@@ -4004,7 +4004,7 @@ var CcTeamGet = &Operation{
 	Description: "Retrieve an existing Team by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/team/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Team"},
 	},
 }
@@ -4017,7 +4017,7 @@ var CcTeamUpdate = &Operation{
 	Description: "Update an existing Team by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/team/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Team."},
 		{Name: "active", In: InQuery, Flag: "active"},
 		{Name: "name", In: InQuery, Flag: "name"},
@@ -4051,7 +4051,7 @@ var CcTeamDelete = &Operation{
 	Description: "Delete an existing Team by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/team/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Team."},
 	},
 }
@@ -4063,7 +4063,7 @@ var CcTeamListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Team by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/team/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -4079,7 +4079,7 @@ var CcUserProfilesList = &Operation{
 	Description: "Retrieve a list of user profiles in a given organization.\n Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, userProfileAppModules, entryPoints, sites, queues, teams, editableFolderIds, viewableFolderIds, nonViewableFolderIds, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except (entryPoints,sites, queues, teams, userProfileAppModules,editableFolderIds, viewableFolderIds, nonViewableFolderIds)"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name, profileType, description)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\",\"description\");value==\"Cisco\"\n"},
@@ -4096,7 +4096,7 @@ var CcUserProfilesBulkSave = &Operation{
 	Description: "Create, Update or delete user profiles in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -4108,7 +4108,7 @@ var CcUserProfilesBulkExport = &Operation{
 	Description: "Export all user profiles in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -4122,7 +4122,7 @@ var CcUserProfilesPurgeInactive = &Operation{
 	Description: "Purge inactive User Profile(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/user-profile/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -4135,7 +4135,7 @@ var CcUserProfilesGet = &Operation{
 	Description: "Retrieve an existing user profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User Profile."},
 		{Name: "includeNames", In: InQuery, Flag: "include-names", Usage: "Flag to include resource names in the response."},
 	},
@@ -4149,7 +4149,7 @@ var CcUserProfilesUpdate = &Operation{
 	Description: "Update an existing user profile by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User Profile."},
 	},
 	Body: &Body{},
@@ -4163,7 +4163,7 @@ var CcUserProfilesDelete = &Operation{
 	Description: "Delete an existing user profile by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User Profile."},
 	},
 }
@@ -4175,7 +4175,7 @@ var CcUserProfilesListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing user profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user-profile/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -4191,7 +4191,7 @@ var CcUserProfilesCreate = &Operation{
 	Description: "Create a new user profile in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -4203,7 +4203,7 @@ var CcUserProfilesGetAclId = &Operation{
 	Description: "Retrieve an existing User Profile ACL by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/user-profile/{id}/acl",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User Profile."},
 		{Name: "names", In: InQuery, Flag: "names", Usage: "    Default all resources are returned in the ACL.\n    If you want to filter the ACL by specific resources,\n    provide a comma-separated list of resource names to filter the ACL. Ex: /url?names=site,team\n"},
 	},
@@ -4216,7 +4216,7 @@ var CcUsersList = &Operation{
 	Description: "Retrieve a list of Users in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/user",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, xspVersion, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"lastName\");value==\"Cisco\"\n"},
@@ -4240,7 +4240,7 @@ var CcUsersBulkPartialUpdate = &Operation{
 	Description: "Update some or all properties for multiple users in bulk for a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/user/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -4252,7 +4252,7 @@ var CcUsersBulkExport = &Operation{
 	Description: "Export all User(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -4266,7 +4266,7 @@ var CcUsersGetCiId = &Operation{
 	Description: "Retrieve an existing User using the CI ID  in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/user/by-ci-user-id/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "CI ID of the User."},
 		{Name: "includeUserProfile", In: InQuery, Flag: "include-user-profile", Usage: "Specifiy whether to include user profile data"},
 		{Name: "includeNames", In: InQuery, Flag: "include-names", Usage: "Specifiy whether to include resource collection names"},
@@ -4281,7 +4281,7 @@ var CcUsersGetAgentsMatchingSkillRequirements = &Operation{
 	Description: "This API can be used to fetch the agents who match the provided skill requirements criteria. Maximum of 50 skill requirements criteria can be passed in the request.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/user/fetch-by-skill-requirements",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"lastName\");value==\"Cisco\"\n"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
@@ -4297,7 +4297,7 @@ var CcUsersListByIds = &Operation{
 	Description: "Retrieve an existing User's first name, last name and email by list of IDs in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/user/fetch-user-details-by-ids",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -4315,7 +4315,7 @@ var CcUsersListAlongProfile = &Operation{
 	Description: "Retrieve a list of Users along with their User Profiles in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/with-user-profile",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single},
 }
@@ -4327,7 +4327,7 @@ var CcUsersGetAlongProfileId = &Operation{
 	Description: "Retrieve an existing User along with the corresponding User Profile by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/with-user-profile/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User."},
 	},
 }
@@ -4340,7 +4340,7 @@ var CcUsersGet = &Operation{
 	Description: "Retrieve an existing Users by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User."},
 		{Name: "includeCount", In: InQuery, Flag: "include-count", Usage: "If set to true, the API response will include the count of each type of Contact Service Queue to which the user is assigned."},
 		{Name: "includeUserProfileType", In: InQuery, Flag: "include-user-profile-type", Usage: "If set to true, the API response includes the User Profile."},
@@ -4360,7 +4360,7 @@ var CcUsersUpdate = &Operation{
 	Description: "Update an existing User by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/user/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User."},
 	},
 	Body: &Body{},
@@ -4374,7 +4374,7 @@ var CcUsersPatch = &Operation{
 	Description: "Partially update User by ID in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/user/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -4389,7 +4389,7 @@ var CcUsersListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing User by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -4406,7 +4406,7 @@ var CcUsersBulkPartialUpdateDynamicSkills = &Operation{
 	Description: "Assign or unassign a dynamic skill to/from multiple users in bulk for a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/user/bulk/update-dynamic-skill/{skillId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "skillId", In: InPath, Flag: "skill-id", Required: true, Usage: "Dynamic skill ID used for bulk update"},
 	},
 	Body: &Body{},
@@ -4419,7 +4419,7 @@ var CcUsersGetDynamicSkillId = &Operation{
 	Description: "Fetches all users assigned to a specific dynamic skill with search and pagination support. Returns user details with the specific dynamic skill value.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/by-dynamic-skill-id/{skillId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "skillId", In: InPath, Flag: "skill-id", Required: true, Usage: "The dynamic skill ID to fetch users for"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email, value)\n\nThe examples below show some search queries\n- \"Cisco\"\n"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -4435,7 +4435,7 @@ var CcUsersReskillAgents = &Operation{
 	Description: "Reskill agents by assigning or unassigning skills.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/user/{id}/reskill",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the User."},
 	},
 	Body: &Body{},
@@ -4449,7 +4449,7 @@ var CcUsersListByCallMonitoringConfig = &Operation{
 	Description: "Fetch paginated users associated to the selected call monitoring team filters while enforcing team ACL.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/user/by-call-monitoring-id/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the call monitoring."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
@@ -4464,7 +4464,7 @@ var CcWorkTypesCreate = &Operation{
 	Description: "Create a new Work Type in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/work-type",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "active", Flag: "active", Type: "bool"},
@@ -4485,7 +4485,7 @@ var CcWorkTypesBulkSave = &Operation{
 	Description: "Create, Update or delete Work Type(s) in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/work-type/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -4497,7 +4497,7 @@ var CcWorkTypesBulkExport = &Operation{
 	Description: "Export all Work Type(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/work-type/bulk-export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Defines the number of items to be displayed on a page. If the number specified is more than allowed max page size, the API will automatically adjust the page size to the max page size."},
 	},
@@ -4511,7 +4511,7 @@ var CcWorkTypesPurgeInactive = &Operation{
 	Description: "Purge inactive Work Type(s) older than the configured interval for a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/work-type/purge-inactive-entities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "nextStartId", In: InQuery, Flag: "next-start-id", Usage: "This is the entity ID from which items for the next purge batch with be selected."},
 	},
 }
@@ -4524,7 +4524,7 @@ var CcWorkTypesGet = &Operation{
 	Description: "Retrieve an existing Work Type by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/work-type/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the work_type."},
 	},
 }
@@ -4537,7 +4537,7 @@ var CcWorkTypesUpdate = &Operation{
 	Description: "Update an existing Work Type by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/work-type/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the work_type."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -4560,7 +4560,7 @@ var CcWorkTypesDelete = &Operation{
 	Description: "Delete an existing Work Type by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/work-type/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of the work_type."},
 	},
 }
@@ -4572,7 +4572,7 @@ var CcWorkTypesListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Work Type by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/work-type/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -4588,7 +4588,7 @@ var CcWorkTypesList = &Operation{
 	Description: "Retrieve a list of Work Type(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/work-type",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain space, and if so kindly bound it with quotes to apply filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned.Default all attributes are returned along with specified columns. All Attributes are supported"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -4695,7 +4695,7 @@ var CcEstimatedWaitTimeGet = &Operation{
 		{Name: "lookbackMinutes", In: InQuery, Flag: "lookback-minutes", Usage: "Integer between 5 and 240 (4 hours) signifying how long back to look at the data points to determine EWT for this queue"},
 		{Name: "maxCV", In: InQuery, Flag: "max-cv", Usage: "This an optional parameter. Maximum value of Coefficient of Variance in a subset of samples (wait times for tasks that got connected to agent in one minute interval) to determine whether the average of such values should be treated as a valid sample for EWT computation. If its not passed it takes the default value of 40 %"},
 		{Name: "minValidSamples", In: InQuery, Flag: "min-valid-samples", Usage: "This an optional parameter. Minimum value of percentage of valid samples (with respect to total number of samples) in the specified lookbackMinutes minutes. If its not passed it takes the default value of 40 %"},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 }
@@ -4726,7 +4726,7 @@ var CcQueuesGetStatistics = &Operation{
 		{Name: "interval", In: InQuery, Flag: "interval", Usage: "Time interval (in minutes) to chunk statistics by i.e. break up the entire from-to timeframe by this interval amount so that statistics can be viewed incrementally. Supported values are 15, 30, or 60."},
 		{Name: "queueIds", In: InQuery, Flag: "queue-ids", Usage: "Comma-separated list of queue IDs. A maximum of 100 values is permitted. If values are not provided, all queues for an organization are returned."},
 		{Name: "queueIds", In: InQuery, Flag: "queue-ids", Usage: "Comma-separated list of queue IDs. A maximum of 100 values is permitted. If values are not provided, all queues for an organization are returned."},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 	TimeRange: TimeEpochMs,
@@ -4753,7 +4753,7 @@ var CcSubscriptionsListV1 = &Operation{
 	Description: "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V1 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 	Method:      "GET", Host: HostCC, Path: "/v1/subscriptions",
 	Params: []Param{
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -4766,7 +4766,7 @@ var CcSubscriptionsListV2 = &Operation{
 	Description: "Retrieve all subscriptions for a given organization. Requires `cjp:config_read` scope.\n\n\n Note: In the response JSON, the 'data' field only contains V2 based subscriptions, while the field 'meta.subscriptionCount' provides the total count encompassing all the created subscriptions in the organization.",
 	Method:      "GET", Host: HostCC, Path: "/v2/subscriptions",
 	Params: []Param{
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -4819,7 +4819,7 @@ var CcSubscriptionsGetV1 = &Operation{
 	Method:      "GET", Host: HostCC, Path: "/v1/subscriptions/{id}",
 	Params: []Param{
 		{Name: "id", In: InPath, Flag: "id", Required: true},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 }
@@ -4832,7 +4832,7 @@ var CcSubscriptionsGetV2 = &Operation{
 	Method:      "GET", Host: HostCC, Path: "/v2/subscriptions/{id}",
 	Params: []Param{
 		{Name: "id", In: InPath, Flag: "id", Required: true},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 }
@@ -4845,7 +4845,7 @@ var CcSubscriptionsDeleteV1 = &Operation{
 	Method:      "DELETE", Host: HostCC, Path: "/v1/subscriptions/{id}",
 	Params: []Param{
 		{Name: "id", In: InPath, Flag: "id", Required: true},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 }
@@ -4858,7 +4858,7 @@ var CcSubscriptionsDeleteV2 = &Operation{
 	Method:      "DELETE", Host: HostCC, Path: "/v2/subscriptions/{id}",
 	Params: []Param{
 		{Name: "id", In: InPath, Flag: "id", Required: true},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 }
@@ -4911,7 +4911,7 @@ var CcSubscriptionsListEventTypesV1 = &Operation{
 	Description: "Retrieve all available event types for an organization. Requires `cjp:config_read` scope.",
 	Method:      "GET", Host: HostCC, Path: "/v1/event-types",
 	Params: []Param{
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -4924,7 +4924,7 @@ var CcSubscriptionsListEventTypesV2 = &Operation{
 	Description: "Retrieve all available event types for an organization along with information about the currently supported resource versions. Requires `cjp:config_read` scope. ",
 	Method:      "GET", Host: HostCC, Path: "/v2/event-types",
 	Params: []Param{
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to be used for this operation. If unspecified, the Organization ID is inferred from the token. The token must have permissions to interact with the organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. If not provided, we will generate one for you."},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "data"},
@@ -5047,7 +5047,7 @@ var CcAgentsGetActivities = &Operation{
 		{Name: "to", In: InQuery, Flag: "to", Usage: "Filter agent activities created before given epoch timestamp in UTC (in milliseconds). If unspecified, queries up to the present.\n The difference between to and from timestamps must be less than 24 hours (86400000 milli seconds)"},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Maximum page size in response. Maximum allowed value is 1000. Defaults to 100 items per page."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Page number to be passed. Maximum number of records that can be fetched for the given from and to is 10,000. So maximum page number allowed is based on it. Defaults to 0."},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 	Paging:    &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"},
@@ -5084,7 +5084,7 @@ var CcAgentsGetStatistics = &Operation{
 		{Name: "agentIds", In: InQuery, Flag: "agent-ids", Usage: "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned."},
 		{Name: "agentIds", In: InQuery, Flag: "agent-ids", Usage: "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned."},
 		{Name: "agentIds", In: InQuery, Flag: "agent-ids", Usage: "Comma-separated list of agent IDs. A maximum of 100 values is permitted. If values are not provided, all agents of an organization are returned."},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 	TimeRange: TimeEpochMs,
@@ -5212,7 +5212,7 @@ var CcTasksGet = &Operation{
 		{Name: "from", In: InQuery, Flag: "from", Usage: "Filters tasks created after the given epoch timestamp (in milliseconds)."},
 		{Name: "to", In: InQuery, Flag: "to", Usage: "Filters tasks created before the given epoch timestamp (in milliseconds); queries up to the present if timestamp is not specified."},
 		{Name: "pageSize", In: InQuery, Flag: "page-size", Usage: "Maximum page size in the response. Maximum allowed value is 1000. Defaults to 100 items per page."},
-		{Name: "orgId", In: InQuery, Flag: "orgid", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 	TimeRange: TimeEpochMs,
@@ -6106,7 +6106,7 @@ var CcCampaignManagerGetValidTimes = &Operation{
 	Description: "Gets valid campaign times for a campaign and agent. This request is accepted for asynchronous processing. Requires 'cjp:user','cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "GET", Host: HostCC, Path: "/v1/organization/{orgid}/getValidCampaignTimes",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which valid campaign times are being requested."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which valid campaign times are being requested."},
 		{Name: "campaignId", In: InQuery, Flag: "campaign-id", Usage: "The campaign ID for which valid campaign times are being requested."},
 		{Name: "interactionId", In: InQuery, Flag: "interaction-id", Usage: "The unique identifier of the interaction associated with this request."},
 		{Name: "agentId", In: InQuery, Flag: "agent-id", Usage: "The agent ID for whom valid campaign times are being requested."},
@@ -6130,7 +6130,7 @@ var CcFlowExportLegacy = &Operation{
 	Description: "Returns the exported flow/subflow in response.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Host: HostCC, Path: "/flow-store/{orgid}/project/{projectId}/flows/{flowId}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Version ID. Possible values are 'draft', 'latest' or version ID like '64b92c004ccd9f3d1c680709'. Defaulted to 'latest'."},
@@ -6144,7 +6144,7 @@ var CcFlowImportLegacy = &Operation{
 	Description: "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "POST", Host: HostCC, Path: "/flow-store/{orgid}/project/{projectId}/flows:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "Determines whether to overwrite the existing flow or not. Possible values: yes/no."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6159,7 +6159,7 @@ var CcFlowList = &Operation{
 	Description: "Returns a list of flows in response. Channel-based filtering can be applied with the `searchBy` query parameter (for example, `channelType|telephony`, `channelType|workItem`, `channelType|customMessaging`, `channelType|genericAction`). Channel visibility may be constrained by organization feature flags. If associatedChannels key is missing or empty, it will be treated as telephony flow.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
 		{Name: "ids", In: InQuery, Flag: "ids", Usage: "Filters results based on a comma-separated list of flow IDs. If provided, only flows with those IDs will be fetched in the response."},
@@ -6181,7 +6181,7 @@ var CcFlowPublish = &Operation{
 	Description: "Returns the published flow in response.\n\nThe Publish API validates the basic structure of the flows. We recommend manually verifying the published flows before proceeding with live traffic.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:publish",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "skipValidation", In: InQuery, Flag: "skip-validation", Usage: "If true, the flow's pre-publish validation is skipped. Use with care."},
@@ -6201,7 +6201,7 @@ var CcFlowLock = &Operation{
 	Description: "Lock a flow to prevent concurrent edits by other users. Locks expire after 15 minutes of inactivity.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:lock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6215,7 +6215,7 @@ var CcFlowUnlock = &Operation{
 	Description: "Release the lock on a flow to allow other users to edit it.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}:unlock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6229,7 +6229,7 @@ var CcFlowValidate = &Operation{
 	Description: "Dry-run validate a flow/subflow definition without persisting it. Use this to check correctness before importing. Include `associatedChannels` to preserve the channel metadata that import and export payloads round-trip. Validation requests where `associatedChannels` is missing or empty are treated as telephony flows, and dry-run validation does not derive the effective channel from `associatedChannels`.\n\nNote: validation is more lenient than import. A flow that passes `:validate` can still be rejected by `:import` (for example, a missing start activity), so a successful validation does not guarantee a successful import.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows:validate",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Body: &Body{},
@@ -6242,7 +6242,7 @@ var CcFlowImport = &Operation{
 	Description: "Import a new flow/subflow from a flow definition. Creates the flow/subflow in draft state and returns the assigned flow metadata, including `flowId`. Include `associatedChannels` in the payload when the flow contains channel-specific activities (for example, `customMessaging`) so channel references can be resolved correctly during import. If `associatedChannels` is missing or empty, the import is treated as a telephony flow. For `FLOW` imports, blank or whitespace-only `associatedChannels[].channelType` values are rejected.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "If true, replaces an existing flow with the same name. Defaults to false."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6257,7 +6257,7 @@ var CcFlowGet = &Operation{
 	Description: "Retrieve the current draft of a flow/subflow as a flow document. To fetch a specific published version, use the `:export` endpoint. The response includes channel metadata (for example, `associatedChannels`) used by channel-specific activities such as `customMessaging`. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
@@ -6271,7 +6271,7 @@ var CcFlowSaveDraft = &Operation{
 	Description: "Save a complete flow/subflow document as the current draft, replacing the existing draft. Submitted `associatedChannels` values are not persisted on save; the draft preserves the existing stored channel metadata. Omitting `associatedChannels` does not default an existing flow to telephony. Pass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "expectedVersion", In: InQuery, Flag: "expected-version", Usage: "Expected current draft version for optimistic locking. The request fails with 409 Conflict if the server-side version does not match. Omit to skip the check."},
@@ -6287,7 +6287,7 @@ var CcFlowPatchDraft = &Operation{
 	Description: "Apply partial updates to an existing flow/subflow draft without replacing the entire document. The patch body is a Patch Draft Contract — server-side merge, idempotent, and re-validated after the merge. The patch is rejected if the merged document fails validation, so the draft is never left in a broken state. The body may also include top-level overrides such as `name` and `description`. Submitted `associatedChannels` values are not persisted on patch; the draft preserves the existing stored channel metadata.\n\nPass `expectedVersion` as a query parameter to enable optimistic locking; the request fails with `409 Conflict` if the server-side version does not match. Omit `expectedVersion` to skip the check.\n\nScope: `cjp:config_write`",
 	Method:      "PATCH", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "Flow ID."},
 		{Name: "expectedVersion", In: InQuery, Flag: "expected-version", Usage: "Expected current draft version for optimistic locking. The request fails with 409 Conflict if the server-side version does not match. Omit to skip the check."},
@@ -6303,7 +6303,7 @@ var CcFlowValidateDraft = &Operation{
 	Description: "Validate the current draft of an existing flow/subflow (read-only operation). Validation reads the draft as stored. Drafts where `associatedChannels` is missing or empty are treated as telephony flows, and validation does not derive the effective channel from `associatedChannels`.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:validate",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "versionId", In: InQuery, Flag: "version-id", Usage: "Version to validate. Use 'draft' for the current draft, or a specific version ObjectId."},
@@ -6318,7 +6318,7 @@ var CcFlowExport = &Operation{
 	Description: "Export a flow/subflow as a flow document for backup, migration, or version control. The exported payload includes `associatedChannels` metadata to preserve channel-specific activity behavior (for example, `customMessaging`) during re-import. If `associatedChannels` is missing or empty, the flow is treated as telephony.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/flows/{flowId}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Version to export. Use 'latest' for the most recent published version, 'draft' for the working copy, or a specific version ObjectId."},
@@ -6333,7 +6333,7 @@ var CcFlowSearch = &Operation{
 	Description: "Returns a list of flows in response. The search is case-sensitive.\n\nScope: `cjp:config_read`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows:search",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "query", In: InQuery, Flag: "query", Usage: "Searches for flows with the given query. The search is case-sensitive."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW' or 'ALL'. Default value is 'ALL'."},
@@ -6351,7 +6351,7 @@ var CcFlowDelete = &Operation{
 	Description: "Permanently deletes a flow or subflow. Flows deleted via this API are removed permanently and cannot be recovered.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Contact Center Service Admin`]",
 	Method:      "DELETE", Host: HostCC, Path: "/{orgid}/project/{projectId}/flows/{flowId}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "flowId", In: InPath, Flag: "flow-id", Required: true, Usage: "ID of the flow/subflow to delete."},
 		{Name: "force", In: InQuery, Flag: "force", Usage: "If 'yes', the flow is deleted even if it is still referenced by other entities. Defaults to 'no'."},
@@ -6367,7 +6367,7 @@ var CcCallbacksSchedule = &Operation{
 	Description: "Creates a new callback request for a customer. Authorization requires the cjp:user scope. The callback default endpoint (EP) and default ANI must be configured as mandatory settings to successfully make API calls.",
 	Method:      "POST", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "customerName", Flag: "customer-name", Type: "string"},
@@ -6390,7 +6390,7 @@ var CcCallbacksGetScheduled = &Operation{
 	Description: "Allows the user to list scheduled callbacks for a given customer number or assignee agent, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
 	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "callbackNumber", In: InQuery, Flag: "callback-number", Usage: "The callback customer number to filter the scheduled callbacks. Only an exact match will yield the result. Allows an optional country code followed by digits (0-9) and the special characters: space, hyphen -, parentheses ( and ), and period ., ensuring the total length is between 7 and 15 characters."},
 		{Name: "assigneeAgent", In: InQuery, Flag: "assignee-agent", Usage: "The unique identifier of the agent assigned to handle the callback. Must be in UUID format. This parameter is optional, but at least one of assigneeAgent or callbackNumber must be provided."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "The page number to retrieve."},
@@ -6408,7 +6408,7 @@ var CcCallbacksGetScheduledId = &Operation{
 	Description: "Retrieve an existing scheduled callback by Id, excluding those whose scheduled trigger time has already passed. Requires 'cjp:user' scope for authorization.",
 	Method:      "GET", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 }
@@ -6420,7 +6420,7 @@ var CcCallbacksUpdateScheduledId = &Operation{
 	Description: "Update an existing scheduled callback by Id,those whose scheduled trigger time has already passed cannot be updated. Requires 'cjp:user' scope for authorization.",
 	Method:      "PUT", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -6445,7 +6445,7 @@ var CcCallbacksDeleteScheduledId = &Operation{
 	Description: "Delete an existing scheduled callback by Id, those whose scheduled trigger time has already passed cannot be deleted. Requires 'cjp:user' scope for authorization.",
 	Method:      "DELETE", Host: HostCC, Path: "/v1/callbacks/organization/{orgid}/scheduled-callback/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "The organization ID for which the callback is being scheduled. This should be a valid UUID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The id with which the Scheduled Callback has been created."},
 	},
 }
@@ -6458,7 +6458,7 @@ var CcAiFeatureGet = &Operation{
 	Description: "Retrieve an existing AI Feature resource by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/ai-feature/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the AI Feature resource."},
 	},
 }
@@ -6471,7 +6471,7 @@ var CcAiFeaturePatch = &Operation{
 	Description: "Partially update AI Feature resource by ID in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/ai-feature/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the AI Feature resource."},
 	},
 	Body: &Body{},
@@ -6484,7 +6484,7 @@ var CcAiFeatureList = &Operation{
 	Description: "Retrieve a list of AI Feature resource(s) in a given organization.Only one entry per organization can exist for AI Feature resource.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/ai-feature",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. Supported filterable fields:  id. \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -6500,7 +6500,7 @@ var CcAiFeatureCreateQuestionMappedAutocsat = &Operation{
 	Description: "Create a new Auto CSAT mapped Question in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/ai-feature/auto-csat/question",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "questionId", Flag: "question-id", Type: "string"},
@@ -6520,7 +6520,7 @@ var CcAiFeatureBulkSaveQuestionMappedAutocsat = &Operation{
 	Description: "Create, Update or delete Auto CSAT mapped Question(s) in bulk for Auto CSAT resource in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/ai-feature/auto-csat/question/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -6532,7 +6532,7 @@ var CcAiFeatureGetQuestionMappedAutocsatId = &Operation{
 	Description: "Retrieve an existing Auto CSAT mapped Question by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/ai-feature/auto-csat/question/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT mapped Question."},
 	},
 }
@@ -6544,7 +6544,7 @@ var CcAiFeatureDeleteQuestionMappedAutocsatId = &Operation{
 	Description: "Delete an existing Auto CSAT mapped Question by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/ai-feature/auto-csat/question/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Auto CSAT mapped Question."},
 	},
 }
@@ -6556,7 +6556,7 @@ var CcAiFeatureListQuestionMappedAutocsat = &Operation{
 	Description: "Retrieve a list of Auto CSAT mapped Question(s) in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/ai-feature/auto-csat/question",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported.(id, questionId, questionnaireId)"},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -6573,7 +6573,7 @@ var CcAgentPersonalGreetingFilesCreate = &Operation{
 	Description: "Create a new Greeting File in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/v2/agent-personal-greeting",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -6586,7 +6586,7 @@ var CcAgentPersonalGreetingFilesDeleteReferences = &Operation{
 	Description: "Removes all references of the specified agent (ciUserId) from greeting files in the given organization. Typically invoked when an agent is deleted or unassigned. in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/agent-personal-greeting/delete-reference",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true},
 	},
 	Body: &Body{},
 }
@@ -6599,7 +6599,7 @@ var CcAgentPersonalGreetingFilesGet = &Operation{
 	Description: "Retrieve an existing Greeting File by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/agent-personal-greeting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Greeting File."},
 		{Name: "includeUrl", In: InQuery, Flag: "include-url", Usage: "Indicates whether the URL for downloading the greeting file should be included in the response."},
 	},
@@ -6613,7 +6613,7 @@ var CcAgentPersonalGreetingFilesUpdate = &Operation{
 	Description: "Update an existing Greeting File by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/v2/agent-personal-greeting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Greeting File."},
 	},
 	Body: &Body{},
@@ -6627,7 +6627,7 @@ var CcAgentPersonalGreetingFilesDelete = &Operation{
 	Description: "Delete an existing Greeting File by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/v2/agent-personal-greeting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Greeting File."},
 	},
 }
@@ -6640,7 +6640,7 @@ var CcAgentPersonalGreetingFilesPatch = &Operation{
 	Description: "Partially update Greeting File by ID in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/v2/agent-personal-greeting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Greeting File."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -6656,7 +6656,7 @@ var CcAgentPersonalGreetingFilesList = &Operation{
 	Description: "Retrieve a list of Greeting Files in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v3/agent-personal-greeting",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. Supported fields are: firstName, lastName, email, ciUserId, and attributeTag.\n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(firstName, lastName, email, attributeTag)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"firstName\";value==\"Cisco\"\n- fields=in=(\"firstName\",\"email\");value==\"Cisco\"\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
@@ -7253,7 +7253,7 @@ var CcResourceCollectionCreate = &Operation{
 	Description: "Create a new resource collection in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/resource-collection",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7265,7 +7265,7 @@ var CcResourceCollectionBulkPartialUpdate = &Operation{
 	Description: "Update some or all properties for resource collections in bulk for a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/resource-collection/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7277,7 +7277,7 @@ var CcResourceCollectionUpdateDefault = &Operation{
 	Description: "Update resource with default resource collection. Ensure resource should not associated to any resource collection and resource should not be updated and not older than 15 min. Only single Resource Collection is allowed to update.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/resource-collection/update-resource",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7290,7 +7290,7 @@ var CcResourceCollectionGet = &Operation{
 	Description: "Retrieve an existing Resource Collection by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/resource-collection/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Resource Collection."},
 	},
 }
@@ -7303,7 +7303,7 @@ var CcResourceCollectionUpdate = &Operation{
 	Description: "Update an existing resource collection by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/resource-collection/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Resource Collection."},
 	},
 	Body: &Body{},
@@ -7317,7 +7317,7 @@ var CcResourceCollectionDelete = &Operation{
 	Description: "Delete an existing resource collection by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/resource-collection/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Resource Collection."},
 	},
 }
@@ -7329,7 +7329,7 @@ var CcResourceCollectionListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing resource collection by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/resource-collection/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -7345,7 +7345,7 @@ var CcResourceCollectionList = &Operation{
 	Description: "Retrieve a list of resource collections in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/resource-collection",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -7487,7 +7487,7 @@ var CcActivitiesListDefinitions = &Operation{
 	Description: "List all available activity types with their full schemas, including inputs, outputs, ports, and descriptions. The response is sufficient on its own to construct nodes — there is no separate schema endpoint.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single},
@@ -7500,7 +7500,7 @@ var CcActivitiesDescribe = &Operation{
 	Description: "Retrieve a single activity's full definition, including inputs, outputs, named ports, and the JSON Schema for its inputs — all returned inline.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "activityName", In: InPath, Flag: "activity-name", Required: true, Usage: "Activity type name (e.g., `play-message`, `queue-contact`)."},
 	},
@@ -7513,7 +7513,7 @@ var CcActivitiesGetInputChoices = &Operation{
 	Description: "Resolve choices for an activity input. Use this when an activity input requires a value from a predefined or dynamically resolved set (e.g., available queues, audio files, agents).\n\nThis endpoint is only valid for inputs that expose choices (an input whose definition includes `allowedValues` or a `choicesEndpoint`, as returned by `describeActivity`). Calling it for an input that does not support choices returns 400.\n\nPass `search` to filter the choices (type-ahead). Add `validate=true` together with `search` to do a point-lookup of a single value instead of filtering — the match is against the choice's `value` (its ID), not its display `name`. For a cascading input whose allowed values depend on a sibling input, supply the parent with `parentInputName` and `parentValue`; otherwise a cascading input returns 400.\n\nFiltering and validation apply only to dynamic (`choicesEndpoint`-backed) inputs. A static input always returns its full enumerated list regardless of `search`/`validate`.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/activities/{activityName}/inputs/{inputName}/choices",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "activityName", In: InPath, Flag: "activity-name", Required: true, Usage: "Activity type name."},
 		{Name: "inputName", In: InPath, Flag: "input-name", Required: true, Usage: "Input field name. Must be an input that exposes choices (has `allowedValues` or a `choicesEndpoint`)."},
@@ -7531,7 +7531,7 @@ var CcEventsListSpecifications = &Operation{
 	Description: "List the event types available for use in `event_flows[]`. Each entry describes the event name, payload schema, and any contextual metadata bound when the event fires.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/{orgid}/project/{projectId}/v2/event-specifications",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 	},
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "specifications"},
@@ -7544,7 +7544,7 @@ var CcFunctionsList = &Operation{
 	Description: "List or search custom functions in the organization. Without filters, returns all custom functions. Supports filtering by name, language, and status, plus sorting and pagination.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "isPartialMatch", In: InQuery, Flag: "is-partial-match", Usage: "Whether to search with partial matches. If `false`, search/filter is based on exact match."},
 		{Name: "isCaseSensitive", In: InQuery, Flag: "is-case-sensitive", Usage: "Whether the search should be case-sensitive. Currently applicable only to the `name` field."},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Filter by function name."},
@@ -7567,7 +7567,7 @@ var CcFunctionsCreate = &Operation{
 	Description: "Create a new custom function. The source code is provided as an escaped string and the runtime defaults to the highest supported runtime for the given language.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 	},
 	Body: &Body{},
 }
@@ -7579,7 +7579,7 @@ var CcFunctionsGet = &Operation{
 	Description: "Retrieve a custom function by its ID. Use `versionOrTag` to fetch a specific published version, or omit it to get the draft.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID. Hexadecimal ObjectId returned by the create or list APIs."},
 		{Name: "versionOrTag", In: InQuery, Flag: "version-or-tag", Usage: "Version number or publish tag of the source code to return (for example, `Dev`, `Live`, or `2`). If omitted, the draft version is returned."},
 		{Name: "metaDataOnly", In: InQuery, Flag: "meta-data-only", Usage: "If `true`, returns only metadata and excludes source code. If `false` or omitted, returns both metadata and source code."},
@@ -7593,7 +7593,7 @@ var CcFunctionsUpdate = &Operation{
 	Description: "Update an existing custom function by ID. Replaces the draft source code and metadata with the supplied body.\n\nScope: `cjp:config_write`",
 	Method:      "PUT", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID."},
 	},
 	Body: &Body{},
@@ -7606,7 +7606,7 @@ var CcFunctionsDelete = &Operation{
 	Description: "Delete a custom function by ID. Use `isForceDeletion=true` to delete even when the function is referenced by one or more flows.\n\nScope: `cjp:config_write`",
 	Method:      "DELETE", Host: HostCC, Path: "/v1/{orgid}/functions/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Custom function ID."},
 		{Name: "isForceDeletion", In: InQuery, Flag: "is-force-deletion", Usage: "If `true`, deletes the function regardless of its usage in flows."},
 	},
@@ -7619,7 +7619,7 @@ var CcFunctionsImport = &Operation{
 	Description: "Import a custom function from a previously exported function-definition JSON file, uploaded as the multipart `file` part (not a zip or base64 envelope). Use `overwrite=true` to replace any existing function with the same name.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions:import",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "If `true`, overwrites a function with the same name if one already exists."},
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
@@ -7633,7 +7633,7 @@ var CcFunctionsUnlock = &Operation{
 	Description: "Release the edit lock on a custom function so that other users can edit it.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:unlock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 }
@@ -7645,7 +7645,7 @@ var CcFunctionsLock = &Operation{
 	Description: "Acquire an edit lock on a custom function to prevent concurrent writes by other users.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:lock",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 }
@@ -7657,7 +7657,7 @@ var CcFunctionsTest = &Operation{
 	Description: "Execute a custom function with a test payload. Implicitly publishes the latest draft first, so the run uses the most recent source code.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:test",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 	Body: &Body{},
@@ -7670,7 +7670,7 @@ var CcFunctionsPublish = &Operation{
 	Description: "Publish the latest draft of a custom function under one or more tags (`Dev`, `Test`, `Latest`, `Live`). Ensure the function has been created or updated before calling this API.\n\nScope: `cjp:config_write`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:publish",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -7686,7 +7686,7 @@ var CcFunctionsExport = &Operation{
 	Description: "Export a custom function for the given version or publish tag. Returns the plain function-definition JSON (name, language, runtime, description, source code, inputs, and outputs), suitable for re-importing via the import API.\n\nScope: `cjp:config_read`",
 	Method:      "POST", Host: HostCC, Path: "/v1/{orgid}/functions/{id}:export",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "id", In: InPath, Flag: "id", Required: true},
 		{Name: "versionOrTag", In: InQuery, Flag: "version-or-tag", Usage: "Version number or publish tag of the source code to export. If omitted, the latest published version is exported."},
 	},
@@ -7699,7 +7699,7 @@ var CcFunctionsListOptions = &Operation{
 	Description: "List the supported programming languages, runtimes, and corresponding wrapper code for custom functions. Filter by `language` or `runtime` to narrow the result.\n\nScope: `cjp:config_read`",
 	Method:      "GET", Host: HostCC, Path: "/v1/{orgid}/functions/options",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "language", In: InQuery, Flag: "language", Usage: "Filter by programming language (for example, `js`, `py`)."},
 		{Name: "runtime", In: InQuery, Flag: "runtime", Usage: "Filter by runtime (for example, `nodejs22.x`, `python3.13`)."},
 	},
@@ -7763,7 +7763,7 @@ var CcAssetCreate = &Operation{
 	Description: "Create a new Asset in a given organization. Supports work item assets with the specified channel and data schema.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/asset",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7775,7 +7775,7 @@ var CcAssetBulkSave = &Operation{
 	Description: "Create, Update or delete Assets in bulk in a given organization. Supports CREATE, UPDATE, and DELETE actions in a single request.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/asset/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7788,7 +7788,7 @@ var CcAssetGet = &Operation{
 	Description: "Retrieve an existing Asset by ID in a given organization. Set includeChannelName to true to include the channel name in the response.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/asset/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Asset"},
 		{Name: "includeChannelName", In: InQuery, Flag: "include-channel-name", Usage: "Include channel name in the response."},
 	},
@@ -7802,7 +7802,7 @@ var CcAssetUpdate = &Operation{
 	Description: "Update an existing Asset by ID in a given organization. Supported for WORK_ITEM assets. For CUSTOM_MESSAGING assets, use PATCH instead.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/asset/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Asset"},
 	},
 	Body: &Body{},
@@ -7816,7 +7816,7 @@ var CcAssetDelete = &Operation{
 	Description: "Delete an existing Asset by ID in a given organization. Validates whether the asset is associated with any flow before deletion.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/asset/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Asset"},
 	},
 }
@@ -7829,7 +7829,7 @@ var CcAssetPatch = &Operation{
 	Description: "Partially update Asset by ID in a given organization. Supported only for CUSTOM_MESSAGING assets. Send only the fields to change; absent fields retain their current values. webhookConfig is optional; omit it to keep the existing credentials. For WORK_ITEM assets, use PUT instead.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/asset/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Asset"},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -7844,7 +7844,7 @@ var CcAssetListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Asset by ID in a given organization. For example, Entry Points.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/asset/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -7860,7 +7860,7 @@ var CcAssetList = &Operation{
 	Description: "Retrieve a list of Assets in a given organization. Supports pagination metadata. Set includeChannelName to true to include the channel name in the response. Set excludeEPAssociated to true to return only assets that are not associated with any Entry Point.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/asset",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Filter expression"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Supported attributes"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -7882,7 +7882,7 @@ var CcChannelCreate = &Operation{
 	Description: "Create a new Channel in a given organization. Supports custom channels for work items.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/channel",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7894,7 +7894,7 @@ var CcChannelBulkSave = &Operation{
 	Description: "Create, Update or delete Channels in bulk in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/channel/bulk",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -7907,7 +7907,7 @@ var CcChannelGet = &Operation{
 	Description: "Retrieve an existing Channel by ID in a given organization. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/channel/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Channel"},
 		{Name: "includeLogoUrlVersioned", In: InQuery, Flag: "include-logo-url-versioned", Usage: "Include logoUrlVersioned in the response."},
 	},
@@ -7921,7 +7921,7 @@ var CcChannelUpdate = &Operation{
 	Description: "Update an existing Channel by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/channel/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Channel"},
 	},
 }
@@ -7934,7 +7934,7 @@ var CcChannelDelete = &Operation{
 	Description: "Delete an existing Channel by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/channel/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Channel"},
 	},
 }
@@ -7947,7 +7947,7 @@ var CcChannelPatch = &Operation{
 	Description: "Partially update a channel by ID. Only the supplied fields are changed; absent fields retain their current values. Patchable fields: name, description, logoType (MOMENTUM only), logoIconName. logoUrl and logoUrlVersioned cannot be changed by using PATCH; use PUT to update the logo image. channelType cannot be changed after creation. in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/channel/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Channel"},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -7964,7 +7964,7 @@ var CcChannelListReferences = &Operation{
 	Description: "Retrieve a list of all entities that have reference to an existing Channel by ID in a given organization. Includes Asset and Entry Point entities that reference the channel.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/channel/{id}/incoming-references",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 		{Name: "type", In: InQuery, Flag: "type", Usage: "Entity type of the other entity that has a reference to this specific entity."},
 		{Name: "page", In: InQuery, Flag: "page", Usage: "Defines the number of displayed page. The page number starts from 0."},
@@ -7980,7 +7980,7 @@ var CcChannelList = &Operation{
 	Description: "Retrieve a list of Channels in a given organization. Supports pagination metadata. Set includeLogoUrlVersioned to true to include logoUrlVersioned in the response. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/channel",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Filter expression"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Supported attributes"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -8084,7 +8084,7 @@ var CcCallMonitoringConfigCreate = &Operation{
 	Description: "Create a new Call Monitoring in a given organization.",
 	Method:      "POST", Host: HostCC, Path: "/organization/{orgid}/call-monitoring",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -8095,7 +8095,7 @@ var CcCallMonitoringConfigDeleteReferences = &Operation{
 	Summary: "delete References Call Monitoring",
 	Method:  "POST", Host: HostCC, Path: "/organization/{orgid}/call-monitoring/delete-reference",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -8107,7 +8107,7 @@ var CcCallMonitoringConfigGet = &Operation{
 	Description: "Retrieve an existing Call Monitoring by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/call-monitoring/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Call Monitoring."},
 		{Name: "includeFilterDetails", In: InQuery, Flag: "include-filter-details", Usage: "If set to true, the API response will include entity details (names) for teams, agents, and contact service queues."},
 	},
@@ -8120,7 +8120,7 @@ var CcCallMonitoringConfigUpdate = &Operation{
 	Description: "Update an existing Call Monitoring by ID in a given organization.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/call-monitoring/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Call Monitoring."},
 	},
 	Body: &Body{},
@@ -8133,7 +8133,7 @@ var CcCallMonitoringConfigDelete = &Operation{
 	Description: "Delete an existing Call Monitoring by ID in a given organization.",
 	Method:      "DELETE", Host: HostCC, Path: "/organization/{orgid}/call-monitoring/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Call Monitoring."},
 	},
 }
@@ -8145,7 +8145,7 @@ var CcCallMonitoringConfigPatch = &Operation{
 	Description: "Partially update Call Monitoring by ID in a given organization.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/call-monitoring/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Call Monitoring."},
 	},
 	Body: &Body{},
@@ -8158,7 +8158,7 @@ var CcCallMonitoringConfigList = &Operation{
 	Description: "Retrieve a list of Call Monitoring Configurations in a given organization. Note: Returning array fields in the List (Get All) API response is deprecated. To retrieve the complete resource with all fields, please use the Get-by-ID API instead.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/call-monitoring",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, teams, agents, contactServiceQueues, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported. except  teams, agents, contactServiceQueues\n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -8178,7 +8178,7 @@ var CcOrganizationSettingList = &Operation{
 	Description: "Retrieve a list of Organization Settings in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/organization-setting",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, inactivateEntitiesPurgedOn, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -8195,7 +8195,7 @@ var CcOrganizationSettingGet = &Operation{
 	Description: "Retrieve an existing Organization Setting by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/organization-setting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 }
@@ -8207,7 +8207,7 @@ var CcOrganizationSettingUpdate = &Operation{
 	Description: "Update an existing Organization Setting by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/organization-setting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Body: &Body{},
@@ -8220,7 +8220,7 @@ var CcOrganizationSettingPatch = &Operation{
 	Description: "Partially update Organization Setting by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PATCH", Host: HostCC, Path: "/organization/{orgid}/organization-setting/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Body: &Body{},
@@ -8233,7 +8233,7 @@ var CcTenantConfigurationList = &Operation{
 	Description: "Retrieve a list of Tenant Configuration in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/v2/tenant-configuration",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "filter", In: InQuery, Flag: "filter", Usage: "Specify a filter based on which the results will be fetched. All the fields are supported except: organizationId, createdTime, lastUpdatedTime \n\nThe examples below show some search queries\n- id==\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id!=\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\"\n- id=in=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\n- id=out=(\"57efb0e6-5af0-4245-a67d-d3c5045cdb6e\",\"a421e0b2-732e-46f3-a057-39160a53afb9\")\nThis parameter uses the RSQL query syntax, a URI-friendly format for expressing criteria for filtering REST entities. For more information about RSQL in general, see  <a href=\"https://www.here.com/docs/bundle/data-client-library-developer-guide-java-scala/page/client/rsql.html\">this reference</a>. For a list of supported operators, see <a href=\"https://github.com/perplexhub/rsql-jpa-specification#rsql-syntax-reference\">this syntax guide</a>.\n\nNote: values to be used in the filter syntax should not contain spaces. If they do, please enclose them in quotes to apply the filter.\n"},
 		{Name: "attributes", In: InQuery, Flag: "attributes", Usage: "Specify the attributes to be returned. By default, all attributes are returned along with the specified columns. All attributes are supported."},
 		{Name: "search", In: InQuery, Flag: "search", Usage: "Filter data based on the search keyword.Supported search columns(name)\n\nThe examples below show some search queries\n- \"Cisco\"\n- field==\"name\";value==\"Cisco\"\n- fields=in=(\"name\");value==\"Cisco\"\n"},
@@ -8250,7 +8250,7 @@ var CcTenantConfigurationGet = &Operation{
 	Description: "Retrieve an existing Tenant Configuration by ID in a given organization.",
 	Method:      "GET", Host: HostCC, Path: "/organization/{orgid}/tenant-configuration/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 }
@@ -8262,7 +8262,7 @@ var CcTenantConfigurationUpdate = &Operation{
 	Description: "Update an existing Tenant Configuration by ID in a given organization. Requests authenticated with a user token can modify only fields designated as user-modifiable.",
 	Method:      "PUT", Host: HostCC, Path: "/organization/{orgid}/tenant-configuration/{id}",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "ID of this contact center resource."},
 	},
 	Body: &Body{Fields: []BodyField{
@@ -8327,7 +8327,7 @@ var CcAiAgentList = &Operation{
 	Description: "Lists the organization's AI agents. Use an agent's `id` as --agent-id. Runtime tokens in the response are redacted.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of agents to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of agents to skip."},
 	},
@@ -8500,7 +8500,7 @@ var CcAiAgentSessionList = &Operation{
 	Description: "Lists the agent's conversation sessions. `is_test` marks preview sessions. For a voice session, `interaction_id` is the Contact Center task ID, which `webex cc captures list` accepts.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of sessions to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of sessions to skip."},
@@ -8517,7 +8517,7 @@ var CcAiAgentSessionGet = &Operation{
 	Description: "Gets one conversation session.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "sessionId", In: InPath, Flag: "session-id", Required: true, Usage: "Session ID."},
 	},
@@ -8532,7 +8532,7 @@ var CcAiAgentSessionListMessages = &Operation{
 	Description: "Lists a session's messages. In an organization with Advanced Data Protection, the text of live sessions is encrypted; preview sessions are not.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v2/organizations/{orgid}/agents/{agentId}/sessions/{sessionId}/messages/",
 	Params: []Param{
-		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, Usage: "Organization ID."},
+		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID."},
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 		{Name: "sessionId", In: InPath, Flag: "session-id", Required: true, Usage: "Session ID."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of messages to return."},
