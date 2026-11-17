@@ -24,6 +24,8 @@ The CLI supports OAuth login with tokens stored in the OS keyring, or in a crede
 ```bash
 webex auth status                        # Show current user, org, token expiry
 webex auth list                          # List all stored users
+webex auth token --output json           # Access token with its expiry, user, and org
+webex auth token --min-ttl 30m           # Refresh first if under 30 minutes remain
 webex auth switch <email>                # Change default user
 webex auth set-folder-default <email>    # Set default user for current folder
 webex auth clear-folder-default          # Remove folder default
