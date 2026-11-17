@@ -155,8 +155,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /{orgid}/project/{projectId}/v2/activities: item array is not an array"
+  ]
  },
  {
   "command": "cc address-book bulk-export",
@@ -1350,15 +1349,16 @@
     }
    },
    {
-    "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=1&pageSize=100",
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-personal-greeting",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"agentPersonalGreetingInfo\"\r\nContent-Type: application/json\r\n\r\n{\"agentId\":\"s-agent-id\",\"contentType\":\"AUDIO_WAV\",\"greetingPurposeId\":\"golden-1\",\"name\":\"golden.wav\"}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
-  ],
-  "error": "no default greeting purpose found; pass --greeting-purpose-id"
+  ]
  },
  {
   "command": "cc agent-personal-greeting-files upload",
@@ -1378,15 +1378,16 @@
     }
    },
    {
-    "method": "GET",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/greeting-purpose?page=1&pageSize=100",
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/agent-personal-greeting",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"agentPersonalGreetingInfo\"\r\nContent-Type: application/json\r\n\r\n{\"agentId\":\"s-agent-id\",\"contentType\":\"AUDIO_WAV\",\"greetingPurposeId\":\"golden-1\",\"name\":\"golden.wav\"}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"audioFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
-  ],
-  "error": "no default greeting purpose found; pass --greeting-purpose-id"
+  ]
  },
  {
   "command": "cc agent-summaries list",
@@ -2228,7 +2229,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2262,7 +2263,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2297,7 +2298,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2334,7 +2335,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2368,7 +2369,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2402,7 +2403,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2437,7 +2438,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2472,7 +2473,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2508,7 +2509,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2543,7 +2544,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2580,7 +2581,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2614,7 +2615,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2648,7 +2649,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2683,7 +2684,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2717,7 +2718,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2751,7 +2752,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2786,7 +2787,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2820,7 +2821,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2854,7 +2855,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2889,7 +2890,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2956,7 +2957,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -2984,7 +2985,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3018,7 +3019,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3053,7 +3054,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3070,7 +3071,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/llmagent/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
@@ -3097,7 +3098,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3133,7 +3134,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3168,7 +3169,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3205,7 +3206,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3239,7 +3240,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3273,7 +3274,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3308,7 +3309,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3345,7 +3346,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3379,7 +3380,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3413,7 +3414,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3448,7 +3449,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3485,7 +3486,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3611,7 +3612,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3676,7 +3677,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/s-session-id/messages/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/s-agent-id/sessions/s-session-id/messages/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3704,7 +3705,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3740,7 +3741,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3775,7 +3776,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3812,7 +3813,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3847,7 +3848,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3881,7 +3882,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3916,7 +3917,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3954,7 +3955,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -3988,7 +3989,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4023,7 +4024,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -4040,7 +4041,7 @@
    },
    {
     "method": "GET",
-    "url": "https://studio.aiagent-us1.cisco.com/api/v1/message/?limit=100&offset=1",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/message/?limit=100&offset=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
@@ -9192,8 +9193,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/contact-number/all-numbers: item array is not an array"
+  ]
  },
  {
   "command": "cc contact-number update",
@@ -12269,8 +12269,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/dial-number/numbers-only: item array is not an array"
+  ]
  },
  {
   "command": "cc dial-number list-dialed-mapping",
@@ -17029,6 +17028,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/journey-actions/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -17142,6 +17149,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -17199,6 +17214,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -17248,6 +17271,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?page=1&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -17307,6 +17338,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?page=2&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -17872,6 +17911,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id/aliases/s-aliases?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id/aliases/s-aliases?page=1&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -18621,6 +18668,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -18736,6 +18791,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id/aliases/s-aliases?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/person/workspace-id/s-workspace-id/aliases/s-aliases?page=1&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -18938,6 +19001,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/profile-view-template/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -18993,6 +19064,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/v1/api/events/workspace-id/s-workspace-id?page=2&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -19898,6 +19977,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/journey-actions/workspace-id/s-workspace-id?page=1&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -20260,6 +20347,14 @@
    {
     "method": "GET",
     "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?page=0&pageSize=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://api.wxcc-us1.cisco.com/admin/v1/api/workspace?page=1&pageSize=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -22860,14 +22955,29 @@
  {
   "command": "cc search agent-sessions",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ agentSession(from: 1767225600000, to: 1767312000000) { agentSessions {\\n      agentSessionId\\n      agentId\\n      agentName\\n      userLoginId\\n      isActive\\n      state\\n      startTime\\n      endTime\\n      siteId\\n      siteName\\n      teamId\\n      teamName\\n      channelInfo {\\n        channelType\\n        totalDuration\\n        idleDuration\\n        idleCount\\n        availableDuration\\n        availableCount\\n        connectedDuration\\n        connectedCount\\n        holdDuration\\n        holdCount\\n        wrapupDuration\\n        wrapupCount\\n        notRespondedCount\\n      }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search agent-sessions",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -22880,6 +22990,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search agent-sessions",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ agentSession(from: 1767225600000, to: 1767312000000) { agentSessions {\\n      agentSessionId\\n      agentId\\n      agentName\\n      userLoginId\\n      isActive\\n      state\\n      startTime\\n      endTime\\n      siteId\\n      siteName\\n      teamId\\n      teamName\\n      channelInfo {\\n        channelType\\n        totalDuration\\n        idleDuration\\n        idleCount\\n        availableDuration\\n        availableCount\\n        connectedDuration\\n        connectedCount\\n        holdDuration\\n        holdCount\\n        wrapupDuration\\n        wrapupCount\\n        notRespondedCount\\n      }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ agentSession(from: 1767225600000, to: 1767312000000, pagination: { cursor: \\\"golden-cursor\\\" }) { agentSessions {\\n      agentSessionId\\n      agentId\\n      agentName\\n      userLoginId\\n      isActive\\n      state\\n      startTime\\n      endTime\\n      siteId\\n      siteName\\n      teamId\\n      teamName\\n      channelInfo {\\n        channelType\\n        totalDuration\\n        idleDuration\\n        idleCount\\n        availableDuration\\n        availableCount\\n        connectedDuration\\n        connectedCount\\n        holdDuration\\n        holdCount\\n        wrapupDuration\\n        wrapupCount\\n        notRespondedCount\\n      }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
    }
   ]
  },
@@ -22921,14 +23062,29 @@
  {
   "command": "cc search flow-interactions",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search flow-interactions",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -22941,6 +23097,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search flow-interactions",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 1 }) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 2 }) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
    }
   ]
  },
@@ -22982,14 +23169,29 @@
  {
   "command": "cc search flow-trace",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search flow-trace",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -23002,6 +23204,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search flow-trace",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 1 }) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 2 }) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
    }
   ]
  },
@@ -23113,14 +23346,29 @@
  {
   "command": "cc search task-details",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskDetails(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      csatScore\\n      terminationType\\n      contributors { id name }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search task-details",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -23133,6 +23381,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search task-details",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskDetails(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      csatScore\\n      terminationType\\n      contributors { id name }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskDetails(from: 1767225600000, to: 1767312000000, pagination: { cursor: \\\"golden-cursor\\\" }) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      csatScore\\n      terminationType\\n      contributors { id name }\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
    }
   ]
  },
@@ -23174,14 +23453,29 @@
  {
   "command": "cc search task-leg-details",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskLegDetails(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      taskId\\n      status\\n      channelType\\n      direction\\n      createdTime\\n      endedTime\\n      isActive\\n      origin\\n      destination\\n      entryPoint { id name }\\n      queue { id name }\\n      owner { id name }\\n      site { id name }\\n      team { id name }\\n      callLegType\\n      handleType\\n      isTaskLegHandled\\n      isWithinServiceLevel\\n      connectedDuration\\n      holdDuration\\n      queueDuration\\n      wrapupDuration\\n      ringingDuration\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search task-leg-details",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -23194,6 +23488,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search task-leg-details",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskLegDetails(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      taskId\\n      status\\n      channelType\\n      direction\\n      createdTime\\n      endedTime\\n      isActive\\n      origin\\n      destination\\n      entryPoint { id name }\\n      queue { id name }\\n      owner { id name }\\n      site { id name }\\n      team { id name }\\n      callLegType\\n      handleType\\n      isTaskLegHandled\\n      isWithinServiceLevel\\n      connectedDuration\\n      holdDuration\\n      queueDuration\\n      wrapupDuration\\n      ringingDuration\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ taskLegDetails(from: 1767225600000, to: 1767312000000, pagination: { cursor: \\\"golden-cursor\\\" }) { tasks {\\n      id\\n      taskId\\n      status\\n      channelType\\n      direction\\n      createdTime\\n      endedTime\\n      isActive\\n      origin\\n      destination\\n      entryPoint { id name }\\n      queue { id name }\\n      owner { id name }\\n      site { id name }\\n      team { id name }\\n      callLegType\\n      handleType\\n      isTaskLegHandled\\n      isWithinServiceLevel\\n      connectedDuration\\n      holdDuration\\n      queueDuration\\n      wrapupDuration\\n      ringingDuration\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
    }
   ]
  },
@@ -23235,14 +23560,29 @@
  {
   "command": "cc search tasks",
   "variant": "required",
-  "args": null,
-  "requests": [],
-  "error": "--from and --to are required (or use --last)"
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ task(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   }
+  ]
  },
  {
   "command": "cc search tasks",
   "variant": "body",
   "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
    "--body={\"golden\":true}"
   ],
   "requests": [
@@ -23255,6 +23595,37 @@
      "Content-Type": "application/json"
     },
     "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc search tasks",
+  "variant": "paginate",
+  "args": [
+   "--from=2026-01-01T00:00:00.000Z",
+   "--to=2026-01-02T00:00:00.000Z",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ task(from: 1767225600000, to: 1767312000000) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"query\":\"{ task(from: 1767225600000, to: 1767312000000, pagination: { cursor: \\\"golden-cursor\\\" }) { tasks {\\n      id\\n      status\\n      channelType\\n      direction\\n      isActive\\n      createdTime\\n      endedTime\\n      origin\\n      destination\\n      totalDuration\\n      connectedDuration\\n      queueDuration\\n      holdDuration\\n      wrapupDuration\\n      ringingDuration\\n      selfserviceDuration\\n      owner { id name }\\n      lastEntryPoint { id name }\\n      lastQueue { id name }\\n      lastTeam { id name }\\n      lastWrapupCodeName\\n      aggregation { name value }\\n      intervalStartTime\\n    }\\n    pageInfo { hasNextPage endCursor } } }\"}"
    }
   ]
  },
@@ -27144,8 +27515,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /templates: item array is not an array"
+  ]
  },
  {
   "command": "cc tenant-configuration get",
@@ -27610,8 +27980,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/usage-reports: item array is not an array"
+  ]
  },
  {
   "command": "cc usage-reports list-resource-types",
@@ -27658,8 +28027,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /v1/usage-reports/resource-types: item array is not an array"
+  ]
  },
  {
   "command": "cc user-profiles bulk-export",
@@ -28723,8 +29091,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /organization/{orgid}/user/with-user-profile: item array is not an array"
+  ]
  },
  {
   "command": "cc users list-by-call-monitoring-config",

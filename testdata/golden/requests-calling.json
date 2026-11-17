@@ -15233,50 +15233,10 @@
  },
  {
   "command": "calling call-settings-for-me get-priority-alert-2",
-  "variant": "all-flags",
+  "variant": "unreachable",
   "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/priorityAlert/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-priority-alert-2",
-  "variant": "required",
-  "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/priorityAlert/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-priority-alert-2",
-  "variant": "paginate",
-  "args": [
-   "--paginate"
-  ],
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/priorityAlert/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "another command has the same path and runs instead"
  },
  {
   "command": "calling call-settings-for-me get-priority-alert-2-2",
@@ -15431,50 +15391,10 @@
  },
  {
   "command": "calling call-settings-for-me get-selective-accept-user-2",
-  "variant": "all-flags",
+  "variant": "unreachable",
   "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveAccept/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-selective-accept-user-2",
-  "variant": "required",
-  "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveAccept/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-selective-accept-user-2",
-  "variant": "paginate",
-  "args": [
-   "--paginate"
-  ],
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveAccept/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "another command has the same path and runs instead"
  },
  {
   "command": "calling call-settings-for-me get-selective-accept-user-2-2",
@@ -15827,50 +15747,10 @@
  },
  {
   "command": "calling call-settings-for-me get-selective-reject-user-2",
-  "variant": "all-flags",
+  "variant": "unreachable",
   "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveReject/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-selective-reject-user-2",
-  "variant": "required",
-  "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveReject/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-selective-reject-user-2",
-  "variant": "paginate",
-  "args": [
-   "--paginate"
-  ],
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/selectiveReject/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "another command has the same path and runs instead"
  },
  {
   "command": "calling call-settings-for-me get-selective-reject-user-2-2",
@@ -16025,50 +15905,10 @@
  },
  {
   "command": "calling call-settings-for-me get-sequential-ring-user-2",
-  "variant": "all-flags",
+  "variant": "unreachable",
   "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/sequentialRing/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-sequential-ring-user-2",
-  "variant": "required",
-  "args": null,
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/sequentialRing/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
- },
- {
-  "command": "calling call-settings-for-me get-sequential-ring-user-2",
-  "variant": "paginate",
-  "args": [
-   "--paginate"
-  ],
-  "requests": [
-   {
-    "method": "GET",
-    "url": "https://webexapis.com/v1/telephony/config/people/me/settings/sequentialRing/criteria/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "another command has the same path and runs instead"
  },
  {
   "command": "calling call-settings-for-me get-sequential-ring-user-2-2",
@@ -19659,39 +19499,10 @@
  },
  {
   "command": "calling call-settings-for-me update-sequential-ring-user-2",
-  "variant": "all-flags",
-  "args": [
-   "--anonymous-callers-enabled=true",
-   "--calls-from=s-calls-from",
-   "--id=s-id",
-   "--phone-numbers=s-phone-numbers-1,s-phone-numbers-2",
-   "--ring-enabled=true",
-   "--schedule-level=s-schedule-level",
-   "--schedule-name=s-schedule-name",
-   "--schedule-type=s-schedule-type",
-   "--unavailable-callers-enabled=true"
-  ],
+  "variant": "unreachable",
+  "args": null,
   "requests": [],
-  "error": "unknown flag: --anonymous-callers-enabled"
- },
- {
-  "command": "calling call-settings-for-me update-sequential-ring-user-2",
-  "variant": "required",
-  "args": [
-   "--id=s-id"
-  ],
-  "requests": [],
-  "error": "unknown flag: --id"
- },
- {
-  "command": "calling call-settings-for-me update-sequential-ring-user-2",
-  "variant": "body",
-  "args": [
-   "--id=s-id",
-   "--body={\"golden\":true}"
-  ],
-  "requests": [],
-  "error": "unknown flag: --id"
+  "error": "another command has the same path and runs instead"
  },
  {
   "command": "calling call-settings-for-me update-sequential-ring-user-2-2",
@@ -24848,6 +24659,14 @@
    {
     "method": "GET",
     "url": "https://webexapis.com/v1/telephony/config/devices/availableMembers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA&start=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/v1/telephony/config/devices/availableMembers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA&start=100",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -38557,6 +38376,14 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers?max=100&orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA&start=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
   ]
  },
@@ -39832,8 +39659,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /partner/reports: item array is not an array"
+  ]
  },
  {
   "command": "calling partner-reports-templates list-2",
@@ -39882,8 +39708,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /partner/reports/templates: item array is not an array"
+  ]
  },
  {
   "command": "calling people create-person",

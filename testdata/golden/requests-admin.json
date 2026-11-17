@@ -1816,8 +1816,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /hybrid/clusters: item array is not an array"
+  ]
  },
  {
   "command": "admin hybrid-connectors get",
@@ -1916,8 +1915,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /hybrid/connectors: item array is not an array"
+  ]
  },
  {
   "command": "admin identity-org generate-otp",
@@ -3307,8 +3305,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /partner/reports: item array is not an array"
+  ]
  },
  {
   "command": "admin partner-reports-templates list-2",
@@ -3357,8 +3354,7 @@
      "Authorization": "Bearer golden-token"
     }
    }
-  ],
-  "error": "incomplete list: /partner/reports/templates: item array is not an array"
+  ]
  },
  {
   "command": "admin partner-tags create-replace-customer-provided-ones",
@@ -3559,9 +3555,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /partner/tags/organizations: item array is not an array"
+  ]
  },
  {
   "command": "admin partner-tags get-customer-org",
@@ -3709,9 +3712,16 @@
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
     }
+   },
+   {
+    "method": "GET",
+    "url": "https://webexapis.com/golden-next?golden_page=2",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
    }
-  ],
-  "error": "incomplete list: /partner/tags/subscriptions: item array is not an array"
+  ]
  },
  {
   "command": "admin people create-person",
@@ -6003,7 +6013,7 @@
    },
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups/s-group-id/Members?count=100&startIndex=2",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups/s-group-id/Members?count=100&startIndex=101",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6068,7 +6078,7 @@
    },
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups?count=100&startIndex=2",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Groups?count=100&startIndex=101",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"
@@ -6570,7 +6580,7 @@
    },
    {
     "method": "GET",
-    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Users?count=100&startIndex=2",
+    "url": "https://webexapis.com/identity/scim/6ab1d2c4-0000-4000-8000-00000000c1d0/v2/Users?count=100&startIndex=101",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token"

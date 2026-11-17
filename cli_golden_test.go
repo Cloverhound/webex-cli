@@ -8,13 +8,16 @@ import (
 	"io"
 	"mime"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/Cloverhound/webex-cli/cmd"
+	"github.com/Cloverhound/webex-cli/internal/search"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -50,6 +53,20 @@ type goldenRun struct {
 // recorder answers every request without touching the network.
 type recorder struct {
 	requests []recordedRequest
+
+	// pages counts this run's requests to each path; firstPage is how many items
+	// the first of them held.
+	pages, firstPage map[string]int
+
+	// bareArray answers with a JSON array, for lists whose response is one.
+	bareArray bool
+}
+
+// startRun forgets the previous run's requests and pages.
+func (r *recorder) startRun() {
+	r.requests = nil
+	r.pages = map[string]int{}
+	r.firstPage = map[string]int{}
 }
 
 // maxRequestsPerRun stops a command that would never stop reading pages.
@@ -82,48 +99,114 @@ func (r *recorder) RoundTrip(req *http.Request) (*http.Response, error) {
 		return nil, fmt.Errorf("golden: more than %d requests in one run", maxRequestsPerRun)
 	}
 
+	r.pages[req.URL.Path]++
+	page := r.pages[req.URL.Path]
+	if strings.Contains(req.URL.RawQuery, "golden_page=") {
+		page = 2
+	}
+	// Page one is a full page, so lists that stop at a short page read on; the
+	// totals then say one more item and two pages, so lists that stop at their
+	// total read exactly page two.
+	items := 1
+	if page == 1 {
+		items = pageSize(req.URL.Query())
+		r.firstPage[req.URL.Path] = items
+	}
+	total := r.firstPage[req.URL.Path] + 1
+
 	header := http.Header{"Content-Type": {"application/json"}}
+	var body string
+	switch {
+	case req.Method == http.MethodPost && strings.HasSuffix(req.URL.Path, "/search"):
+		body = searchResponse(page == 1)
+	case r.bareArray:
+		body = listResponse(items, 0, true)
+	default:
+		body = listResponse(items, total, false)
+	}
 	// A first page links to a second one on a different path, so a list that
 	// applies only the link's query is told apart from one that follows it.
-	if !strings.Contains(req.URL.RawQuery, "golden_page=") {
+	if page == 1 {
 		header.Set("Link", fmt.Sprintf(`<%s://%s/golden-next?golden_page=2>; rel="next"`, req.URL.Scheme, req.URL.Host))
 	}
 	return &http.Response{
 		StatusCode: 200,
 		Header:     header,
-		Body:       io.NopCloser(strings.NewReader(fakeResponse)),
+		Body:       io.NopCloser(strings.NewReader(body)),
 		Request:    req,
 	}, nil
 }
 
-// fakeResponse answers every request. It holds one item under each item field
-// the list commands read, and totals of two, so every list reads a second page.
-// It also holds the download links the download commands follow, and the agent
-// AI Agent Studio commands look up.
-var fakeResponse = func() string {
-	body := map[string]any{
-		"objects":        []any{map[string]any{"id": "s-agent-id", "bot_access_token": "golden-bot-token"}},
-		"meta":           map[string]any{"total_count": 2, "totalPages": 2},
-		"pageInfo":       map[string]any{"totalPages": 2},
-		"pagination":     map[string]any{"totalPages": 2},
-		"totalResources": 2,
-		"totalResults":   2,
-		"url":            "https://download.golden.example/audio?sig=golden",
-		"temporaryDirectDownloadLinks": map[string]any{
-			"audioDownloadLink":      "https://download.golden.example/audio?sig=golden",
-			"recordingDownloadLink":  "https://download.golden.example/recording?sig=golden",
-			"transcriptDownloadLink": "https://download.golden.example/transcript?sig=golden",
-		},
+// pageSize is the page size a request asks for, or the CLI's default of 100.
+func pageSize(query url.Values) int {
+	for _, name := range []string{"max", "pageSize", "limit", "count", "size"} {
+		if n, err := strconv.Atoi(query.Get(name)); err == nil && n > 0 {
+			return min(n, 1000)
+		}
 	}
-	for _, field := range listItemFields {
-		body[field] = []any{map[string]any{"id": "golden-1"}}
+	return 100
+}
+
+var listResponses = map[string]string{}
+
+// listResponse holds items under each item field the list commands read, and
+// the totals given. It also holds the download links the download commands
+// follow, and the agent AI Agent Studio commands look up.
+func listResponse(items, total int, bareArray bool) string {
+	key := fmt.Sprint(items, total, bareArray)
+	if body, ok := listResponses[key]; ok {
+		return body
 	}
-	data, err := json.Marshal(body)
+	list := make([]any, items)
+	agents := make([]any, items)
+	for i := range list {
+		list[i] = map[string]any{"id": "golden-1", "systemDefault": true}
+		agents[i] = map[string]any{"id": "s-agent-id", "bot_access_token": "golden-bot-token"}
+	}
+	var v any = list
+	if !bareArray {
+		object := map[string]any{
+			"objects":        agents,
+			"meta":           map[string]any{"total_count": total, "totalPages": 2},
+			"pageInfo":       map[string]any{"totalPages": 2},
+			"pagination":     map[string]any{"totalPages": 2},
+			"totalResources": total,
+			"totalResults":   total,
+			"url":            "https://download.golden.example/audio?sig=golden",
+			"temporaryDirectDownloadLinks": map[string]any{
+				"audioDownloadLink":      "https://download.golden.example/audio?sig=golden",
+				"recordingDownloadLink":  "https://download.golden.example/recording?sig=golden",
+				"transcriptDownloadLink": "https://download.golden.example/transcript?sig=golden",
+			},
+		}
+		for _, field := range listItemFields {
+			object[field] = list
+		}
+		v = object
+	}
+	data, err := json.Marshal(v)
 	if err != nil {
 		panic(err)
 	}
-	return string(data)
-}()
+	listResponses[key] = string(data)
+	return listResponses[key]
+}
+
+// searchResponse is a Contact Center search result page for every query type.
+func searchResponse(hasNextPage bool) string {
+	data := map[string]any{}
+	for queryType, resultsKey := range search.ResultsKey {
+		data[string(queryType)] = map[string]any{
+			resultsKey: []any{map[string]any{"id": "golden-1"}},
+			"pageInfo": map[string]any{"hasNextPage": hasNextPage, "endCursor": "golden-cursor"},
+		}
+	}
+	body, err := json.Marshal(map[string]any{"data": data})
+	if err != nil {
+		panic(err)
+	}
+	return string(body)
+}
 
 // listItemFields are the item fields of the paged lists. A list that reads its
 // items from another field gets one page.
@@ -169,6 +252,7 @@ func goldenEnv(t *testing.T) *recorder {
 	}
 
 	rec := &recorder{}
+	rec.startRun()
 	saved := http.DefaultTransport
 	http.DefaultTransport = rec
 	t.Cleanup(func() { http.DefaultTransport = saved })
@@ -271,9 +355,21 @@ func resetFlags(c *cobra.Command) {
 	}
 }
 
+// run executes c with args. A list whose response is a JSON array refuses the
+// usual object response, and is run again with an array.
 func run(rec *recorder, c *cobra.Command, variant string, args []string) goldenRun {
+	out := runOnce(rec, c, variant, args)
+	if strings.Contains(out.Error, "is not an array") {
+		rec.bareArray = true
+		out = runOnce(rec, c, variant, args)
+		rec.bareArray = false
+	}
+	return out
+}
+
+func runOnce(rec *recorder, c *cobra.Command, variant string, args []string) goldenRun {
 	resetFlags(c)
-	rec.requests = nil
+	rec.startRun()
 	path := strings.Fields(c.CommandPath())[1:]
 	full := append(append([]string{}, path...), args...)
 	full = append(full, "--token", "golden-token", "--organization", goldenOrg)
@@ -299,7 +395,16 @@ func TestGoldenRequests(t *testing.T) {
 
 	byArea := map[string][]goldenRun{}
 	for _, c := range leafCommands(root) {
-		area := strings.Fields(c.CommandPath())[1]
+		path := strings.Fields(c.CommandPath())[1:]
+		area := path[0]
+		// Of two commands with the same path, Cobra always runs the first.
+		if dispatched, _, err := root.Find(path); err != nil || dispatched != c {
+			byArea[area] = append(byArea[area], goldenRun{
+				Command: strings.Join(path, " "), Variant: "unreachable", Requests: []recordedRequest{},
+				Error: "another command has the same path and runs instead",
+			})
+			continue
+		}
 		var all, required []string
 		c.Flags().VisitAll(func(f *pflag.Flag) {
 			if skippedFlags[f.Name] || c.InheritedFlags().Lookup(f.Name) != nil {
@@ -311,11 +416,17 @@ func TestGoldenRequests(t *testing.T) {
 				required = append(required, arg)
 			}
 		})
+		// A Contact Center search needs a time window to send its default query,
+		// and pages with POST requests.
+		isSearch := area == "cc" && path[1] == "search" && c.Flags().Lookup("from") != nil
+		if isSearch {
+			required = append(required, "--from="+sampleValue(c.Flags().Lookup("from")), "--to="+sampleValue(c.Flags().Lookup("to")))
+		}
 		runs := []goldenRun{run(rec, c, "all-flags", all), run(rec, c, "required", required)}
 		if c.Flags().Lookup("body") != nil {
 			runs = append(runs, run(rec, c, "body", append(append([]string{}, required...), `--body={"golden":true}`)))
 		}
-		if hasGET(runs[1]) {
+		if hasGET(runs[1]) || isSearch {
 			runs = append(runs, run(rec, c, "paginate", append(append([]string{}, required...), "--paginate")))
 		}
 		byArea[area] = append(byArea[area], runs...)
@@ -341,8 +452,34 @@ func TestGoldenFilesExerciseEachKindOfRequest(t *testing.T) {
 		runs = append(runs, areaRuns...)
 	}
 
-	var uploads, downloads, searches, secondPages, linkQueryOnly int
+	// Lists with no item field, and lists with no total, each read a second page.
+	pagedTwice := map[string]bool{"admin partner-tags get-all-customers-set": false, "calling numbers list-manage-jobs": false}
+	var uploads, downloads, searches, searchPages, defaultGreeting, secondPages, linkQueryOnly, unreachable int
 	for _, r := range runs {
+		if r.Variant == "unreachable" {
+			unreachable++
+			if len(r.Requests) > 0 {
+				t.Errorf("%s: an unreachable command recorded requests", r.Command)
+			}
+			continue
+		}
+		if r.Variant == "paginate" && len(r.Requests) > 1 {
+			if _, ok := pagedTwice[r.Command]; ok {
+				pagedTwice[r.Command] = true
+			}
+		}
+		if strings.HasPrefix(r.Command, "cc search ") && r.Variant == "paginate" {
+			searchPages++
+			if len(r.Requests) < 2 {
+				t.Errorf("%s: search --paginate read one page (error %q)", r.Command, r.Error)
+			}
+		}
+		if r.Command == "cc agent-personal-greeting-files upload" && r.Variant == "required" {
+			defaultGreeting++
+			if !sentMultipart(r) {
+				t.Errorf("%s: upload with the default purpose sent no file (error %q)", r.Command, r.Error)
+			}
+		}
 		hasArg := func(prefix string) bool {
 			for _, a := range r.Args {
 				if strings.HasPrefix(a, prefix) {
@@ -359,6 +496,10 @@ func TestGoldenFilesExerciseEachKindOfRequest(t *testing.T) {
 			}
 		case r.Variant == "all-flags" && hasArg("--output="):
 			downloads++
+			if len(r.Requests) == 0 {
+				t.Errorf("%s: download sent no request (error %q)", r.Command, r.Error)
+				break
+			}
 			last := r.Requests[len(r.Requests)-1]
 			if !strings.HasPrefix(last.URL, "https://download.golden.example/") {
 				t.Errorf("%s: download did not fetch the file (error %q)", r.Command, r.Error)
@@ -380,9 +521,53 @@ func TestGoldenFilesExerciseEachKindOfRequest(t *testing.T) {
 			}
 		}
 	}
-	if uploads == 0 || downloads == 0 || searches == 0 || secondPages == 0 || linkQueryOnly == 0 {
-		t.Errorf("uploads=%d downloads=%d searches=%d second pages=%d link-query-only=%d; each must be recorded",
-			uploads, downloads, searches, secondPages, linkQueryOnly)
+	for command, twice := range pagedTwice {
+		if !twice {
+			t.Errorf("%s: --paginate read one page", command)
+		}
+	}
+	if uploads == 0 || downloads == 0 || searches == 0 || searchPages == 0 || defaultGreeting == 0 ||
+		secondPages == 0 || linkQueryOnly == 0 || unreachable == 0 {
+		t.Errorf("uploads=%d downloads=%d searches=%d search pages=%d default greeting=%d second pages=%d link-query-only=%d unreachable=%d; each must be recorded",
+			uploads, downloads, searches, searchPages, defaultGreeting, secondPages, linkQueryOnly, unreachable)
+	}
+}
+
+// TestGoldenCommandTreeHasPublishedRootFlags checks flags Cobra adds lazily, and
+// that persistent flags are recorded as such.
+func TestGoldenCommandTreeHasPublishedRootFlags(t *testing.T) {
+	data, err := os.ReadFile(filepath.Join(packageDir, "testdata", "golden", "commands.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var tree []struct {
+		Path  string `json:"path"`
+		Flags []struct {
+			Name       string `json:"name"`
+			Shorthand  string `json:"shorthand"`
+			Persistent bool   `json:"persistent"`
+		} `json:"flags"`
+	}
+	if err := json.Unmarshal(data, &tree); err != nil {
+		t.Fatal(err)
+	}
+	found := map[string]bool{}
+	for _, c := range tree {
+		if c.Path != "webex" {
+			continue
+		}
+		for _, f := range c.Flags {
+			found[f.Name] = true
+			if f.Name == "version" && f.Shorthand != "v" {
+				t.Errorf("--version has shorthand %q", f.Shorthand)
+			}
+			if f.Name == "dry-run" && !f.Persistent {
+				t.Error("--dry-run is not recorded as persistent")
+			}
+		}
+	}
+	if !found["version"] || !found["dry-run"] {
+		t.Errorf("root flags recorded: %v", found)
 	}
 }
 
@@ -412,6 +597,9 @@ type goldenFlag struct {
 	Usage     string `json:"usage,omitempty"`
 	Required  bool   `json:"required,omitempty"`
 	Hidden    bool   `json:"hidden,omitempty"`
+
+	// Persistent flags are inherited by every subcommand.
+	Persistent bool `json:"persistent,omitempty"`
 }
 
 type goldenCommand struct {
@@ -433,14 +621,16 @@ func TestGoldenCommandTree(t *testing.T) {
 	var out []goldenCommand
 	var walk func(c *cobra.Command)
 	walk = func(c *cobra.Command) {
-		// Cobra adds --help when a command first runs; adding it here keeps the
-		// tree the same whichever commands ran before.
+		// Cobra adds --help and --version when a command first runs; adding them
+		// here keeps the tree the same whichever commands ran before.
 		c.InitDefaultHelpFlag()
+		c.InitDefaultVersionFlag()
 		gc := goldenCommand{Path: c.CommandPath(), Use: c.Use, Aliases: c.Aliases, Short: c.Short, Long: c.Long, Hidden: c.Hidden}
 		c.LocalFlags().VisitAll(func(f *pflag.Flag) {
 			gc.Flags = append(gc.Flags, goldenFlag{
 				Name: f.Name, Shorthand: f.Shorthand, Type: f.Value.Type(), Default: f.DefValue,
 				Usage: f.Usage, Required: isRequired(f), Hidden: f.Hidden,
+				Persistent: c.PersistentFlags().Lookup(f.Name) != nil,
 			})
 		})
 		out = append(out, gc)

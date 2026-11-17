@@ -8,19 +8,22 @@
    {
     "name": "cc-region",
     "type": "string",
-    "usage": "Contact Center data center: us1, eu1, eu2, anz1, ca1, jp1, sg1, in1 (default: the organization's saved region, else us1)"
+    "usage": "Contact Center data center: us1, eu1, eu2, anz1, ca1, jp1, sg1, in1 (default: the organization's saved region, else us1)",
+    "persistent": true
    },
    {
     "name": "debug",
     "type": "bool",
     "default": "false",
-    "usage": "Enable debug logging of HTTP requests"
+    "usage": "Enable debug logging of HTTP requests",
+    "persistent": true
    },
    {
     "name": "dry-run",
     "type": "bool",
     "default": "false",
-    "usage": "Print write requests without executing them"
+    "usage": "Print write requests without executing them",
+    "persistent": true
    },
    {
     "name": "help",
@@ -33,45 +36,60 @@
     "name": "max-retry",
     "type": "int",
     "default": "3",
-    "usage": "Max number of 429 retries before giving up (0 = no retries)"
+    "usage": "Max number of 429 retries before giving up (0 = no retries)",
+    "persistent": true
    },
    {
     "name": "max-retry-timer",
     "type": "int",
     "default": "60",
-    "usage": "Max total seconds to wait across all 429 retries (0 = unlimited)"
+    "usage": "Max total seconds to wait across all 429 retries (0 = unlimited)",
+    "persistent": true
    },
    {
     "name": "organization",
     "type": "string",
-    "usage": "Override organization ID for this command"
+    "usage": "Override organization ID for this command",
+    "persistent": true
    },
    {
     "name": "output",
     "type": "string",
     "default": "json",
-    "usage": "Output format: json, table, csv, raw"
+    "usage": "Output format: json, table, csv, raw",
+    "persistent": true
    },
    {
     "name": "paginate",
     "type": "bool",
     "default": "false",
-    "usage": "Return every item in a list as one array, reading all its pages; fails with \"incomplete list\" rather than return part of a list"
+    "usage": "Return every item in a list as one array, reading all its pages; fails with \"incomplete list\" rather than return part of a list",
+    "persistent": true
    },
    {
     "name": "region",
     "type": "string",
-    "usage": "Data region for region-specific APIs: us, ca, eu, eun, in, au (default us)"
+    "usage": "Data region for region-specific APIs: us, ca, eu, eun, in, au (default us)",
+    "persistent": true
    },
    {
     "name": "token",
     "type": "string",
-    "usage": "Webex API token (overrides stored login)"
+    "usage": "Webex API token (overrides stored login)",
+    "persistent": true
    },
    {
     "name": "user",
     "type": "string",
-    "usage": "Use a specific authenticated user (email)"
+    "usage": "Use a specific authenticated user (email)",
+    "persistent": true
+   },
+   {
+    "name": "version",
+    "shorthand": "v",
+    "type": "bool",
+    "default": "false",
+    "usage": "version for webex"
    }
   ]
  },
