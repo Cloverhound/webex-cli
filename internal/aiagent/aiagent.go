@@ -3,12 +3,12 @@
 package aiagent
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
-	"regexp"
 
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/aiagent"
 )
 
 // studioURL is read at call time, after the command has chosen the org's data
@@ -23,37 +23,9 @@ func BotToken(agentID string) (string, error) {
 	if orgID == "" {
 		return "", fmt.Errorf("no organization: log in or pass --organization")
 	}
-	req := client.NewRequest(studioURL(), "GET", "/api/v2/organizations/{orgid}/agents/")
-	req.PathParam("orgid", orgID)
-	req.RedactErrors(RedactSecrets)
-	body, _, err := req.DoPaginated(client.Paging{Mode: client.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
-	if err != nil {
-		return "", fmt.Errorf("looking up AI agent %s: %w", agentID, err)
-	}
-	var agents []struct {
-		ID    string `json:"id"`
-		Token string `json:"bot_access_token"`
-	}
-	if err := json.Unmarshal(body, &agents); err != nil {
-		return "", fmt.Errorf("reading the AI agent list: %w", err)
-	}
-	for _, a := range agents {
-		if a.ID != agentID {
-			continue
-		}
-		if a.Token == "" {
-			return "", fmt.Errorf("AI agent %s has no runtime token", agentID)
-		}
-		return a.Token, nil
-	}
-	return "", fmt.Errorf("AI agent %s not found in organization %s", agentID, orgID)
+	return aiagent.BotToken(context.Background(), client.API("/api/v2/organizations/{orgid}/agents/", ""), studioURL(), orgID, agentID)
 }
 
-// secretField matches a JSON string value of a Studio credential field.
-var secretField = regexp.MustCompile(`("(?:bot_access_token|auth_token|user_access_token|ci_access_token)"\s*:\s*)"(?:[^"\\]|\\.)*"`)
-
-// RedactSecrets replaces Studio credentials in a JSON response, keeping the
-// rest of the document byte for byte.
-func RedactSecrets(body []byte) []byte {
-	return secretField.ReplaceAll(body, []byte(`$1"<redacted>"`))
-}
+// RedactSecrets replaces Studio credentials in a JSON response; see
+// aiagent.RedactSecrets.
+func RedactSecrets(body []byte) []byte { return aiagent.RedactSecrets(body) }

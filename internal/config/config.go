@@ -1,8 +1,9 @@
 package config
 
 import (
-	"encoding/base64"
 	"strings"
+
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
 var (
@@ -58,58 +59,48 @@ func SetOrgID(id string) {
 func OrgID() string       { return orgID }
 func OrgIDBase64() string { return orgIDBase64 }
 
-const (
-	CallingBaseURL = "https://webexapis.com/v1"
+var defaultHosts = webexapi.HostsFor("", "")
+
+var (
+	CallingBaseURL = defaultHosts.Webex
 
 	// IdentityBaseURL serves SCIM and archived users, whose paths have no /v1 segment.
-	IdentityBaseURL = "https://webexapis.com"
+	IdentityBaseURL = defaultHosts.Identity
 
 	// AnalyticsBaseURL serves the Admin analytics reports. Paths for those
 	// endpoints already carry their own /v1 segment.
-	AnalyticsBaseURL = "https://analytics.webexapis.com"
+	AnalyticsBaseURL = defaultHosts.Analytics
 )
 
 // CCRegions lists the Contact Center data centers. An org's Contact Center lives
 // in one of them, and each has its own API and AI Agent Studio host.
-var CCRegions = []string{"us1", "eu1", "eu2", "anz1", "ca1", "jp1", "sg1", "in1"}
+var CCRegions = webexapi.CCRegions
 
 // DefaultCCRegion is used when no region is given or saved for the org.
-const DefaultCCRegion = "us1"
+const DefaultCCRegion = webexapi.DefaultCCRegion
 
 var (
-	CcBaseURL = ccHost(DefaultCCRegion)
+	ccRegion = DefaultCCRegion
+
+	CcBaseURL = defaultHosts.CC
 
 	// AiAgentBaseURL is AI Agent Studio in the same data center as CcBaseURL.
-	AiAgentBaseURL = aiAgentHost(DefaultCCRegion)
+	AiAgentBaseURL = defaultHosts.AIAgent
 )
-
-func ccHost(region string) string      { return "https://api.wxcc-" + region + ".cisco.com" }
-func aiAgentHost(region string) string { return "https://studio.aiagent-" + region + ".cisco.com" }
 
 // SetCCRegion points Contact Center and AI Agent Studio requests at a data center
 // from CCRegions. Empty means DefaultCCRegion.
-func SetCCRegion(region string) {
-	if region == "" {
-		region = DefaultCCRegion
+func SetCCRegion(r string) {
+	if r == "" {
+		r = DefaultCCRegion
 	}
-	CcBaseURL = ccHost(region)
-	AiAgentBaseURL = aiAgentHost(region)
-}
-
-// analyticsCallingHosts maps a data region to the Detailed Call History (CDR) FQDN.
-// Calls to the default host are routed to the nearest region; if that region does
-// not hold the org's data the API returns HTTP 451 with the correct endpoint.
-var analyticsCallingHosts = map[string]string{
-	"us":  "https://analytics-calling.webexapis.com",
-	"ca":  "https://analytics-calling.webexapis.com",
-	"eu":  "https://analytics-calling-eu.webexapis.com",
-	"eun": "https://analytics-calling-eu.webexapis.com",
-	"in":  "https://analytics-calling-in.webexapis.com",
-	"au":  "https://analytics-calling-au.webexapis.com",
+	ccRegion = r
+	CcBaseURL = webexapi.CCHost(r)
+	AiAgentBaseURL = webexapi.AIAgentHost(r)
 }
 
 // Regions lists the supported --region values.
-var Regions = []string{"us", "ca", "eu", "eun", "in", "au"}
+var Regions = webexapi.Regions
 
 var region string
 
@@ -120,67 +111,14 @@ func Region() string     { return region }
 
 // AnalyticsCallingBaseURL returns the Detailed Call History base URL for the
 // configured region, falling back to the US/Canada host.
-func AnalyticsCallingBaseURL() string {
-	host, ok := analyticsCallingHosts[region]
-	if !ok {
-		host = analyticsCallingHosts["us"]
-	}
-	return host + "/v1"
-}
+func AnalyticsCallingBaseURL() string { return webexapi.AnalyticsCallingHost(region) }
 
-// DecodeOrgID converts a base64-encoded Webex org ID (ciscospark://us/ORGANIZATION/<uuid>)
-// to the raw UUID. If the input is already a UUID or unrecognized, it is returned as-is.
-func DecodeOrgID(id string) string {
-	if id == "" {
-		return id
-	}
+// Hosts are this run's API hosts, for its data region and Contact Center data
+// center.
+func Hosts() webexapi.Hosts { return webexapi.HostsFor(region, ccRegion) }
 
-	// If it already looks like a UUID, return as-is
-	if strings.Count(id, "-") == 4 && len(id) == 36 {
-		return id
-	}
+// DecodeOrgID converts a base64 Webex org ID to its UUID; see webexapi.DecodeOrgID.
+func DecodeOrgID(id string) string { return webexapi.DecodeOrgID(id) }
 
-	// Try all base64 variants (Webex IDs may or may not have padding)
-	encodings := []*base64.Encoding{
-		base64.StdEncoding,
-		base64.RawStdEncoding,
-		base64.URLEncoding,
-		base64.RawURLEncoding,
-	}
-
-	for _, enc := range encodings {
-		decoded, err := enc.DecodeString(id)
-		if err != nil {
-			continue
-		}
-		s := string(decoded)
-		if strings.HasPrefix(s, "ciscospark://") {
-			parts := strings.Split(s, "/")
-			if len(parts) > 0 {
-				uuid := parts[len(parts)-1]
-				if uuid != "" {
-					return uuid
-				}
-			}
-		}
-	}
-
-	return id
-}
-
-// EncodeOrgID converts a UUID to the base64-encoded Webex org ID format:
-// base64("ciscospark://us/ORGANIZATION/<uuid>"), unpadded as Webex issues it.
-// Calling multipart upload endpoints never respond to a padded orgId.
-// If the input is empty, returns empty. If the input is already base64-encoded, returns as-is.
-func EncodeOrgID(id string) string {
-	if id == "" {
-		return ""
-	}
-	// If it looks like a UUID, encode it
-	if strings.Count(id, "-") == 4 && len(id) == 36 {
-		uri := "ciscospark://us/ORGANIZATION/" + id
-		return base64.RawStdEncoding.EncodeToString([]byte(uri))
-	}
-	// Already base64 or unknown format — return as-is
-	return id
-}
+// EncodeOrgID converts an org UUID to the base64 Webex form; see webexapi.EncodeOrgID.
+func EncodeOrgID(id string) string { return webexapi.EncodeOrgID(id) }

@@ -1,4 +1,4 @@
-package client
+package webexapi
 
 import (
 	"encoding/json"

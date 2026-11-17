@@ -1,19 +1,17 @@
 package client
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
-	urlpkg "net/url"
 	"os"
-	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/readonly"
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
 // ErrDryRun is returned when a write operation is intercepted by --dry-run mode.
@@ -31,58 +29,81 @@ func ReadOnlyError(method, url string) error {
 // On a 401 it refreshes the token and retries once.
 // On a 429 it reads Retry-After and retries up to 3 times.
 func Do(req *Request) ([]byte, int, error) {
-	body, status, _, err := doWithHeaders(req)
-	return body, status, err
+	resp, err := API(req.path, req.logBody()).Send(context.Background(), req.sdkRequest())
+	if resp == nil {
+		return nil, 0, CLIError(err)
+	}
+	return resp.Body, resp.Status, CLIError(err)
 }
 
-// doWithHeaders is Do, also returning the final response's headers.
-func doWithHeaders(req *Request) ([]byte, int, http.Header, error) {
-	body, status, headers, err := doOnce(req)
-
-	if status == 401 && config.TokenRefresher != nil {
-		newToken, refreshErr := config.TokenRefresher()
-		if refreshErr != nil {
-			return body, status, headers, err
-		}
-		config.SetToken(newToken)
-		body, status, headers, err = doOnce(req)
+// API is a client set up by the command line: its token and refresh, 429 retry
+// limits, --debug output, read-only mode and --dry-run. template is the request's
+// unexpanded path, which is how read-only mode lists query endpoints, and logBody
+// stands in for the body in diagnostics.
+func API(template, logBody string) *webexapi.Client {
+	c := &webexapi.Client{
+		Token:        func(context.Context) (string, error) { return config.Token(), nil },
+		MaxRetries:   config.MaxRetry(),
+		MaxRetryWait: time.Duration(config.MaxRetryTimer()) * time.Second,
+		BeforeSend: func(httpReq *http.Request) error {
+			url := httpReq.URL.String()
+			if config.Debug() {
+				fmt.Fprintf(os.Stderr, "DEBUG: %s %s\n", httpReq.Method, url)
+				for k, v := range httpReq.Header {
+					fmt.Fprintf(os.Stderr, "DEBUG:   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
+				}
+				if logBody != "" {
+					fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(logBody, 500))
+				}
+			}
+			if config.ReadOnly() && !readOnlyAllows(httpReq.Method, template) {
+				return ReadOnlyError(httpReq.Method, url)
+			}
+			// Dry-run: intercept write operations before making the HTTP call
+			if config.DryRun() && isWriteMethod(httpReq.Method) {
+				fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", httpReq.Method, url)
+				for k, v := range httpReq.Header {
+					fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
+				}
+				if logBody != "" {
+					fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", logBody)
+				}
+				return ErrDryRun
+			}
+			return nil
+		},
+		AfterResponse: func(status, size int) {
+			if config.Debug() {
+				fmt.Fprintf(os.Stderr, "DEBUG: Response %d (%d bytes)\n", status, size)
+			}
+		},
+		OnRetry: func(wait time.Duration, attempt, max int) {
+			fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), attempt, max)
+		},
 	}
-
-	var cumulativeWait time.Duration
-	for retries := 0; status == 429; retries++ {
-		maxRetry := config.MaxRetry()
-		maxTimer := time.Duration(config.MaxRetryTimer()) * time.Second
-		wait := retryAfterDuration(headers.Get("Retry-After"))
-
-		if retries >= maxRetry {
-			return body, status, headers, fmt.Errorf("rate limited (429): retry limit reached after %d attempts — try again after %s", retries, wait.Round(time.Second))
+	if refresh := config.TokenRefresher; refresh != nil {
+		c.Refresh = func(context.Context) error {
+			token, err := refresh()
+			if err != nil {
+				return err
+			}
+			config.SetToken(token)
+			return nil
 		}
-		if maxTimer > 0 && cumulativeWait+wait > maxTimer {
-			return body, status, headers, fmt.Errorf("rate limited (429): retry wait of %s would exceed max-retry-timer of %s — try again after %s", (cumulativeWait + wait).Round(time.Second), maxTimer.Round(time.Second), wait.Round(time.Second))
-		}
-
-		fmt.Fprintf(os.Stderr, "Rate limited (429). Retrying in %s (attempt %d/%d)...\n", wait.Round(time.Second), retries+1, maxRetry)
-		time.Sleep(wait)
-		cumulativeWait += wait
-		body, status, headers, err = doOnce(req)
 	}
-
-	if status == 451 {
-		return body, status, headers, wrongRegionError(body)
-	}
-
-	return body, status, headers, err
+	return c
 }
 
-// endpointURLPattern finds the regional endpoint Webex returns in a 451 body.
-var endpointURLPattern = regexp.MustCompile(`https?://[a-zA-Z0-9.\-]+`)
-
-// wrongRegionError turns an HTTP 451 (org data lives in another region) into an
-// actionable message naming the endpoint the API pointed us at.
-func wrongRegionError(body []byte) error {
+// CLIError says how to fix a request sent to the wrong data region, and returns
+// any other error as it is.
+func CLIError(err error) error {
+	var wrongRegion *webexapi.WrongRegionError
+	if !errors.As(err, &wrongRegion) {
+		return err
+	}
 	msg := fmt.Sprintf("wrong data region (451): this organization's data is not hosted in region %q", regionLabel())
-	if m := endpointURLPattern.Find(body); m != nil {
-		msg += fmt.Sprintf("; Webex says to use %s", m)
+	if wrongRegion.Endpoint != "" {
+		msg += fmt.Sprintf("; Webex says to use %s", wrongRegion.Endpoint)
 	}
 	return fmt.Errorf("%s — rerun with --region <%s> (or: webex config set region <region>)",
 		msg, strings.Join(config.Regions, "|"))
@@ -93,16 +114,6 @@ func regionLabel() string {
 		return r
 	}
 	return "us (default)"
-}
-
-// retryAfterDuration parses the Retry-After header value (seconds integer) and
-// returns the duration to wait. Defaults to 5 seconds if the header is absent
-// or unparseable.
-func retryAfterDuration(header string) time.Duration {
-	if secs, err := strconv.Atoi(strings.TrimSpace(header)); err == nil && secs > 0 {
-		return time.Duration(secs) * time.Second
-	}
-	return 5 * time.Second
 }
 
 // redactHeader replaces a credential value with its length, which is enough to
@@ -119,117 +130,6 @@ func redactHeader(key, value string) string {
 		return fmt.Sprintf("%s <%d chars>", scheme, len(cred))
 	}
 	return fmt.Sprintf("<%d chars>", len(value))
-}
-
-// doOnce executes a single HTTP request without retry.
-func doOnce(req *Request) ([]byte, int, http.Header, error) {
-	// Build URL
-	url := req.baseURL + req.path
-	for k, v := range req.pathParams {
-		url = strings.ReplaceAll(url, "{"+k+"}", urlpkg.PathEscape(v))
-	}
-
-	// Add query params
-	if req.rawURL != "" {
-		url = req.rawURL
-	} else if len(req.queryParams) > 0 {
-		params := urlpkg.Values{}
-		for k, v := range req.queryParams {
-			if v != "" {
-				params.Set(k, v)
-			}
-		}
-		if encoded := params.Encode(); encoded != "" {
-			url += "?" + encoded
-		}
-	}
-
-	// Build body
-	var bodyReader io.Reader
-	if req.bodyRaw != "" {
-		bodyReader = strings.NewReader(req.bodyRaw)
-	}
-
-	httpReq, err := http.NewRequest(req.method, url, bodyReader)
-	if err != nil {
-		return nil, 0, nil, fmt.Errorf("building request: %w", err)
-	}
-
-	// Auth
-	httpReq.Header.Set("Authorization", "Bearer "+config.Token())
-
-	// Content type
-	if req.bodyRaw != "" {
-		contentType := req.bodyContentType
-		if contentType == "" {
-			contentType = "application/json"
-		}
-		httpReq.Header.Set("Content-Type", contentType)
-	}
-	httpReq.Header.Set("Accept", "application/json")
-
-	// Extra headers
-	for k, v := range req.headers {
-		httpReq.Header.Set(k, v)
-	}
-
-	// Multipart diagnostics describe the file; never print its binary contents.
-	logBody := req.bodyRaw
-	if req.bodySummary != "" {
-		logBody = req.bodySummary
-	}
-
-	// Debug
-	if config.Debug() {
-		fmt.Fprintf(os.Stderr, "DEBUG: %s %s\n", req.method, url)
-		for k, v := range httpReq.Header {
-			fmt.Fprintf(os.Stderr, "DEBUG:   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
-		}
-		if req.bodyRaw != "" {
-			fmt.Fprintf(os.Stderr, "DEBUG:   Body: %s\n", truncate(logBody, 500))
-		}
-	}
-
-	if config.ReadOnly() && !readOnlyAllows(req.method, req.path) {
-		return nil, 0, nil, ReadOnlyError(req.method, url)
-	}
-
-	// Dry-run: intercept write operations before making the HTTP call
-	if config.DryRun() && isWriteMethod(req.method) {
-		fmt.Fprintf(os.Stderr, "[DRY RUN] %s %s\n", req.method, url)
-		for k, v := range httpReq.Header {
-			fmt.Fprintf(os.Stderr, "[DRY RUN]   %s: %s\n", k, redactHeader(k, strings.Join(v, ", ")))
-		}
-		if req.bodyRaw != "" {
-			fmt.Fprintf(os.Stderr, "[DRY RUN]   Body: %s\n", logBody)
-		}
-		return nil, 0, nil, ErrDryRun
-	}
-
-	resp, err := http.DefaultClient.Do(httpReq)
-	if err != nil {
-		return nil, 0, nil, fmt.Errorf("executing request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, resp.StatusCode, resp.Header, fmt.Errorf("reading response: %w", err)
-	}
-
-	if config.Debug() {
-		fmt.Fprintf(os.Stderr, "DEBUG: Response %d (%d bytes)\n", resp.StatusCode, len(body))
-	}
-
-	if resp.StatusCode >= 400 {
-		shown := body
-		if req.redactError != nil {
-			shown = req.redactError(body)
-		}
-		return body, resp.StatusCode, resp.Header, fmt.Errorf("API error %d: %s", resp.StatusCode, truncate(string(shown), 500))
-	}
-
-	return body, resp.StatusCode, resp.Header, nil
 }
 
 func truncate(s string, n int) string {
