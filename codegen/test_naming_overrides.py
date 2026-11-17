@@ -163,8 +163,7 @@ class NamingOverridesTest(unittest.TestCase):
         group = next(g for g in spec['Webex Cloud Calling'] if g['group'] == 'metrics')
         ep = group['endpoints'][0]
         self.assertEqual(ep['command'], 'get-call-quality-stats')
-        self.assertEqual(resolve_base_url('Webex Cloud Calling', ep['path'], 'wrong-host'),
-                         'config.AnalyticsBaseURL')
+        self.assertEqual(resolve_base_url('Webex Cloud Calling', ep['path'], 'wrong-host'), 'analytics')
 
     def test_queue_names_keep_selection_method_without_parameter_suffixes(self):
         for name in ['list-agent-based', 'list-skill-based', 'list-team-based',
