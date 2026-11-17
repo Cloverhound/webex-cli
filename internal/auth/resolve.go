@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/Cloverhound/webex-cli/internal/appconfig"
 )
@@ -165,6 +166,27 @@ func MakeEnvRefresher(current string, cfg *appconfig.Config) func() (string, err
 		current = token
 		return current, nil
 	}
+}
+
+// EnsureMinTTL returns the stored token for email, refreshing it when less than
+// minTTL remains. A caller that hands the token to a long-running process with no
+// way to refresh uses this so the token cannot expire partway through.
+func EnsureMinTTL(email string, minTTL time.Duration, cfg *appconfig.Config) (*StoredToken, error) {
+	tok, err := LoadToken(email)
+	if err != nil {
+		return nil, fmt.Errorf("no token for %s — run: webex login", email)
+	}
+	if time.Until(tok.ExpiresAt) >= minTTL && !tok.IsExpired() {
+		return tok, nil
+	}
+	refreshed, err := refreshStored(email, cfg, tok.AccessToken)
+	if err != nil {
+		return nil, fmt.Errorf("refreshing token for %s: %w\nRun: webex login", email, err)
+	}
+	if remaining := time.Until(refreshed.ExpiresAt); remaining < minTTL {
+		return nil, fmt.Errorf("token for %s lasts %s, shorter than the requested %s", email, remaining.Round(time.Second), minTTL)
+	}
+	return refreshed, nil
 }
 
 // refreshStored refreshes the stored token for email under a lock shared by all

@@ -173,9 +173,12 @@ webex auth switch <email>      # Switch default user
 webex auth set-org <org-id>    # Set a persistent org override
 webex auth clear-org           # Clear the org override
 webex auth export              # Print the refresh token for $WEBEX_REFRESH_TOKEN
+webex auth token               # Print the access token
 ```
 
 Token resolution order: `--token` flag > `$WEBEX_TOKEN` env var > `$WEBEX_REFRESH_TOKEN` env var > stored login.
+
+`webex auth list` and `auth token` print JSON with `--output json`. `auth token --output json` includes the token's expiry, user, and organization. `webex auth token --min-ttl 30m` refreshes the token first if less than that time remains, for handing it to a long-running process; it needs a stored login.
 
 ### Headless and Unattended Use
 
