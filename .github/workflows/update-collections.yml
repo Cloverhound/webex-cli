@@ -40,6 +40,11 @@ jobs:
       - name: Build and vet
         run: make check
 
+      # The command and request golden files change with the collections; the
+      # PR diff shows each published command that changed.
+      - name: Update golden files
+        run: make golden
+
       - name: Generate changelog
         run: python3 codegen/diff_spec.py /tmp/old_spec.json codegen/api_spec.json > /tmp/spec_diff.md
 
