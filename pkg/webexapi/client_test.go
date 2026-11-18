@@ -179,11 +179,36 @@ func TestARedirectToAnotherPortSendsNoCredentials(t *testing.T) {
 	}))
 	t.Cleanup(origin.Close)
 	c := &Client{Token: func(context.Context) (string, error) { return "secret", nil }}
-	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: http.Header{"Bot-Access-Token": {"agent"}}}); err != nil {
+	header := http.Header{"Bot-Access-Token": {"agent"}, "Password": {"meeting-password"}}
+	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header}); err != nil {
 		t.Fatal(err)
 	}
-	if got.Get("Authorization") != "" || got.Get("Bot-Access-Token") != "" {
-		t.Fatalf("credentials reached another origin: %v", got)
+	for _, name := range []string{"Authorization", "Bot-Access-Token", "Password"} {
+		if got.Get(name) != "" {
+			t.Errorf("%s reached another origin", name)
+		}
+	}
+	if got.Get("Accept") != "application/json" {
+		t.Errorf("Accept was dropped: %v", got)
+	}
+}
+
+func TestARefusedRedirectReturnsItsResponse(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/moved", http.StatusTemporaryRedirect)
+	}))
+	t.Cleanup(srv.Close)
+	refuse := errors.New("refused")
+	calls := 0
+	c := &Client{BeforeSend: func(*http.Request) error {
+		if calls++; calls > 1 {
+			return refuse
+		}
+		return nil
+	}}
+	resp, err := c.Send(context.Background(), Request{Method: "POST", URL: srv.URL, Body: []byte("{}")})
+	if !errors.Is(err, refuse) || resp == nil || resp.Status != http.StatusTemporaryRedirect || resp.Header.Get("Location") != "/moved" {
+		t.Fatalf("resp %+v, err %v", resp, err)
 	}
 }
 

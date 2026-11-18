@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -180,6 +181,11 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 
 	httpResp, err := c.httpClient().Do(httpReq)
 	if err != nil {
+		// A refused redirect comes back with the redirect response, its body
+		// already closed: the server did answer.
+		if httpResp != nil {
+			return &Response{Status: httpResp.StatusCode, Header: httpResp.Header}, fmt.Errorf("executing request: %w", err)
+		}
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
 	defer httpResp.Body.Close()
@@ -203,10 +209,15 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 	return resp, nil
 }
 
+// crossOriginHeaders are the only headers a redirect to another origin keeps.
+// Any other header may carry a credential: a token, an AI agent's runtime token,
+// a meeting password.
+var crossOriginHeaders = []string{"Accept", "Accept-Encoding", "Content-Type", "User-Agent", "Referer"}
+
 // httpClient is the HTTP client with redirects passed through BeforeSend, so the
 // hook sees every request sent. A redirect to another origin (scheme, host or
-// port) carries no credentials: net/http forwards Authorization to subdomains and
-// other ports, and AI Agent Studio's Bot-Access-Token everywhere.
+// port) keeps only crossOriginHeaders; net/http itself forwards Authorization to
+// subdomains and other ports, and custom headers everywhere.
 func (c *Client) httpClient() *http.Client {
 	base := c.HTTP
 	if base == nil {
@@ -215,8 +226,11 @@ func (c *Client) httpClient() *http.Client {
 	client := *base
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		if !sameHost(req.URL, via[0].URL) {
-			req.Header.Del("Authorization")
-			req.Header.Del("Bot-Access-Token")
+			for name := range req.Header {
+				if !slices.Contains(crossOriginHeaders, http.CanonicalHeaderKey(name)) {
+					req.Header.Del(name)
+				}
+			}
 		}
 		if c.BeforeSend != nil {
 			if err := c.BeforeSend(req); err != nil {
