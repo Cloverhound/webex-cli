@@ -88,28 +88,38 @@ class PaginationTest(unittest.TestCase):
 
 
 class OperationIDTest(unittest.TestCase):
-    colliding = [
-        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': '/telephony/config/people/me/settings/priorityAlert/criteria/{id}',
-         'path_params': [{'name': 'id'}]},
-        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': '/telephony/config/people/me/settings/priorityAlert'},
-    ]
+    park = '/telephony/config/locations/{locationId}/callParks/{callParkId}'
+    settings = '/telephony/config/locations/{locationId}/callParks/settings'
 
     def ids(self, endpoints):
-        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-settings-for-me', endpoints)
-        return dict(re.findall(r'^var (\w+) = &Operation\{.*?Path:\s+"([^"]+)"', source, re.S | re.M))
+        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-park', endpoints)
+        found = re.findall(r'^var (\w+) = &Operation\{.*?Method:\s+"(\w+)", Host: \w+, Path:\s+"([^"]+)"', source, re.S | re.M)
+        return {name: (method, path) for name, method, path in found}
 
-    def test_colliding_operations_are_named_by_route_in_any_order(self):
-        forward, backward = self.ids(self.colliding), self.ids(list(reversed(self.colliding)))
-        self.assertEqual(forward, backward)
-        self.assertEqual(forward['CallingCallSettingsForMeGetPriorityAlert2'],
-                         '/telephony/config/people/me/settings/priorityAlert')
-        self.assertEqual(forward['CallingCallSettingsForMeGetPriorityAlertCriterion'],
-                         '/telephony/config/people/me/settings/priorityAlert/criteria/{id}')
+    def test_names_stay_with_their_routes_when_extraction_renumbers_commands(self):
+        # A reordered collection makes extraction give "update" and "update-2" to
+        # the other route.
+        before = self.ids([{'command': 'update', 'method': 'PUT', 'path': self.park},
+                           {'command': 'update-2', 'method': 'PUT', 'path': self.settings}])
+        after = self.ids([{'command': 'update', 'method': 'PUT', 'path': self.settings},
+                          {'command': 'update-2', 'method': 'PUT', 'path': self.park}])
+        self.assertEqual(before, after)
+        self.assertEqual(before, {'CallingCallParkUpdateByCallParkId': ('PUT', self.park),
+                                  'CallingCallParkUpdateSettings': ('PUT', self.settings)})
 
-    def test_a_collision_without_route_names_stops_generation(self):
-        endpoints = [{'command': 'list', 'method': 'GET', 'path': '/a'}, {'command': 'list', 'method': 'GET', 'path': '/b'}]
-        with self.assertRaises(SystemExit):
-            area_file('calling', 'Webex Cloud Calling', 'webex', True, 'things', endpoints)
+    def test_a_route_listed_twice_is_named_twice(self):
+        base = '/telephony/config/people/me/settings/priorityAlert'
+        ids = self.ids([{'command': 'get-priority-alert', 'method': 'GET', 'path': base},
+                        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': base},
+                        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': base + '/criteria/{id}'}])
+        self.assertEqual(ids, {'CallingCallParkGetPriorityAlert': ('GET', base),
+                               'CallingCallParkGetPriorityAlert_2': ('GET', base),
+                               'CallingCallParkGetPriorityAlertCriteriaById': ('GET', base + '/criteria/{id}')})
+
+    def test_a_family_on_one_path_is_named_by_method(self):
+        ids = self.ids([{'command': 'set', 'method': 'PUT', 'path': '/things'},
+                        {'command': 'set-2', 'method': 'POST', 'path': '/things'}])
+        self.assertEqual(ids, {'CallingCallParkSetPut': ('PUT', '/things'), 'CallingCallParkSetPost': ('POST', '/things')})
 
 
 class FlagTest(unittest.TestCase):

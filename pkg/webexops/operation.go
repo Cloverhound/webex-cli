@@ -218,6 +218,12 @@ func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 		}
 	}
 	for k, vs := range args.Query {
+		vs = slices.Clone(vs)
+		if op.takesOrgUUID(k) {
+			for i := range vs {
+				vs[i] = webexapi.DecodeOrgID(vs[i])
+			}
+		}
 		query[k] = vs
 	}
 	l := webexapi.List{
@@ -234,6 +240,16 @@ func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 		l.Redact = aiagent.RedactSecrets
 	}
 	return l
+}
+
+// takesOrgUUID reports whether the query parameter name takes the org UUID.
+func (op *Operation) takesOrgUUID(name string) bool {
+	for _, p := range op.Params {
+		if p.In == InQuery && p.Name == name && p.OrgUUID {
+			return true
+		}
+	}
+	return false
 }
 
 // Call sends an operation.

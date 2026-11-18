@@ -23,7 +23,8 @@ func BotToken(agentID string) (string, error) {
 	if orgID == "" {
 		return "", fmt.Errorf("no organization: log in or pass --organization")
 	}
-	return aiagent.BotToken(context.Background(), client.API("/api/v2/organizations/{orgid}/agents/", ""), studioURL(), orgID, agentID)
+	token, err := aiagent.BotToken(context.Background(), client.API("/api/v2/organizations/{orgid}/agents/", ""), studioURL(), orgID, agentID)
+	return token, client.CLIError(err)
 }
 
 // RedactSecrets replaces Studio credentials in a JSON response; see

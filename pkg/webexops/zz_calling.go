@@ -95,7 +95,7 @@ var callingOperations = []*Operation{
 	CallingCallControlsDivert,
 	CallingCallControlsTransfer,
 	CallingCallControlsPark,
-	CallingCallControlsGet,
+	CallingCallControlsGetRetrieve,
 	CallingCallControlsStartRecording,
 	CallingCallControlsStopRecording,
 	CallingCallControlsPauseRecording,
@@ -105,7 +105,7 @@ var callingOperations = []*Operation{
 	CallingCallControlsPickup,
 	CallingCallControlsBarge,
 	CallingCallControlsList,
-	CallingCallControlsGet2,
+	CallingCallControlsGetByCallId,
 	CallingCallControlsListHistory,
 	CallingCallControlsDialMemberId,
 	CallingCallControlsAnswerMemberId,
@@ -270,8 +270,8 @@ var callingOperations = []*Operation{
 	CallingCallSettingsForMeUpdateUserExecutiveScreening,
 	CallingCallSettingsForMeGetUserExecutiveFiltering,
 	CallingCallSettingsForMeUpdateUserExecutiveFiltering,
-	CallingCallSettingsForMeGetUserExecutiveFiltering2,
-	CallingCallSettingsForMeUpdateUserExecutiveFiltering2,
+	CallingCallSettingsForMeGetUserExecutiveFilteringCriteriaById,
+	CallingCallSettingsForMeUpdateUserExecutiveFilteringCriteriaById,
 	CallingCallSettingsForMeDeleteUserExecutiveFiltering,
 	CallingCallSettingsForMeGetDoNotDisturbUser,
 	CallingCallSettingsForMeUpdateDoNotDisturbUser,
@@ -285,7 +285,7 @@ var callingOperations = []*Operation{
 	CallingCallSettingsForMeGetPriorityAlert,
 	CallingCallSettingsForMeUpdatePriorityAlertUser,
 	CallingCallSettingsForMeCreatePriorityAlert,
-	CallingCallSettingsForMeGetPriorityAlertCriterion,
+	CallingCallSettingsForMeGetPriorityAlertCriteriaById,
 	CallingCallSettingsForMeUpdatePriorityAlert,
 	CallingCallSettingsForMeDeletePriorityAlert,
 	CallingCallSettingsForMeGetUserSchedules,
@@ -307,7 +307,7 @@ var callingOperations = []*Operation{
 	CallingCallSettingsForMeGetSelectiveAcceptUser,
 	CallingCallSettingsForMeUpdateSelectiveAcceptUser,
 	CallingCallSettingsForMeCreateUserSelectiveAccept,
-	CallingCallSettingsForMeGetSelectiveAcceptCriterion,
+	CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById,
 	CallingCallSettingsForMeUpdateSelectiveAccept,
 	CallingCallSettingsForMeDeleteSelectiveAccept,
 	CallingCallSettingsForMeGetAvailableNumbersUserLocation,
@@ -322,7 +322,7 @@ var callingOperations = []*Operation{
 	CallingCallSettingsForMeCreateUserSelectiveReject,
 	CallingCallSettingsForMeGetAnonymousRejectionUser,
 	CallingCallSettingsForMeUpdateAnonymousRejectionUser,
-	CallingCallSettingsForMeGetSelectiveRejectCriterion,
+	CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById,
 	CallingCallSettingsForMeUpdateSelectiveReject,
 	CallingCallSettingsForMeDeleteSelectiveReject,
 	CallingCallSettingsForMeGetWaitingUser,
@@ -330,64 +330,64 @@ var callingOperations = []*Operation{
 	CallingCallSettingsForMeGetSequentialRingUser,
 	CallingCallSettingsForMeUpdateSequentialRingUser,
 	CallingCallSettingsForMeCreateUserSequentialRing,
-	CallingCallSettingsForMeGetSequentialRingCriterion,
-	CallingCallSettingsForMeUpdateSequentialRingCriterion,
+	CallingCallSettingsForMeGetSequentialRingUserCriteriaById,
+	CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById,
 	CallingCallSettingsForMeDeleteSequentialRing,
-	CallingCallSettingsForMeGetPriorityAlert2,
-	CallingCallSettingsForMeUpdatePriorityAlertUser2,
-	CallingCallSettingsForMeCreatePriorityAlert2,
-	CallingCallSettingsForMeGetPriorityAlert22,
-	CallingCallSettingsForMeUpdatePriorityAlert2,
-	CallingCallSettingsForMeDeletePriorityAlert2,
-	CallingCallSettingsForMeGetUserSchedules2,
-	CallingCallSettingsForMeCreateUserSchedule2,
-	CallingCallSettingsForMeGetUserSchedule2,
-	CallingCallSettingsForMeUpdateUserSchedule2,
-	CallingCallSettingsForMeDeleteUserSchedule2,
-	CallingCallSettingsForMeCreateEventUserSchedule2,
-	CallingCallSettingsForMeGetUserScheduleEvent2,
-	CallingCallSettingsForMeUpdateUserScheduleEvent2,
-	CallingCallSettingsForMeDeleteUserScheduleEvent2,
-	CallingCallSettingsForMeGetUserLocationSchedule2,
-	CallingCallSettingsForMeGetNotifyUser2,
-	CallingCallSettingsForMeUpdateNotifyUser2,
-	CallingCallSettingsForMeCreateNotify2,
-	CallingCallSettingsForMeGetNotify2,
-	CallingCallSettingsForMeUpdateNotify2,
-	CallingCallSettingsForMeDeleteNotify2,
-	CallingCallSettingsForMeGetSelectiveAcceptUser2,
-	CallingCallSettingsForMeUpdateSelectiveAcceptUser2,
-	CallingCallSettingsForMeCreateUserSelectiveAccept2,
-	CallingCallSettingsForMeGetSelectiveAcceptUser22,
-	CallingCallSettingsForMeUpdateSelectiveAccept2,
-	CallingCallSettingsForMeDeleteSelectiveAccept2,
-	CallingCallSettingsForMeGetAvailableNumbersUserLocation2,
-	CallingCallSettingsForMeCreateSelectiveForward2,
-	CallingCallSettingsForMeGetSelectiveForward2,
-	CallingCallSettingsForMeUpdateSelectiveForward2,
-	CallingCallSettingsForMeDeleteSelectiveForward2,
-	CallingCallSettingsForMeGetSelectiveForwardUser2,
-	CallingCallSettingsForMeUpdateSelectiveForwardUser2,
-	CallingCallSettingsForMeGetSelectiveRejectUser2,
-	CallingCallSettingsForMeUpdateSelectiveRejectUser2,
-	CallingCallSettingsForMeCreateUserSelectiveReject2,
-	CallingCallSettingsForMeGetAnonymousRejectionUser2,
-	CallingCallSettingsForMeUpdateAnonymousRejectionUser2,
-	CallingCallSettingsForMeGetSelectiveRejectUser22,
-	CallingCallSettingsForMeUpdateSelectiveReject2,
-	CallingCallSettingsForMeDeleteSelectiveReject2,
-	CallingCallSettingsForMeGetWaitingUser2,
-	CallingCallSettingsForMeUpdateWaitingUser2,
-	CallingCallSettingsForMeGetSequentialRingUser2,
-	CallingCallSettingsForMeUpdateSequentialRingUser2,
-	CallingCallSettingsForMeCreateUserSequentialRing2,
-	CallingCallSettingsForMeGetSequentialRingUser22,
-	CallingCallSettingsForMeUpdateSequentialRingUser22,
-	CallingCallSettingsForMeDeleteSequentialRing2,
+	CallingCallSettingsForMeGetPriorityAlert_2,
+	CallingCallSettingsForMeUpdatePriorityAlertUser_2,
+	CallingCallSettingsForMeCreatePriorityAlert_2,
+	CallingCallSettingsForMeGetPriorityAlertCriteriaById_2,
+	CallingCallSettingsForMeUpdatePriorityAlert_2,
+	CallingCallSettingsForMeDeletePriorityAlert_2,
+	CallingCallSettingsForMeGetUserSchedules_2,
+	CallingCallSettingsForMeCreateUserSchedule_2,
+	CallingCallSettingsForMeGetUserSchedule_2,
+	CallingCallSettingsForMeUpdateUserSchedule_2,
+	CallingCallSettingsForMeDeleteUserSchedule_2,
+	CallingCallSettingsForMeCreateEventUserSchedule_2,
+	CallingCallSettingsForMeGetUserScheduleEvent_2,
+	CallingCallSettingsForMeUpdateUserScheduleEvent_2,
+	CallingCallSettingsForMeDeleteUserScheduleEvent_2,
+	CallingCallSettingsForMeGetUserLocationSchedule_2,
+	CallingCallSettingsForMeGetNotifyUser_2,
+	CallingCallSettingsForMeUpdateNotifyUser_2,
+	CallingCallSettingsForMeCreateNotify_2,
+	CallingCallSettingsForMeGetNotify_2,
+	CallingCallSettingsForMeUpdateNotify_2,
+	CallingCallSettingsForMeDeleteNotify_2,
+	CallingCallSettingsForMeGetSelectiveAcceptUser_2,
+	CallingCallSettingsForMeUpdateSelectiveAcceptUser_2,
+	CallingCallSettingsForMeCreateUserSelectiveAccept_2,
+	CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById_2,
+	CallingCallSettingsForMeUpdateSelectiveAccept_2,
+	CallingCallSettingsForMeDeleteSelectiveAccept_2,
+	CallingCallSettingsForMeGetAvailableNumbersUserLocation_2,
+	CallingCallSettingsForMeCreateSelectiveForward_2,
+	CallingCallSettingsForMeGetSelectiveForward_2,
+	CallingCallSettingsForMeUpdateSelectiveForward_2,
+	CallingCallSettingsForMeDeleteSelectiveForward_2,
+	CallingCallSettingsForMeGetSelectiveForwardUser_2,
+	CallingCallSettingsForMeUpdateSelectiveForwardUser_2,
+	CallingCallSettingsForMeGetSelectiveRejectUser_2,
+	CallingCallSettingsForMeUpdateSelectiveRejectUser_2,
+	CallingCallSettingsForMeCreateUserSelectiveReject_2,
+	CallingCallSettingsForMeGetAnonymousRejectionUser_2,
+	CallingCallSettingsForMeUpdateAnonymousRejectionUser_2,
+	CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById_2,
+	CallingCallSettingsForMeUpdateSelectiveReject_2,
+	CallingCallSettingsForMeDeleteSelectiveReject_2,
+	CallingCallSettingsForMeGetWaitingUser_2,
+	CallingCallSettingsForMeUpdateWaitingUser_2,
+	CallingCallSettingsForMeGetSequentialRingUser_2,
+	CallingCallSettingsForMeUpdateSequentialRingUser_2,
+	CallingCallSettingsForMeCreateUserSequentialRing_2,
+	CallingCallSettingsForMeGetSequentialRingUserCriteriaById_2,
+	CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById_2,
+	CallingCallSettingsForMeDeleteSequentialRing_2,
 	CallingCallSettingsForMeGetMySimultaneousRing,
 	CallingCallSettingsForMeUpdateMySimultaneousRing,
-	CallingCallSettingsForMeGetMySimultaneousRing2,
-	CallingCallSettingsForMeUpdateMySimultaneousRing2,
+	CallingCallSettingsForMeGetMySimultaneousRingCriteriaById,
+	CallingCallSettingsForMeUpdateMySimultaneousRingCriteriaById,
 	CallingCallSettingsForMeDeleteMySimultaneousRing,
 	CallingCallSettingsForMeCreateMySimultaneousRing,
 	CallingCallSettingsForMeGetMyGuestCallingNumbers,
@@ -477,7 +477,7 @@ var callingOperations = []*Operation{
 	CallingDeviceCallGetUserCount,
 	CallingDeviceCallGetCountMembers,
 	CallingDeviceCallGetCountAvailableMembers,
-	CallingDeviceCallListSupported2,
+	CallingDeviceCallListSupported_2,
 	CallingDeviceCallGetValidationSchema,
 	CallingDeviceCallGetSettingsGroups,
 	CallingDeviceCallGetCustomerDynamicSettings,
@@ -488,16 +488,16 @@ var callingOperations = []*Operation{
 	CallingDeviceCallListDynamicSettingsJobs,
 	CallingDeviceCallGetDynamicSettingsJobStatus,
 	CallingDeviceCallListDynamicSettingsJobErrors,
-	CallingDeviceCallListSupported3,
-	CallingDeviceCallGetSettingsGroups2,
-	CallingDeviceCallGetCustomerDynamicSettings2,
-	CallingDeviceCallGetLocationDynamicSettings2,
-	CallingDeviceCallGetDynamicSettings2,
+	CallingDeviceCallListSupported_3,
+	CallingDeviceCallGetSettingsGroups_2,
+	CallingDeviceCallGetCustomerDynamicSettings_2,
+	CallingDeviceCallGetLocationDynamicSettings_2,
+	CallingDeviceCallGetDynamicSettings_2,
 	CallingDeviceCallUpdateDynamicSettings,
 	CallingDeviceCallUpdateDynamicSettingsAcrossOrgLocation,
-	CallingDeviceCallListDynamicSettingsJobs2,
-	CallingDeviceCallGetDynamicSettingsJobStatus2,
-	CallingDeviceCallListDynamicSettingsJobErrors2,
+	CallingDeviceCallListDynamicSettingsJobs_2,
+	CallingDeviceCallGetDynamicSettingsJobStatus_2,
+	CallingDeviceCallListDynamicSettingsJobErrors_2,
 	CallingDevicesList,
 	CallingDevicesCreateMacAddress,
 	CallingDevicesGet,
@@ -540,10 +540,10 @@ var callingOperations = []*Operation{
 	CallingAnnouncementRepositoryListGreetings,
 	CallingAnnouncementRepositoryGetUsage,
 	CallingAnnouncementRepositoryDeleteGreetingOrg,
-	CallingAnnouncementRepositoryGetBinaryGreeting,
+	CallingAnnouncementRepositoryGetBinaryGreetingAnnouncementsByAnnouncementId,
 	CallingAnnouncementRepositoryGetUsageLocation,
 	CallingAnnouncementRepositoryDeleteGreetingLocation,
-	CallingAnnouncementRepositoryGetBinaryGreeting2,
+	CallingAnnouncementRepositoryGetBinaryGreetingLocationsByLocationIdAnnouncementsByAnnouncementId,
 	CallingAnnouncementRepositoryGenerateTextToSpeechPrompt,
 	CallingAnnouncementRepositoryGetTextToSpeechUsage,
 	CallingAnnouncementRepositoryGetTextToSpeechGenerationStatus,
@@ -568,12 +568,12 @@ var callingOperations = []*Operation{
 	CallingCallParkList,
 	CallingCallParkCreate,
 	CallingCallParkDelete,
-	CallingCallParkGet,
-	CallingCallParkUpdate,
+	CallingCallParkGetByCallParkId,
+	CallingCallParkUpdateByCallParkId,
 	CallingCallParkGetAvailableAgents,
 	CallingCallParkGetAvailableRecallHuntGroups,
-	CallingCallParkGet2,
-	CallingCallParkUpdate2,
+	CallingCallParkGetSettings,
+	CallingCallParkUpdateSettings,
 	CallingCallParkListExtensions,
 	CallingCallParkGetExtension,
 	CallingCallParkDeleteExtension,
@@ -727,7 +727,7 @@ var callingOperations = []*Operation{
 	CallingLocationCallHandlingGetOutgoingDigitPattern,
 	CallingLocationCallHandlingCreateOutgoingPermissionDigitPattern,
 	CallingLocationCallHandlingDeleteAllOutgoingDigitPatterns,
-	CallingLocationCallHandlingGetOutgoingDigitPattern2,
+	CallingLocationCallHandlingGetOutgoingDigitPatternByDigitPatternId,
 	CallingLocationCallHandlingUpdateOutgoingDigitPattern,
 	CallingLocationCallHandlingDeleteOutgoingDigitPattern,
 	CallingLocationSchedulesList,
@@ -777,7 +777,7 @@ var callingOperations = []*Operation{
 	CallingPartnerReportsTemplatesCreate,
 	CallingPartnerReportsTemplatesGet,
 	CallingPartnerReportsTemplatesDelete,
-	CallingPartnerReportsTemplatesList2,
+	CallingPartnerReportsTemplatesListTemplates,
 	CallingPeopleList,
 	CallingPeopleCreatePerson,
 	CallingPeopleGetPerson,
@@ -875,9 +875,9 @@ var callingOperations = []*Operation{
 	CallingUserCallAssignUnassignNumbersPerson,
 	CallingUserCallGetPreferredEndpoint,
 	CallingUserCallUpdatePreferredEndpoint,
-	CallingUserCallSearchSharedLineAppearanceMembers,
-	CallingUserCallGetSharedLineAppearanceMembers,
-	CallingUserCallUpdateSharedLineAppearanceMembers,
+	CallingUserCallSearchSharedLineAppearanceMembersByApplicationIdAvailableMembers,
+	CallingUserCallGetSharedLineAppearanceMembersByApplicationIdMembers,
+	CallingUserCallUpdateSharedLineAppearanceMembersByApplicationIdMembers,
 	CallingUserCallUpdatePersonVoicemailPasscode,
 	CallingUserCallGetMessageSummary,
 	CallingUserCallListMessages,
@@ -920,16 +920,16 @@ var callingOperations = []*Operation{
 	CallingUserCallGetUsersSelectiveForwardService,
 	CallingUserCallUpdateUsersSelectiveForwardService,
 	CallingUserCallDeleteUsersSelectiveForwardService,
-	CallingUserCallGetPersonApplicationServicesSettings2,
-	CallingUserCallSearchSharedLineAppearanceMembers2,
-	CallingUserCallGetSharedLineAppearanceMembers2,
-	CallingUserCallUpdateSharedLineAppearanceMembers2,
+	CallingUserCallGetPersonApplicationServicesSettings_2,
+	CallingUserCallSearchSharedLineAppearanceMembersAvailableMembers,
+	CallingUserCallGetSharedLineAppearanceMembersMembers,
+	CallingUserCallUpdateSharedLineAppearanceMembersMembers,
 	CallingUserCallGetCaptionsSettings,
 	CallingUserCallUpdateCaptionsSettings,
 	CallingUserCallGetPersonExecutiveFilteringSettings,
 	CallingUserCallUpdatePersonExecutiveFilteringSettings,
-	CallingUserCallGetPersonExecutiveFilteringSettings2,
-	CallingUserCallUpdatePersonExecutiveFilteringSettings2,
+	CallingUserCallGetPersonExecutiveFilteringSettingsCriteriaById,
+	CallingUserCallUpdatePersonExecutiveFilteringSettingsCriteriaById,
 	CallingUserCallDeletePersonExecutiveFiltering,
 	CallingUserCallCreatePersonExecutiveFiltering,
 	CallingUserCallGetPersonExecutiveAlertSettings,
@@ -1104,7 +1104,7 @@ var callingOperations = []*Operation{
 	CallingWorkspacesUpdate,
 	CallingWorkspacesDelete,
 	CallingWorkspacesGetCapabilities,
-	CallingWorkspacesGet2,
+	CallingWorkspacesGet_2,
 	CallingExternalVoicemailDial,
 	CallingExternalVoicemailAnswer,
 	CallingExternalVoicemailReject,
@@ -1651,9 +1651,9 @@ var CallingCallControlsPark = &Operation{
 	}},
 }
 
-// CallingCallControlsGet is "Retrieve": POST /telephony/calls/retrieve.
-var CallingCallControlsGet = &Operation{
-	ID: "CallingCallControlsGet", Area: "calling", Group: "call-controls", Command: "get",
+// CallingCallControlsGetRetrieve is "Retrieve": POST /telephony/calls/retrieve.
+var CallingCallControlsGetRetrieve = &Operation{
+	ID: "CallingCallControlsGetRetrieve", Area: "calling", Group: "call-controls", Command: "get",
 	Summary:     "Retrieve",
 	Description: "Retrieve a parked call. A new call is initiated to perform the retrieval in a similar manner to the dial command. The number field from the park command response can be used as the destination for the retrieve command.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/calls/retrieve",
@@ -1778,9 +1778,9 @@ var CallingCallControlsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// CallingCallControlsGet2 is "Get Call Details": GET /telephony/calls/{callId}.
-var CallingCallControlsGet2 = &Operation{
-	ID: "CallingCallControlsGet2", Area: "calling", Group: "call-controls", Command: "get-2",
+// CallingCallControlsGetByCallId is "Get Call Details": GET /telephony/calls/{callId}.
+var CallingCallControlsGetByCallId = &Operation{
+	ID: "CallingCallControlsGetByCallId", Area: "calling", Group: "call-controls", Command: "get-2",
 	Summary:     "Get Call Details",
 	Description: "Get the details of the specified active call for the user.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/calls/{callId}",
@@ -3891,9 +3891,9 @@ var CallingCallSettingsForMeUpdateUserExecutiveFiltering = &Operation{
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeGetUserExecutiveFiltering2 is "Get User Executive Call Filtering Criteria Settings": GET /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
-var CallingCallSettingsForMeGetUserExecutiveFiltering2 = &Operation{
-	ID: "CallingCallSettingsForMeGetUserExecutiveFiltering2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-executive-filtering-2",
+// CallingCallSettingsForMeGetUserExecutiveFilteringCriteriaById is "Get User Executive Call Filtering Criteria Settings": GET /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
+var CallingCallSettingsForMeGetUserExecutiveFilteringCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetUserExecutiveFilteringCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-user-executive-filtering-2",
 	Summary:     "Get User Executive Call Filtering Criteria Settings",
 	Description: "Get executive call filtering criteria settings for the authenticated user.\n\nExecutive Call Filtering Criteria in Webex allows you to retrieve detailed configuration for a specific filter rule. This includes schedule settings, phone number filters, and call routing preferences for executive call filtering.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/executive/callFiltering/criteria/{id}",
@@ -3902,9 +3902,9 @@ var CallingCallSettingsForMeGetUserExecutiveFiltering2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateUserExecutiveFiltering2 is "Modify User Executive Call Filtering Criteria Settings": PUT /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
-var CallingCallSettingsForMeUpdateUserExecutiveFiltering2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateUserExecutiveFiltering2", Area: "calling", Group: "call-settings-for-me", Command: "update-user-executive-filtering-2",
+// CallingCallSettingsForMeUpdateUserExecutiveFilteringCriteriaById is "Modify User Executive Call Filtering Criteria Settings": PUT /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
+var CallingCallSettingsForMeUpdateUserExecutiveFilteringCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeUpdateUserExecutiveFilteringCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "update-user-executive-filtering-2",
 	Summary:     "Modify User Executive Call Filtering Criteria Settings",
 	Description: "Update executive call filtering criteria settings for the authenticated user.\n\nExecutive Call Filtering Criteria in Webex allows you to modify detailed configuration for a specific filter rule. This includes updating schedule settings, phone number filters, and call routing preferences for executive call filtering.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/executive/callFiltering/criteria/{id}",
@@ -4060,9 +4060,9 @@ var CallingCallSettingsForMeCreatePriorityAlert = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetPriorityAlertCriterion is "Get Priority Alert Criteria Settings": GET /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
-var CallingCallSettingsForMeGetPriorityAlertCriterion = &Operation{
-	ID: "CallingCallSettingsForMeGetPriorityAlertCriterion", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2",
+// CallingCallSettingsForMeGetPriorityAlertCriteriaById is "Get Priority Alert Criteria Settings": GET /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
+var CallingCallSettingsForMeGetPriorityAlertCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetPriorityAlertCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2",
 	Summary:     "Get Priority Alert Criteria Settings",
 	Description: "Get Priority Alert Criteria Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert/criteria/{id}",
@@ -4340,9 +4340,9 @@ var CallingCallSettingsForMeCreateUserSelectiveAccept = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveAcceptCriterion is "Get Selective Call Accept Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
-var CallingCallSettingsForMeGetSelectiveAcceptCriterion = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveAcceptCriterion", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2",
+// CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById is "Get Selective Call Accept Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
+var CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2",
 	Summary:     "Get Selective Call Accept Criteria Settings for User",
 	Description: "Get Selective Call Accept Criteria Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}",
@@ -4543,9 +4543,9 @@ var CallingCallSettingsForMeUpdateAnonymousRejectionUser = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveRejectCriterion is "Get Selective Call Reject Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
-var CallingCallSettingsForMeGetSelectiveRejectCriterion = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveRejectCriterion", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2",
+// CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById is "Get Selective Call Reject Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
+var CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2",
 	Summary:     "Get Selective Call Reject Criteria Settings for User",
 	Description: "Get Selective Call Reject Criteria Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject/criteria/{id}",
@@ -4640,9 +4640,9 @@ var CallingCallSettingsForMeCreateUserSequentialRing = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSequentialRingCriterion is "Get Sequential Ring Criteria Settings for User": GET /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
-var CallingCallSettingsForMeGetSequentialRingCriterion = &Operation{
-	ID: "CallingCallSettingsForMeGetSequentialRingCriterion", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2",
+// CallingCallSettingsForMeGetSequentialRingUserCriteriaById is "Get Sequential Ring Criteria Settings for User": GET /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
+var CallingCallSettingsForMeGetSequentialRingUserCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetSequentialRingUserCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2",
 	Summary:     "Get Sequential Ring Criteria Settings for User",
 	Description: "Get Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria/{id}",
@@ -4651,9 +4651,9 @@ var CallingCallSettingsForMeGetSequentialRingCriterion = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateSequentialRingCriterion is "Modify Sequential Ring Criteria Settings for User": PUT /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
-var CallingCallSettingsForMeUpdateSequentialRingCriterion = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSequentialRingCriterion", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2",
+// CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById is "Modify Sequential Ring Criteria Settings for User": PUT /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
+var CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2",
 	Summary:     "Modify Sequential Ring Criteria Settings for User",
 	Description: "Update Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria/{id}",
@@ -4683,17 +4683,17 @@ var CallingCallSettingsForMeDeleteSequentialRing = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetPriorityAlert2 is "Get Priority Alert Settings": GET /telephony/config/people/me/settings/priorityAlert.
-var CallingCallSettingsForMeGetPriorityAlert2 = &Operation{
-	ID: "CallingCallSettingsForMeGetPriorityAlert2", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2",
+// CallingCallSettingsForMeGetPriorityAlert_2 is "Get Priority Alert Settings": GET /telephony/config/people/me/settings/priorityAlert.
+var CallingCallSettingsForMeGetPriorityAlert_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetPriorityAlert_2", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2",
 	Summary:     "Get Priority Alert Settings",
 	Description: "Get Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert",
 }
 
-// CallingCallSettingsForMeUpdatePriorityAlertUser2 is "Modify Priority Alert Settings for User": PUT /telephony/config/people/me/settings/priorityAlert.
-var CallingCallSettingsForMeUpdatePriorityAlertUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdatePriorityAlertUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-priority-alert-user-2",
+// CallingCallSettingsForMeUpdatePriorityAlertUser_2 is "Modify Priority Alert Settings for User": PUT /telephony/config/people/me/settings/priorityAlert.
+var CallingCallSettingsForMeUpdatePriorityAlertUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdatePriorityAlertUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-priority-alert-user-2",
 	Summary:     "Modify Priority Alert Settings for User",
 	Description: "Update Priority Alert Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert",
@@ -4702,9 +4702,9 @@ var CallingCallSettingsForMeUpdatePriorityAlertUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeCreatePriorityAlert2 is "Add a Priority Alert Criteria": POST /telephony/config/people/me/settings/priorityAlert/criteria.
-var CallingCallSettingsForMeCreatePriorityAlert2 = &Operation{
-	ID: "CallingCallSettingsForMeCreatePriorityAlert2", Area: "calling", Group: "call-settings-for-me", Command: "create-priority-alert-2",
+// CallingCallSettingsForMeCreatePriorityAlert_2 is "Add a Priority Alert Criteria": POST /telephony/config/people/me/settings/priorityAlert/criteria.
+var CallingCallSettingsForMeCreatePriorityAlert_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreatePriorityAlert_2", Area: "calling", Group: "call-settings-for-me", Command: "create-priority-alert-2",
 	Summary:     "Add a Priority Alert Criteria",
 	Description: "Create a Priority Alert Criteria for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert/criteria",
@@ -4720,9 +4720,9 @@ var CallingCallSettingsForMeCreatePriorityAlert2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetPriorityAlert22 is "Get Priority Alert Criteria Settings": GET /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
-var CallingCallSettingsForMeGetPriorityAlert22 = &Operation{
-	ID: "CallingCallSettingsForMeGetPriorityAlert22", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2-2",
+// CallingCallSettingsForMeGetPriorityAlertCriteriaById_2 is "Get Priority Alert Criteria Settings": GET /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
+var CallingCallSettingsForMeGetPriorityAlertCriteriaById_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetPriorityAlertCriteriaById_2", Area: "calling", Group: "call-settings-for-me", Command: "get-priority-alert-2-2",
 	Summary:     "Get Priority Alert Criteria Settings",
 	Description: "Get Priority Alert Criteria Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert/criteria/{id}",
@@ -4731,9 +4731,9 @@ var CallingCallSettingsForMeGetPriorityAlert22 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdatePriorityAlert2 is "Modify Settings for a Priority Alert Criteria": PUT /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
-var CallingCallSettingsForMeUpdatePriorityAlert2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdatePriorityAlert2", Area: "calling", Group: "call-settings-for-me", Command: "update-priority-alert-2",
+// CallingCallSettingsForMeUpdatePriorityAlert_2 is "Modify Settings for a Priority Alert Criteria": PUT /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
+var CallingCallSettingsForMeUpdatePriorityAlert_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdatePriorityAlert_2", Area: "calling", Group: "call-settings-for-me", Command: "update-priority-alert-2",
 	Summary:     "Modify Settings for a Priority Alert Criteria",
 	Description: "Modify Priority Alert Criteria Settings for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert/criteria/{id}",
@@ -4752,9 +4752,9 @@ var CallingCallSettingsForMeUpdatePriorityAlert2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeletePriorityAlert2 is "Delete a Priority Alert Criteria": DELETE /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
-var CallingCallSettingsForMeDeletePriorityAlert2 = &Operation{
-	ID: "CallingCallSettingsForMeDeletePriorityAlert2", Area: "calling", Group: "call-settings-for-me", Command: "delete-priority-alert-2",
+// CallingCallSettingsForMeDeletePriorityAlert_2 is "Delete a Priority Alert Criteria": DELETE /telephony/config/people/me/settings/priorityAlert/criteria/{id}.
+var CallingCallSettingsForMeDeletePriorityAlert_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeletePriorityAlert_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-priority-alert-2",
 	Summary:     "Delete a Priority Alert Criteria",
 	Description: "Delete a Priority Alert criteria for the authenticated user.\n\nPriority alert allows you to set up a unique ringtone based on predefined criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/priorityAlert/criteria/{id}",
@@ -4763,26 +4763,26 @@ var CallingCallSettingsForMeDeletePriorityAlert2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetUserSchedules2 is "Get User (and Location) Schedules": GET /telephony/config/people/me/schedules.
-var CallingCallSettingsForMeGetUserSchedules2 = &Operation{
-	ID: "CallingCallSettingsForMeGetUserSchedules2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedules-2",
+// CallingCallSettingsForMeGetUserSchedules_2 is "Get User (and Location) Schedules": GET /telephony/config/people/me/schedules.
+var CallingCallSettingsForMeGetUserSchedules_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetUserSchedules_2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedules-2",
 	Summary:     "Get User (and Location) Schedules",
 	Description: "Get Schedules for Call Settings for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/schedules",
 }
 
-// CallingCallSettingsForMeCreateUserSchedule2 is "Add a User level Schedule for Call Settings": POST /telephony/config/people/me/schedules.
-var CallingCallSettingsForMeCreateUserSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateUserSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-schedule-2",
+// CallingCallSettingsForMeCreateUserSchedule_2 is "Add a User level Schedule for Call Settings": POST /telephony/config/people/me/schedules.
+var CallingCallSettingsForMeCreateUserSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateUserSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-schedule-2",
 	Summary:     "Add a User level Schedule for Call Settings",
 	Description: "Create a new Schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/schedules",
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeGetUserSchedule2 is "Get User Schedule": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
-var CallingCallSettingsForMeGetUserSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeGetUserSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedule-2",
+// CallingCallSettingsForMeGetUserSchedule_2 is "Get User Schedule": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
+var CallingCallSettingsForMeGetUserSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetUserSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedule-2",
 	Summary:     "Get User Schedule",
 	Description: "Get a Schedule details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}",
@@ -4792,9 +4792,9 @@ var CallingCallSettingsForMeGetUserSchedule2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateUserSchedule2 is "Modify User Schedule": PUT /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
-var CallingCallSettingsForMeUpdateUserSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateUserSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "update-user-schedule-2",
+// CallingCallSettingsForMeUpdateUserSchedule_2 is "Modify User Schedule": PUT /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
+var CallingCallSettingsForMeUpdateUserSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateUserSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "update-user-schedule-2",
 	Summary:     "Modify User Schedule",
 	Description: "Modify a Schedule details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}",
@@ -4805,9 +4805,9 @@ var CallingCallSettingsForMeUpdateUserSchedule2 = &Operation{
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeDeleteUserSchedule2 is "Delete a User Schedule": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
-var CallingCallSettingsForMeDeleteUserSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteUserSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "delete-user-schedule-2",
+// CallingCallSettingsForMeDeleteUserSchedule_2 is "Delete a User Schedule": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
+var CallingCallSettingsForMeDeleteUserSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteUserSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-user-schedule-2",
 	Summary:     "Delete a User Schedule",
 	Description: "Delete a specific schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}",
@@ -4817,9 +4817,9 @@ var CallingCallSettingsForMeDeleteUserSchedule2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeCreateEventUserSchedule2 is "Add an event for a User Schedule": POST /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events.
-var CallingCallSettingsForMeCreateEventUserSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateEventUserSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "create-event-user-schedule-2",
+// CallingCallSettingsForMeCreateEventUserSchedule_2 is "Add an event for a User Schedule": POST /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events.
+var CallingCallSettingsForMeCreateEventUserSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateEventUserSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "create-event-user-schedule-2",
 	Summary:     "Add an event for a User Schedule",
 	Description: "Create a new Event for for the authenticated user's specified schedule.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events",
@@ -4830,9 +4830,9 @@ var CallingCallSettingsForMeCreateEventUserSchedule2 = &Operation{
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeGetUserScheduleEvent2 is "Get User Schedule Event": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
-var CallingCallSettingsForMeGetUserScheduleEvent2 = &Operation{
-	ID: "CallingCallSettingsForMeGetUserScheduleEvent2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedule-event-2",
+// CallingCallSettingsForMeGetUserScheduleEvent_2 is "Get User Schedule Event": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
+var CallingCallSettingsForMeGetUserScheduleEvent_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetUserScheduleEvent_2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-schedule-event-2",
 	Summary:     "Get User Schedule Event",
 	Description: "Get a Schedule Event details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}",
@@ -4843,9 +4843,9 @@ var CallingCallSettingsForMeGetUserScheduleEvent2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateUserScheduleEvent2 is "Modify User Schedule Event": PUT /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
-var CallingCallSettingsForMeUpdateUserScheduleEvent2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateUserScheduleEvent2", Area: "calling", Group: "call-settings-for-me", Command: "update-user-schedule-event-2",
+// CallingCallSettingsForMeUpdateUserScheduleEvent_2 is "Modify User Schedule Event": PUT /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
+var CallingCallSettingsForMeUpdateUserScheduleEvent_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateUserScheduleEvent_2", Area: "calling", Group: "call-settings-for-me", Command: "update-user-schedule-event-2",
 	Summary:     "Modify User Schedule Event",
 	Description: "Modify a Schedule event details for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}",
@@ -4857,9 +4857,9 @@ var CallingCallSettingsForMeUpdateUserScheduleEvent2 = &Operation{
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeDeleteUserScheduleEvent2 is "Delete User a Schedule Event": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
-var CallingCallSettingsForMeDeleteUserScheduleEvent2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteUserScheduleEvent2", Area: "calling", Group: "call-settings-for-me", Command: "delete-user-schedule-event-2",
+// CallingCallSettingsForMeDeleteUserScheduleEvent_2 is "Delete User a Schedule Event": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
+var CallingCallSettingsForMeDeleteUserScheduleEvent_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteUserScheduleEvent_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-user-schedule-event-2",
 	Summary:     "Delete User a Schedule Event",
 	Description: "Delete a specific schedule event for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}",
@@ -4870,9 +4870,9 @@ var CallingCallSettingsForMeDeleteUserScheduleEvent2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetUserLocationSchedule2 is "Get User's Location Level Schedule": GET /telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}.
-var CallingCallSettingsForMeGetUserLocationSchedule2 = &Operation{
-	ID: "CallingCallSettingsForMeGetUserLocationSchedule2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-location-schedule-2",
+// CallingCallSettingsForMeGetUserLocationSchedule_2 is "Get User's Location Level Schedule": GET /telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}.
+var CallingCallSettingsForMeGetUserLocationSchedule_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetUserLocationSchedule_2", Area: "calling", Group: "call-settings-for-me", Command: "get-user-location-schedule-2",
 	Summary:     "Get User's Location Level Schedule",
 	Description: "Get Location Schedule for Call Settings of the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/locations/schedules/{scheduleType}/{scheduleId}",
@@ -4882,17 +4882,17 @@ var CallingCallSettingsForMeGetUserLocationSchedule2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetNotifyUser2 is "Get Call Notify Settings for User": GET /telephony/config/people/me/settings/callNotify.
-var CallingCallSettingsForMeGetNotifyUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetNotifyUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-notify-user-2",
+// CallingCallSettingsForMeGetNotifyUser_2 is "Get Call Notify Settings for User": GET /telephony/config/people/me/settings/callNotify.
+var CallingCallSettingsForMeGetNotifyUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetNotifyUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-notify-user-2",
 	Summary:     "Get Call Notify Settings for User",
 	Description: "Get Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify",
 }
 
-// CallingCallSettingsForMeUpdateNotifyUser2 is "Modify Call Notify Settings for User": PUT /telephony/config/people/me/settings/callNotify.
-var CallingCallSettingsForMeUpdateNotifyUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateNotifyUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-notify-user-2",
+// CallingCallSettingsForMeUpdateNotifyUser_2 is "Modify Call Notify Settings for User": PUT /telephony/config/people/me/settings/callNotify.
+var CallingCallSettingsForMeUpdateNotifyUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateNotifyUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-notify-user-2",
 	Summary:     "Modify Call Notify Settings for User",
 	Description: "Update Call Notify Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify",
@@ -4902,9 +4902,9 @@ var CallingCallSettingsForMeUpdateNotifyUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeCreateNotify2 is "Add a Call Notify Criteria": POST /telephony/config/people/me/settings/callNotify/criteria.
-var CallingCallSettingsForMeCreateNotify2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateNotify2", Area: "calling", Group: "call-settings-for-me", Command: "create-notify-2",
+// CallingCallSettingsForMeCreateNotify_2 is "Add a Call Notify Criteria": POST /telephony/config/people/me/settings/callNotify/criteria.
+var CallingCallSettingsForMeCreateNotify_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateNotify_2", Area: "calling", Group: "call-settings-for-me", Command: "create-notify-2",
 	Summary:     "Add a Call Notify Criteria",
 	Description: "Create a Call Notify Criteria for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify/criteria",
@@ -4920,9 +4920,9 @@ var CallingCallSettingsForMeCreateNotify2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetNotify2 is "Get Call Notify Criteria Settings": GET /telephony/config/people/me/settings/callNotify/criteria/{id}.
-var CallingCallSettingsForMeGetNotify2 = &Operation{
-	ID: "CallingCallSettingsForMeGetNotify2", Area: "calling", Group: "call-settings-for-me", Command: "get-notify-2",
+// CallingCallSettingsForMeGetNotify_2 is "Get Call Notify Criteria Settings": GET /telephony/config/people/me/settings/callNotify/criteria/{id}.
+var CallingCallSettingsForMeGetNotify_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetNotify_2", Area: "calling", Group: "call-settings-for-me", Command: "get-notify-2",
 	Summary:     "Get Call Notify Criteria Settings",
 	Description: "Get Call Notify Criteria Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user wants to be quickly notified that a specific phone number is calling.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify/criteria/{id}",
@@ -4931,9 +4931,9 @@ var CallingCallSettingsForMeGetNotify2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateNotify2 is "Modify a Call Notify Criteria": PUT /telephony/config/people/me/settings/callNotify/criteria/{id}.
-var CallingCallSettingsForMeUpdateNotify2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateNotify2", Area: "calling", Group: "call-settings-for-me", Command: "update-notify-2",
+// CallingCallSettingsForMeUpdateNotify_2 is "Modify a Call Notify Criteria": PUT /telephony/config/people/me/settings/callNotify/criteria/{id}.
+var CallingCallSettingsForMeUpdateNotify_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateNotify_2", Area: "calling", Group: "call-settings-for-me", Command: "update-notify-2",
 	Summary:     "Modify a Call Notify Criteria",
 	Description: "Modify Call Notify Criteria Settings for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying attributes such as name, phoneNumbers etc for a particular criteria.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify/criteria/{id}",
@@ -4952,9 +4952,9 @@ var CallingCallSettingsForMeUpdateNotify2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeleteNotify2 is "Delete a Call Notify Criteria": DELETE /telephony/config/people/me/settings/callNotify/criteria/{id}.
-var CallingCallSettingsForMeDeleteNotify2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteNotify2", Area: "calling", Group: "call-settings-for-me", Command: "delete-notify-2",
+// CallingCallSettingsForMeDeleteNotify_2 is "Delete a Call Notify Criteria": DELETE /telephony/config/people/me/settings/callNotify/criteria/{id}.
+var CallingCallSettingsForMeDeleteNotify_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteNotify_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-notify-2",
 	Summary:     "Delete a Call Notify Criteria",
 	Description: "Delete a Call Notify criteria for the authenticated user.\n\nCall Notify allows you to set up a unique ringtone based on predefined criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/callNotify/criteria/{id}",
@@ -4963,17 +4963,17 @@ var CallingCallSettingsForMeDeleteNotify2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetSelectiveAcceptUser2 is "Get Selective Call Accept Settings for User": GET /telephony/config/people/me/settings/selectiveAccept.
-var CallingCallSettingsForMeGetSelectiveAcceptUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveAcceptUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2",
+// CallingCallSettingsForMeGetSelectiveAcceptUser_2 is "Get Selective Call Accept Settings for User": GET /telephony/config/people/me/settings/selectiveAccept.
+var CallingCallSettingsForMeGetSelectiveAcceptUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveAcceptUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2",
 	Summary:     "Get Selective Call Accept Settings for User",
 	Description: "Get Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept",
 }
 
-// CallingCallSettingsForMeUpdateSelectiveAcceptUser2 is "Modify Selective Call Accept Settings for User": PUT /telephony/config/people/me/settings/selectiveAccept.
-var CallingCallSettingsForMeUpdateSelectiveAcceptUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveAcceptUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-accept-user-2",
+// CallingCallSettingsForMeUpdateSelectiveAcceptUser_2 is "Modify Selective Call Accept Settings for User": PUT /telephony/config/people/me/settings/selectiveAccept.
+var CallingCallSettingsForMeUpdateSelectiveAcceptUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveAcceptUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-accept-user-2",
 	Summary:     "Modify Selective Call Accept Settings for User",
 	Description: "Update Selective Call Accept Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept",
@@ -4982,9 +4982,9 @@ var CallingCallSettingsForMeUpdateSelectiveAcceptUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeCreateUserSelectiveAccept2 is "Add User Selective Call Accept Criteria": POST /telephony/config/people/me/settings/selectiveAccept/criteria.
-var CallingCallSettingsForMeCreateUserSelectiveAccept2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateUserSelectiveAccept2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-selective-accept-2",
+// CallingCallSettingsForMeCreateUserSelectiveAccept_2 is "Add User Selective Call Accept Criteria": POST /telephony/config/people/me/settings/selectiveAccept/criteria.
+var CallingCallSettingsForMeCreateUserSelectiveAccept_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateUserSelectiveAccept_2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-selective-accept-2",
 	Summary:     "Add User Selective Call Accept Criteria",
 	Description: "Create a new Selective Call Accept Criteria for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept/criteria",
@@ -5000,9 +5000,9 @@ var CallingCallSettingsForMeCreateUserSelectiveAccept2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveAcceptUser22 is "Get Selective Call Accept Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
-var CallingCallSettingsForMeGetSelectiveAcceptUser22 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveAcceptUser22", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2-2",
+// CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById_2 is "Get Selective Call Accept Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
+var CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveAcceptUserCriteriaById_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-accept-user-2-2",
 	Summary:     "Get Selective Call Accept Criteria Settings for User",
 	Description: "Get Selective Call Accept Criteria Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}",
@@ -5011,9 +5011,9 @@ var CallingCallSettingsForMeGetSelectiveAcceptUser22 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateSelectiveAccept2 is "Modify a Selective Call Accept Criteria": PUT /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
-var CallingCallSettingsForMeUpdateSelectiveAccept2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveAccept2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-accept-2",
+// CallingCallSettingsForMeUpdateSelectiveAccept_2 is "Modify a Selective Call Accept Criteria": PUT /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
+var CallingCallSettingsForMeUpdateSelectiveAccept_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveAccept_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-accept-2",
 	Summary:     "Modify a Selective Call Accept Criteria",
 	Description: "Modify Selective Call Accept Criteria Settings for the authenticated user.\n\n\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}",
@@ -5032,9 +5032,9 @@ var CallingCallSettingsForMeUpdateSelectiveAccept2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeleteSelectiveAccept2 is "Delete a Selective Call Accept Criteria": DELETE /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
-var CallingCallSettingsForMeDeleteSelectiveAccept2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteSelectiveAccept2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-accept-2",
+// CallingCallSettingsForMeDeleteSelectiveAccept_2 is "Delete a Selective Call Accept Criteria": DELETE /telephony/config/people/me/settings/selectiveAccept/criteria/{id}.
+var CallingCallSettingsForMeDeleteSelectiveAccept_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteSelectiveAccept_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-accept-2",
 	Summary:     "Delete a Selective Call Accept Criteria",
 	Description: "Delete a Selective Call Accept Criteria for the authenticated user.\n\n\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveAccept/criteria/{id}",
@@ -5043,9 +5043,9 @@ var CallingCallSettingsForMeDeleteSelectiveAccept2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetAvailableNumbersUserLocation2 is "Get Available Numbers for User's Location": GET /telephony/config/people/me/location/assignedNumbers.
-var CallingCallSettingsForMeGetAvailableNumbersUserLocation2 = &Operation{
-	ID: "CallingCallSettingsForMeGetAvailableNumbersUserLocation2", Area: "calling", Group: "call-settings-for-me", Command: "get-available-numbers-user-location-2",
+// CallingCallSettingsForMeGetAvailableNumbersUserLocation_2 is "Get Available Numbers for User's Location": GET /telephony/config/people/me/location/assignedNumbers.
+var CallingCallSettingsForMeGetAvailableNumbersUserLocation_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetAvailableNumbersUserLocation_2", Area: "calling", Group: "call-settings-for-me", Command: "get-available-numbers-user-location-2",
 	Summary:     "Get Available Numbers for User's Location",
 	Description: "Get Available Numbers for User's Location.\n\nFetch all the numbers available in User's location.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/location/assignedNumbers",
@@ -5060,9 +5060,9 @@ var CallingCallSettingsForMeGetAvailableNumbersUserLocation2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "phoneNumbers", OmitEmpty: true},
 }
 
-// CallingCallSettingsForMeCreateSelectiveForward2 is "Add a Selective Call Forwarding Criteria": POST /telephony/config/people/me/settings/selectiveForward/criteria.
-var CallingCallSettingsForMeCreateSelectiveForward2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateSelectiveForward2", Area: "calling", Group: "call-settings-for-me", Command: "create-selective-forward-2",
+// CallingCallSettingsForMeCreateSelectiveForward_2 is "Add a Selective Call Forwarding Criteria": POST /telephony/config/people/me/settings/selectiveForward/criteria.
+var CallingCallSettingsForMeCreateSelectiveForward_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateSelectiveForward_2", Area: "calling", Group: "call-settings-for-me", Command: "create-selective-forward-2",
 	Summary:     "Add a Selective Call Forwarding Criteria",
 	Description: "Create a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward/criteria",
@@ -5080,9 +5080,9 @@ var CallingCallSettingsForMeCreateSelectiveForward2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveForward2 is "Get Settings for a Selective Call Forwarding Criteria": GET /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
-var CallingCallSettingsForMeGetSelectiveForward2 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveForward2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-forward-2",
+// CallingCallSettingsForMeGetSelectiveForward_2 is "Get Settings for a Selective Call Forwarding Criteria": GET /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
+var CallingCallSettingsForMeGetSelectiveForward_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveForward_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-forward-2",
 	Summary:     "Get Settings for a Selective Call Forwarding Criteria",
 	Description: "Get settings for a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward/criteria/{id}",
@@ -5091,9 +5091,9 @@ var CallingCallSettingsForMeGetSelectiveForward2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateSelectiveForward2 is "Modify Settings for a Selective Call Forwarding Criteria": PUT /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
-var CallingCallSettingsForMeUpdateSelectiveForward2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveForward2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-forward-2",
+// CallingCallSettingsForMeUpdateSelectiveForward_2 is "Modify Settings for a Selective Call Forwarding Criteria": PUT /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
+var CallingCallSettingsForMeUpdateSelectiveForward_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveForward_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-forward-2",
 	Summary:     "Modify Settings for a Selective Call Forwarding Criteria",
 	Description: "Modify settings for a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective Call Forward allows you to define rules that automatically forward incoming calls based on specific criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward/criteria/{id}",
@@ -5114,9 +5114,9 @@ var CallingCallSettingsForMeUpdateSelectiveForward2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeleteSelectiveForward2 is "Delete a Selective Call Forwarding Criteria": DELETE /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
-var CallingCallSettingsForMeDeleteSelectiveForward2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteSelectiveForward2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-forward-2",
+// CallingCallSettingsForMeDeleteSelectiveForward_2 is "Delete a Selective Call Forwarding Criteria": DELETE /telephony/config/people/me/settings/selectiveForward/criteria/{id}.
+var CallingCallSettingsForMeDeleteSelectiveForward_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteSelectiveForward_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-forward-2",
 	Summary:     "Delete a Selective Call Forwarding Criteria",
 	Description: "Delete a Selective Call Forwarding Criteria for the authenticated user.\n\nSelective call forwarding allows you to define rules that automatically forward incoming calls based on specific criteria. This API removes a specific criteria rule by its unique identifier.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward/criteria/{id}",
@@ -5125,17 +5125,17 @@ var CallingCallSettingsForMeDeleteSelectiveForward2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetSelectiveForwardUser2 is "Get Selective Call Forward Settings for User": GET /telephony/config/people/me/settings/selectiveForward.
-var CallingCallSettingsForMeGetSelectiveForwardUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveForwardUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-forward-user-2",
+// CallingCallSettingsForMeGetSelectiveForwardUser_2 is "Get Selective Call Forward Settings for User": GET /telephony/config/people/me/settings/selectiveForward.
+var CallingCallSettingsForMeGetSelectiveForwardUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveForwardUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-forward-user-2",
 	Summary:     "Get Selective Call Forward Settings for User",
 	Description: "Get Selective Call Forward Settings for the authenticated user.\n\nSelective Call Forward allows you to create customized rules to forward specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward",
 }
 
-// CallingCallSettingsForMeUpdateSelectiveForwardUser2 is "Modify Selective Call Forward Settings for User": PUT /telephony/config/people/me/settings/selectiveForward.
-var CallingCallSettingsForMeUpdateSelectiveForwardUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveForwardUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-forward-user-2",
+// CallingCallSettingsForMeUpdateSelectiveForwardUser_2 is "Modify Selective Call Forward Settings for User": PUT /telephony/config/people/me/settings/selectiveForward.
+var CallingCallSettingsForMeUpdateSelectiveForwardUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveForwardUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-forward-user-2",
 	Summary:     "Modify Selective Call Forward Settings for User",
 	Description: "Update the Selective Call Forward Settings for the authenticated user.\n\nSelective Call Accept allows you to create customized rules to accept specific calls for users based on the phone number, identity, and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveForward",
@@ -5147,17 +5147,17 @@ var CallingCallSettingsForMeUpdateSelectiveForwardUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveRejectUser2 is "Get Selective Call Reject Settings for User": GET /telephony/config/people/me/settings/selectiveReject.
-var CallingCallSettingsForMeGetSelectiveRejectUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveRejectUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2",
+// CallingCallSettingsForMeGetSelectiveRejectUser_2 is "Get Selective Call Reject Settings for User": GET /telephony/config/people/me/settings/selectiveReject.
+var CallingCallSettingsForMeGetSelectiveRejectUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveRejectUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2",
 	Summary:     "Get Selective Call Reject Settings for User",
 	Description: "Get Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject",
 }
 
-// CallingCallSettingsForMeUpdateSelectiveRejectUser2 is "Modify Selective Call Reject Settings for User": PUT /telephony/config/people/me/settings/selectiveReject.
-var CallingCallSettingsForMeUpdateSelectiveRejectUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveRejectUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-reject-user-2",
+// CallingCallSettingsForMeUpdateSelectiveRejectUser_2 is "Modify Selective Call Reject Settings for User": PUT /telephony/config/people/me/settings/selectiveReject.
+var CallingCallSettingsForMeUpdateSelectiveRejectUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveRejectUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-reject-user-2",
 	Summary:     "Modify Selective Call Reject Settings for User",
 	Description: "Update Selective Call Reject Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject",
@@ -5166,9 +5166,9 @@ var CallingCallSettingsForMeUpdateSelectiveRejectUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeCreateUserSelectiveReject2 is "Add User Selective Call Reject Criteria": POST /telephony/config/people/me/settings/selectiveReject/criteria.
-var CallingCallSettingsForMeCreateUserSelectiveReject2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateUserSelectiveReject2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-selective-reject-2",
+// CallingCallSettingsForMeCreateUserSelectiveReject_2 is "Add User Selective Call Reject Criteria": POST /telephony/config/people/me/settings/selectiveReject/criteria.
+var CallingCallSettingsForMeCreateUserSelectiveReject_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateUserSelectiveReject_2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-selective-reject-2",
 	Summary:     "Add User Selective Call Reject Criteria",
 	Description: "Create a new Selective Call Reject Criteria for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject/criteria",
@@ -5184,17 +5184,17 @@ var CallingCallSettingsForMeCreateUserSelectiveReject2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetAnonymousRejectionUser2 is "Get Anonymous Call Rejection Settings for User": GET /telephony/config/people/me/settings/anonymousCallReject.
-var CallingCallSettingsForMeGetAnonymousRejectionUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetAnonymousRejectionUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-anonymous-rejection-user-2",
+// CallingCallSettingsForMeGetAnonymousRejectionUser_2 is "Get Anonymous Call Rejection Settings for User": GET /telephony/config/people/me/settings/anonymousCallReject.
+var CallingCallSettingsForMeGetAnonymousRejectionUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetAnonymousRejectionUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-anonymous-rejection-user-2",
 	Summary:     "Get Anonymous Call Rejection Settings for User",
 	Description: "Get Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/anonymousCallReject",
 }
 
-// CallingCallSettingsForMeUpdateAnonymousRejectionUser2 is "Modify Anonymous Call Rejection Settings for User": PUT /telephony/config/people/me/settings/anonymousCallReject.
-var CallingCallSettingsForMeUpdateAnonymousRejectionUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateAnonymousRejectionUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-anonymous-rejection-user-2",
+// CallingCallSettingsForMeUpdateAnonymousRejectionUser_2 is "Modify Anonymous Call Rejection Settings for User": PUT /telephony/config/people/me/settings/anonymousCallReject.
+var CallingCallSettingsForMeUpdateAnonymousRejectionUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateAnonymousRejectionUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-anonymous-rejection-user-2",
 	Summary:     "Modify Anonymous Call Rejection Settings for User",
 	Description: "Update Anonymous Call Rejection Settings for the authenticated user.\n\nAnonymous Call Rejection allows you to reject calls from anonymous callers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/anonymousCallReject",
@@ -5203,9 +5203,9 @@ var CallingCallSettingsForMeUpdateAnonymousRejectionUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSelectiveRejectUser22 is "Get Selective Call Reject Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
-var CallingCallSettingsForMeGetSelectiveRejectUser22 = &Operation{
-	ID: "CallingCallSettingsForMeGetSelectiveRejectUser22", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2-2",
+// CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById_2 is "Get Selective Call Reject Criteria Settings for User": GET /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
+var CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSelectiveRejectUserCriteriaById_2", Area: "calling", Group: "call-settings-for-me", Command: "get-selective-reject-user-2-2",
 	Summary:     "Get Selective Call Reject Criteria Settings for User",
 	Description: "Get Selective Call Reject Criteria Settings for the authenticated user.\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject/criteria/{id}",
@@ -5214,9 +5214,9 @@ var CallingCallSettingsForMeGetSelectiveRejectUser22 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateSelectiveReject2 is "Modify a Selective Call Reject Criteria": PUT /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
-var CallingCallSettingsForMeUpdateSelectiveReject2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSelectiveReject2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-reject-2",
+// CallingCallSettingsForMeUpdateSelectiveReject_2 is "Modify a Selective Call Reject Criteria": PUT /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
+var CallingCallSettingsForMeUpdateSelectiveReject_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSelectiveReject_2", Area: "calling", Group: "call-settings-for-me", Command: "update-selective-reject-2",
 	Summary:     "Modify a Selective Call Reject Criteria",
 	Description: "Modify Selective Call Reject Criteria Settings for the authenticated user.\n\n\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject/criteria/{id}",
@@ -5235,9 +5235,9 @@ var CallingCallSettingsForMeUpdateSelectiveReject2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeleteSelectiveReject2 is "Delete a Selective Call Reject Criteria": DELETE /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
-var CallingCallSettingsForMeDeleteSelectiveReject2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteSelectiveReject2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-reject-2",
+// CallingCallSettingsForMeDeleteSelectiveReject_2 is "Delete a Selective Call Reject Criteria": DELETE /telephony/config/people/me/settings/selectiveReject/criteria/{id}.
+var CallingCallSettingsForMeDeleteSelectiveReject_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteSelectiveReject_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-selective-reject-2",
 	Summary:     "Delete a Selective Call Reject Criteria",
 	Description: "Delete a Selective Call Reject Criteria for the authenticated user.\n\n\n\nSelective Call Reject allows you to create customized rules to reject specific calls for users based on the phone number,identity and the time or day of the call.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectiveReject/criteria/{id}",
@@ -5246,17 +5246,17 @@ var CallingCallSettingsForMeDeleteSelectiveReject2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeGetWaitingUser2 is "Get Call Waiting Settings for User": GET /telephony/config/people/me/settings/callWaiting.
-var CallingCallSettingsForMeGetWaitingUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetWaitingUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-waiting-user-2",
+// CallingCallSettingsForMeGetWaitingUser_2 is "Get Call Waiting Settings for User": GET /telephony/config/people/me/settings/callWaiting.
+var CallingCallSettingsForMeGetWaitingUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetWaitingUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-waiting-user-2",
 	Summary:     "Get Call Waiting Settings for User",
 	Description: "Get Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/callWaiting",
 }
 
-// CallingCallSettingsForMeUpdateWaitingUser2 is "Modify Call Waiting Settings for User": PUT /telephony/config/people/me/settings/callWaiting.
-var CallingCallSettingsForMeUpdateWaitingUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateWaitingUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-waiting-user-2",
+// CallingCallSettingsForMeUpdateWaitingUser_2 is "Modify Call Waiting Settings for User": PUT /telephony/config/people/me/settings/callWaiting.
+var CallingCallSettingsForMeUpdateWaitingUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateWaitingUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-waiting-user-2",
 	Summary:     "Modify Call Waiting Settings for User",
 	Description: "Update Call Waiting Settings for the authenticated user.\n\nCall Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they can receive an incoming call and switch between the two calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/callWaiting",
@@ -5265,26 +5265,26 @@ var CallingCallSettingsForMeUpdateWaitingUser2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSequentialRingUser2 is "Get Sequential Ring Settings for User": GET /telephony/config/people/me/settings/sequentialRing.
-var CallingCallSettingsForMeGetSequentialRingUser2 = &Operation{
-	ID: "CallingCallSettingsForMeGetSequentialRingUser2", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2",
+// CallingCallSettingsForMeGetSequentialRingUser_2 is "Get Sequential Ring Settings for User": GET /telephony/config/people/me/settings/sequentialRing.
+var CallingCallSettingsForMeGetSequentialRingUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSequentialRingUser_2", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2",
 	Summary:     "Get Sequential Ring Settings for User",
 	Description: "Get Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing",
 }
 
-// CallingCallSettingsForMeUpdateSequentialRingUser2 is "Modify Sequential Ring Settings for User": PUT /telephony/config/people/me/settings/sequentialRing.
-var CallingCallSettingsForMeUpdateSequentialRingUser2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSequentialRingUser2", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2",
+// CallingCallSettingsForMeUpdateSequentialRingUser_2 is "Modify Sequential Ring Settings for User": PUT /telephony/config/people/me/settings/sequentialRing.
+var CallingCallSettingsForMeUpdateSequentialRingUser_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSequentialRingUser_2", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2",
 	Summary:     "Modify Sequential Ring Settings for User",
 	Description: "Update Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing",
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeCreateUserSequentialRing2 is "Add User Sequential Ring Criteria": POST /telephony/config/people/me/settings/sequentialRing/criteria.
-var CallingCallSettingsForMeCreateUserSequentialRing2 = &Operation{
-	ID: "CallingCallSettingsForMeCreateUserSequentialRing2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-sequential-ring-2",
+// CallingCallSettingsForMeCreateUserSequentialRing_2 is "Add User Sequential Ring Criteria": POST /telephony/config/people/me/settings/sequentialRing/criteria.
+var CallingCallSettingsForMeCreateUserSequentialRing_2 = &Operation{
+	ID: "CallingCallSettingsForMeCreateUserSequentialRing_2", Area: "calling", Group: "call-settings-for-me", Command: "create-user-sequential-ring-2",
 	Summary:     "Add User Sequential Ring Criteria",
 	Description: "Create a new Sequential Ring Criteria for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria",
@@ -5300,9 +5300,9 @@ var CallingCallSettingsForMeCreateUserSequentialRing2 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeGetSequentialRingUser22 is "Get Sequential Ring Criteria Settings for User": GET /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
-var CallingCallSettingsForMeGetSequentialRingUser22 = &Operation{
-	ID: "CallingCallSettingsForMeGetSequentialRingUser22", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2-2",
+// CallingCallSettingsForMeGetSequentialRingUserCriteriaById_2 is "Get Sequential Ring Criteria Settings for User": GET /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
+var CallingCallSettingsForMeGetSequentialRingUserCriteriaById_2 = &Operation{
+	ID: "CallingCallSettingsForMeGetSequentialRingUserCriteriaById_2", Area: "calling", Group: "call-settings-for-me", Command: "get-sequential-ring-user-2-2",
 	Summary:     "Get Sequential Ring Criteria Settings for User",
 	Description: "Get Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria/{id}",
@@ -5311,9 +5311,9 @@ var CallingCallSettingsForMeGetSequentialRingUser22 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateSequentialRingUser22 is "Modify Sequential Ring Criteria Settings for User": PUT /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
-var CallingCallSettingsForMeUpdateSequentialRingUser22 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateSequentialRingUser22", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2-2",
+// CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById_2 is "Modify Sequential Ring Criteria Settings for User": PUT /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
+var CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById_2 = &Operation{
+	ID: "CallingCallSettingsForMeUpdateSequentialRingUserCriteriaById_2", Area: "calling", Group: "call-settings-for-me", Command: "update-sequential-ring-user-2-2",
 	Summary:     "Modify Sequential Ring Criteria Settings for User",
 	Description: "Update Sequential Ring Criteria Settings for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria/{id}",
@@ -5332,9 +5332,9 @@ var CallingCallSettingsForMeUpdateSequentialRingUser22 = &Operation{
 	}},
 }
 
-// CallingCallSettingsForMeDeleteSequentialRing2 is "Delete Sequential Ring Criteria": DELETE /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
-var CallingCallSettingsForMeDeleteSequentialRing2 = &Operation{
-	ID: "CallingCallSettingsForMeDeleteSequentialRing2", Area: "calling", Group: "call-settings-for-me", Command: "delete-sequential-ring-2",
+// CallingCallSettingsForMeDeleteSequentialRing_2 is "Delete Sequential Ring Criteria": DELETE /telephony/config/people/me/settings/sequentialRing/criteria/{id}.
+var CallingCallSettingsForMeDeleteSequentialRing_2 = &Operation{
+	ID: "CallingCallSettingsForMeDeleteSequentialRing_2", Area: "calling", Group: "call-settings-for-me", Command: "delete-sequential-ring-2",
 	Summary:     "Delete Sequential Ring Criteria",
 	Description: "Delete a Sequential Ring Criteria for the authenticated user.\n\nSequential Ring criteria defines rules for when sequential ring should activate based on the caller and schedule.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing/criteria/{id}",
@@ -5360,9 +5360,9 @@ var CallingCallSettingsForMeUpdateMySimultaneousRing = &Operation{
 	Body: &Body{},
 }
 
-// CallingCallSettingsForMeGetMySimultaneousRing2 is "Retrieve My Simultaneous Ring Criteria": GET /telephony/config/people/me/settings/simultaneousRing/criteria/{id}.
-var CallingCallSettingsForMeGetMySimultaneousRing2 = &Operation{
-	ID: "CallingCallSettingsForMeGetMySimultaneousRing2", Area: "calling", Group: "call-settings-for-me", Command: "get-my-simultaneous-ring-2",
+// CallingCallSettingsForMeGetMySimultaneousRingCriteriaById is "Retrieve My Simultaneous Ring Criteria": GET /telephony/config/people/me/settings/simultaneousRing/criteria/{id}.
+var CallingCallSettingsForMeGetMySimultaneousRingCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeGetMySimultaneousRingCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "get-my-simultaneous-ring-2",
 	Summary:     "Retrieve My Simultaneous Ring Criteria",
 	Description: "Retrieve simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nRetrieving criteria requires a user auth token with a scope of `spark:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}",
@@ -5371,9 +5371,9 @@ var CallingCallSettingsForMeGetMySimultaneousRing2 = &Operation{
 	},
 }
 
-// CallingCallSettingsForMeUpdateMySimultaneousRing2 is "Modify My Simultaneous Ring Criteria": PUT /telephony/config/people/me/settings/simultaneousRing/criteria/{id}.
-var CallingCallSettingsForMeUpdateMySimultaneousRing2 = &Operation{
-	ID: "CallingCallSettingsForMeUpdateMySimultaneousRing2", Area: "calling", Group: "call-settings-for-me", Command: "update-my-simultaneous-ring-2",
+// CallingCallSettingsForMeUpdateMySimultaneousRingCriteriaById is "Modify My Simultaneous Ring Criteria": PUT /telephony/config/people/me/settings/simultaneousRing/criteria/{id}.
+var CallingCallSettingsForMeUpdateMySimultaneousRingCriteriaById = &Operation{
+	ID: "CallingCallSettingsForMeUpdateMySimultaneousRingCriteriaById", Area: "calling", Group: "call-settings-for-me", Command: "update-my-simultaneous-ring-2",
 	Summary:     "Modify My Simultaneous Ring Criteria",
 	Description: "Modify simultaneous ring criteria settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day or days of the week.\n\nModifying criteria requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/simultaneousRing/criteria/{id}",
@@ -6537,9 +6537,9 @@ var CallingDeviceCallGetCountAvailableMembers = &Operation{
 	},
 }
 
-// CallingDeviceCallListSupported2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var CallingDeviceCallListSupported2 = &Operation{
-	ID: "CallingDeviceCallListSupported2", Area: "calling", Group: "device-call", Command: "list-supported-2",
+// CallingDeviceCallListSupported_2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var CallingDeviceCallListSupported_2 = &Operation{
+	ID: "CallingDeviceCallListSupported_2", Area: "calling", Group: "device-call", Command: "list-supported-2",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -6687,9 +6687,9 @@ var CallingDeviceCallListDynamicSettingsJobErrors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// CallingDeviceCallListSupported3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var CallingDeviceCallListSupported3 = &Operation{
-	ID: "CallingDeviceCallListSupported3", Area: "calling", Group: "device-call", Command: "list-supported-3",
+// CallingDeviceCallListSupported_3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var CallingDeviceCallListSupported_3 = &Operation{
+	ID: "CallingDeviceCallListSupported_3", Area: "calling", Group: "device-call", Command: "list-supported-3",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -6701,9 +6701,9 @@ var CallingDeviceCallListSupported3 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "devices", OmitEmpty: true},
 }
 
-// CallingDeviceCallGetSettingsGroups2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
-var CallingDeviceCallGetSettingsGroups2 = &Operation{
-	ID: "CallingDeviceCallGetSettingsGroups2", Area: "calling", Group: "device-call", Command: "get-settings-groups-2",
+// CallingDeviceCallGetSettingsGroups_2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
+var CallingDeviceCallGetSettingsGroups_2 = &Operation{
+	ID: "CallingDeviceCallGetSettingsGroups_2", Area: "calling", Group: "device-call", Command: "get-settings-groups-2",
 	Summary:     "Get Settings Groups",
 	Description: "This API returns the `settingsGroups` that define the structure and association of tags for device dynamic settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure device dynamic settings.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dynamicSettings/settingsGroups",
@@ -6714,9 +6714,9 @@ var CallingDeviceCallGetSettingsGroups2 = &Operation{
 	},
 }
 
-// CallingDeviceCallGetCustomerDynamicSettings2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
-var CallingDeviceCallGetCustomerDynamicSettings2 = &Operation{
-	ID: "CallingDeviceCallGetCustomerDynamicSettings2", Area: "calling", Group: "device-call", Command: "get-customer-dynamic-settings-2",
+// CallingDeviceCallGetCustomerDynamicSettings_2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
+var CallingDeviceCallGetCustomerDynamicSettings_2 = &Operation{
+	ID: "CallingDeviceCallGetCustomerDynamicSettings_2", Area: "calling", Group: "device-call", Command: "get-customer-dynamic-settings-2",
 	Summary:     "Get Customer Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke",
@@ -6729,9 +6729,9 @@ var CallingDeviceCallGetCustomerDynamicSettings2 = &Operation{
 	}},
 }
 
-// CallingDeviceCallGetLocationDynamicSettings2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
-var CallingDeviceCallGetLocationDynamicSettings2 = &Operation{
-	ID: "CallingDeviceCallGetLocationDynamicSettings2", Area: "calling", Group: "device-call", Command: "get-location-dynamic-settings-2",
+// CallingDeviceCallGetLocationDynamicSettings_2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
+var CallingDeviceCallGetLocationDynamicSettings_2 = &Operation{
+	ID: "CallingDeviceCallGetLocationDynamicSettings_2", Area: "calling", Group: "device-call", Command: "get-location-dynamic-settings-2",
 	Summary:     "Get Location Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
@@ -6745,9 +6745,9 @@ var CallingDeviceCallGetLocationDynamicSettings2 = &Operation{
 	}},
 }
 
-// CallingDeviceCallGetDynamicSettings2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
-var CallingDeviceCallGetDynamicSettings2 = &Operation{
-	ID: "CallingDeviceCallGetDynamicSettings2", Area: "calling", Group: "device-call", Command: "get-dynamic-settings-2",
+// CallingDeviceCallGetDynamicSettings_2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
+var CallingDeviceCallGetDynamicSettings_2 = &Operation{
+	ID: "CallingDeviceCallGetDynamicSettings_2", Area: "calling", Group: "device-call", Command: "get-dynamic-settings-2",
 	Summary:     "Get Device Dynamic Settings",
 	Description: "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
@@ -6785,9 +6785,9 @@ var CallingDeviceCallUpdateDynamicSettingsAcrossOrgLocation = &Operation{
 	Body: &Body{},
 }
 
-// CallingDeviceCallListDynamicSettingsJobs2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
-var CallingDeviceCallListDynamicSettingsJobs2 = &Operation{
-	ID: "CallingDeviceCallListDynamicSettingsJobs2", Area: "calling", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
+// CallingDeviceCallListDynamicSettingsJobs_2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
+var CallingDeviceCallListDynamicSettingsJobs_2 = &Operation{
+	ID: "CallingDeviceCallListDynamicSettingsJobs_2", Area: "calling", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
 	Summary:     "List Device Dynamic Settings Jobs",
 	Description: "List device dynamic settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -6799,9 +6799,9 @@ var CallingDeviceCallListDynamicSettingsJobs2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// CallingDeviceCallGetDynamicSettingsJobStatus2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
-var CallingDeviceCallGetDynamicSettingsJobStatus2 = &Operation{
-	ID: "CallingDeviceCallGetDynamicSettingsJobStatus2", Area: "calling", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
+// CallingDeviceCallGetDynamicSettingsJobStatus_2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
+var CallingDeviceCallGetDynamicSettingsJobStatus_2 = &Operation{
+	ID: "CallingDeviceCallGetDynamicSettingsJobStatus_2", Area: "calling", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
 	Summary:     "Get Device Dynamic Settings Job Status",
 	Description: "Get device dynamic settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}",
@@ -6810,9 +6810,9 @@ var CallingDeviceCallGetDynamicSettingsJobStatus2 = &Operation{
 	},
 }
 
-// CallingDeviceCallListDynamicSettingsJobErrors2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
-var CallingDeviceCallListDynamicSettingsJobErrors2 = &Operation{
-	ID: "CallingDeviceCallListDynamicSettingsJobErrors2", Area: "calling", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
+// CallingDeviceCallListDynamicSettingsJobErrors_2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
+var CallingDeviceCallListDynamicSettingsJobErrors_2 = &Operation{
+	ID: "CallingDeviceCallListDynamicSettingsJobErrors_2", Area: "calling", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
 	Summary:     "List Device Dynamic Settings Job Errors",
 	Description: "List Update device dynamic settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors",
@@ -7426,9 +7426,9 @@ var CallingAnnouncementRepositoryDeleteGreetingOrg = &Operation{
 	},
 }
 
-// CallingAnnouncementRepositoryGetBinaryGreeting is "Fetch details of a binary announcement greeting at the organization level": GET /telephony/config/announcements/{announcementId}.
-var CallingAnnouncementRepositoryGetBinaryGreeting = &Operation{
-	ID: "CallingAnnouncementRepositoryGetBinaryGreeting", Area: "calling", Group: "announcement-repository", Command: "get-binary-greeting",
+// CallingAnnouncementRepositoryGetBinaryGreetingAnnouncementsByAnnouncementId is "Fetch details of a binary announcement greeting at the organization level": GET /telephony/config/announcements/{announcementId}.
+var CallingAnnouncementRepositoryGetBinaryGreetingAnnouncementsByAnnouncementId = &Operation{
+	ID: "CallingAnnouncementRepositoryGetBinaryGreetingAnnouncementsByAnnouncementId", Area: "calling", Group: "announcement-repository", Command: "get-binary-greeting",
 	Summary:     "Fetch details of a binary announcement greeting at the organization level",
 	Description: "Fetch details of a binary announcement greeting by its ID at an organization level.\n\nAn admin can upload a file at an organization level. This file will be uploaded to the announcement repository.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/announcements/{announcementId}",
@@ -7463,9 +7463,9 @@ var CallingAnnouncementRepositoryDeleteGreetingLocation = &Operation{
 	},
 }
 
-// CallingAnnouncementRepositoryGetBinaryGreeting2 is "Fetch details of a binary announcement greeting at location level": GET /telephony/config/locations/{locationId}/announcements/{announcementId}.
-var CallingAnnouncementRepositoryGetBinaryGreeting2 = &Operation{
-	ID: "CallingAnnouncementRepositoryGetBinaryGreeting2", Area: "calling", Group: "announcement-repository", Command: "get-binary-greeting-2",
+// CallingAnnouncementRepositoryGetBinaryGreetingLocationsByLocationIdAnnouncementsByAnnouncementId is "Fetch details of a binary announcement greeting at location level": GET /telephony/config/locations/{locationId}/announcements/{announcementId}.
+var CallingAnnouncementRepositoryGetBinaryGreetingLocationsByLocationIdAnnouncementsByAnnouncementId = &Operation{
+	ID: "CallingAnnouncementRepositoryGetBinaryGreetingLocationsByLocationIdAnnouncementsByAnnouncementId", Area: "calling", Group: "announcement-repository", Command: "get-binary-greeting-2",
 	Summary:     "Fetch details of a binary announcement greeting at location level",
 	Description: "Fetch details of a binary announcement greeting by its ID at a location level.\n\nAn admin can upload a file at a location level. This file will be uploaded to the announcement repository.\n\nThis API requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/announcements/{announcementId}",
@@ -7819,9 +7819,9 @@ var CallingCallParkDelete = &Operation{
 	},
 }
 
-// CallingCallParkGet is "Get Details for a Call Park": GET /telephony/config/locations/{locationId}/callParks/{callParkId}.
-var CallingCallParkGet = &Operation{
-	ID: "CallingCallParkGet", Area: "calling", Group: "call-park", Command: "get",
+// CallingCallParkGetByCallParkId is "Get Details for a Call Park": GET /telephony/config/locations/{locationId}/callParks/{callParkId}.
+var CallingCallParkGetByCallParkId = &Operation{
+	ID: "CallingCallParkGetByCallParkId", Area: "calling", Group: "call-park", Command: "get",
 	Summary:     "Get Details for a Call Park",
 	Description: "Retrieve Call Park details.\n\nCall Park allows call recipients to place a call on hold so that it can be retrieved from another device.\n\nRetrieving call park details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.\n\n**NOTE**: The Call Park ID will change upon modification of the Call Park name.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/callParks/{callParkId}",
@@ -7832,9 +7832,9 @@ var CallingCallParkGet = &Operation{
 	},
 }
 
-// CallingCallParkUpdate is "Update a Call Park": PUT /telephony/config/locations/{locationId}/callParks/{callParkId}.
-var CallingCallParkUpdate = &Operation{
-	ID: "CallingCallParkUpdate", Area: "calling", Group: "call-park", Command: "update",
+// CallingCallParkUpdateByCallParkId is "Update a Call Park": PUT /telephony/config/locations/{locationId}/callParks/{callParkId}.
+var CallingCallParkUpdateByCallParkId = &Operation{
+	ID: "CallingCallParkUpdateByCallParkId", Area: "calling", Group: "call-park", Command: "update",
 	Summary:     "Update a Call Park",
 	Description: "Update the designated Call Park.\n\nCall Park allows call recipients to place a call on hold so that it can be retrieved from another device.\n\nUpdating a call park requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**NOTE**: The Call Park ID will change upon modification of the Call Park name.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/callParks/{callParkId}",
@@ -7882,9 +7882,9 @@ var CallingCallParkGetAvailableRecallHuntGroups = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "huntGroups", OmitEmpty: true},
 }
 
-// CallingCallParkGet2 is "Get Call Park Settings": GET /telephony/config/locations/{locationId}/callParks/settings.
-var CallingCallParkGet2 = &Operation{
-	ID: "CallingCallParkGet2", Area: "calling", Group: "call-park", Command: "get-2",
+// CallingCallParkGetSettings is "Get Call Park Settings": GET /telephony/config/locations/{locationId}/callParks/settings.
+var CallingCallParkGetSettings = &Operation{
+	ID: "CallingCallParkGetSettings", Area: "calling", Group: "call-park", Command: "get-2",
 	Summary:     "Get Call Park Settings",
 	Description: "Retrieve Call Park Settings from call parks for a given location.\n\nCall Park allows call recipients to place a call on hold so that it can be retrieved from another device.\n\nRetrieving settings from call parks requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/callParks/settings",
@@ -7894,9 +7894,9 @@ var CallingCallParkGet2 = &Operation{
 	},
 }
 
-// CallingCallParkUpdate2 is "Update Call Park settings": PUT /telephony/config/locations/{locationId}/callParks/settings.
-var CallingCallParkUpdate2 = &Operation{
-	ID: "CallingCallParkUpdate2", Area: "calling", Group: "call-park", Command: "update-2",
+// CallingCallParkUpdateSettings is "Update Call Park settings": PUT /telephony/config/locations/{locationId}/callParks/settings.
+var CallingCallParkUpdateSettings = &Operation{
+	ID: "CallingCallParkUpdateSettings", Area: "calling", Group: "call-park", Command: "update-2",
 	Summary:     "Update Call Park settings",
 	Description: "Update Call Park settings for the designated location.\n\nCall Park allows call recipients to place a call on hold so that it can be retrieved from another device.\n\nUpdating call park settings requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/callParks/settings",
@@ -10124,9 +10124,9 @@ var CallingLocationCallHandlingDeleteAllOutgoingDigitPatterns = &Operation{
 	},
 }
 
-// CallingLocationCallHandlingGetOutgoingDigitPattern2 is "Get Details for a Outgoing Permission Digit Pattern for a Location": GET /telephony/config/locations/{locationId}/outgoingPermission/digitPatterns/{digitPatternId}.
-var CallingLocationCallHandlingGetOutgoingDigitPattern2 = &Operation{
-	ID: "CallingLocationCallHandlingGetOutgoingDigitPattern2", Area: "calling", Group: "location-call-handling", Command: "get-outgoing-digit-pattern-2",
+// CallingLocationCallHandlingGetOutgoingDigitPatternByDigitPatternId is "Get Details for a Outgoing Permission Digit Pattern for a Location": GET /telephony/config/locations/{locationId}/outgoingPermission/digitPatterns/{digitPatternId}.
+var CallingLocationCallHandlingGetOutgoingDigitPatternByDigitPatternId = &Operation{
+	ID: "CallingLocationCallHandlingGetOutgoingDigitPatternByDigitPatternId", Area: "calling", Group: "location-call-handling", Command: "get-outgoing-digit-pattern-2",
 	Summary:     "Get Details for a Outgoing Permission Digit Pattern for a Location",
 	Description: "Get the digit pattern details.\n\nUse Digit Patterns to bypass the set permissions for all persons/workspaces at this location.\n\nRetrieving digit pattern details requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/outgoingPermission/digitPatterns/{digitPatternId}",
@@ -10846,9 +10846,9 @@ var CallingPartnerReportsTemplatesDelete = &Operation{
 	},
 }
 
-// CallingPartnerReportsTemplatesList2 is "List Report Templates": GET /partner/reports/templates.
-var CallingPartnerReportsTemplatesList2 = &Operation{
-	ID: "CallingPartnerReportsTemplatesList2", Area: "calling", Group: "partner-reports-templates", Command: "list-2",
+// CallingPartnerReportsTemplatesListTemplates is "List Report Templates": GET /partner/reports/templates.
+var CallingPartnerReportsTemplatesListTemplates = &Operation{
+	ID: "CallingPartnerReportsTemplatesListTemplates", Area: "calling", Group: "partner-reports-templates", Command: "list-2",
 	Summary:     "List Report Templates",
 	Description: "List report templates. Report templates are available for use with the Partner Reports API.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` [scopes](/docs/integrations#scopes). The authenticated user must be a Partner full administrator or Partner read-only administrator of the organization.",
 	Method:      "GET", Host: HostWebex, Path: "/partner/reports/templates",
@@ -12225,9 +12225,9 @@ var CallingUserCallUpdatePreferredEndpoint = &Operation{
 	}},
 }
 
-// CallingUserCallSearchSharedLineAppearanceMembers is "Search Shared-Line Appearance Members": GET /telephony/config/people/{personId}/applications/{applicationId}/availableMembers.
-var CallingUserCallSearchSharedLineAppearanceMembers = &Operation{
-	ID: "CallingUserCallSearchSharedLineAppearanceMembers", Area: "calling", Group: "user-call", Command: "search-shared-line-appearance-members",
+// CallingUserCallSearchSharedLineAppearanceMembersByApplicationIdAvailableMembers is "Search Shared-Line Appearance Members": GET /telephony/config/people/{personId}/applications/{applicationId}/availableMembers.
+var CallingUserCallSearchSharedLineAppearanceMembersByApplicationIdAvailableMembers = &Operation{
+	ID: "CallingUserCallSearchSharedLineAppearanceMembersByApplicationIdAvailableMembers", Area: "calling", Group: "user-call", Command: "search-shared-line-appearance-members",
 	Summary:     "Search Shared-Line Appearance Members",
 	Description: "Get members available for shared-line assignment to a Webex Calling Apps Desktop device.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/{applicationId}/availableMembers",
@@ -12245,9 +12245,9 @@ var CallingUserCallSearchSharedLineAppearanceMembers = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true},
 }
 
-// CallingUserCallGetSharedLineAppearanceMembers is "Get Shared-Line Appearance Members": GET /telephony/config/people/{personId}/applications/{applicationId}/members.
-var CallingUserCallGetSharedLineAppearanceMembers = &Operation{
-	ID: "CallingUserCallGetSharedLineAppearanceMembers", Area: "calling", Group: "user-call", Command: "get-shared-line-appearance-members",
+// CallingUserCallGetSharedLineAppearanceMembersByApplicationIdMembers is "Get Shared-Line Appearance Members": GET /telephony/config/people/{personId}/applications/{applicationId}/members.
+var CallingUserCallGetSharedLineAppearanceMembersByApplicationIdMembers = &Operation{
+	ID: "CallingUserCallGetSharedLineAppearanceMembersByApplicationIdMembers", Area: "calling", Group: "user-call", Command: "get-shared-line-appearance-members",
 	Summary:     "Get Shared-Line Appearance Members",
 	Description: "Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/{applicationId}/members",
@@ -12257,9 +12257,9 @@ var CallingUserCallGetSharedLineAppearanceMembers = &Operation{
 	},
 }
 
-// CallingUserCallUpdateSharedLineAppearanceMembers is "Put Shared-Line Appearance Members": PUT /telephony/config/people/{personId}/applications/{applicationId}/members.
-var CallingUserCallUpdateSharedLineAppearanceMembers = &Operation{
-	ID: "CallingUserCallUpdateSharedLineAppearanceMembers", Area: "calling", Group: "user-call", Command: "update-shared-line-appearance-members",
+// CallingUserCallUpdateSharedLineAppearanceMembersByApplicationIdMembers is "Put Shared-Line Appearance Members": PUT /telephony/config/people/{personId}/applications/{applicationId}/members.
+var CallingUserCallUpdateSharedLineAppearanceMembersByApplicationIdMembers = &Operation{
+	ID: "CallingUserCallUpdateSharedLineAppearanceMembersByApplicationIdMembers", Area: "calling", Group: "user-call", Command: "update-shared-line-appearance-members",
 	Summary:     "Put Shared-Line Appearance Members",
 	Description: "Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps Desktop device.\n\nThis API requires a full or user administrator or location administrator auth token with the `spark-admin:people_write` scope.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/{applicationId}/members",
@@ -12921,9 +12921,9 @@ var CallingUserCallDeleteUsersSelectiveForwardService = &Operation{
 	},
 }
 
-// CallingUserCallGetPersonApplicationServicesSettings2 is "Retrieve a person's Application Services Settings New": GET /people/{personId}/features/applications.
-var CallingUserCallGetPersonApplicationServicesSettings2 = &Operation{
-	ID: "CallingUserCallGetPersonApplicationServicesSettings2", Area: "calling", Group: "user-call", Command: "get-person-application-services-settings-2",
+// CallingUserCallGetPersonApplicationServicesSettings_2 is "Retrieve a person's Application Services Settings New": GET /people/{personId}/features/applications.
+var CallingUserCallGetPersonApplicationServicesSettings_2 = &Operation{
+	ID: "CallingUserCallGetPersonApplicationServicesSettings_2", Area: "calling", Group: "user-call", Command: "get-person-application-services-settings-2",
 	Summary:     "Retrieve a person's Application Services Settings New",
 	Description: "Gets mobile and PC applications settings for a user.\n\nApplication services let you determine the ringing behavior for calls made to people in certain scenarios. You can also specify which devices can download the Webex Calling app.\n\nRequires a full, user, or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/people/{personId}/features/applications",
@@ -12933,9 +12933,9 @@ var CallingUserCallGetPersonApplicationServicesSettings2 = &Operation{
 	},
 }
 
-// CallingUserCallSearchSharedLineAppearanceMembers2 is "Search Shared-Line Appearance Members New": GET /telephony/config/people/{personId}/applications/availableMembers.
-var CallingUserCallSearchSharedLineAppearanceMembers2 = &Operation{
-	ID: "CallingUserCallSearchSharedLineAppearanceMembers2", Area: "calling", Group: "user-call", Command: "search-shared-line-appearance-members-2",
+// CallingUserCallSearchSharedLineAppearanceMembersAvailableMembers is "Search Shared-Line Appearance Members New": GET /telephony/config/people/{personId}/applications/availableMembers.
+var CallingUserCallSearchSharedLineAppearanceMembersAvailableMembers = &Operation{
+	ID: "CallingUserCallSearchSharedLineAppearanceMembersAvailableMembers", Area: "calling", Group: "user-call", Command: "search-shared-line-appearance-members-2",
 	Summary:     "Search Shared-Line Appearance Members New",
 	Description: "Get members available for shared-line assignment to a Webex Calling Apps.\n\nLike most hardware devices, applications support assigning additional shared lines which can monitored and utilized by the application.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:telephony_config_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/availableMembers",
@@ -12952,9 +12952,9 @@ var CallingUserCallSearchSharedLineAppearanceMembers2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true},
 }
 
-// CallingUserCallGetSharedLineAppearanceMembers2 is "Get Shared-Line Appearance Members New": GET /telephony/config/people/{personId}/applications/members.
-var CallingUserCallGetSharedLineAppearanceMembers2 = &Operation{
-	ID: "CallingUserCallGetSharedLineAppearanceMembers2", Area: "calling", Group: "user-call", Command: "get-shared-line-appearance-members-2",
+// CallingUserCallGetSharedLineAppearanceMembersMembers is "Get Shared-Line Appearance Members New": GET /telephony/config/people/{personId}/applications/members.
+var CallingUserCallGetSharedLineAppearanceMembersMembers = &Operation{
+	ID: "CallingUserCallGetSharedLineAppearanceMembersMembers", Area: "calling", Group: "user-call", Command: "get-shared-line-appearance-members-2",
 	Summary:     "Get Shared-Line Appearance Members New",
 	Description: "Get primary and secondary members assigned to a shared line on a Webex Calling Apps.\n\nLike most hardware devices, applications support assigning additional shared lines which can monitored and utilized by the application.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:telephony_config_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/members",
@@ -12963,9 +12963,9 @@ var CallingUserCallGetSharedLineAppearanceMembers2 = &Operation{
 	},
 }
 
-// CallingUserCallUpdateSharedLineAppearanceMembers2 is "Put Shared-Line Appearance Members New": PUT /telephony/config/people/{personId}/applications/members.
-var CallingUserCallUpdateSharedLineAppearanceMembers2 = &Operation{
-	ID: "CallingUserCallUpdateSharedLineAppearanceMembers2", Area: "calling", Group: "user-call", Command: "update-shared-line-appearance-members-2",
+// CallingUserCallUpdateSharedLineAppearanceMembersMembers is "Put Shared-Line Appearance Members New": PUT /telephony/config/people/{personId}/applications/members.
+var CallingUserCallUpdateSharedLineAppearanceMembersMembers = &Operation{
+	ID: "CallingUserCallUpdateSharedLineAppearanceMembersMembers", Area: "calling", Group: "user-call", Command: "update-shared-line-appearance-members-2",
 	Summary:     "Put Shared-Line Appearance Members New",
 	Description: "Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps.\n\nLike most hardware devices, applications support assigning additional shared lines which can monitored and utilized by the application.\n\nThis API requires a full, user, or location administrator auth token with the `spark-admin:telephony_config_write` scope.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/{personId}/applications/members",
@@ -13029,9 +13029,9 @@ var CallingUserCallUpdatePersonExecutiveFilteringSettings = &Operation{
 	Body: &Body{},
 }
 
-// CallingUserCallGetPersonExecutiveFilteringSettings2 is "Get Person Executive Call Filtering Criteria Settings": GET /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
-var CallingUserCallGetPersonExecutiveFilteringSettings2 = &Operation{
-	ID: "CallingUserCallGetPersonExecutiveFilteringSettings2", Area: "calling", Group: "user-call", Command: "get-person-executive-filtering-settings-2",
+// CallingUserCallGetPersonExecutiveFilteringSettingsCriteriaById is "Get Person Executive Call Filtering Criteria Settings": GET /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
+var CallingUserCallGetPersonExecutiveFilteringSettingsCriteriaById = &Operation{
+	ID: "CallingUserCallGetPersonExecutiveFilteringSettingsCriteriaById", Area: "calling", Group: "user-call", Command: "get-person-executive-filtering-settings-2",
 	Summary:     "Get Person Executive Call Filtering Criteria Settings",
 	Description: "Retrieve the executive call filtering criteria settings for the specified person.\n\nExecutive Call Filtering Criteria in Webex allows you to retrieve the detailed configuration for a specific filter rule. This includes schedule settings, phone number filters, and call routing preferences for executive call filtering.\n\nThis API requires a full, user, read-only or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/executive/callFiltering/criteria/{id}",
@@ -13042,9 +13042,9 @@ var CallingUserCallGetPersonExecutiveFilteringSettings2 = &Operation{
 	},
 }
 
-// CallingUserCallUpdatePersonExecutiveFilteringSettings2 is "Modify Person Executive Call Filtering Criteria Settings": PUT /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
-var CallingUserCallUpdatePersonExecutiveFilteringSettings2 = &Operation{
-	ID: "CallingUserCallUpdatePersonExecutiveFilteringSettings2", Area: "calling", Group: "user-call", Command: "update-person-executive-filtering-settings-2",
+// CallingUserCallUpdatePersonExecutiveFilteringSettingsCriteriaById is "Modify Person Executive Call Filtering Criteria Settings": PUT /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
+var CallingUserCallUpdatePersonExecutiveFilteringSettingsCriteriaById = &Operation{
+	ID: "CallingUserCallUpdatePersonExecutiveFilteringSettingsCriteriaById", Area: "calling", Group: "user-call", Command: "update-person-executive-filtering-settings-2",
 	Summary:     "Modify Person Executive Call Filtering Criteria Settings",
 	Description: "Update the executive call filtering settings for the specified person.\n\nExecutive Call Filtering in Webex allows you to control which calls are allowed to reach the executive assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable call filtering and configure filter rules to manage incoming calls.\n\nThis API requires a full, user or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/{personId}/executive/callFiltering/criteria/{id}",
@@ -15627,9 +15627,9 @@ var CallingWorkspacesGetCapabilities = &Operation{
 	},
 }
 
-// CallingWorkspacesGet2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
-var CallingWorkspacesGet2 = &Operation{
-	ID: "CallingWorkspacesGet2", Area: "calling", Group: "workspaces", Command: "get-2",
+// CallingWorkspacesGet_2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
+var CallingWorkspacesGet_2 = &Operation{
+	ID: "CallingWorkspacesGet_2", Area: "calling", Group: "workspaces", Command: "get-2",
 	Summary:     "Get Workspace Details",
 	Description: "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}",

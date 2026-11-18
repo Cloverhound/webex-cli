@@ -272,25 +272,6 @@ NAMING_OVERRIDES = {
     },
 }
 
-# Go names for operations whose CLI names would give two operations the same name
-# in pkg/webexops. The collections list some routes twice, so each is keyed by its
-# route and CLI command, and the name stays with that route whatever order a
-# refresh puts them in. Collection → (method, path, command) → name.
-OPERATION_IDS = {
-    'Webex Cloud Calling': {
-        ('GET', '/telephony/config/people/me/settings/priorityAlert/criteria/{id}', 'get-priority-alert-2'):
-            'CallingCallSettingsForMeGetPriorityAlertCriterion',
-        ('GET', '/telephony/config/people/me/settings/selectiveAccept/criteria/{id}', 'get-selective-accept-user-2'):
-            'CallingCallSettingsForMeGetSelectiveAcceptCriterion',
-        ('GET', '/telephony/config/people/me/settings/selectiveReject/criteria/{id}', 'get-selective-reject-user-2'):
-            'CallingCallSettingsForMeGetSelectiveRejectCriterion',
-        ('GET', '/telephony/config/people/me/settings/sequentialRing/criteria/{id}', 'get-sequential-ring-user-2'):
-            'CallingCallSettingsForMeGetSequentialRingCriterion',
-        ('PUT', '/telephony/config/people/me/settings/sequentialRing/criteria/{id}', 'update-sequential-ring-user-2'):
-            'CallingCallSettingsForMeUpdateSequentialRingCriterion',
-    },
-}
-
 GROUP_ALIASES = {
     'Webex Contact Center': {'flow': ['flows'], 'call-monitor': ['call-monitoring']},
     'Webex Messaging': {'hds': ['hybrid-data-security']},

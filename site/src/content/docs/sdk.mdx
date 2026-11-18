@@ -72,6 +72,6 @@ func main() {
 
 - **Retries:** only a 401 (once, after `Refresh`) and a 429 are retried. A 5xx or a broken connection may follow a write that was carried out, so it is returned, not repeated. A 429 that is not retried further returns a `RateLimitError`, which unwraps to the `APIError`.
 - **Hosts:** `HostsFor` refuses a Contact Center data center that is not in `CCRegions`, since it becomes part of the host the token is sent to.
-- **Paging:** each list's paging was derived from its collection and, where Webex differs, measured against a live organization. A list that can't be read to its end returns `webexapi.ErrIncompleteList`.
+- **Paging:** each list's paging was derived from its collection and, where Webex differs, measured against a live organization. `All` and `Visit` fail rather than return part of a list. A failed request returns its own error, such as an `APIError` or the context's error. A response that doesn't page as expected returns an error matching `webexapi.ErrIncompleteList`: for example, a missing item array or total, a page that repeats, or a next link to another host.
 - **Hooks:** `BeforeSend`, `AfterResponse` and `OnRetry` let a program log requests or stop them before they are sent. The CLI uses them for `--debug`, `--dry-run` and read-only mode.
 - **Generated names:** the operation table is regenerated when Cisco's collections change. A program that names an operation fails to build if a refresh drops or renames it.

@@ -42,7 +42,7 @@ var meetingsOperations = []*Operation{
 	MeetingsClosedCaptionsDownloadMeetingSnippets,
 	MeetingsInviteesListMeeting,
 	MeetingsInviteesCreateMeeting,
-	MeetingsInviteesCreateMeeting2,
+	MeetingsInviteesCreateMeetingBulkInsert,
 	MeetingsInviteesGetMeeting,
 	MeetingsInviteesUpdateMeeting,
 	MeetingsInviteesDeleteMeeting,
@@ -306,9 +306,9 @@ var MeetingsInviteesCreateMeeting = &Operation{
 	}},
 }
 
-// MeetingsInviteesCreateMeeting2 is "Create Meeting Invitees": POST /meetingInvitees/bulkInsert.
-var MeetingsInviteesCreateMeeting2 = &Operation{
-	ID: "MeetingsInviteesCreateMeeting2", Area: "meetings", Group: "invitees", Command: "create-meeting-2",
+// MeetingsInviteesCreateMeetingBulkInsert is "Create Meeting Invitees": POST /meetingInvitees/bulkInsert.
+var MeetingsInviteesCreateMeetingBulkInsert = &Operation{
+	ID: "MeetingsInviteesCreateMeetingBulkInsert", Area: "meetings", Group: "invitees", Command: "create-meeting-2",
 	Summary:     "Create Meeting Invitees",
 	Description: "* Invite people to attend a meeting in bulk.\n\n* Identify each invitee by the email address of each item in the `items` of the request body.\n\n* Each invitee should have a unique `email`.\n\n* This API limits the maximum size of `items` in the request body to 100.\n\n* The `sendEmail` parameter for each invitee is `true` by default and the meeting emails will be sent to the invitee's `email`. Please set `sendEmail` to `false` to prevent an invitee from receiving emails.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingInvitees/bulkInsert",

@@ -70,7 +70,7 @@ var deviceOperations = []*Operation{
 	DeviceDeviceCallGetUserCount,
 	DeviceDeviceCallGetCountMembers,
 	DeviceDeviceCallGetCountAvailableMembers,
-	DeviceDeviceCallListSupported2,
+	DeviceDeviceCallListSupported_2,
 	DeviceDeviceCallGetValidationSchema,
 	DeviceDeviceCallGetSettingsGroups,
 	DeviceDeviceCallGetCustomerDynamicSettings,
@@ -81,16 +81,16 @@ var deviceOperations = []*Operation{
 	DeviceDeviceCallListDynamicSettingsJobs,
 	DeviceDeviceCallGetDynamicSettingsJobStatus,
 	DeviceDeviceCallListDynamicSettingsJobErrors,
-	DeviceDeviceCallListSupported3,
-	DeviceDeviceCallGetSettingsGroups2,
-	DeviceDeviceCallGetCustomerDynamicSettings2,
-	DeviceDeviceCallGetLocationDynamicSettings2,
-	DeviceDeviceCallGetDynamicSettings2,
+	DeviceDeviceCallListSupported_3,
+	DeviceDeviceCallGetSettingsGroups_2,
+	DeviceDeviceCallGetCustomerDynamicSettings_2,
+	DeviceDeviceCallGetLocationDynamicSettings_2,
+	DeviceDeviceCallGetDynamicSettings_2,
 	DeviceDeviceCallUpdateDynamicSettings,
 	DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation,
-	DeviceDeviceCallListDynamicSettingsJobs2,
-	DeviceDeviceCallGetDynamicSettingsJobStatus2,
-	DeviceDeviceCallListDynamicSettingsJobErrors2,
+	DeviceDeviceCallListDynamicSettingsJobs_2,
+	DeviceDeviceCallGetDynamicSettingsJobStatus_2,
+	DeviceDeviceCallListDynamicSettingsJobErrors_2,
 	DeviceDeviceConfigurationsList,
 	DeviceDeviceConfigurationsUpdate,
 	DeviceDevicesList,
@@ -121,7 +121,7 @@ var deviceOperations = []*Operation{
 	DeviceWorkspacesUpdate,
 	DeviceWorkspacesDelete,
 	DeviceWorkspacesGetCapabilities,
-	DeviceWorkspacesGet2,
+	DeviceWorkspacesGet_2,
 	DeviceXapiQueryStatus,
 	DeviceXapiExecuteCommand,
 	DeviceXapiQuerySchema,
@@ -761,9 +761,9 @@ var DeviceDeviceCallGetCountAvailableMembers = &Operation{
 	},
 }
 
-// DeviceDeviceCallListSupported2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var DeviceDeviceCallListSupported2 = &Operation{
-	ID: "DeviceDeviceCallListSupported2", Area: "device", Group: "device-call", Command: "list-supported-2",
+// DeviceDeviceCallListSupported_2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var DeviceDeviceCallListSupported_2 = &Operation{
+	ID: "DeviceDeviceCallListSupported_2", Area: "device", Group: "device-call", Command: "list-supported-2",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -911,9 +911,9 @@ var DeviceDeviceCallListDynamicSettingsJobErrors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallListSupported3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var DeviceDeviceCallListSupported3 = &Operation{
-	ID: "DeviceDeviceCallListSupported3", Area: "device", Group: "device-call", Command: "list-supported-3",
+// DeviceDeviceCallListSupported_3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var DeviceDeviceCallListSupported_3 = &Operation{
+	ID: "DeviceDeviceCallListSupported_3", Area: "device", Group: "device-call", Command: "list-supported-3",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -925,9 +925,9 @@ var DeviceDeviceCallListSupported3 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "devices", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetSettingsGroups2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
-var DeviceDeviceCallGetSettingsGroups2 = &Operation{
-	ID: "DeviceDeviceCallGetSettingsGroups2", Area: "device", Group: "device-call", Command: "get-settings-groups-2",
+// DeviceDeviceCallGetSettingsGroups_2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
+var DeviceDeviceCallGetSettingsGroups_2 = &Operation{
+	ID: "DeviceDeviceCallGetSettingsGroups_2", Area: "device", Group: "device-call", Command: "get-settings-groups-2",
 	Summary:     "Get Settings Groups",
 	Description: "This API returns the `settingsGroups` that define the structure and association of tags for device dynamic settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure device dynamic settings.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dynamicSettings/settingsGroups",
@@ -938,9 +938,9 @@ var DeviceDeviceCallGetSettingsGroups2 = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetCustomerDynamicSettings2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetCustomerDynamicSettings2 = &Operation{
-	ID: "DeviceDeviceCallGetCustomerDynamicSettings2", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings-2",
+// DeviceDeviceCallGetCustomerDynamicSettings_2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
+var DeviceDeviceCallGetCustomerDynamicSettings_2 = &Operation{
+	ID: "DeviceDeviceCallGetCustomerDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings-2",
 	Summary:     "Get Customer Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke",
@@ -953,9 +953,9 @@ var DeviceDeviceCallGetCustomerDynamicSettings2 = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetLocationDynamicSettings2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetLocationDynamicSettings2 = &Operation{
-	ID: "DeviceDeviceCallGetLocationDynamicSettings2", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings-2",
+// DeviceDeviceCallGetLocationDynamicSettings_2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
+var DeviceDeviceCallGetLocationDynamicSettings_2 = &Operation{
+	ID: "DeviceDeviceCallGetLocationDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings-2",
 	Summary:     "Get Location Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
@@ -969,9 +969,9 @@ var DeviceDeviceCallGetLocationDynamicSettings2 = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetDynamicSettings2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetDynamicSettings2 = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettings2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-2",
+// DeviceDeviceCallGetDynamicSettings_2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
+var DeviceDeviceCallGetDynamicSettings_2 = &Operation{
+	ID: "DeviceDeviceCallGetDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-2",
 	Summary:     "Get Device Dynamic Settings",
 	Description: "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
@@ -1009,9 +1009,9 @@ var DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobs2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
-var DeviceDeviceCallListDynamicSettingsJobs2 = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobs2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
+// DeviceDeviceCallListDynamicSettingsJobs_2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
+var DeviceDeviceCallListDynamicSettingsJobs_2 = &Operation{
+	ID: "DeviceDeviceCallListDynamicSettingsJobs_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
 	Summary:     "List Device Dynamic Settings Jobs",
 	Description: "List device dynamic settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -1023,9 +1023,9 @@ var DeviceDeviceCallListDynamicSettingsJobs2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetDynamicSettingsJobStatus2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
-var DeviceDeviceCallGetDynamicSettingsJobStatus2 = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettingsJobStatus2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
+// DeviceDeviceCallGetDynamicSettingsJobStatus_2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
+var DeviceDeviceCallGetDynamicSettingsJobStatus_2 = &Operation{
+	ID: "DeviceDeviceCallGetDynamicSettingsJobStatus_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
 	Summary:     "Get Device Dynamic Settings Job Status",
 	Description: "Get device dynamic settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}",
@@ -1034,9 +1034,9 @@ var DeviceDeviceCallGetDynamicSettingsJobStatus2 = &Operation{
 	},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobErrors2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
-var DeviceDeviceCallListDynamicSettingsJobErrors2 = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobErrors2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
+// DeviceDeviceCallListDynamicSettingsJobErrors_2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
+var DeviceDeviceCallListDynamicSettingsJobErrors_2 = &Operation{
+	ID: "DeviceDeviceCallListDynamicSettingsJobErrors_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
 	Summary:     "List Device Dynamic Settings Job Errors",
 	Description: "List Update device dynamic settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors",
@@ -1495,9 +1495,9 @@ var DeviceWorkspacesGetCapabilities = &Operation{
 	},
 }
 
-// DeviceWorkspacesGet2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
-var DeviceWorkspacesGet2 = &Operation{
-	ID: "DeviceWorkspacesGet2", Area: "device", Group: "workspaces", Command: "get-2",
+// DeviceWorkspacesGet_2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
+var DeviceWorkspacesGet_2 = &Operation{
+	ID: "DeviceWorkspacesGet_2", Area: "device", Group: "workspaces", Command: "get-2",
 	Summary:     "Get Workspace Details",
 	Description: "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}",

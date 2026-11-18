@@ -94,8 +94,8 @@ func API(template, logBody string) *webexapi.Client {
 	return c
 }
 
-// CLIError says how to fix a request sent to the wrong data region, and returns
-// any other error as it is.
+// CLIError says how to fix a request sent to the wrong data region, keeping the
+// context of any error that wraps it, and returns any other error as it is.
 func CLIError(err error) error {
 	var wrongRegion *webexapi.WrongRegionError
 	if !errors.As(err, &wrongRegion) {
@@ -105,9 +105,19 @@ func CLIError(err error) error {
 	if wrongRegion.Endpoint != "" {
 		msg += fmt.Sprintf("; Webex says to use %s", wrongRegion.Endpoint)
 	}
-	return fmt.Errorf("%s — rerun with --region <%s> (or: webex config set region <region>)",
+	msg = fmt.Sprintf("%s — rerun with --region <%s> (or: webex config set region <region>)",
 		msg, strings.Join(config.Regions, "|"))
+	return &cliError{msg: strings.Replace(err.Error(), wrongRegion.Error(), msg, 1), err: err}
 }
+
+// cliError is an error with the CLI's own message.
+type cliError struct {
+	msg string
+	err error
+}
+
+func (e *cliError) Error() string { return e.msg }
+func (e *cliError) Unwrap() error { return e.err }
 
 func regionLabel() string {
 	if r := config.Region(); r != "" {

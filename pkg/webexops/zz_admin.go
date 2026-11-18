@@ -115,7 +115,7 @@ var adminOperations = []*Operation{
 	AdminPartnerReportsTemplatesCreate,
 	AdminPartnerReportsTemplatesGet,
 	AdminPartnerReportsTemplatesDelete,
-	AdminPartnerReportsTemplatesList2,
+	AdminPartnerReportsTemplatesListTemplates,
 	AdminPeopleList,
 	AdminPeopleCreatePerson,
 	AdminPeopleGetPerson,
@@ -1022,9 +1022,9 @@ var AdminPartnerReportsTemplatesDelete = &Operation{
 	},
 }
 
-// AdminPartnerReportsTemplatesList2 is "List Report Templates": GET /partner/reports/templates.
-var AdminPartnerReportsTemplatesList2 = &Operation{
-	ID: "AdminPartnerReportsTemplatesList2", Area: "admin", Group: "partner-reports-templates", Command: "list-2",
+// AdminPartnerReportsTemplatesListTemplates is "List Report Templates": GET /partner/reports/templates.
+var AdminPartnerReportsTemplatesListTemplates = &Operation{
+	ID: "AdminPartnerReportsTemplatesListTemplates", Area: "admin", Group: "partner-reports-templates", Command: "list-2",
 	Summary:     "List Report Templates",
 	Description: "List report templates. Report templates are available for use with the Partner Reports API.\n\nTo access this endpoint, you must use an administrator token with `spark-admin:reports_read` and `identity:people_read` [scopes](/docs/integrations#scopes). The authenticated user must be a Partner full administrator or Partner read-only administrator of the organization.",
 	Method:      "GET", Host: HostWebex, Path: "/partner/reports/templates",

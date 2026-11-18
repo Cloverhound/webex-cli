@@ -11,7 +11,7 @@ import os
 import re
 import subprocess
 import paging
-from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS, OPERATION_IDS
+from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
@@ -330,6 +330,53 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     }
 
 
+def route_word(segment):
+    """A path segment as part of a Go name: {callParkId} is ByCallParkId."""
+    if segment.startswith('{'):
+        return 'By' + go_identifier(segment.strip('{}'))
+    return go_identifier(segment)
+
+
+def operation_ids(area, group, endpoints):
+    """The Go names of a group's operations, in order.
+
+    Extraction numbers commands that share a name (update, update-2) in collection
+    order, so a reordered collection can swap their numbers. Each member of such a
+    family is named instead by the family's command and the part of its route after
+    the family's common path, which keeps the name with the route. A route listed
+    twice gets _2, _3: those names reach the same endpoint whichever way round they
+    fall."""
+    families = {}
+    for i, ep in enumerate(endpoints):
+        families.setdefault(re.sub(r'(-\d+)+$', '', ep['command']), []).append(i)
+    ids = [None] * len(endpoints)
+    for base, members in families.items():
+        if len(members) == 1:
+            ids[members[0]] = go_identifier(area, group, endpoints[members[0]]['command'])
+            continue
+        paths = [endpoints[i]['path'].strip('/').split('/') for i in members]
+        common = 0
+        while all(len(p) > common for p in paths) and len({p[common] for p in paths}) == 1:
+            common += 1
+        rests = {i: ''.join(route_word(s) for s in p[common:]) for i, p in zip(members, paths)}
+        methods = {}
+        for i in members:
+            methods.setdefault(rests[i], set()).add(endpoints[i]['method'])
+        routes, seen = {}, {}
+        for i in members:
+            ep = endpoints[i]
+            name = go_identifier(area, group, base) + rests[i]
+            if len(methods[rests[i]]) > 1:
+                name += ep['method'].capitalize()
+            route = (ep['method'], ep['path'])
+            if routes.setdefault(name, route) != route:
+                raise SystemExit(f"{ep['method']} {ep['path']} and {routes[name][0]} {routes[name][1]} would both be "
+                                 f"named {name} in pkg/webexops; extend operation_ids in codegen/generate_cli.py.")
+            seen[name] = seen.get(name, 0) + 1
+            ids[i] = name if seen[name] == 1 else f'{name}_{seen[name]}'
+    return ids
+
+
 def operation_literal(op_id, area, group, op):
     """Go source declaring one operation."""
     lines = [f'// {op_id} is {go_string(op["summary"])}: {op["method"]} {op["path"]}.',
@@ -404,14 +451,13 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
         for ep in endpoints:
             if ep['command'] in skip_cmds:
                 print(f"    Skipping command '{ep['command']}' (custom override)")
-                continue
+        kept = [ep for ep in endpoints if ep['command'] not in skip_cmds]
+        for ep, op_id in zip(kept, operation_ids(area, group, kept)):
             host_of = resolve_base_url(collection_name, ep['path'], host)
-            key = (ep['method'], ep['path'], ep['command'])
             op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
-            op_id = OPERATION_IDS.get(collection_name, {}).get(key) or go_identifier(area, group, ep['command'])
             if op_id in used_ids:
-                raise SystemExit(f"Two {collection_name} operations would be named {op_id}; the second is {key}. "
-                                 "Name one by its route and command in OPERATION_IDS in codegen/naming_overrides.py.")
+                raise SystemExit(f"Two {collection_name} operations would be named {op_id}; the second is "
+                                 f"{ep['method']} {ep['path']}. Extend operation_ids in codegen/generate_cli.py.")
             used_ids.add(op_id)
             op_ids.append(op_id)
             decls.append('')

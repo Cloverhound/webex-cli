@@ -492,9 +492,9 @@ var ccOperations = []*Operation{
 	CcJourneyProfileCreationInsightsGetAllTemplate,
 	CcJourneyProfileCreationInsightsCreateTemplate,
 	CcJourneyProfileCreationInsightsGetTemplateSearchedTemplateName,
-	CcJourneyProfileCreationInsightsGetHistoricViewTemplateName,
+	CcJourneyProfileCreationInsightsGetHistoricViewTemplateNamePersonIdByPersonIdTemplateNameByTemplateName,
 	CcJourneyProfileCreationInsightsGetHistoricView,
-	CcJourneyProfileCreationInsightsGetHistoricViewTemplateName2,
+	CcJourneyProfileCreationInsightsGetHistoricViewTemplateNameIdentityByIdentityTemplateNameByTemplateName,
 	CcJourneyProfileCreationInsightsGetHistoricViewTemplateId,
 	CcJourneyProfileCreationInsightsStreamViewsTemplateName,
 	CcJourneyProfileCreationInsightsStreamViewsTemplateId,
@@ -532,8 +532,8 @@ var ccOperations = []*Operation{
 	CcContactListManagementUpdateStatus,
 	CcContactListManagementGetWithinCampaign,
 	CcContactListManagementUpdateStatusAcrossCampaignChain,
-	CcAgentSummariesList,
-	CcAgentSummariesList2,
+	CcAgentSummariesListSummaryList,
+	CcAgentSummariesListGeneratedSummariesSearch,
 	CcAiAssistantGetSuggestions,
 	CcActivitiesListDefinitions,
 	CcActivitiesDescribe,
@@ -6903,9 +6903,9 @@ var CcJourneyProfileCreationInsightsGetTemplateSearchedTemplateName = &Operation
 	},
 }
 
-// CcJourneyProfileCreationInsightsGetHistoricViewTemplateName is "Historic Progressive Profile View by Template Name": GET /v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}.
-var CcJourneyProfileCreationInsightsGetHistoricViewTemplateName = &Operation{
-	ID: "CcJourneyProfileCreationInsightsGetHistoricViewTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name",
+// CcJourneyProfileCreationInsightsGetHistoricViewTemplateNamePersonIdByPersonIdTemplateNameByTemplateName is "Historic Progressive Profile View by Template Name": GET /v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}.
+var CcJourneyProfileCreationInsightsGetHistoricViewTemplateNamePersonIdByPersonIdTemplateNameByTemplateName = &Operation{
+	ID: "CcJourneyProfileCreationInsightsGetHistoricViewTemplateNamePersonIdByPersonIdTemplateNameByTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name",
 	Summary:     "Historic Progressive Profile View by Template Name",
 	Description: "Get Historic Progressive Profile View in JDS. \n\nRole and Scope: Requires id full admin role with cjds:admin_org_write or cjds:admin_org_read scope. Or requires any role with cjp:user, cjp:config_write or cjp:config_read scope.",
 	Method:      "GET", Host: HostCC, Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/person-id/{personId}/template-name/{templateName}",
@@ -6929,9 +6929,9 @@ var CcJourneyProfileCreationInsightsGetHistoricView = &Operation{
 	},
 }
 
-// CcJourneyProfileCreationInsightsGetHistoricViewTemplateName2 is "Historic Progressive Profile View By Template Name": GET /v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}.
-var CcJourneyProfileCreationInsightsGetHistoricViewTemplateName2 = &Operation{
-	ID: "CcJourneyProfileCreationInsightsGetHistoricViewTemplateName2", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name-2",
+// CcJourneyProfileCreationInsightsGetHistoricViewTemplateNameIdentityByIdentityTemplateNameByTemplateName is "Historic Progressive Profile View By Template Name": GET /v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}.
+var CcJourneyProfileCreationInsightsGetHistoricViewTemplateNameIdentityByIdentityTemplateNameByTemplateName = &Operation{
+	ID: "CcJourneyProfileCreationInsightsGetHistoricViewTemplateNameIdentityByIdentityTemplateNameByTemplateName", Area: "cc", Group: "journey-profile-creation-insights", Command: "get-historic-view-template-name-2",
 	Summary:     "Historic Progressive Profile View By Template Name",
 	Description: "Get Historic Progressive Profile View in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_read or cjds:admin_org_write scopes or cjp:config_read or cjp:config_write scopes",
 	Method:      "GET", Host: HostCC, Path: "/v1/api/progressive-profile-view/workspace-id/{workspaceId}/identity/{identity}/template-name/{templateName}",
@@ -7446,9 +7446,9 @@ var CcContactListManagementUpdateStatusAcrossCampaignChain = &Operation{
 	}},
 }
 
-// CcAgentSummariesList is "List summaries": POST /summary/list.
-var CcAgentSummariesList = &Operation{
-	ID: "CcAgentSummariesList", Area: "cc", Group: "agent-summaries", Command: "list",
+// CcAgentSummariesListSummaryList is "List summaries": POST /summary/list.
+var CcAgentSummariesListSummaryList = &Operation{
+	ID: "CcAgentSummariesListSummaryList", Area: "cc", Group: "agent-summaries", Command: "list",
 	Summary:     "List summaries",
 	Description: "Lists summaries based on the requested search type.",
 	Method:      "POST", Host: HostCC, Path: "/summary/list",
@@ -7459,9 +7459,9 @@ var CcAgentSummariesList = &Operation{
 	}},
 }
 
-// CcAgentSummariesList2 is "List summaries": POST /generated-summaries/search.
-var CcAgentSummariesList2 = &Operation{
-	ID: "CcAgentSummariesList2", Area: "cc", Group: "agent-summaries", Command: "list-2",
+// CcAgentSummariesListGeneratedSummariesSearch is "List summaries": POST /generated-summaries/search.
+var CcAgentSummariesListGeneratedSummariesSearch = &Operation{
+	ID: "CcAgentSummariesListGeneratedSummariesSearch", Area: "cc", Group: "agent-summaries", Command: "list-2",
 	Summary:     "List summaries",
 	Description: "Lists summaries based on the requested search type.",
 	Method:      "POST", Host: HostCC, Path: "/generated-summaries/search",

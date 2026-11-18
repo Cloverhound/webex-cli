@@ -115,6 +115,11 @@ func TestOrgParametersThatTakeTheUUIDAreMarked(t *testing.T) {
 	if got != "https://cc/organization/"+testUUID+"/team?orgId="+testUUID {
 		t.Fatalf("URL %s", got)
 	}
+	query := url.Values{"orgId": {testB64}}
+	got = op.Request(testHosts, Args{Params: map[string]string{"orgid": testUUID}, Query: query}).URL
+	if got != "https://cc/organization/"+testUUID+"/team?orgId="+testUUID || query["orgId"][0] != testB64 {
+		t.Fatalf("URL %s, caller's query %v", got, query)
+	}
 }
 
 func TestRequestFillsTheOperation(t *testing.T) {
