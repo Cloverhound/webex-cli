@@ -2146,7 +2146,7 @@ var MeetingsSlidoListComplianceEvents = &Operation{
 	Description: "Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)\n\nEvents capture who performed the action and on what resource.\n\nThe events are paginated by the server into pages of max 256 items per page without any order.\n\nThe events are available within 15 minutes after they happened.\n\nEvery resource has properties:\n* type - event type\n\n* ... event specific ids\n\n* ... event specific properties\n",
 	Method:      "GET", Host: HostWebex, Path: "/slido/compliance/events",
 	Params: []Param{
-		{Name: "sessionOrgId", In: InQuery, Flag: "session-org-id", Usage: "Webex organization UUID."},
+		{Name: "sessionOrgId", In: InQuery, Flag: "session-org-id", OrgUUID: true, Usage: "Webex organization UUID."},
 		{Name: "sessionId", In: InQuery, Flag: "session-id", Usage: "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`)."},
 		{Name: "start", In: InQuery, Flag: "start", Usage: "Pagination token. Returned in the response body as the `next` property."},
 	},
@@ -2682,7 +2682,7 @@ var MeetingsSlidosecurepremiumListComplianceEvents = &Operation{
 	Description: "Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)\n\nEvents capture who performed the action and on what resource.\n\nThe events are paginated by the server into pages of max 256 items per page without any order.\n\nThe events are available within 15 minutes after they happened.\n\nEvery resource has properties:\n* type - event type\n\n* ... event specific ids\n\n* ... event specific properties\n",
 	Method:      "GET", Host: HostWebex, Path: "/slido/compliance/events",
 	Params: []Param{
-		{Name: "sessionOrgId", In: InQuery, Flag: "session-org-id", Usage: "Webex organization UUID."},
+		{Name: "sessionOrgId", In: InQuery, Flag: "session-org-id", OrgUUID: true, Usage: "Webex organization UUID."},
 		{Name: "sessionId", In: InQuery, Flag: "session-id", Usage: "Webex meeting instance ID (`{meetingSeriesId}_I_{conferenceId}`)."},
 		{Name: "start", In: InQuery, Flag: "start", Usage: "Pagination token. Returned in the response body as the `next` property."},
 	},

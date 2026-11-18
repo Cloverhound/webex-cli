@@ -50,6 +50,16 @@ func TestA401RefreshesTheTokenAndRetriesOnce(t *testing.T) {
 	}
 }
 
+func TestARefreshCutOffByTheContextReturnsTheContextError(t *testing.T) {
+	srv, _ := statusServer(t, []int{401}, `{}`, nil)
+	ctx, cancel := context.WithCancel(context.Background())
+	c := &Client{Refresh: func(ctx context.Context) error { cancel(); return ctx.Err() }}
+	resp, err := c.Send(ctx, Request{Method: "GET", URL: srv.URL})
+	if !errors.Is(err, context.Canceled) || resp == nil || resp.Status != 401 {
+		t.Fatalf("resp %v, err %v", resp, err)
+	}
+}
+
 func TestAFailedRefreshReturnsThe401(t *testing.T) {
 	srv, seen := statusServer(t, []int{401}, `{"message":"expired"}`, nil)
 	c := &Client{Refresh: func(context.Context) error { return errors.New("no refresh token") }}

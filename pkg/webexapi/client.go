@@ -89,7 +89,10 @@ type Response struct {
 func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 	resp, err := c.attempt(ctx, r)
 	if resp != nil && resp.Status == http.StatusUnauthorized && c.Refresh != nil {
-		if c.Refresh(ctx) != nil {
+		if refreshErr := c.Refresh(ctx); refreshErr != nil {
+			if ctx.Err() != nil {
+				return resp, ctx.Err()
+			}
 			return resp, err
 		}
 		resp, err = c.attempt(ctx, r)
