@@ -1,55 +1,64 @@
 #!/usr/bin/env python3
-"""Generate Go CLI command files from api_spec.json.
+"""Generate the Webex API operation table from api_spec.json.
 
-Reads the enriched API spec and writes one .go file per group
-into cmd/calling/ and cmd/cc/ directories.
+Reads the enriched API spec and writes one pkg/webexops/zz_<area>.go file per
+collection, plus zz_areas.go, which lists them. internal/apicmd builds the CLI's
+commands from the table.
 """
 
 import json
 import os
 import re
 import subprocess
-import textwrap
 import paging
 from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
 SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
+# Every exported operation name and the route it was given to; see operation_ids.
+# Entries are only ever added.
+NAMES_PATH = os.path.join(SCRIPT_DIR, "operation_names.json")
+OPS_DIR = os.path.join(CLI_DIR, "pkg", "webexops")
 
-# Collection name → (subcommand package, parent var, base URL const, is_calling)
+# Collection name → (CLI area, default host, is_calling)
 COLLECTIONS = {
-    "Webex Cloud Calling": ("calling", "cmd.CallingCmd", "config.CallingBaseURL", True),
-    "Webex Contact Center": ("cc", "cmd.CcCmd", "config.CcBaseURL", False),
-    "Webex Admin":          ("admin", "cmd.AdminCmd", "config.CallingBaseURL", True),
-    "Webex Device":         ("device", "cmd.DeviceCmd", "config.CallingBaseURL", True),
-    "Webex Meetings":       ("meetings", "cmd.MeetingsCmd", "config.CallingBaseURL", True),
-    "Webex Messaging":      ("messaging", "cmd.MessagingCmd", "config.CallingBaseURL", True),
+    "Webex Cloud Calling": ("calling", "webex", True),
+    "Webex Contact Center": ("cc", "cc", False),
+    "Webex Admin":          ("admin", "webex", True),
+    "Webex Device":         ("device", "webex", True),
+    "Webex Meetings":       ("meetings", "webex", True),
+    "Webex Messaging":      ("messaging", "webex", True),
 }
 
+# webexops host constants, by the host names used here.
+HOSTS_GO = {
+    'webex': 'HostWebex', 'identity': 'HostIdentity', 'analytics': 'HostAnalytics',
+    'analytics-calling': 'HostAnalyticsCalling', 'cc': 'HostCC', 'ai-agent': 'HostAIAgent',
+}
 
 # Endpoints served from a different host than the rest of their collection.
 # The Postman collections use "{{baseUrl}}" for every request, so the real host
 # is not in the source data and has to be recorded here.
-# Collection name → URL path prefix → Go expression for the base URL.
+# Collection name → URL path prefix → host.
 BASE_URL_OVERRIDES = {
     "Webex Cloud Calling": {
-        "/v1/analytics/": "config.AnalyticsBaseURL",
+        "/v1/analytics/": "analytics",
         # Detailed Call History (CDR) — region-specific analytics FQDN.
-        "/cdr_feed": "config.AnalyticsCallingBaseURL()",
-        "/cdr_stream": "config.AnalyticsCallingBaseURL()",
+        "/cdr_feed": "analytics-calling",
+        "/cdr_stream": "analytics-calling",
     },
     "Webex Admin": {
-        # Analytics reports. These paths already include /v1, so the base URL
+        # Analytics reports. These paths already include /v1, so the host
         # deliberately has no version segment.
-        "/v1/analytics/": "config.AnalyticsBaseURL",
+        "/v1/analytics/": "analytics",
         # SCIM and archived users are served without the /v1 segment.
-        "/identity/scim/": "config.IdentityBaseURL",
-        "/identity/organizations/{orgId}/v1/": "config.IdentityBaseURL",
+        "/identity/scim/": "identity",
+        "/identity/organizations/{orgId}/v1/": "identity",
     },
     "Webex Contact Center": {
         # AI Agent Studio, from codegen/supplemental.
-        "/api/": "config.AiAgentBaseURL",
+        "/api/": "ai-agent",
     },
 }
 
@@ -60,18 +69,12 @@ REDACTED_ROUTES = {
     "Webex Contact Center": ("/api/",),
 }
 
-# Routes on APIs that Cisco neither documents nor supports. Their commands carry
-# PRIVATE_API_NOTE in --help and show aiagent.PrivateAPINotice once when run.
+# Routes on APIs that Cisco neither documents nor supports. The CLI cautions
+# about them in --help and once when run.
 # Collection name → URL path prefixes.
 PRIVATE_API_ROUTES = {
     "Webex Contact Center": ("/api/",),
 }
-
-PRIVATE_API_NOTE = (
-    "Caution: this command uses Webex AI Agent Studio's private API, which is not "
-    "documented or supported by Cisco and can change or stop working without notice. "
-    "Do not build production automation on it."
-)
 
 # AI Agent Studio selects the agent of a v1 call by the agent's runtime token.
 # The CLI looks the token up from --agent-id, so users never pass or see it.
@@ -91,7 +94,7 @@ def uses_agent_token(ep):
 
 
 def resolve_base_url(collection_name, path, default):
-    """Return the base URL expression for an endpoint (longest prefix wins)."""
+    """Return the host of an endpoint (longest prefix wins)."""
     overrides = BASE_URL_OVERRIDES.get(collection_name, {})
     match = ""
     for prefix in overrides:
@@ -100,20 +103,55 @@ def resolve_base_url(collection_name, path, default):
     return overrides[match] if match else default
 
 
-# Path params that are always the same value — hardcode instead of generating a flag.
+# How each org ID parameter is sent: 'uuid' is converted to the org UUID, and
+# 'webex' is sent as given, which is the base64 Webex org ID. Collection name →
+# parameter name → form. A parameter whose name looks like an org ID and that is
+# not listed stops codegen, because sending the wrong form fails only at run time.
+ORG_ID_FORMS = {
+    "Webex Contact Center": {"orgId": "uuid", "orgid": "uuid", "organizationId": "uuid", "X-ORGANIZATION-ID": "uuid"},
+    "Webex Meetings": {"orgId": "webex", "sessionOrgId": "uuid"},
+    "Webex Admin": {"orgId": "webex", "personOrgId": "webex", "onBehalfOfSubPartnerOrgId": "webex"},
+    "Webex Cloud Calling": {"orgId": "webex", "organizationId": "webex", "onBehalfOfSubPartnerOrgId": "webex"},
+    "Webex Device": {"orgId": "webex"},
+    "Webex Messaging": {"orgId": "webex", "organizationId": "webex"},
+}
+
+ORG_ID_NAME = re.compile(r'(?i)org(anization)?[-_]?id')
+
+# Routes that take the org UUID as orgId in any collection. The contacts note in
+# the Postman collection reads "orgId used in path are the org UUIDs".
+UUID_ORG_ROUTE_PREFIXES = ('/identity/scim/', '/identity/organizations/')
+UUID_ORG_ROUTE_PART = '/contacts/organizations/'
+
+
+def takes_org_uuid(collection_name, path, name):
+    """Whether a parameter takes the org UUID. Raises ValueError for an org ID
+    parameter that ORG_ID_FORMS does not list."""
+    if not ORG_ID_NAME.search(name):
+        return False
+    if name == 'orgId' and (path.startswith(UUID_ORG_ROUTE_PREFIXES) or UUID_ORG_ROUTE_PART in path):
+        return True
+    form = ORG_ID_FORMS.get(collection_name, {}).get(name)
+    if form is None:
+        raise ValueError(f'{collection_name} {path}: org ID parameter {name} has no form; '
+                         'add it to ORG_ID_FORMS in codegen/generate_cli.py')
+    return form == 'uuid'
+
+
+# Path params that are always the same value — fixed instead of given by a flag.
 HARDCODED_PATH_PARAMS = {
     "projectId": "5e5c9ad6d61f870d6d778c1b",
 }
 
-# Groups to skip during codegen — hand-written replacements exist (custom_*.go).
+# Groups left out of the table — hand-written replacements exist (custom_*.go).
 SKIP_GROUPS = {
     "Webex Contact Center": {"search"},
 }
 
 # Per-command skip list, keyed by collection → group → set of command names.
-# These require multipart/form-data file uploads that the generator cannot produce
-# (it emits JSON or empty POST/PUT bodies). Each is replaced by a hand-written
-# custom_*.go implementation in the same package.
+# These require multipart/form-data file uploads that the table cannot describe
+# (it sends JSON or empty POST/PUT bodies). Each is replaced by a hand-written
+# custom_*.go implementation in the area's command package.
 SKIP_COMMANDS = {
     # Same JSON flags, but files may require a multipart upload.
     # Replaced by: cmd/messaging/custom_messages.go
@@ -166,10 +204,10 @@ def kebab_to_camel(name):
 
 
 def kebab_to_go_var(name):
-    """Convert kebab-case to a Go variable name (camelCase, safe)."""
+    """The key that decides which flags share a value: two parameters whose
+    names give the same key share the first one's flag."""
     parts = name.split('-')
     var = parts[0] + ''.join(p.capitalize() for p in parts[1:])
-    # Avoid Go keywords
     if var in ('type', 'range', 'map', 'func', 'var', 'return', 'select',
                'default', 'switch', 'case', 'break', 'continue', 'interface',
                'package', 'import', 'go', 'defer', 'chan', 'struct'):
@@ -182,17 +220,17 @@ def kebab_to_pascal(name):
     return ''.join(p.capitalize() for p in name.split('-'))
 
 
-def escape_go_string(s):
-    """Escape a string for use in Go backtick raw string literal."""
-    # Backtick strings can't contain backticks — use double-quoted with escaping
-    if '`' in s:
-        return json.dumps(s)  # JSON double-quoted escaping works for Go
-    return '`' + s + '`'
+def go_string(s):
+    """A Go double-quoted string literal."""
+    return json.dumps(s, ensure_ascii=False)
 
 
-def escape_go_double_quoted(s):
-    """Escape a string for Go double-quoted literal."""
-    return json.dumps(s)
+def go_identifier(*names):
+    """A Go exported identifier from kebab-case names."""
+    words = []
+    for name in names:
+        words.extend(w for w in re.split(r'[^A-Za-z0-9]+', name) if w)
+    return ''.join(w[0].upper() + w[1:] for w in words)
 
 
 # CC API paths where --from/--to expect epoch milliseconds (not ISO 8601).
@@ -203,99 +241,10 @@ EPOCH_MS_PATHS = {
     "/v1/tasks",
 }
 
-
-def generate_group_file(group, endpoints, pkg, parent_var, base_url_const, is_calling, collection_name=""):
-    """Generate Go source for one group's commands."""
-    group_var = kebab_to_camel(group) + "Cmd"
-    group_pascal = kebab_to_pascal(group)
-
-    lines = []
-    lines.append('// Code generated by codegen/generate_cli.py; DO NOT EDIT.')
-    lines.append('')
-    lines.append(f'package {pkg}')
-    lines.append('')
-    lines.append('import (')
-    lines.append('\t"fmt"')
-
-    # Check if we need strconv
-    needs_strconv = False
-    needs_strings = False
-    needs_timeutil = False
-    for ep in endpoints:
-        for f in ep.get('body_fields', []):
-            if f['type'] in ('int64', 'float64'):
-                needs_strconv = True
-            if f['type'] == '[]string':
-                needs_strings = True
-        if any(p['name'] == 'from' for p in ep.get('query_params', [])):
-            needs_timeutil = True
-    needs_aiagent = any(redacts_secrets(collection_name, ep['path']) or uses_agent_token(ep)
-                        or is_private_api(collection_name, ep['path'])
-                        for ep in endpoints)
-
-    if needs_strconv:
-        lines.append('\t"strconv"')
-    if needs_strings:
-        lines.append('\t"strings"')
-
-    lines.append('')
-    lines.append('\tcmd "github.com/Cloverhound/webex-cli/cmd"')
-    if needs_aiagent:
-        lines.append('\t"github.com/Cloverhound/webex-cli/internal/aiagent"')
-    lines.append('\t"github.com/Cloverhound/webex-cli/internal/client"')
-    lines.append('\t"github.com/Cloverhound/webex-cli/internal/config"')
-    lines.append('\t"github.com/Cloverhound/webex-cli/internal/output"')
-    if needs_timeutil:
-        lines.append('\t"github.com/Cloverhound/webex-cli/internal/timeutil"')
-    lines.append('\t"github.com/spf13/cobra"')
-    lines.append(')')
-    lines.append('')
-
-    # Silence import warnings - use a reference
-    lines.append('// Ensure imports are used.')
-    lines.append('var _ = fmt.Sprintf')
-    lines.append('var _ = config.Token')
-    lines.append('var _ = output.Print')
-    if needs_strconv:
-        lines.append('var _ = strconv.Itoa')
-    if needs_strings:
-        lines.append('var _ = strings.Join')
-    if needs_timeutil:
-        lines.append('var _ = timeutil.ParseLastISO')
-    lines.append('')
-
-    lines.append(f'var {group_var} = &cobra.Command{{')
-    lines.append(f'\tUse:   "{group}",')
-    aliases = GROUP_ALIASES.get(collection_name, {}).get(group, [])
-    if aliases:
-        lines.append('\tAliases: []string{' + ', '.join(escape_go_double_quoted(a) for a in aliases) + '},')
-    short = GROUP_DESCRIPTIONS.get(collection_name, {}).get(group, f'{group_pascal} commands')
-    lines.append(f'\tShort: "{short}",')
-    lines.append(f'}}')
-    lines.append('')
-    lines.append('func init() {')
-    lines.append(f'\t{parent_var}.AddCommand({group_var})')
-    lines.append('')
-
-    skip_cmds = SKIP_COMMANDS.get(collection_name, {}).get(group, set())
-    for ep in endpoints:
-        if ep['command'] in skip_cmds:
-            print(f"    Skipping command '{ep['command']}' (custom override)")
-            continue
-        ep_base_url = resolve_base_url(collection_name, ep['path'], base_url_const)
-        lines.extend(generate_command(ep, group_var, ep_base_url, is_calling,
-                                      redact=redacts_secrets(collection_name, ep['path']),
-                                      private=is_private_api(collection_name, ep['path'])))
-        lines.append('')
-
-    lines.append('}')
-
-    return '\n'.join(lines) + '\n'
-
-
-PAGING_FAMILY = {'config.CcBaseURL': 'cc', 'config.AiAgentBaseURL': 'aiagent'}
-PAGING_MODES_GO = {'single': 'client.Single', 'link': 'client.Link', 'pages': 'client.Pages', 'offset': 'client.Offset'}
-# Field order of the generated client.Paging literal.
+# Paging families by host; every other host pages as the main Webex APIs do.
+PAGING_FAMILY = {'cc': 'cc', 'ai-agent': 'aiagent'}
+PAGING_MODES_GO = {'single': 'webexapi.Single', 'link': 'webexapi.Link', 'pages': 'webexapi.Pages', 'offset': 'webexapi.Offset'}
+# Field order of the generated webexapi.Paging literal.
 PAGING_FIELDS_GO = (('page', 'Page'), ('start', 'Start'), ('first', 'First'), ('size', 'Size'), ('pageSize', 'PageSize'),
                     ('items', 'Items'), ('omitEmpty', 'OmitEmpty'), ('totalPages', 'TotalPages'),
                     ('totalItems', 'TotalItems'), ('linkQueryOnly', 'LinkQueryOnly'), ('query', 'Query'),
@@ -304,10 +253,10 @@ UNPAGED_LISTS = []
 PAGED_ENDPOINTS = []
 
 
-def paging_literal(ep, base_url_expr, overrides):
-    """The client.Paging literal --paginate reads this endpoint with, or None
-    when it is not a list or its item field is unknown."""
-    family = PAGING_FAMILY.get(base_url_expr, 'webex')
+def paging_literal(ep, host, overrides):
+    """The webexapi.Paging literal a list is read with, or None when it is not a
+    list or its item field is unknown."""
+    family = PAGING_FAMILY.get(host, 'webex')
     PAGED_ENDPOINTS.append((ep, family))
     spec = paging.paging(ep, family, overrides)
     if spec is None:
@@ -325,348 +274,367 @@ def paging_literal(ep, base_url_expr, overrides):
         elif isinstance(value, int):
             fields.append(f'{name}: {value}')
         elif isinstance(value, dict):
-            pairs = ', '.join(f'{escape_go_double_quoted(k)}: {escape_go_double_quoted(v)}' for k, v in value.items())
+            pairs = ', '.join(f'{go_string(k)}: {go_string(v)}' for k, v in value.items())
             fields.append(f'{name}: map[string]string{{{pairs}}}')
         else:
-            fields.append(f'{name}: {escape_go_double_quoted(value)}')
-    return 'client.Paging{' + ', '.join(fields) + '}'
+            fields.append(f'{name}: {go_string(value)}')
+    return '&webexapi.Paging{' + ', '.join(fields) + '}'
 
 
-def generate_command(ep, group_var, base_url_expr, is_calling, redact=False, private=False, paging_overrides=None):
-    """Generate Go source for one command within a group's init()."""
-    lines = []
-    indent = '\t'
-
-    cmd_name = ep['command']
-    method = ep['method']
+def operation(ep, collection_name, host, is_calling, paging_overrides=None):
+    """The operation-table entry for one endpoint, as a dict."""
     path = ep['path']
     path_params = ep.get('path_params', [])
     query_params = ep.get('query_params', [])
     body_fields = ep.get('body_fields', [])
     complex_body = ep.get('complex_body', False)
-    has_body = ep.get('has_body', False)
-    description = ep.get('description', '')
-    if private:
-        description = f'{description}\n\n{PRIVATE_API_NOTE}' if description else PRIVATE_API_NOTE
-    extra_headers = ep.get('extra_headers', [])
-    original_name = ep.get('original_name', cmd_name)
-    has_from = any(p['name'] == 'from' for p in query_params)
+    method = ep['method']
 
-    # Normalize orgId → orgid so auto-populate in root.go resolves to UUID format.
-    # Applies to CC commands (is_calling=False) and to any endpoint under
-    # /contacts/organizations/ which explicitly requires UUID despite being in a
-    # non-CC collection (Postman note: "orgId used in path are the org UUIDs").
-    # For path params, rename both the flag and the param key (path uses {orgid}).
-    # For query params, only rename the flag; keep the original API key (orgId).
-    needs_uuid_orgid = not is_calling or '/contacts/organizations/' in path
+    # The org parameter of Contact Center and contacts routes has the flag --orgid,
+    # which the CLI fills with the UUID; the parameter keeps its API name. Identity
+    # routes keep --org-id, filled with the base64 ID, and convert it.
+    needs_uuid_orgid = not is_calling or UUID_ORG_ROUTE_PART in path
     if needs_uuid_orgid:
-        path = path.replace('{orgId}', '{orgid}')
-        for p in path_params:
+        for p in path_params + query_params:
             if p['name'] == 'orgId':
-                p['name'] = 'orgid'
-        for p in query_params:
-            if p['name'] == 'orgId':
-                p['_api_name'] = 'orgId'  # preserve original for API call
+                p['_api_name'] = 'orgId'
                 p['name'] = 'orgid'
 
-    # Block scope
-    lines.append(f'{indent}{{ // {cmd_name}')
-    indent2 = indent + '\t'
+    # Parameters whose names give the same key share the first one's flag.
+    flags = {}
 
-    # Track declared variable names and flag names to avoid duplicates
-    declared_vars = set()
-    declared_flags = set()
+    def flag_for(name, flag):
+        key = kebab_to_go_var(camel_to_kebab(name))
+        return flags.setdefault(key, flag)
 
-    # Declare flag variables
-    all_flags = []
+    def org_uuid(p):
+        return takes_org_uuid(collection_name, path, p.get('_api_name', p['name']))
 
+    params = []
     for p in path_params:
         if p['name'] in HARDCODED_PATH_PARAMS:
-            continue  # hardcoded — no flag needed
-        var = kebab_to_go_var(camel_to_kebab(p['name']))
-        flag = camel_to_kebab(p['name'])
-        if var not in declared_vars:
-            declared_vars.add(var)
-            declared_flags.add(flag)
-            all_flags.append((var, 'string', flag, p.get('description', ''), True, p['name']))
-            lines.append(f'{indent2}var {var} string')
-
-    for p in query_params:
-        var = kebab_to_go_var(camel_to_kebab(p['name']))
-        flag = camel_to_kebab(p['name'])
-        if var not in declared_vars:
-            declared_vars.add(var)
-            declared_flags.add(flag)
-            all_flags.append((var, 'string', flag, p.get('description', ''), False, p['name']))
-            lines.append(f'{indent2}var {var} string')
-
-    for h in extra_headers:
-        if h['name'] == AGENT_TOKEN_HEADER:
-            # Shares the variable with an {agentId} path parameter when there is one.
-            if 'agentId' not in declared_vars:
-                declared_vars.add('agentId')
-                declared_flags.add('agent-id')
-                all_flags.append(('agentId', 'string', 'agent-id', h.get('description', ''), True, 'agentId'))
-                lines.append(f'{indent2}var agentId string')
+            params.append({'name': p['name'], 'in': 'InPath', 'value': HARDCODED_PATH_PARAMS[p['name']]})
             continue
-        var = kebab_to_go_var(camel_to_kebab(h['name']))
-        flag = camel_to_kebab(h['name'])
-        if var not in declared_vars:
-            declared_vars.add(var)
-            declared_flags.add(flag)
-            all_flags.append((var, 'header', flag, h.get('description', ''), False, h['name']))
-            lines.append(f'{indent2}var {var} string')
+        params.append({
+            'name': p.get('_api_name', p['name']), 'in': 'InPath', 'flag': flag_for(p['name'], camel_to_kebab(p['name'])),
+            'usage': p.get('description', ''), 'required': True, 'orgUUID': org_uuid(p),
+        })
+    for p in query_params:
+        params.append({
+            'name': p.get('_api_name', p['name']), 'in': 'InQuery',
+            'flag': flag_for(p['name'], camel_to_kebab(p['name'])), 'usage': p.get('description', ''),
+            'orgUUID': org_uuid(p),
+        })
+    for h in ep.get('extra_headers', []):
+        if h['name'] == AGENT_TOKEN_HEADER:
+            # Shares the --agent-id flag with an {agentId} path parameter when there is one.
+            params.append({'name': h['name'], 'in': 'InAgentToken', 'flag': flags.setdefault('agentId', 'agent-id'),
+                           'usage': h.get('description', ''), 'required': True})
+            continue
+        params.append({'name': h['name'], 'in': 'InHeader', 'flag': flag_for(h['name'], camel_to_kebab(h['name'])),
+                       'usage': h.get('description', ''), 'orgUUID': org_uuid(h)})
 
-    # Body flags — skip fields that duplicate path/query param names
-    body_flag_vars = []
-    if not complex_body:
-        for f in body_fields:
-            flag_name = camel_to_kebab(f['name'])
-            go_type = f['type']
-            var = kebab_to_go_var(flag_name)
+    body = None
+    if ep.get('has_body', False):
+        fields = []
+        if not complex_body:
+            for f in body_fields:
+                key = kebab_to_go_var(camel_to_kebab(f['name']))
+                if key in flags:
+                    # A field that repeats a parameter's name sends that parameter's
+                    # value, when both are strings.
+                    if f['type'] == 'string':
+                        fields.append({'name': f['name'], 'flag': flags[key], 'type': 'string'})
+                    continue
+                flags[key] = camel_to_kebab(f['name'])
+                fields.append({'name': f['name'], 'flag': flags[key], 'type': f['type']})
+        body = fields
 
-            if var in declared_vars:
-                # Body field duplicates a param — use param var for body too,
-                # but only if it's a string (query/path params are always string)
-                if go_type == 'string':
-                    body_flag_vars.append((var, go_type, flag_name, f['name'], True))
+    time_range = None
+    # --last sets both ends of a range, so it needs both parameters.
+    if {'from', 'to'} <= {p['name'] for p in query_params}:
+        time_range = 'TimeEpochMs' if path in EPOCH_MS_PATHS else 'TimeISO'
+
+    return {
+        'command': ep['command'], 'aliases': ep.get('aliases') or [],
+        'summary': ep.get('original_name', ep['command']), 'description': ep.get('description', ''),
+        'method': method, 'host': host, 'path': path, 'params': params, 'body': body,
+        'paging': paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
+        # This endpoint returns a non-JSON deletion acknowledgement. Restricting
+        # Accept to application/json causes the service to reject it with HTTP 406.
+        'accept': '*/*' if method == 'DELETE' and path == '/v1/usage-reports/{reportId}' else '',
+        'redact': redacts_secrets(collection_name, ep['path']),
+        'private': is_private_api(collection_name, ep['path']),
+    }
+
+
+def route_word(segment):
+    """A path segment as part of a Go name: {callParkId} is ByCallParkId."""
+    if segment.startswith('{'):
+        return 'By' + go_identifier(segment.strip('{}'))
+    return go_identifier(segment)
+
+
+def route_name(area, method, path):
+    """The Go name of an operation: its area, method and path, such as
+    CcGetOrganizationByOrgidV2Team."""
+    return go_identifier(area) + method.capitalize() + ''.join(route_word(s) for s in path.strip('/').split('/'))
+
+
+def request_shape(ep):
+    """What a listing says a request carries: its parameter and body field names."""
+    return (tuple(sorted(p['name'] for p in ep.get('path_params', []))),
+            tuple(sorted(p['name'] for p in ep.get('query_params', []))),
+            tuple(sorted(h['name'] for h in ep.get('extra_headers', []))),
+            tuple(sorted((f['name'], f['type']) for f in ep.get('body_fields', []))),
+            bool(ep.get('has_body')), bool(ep.get('complex_body')))
+
+
+def operation_ids(area, endpoints, names=None):
+    """The Go names of an area's listings, in order, and the routes to export as
+    one operation combining their listings: exported name → listing indexes.
+
+    A name is made from the operation's route alone, so it means the same request
+    whatever the CLI commands are called and in whatever order the collection lists
+    them. A route the collection lists more than once is exported once, on its first
+    listing, when every listing sends the same request; otherwise it is exported as
+    an operation combining them, which is not a CLI command. The other listings are
+    unexported, for the CLI's commands.
+
+    names maps each name ever exported to its route ("GET /path"). A name given to
+    one route is never exported for another, since programs built against it would
+    call the new route. Routes spelled alike that no name was given to are not
+    exported, since neither name would say which route it is."""
+    names = names if names is not None else {}
+    routes = {}
+    for i, ep in enumerate(endpoints):
+        routes.setdefault((ep['method'], ep['path']), []).append(i)
+    spellings = {}
+    for method, path in routes:
+        spellings.setdefault(route_name(area, method, path), []).append((method, path))
+    ids = [None] * len(endpoints)
+    combined = {}
+    for (method, path), listings in routes.items():
+        name = route_name(area, method, path)
+        unexported = f'{name[0].lower()}{name[1:]}'
+        owner = names.get(name)
+        blocked = None
+        if owner is None and len(spellings[name]) > 1:
+            blocked = f"{' and '.join(f'{m} {p}' for m, p in spellings[name])} are all spelled {name}; none is exported"
+        elif owner is not None and owner != f'{method} {path}':
+            blocked = f'{method} {path} is spelled {name}, which {owner} was given; it is not exported'
+        if blocked:
+            print(f'  WARNING: {blocked}')
+            route = spellings[name].index((method, path)) + 1
+            for n, i in enumerate(listings, 1):
+                ids[i] = f'{unexported}_route{route}_{n}'
+            continue
+        one_request = len({request_shape(endpoints[i]) for i in listings}) == 1
+        for n, i in enumerate(listings, 1):
+            ids[i] = name if one_request and n == 1 else f'{unexported}_{n}'
+        if not one_request:
+            combined[name] = listings
+    return ids, combined
+
+
+def combine_operations(ops):
+    """One operation with every listing's parameters and body fields, or None
+    when two listings put a parameter in different places or give a body field
+    different types."""
+    first = ops[0]
+    params, places = [], {}
+    for op in ops:
+        for p in op['params']:
+            if p['name'] in places:
+                if places[p['name']] != p['in']:
+                    return None
                 continue
-
-            declared_vars.add(var)
-            declared_flags.add(flag_name)
-            body_flag_vars.append((var, go_type, flag_name, f['name'], False))
-
-            if go_type == 'string':
-                lines.append(f'{indent2}var {var} string')
-            elif go_type == 'int64':
-                lines.append(f'{indent2}var {var} int64')
-            elif go_type == 'float64':
-                lines.append(f'{indent2}var {var} float64')
-            elif go_type == 'bool':
-                lines.append(f'{indent2}var {var} bool')
-            elif go_type == '[]string':
-                lines.append(f'{indent2}var {var} []string')
-
-    # --last convenience flag for endpoints with a 'from' query param
-    if has_from:
-        lines.append(f'{indent2}var last string')
-
-    # --body and --body-file for POST/PUT/PATCH or complex bodies
-    if has_body:
-        lines.append(f'{indent2}var bodyRaw string')
-        lines.append(f'{indent2}var bodyFile string')
-
-    lines.append(f'{indent2}cmd := &cobra.Command{{')
-    lines.append(f'{indent2}\tUse:   {escape_go_double_quoted(cmd_name)},')
-    if ep.get('aliases'):
-        lines.append(f'{indent2}\tAliases: []string{{' + ', '.join(escape_go_double_quoted(a) for a in ep['aliases']) + '},')
-    lines.append(f'{indent2}\tShort: {escape_go_double_quoted(original_name)},')
-
-    if description:
-        lines.append(f'{indent2}\tLong:  {escape_go_string(description)},')
-
-    # RunE
-    lines.append(f'{indent2}\tRunE: func(cmd *cobra.Command, args []string) error {{')
-    indent3 = indent2 + '\t\t'
-
-    if private:
-        lines.append(f'{indent3}aiagent.PrivateAPINotice()')
-    lines.append(f'{indent3}req := client.NewRequest({base_url_expr}, "{method}", {escape_go_double_quoted(path)})')
-    if redact:
-        lines.append(f'{indent3}req.RedactErrors(aiagent.RedactSecrets)')
-
-    # This endpoint returns a non-JSON deletion acknowledgement. Restricting
-    # Accept to application/json causes the service to reject it with HTTP 406.
-    if method == 'DELETE' and path == '/v1/usage-reports/{reportId}':
-        lines.append(f'{indent3}req.Header("Accept", "*/*")')
-
-    # --last → from/to conversion
-    if has_from:
-        parse_func = 'timeutil.ParseLastEpochMs' if path in EPOCH_MS_PATHS else 'timeutil.ParseLastISO'
-        lines.append(f'{indent3}if last != "" {{')
-        lines.append(f'{indent3}\tvar err error')
-        lines.append(f'{indent3}\tfrom, to, err = {parse_func}(last)')
-        lines.append(f'{indent3}\tif err != nil {{')
-        lines.append(f'{indent3}\t\treturn err')
-        lines.append(f'{indent3}\t}}')
-        lines.append(f'{indent3}}}')
-
-    # Path params
-    for p in path_params:
-        if p['name'] in HARDCODED_PATH_PARAMS:
-            val = HARDCODED_PATH_PARAMS[p['name']]
-            lines.append(f'{indent3}req.PathParam("{p["name"]}", "{val}")')
-        else:
-            var = kebab_to_go_var(camel_to_kebab(p['name']))
-            # Identity routes take the org UUID, but --org-id is filled with the base64 org ID.
-            if p['name'] == 'orgId' and path.startswith(('/identity/scim/', '/identity/organizations/')):
-                var = f'config.DecodeOrgID({var})'
-            lines.append(f'{indent3}req.PathParam("{p["name"]}", {var})')
-
-    # Query params
-    for p in query_params:
-        var = kebab_to_go_var(camel_to_kebab(p['name']))
-        api_name = p.get('_api_name', p['name'])
-        lines.append(f'{indent3}req.QueryParam("{api_name}", {var})')
-
-    # Extra headers
-    for h in extra_headers:
-        if h['name'] == AGENT_TOKEN_HEADER:
-            lines.append(f'{indent3}botToken, err := aiagent.BotToken(agentId)')
-            lines.append(f'{indent3}if err != nil {{')
-            lines.append(f'{indent3}\treturn err')
-            lines.append(f'{indent3}}}')
-            lines.append(f'{indent3}req.Header("{AGENT_TOKEN_HEADER}", botToken)')
+            places[p['name']] = p['in']
+            params.append(dict(p, required=p.get('required', False) and all(
+                any(q['name'] == p['name'] and q.get('required') for q in other['params']) for other in ops)))
+    body, types = None, {}
+    for op in ops:
+        if op['body'] is None:
             continue
-        var = kebab_to_go_var(camel_to_kebab(h['name']))
-        lines.append(f'{indent3}req.Header("{h["name"]}", {var})')
+        body = body if body is not None else []
+        for f in op['body']:
+            if types.setdefault(f['name'], f['type']) != f['type']:
+                return None
+            if not any(b['name'] == f['name'] for b in body):
+                body.append(f)
+    pagings = {op['paging'] for op in ops if op['paging']}
+    ranges = {op['timeRange'] for op in ops if op['timeRange']}
+    if len(pagings) > 1 or len(ranges) > 1:
+        return None
+    return dict(first, command='', aliases=[], params=params, body=body,
+                paging=next(iter(pagings), None), timeRange=next(iter(ranges), None),
+                redact=any(op['redact'] for op in ops), private=any(op['private'] for op in ops))
 
-    # Body handling
-    if has_body:
-        lines.append(f'{indent3}if bodyFile != "" {{')
-        lines.append(f'{indent3}\tif err := req.SetBodyFile(bodyFile); err != nil {{')
-        lines.append(f'{indent3}\t\treturn err')
-        lines.append(f'{indent3}\t}}')
-        lines.append(f'{indent3}}} else if bodyRaw != "" {{')
-        lines.append(f'{indent3}\treq.SetBodyRaw(bodyRaw)')
-        if not complex_body and body_flag_vars:
-            lines.append(f'{indent3}}} else {{')
-            for var, go_type, flag_name, orig_name, *rest in body_flag_vars:
-                if go_type == 'string':
-                    lines.append(f'{indent3}\treq.BodyString("{orig_name}", {var})')
-                elif go_type == 'int64':
-                    lines.append(f'{indent3}\treq.BodyInt("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
-                elif go_type == 'float64':
-                    lines.append(f'{indent3}\treq.BodyFloat("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
-                elif go_type == 'bool':
-                    lines.append(f'{indent3}\treq.BodyBool("{orig_name}", {var}, cmd.Flags().Changed("{flag_name}"))')
-                elif go_type == '[]string':
-                    lines.append(f'{indent3}\treq.BodyStringSlice("{orig_name}", {var})')
-        lines.append(f'{indent3}}}')
 
-    paging_go = paging_literal(ep, base_url_expr, paging_overrides)
-    if paging_go is not None:
-        lines.append(f'{indent3}if config.Paginate() {{')
-        lines.append(f'{indent3}\tresp, statusCode, err := req.DoPaginated({paging_go})')
-        lines.append(f'{indent3}\tif err != nil {{')
-        lines.append(f'{indent3}\t\treturn err')
-        lines.append(f'{indent3}\t}}')
-        if redact:
-            lines.append(f'{indent3}\tresp = aiagent.RedactSecrets(resp)')
-        lines.append(f'{indent3}\treturn output.Print(resp, statusCode)')
-        lines.append(f'{indent3}}}')
-
-    lines.append(f'{indent3}resp, statusCode, err := req.Do()')
-    lines.append(f'{indent3}if err != nil {{')
-    lines.append(f'{indent3}\treturn err')
-    lines.append(f'{indent3}}}')
-    if redact:
-        lines.append(f'{indent3}resp = aiagent.RedactSecrets(resp)')
-    lines.append(f'{indent3}return output.Print(resp, statusCode)')
-
-    lines.append(f'{indent2}\t}},')
-    lines.append(f'{indent2}}}')
-
-    # Register flags
-    for var, ftype, flag_name, desc, required, orig in all_flags:
-        desc_escaped = desc.replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ')
-        if ftype == 'header':
-            lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "{desc_escaped}")')
+def operation_literal(op_id, area, group, op):
+    """Go source declaring one operation."""
+    lines = [f'// {op_id} is {go_string(op["summary"])}: {op["method"]} {op["path"]}.',
+             f'var {op_id} = &Operation{{',
+             f'\tID: {go_string(op_id)}, Area: {go_string(area)}, Group: {go_string(group)}, Command: {go_string(op["command"])},']
+    if op['aliases']:
+        lines.append('\tAliases: []string{' + ', '.join(go_string(a) for a in op['aliases']) + '},')
+    lines.append(f'\tSummary: {go_string(op["summary"])},')
+    if op['description']:
+        lines.append(f'\tDescription: {go_string(op["description"])},')
+    lines.append(f'\tMethod: {go_string(op["method"])}, Host: {HOSTS_GO[op["host"]]}, Path: {go_string(op["path"])},')
+    if op['params']:
+        lines.append('\tParams: []Param{')
+        for p in op['params']:
+            fields = [f'Name: {go_string(p["name"])}', f'In: {p["in"]}']
+            if p.get('value'):
+                fields.append(f'Value: {go_string(p["value"])}')
+            else:
+                fields.append(f'Flag: {go_string(p["flag"])}')
+            if p.get('required'):
+                fields.append('Required: true')
+            if p.get('orgUUID'):
+                fields.append('OrgUUID: true')
+            if p.get('usage'):
+                fields.append(f'Usage: {go_string(p["usage"])}')
+            lines.append('\t\t{' + ', '.join(fields) + '},')
+        lines.append('\t},')
+    if op['body'] is not None:
+        if op['body']:
+            lines.append('\tBody: &Body{Fields: []BodyField{')
+            for f in op['body']:
+                lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}}},')
+            lines.append('\t}},')
         else:
-            lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "{desc_escaped}")')
-        if required:
-            lines.append(f'{indent2}cmd.MarkFlagRequired("{flag_name}")')
-
-    # Body field flags — skip those that reuse a param/query variable
-    if not complex_body:
-        for var, go_type, flag_name, orig_name, *rest in body_flag_vars:
-            is_reused = rest[0] if rest else False
-            if is_reused:
-                continue  # already registered as a param/query flag
-            if go_type == 'string':
-                lines.append(f'{indent2}cmd.Flags().StringVar(&{var}, "{flag_name}", "", "")')
-            elif go_type == 'int64':
-                lines.append(f'{indent2}cmd.Flags().Int64Var(&{var}, "{flag_name}", 0, "")')
-            elif go_type == 'float64':
-                lines.append(f'{indent2}cmd.Flags().Float64Var(&{var}, "{flag_name}", 0, "")')
-            elif go_type == 'bool':
-                lines.append(f'{indent2}cmd.Flags().BoolVar(&{var}, "{flag_name}", false, "")')
-            elif go_type == '[]string':
-                lines.append(f'{indent2}cmd.Flags().StringSliceVar(&{var}, "{flag_name}", nil, "")')
-
-    # --body and --body-file
-    if has_body:
-        lines.append(f'{indent2}cmd.Flags().StringVar(&bodyRaw, "body", "", "Raw JSON body")')
-        lines.append(f'{indent2}cmd.Flags().StringVar(&bodyFile, "body-file", "", "Path to JSON body file")')
-
-    # --last convenience flag
-    if has_from:
-        lines.append(f'{indent2}cmd.Flags().StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")')
-
-    lines.append(f'{indent2}{group_var}.AddCommand(cmd)')
-    lines.append(f'{indent}}}')
-
+            lines.append('\tBody: &Body{},')
+    if op['paging']:
+        lines.append(f'\tPaging: {op["paging"]},')
+    if op['timeRange']:
+        lines.append(f'\tTimeRange: {op["timeRange"]},')
+    if op['accept']:
+        lines.append(f'\tAccept: {go_string(op["accept"])},')
+    if op['redact']:
+        lines.append('\tRedact: true,')
+    if op['private']:
+        lines.append('\tPrivate: true,')
+    lines.append('}')
     return lines
+
+
+def generate_area_file(area, collection_name, host, is_calling, groups, paging_overrides=None, names=None):
+    """Go source for one area's groups and operations, and its counts. names is
+    operation_ids' record of exported names, and gains this area's."""
+    names = names if names is not None else {}
+    group_lines, kept = [], []
+    skip_groups = SKIP_GROUPS.get(collection_name, set())
+    for group_data in groups:
+        group = group_data['group']
+        endpoints = group_data['endpoints']
+        if not endpoints:
+            continue
+        if group in skip_groups:
+            print(f"  Skipping group '{group}' (hand-written override)")
+            continue
+        aliases = GROUP_ALIASES.get(collection_name, {}).get(group, [])
+        summary = GROUP_DESCRIPTIONS.get(collection_name, {}).get(group, f'{kebab_to_pascal(group)} commands')
+        fields = [f'Area: {go_string(area)}', f'Name: {go_string(group)}']
+        if aliases:
+            fields.append('Aliases: []string{' + ', '.join(go_string(a) for a in aliases) + '}')
+        fields.append(f'Summary: {go_string(summary)}')
+        group_lines.append('\t{' + ', '.join(fields) + '},')
+
+        skip_cmds = SKIP_COMMANDS.get(collection_name, {}).get(group, set())
+        for ep in endpoints:
+            if ep['command'] in skip_cmds:
+                print(f"    Skipping command '{ep['command']}' (custom override)")
+            else:
+                kept.append((group, ep))
+
+    op_ids, combined = operation_ids(area, [ep for _, ep in kept], names)
+    decls, ops = [], []
+    for (group, ep), op_id in zip(kept, op_ids):
+        host_of = resolve_base_url(collection_name, ep['path'], host)
+        op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
+        ops.append(op)
+        if op_id[0].isupper():
+            names[op_id] = f"{op['method']} {op['path']}"
+        decls.append('')
+        decls.extend(operation_literal(op_id, area, group, op))
+    for name, listings in combined.items():
+        op = combine_operations([ops[i] for i in listings])
+        if op is None:
+            print(f"  WARNING: the listings of {ops[listings[0]]['method']} {ops[listings[0]]['path']} "
+                  "disagree on a parameter's place or a field's type; it is not exported")
+            continue
+        names[name] = f"{op['method']} {op['path']}"
+        literal = operation_literal(name, area, kept[listings[0]][0], op)
+        literal.insert(1, '// It has the parameters of every listing of the route, and is not a CLI command.')
+        decls.append('')
+        decls.extend(literal)
+
+    lines = ['// Code generated by codegen/generate_cli.py; DO NOT EDIT.', '',
+             'package webexops', '', 'import "github.com/Cloverhound/webex-cli/pkg/webexapi"', '',
+             'var _ = webexapi.Single', '',
+             f'// {area}Groups are the {collection_name} command groups.',
+             f'var {area}Groups = []Group{{', *group_lines, '}', '',
+             f'// {area}Operations are the {collection_name} operations, in collection order.',
+             f'var {area}Operations = []*Operation{{', *[f'\t{i},' for i in op_ids], '}']
+    lines.extend(decls)
+    return '\n'.join(lines) + '\n', len(group_lines), len(op_ids)
+
+
+def generate_areas_file(areas):
+    """Go source listing every area's groups and operations."""
+    lines = ['// Code generated by codegen/generate_cli.py; DO NOT EDIT.', '', 'package webexops', '',
+             'var areas = map[string]area{']
+    for area in areas:
+        lines.append(f'\t{go_string(area)}: {{{area}Groups, {area}Operations}},')
+    lines.append('}')
+    return '\n'.join(lines) + '\n'
+
+
+def load_names(path):
+    """The record of exported names. It cannot be rebuilt from the collections,
+    so a missing file stops codegen rather than starting a new record."""
+    if not os.path.exists(path):
+        raise SystemExit(f"{path} is missing; restore it from git before running codegen.")
+    with open(path) as f:
+        return json.load(f)
 
 
 def main():
     with open(SPEC_PATH) as f:
         spec = json.load(f)
+    names = load_names(NAMES_PATH)
 
+    for f in os.listdir(OPS_DIR):
+        if f.startswith('zz_') and f.endswith('.go'):
+            os.remove(os.path.join(OPS_DIR, f))
+
+    areas = []
     for collection_name, groups in spec.items():
         if collection_name not in COLLECTIONS:
             print(f"Skipping unknown collection: {collection_name}")
             continue
+        area, host, is_calling = COLLECTIONS[collection_name]
+        source, group_count, op_count = generate_area_file(area, collection_name, host, is_calling, groups,
+                                                           names=names)
+        with open(os.path.join(OPS_DIR, f'zz_{area}.go'), 'w') as f:
+            f.write(source)
+        areas.append(area)
+        print(f"{collection_name}: {group_count} groups, {op_count} operations → pkg/webexops/zz_{area}.go")
 
-        pkg, parent_var, base_url_const, is_calling = COLLECTIONS[collection_name]
-        out_dir = os.path.join(CLI_DIR, "cmd", pkg)
-        os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(OPS_DIR, 'zz_areas.go'), 'w') as f:
+        f.write(generate_areas_file(sorted(areas)))
+    with open(NAMES_PATH, 'w') as f:
+        json.dump(dict(sorted(names.items())), f, indent=1)
+        f.write('\n')
 
-        # Clean existing generated files (preserve hand-written custom_*.go)
-        for f in os.listdir(out_dir):
-            if f.endswith('.go') and not f.startswith('custom_'):
-                os.remove(os.path.join(out_dir, f))
-
-        file_count = 0
-        cmd_count = 0
-        for group_data in groups:
-            group = group_data['group']
-            endpoints = group_data['endpoints']
-            if not endpoints:
-                continue
-
-            skip_set = SKIP_GROUPS.get(collection_name, set())
-            if group in skip_set:
-                print(f"  Skipping group '{group}' (hand-written override)")
-                continue
-
-            source = generate_group_file(
-                group, endpoints, pkg, parent_var, base_url_const, is_calling,
-                collection_name=collection_name
-            )
-
-            filename = group.replace('-', '_') + '.go'
-            filepath = os.path.join(out_dir, filename)
-            with open(filepath, 'w') as f:
-                f.write(source)
-
-            file_count += 1
-            cmd_count += len(endpoints)
-
-        print(f"{collection_name}: generated {file_count} files, {cmd_count} commands → cmd/{pkg}/")
-
-    # Run gofmt
     print("\nRunning gofmt...")
-    for pkg in sorted(set(c[0] for c in COLLECTIONS.values())):
-        pkg_dir = os.path.join(CLI_DIR, "cmd", pkg)
-        result = subprocess.run(
-            ['gofmt', '-w', pkg_dir],
-            capture_output=True, text=True
-        )
-        if result.returncode != 0:
-            print(f"gofmt error in {pkg}: {result.stderr}")
-        else:
-            print(f"  gofmt {pkg}/ OK")
+    result = subprocess.run(['gofmt', '-w', OPS_DIR], capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"gofmt error: {result.stderr}")
+    else:
+        print("  gofmt pkg/webexops/ OK")
 
     if UNPAGED_LISTS:
         print("\nWARNING: --paginate is off for these lists, whose item field neither the collection nor")
@@ -680,7 +648,7 @@ def main():
         for route in redundant:
             print(f"  {route}")
 
-    print("\nDone. Run 'go build ./...' in webex-cli/ to verify.")
+    print("\nDone. Run 'go build ./...' to verify.")
 
 
 if __name__ == "__main__":

@@ -134,7 +134,7 @@ var queryPOSTPaths = []string{
 	"/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
 	"/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
 	"/v1/captures/query",
-	"/v1/{orgid}/functions/{id}:export",
+	"/v1/{orgId}/functions/{id}:export",
 }
 
 // IsQueryPOST reports whether a POST to the path template only reads data.

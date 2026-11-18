@@ -1,0 +1,81 @@
+---
+title: Go SDK
+description: Call the Webex APIs from Go the way the CLI does.
+---
+
+The CLI is built on a Go SDK that other Go programs can import. It sends requests the way the CLI does: the same hosts, retries, paging and errors. It holds no process-wide state, and every call takes a context.
+
+```bash
+go get github.com/Cloverhound/webex-cli/pkg/webexops
+```
+
+That brings in `pkg/webexapi` too. Get the SDK packages rather than the module root, whose CLI needs Cobra and the OS keyring.
+
+| Package | What it does |
+|---|---|
+| `pkg/webexapi` | Sends requests: the bearer token, one refresh after a 401, waits for a 429's `Retry-After`, and errors that carry the failed response. Reads lists to their end, and fails rather than return part of a list. Names the hosts for each data region and Contact Center data center, and converts organization IDs. |
+| `pkg/webexops` | The operations the CLI generates from Cisco's Postman collections. Each is an exported `*Operation` with its route, host, parameters, body fields and paging. `Call` sends one; `All` reads a list to its end. |
+| `pkg/aiagent` | AI Agent Studio: looks up an agent's runtime token, and removes credentials from responses. Studio's API is private, and Cisco does not support it. |
+
+The SDK has no login of its own. Give the client a token source, such as `webex auth token --output json --min-ttl 30m`.
+
+A few CLI commands are handwritten, not generated, so they are not in `pkg/webexops`:
+- `messaging messages create`, which can attach a file;
+- the Calling announcement and voicemail greeting uploads;
+- the Contact Center audio file and agent greeting uploads and downloads;
+- Calling and Meetings recording downloads;
+- `cc search`.
+
+`webexapi.EncodeMultipart` and `webexapi.MultipartFile` build the upload bodies these commands send.
+
+## Example
+
+List an organization's Contact Center teams:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
+	"github.com/Cloverhound/webex-cli/pkg/webexops"
+)
+
+func main() {
+	ctx := context.Background()
+	client := &webexapi.Client{
+		Token:      func(context.Context) (string, error) { return os.Getenv("WEBEX_TOKEN"), nil },
+		MaxRetries: 3,
+	}
+	hosts, err := webexapi.HostsFor("us", "us1")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	org := webexapi.DecodeOrgID(os.Getenv("WEBEX_ORG"))
+
+	teams, err := webexops.All(ctx, client, hosts, webexops.CcGetOrganizationByOrgidV2Team, webexops.Args{
+		Params: map[string]string{"orgid": org},
+	})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fmt.Println(len(teams), "teams")
+}
+```
+
+`Args.Params` holds parameter values by the names the API uses. Each operation's `Params` lists them. A name the operation doesn't have and a missing path value are errors, and nothing is sent. A parameter marked `OrgUUID` takes the organization's UUID; a base64 Webex organization ID is converted. Bodies and responses are JSON documents, not Go types, because the collections' example bodies don't match what Webex returns.
+
+## Behaviour
+
+- **Retries:** only a 401 (once, after `Refresh`) and a 429 are retried. A 5xx or a broken connection may follow a write that was carried out, so it is returned, not repeated. A 429 that is not retried further returns a `RateLimitError`, and a 451 a `WrongRegionError`; both unwrap to the `APIError`.
+- **Redirects:** a redirect is never followed. A 3xx returns a `RedirectError`, which unwraps to the `APIError`. Following one could take the token and other credentials to another host, or turn a write into a read that reports success.
+- **Hosts:** `HostsFor` refuses a Contact Center data center that is not in `CCRegions`, since it becomes part of the host the token is sent to.
+- **AI Agent Studio:** `Call` and `All` remove credentials from the responses of operations marked `Redact`. Send `op.Request` with the client for the raw response.
+- **Paging:** each list's paging was derived from its collection and, where Webex differs, measured against a live organization. `All` and `Visit` fail rather than return part of a list. A failed request returns its own error, such as an `APIError` or the context's error. A response that doesn't page as expected returns an error matching `webexapi.ErrIncompleteList`: for example, a missing item array or total, a page that repeats, or a next link to another host.
+- **Hooks:** `BeforeSend`, `AfterResponse` and `OnRetry` let a program log requests or stop them before they are sent. The CLI uses them for `--debug`, `--dry-run` and read-only mode.
+- **Names:** each operation is named by its area, method and path. For example, `GET /organization/{orgid}/v2/team` in Contact Center is `CcGetOrganizationByOrgidV2Team`, and `POST /telephony/calls/dial` in Calling is `CallingPostTelephonyCallsDial`. A name always means that request, and is never given to another route later. If Cisco removes the route, the name goes too, and a program that uses it fails to build rather than calling something else. A route that Cisco lists twice with different requests has one name with the parameters of both listings.

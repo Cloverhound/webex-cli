@@ -362,11 +362,15 @@ Run `npx -y @cloverhound/webex-cli agent-setup` and follow what it prints.
 
 See the [docs](https://cloverhound.github.io/webex-cli/agent-skill/) for manual setup instructions.
 
+## Go SDK
+
+The CLI is built on a Go SDK that other programs can import: `pkg/webexapi` (transport, paging, hosts, org IDs), `pkg/webexops` (the operations generated from the collections; the handwritten upload, download and search commands are not in it) and `pkg/aiagent` (AI Agent Studio). See the [Go SDK docs](https://cloverhound.github.io/webex-cli/sdk/).
+
 ## Development
 
 See [AGENTS.md](AGENTS.md) for project structure and development workflow.
 
-Commands in `cmd/calling/`, `cmd/cc/`, and the other area packages are **generated** from Postman collections — do not edit by hand. Run `make refresh` to re-download collections, regenerate Go files, update skill documentation, and rebuild. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
+The API commands are built from the operation table in `pkg/webexops`, which is **generated** from Postman collections — do not edit it by hand. Run `make refresh` to re-download collections, regenerate the table, update skill documentation, and rebuild. See the [code generation pipeline](AGENTS.md#code-generation-pipeline) for details.
 
 ## License
 

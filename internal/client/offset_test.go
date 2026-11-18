@@ -34,8 +34,9 @@ func TestOffsetPagingAppliesOutsideCalling(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := len(names(t, body)); got != 150 {
-		t.Fatalf("got %d items, want 150", got)
+	var items []json.RawMessage
+	if err := json.Unmarshal(body, &items); err != nil || len(items) != 150 {
+		t.Fatalf("got %d items (err %v), want 150", len(items), err)
 	}
 	if fmt.Sprint(offsets) != "[0 100]" {
 		t.Fatalf("offsets %v, want [0 100]", offsets)

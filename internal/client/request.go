@@ -3,7 +3,11 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
+
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
 // Request builds an HTTP request for the Webex API.
@@ -16,10 +20,10 @@ type Request struct {
 	headers     map[string]string
 	bodyJSON    map[string]any
 	bodyRaw     string
-	// rawURL, when set, is sent verbatim in place of path and query params.
-	rawURL string
 
-	// Multipart bodies override the JSON content type and log a safe summary.
+	// Multipart bodies are sent from bodyBytes, which can be large, rather than
+	// a copy; they override the JSON content type and log a safe summary.
+	bodyBytes                    []byte
 	bodyContentType, bodySummary string
 
 	// redactError removes credentials from a failed response before its error
@@ -91,6 +95,7 @@ func (r *Request) BodyStringSlice(key string, values []string) {
 // SetBodyRaw sets the raw JSON body, overriding individual fields.
 func (r *Request) SetBodyRaw(raw string) {
 	r.bodyRaw = raw
+	r.bodyBytes = nil
 	r.bodyContentType = ""
 	r.bodySummary = ""
 }
@@ -113,7 +118,7 @@ func (r *Request) RedactErrors(redact func([]byte) []byte) {
 
 // Finalize builds the body JSON if no raw body is set.
 func (r *Request) Finalize() {
-	if r.bodyRaw == "" && len(r.bodyJSON) > 0 {
+	if r.bodyRaw == "" && r.bodyBytes == nil && len(r.bodyJSON) > 0 {
 		data, err := json.Marshal(r.bodyJSON)
 		if err == nil {
 			r.bodyRaw = string(data)
@@ -125,4 +130,65 @@ func (r *Request) Finalize() {
 func (r *Request) Do() ([]byte, int, error) {
 	r.Finalize()
 	return Do(r)
+}
+
+// url is the request URL with its path parameters filled in and no query.
+func (r *Request) url() string {
+	return webexapi.FillPath(r.baseURL+r.path, r.pathParams)
+}
+
+func (r *Request) query() url.Values {
+	q := url.Values{}
+	for k, v := range r.queryParams {
+		q.Set(k, v)
+	}
+	return q
+}
+
+func (r *Request) header() http.Header {
+	h := http.Header{}
+	for k, v := range r.headers {
+		h.Set(k, v)
+	}
+	return h
+}
+
+// logBody is how diagnostics show the body: a multipart body's summary, never
+// its bytes.
+func (r *Request) logBody() string {
+	if r.bodySummary != "" {
+		return r.bodySummary
+	}
+	return r.bodyRaw
+}
+
+func (r *Request) body() []byte {
+	if r.bodyBytes != nil {
+		return r.bodyBytes
+	}
+	return []byte(r.bodyRaw)
+}
+
+func (r *Request) sdkRequest() webexapi.Request {
+	return webexapi.Request{
+		Method:      r.method,
+		URL:         webexapi.WithQuery(r.url(), r.query()),
+		Body:        r.body(),
+		ContentType: r.bodyContentType,
+		Header:      r.header(),
+		Redact:      r.redactError,
+	}
+}
+
+func (r *Request) sdkList() webexapi.List {
+	return webexapi.List{
+		Method:      r.method,
+		URL:         r.url(),
+		Query:       r.query(),
+		Body:        r.body(),
+		ContentType: r.bodyContentType,
+		Header:      r.header(),
+		Redact:      r.redactError,
+		Name:        r.path,
+	}
 }

@@ -76,6 +76,24 @@ func TestRedactSecretsKeepsTheRest(t *testing.T) {
 	}
 }
 
+func TestBotTokenGivesTheCLIsAdviceForTheWrongRegion(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusUnavailableForLegalReasons)
+	}))
+	t.Cleanup(srv.Close)
+	old := studioURL
+	studioURL = func() string { return srv.URL }
+	t.Cleanup(func() { studioURL = old })
+	config.SetOrgID("org-1")
+	t.Cleanup(func() { config.SetOrgID("") })
+
+	_, err := BotToken("a1")
+	if err == nil || !strings.HasPrefix(err.Error(), "looking up AI agent a1: wrong data region (451)") ||
+		!strings.Contains(err.Error(), "rerun with --region") {
+		t.Fatalf("err = %v", err)
+	}
+}
+
 func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -89,7 +107,7 @@ func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
 	t.Cleanup(func() { config.SetOrgID("") })
 
 	_, err := BotToken("a1")
-	if err == nil || strings.Contains(err.Error(), "token-1") {
-		t.Fatalf("err = %v, want an error without the token", err)
+	if err == nil || strings.Contains(err.Error(), "token-1") || !strings.Contains(err.Error(), "500") {
+		t.Fatalf("err = %v, want the 500 without the token", err)
 	}
 }

@@ -25,6 +25,18 @@ func writeTempFile(t *testing.T, name string, data []byte) string {
 	return path
 }
 
+// A large attachment is sent from the encoded body, not a copy of it.
+func TestMultipartBodyIsSentWithoutCopying(t *testing.T) {
+	req := NewRequest("https://example.com", "POST", "/messages")
+	if err := req.SetMultipartFile(map[string]string{"roomId": "r"}, "files", writeTempFile(t, "a.txt", []byte("hello"))); err != nil {
+		t.Fatal(err)
+	}
+	first, second := req.sdkRequest().Body, req.sdkRequest().Body
+	if len(first) == 0 || &first[0] != &second[0] {
+		t.Fatal("each send copied the multipart body")
+	}
+}
+
 // RFC 7578 forbids filename*= in multipart/form-data; names stay quoted UTF-8.
 func TestMultipartAttachmentUsesQuotedUTF8Filename(t *testing.T) {
 	for name, header := range map[string]string{
@@ -42,7 +54,7 @@ func TestMultipartAttachmentUsesQuotedUTF8Filename(t *testing.T) {
 			t.Fatal(err)
 		}
 		_, params, _ := mime.ParseMediaType(req.bodyContentType)
-		part, err := multipart.NewReader(strings.NewReader(req.bodyRaw), params["boundary"]).NextPart()
+		part, err := multipart.NewReader(bytes.NewReader(req.body()), params["boundary"]).NextPart()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -121,7 +133,7 @@ func TestSetMultipartWritesTypedPartsAndSummarizesFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, params, _ := mime.ParseMediaType(req.bodyContentType)
-	reader := multipart.NewReader(strings.NewReader(req.bodyRaw), params["boundary"])
+	reader := multipart.NewReader(bytes.NewReader(req.body()), params["boundary"])
 	for _, want := range []struct{ field, file, contentType, body string }{
 		{"audioFileInfo", "", "application/json", `{"name":"prompt.wav"}`},
 		{"audioFile", "prompt.wav", "audio/wav", string(data)},
