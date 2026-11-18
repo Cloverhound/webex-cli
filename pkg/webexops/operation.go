@@ -124,7 +124,10 @@ type Group struct {
 
 // Operation is one API call.
 type Operation struct {
-	// ID is the operation's Go variable name, such as CcTeamList.
+	// ID is the operation's Go variable name: its area, method and path, such as
+	// CcGetOrganizationByOrgidV2Team. A route the collection lists more than once
+	// with different requests is not exported, and its listings are found with
+	// Operations.
 	ID string
 
 	// Area, Group and Command are the CLI names: webex <area> <group> <command>.

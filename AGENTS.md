@@ -45,7 +45,7 @@ Other Go programs, such as Webex Admin Studio, import these to call Webex the wa
 - `pkg/webexops/` — the generated operation table: one exported `*Operation` per API call (route, host, parameters, body fields, paging, CLI names), with `Call` and `All`
 - `pkg/aiagent/` — AI Agent Studio: agent runtime token lookup and credential redaction
 
-`codegen/operation_names.json` records every Go name `pkg/webexops` has published, with the operation it names (group, method, path, and its place among listings of the same route). Programs compile against these names, so codegen never gives one to another operation: a renumbered or removed command keeps or retires its name. Commit the file with each refresh, and never edit a name in it.
+Each operation's Go name is built from its area, method and path (`CcGetOrganizationByOrgidV2Team`), never from its CLI command name, which the collection's order can change. Programs compile against these names, so a name always means the same request; a removed route's name disappears and the program fails to build. A route the collection lists more than once is exported once when every listing sends the same request, and not at all when they differ.
 
 Packages in `pkg/` import only the standard library and each other — never `internal/`, `cmd/`, cobra or the keyring; `pkg/imports_test.go` enforces it. CLI concerns stay in `internal/`: flags, output, the config file, login, `--debug`, `--dry-run` and read-only mode, which `internal/client.API` attaches to a `webexapi.Client` as hooks.
 

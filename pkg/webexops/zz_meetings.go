@@ -35,184 +35,184 @@ var meetingsGroups = []Group{
 
 // meetingsOperations are the Webex Meetings operations, in collection order.
 var meetingsOperations = []*Operation{
-	MeetingsChatsListMeeting,
-	MeetingsChatsDeleteMeeting,
-	MeetingsClosedCaptionsListMeeting,
-	MeetingsClosedCaptionsListMeetingSnippets,
-	MeetingsClosedCaptionsDownloadMeetingSnippets,
-	MeetingsInviteesListMeeting,
-	MeetingsInviteesCreateMeeting,
-	MeetingsInviteesCreateMeetingBulkInsert,
-	MeetingsInviteesGetMeeting,
-	MeetingsInviteesUpdateMeeting,
-	MeetingsInviteesDeleteMeeting,
-	MeetingsMessagesDeleteMeeting,
-	MeetingsParticipantsListMeeting,
-	MeetingsParticipantsQueryMeetingEmail,
-	MeetingsParticipantsGetMeeting,
-	MeetingsParticipantsUpdate,
-	MeetingsParticipantsAdmit,
-	MeetingsParticipantsCallOutSip,
-	MeetingsParticipantsCancelCallingOutSip,
-	MeetingsMeetingPollsList,
-	MeetingsMeetingPollsGetPollresults,
-	MeetingsMeetingPollsListRespondentsQuestion,
-	MeetingsPreferencesGetMeeting,
-	MeetingsPreferencesGetPersonalMeetingRoomOptions,
-	MeetingsPreferencesUpdatePersonalMeetingRoomOptions,
-	MeetingsPreferencesGetAudioOptions,
-	MeetingsPreferencesUpdateAudioOptions,
-	MeetingsPreferencesGetVideoOptions,
-	MeetingsPreferencesUpdateVideoOptions,
-	MeetingsPreferencesGetSchedulingOptions,
-	MeetingsPreferencesUpdateSchedulingOptions,
-	MeetingsPreferencesInsertDelegateEmails,
-	MeetingsPreferencesDeleteDelegateEmails,
-	MeetingsPreferencesGetSiteList,
-	MeetingsPreferencesUpdateDefaultSite,
-	MeetingsPreferencesBatchRefreshPersonalMeetingRoomId,
-	MeetingsMeetingQaListQ,
-	MeetingsMeetingQaListAnswersQuestion,
-	MeetingsMeetingQualitiesGet,
-	MeetingsSessionTypesListSite,
-	MeetingsSessionTypesListUser,
-	MeetingsSessionTypesUpdateUser,
-	MeetingsTranscriptsListMeeting,
-	MeetingsTranscriptsListMeetingComplianceOfficer,
-	MeetingsTranscriptsDownloadMeeting,
-	MeetingsTranscriptsListSnippetsMeeting,
-	MeetingsTranscriptsGetSnippet,
-	MeetingsTranscriptsUpdateSnippet,
-	MeetingsTranscriptsDelete,
-	MeetingsMeetingSummaryListUsageReports,
-	MeetingsMeetingSummaryListAttendeeReports,
-	MeetingsMeetingsGetAdmin,
-	MeetingsMeetingsListAdmin,
-	MeetingsMeetingsCreate,
-	MeetingsMeetingsList,
-	MeetingsMeetingsGet,
-	MeetingsMeetingsPatch,
-	MeetingsMeetingsUpdate,
-	MeetingsMeetingsDelete,
-	MeetingsMeetingsJoin,
-	MeetingsMeetingsListTemplates,
-	MeetingsMeetingsGetTemplate,
-	MeetingsMeetingsGetControlStatus,
-	MeetingsMeetingsUpdateControlStatus,
-	MeetingsMeetingsListSessionTypes,
-	MeetingsMeetingsGetSessionType,
-	MeetingsMeetingsGetRegistrationForm,
-	MeetingsMeetingsUpdateRegistrationForm,
-	MeetingsMeetingsDeleteRegistrationForm,
-	MeetingsMeetingsRegisterRegistrant,
-	MeetingsMeetingsListRegistrants,
-	MeetingsMeetingsBatchRegisterRegistrants,
-	MeetingsMeetingsGetDetailedInformationRegistrant,
-	MeetingsMeetingsDeleteRegistrant,
-	MeetingsMeetingsQueryRegistrants,
-	MeetingsMeetingsBatchUpdateRegistrantsStatus,
-	MeetingsMeetingsUpdateSimultaneousInterpretation,
-	MeetingsMeetingsCreateInterpreter,
-	MeetingsMeetingsListInterpreters,
-	MeetingsMeetingsGetInterpreter,
-	MeetingsMeetingsUpdateInterpreter,
-	MeetingsMeetingsDeleteInterpreter,
-	MeetingsMeetingsListBreakoutSessions,
-	MeetingsMeetingsUpdateBreakoutSessions,
-	MeetingsMeetingsDeleteBreakoutSessions,
-	MeetingsMeetingsGetSurvey,
-	MeetingsMeetingsListSurveyResults,
-	MeetingsMeetingsGetSurveyLinks,
-	MeetingsMeetingsCreateInvitationSources,
-	MeetingsMeetingsListInvitationSources,
-	MeetingsMeetingsListTrackingCodes,
-	MeetingsMeetingsReassignHost,
-	MeetingsMeetingsEnd,
-	MeetingsMeetingsBatchApproveRegistrants,
-	MeetingsMeetingsBatchRejectRegistrants,
-	MeetingsMeetingsBatchCancelRegistrants,
-	MeetingsMeetingsBatchDeleteRegistrants,
-	MeetingsMeetingsListGroup,
-	MeetingsMeetingsPatchGroup,
-	MeetingsMeetingsUpdateGroupControlStatus,
-	MeetingsTrackingCodesList,
-	MeetingsTrackingCodesCreate,
-	MeetingsTrackingCodesGet,
-	MeetingsTrackingCodesUpdate,
-	MeetingsTrackingCodesDelete,
-	MeetingsTrackingCodesGetUser,
-	MeetingsTrackingCodesUpdateUser,
-	MeetingsPeopleList,
-	MeetingsPeopleCreatePerson,
-	MeetingsPeopleGetPerson,
-	MeetingsPeopleUpdatePerson,
-	MeetingsPeopleDeletePerson,
-	MeetingsPeopleGetMyOwn,
-	MeetingsRecordingReportListAuditSummaries,
-	MeetingsRecordingReportGetAudit,
-	MeetingsRecordingReportListMeetingArchiveSummaries,
-	MeetingsRecordingReportGetMeetingArchive,
-	MeetingsRecordingsList,
-	MeetingsRecordingsListAdminComplianceOfficer,
-	MeetingsRecordingsDeleteAdmin,
-	MeetingsRecordingsGet,
-	MeetingsRecordingsDelete,
-	MeetingsRecordingsMoveRecycleBin,
-	MeetingsRecordingsRestoreRecycleBin,
-	MeetingsRecordingsPurgeRecycleBin,
-	MeetingsRecordingsShare,
-	MeetingsRecordingsListGroup,
-	MeetingsRecordingsGetGroup,
-	MeetingsRecordingsShareLink,
-	MeetingsRecordingsQuery,
-	MeetingsRecordingsQueryAdminComplianceOfficer,
-	MeetingsSiteGetMeetingCommonSettingsConfiguration,
-	MeetingsSiteUpdateMeetingCommonSettingsConfiguration,
-	MeetingsSlidoListComplianceEvents,
-	MeetingsVideoMeshListClustersAvailability,
-	MeetingsVideoMeshGetClusterAvailability,
-	MeetingsVideoMeshListNodeAvailability,
-	MeetingsVideoMeshGetNodeAvailability,
-	MeetingsVideoMeshListMediaHealthMonitoringToolTestResultsV2,
-	MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsClustersV2,
-	MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsNodeV2,
-	MeetingsVideoMeshListOverflowCloud,
-	MeetingsVideoMeshListClusterRedirect,
-	MeetingsVideoMeshGetClusterRedirect,
-	MeetingsVideoMeshListClustersUtilization,
-	MeetingsVideoMeshGetClusterUtilization,
-	MeetingsVideoMeshListReachabilityTestResultsV2,
-	MeetingsVideoMeshGetReachabilityTestResultsClusterV2,
-	MeetingsVideoMeshGetReachabilityTestResultsNodeV2,
-	MeetingsVideoMeshListCluster,
-	MeetingsVideoMeshGetCluster,
-	MeetingsVideoMeshTriggerOnDemandTestCluster,
-	MeetingsVideoMeshTriggerOnDemandTestNode,
-	MeetingsVideoMeshGetTriggeredTestStatus,
-	MeetingsVideoMeshGetTriggeredTestResults,
-	MeetingsVideoMeshListNetworkTestResults,
-	MeetingsVideoMeshGetNetworkTestResultsCluster,
-	MeetingsVideoMeshGetNetworkTestResultsNode,
-	MeetingsVideoMeshListClusterClientTypeDistribution,
-	MeetingsVideoMeshGetClusterClientTypeDistribution,
-	MeetingsVideoMeshListEventThresholdConfiguration,
-	MeetingsVideoMeshUpdateEventThresholdConfiguration,
-	MeetingsVideoMeshGetEventThresholdConfiguration,
-	MeetingsVideoMeshResetEventThresholdConfiguration,
-	MeetingsWebhooksList,
-	MeetingsWebhooksCreate,
-	MeetingsWebhooksGet,
-	MeetingsWebhooksUpdate,
-	MeetingsWebhooksDelete,
-	MeetingsSummariesGetMeetingId,
-	MeetingsSummariesGetComplianceOfficer,
-	MeetingsSummariesDelete,
-	MeetingsSlidosecurepremiumListComplianceEvents,
+	MeetingsGetMeetingsPostMeetingChats,
+	MeetingsDeleteMeetingsPostMeetingChats,
+	MeetingsGetMeetingClosedCaptions,
+	MeetingsGetMeetingClosedCaptionsByClosedCaptionIdSnippets,
+	MeetingsGetMeetingClosedCaptionsByClosedCaptionIdDownload,
+	MeetingsGetMeetingInvitees,
+	MeetingsPostMeetingInvitees,
+	MeetingsPostMeetingInviteesBulkInsert,
+	MeetingsGetMeetingInviteesByMeetingInviteeId,
+	MeetingsPutMeetingInviteesByMeetingInviteeId,
+	MeetingsDeleteMeetingInviteesByMeetingInviteeId,
+	MeetingsDeleteMeetingMessagesByMeetingMessageId,
+	MeetingsGetMeetingParticipants,
+	MeetingsPostMeetingParticipantsQuery,
+	MeetingsGetMeetingParticipantsByParticipantId,
+	MeetingsPutMeetingParticipantsByParticipantId,
+	MeetingsPostMeetingParticipantsAdmit,
+	MeetingsPostMeetingParticipantsCallout,
+	MeetingsPostMeetingParticipantsCancelCallout,
+	MeetingsGetMeetingsPolls,
+	MeetingsGetMeetingsPollResults,
+	MeetingsGetMeetingsPollsByPollIdQuestionsByQuestionIdRespondents,
+	MeetingsGetMeetingPreferences,
+	MeetingsGetMeetingPreferencesPersonalMeetingRoom,
+	MeetingsPutMeetingPreferencesPersonalMeetingRoom,
+	MeetingsGetMeetingPreferencesAudio,
+	MeetingsPutMeetingPreferencesAudio,
+	MeetingsGetMeetingPreferencesVideo,
+	MeetingsPutMeetingPreferencesVideo,
+	MeetingsGetMeetingPreferencesSchedulingOptions,
+	MeetingsPutMeetingPreferencesSchedulingOptions,
+	MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsInsert,
+	MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsDelete,
+	MeetingsGetMeetingPreferencesSites,
+	MeetingsPutMeetingPreferencesSites,
+	MeetingsPostAdminMeetingPreferencesPersonalMeetingRoomRefreshId,
+	MeetingsGetMeetingsQAndA,
+	MeetingsGetMeetingsQAndAByQuestionIdAnswers,
+	MeetingsGetMeetingQualities,
+	MeetingsGetAdminMeetingConfigSessionTypes,
+	MeetingsGetAdminMeetingUserconfigSessionTypes,
+	MeetingsPutAdminMeetingUserconfigSessionTypes,
+	MeetingsGetMeetingTranscripts,
+	MeetingsGetAdminMeetingTranscripts,
+	MeetingsGetMeetingTranscriptsByTranscriptIdDownload,
+	MeetingsGetMeetingTranscriptsByTranscriptIdSnippets,
+	MeetingsGetMeetingTranscriptsByTranscriptIdSnippetsBySnippetId,
+	MeetingsPutMeetingTranscriptsByTranscriptIdSnippetsBySnippetId,
+	MeetingsDeleteMeetingTranscriptsByTranscriptId,
+	MeetingsGetMeetingReportsUsage,
+	MeetingsGetMeetingReportsAttendees,
+	MeetingsGetAdminMeetingsByMeetingId,
+	MeetingsGetAdminMeetings,
+	MeetingsPostMeetings,
+	MeetingsGetMeetings,
+	MeetingsGetMeetingsByMeetingId,
+	MeetingsPatchMeetingsByMeetingId,
+	MeetingsPutMeetingsByMeetingId,
+	MeetingsDeleteMeetingsByMeetingId,
+	MeetingsPostMeetingsJoin,
+	MeetingsGetMeetingsTemplates,
+	MeetingsGetMeetingsTemplatesByTemplateId,
+	MeetingsGetMeetingsControls,
+	MeetingsPutMeetingsControls,
+	MeetingsGetMeetingsSessionTypes,
+	MeetingsGetMeetingsSessionTypesBySessionTypeId,
+	MeetingsGetMeetingsByMeetingIdRegistration,
+	MeetingsPutMeetingsByMeetingIdRegistration,
+	MeetingsDeleteMeetingsByMeetingIdRegistration,
+	MeetingsPostMeetingsByMeetingIdRegistrants,
+	MeetingsGetMeetingsByMeetingIdRegistrants,
+	MeetingsPostMeetingsByMeetingIdRegistrantsBulkInsert,
+	MeetingsGetMeetingsByMeetingIdRegistrantsByRegistrantId,
+	MeetingsDeleteMeetingsByMeetingIdRegistrantsByRegistrantId,
+	MeetingsPostMeetingsByMeetingIdRegistrantsQuery,
+	MeetingsPostMeetingsByMeetingIdRegistrantsByStatusOpType,
+	MeetingsPutMeetingsByMeetingIdSimultaneousInterpretation,
+	MeetingsPostMeetingsByMeetingIdInterpreters,
+	MeetingsGetMeetingsByMeetingIdInterpreters,
+	MeetingsGetMeetingsByMeetingIdInterpretersByInterpreterId,
+	MeetingsPutMeetingsByMeetingIdInterpretersByInterpreterId,
+	MeetingsDeleteMeetingsByMeetingIdInterpretersByInterpreterId,
+	MeetingsGetMeetingsByMeetingIdBreakoutSessions,
+	MeetingsPutMeetingsByMeetingIdBreakoutSessions,
+	MeetingsDeleteMeetingsByMeetingIdBreakoutSessions,
+	MeetingsGetMeetingsByMeetingIdSurvey,
+	MeetingsGetMeetingsByMeetingIdSurveyResults,
+	MeetingsPostMeetingsByMeetingIdSurveyLinks,
+	MeetingsPostMeetingsByMeetingIdInvitationSources,
+	MeetingsGetMeetingsByMeetingIdInvitationSources,
+	MeetingsGetMeetingsTrackingCodes,
+	MeetingsPostMeetingsReassignHost,
+	MeetingsPostMeetingsByMeetingIdEnd,
+	MeetingsPostMeetingsByMeetingIdRegistrantsApprove,
+	MeetingsPostMeetingsByMeetingIdRegistrantsReject,
+	MeetingsPostMeetingsByMeetingIdRegistrantsCancel,
+	MeetingsPostMeetingsByMeetingIdRegistrantsBulkDelete,
+	MeetingsGetGroupMeetings,
+	MeetingsPatchGroupMeetingsByMeetingId,
+	MeetingsPostGroupMeetingsControls,
+	MeetingsGetAdminMeetingConfigTrackingCodes,
+	MeetingsPostAdminMeetingConfigTrackingCodes,
+	MeetingsGetAdminMeetingConfigTrackingCodesByTrackingCodeId,
+	MeetingsPutAdminMeetingConfigTrackingCodesByTrackingCodeId,
+	MeetingsDeleteAdminMeetingConfigTrackingCodesByTrackingCodeId,
+	MeetingsGetAdminMeetingUserconfigTrackingCodes,
+	MeetingsPutAdminMeetingUserconfigTrackingCodes,
+	MeetingsGetPeople,
+	MeetingsPostPeople,
+	MeetingsGetPeopleByPersonId,
+	MeetingsPutPeopleByPersonId,
+	MeetingsDeletePeopleByPersonId,
+	MeetingsGetPeopleMe,
+	MeetingsGetRecordingReportAccessSummary,
+	MeetingsGetRecordingReportAccessDetail,
+	MeetingsGetRecordingReportMeetingArchiveSummaries,
+	MeetingsGetRecordingReportMeetingArchivesByArchiveId,
+	MeetingsGetRecordings,
+	MeetingsGetAdminRecordings,
+	MeetingsDeleteAdminRecordingsByRecordingId,
+	MeetingsGetRecordingsByRecordingId,
+	MeetingsDeleteRecordingsByRecordingId,
+	MeetingsPostRecordingsSoftDelete,
+	MeetingsPostRecordingsRestore,
+	MeetingsPostRecordingsPurge,
+	MeetingsPostRecordingsByRecordingIdAccessList,
+	MeetingsGetGroupRecordings,
+	MeetingsGetGroupRecordingsByRecordingId,
+	MeetingsPostRecordingsAccessList,
+	MeetingsPostRecordingsQuery,
+	MeetingsPostAdminRecordingsQuery,
+	MeetingsGetAdminMeetingConfigCommonSettings,
+	MeetingsPatchAdminMeetingConfigCommonSettings,
+	MeetingsGetSlidoComplianceEvents,
+	MeetingsGetVideoMeshClustersAvailability,
+	MeetingsGetVideoMeshClustersAvailabilityByClusterId,
+	MeetingsGetVideoMeshNodesAvailability,
+	MeetingsGetVideoMeshNodesAvailabilityByNodeId,
+	MeetingsGetVideoMeshTestResultsMediaHealthMonitorTest,
+	MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestClusters,
+	MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestNodes,
+	MeetingsGetVideoMeshCloudOverflow,
+	MeetingsGetVideoMeshCallRedirects,
+	MeetingsGetVideoMeshClustersCallRedirects,
+	MeetingsGetVideoMeshUtilization,
+	MeetingsGetVideoMeshClustersUtilization,
+	MeetingsGetVideoMeshTestResultsReachabilityTest,
+	MeetingsGetVideoMeshTestResultsReachabilityTestClusters,
+	MeetingsGetVideoMeshTestResultsReachabilityTestNodes,
+	MeetingsGetVideoMeshClusters,
+	MeetingsGetVideoMeshClustersByClusterId,
+	MeetingsPostVideoMeshTriggerTestClustersByClusterId,
+	MeetingsPostVideoMeshTriggerTestNodesByNodeId,
+	MeetingsGetVideoMeshTestStatus,
+	MeetingsGetVideoMeshTestResults,
+	MeetingsGetVideoMeshTestResultsNetworkTest,
+	MeetingsGetVideoMeshTestResultsNetworkTestClusters,
+	MeetingsGetVideoMeshTestResultsNetworkTestNodes,
+	MeetingsGetVideoMeshClientTypeDistribution,
+	MeetingsGetVideoMeshClientTypeDistributionClusters,
+	MeetingsGetVideoMeshEventThresholds,
+	MeetingsPatchVideoMeshEventThresholds,
+	MeetingsGetVideoMeshEventThresholdsByEventThresholdId,
+	MeetingsPostVideoMeshEventThresholdsReset,
+	MeetingsGetWebhooks,
+	MeetingsPostWebhooks,
+	MeetingsGetWebhooksByWebhookId,
+	MeetingsPutWebhooksByWebhookId,
+	MeetingsDeleteWebhooksByWebhookId,
+	MeetingsGetMeetingSummaries,
+	MeetingsGetAdminMeetingSummaries,
+	MeetingsDeleteMeetingSummariesBySummaryId,
+	meetingsGetSlidoComplianceEvents_2,
 }
 
-// MeetingsChatsListMeeting is "List Meeting Chats": GET /meetings/postMeetingChats.
-var MeetingsChatsListMeeting = &Operation{
-	ID: "MeetingsChatsListMeeting", Area: "meetings", Group: "chats", Command: "list-meeting",
+// MeetingsGetMeetingsPostMeetingChats is "List Meeting Chats": GET /meetings/postMeetingChats.
+var MeetingsGetMeetingsPostMeetingChats = &Operation{
+	ID: "MeetingsGetMeetingsPostMeetingChats", Area: "meetings", Group: "chats", Command: "list-meeting",
 	Summary:     "List Meeting Chats",
 	Description: "Lists the meeting chats of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) specified by `meetingId`. You can set a maximum number of chats to return.\n\nUse this operation to list the chats of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) when they are ready. Please note that only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/postMeetingChats",
@@ -224,9 +224,9 @@ var MeetingsChatsListMeeting = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "offset", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsChatsDeleteMeeting is "Delete Meeting Chats": DELETE /meetings/postMeetingChats.
-var MeetingsChatsDeleteMeeting = &Operation{
-	ID: "MeetingsChatsDeleteMeeting", Area: "meetings", Group: "chats", Command: "delete-meeting",
+// MeetingsDeleteMeetingsPostMeetingChats is "Delete Meeting Chats": DELETE /meetings/postMeetingChats.
+var MeetingsDeleteMeetingsPostMeetingChats = &Operation{
+	ID: "MeetingsDeleteMeetingsPostMeetingChats", Area: "meetings", Group: "chats", Command: "delete-meeting",
 	Summary:     "Delete Meeting Chats",
 	Description: "Deletes the meeting chats of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) specified by `meetingId`.\n\nUse this operation to delete the chats of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) when they are ready. Please note that only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/postMeetingChats",
@@ -235,9 +235,9 @@ var MeetingsChatsDeleteMeeting = &Operation{
 	},
 }
 
-// MeetingsClosedCaptionsListMeeting is "List Meeting Closed Captions": GET /meetingClosedCaptions.
-var MeetingsClosedCaptionsListMeeting = &Operation{
-	ID: "MeetingsClosedCaptionsListMeeting", Area: "meetings", Group: "closed-captions", Command: "list-meeting",
+// MeetingsGetMeetingClosedCaptions is "List Meeting Closed Captions": GET /meetingClosedCaptions.
+var MeetingsGetMeetingClosedCaptions = &Operation{
+	ID: "MeetingsGetMeetingClosedCaptions", Area: "meetings", Group: "closed-captions", Command: "list-meeting",
 	Summary:     "List Meeting Closed Captions",
 	Description: "Lists closed captions of a finished [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) specified by `meetingId`.\n\n* Closed captions are ready 15 minutes after the meeting is finished.\n\n* Only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.\n\n* Currently, a meeting may have only one closed caption associated with its `meetingId`. The response is a closed captions array, which may contain multiple values to allow for future expansion, but currently only one closed caption is included in the response.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingClosedCaptions",
@@ -247,9 +247,9 @@ var MeetingsClosedCaptionsListMeeting = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsClosedCaptionsListMeetingSnippets is "List Meeting Closed Caption Snippets": GET /meetingClosedCaptions/{closedCaptionId}/snippets.
-var MeetingsClosedCaptionsListMeetingSnippets = &Operation{
-	ID: "MeetingsClosedCaptionsListMeetingSnippets", Area: "meetings", Group: "closed-captions", Command: "list-meeting-snippets",
+// MeetingsGetMeetingClosedCaptionsByClosedCaptionIdSnippets is "List Meeting Closed Caption Snippets": GET /meetingClosedCaptions/{closedCaptionId}/snippets.
+var MeetingsGetMeetingClosedCaptionsByClosedCaptionIdSnippets = &Operation{
+	ID: "MeetingsGetMeetingClosedCaptionsByClosedCaptionIdSnippets", Area: "meetings", Group: "closed-captions", Command: "list-meeting-snippets",
 	Summary:     "List Meeting Closed Caption Snippets",
 	Description: "Lists snippets of a meeting closed caption specified by `closedCaptionId`.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingClosedCaptions/{closedCaptionId}/snippets",
@@ -260,9 +260,9 @@ var MeetingsClosedCaptionsListMeetingSnippets = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsClosedCaptionsDownloadMeetingSnippets is "Download Meeting Closed Caption Snippets": GET /meetingClosedCaptions/{closedCaptionId}/download.
-var MeetingsClosedCaptionsDownloadMeetingSnippets = &Operation{
-	ID: "MeetingsClosedCaptionsDownloadMeetingSnippets", Area: "meetings", Group: "closed-captions", Command: "download-meeting-snippets",
+// MeetingsGetMeetingClosedCaptionsByClosedCaptionIdDownload is "Download Meeting Closed Caption Snippets": GET /meetingClosedCaptions/{closedCaptionId}/download.
+var MeetingsGetMeetingClosedCaptionsByClosedCaptionIdDownload = &Operation{
+	ID: "MeetingsGetMeetingClosedCaptionsByClosedCaptionIdDownload", Area: "meetings", Group: "closed-captions", Command: "download-meeting-snippets",
 	Summary:     "Download Meeting Closed Caption Snippets",
 	Description: "Download meeting closed caption snippets from the meeting closed caption specified by `closedCaptionId` formatted either as a Video Text Track (.vtt) file or plain text (.txt) file.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.*",
 	Method:      "GET", Host: HostWebex, Path: "/meetingClosedCaptions/{closedCaptionId}/download",
@@ -274,9 +274,9 @@ var MeetingsClosedCaptionsDownloadMeetingSnippets = &Operation{
 	},
 }
 
-// MeetingsInviteesListMeeting is "List Meeting Invitees": GET /meetingInvitees.
-var MeetingsInviteesListMeeting = &Operation{
-	ID: "MeetingsInviteesListMeeting", Area: "meetings", Group: "invitees", Command: "list-meeting",
+// MeetingsGetMeetingInvitees is "List Meeting Invitees": GET /meetingInvitees.
+var MeetingsGetMeetingInvitees = &Operation{
+	ID: "MeetingsGetMeetingInvitees", Area: "meetings", Group: "invitees", Command: "list-meeting",
 	Summary:     "List Meeting Invitees",
 	Description: "Lists meeting invitees for a meeting with a specified `meetingId`. You can set a maximum number of invitees to return.\n\nThis operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting instance objects. If the specified `meetingId` is for a meeting series, the invitees for the series will be listed; if the `meetingId` is for a scheduled meeting, the invitees for the particular scheduled meeting will be listed; if the `meetingId` is for an ended or ongoing meeting instance, the invitees for the particular meeting instance will be listed. See the [Webex Meetings](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) guide for more information about the types of meetings.\n\nThe list returned is sorted in ascending order by email address.\n\nLong result sets are split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/meetingInvitees",
@@ -289,9 +289,9 @@ var MeetingsInviteesListMeeting = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsInviteesCreateMeeting is "Create a Meeting Invitee": POST /meetingInvitees.
-var MeetingsInviteesCreateMeeting = &Operation{
-	ID: "MeetingsInviteesCreateMeeting", Area: "meetings", Group: "invitees", Command: "create-meeting",
+// MeetingsPostMeetingInvitees is "Create a Meeting Invitee": POST /meetingInvitees.
+var MeetingsPostMeetingInvitees = &Operation{
+	ID: "MeetingsPostMeetingInvitees", Area: "meetings", Group: "invitees", Command: "create-meeting",
 	Summary:     "Create a Meeting Invitee",
 	Description: "* Invite a person to attend a meeting.\n\n* Identify the invitee in the request body, by email address.\n\n* The `sendEmail` parameter is `true` by default and the meeting emails will be sent to the invitee's `email`. Please set `sendEmail` to `false` to prevent the invitee from receiving emails.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingInvitees",
@@ -306,18 +306,18 @@ var MeetingsInviteesCreateMeeting = &Operation{
 	}},
 }
 
-// MeetingsInviteesCreateMeetingBulkInsert is "Create Meeting Invitees": POST /meetingInvitees/bulkInsert.
-var MeetingsInviteesCreateMeetingBulkInsert = &Operation{
-	ID: "MeetingsInviteesCreateMeetingBulkInsert", Area: "meetings", Group: "invitees", Command: "create-meeting-2",
+// MeetingsPostMeetingInviteesBulkInsert is "Create Meeting Invitees": POST /meetingInvitees/bulkInsert.
+var MeetingsPostMeetingInviteesBulkInsert = &Operation{
+	ID: "MeetingsPostMeetingInviteesBulkInsert", Area: "meetings", Group: "invitees", Command: "create-meeting-2",
 	Summary:     "Create Meeting Invitees",
 	Description: "* Invite people to attend a meeting in bulk.\n\n* Identify each invitee by the email address of each item in the `items` of the request body.\n\n* Each invitee should have a unique `email`.\n\n* This API limits the maximum size of `items` in the request body to 100.\n\n* The `sendEmail` parameter for each invitee is `true` by default and the meeting emails will be sent to the invitee's `email`. Please set `sendEmail` to `false` to prevent an invitee from receiving emails.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingInvitees/bulkInsert",
 	Body: &Body{},
 }
 
-// MeetingsInviteesGetMeeting is "Get a Meeting Invitee": GET /meetingInvitees/{meetingInviteeId}.
-var MeetingsInviteesGetMeeting = &Operation{
-	ID: "MeetingsInviteesGetMeeting", Area: "meetings", Group: "invitees", Command: "get-meeting",
+// MeetingsGetMeetingInviteesByMeetingInviteeId is "Get a Meeting Invitee": GET /meetingInvitees/{meetingInviteeId}.
+var MeetingsGetMeetingInviteesByMeetingInviteeId = &Operation{
+	ID: "MeetingsGetMeetingInviteesByMeetingInviteeId", Area: "meetings", Group: "invitees", Command: "get-meeting",
 	Summary:     "Get a Meeting Invitee",
 	Description: "Retrieve details for a meeting invitee identified by a `meetingInviteeId` in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingInvitees/{meetingInviteeId}",
@@ -327,9 +327,9 @@ var MeetingsInviteesGetMeeting = &Operation{
 	},
 }
 
-// MeetingsInviteesUpdateMeeting is "Update a Meeting Invitee": PUT /meetingInvitees/{meetingInviteeId}.
-var MeetingsInviteesUpdateMeeting = &Operation{
-	ID: "MeetingsInviteesUpdateMeeting", Area: "meetings", Group: "invitees", Command: "update-meeting",
+// MeetingsPutMeetingInviteesByMeetingInviteeId is "Update a Meeting Invitee": PUT /meetingInvitees/{meetingInviteeId}.
+var MeetingsPutMeetingInviteesByMeetingInviteeId = &Operation{
+	ID: "MeetingsPutMeetingInviteesByMeetingInviteeId", Area: "meetings", Group: "invitees", Command: "update-meeting",
 	Summary:     "Update a Meeting Invitee",
 	Description: "Update details for a meeting invitee identified by a `meetingInviteeId` in the URI.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingInvitees/{meetingInviteeId}",
@@ -346,9 +346,9 @@ var MeetingsInviteesUpdateMeeting = &Operation{
 	}},
 }
 
-// MeetingsInviteesDeleteMeeting is "Delete a Meeting Invitee": DELETE /meetingInvitees/{meetingInviteeId}.
-var MeetingsInviteesDeleteMeeting = &Operation{
-	ID: "MeetingsInviteesDeleteMeeting", Area: "meetings", Group: "invitees", Command: "delete-meeting",
+// MeetingsDeleteMeetingInviteesByMeetingInviteeId is "Delete a Meeting Invitee": DELETE /meetingInvitees/{meetingInviteeId}.
+var MeetingsDeleteMeetingInviteesByMeetingInviteeId = &Operation{
+	ID: "MeetingsDeleteMeetingInviteesByMeetingInviteeId", Area: "meetings", Group: "invitees", Command: "delete-meeting",
 	Summary:     "Delete a Meeting Invitee",
 	Description: "Removes a meeting invitee identified by a `meetingInviteeId` specified in the URI. The deleted meeting invitee cannot be recovered.\n\nIf the meeting invitee is associated with a meeting series, the invitee will be removed from the entire meeting series. If the invitee is associated with a scheduled meeting, the invitee will be removed from only that scheduled meeting.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetingInvitees/{meetingInviteeId}",
@@ -359,9 +359,9 @@ var MeetingsInviteesDeleteMeeting = &Operation{
 	},
 }
 
-// MeetingsMessagesDeleteMeeting is "Delete a Meeting Message": DELETE /meeting/messages/{meetingMessageId}.
-var MeetingsMessagesDeleteMeeting = &Operation{
-	ID: "MeetingsMessagesDeleteMeeting", Area: "meetings", Group: "messages", Command: "delete-meeting",
+// MeetingsDeleteMeetingMessagesByMeetingMessageId is "Delete a Meeting Message": DELETE /meeting/messages/{meetingMessageId}.
+var MeetingsDeleteMeetingMessagesByMeetingMessageId = &Operation{
+	ID: "MeetingsDeleteMeetingMessagesByMeetingMessageId", Area: "meetings", Group: "messages", Command: "delete-meeting",
 	Summary:     "Delete a Meeting Message",
 	Description: "Deletes a Meeting Message from the In Meeting Chat, using its ID.\n\nThis ID can be retrieved by a Compliance Officer using the [events API](/docs/api/v1/events/list-events) filtering on the `meetingMessages` resource type.\n\nNOTE: When viewing the response from the events API, there are 2 `id` fields. The ID to be used here can be found under the `data` field in the response.\n\nSpecify the `meetingMessage` ID in the `meetingMessageId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meeting/messages/{meetingMessageId}",
@@ -370,9 +370,9 @@ var MeetingsMessagesDeleteMeeting = &Operation{
 	},
 }
 
-// MeetingsParticipantsListMeeting is "List Meeting Participants": GET /meetingParticipants.
-var MeetingsParticipantsListMeeting = &Operation{
-	ID: "MeetingsParticipantsListMeeting", Area: "meetings", Group: "participants", Command: "list-meeting",
+// MeetingsGetMeetingParticipants is "List Meeting Participants": GET /meetingParticipants.
+var MeetingsGetMeetingParticipants = &Operation{
+	ID: "MeetingsGetMeetingParticipants", Area: "meetings", Group: "participants", Command: "list-meeting",
 	Summary:     "List Meeting Participants",
 	Description: "List all participants in an in-progress meeting or an ended meeting. The `meetingId` parameter is required, which is the unique identifier for the meeting.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.\n\n* If the `meetingId` value specified is for a meeting series, the operation returns participants' details for the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the meeting series in the time range.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the scheduled meeting in the time range.\n\n* If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation returns participants' details for that meeting instance.\n\n* If the meeting is in progress, the operation returns all the real-time participants. If the meeting is ended, the operation returns all the participants that have joined the meeting.\n\n* If the `breakoutSessionId` parameter is specified, the operation returns participants who joined the specified breakout session. It only applies to end meeting instances.\n\n* The `breakoutSessionsAttended` attribute is only returned for a participant of an ended meeting instance if the participant joined breakout sessions in the meeitng.\n\n* The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an occurrence ID.\n\n* If the webinar is in progress when the attendee has ever been unmuted to speak in the webinar, this attendee becomes a panelist. The operation returns include the people who have been designated as panelists when the webinar is created and have joined the webinar, and the attendees who have joined the webinar and are unmuted to speak in the webinar temporarily. If the webinar is ended, the operation returns all the participants, including all panelists and all attendees who are not panelists.\n\n#### Request Header\n\n* `timezone`: Time zone for time stamps in the response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones).",
 	Method:      "GET", Host: HostWebex, Path: "/meetingParticipants",
@@ -390,9 +390,9 @@ var MeetingsParticipantsListMeeting = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsParticipantsQueryMeetingEmail is "Query Meeting Participants with Email": POST /meetingParticipants/query.
-var MeetingsParticipantsQueryMeetingEmail = &Operation{
-	ID: "MeetingsParticipantsQueryMeetingEmail", Area: "meetings", Group: "participants", Command: "query-meeting-email",
+// MeetingsPostMeetingParticipantsQuery is "Query Meeting Participants with Email": POST /meetingParticipants/query.
+var MeetingsPostMeetingParticipantsQuery = &Operation{
+	ID: "MeetingsPostMeetingParticipantsQuery", Area: "meetings", Group: "participants", Command: "query-meeting-email",
 	Summary:     "Query Meeting Participants with Email",
 	Description: "Query participants in a live meeting, or after the meeting, using participant's email. The `meetingId` parameter is the unique identifier for the meeting and is required.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.\n\n* If the `meetingId` value specified is for a meeting series, the operation returns participants' details for the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the meeting series in the time range.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in the scheduled meeting in the time range.\n\n* If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation returns participants' details for that meeting instance.\n\n* The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an occurrence ID.\n\n#### Request Header\n\n* `timezone`: Time zone for time stamps in the response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones).",
 	Method:      "POST", Host: HostWebex, Path: "/meetingParticipants/query",
@@ -410,9 +410,9 @@ var MeetingsParticipantsQueryMeetingEmail = &Operation{
 	}},
 }
 
-// MeetingsParticipantsGetMeeting is "Get Meeting Participant Details": GET /meetingParticipants/{participantId}.
-var MeetingsParticipantsGetMeeting = &Operation{
-	ID: "MeetingsParticipantsGetMeeting", Area: "meetings", Group: "participants", Command: "get-meeting",
+// MeetingsGetMeetingParticipantsByParticipantId is "Get Meeting Participant Details": GET /meetingParticipants/{participantId}.
+var MeetingsGetMeetingParticipantsByParticipantId = &Operation{
+	ID: "MeetingsGetMeetingParticipantsByParticipantId", Area: "meetings", Group: "participants", Command: "get-meeting",
 	Summary:     "Get Meeting Participant Details",
 	Description: "Get a meeting participant details of a live or post meeting. The `participantId` is required to identify the meeting and the participant.\n\nThe authenticated user calling this API must either have an Administrator role with the `meeting:admin_participants_read` scope, or be the meeting host.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingParticipants/{participantId}",
@@ -422,9 +422,9 @@ var MeetingsParticipantsGetMeeting = &Operation{
 	},
 }
 
-// MeetingsParticipantsUpdate is "Update a Participant": PUT /meetingParticipants/{participantId}.
-var MeetingsParticipantsUpdate = &Operation{
-	ID: "MeetingsParticipantsUpdate", Area: "meetings", Group: "participants", Command: "update",
+// MeetingsPutMeetingParticipantsByParticipantId is "Update a Participant": PUT /meetingParticipants/{participantId}.
+var MeetingsPutMeetingParticipantsByParticipantId = &Operation{
+	ID: "MeetingsPutMeetingParticipantsByParticipantId", Area: "meetings", Group: "participants", Command: "update",
 	Summary:     "Update a Participant",
 	Description: "Mute, un-mute, expel, or admit a participant in a live meeting. The `participantId` is required to identify the meeting and the participant.\n\nNotes:\n\n* The owner of the OAuth token calling this API needs to be the meeting host or co-host.\n\n* The `expel` attribute always takes precedence over `admit` and `muted`. The request can have all `expel`, `admit` and `muted` or any of them.\n\n<div><Callout type=\"warning\">There is an inconsistent behavior in Webex Meetings App when all active meeting participants join using Webex Meetings App and the host attempts to change meeting participant status using this API. Requests to mute, un-mute, admit, or expel a meeting participant return a successful response and update the state in the API, but the changes will not be applied to the Webex Meetings App participants. The inconsistent behavior in Webex Meetings App will be corrected in a future release.\n**Workaround**: [Enable closed captions](https://help.webex.com/en-us/article/WBX47352/How-Do-I-Enable-Closed-Captions?) or enable the [Webex Assistant](https://help.webex.com/en-us/article/n91uf2x/Turn-on-or-turn-off-Webex-Assistant-during-a-meeting-or-webinar).</Callout></div>",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingParticipants/{participantId}",
@@ -438,18 +438,18 @@ var MeetingsParticipantsUpdate = &Operation{
 	}},
 }
 
-// MeetingsParticipantsAdmit is "Admit Participants": POST /meetingParticipants/admit.
-var MeetingsParticipantsAdmit = &Operation{
-	ID: "MeetingsParticipantsAdmit", Area: "meetings", Group: "participants", Command: "admit",
+// MeetingsPostMeetingParticipantsAdmit is "Admit Participants": POST /meetingParticipants/admit.
+var MeetingsPostMeetingParticipantsAdmit = &Operation{
+	ID: "MeetingsPostMeetingParticipantsAdmit", Area: "meetings", Group: "participants", Command: "admit",
 	Summary:     "Admit Participants",
 	Description: "Admit multiple participants to a meeting in progress.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingParticipants/admit",
 	Body: &Body{},
 }
 
-// MeetingsParticipantsCallOutSip is "Call Out a SIP Participant": POST /meetingParticipants/callout.
-var MeetingsParticipantsCallOutSip = &Operation{
-	ID: "MeetingsParticipantsCallOutSip", Area: "meetings", Group: "participants", Command: "call-out-sip",
+// MeetingsPostMeetingParticipantsCallout is "Call Out a SIP Participant": POST /meetingParticipants/callout.
+var MeetingsPostMeetingParticipantsCallout = &Operation{
+	ID: "MeetingsPostMeetingParticipantsCallout", Area: "meetings", Group: "participants", Command: "call-out-sip",
 	Summary:     "Call Out a SIP Participant",
 	Description: "Initiate a call to a SIP participant to join a meeting.\n\nIf a user invoking the API is not a [Service App](/docs/service-apps), the user must join the meeting before invoking the API. If a user is a [Service App](/docs/service-apps), the service app can invoke the API without joining the meeting. In both cases, the normal user or the service app that invokes the API must be the meeting host or cohost. If the meeting is created by the service app on behalf of the real host, the service app cannot use the admin on behalf function to invoke this API. Instead the host or cohost must execute the action.\n\nThe authenticated user calling this API must have the `meeting:participants_write` scope.\n\nThe ringing on the invited SIP device stops in 30 seconds if there is no response.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingParticipants/callout",
@@ -463,9 +463,9 @@ var MeetingsParticipantsCallOutSip = &Operation{
 	}},
 }
 
-// MeetingsParticipantsCancelCallingOutSip is "Cancel Calling Out a SIP Participant": POST /meetingParticipants/cancelCallout.
-var MeetingsParticipantsCancelCallingOutSip = &Operation{
-	ID: "MeetingsParticipantsCancelCallingOutSip", Area: "meetings", Group: "participants", Command: "cancel-calling-out-sip",
+// MeetingsPostMeetingParticipantsCancelCallout is "Cancel Calling Out a SIP Participant": POST /meetingParticipants/cancelCallout.
+var MeetingsPostMeetingParticipantsCancelCallout = &Operation{
+	ID: "MeetingsPostMeetingParticipantsCancelCallout", Area: "meetings", Group: "participants", Command: "cancel-calling-out-sip",
 	Summary:     "Cancel Calling Out a SIP Participant",
 	Description: "Cancel the call to a SIP participant before the ringing on the invited SIP device stops. The ringing on the invited SIP device stops in 30 seconds if there is no response.\n\nIf a user invoking the API is not a [Service App](/docs/service-apps), the user must join the meeting before invoking the API. If a user is a [Service App](/docs/service-apps), the service app can invoke the API without joining the meeting. In both cases, the normal user or the service app that invokes the API must be the meeting host or cohost. If the meeting is created by the service app on behalf of the real host, the service app cannot use the admin on behalf function to invoke this API. Instead the host or cohost must execute the action.\n\nThe authenticated user calling this API must have the `meeting:participants_write` scope.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingParticipants/cancelCallout",
@@ -474,9 +474,9 @@ var MeetingsParticipantsCancelCallingOutSip = &Operation{
 	}},
 }
 
-// MeetingsMeetingPollsList is "List Meeting Polls": GET /meetings/polls.
-var MeetingsMeetingPollsList = &Operation{
-	ID: "MeetingsMeetingPollsList", Area: "meetings", Group: "meeting-polls", Command: "list",
+// MeetingsGetMeetingsPolls is "List Meeting Polls": GET /meetings/polls.
+var MeetingsGetMeetingsPolls = &Operation{
+	ID: "MeetingsGetMeetingsPolls", Area: "meetings", Group: "meeting-polls", Command: "list",
 	Summary:     "List Meeting Polls",
 	Description: "Lists all the polls and the poll questions in a meeting when ready.\n\n* Only [meeting instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* No pagination for this API because we don't expect a large number of questions for each meeting.\n\n<div><Callout type=\"info\">Polls are available within 15 minutes following the meeting.</Callout></div>",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/polls",
@@ -486,9 +486,9 @@ var MeetingsMeetingPollsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingPollsGetPollresults is "Get Meeting PollResults": GET /meetings/pollResults.
-var MeetingsMeetingPollsGetPollresults = &Operation{
-	ID: "MeetingsMeetingPollsGetPollresults", Area: "meetings", Group: "meeting-polls", Command: "get-pollresults",
+// MeetingsGetMeetingsPollResults is "Get Meeting PollResults": GET /meetings/pollResults.
+var MeetingsGetMeetingsPollResults = &Operation{
+	ID: "MeetingsGetMeetingsPollResults", Area: "meetings", Group: "meeting-polls", Command: "get-pollresults",
 	Summary:     "Get Meeting PollResults",
 	Description: "List the meeting polls, the poll's questions, and answers from the meeting when ready.\n\n* Only [meeting instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).\n\n* This API is paginated by the sum of respondents from all questions in a meeting, these pagination links are returned in the response header.\n\n<div><Callout type=\"info\">Polls results are available within 15 minutes following the meeting.</Callout></div>",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/pollResults",
@@ -499,9 +499,9 @@ var MeetingsMeetingPollsGetPollresults = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingPollsListRespondentsQuestion is "List Respondents of a Question": GET /meetings/polls/{pollId}/questions/{questionId}/respondents.
-var MeetingsMeetingPollsListRespondentsQuestion = &Operation{
-	ID: "MeetingsMeetingPollsListRespondentsQuestion", Area: "meetings", Group: "meeting-polls", Command: "list-respondents-question",
+// MeetingsGetMeetingsPollsByPollIdQuestionsByQuestionIdRespondents is "List Respondents of a Question": GET /meetings/polls/{pollId}/questions/{questionId}/respondents.
+var MeetingsGetMeetingsPollsByPollIdQuestionsByQuestionIdRespondents = &Operation{
+	ID: "MeetingsGetMeetingsPollsByPollIdQuestionsByQuestionIdRespondents", Area: "meetings", Group: "meeting-polls", Command: "list-respondents-question",
 	Summary:     "List Respondents of a Question",
 	Description: "Lists the respondents to a specific questions in a poll.\n\n* Only [meeting instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets are split into [pages](/docs/basics#pagination).\n\n<div><Callout type=\"info\">The list of poll respondents are available within 15 minutes following the meeting.</Callout></div>",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/polls/{pollId}/questions/{questionId}/respondents",
@@ -514,9 +514,9 @@ var MeetingsMeetingPollsListRespondentsQuestion = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsPreferencesGetMeeting is "Get Meeting Preference Details": GET /meetingPreferences.
-var MeetingsPreferencesGetMeeting = &Operation{
-	ID: "MeetingsPreferencesGetMeeting", Area: "meetings", Group: "preferences", Command: "get-meeting",
+// MeetingsGetMeetingPreferences is "Get Meeting Preference Details": GET /meetingPreferences.
+var MeetingsGetMeetingPreferences = &Operation{
+	ID: "MeetingsGetMeetingPreferences", Area: "meetings", Group: "preferences", Command: "get-meeting",
 	Summary:     "Get Meeting Preference Details",
 	Description: "Retrieves meeting preferences for the authenticated user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences",
@@ -526,9 +526,9 @@ var MeetingsPreferencesGetMeeting = &Operation{
 	},
 }
 
-// MeetingsPreferencesGetPersonalMeetingRoomOptions is "Get Personal Meeting Room Options": GET /meetingPreferences/personalMeetingRoom.
-var MeetingsPreferencesGetPersonalMeetingRoomOptions = &Operation{
-	ID: "MeetingsPreferencesGetPersonalMeetingRoomOptions", Area: "meetings", Group: "preferences", Command: "get-personal-meeting-room-options",
+// MeetingsGetMeetingPreferencesPersonalMeetingRoom is "Get Personal Meeting Room Options": GET /meetingPreferences/personalMeetingRoom.
+var MeetingsGetMeetingPreferencesPersonalMeetingRoom = &Operation{
+	ID: "MeetingsGetMeetingPreferencesPersonalMeetingRoom", Area: "meetings", Group: "preferences", Command: "get-personal-meeting-room-options",
 	Summary:     "Get Personal Meeting Room Options",
 	Description: "Retrieves the Personal Meeting Room options for the authenticated user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences/personalMeetingRoom",
@@ -538,9 +538,9 @@ var MeetingsPreferencesGetPersonalMeetingRoomOptions = &Operation{
 	},
 }
 
-// MeetingsPreferencesUpdatePersonalMeetingRoomOptions is "Update Personal Meeting Room Options": PUT /meetingPreferences/personalMeetingRoom.
-var MeetingsPreferencesUpdatePersonalMeetingRoomOptions = &Operation{
-	ID: "MeetingsPreferencesUpdatePersonalMeetingRoomOptions", Area: "meetings", Group: "preferences", Command: "update-personal-meeting-room-options",
+// MeetingsPutMeetingPreferencesPersonalMeetingRoom is "Update Personal Meeting Room Options": PUT /meetingPreferences/personalMeetingRoom.
+var MeetingsPutMeetingPreferencesPersonalMeetingRoom = &Operation{
+	ID: "MeetingsPutMeetingPreferencesPersonalMeetingRoom", Area: "meetings", Group: "preferences", Command: "update-personal-meeting-room-options",
 	Summary:     "Update Personal Meeting Room Options",
 	Description: "Updates Personal Meeting Room options for the authenticated user.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingPreferences/personalMeetingRoom",
@@ -551,9 +551,9 @@ var MeetingsPreferencesUpdatePersonalMeetingRoomOptions = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsPreferencesGetAudioOptions is "Get Audio Options": GET /meetingPreferences/audio.
-var MeetingsPreferencesGetAudioOptions = &Operation{
-	ID: "MeetingsPreferencesGetAudioOptions", Area: "meetings", Group: "preferences", Command: "get-audio-options",
+// MeetingsGetMeetingPreferencesAudio is "Get Audio Options": GET /meetingPreferences/audio.
+var MeetingsGetMeetingPreferencesAudio = &Operation{
+	ID: "MeetingsGetMeetingPreferencesAudio", Area: "meetings", Group: "preferences", Command: "get-audio-options",
 	Summary:     "Get Audio Options",
 	Description: "Retrieves audio options for the authenticated user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences/audio",
@@ -563,9 +563,9 @@ var MeetingsPreferencesGetAudioOptions = &Operation{
 	},
 }
 
-// MeetingsPreferencesUpdateAudioOptions is "Update Audio Options": PUT /meetingPreferences/audio.
-var MeetingsPreferencesUpdateAudioOptions = &Operation{
-	ID: "MeetingsPreferencesUpdateAudioOptions", Area: "meetings", Group: "preferences", Command: "update-audio-options",
+// MeetingsPutMeetingPreferencesAudio is "Update Audio Options": PUT /meetingPreferences/audio.
+var MeetingsPutMeetingPreferencesAudio = &Operation{
+	ID: "MeetingsPutMeetingPreferencesAudio", Area: "meetings", Group: "preferences", Command: "update-audio-options",
 	Summary:     "Update Audio Options",
 	Description: "Updates audio options for the authenticated user.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingPreferences/audio",
@@ -576,9 +576,9 @@ var MeetingsPreferencesUpdateAudioOptions = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsPreferencesGetVideoOptions is "Get Video Options": GET /meetingPreferences/video.
-var MeetingsPreferencesGetVideoOptions = &Operation{
-	ID: "MeetingsPreferencesGetVideoOptions", Area: "meetings", Group: "preferences", Command: "get-video-options",
+// MeetingsGetMeetingPreferencesVideo is "Get Video Options": GET /meetingPreferences/video.
+var MeetingsGetMeetingPreferencesVideo = &Operation{
+	ID: "MeetingsGetMeetingPreferencesVideo", Area: "meetings", Group: "preferences", Command: "get-video-options",
 	Summary:     "Get Video Options",
 	Description: "Retrieves video options for the authenticated user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences/video",
@@ -588,9 +588,9 @@ var MeetingsPreferencesGetVideoOptions = &Operation{
 	},
 }
 
-// MeetingsPreferencesUpdateVideoOptions is "Update Video Options": PUT /meetingPreferences/video.
-var MeetingsPreferencesUpdateVideoOptions = &Operation{
-	ID: "MeetingsPreferencesUpdateVideoOptions", Area: "meetings", Group: "preferences", Command: "update-video-options",
+// MeetingsPutMeetingPreferencesVideo is "Update Video Options": PUT /meetingPreferences/video.
+var MeetingsPutMeetingPreferencesVideo = &Operation{
+	ID: "MeetingsPutMeetingPreferencesVideo", Area: "meetings", Group: "preferences", Command: "update-video-options",
 	Summary:     "Update Video Options",
 	Description: "Updates video options for the authenticated user.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingPreferences/video",
@@ -601,9 +601,9 @@ var MeetingsPreferencesUpdateVideoOptions = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsPreferencesGetSchedulingOptions is "Get Scheduling Options": GET /meetingPreferences/schedulingOptions.
-var MeetingsPreferencesGetSchedulingOptions = &Operation{
-	ID: "MeetingsPreferencesGetSchedulingOptions", Area: "meetings", Group: "preferences", Command: "get-scheduling-options",
+// MeetingsGetMeetingPreferencesSchedulingOptions is "Get Scheduling Options": GET /meetingPreferences/schedulingOptions.
+var MeetingsGetMeetingPreferencesSchedulingOptions = &Operation{
+	ID: "MeetingsGetMeetingPreferencesSchedulingOptions", Area: "meetings", Group: "preferences", Command: "get-scheduling-options",
 	Summary:     "Get Scheduling Options",
 	Description: "Retrieves scheduling options for the authenticated user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences/schedulingOptions",
@@ -613,9 +613,9 @@ var MeetingsPreferencesGetSchedulingOptions = &Operation{
 	},
 }
 
-// MeetingsPreferencesUpdateSchedulingOptions is "Update Scheduling Options": PUT /meetingPreferences/schedulingOptions.
-var MeetingsPreferencesUpdateSchedulingOptions = &Operation{
-	ID: "MeetingsPreferencesUpdateSchedulingOptions", Area: "meetings", Group: "preferences", Command: "update-scheduling-options",
+// MeetingsPutMeetingPreferencesSchedulingOptions is "Update Scheduling Options": PUT /meetingPreferences/schedulingOptions.
+var MeetingsPutMeetingPreferencesSchedulingOptions = &Operation{
+	ID: "MeetingsPutMeetingPreferencesSchedulingOptions", Area: "meetings", Group: "preferences", Command: "update-scheduling-options",
 	Summary:     "Update Scheduling Options",
 	Description: "Updates scheduling options for the authenticated user.\n\n* If `delegateEmails` is null or not specified, the user's delegate emails are not changed. If `delegateEmails` is specified and not empty, the user's delegate emails are updated with the specified emails. If `delegateEmails` is specified as an empty array, the user's existing delegate emails are removed.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingPreferences/schedulingOptions",
@@ -632,9 +632,9 @@ var MeetingsPreferencesUpdateSchedulingOptions = &Operation{
 	}},
 }
 
-// MeetingsPreferencesInsertDelegateEmails is "Insert Delegate Emails": POST /meetingPreferences/schedulingOptions/delegateEmails/insert.
-var MeetingsPreferencesInsertDelegateEmails = &Operation{
-	ID: "MeetingsPreferencesInsertDelegateEmails", Area: "meetings", Group: "preferences", Command: "insert-delegate-emails",
+// MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsInsert is "Insert Delegate Emails": POST /meetingPreferences/schedulingOptions/delegateEmails/insert.
+var MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsInsert = &Operation{
+	ID: "MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsInsert", Area: "meetings", Group: "preferences", Command: "insert-delegate-emails",
 	Summary:     "Insert Delegate Emails",
 	Description: "Insert delegate emails for the authenticated user.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingPreferences/schedulingOptions/delegateEmails/insert",
@@ -647,9 +647,9 @@ var MeetingsPreferencesInsertDelegateEmails = &Operation{
 	}},
 }
 
-// MeetingsPreferencesDeleteDelegateEmails is "Delete Delegate Emails": POST /meetingPreferences/schedulingOptions/delegateEmails/delete.
-var MeetingsPreferencesDeleteDelegateEmails = &Operation{
-	ID: "MeetingsPreferencesDeleteDelegateEmails", Area: "meetings", Group: "preferences", Command: "delete-delegate-emails",
+// MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsDelete is "Delete Delegate Emails": POST /meetingPreferences/schedulingOptions/delegateEmails/delete.
+var MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsDelete = &Operation{
+	ID: "MeetingsPostMeetingPreferencesSchedulingOptionsDelegateEmailsDelete", Area: "meetings", Group: "preferences", Command: "delete-delegate-emails",
 	Summary:     "Delete Delegate Emails",
 	Description: "Delete delegate emails for the authenticated user.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingPreferences/schedulingOptions/delegateEmails/delete",
@@ -662,9 +662,9 @@ var MeetingsPreferencesDeleteDelegateEmails = &Operation{
 	}},
 }
 
-// MeetingsPreferencesGetSiteList is "Get Site List": GET /meetingPreferences/sites.
-var MeetingsPreferencesGetSiteList = &Operation{
-	ID: "MeetingsPreferencesGetSiteList", Area: "meetings", Group: "preferences", Command: "get-site-list",
+// MeetingsGetMeetingPreferencesSites is "Get Site List": GET /meetingPreferences/sites.
+var MeetingsGetMeetingPreferencesSites = &Operation{
+	ID: "MeetingsGetMeetingPreferencesSites", Area: "meetings", Group: "preferences", Command: "get-site-list",
 	Summary:     "Get Site List",
 	Description: "Retrieves the list of Webex sites that the authenticated user is set up to use.\nWhen the admin tries to get the site list via `userEmail`, if `siteUrl` is not specified, the API searches the user ID from the admin's default site. If `siteUrl` is specified, the API searches the user ID from the specified site.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingPreferences/sites",
@@ -674,9 +674,9 @@ var MeetingsPreferencesGetSiteList = &Operation{
 	},
 }
 
-// MeetingsPreferencesUpdateDefaultSite is "Update Default Site": PUT /meetingPreferences/sites.
-var MeetingsPreferencesUpdateDefaultSite = &Operation{
-	ID: "MeetingsPreferencesUpdateDefaultSite", Area: "meetings", Group: "preferences", Command: "update-default-site",
+// MeetingsPutMeetingPreferencesSites is "Update Default Site": PUT /meetingPreferences/sites.
+var MeetingsPutMeetingPreferencesSites = &Operation{
+	ID: "MeetingsPutMeetingPreferencesSites", Area: "meetings", Group: "preferences", Command: "update-default-site",
 	Summary:     "Update Default Site",
 	Description: "Updates the default site for the authenticated user.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingPreferences/sites",
@@ -689,18 +689,18 @@ var MeetingsPreferencesUpdateDefaultSite = &Operation{
 	}},
 }
 
-// MeetingsPreferencesBatchRefreshPersonalMeetingRoomId is "Batch Refresh Personal Meeting Room ID": POST /admin/meetingPreferences/personalMeetingRoom/refreshId.
-var MeetingsPreferencesBatchRefreshPersonalMeetingRoomId = &Operation{
-	ID: "MeetingsPreferencesBatchRefreshPersonalMeetingRoomId", Area: "meetings", Group: "preferences", Command: "batch-refresh-personal-meeting-room-id",
+// MeetingsPostAdminMeetingPreferencesPersonalMeetingRoomRefreshId is "Batch Refresh Personal Meeting Room ID": POST /admin/meetingPreferences/personalMeetingRoom/refreshId.
+var MeetingsPostAdminMeetingPreferencesPersonalMeetingRoomRefreshId = &Operation{
+	ID: "MeetingsPostAdminMeetingPreferencesPersonalMeetingRoomRefreshId", Area: "meetings", Group: "preferences", Command: "batch-refresh-personal-meeting-room-id",
 	Summary:     "Batch Refresh Personal Meeting Room ID",
 	Description: "Refreshes personal room IDs automatically according to the current personal room ID rule of the target site or by the values specified by the admin user.\n\nThe new personal room IDs are generated by the site's settings automatically if `systemGenerated` is true; otherwise, replace the existing personal room IDs with the specified values if `systemGenerated` is false or not specified.\n\nIt may take up to 30 minutes to see the updated personal room ID on the Webex meeting page after refreshing the personal room ID due to cache.\n\nEither all items in `personalMeetingRoomIds` have `personalMeetingRoomId`, or they all have `systemGenerated` which equals true. `personalMeetingRoomId` and `systemGenerated: true` cannot be specified at the same time.\n\nThe items in `personalMeetingRoomIds` either all have `personId` or all have `email` in a single request. Partial `personId` and partial `email` is not allowed in the same request.",
 	Method:      "POST", Host: HostWebex, Path: "/admin/meetingPreferences/personalMeetingRoom/refreshId",
 	Body: &Body{},
 }
 
-// MeetingsMeetingQaListQ is "List Meeting Q and A": GET /meetings/q_and_a.
-var MeetingsMeetingQaListQ = &Operation{
-	ID: "MeetingsMeetingQaListQ", Area: "meetings", Group: "meeting-qa", Command: "list-q",
+// MeetingsGetMeetingsQAndA is "List Meeting Q and A": GET /meetings/q_and_a.
+var MeetingsGetMeetingsQAndA = &Operation{
+	ID: "MeetingsGetMeetingsQAndA", Area: "meetings", Group: "meeting-qa", Command: "list-q",
 	Summary:     "List Meeting Q and A",
 	Description: "Lists questions and answers from a meeting, when ready.\n\nNotes:\n\n* Only [meeting instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).\n\n* This API is paginated by the sum of answers in a meeting, These pagination links are returned in the response header.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/q_and_a",
@@ -711,9 +711,9 @@ var MeetingsMeetingQaListQ = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingQaListAnswersQuestion is "List Answers of a Question": GET /meetings/q_and_a/{questionId}/answers.
-var MeetingsMeetingQaListAnswersQuestion = &Operation{
-	ID: "MeetingsMeetingQaListAnswersQuestion", Area: "meetings", Group: "meeting-qa", Command: "list-answers-question",
+// MeetingsGetMeetingsQAndAByQuestionIdAnswers is "List Answers of a Question": GET /meetings/q_and_a/{questionId}/answers.
+var MeetingsGetMeetingsQAndAByQuestionIdAnswers = &Operation{
+	ID: "MeetingsGetMeetingsQAndAByQuestionIdAnswers", Area: "meetings", Group: "meeting-qa", Command: "list-answers-question",
 	Summary:     "List Answers of a Question",
 	Description: "Lists the answers to a specific question asked in a meeting.\n\n* Only [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) in state `ended` or `inProgress` are supported for `meetingId`.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/q_and_a/{questionId}/answers",
@@ -725,9 +725,9 @@ var MeetingsMeetingQaListAnswersQuestion = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingQualitiesGet is "Get Meeting Qualities": GET /meeting/qualities.
-var MeetingsMeetingQualitiesGet = &Operation{
-	ID: "MeetingsMeetingQualitiesGet", Area: "meetings", Group: "meeting-qualities", Command: "get",
+// MeetingsGetMeetingQualities is "Get Meeting Qualities": GET /meeting/qualities.
+var MeetingsGetMeetingQualities = &Operation{
+	ID: "MeetingsGetMeetingQualities", Area: "meetings", Group: "meeting-qualities", Command: "get",
 	Summary:     "Get Meeting Qualities",
 	Description: "Get quality data for a meeting, by `meetingId`. Only organization administrators can retrieve meeting quality data.",
 	Method:      "GET", Host: HostWebex, Path: "/meeting/qualities",
@@ -739,9 +739,9 @@ var MeetingsMeetingQualitiesGet = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "offset", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsSessionTypesListSite is "List Site Session Types": GET /admin/meeting/config/sessionTypes.
-var MeetingsSessionTypesListSite = &Operation{
-	ID: "MeetingsSessionTypesListSite", Area: "meetings", Group: "session-types", Command: "list-site",
+// MeetingsGetAdminMeetingConfigSessionTypes is "List Site Session Types": GET /admin/meeting/config/sessionTypes.
+var MeetingsGetAdminMeetingConfigSessionTypes = &Operation{
+	ID: "MeetingsGetAdminMeetingConfigSessionTypes", Area: "meetings", Group: "session-types", Command: "list-site",
 	Summary:     "List Site Session Types",
 	Description: "List session types for a specific site.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/config/sessionTypes",
@@ -751,9 +751,9 @@ var MeetingsSessionTypesListSite = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsSessionTypesListUser is "List User Session Type": GET /admin/meeting/userconfig/sessionTypes.
-var MeetingsSessionTypesListUser = &Operation{
-	ID: "MeetingsSessionTypesListUser", Area: "meetings", Group: "session-types", Command: "list-user",
+// MeetingsGetAdminMeetingUserconfigSessionTypes is "List User Session Type": GET /admin/meeting/userconfig/sessionTypes.
+var MeetingsGetAdminMeetingUserconfigSessionTypes = &Operation{
+	ID: "MeetingsGetAdminMeetingUserconfigSessionTypes", Area: "meetings", Group: "session-types", Command: "list-user",
 	Summary:     "List User Session Type",
 	Description: "List session types for a specific user.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/userconfig/sessionTypes",
@@ -765,9 +765,9 @@ var MeetingsSessionTypesListUser = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsSessionTypesUpdateUser is "Update User Session Types": PUT /admin/meeting/userconfig/sessionTypes.
-var MeetingsSessionTypesUpdateUser = &Operation{
-	ID: "MeetingsSessionTypesUpdateUser", Area: "meetings", Group: "session-types", Command: "update-user",
+// MeetingsPutAdminMeetingUserconfigSessionTypes is "Update User Session Types": PUT /admin/meeting/userconfig/sessionTypes.
+var MeetingsPutAdminMeetingUserconfigSessionTypes = &Operation{
+	ID: "MeetingsPutAdminMeetingUserconfigSessionTypes", Area: "meetings", Group: "session-types", Command: "update-user",
 	Summary:     "Update User Session Types",
 	Description: "Assign session types to specific users.\n\n* At least one of the following body parameters is required to update a specific user session type: `personId`, `email`.",
 	Method:      "PUT", Host: HostWebex, Path: "/admin/meeting/userconfig/sessionTypes",
@@ -779,9 +779,9 @@ var MeetingsSessionTypesUpdateUser = &Operation{
 	}},
 }
 
-// MeetingsTranscriptsListMeeting is "List Meeting Transcripts": GET /meetingTranscripts.
-var MeetingsTranscriptsListMeeting = &Operation{
-	ID: "MeetingsTranscriptsListMeeting", Area: "meetings", Group: "transcripts", Command: "list-meeting",
+// MeetingsGetMeetingTranscripts is "List Meeting Transcripts": GET /meetingTranscripts.
+var MeetingsGetMeetingTranscripts = &Operation{
+	ID: "MeetingsGetMeetingTranscripts", Area: "meetings", Group: "transcripts", Command: "list-meeting",
 	Summary:     "List Meeting Transcripts",
 	Description: "Lists available transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances).\n\nUse this operation to list transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) when they are ready. Please note that only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled meetings** and `in-progress` **meeting instances** are not supported.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingTranscripts",
@@ -797,9 +797,9 @@ var MeetingsTranscriptsListMeeting = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsTranscriptsListMeetingComplianceOfficer is "List Meeting Transcripts For Compliance Officer": GET /admin/meetingTranscripts.
-var MeetingsTranscriptsListMeetingComplianceOfficer = &Operation{
-	ID: "MeetingsTranscriptsListMeetingComplianceOfficer", Area: "meetings", Group: "transcripts", Command: "list-meeting-compliance-officer",
+// MeetingsGetAdminMeetingTranscripts is "List Meeting Transcripts For Compliance Officer": GET /admin/meetingTranscripts.
+var MeetingsGetAdminMeetingTranscripts = &Operation{
+	ID: "MeetingsGetAdminMeetingTranscripts", Area: "meetings", Group: "transcripts", Command: "list-meeting-compliance-officer",
 	Summary:     "List Meeting Transcripts For Compliance Officer",
 	Description: "Lists available or deleted transcripts of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) for a specific site.\n\nThe returned list is sorted in descending order by the date and time that the transcript was created.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meetingTranscripts",
@@ -813,9 +813,9 @@ var MeetingsTranscriptsListMeetingComplianceOfficer = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsTranscriptsDownloadMeeting is "Download a Meeting Transcript": GET /meetingTranscripts/{transcriptId}/download.
-var MeetingsTranscriptsDownloadMeeting = &Operation{
-	ID: "MeetingsTranscriptsDownloadMeeting", Area: "meetings", Group: "transcripts", Command: "download-meeting",
+// MeetingsGetMeetingTranscriptsByTranscriptIdDownload is "Download a Meeting Transcript": GET /meetingTranscripts/{transcriptId}/download.
+var MeetingsGetMeetingTranscriptsByTranscriptIdDownload = &Operation{
+	ID: "MeetingsGetMeetingTranscriptsByTranscriptIdDownload", Area: "meetings", Group: "transcripts", Command: "download-meeting",
 	Summary:     "Download a Meeting Transcript",
 	Description: "Download a meeting transcript from the meeting transcript specified by `transcriptId`.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingTranscripts/{transcriptId}/download",
@@ -826,9 +826,9 @@ var MeetingsTranscriptsDownloadMeeting = &Operation{
 	},
 }
 
-// MeetingsTranscriptsListSnippetsMeeting is "List Snippets of a Meeting Transcript": GET /meetingTranscripts/{transcriptId}/snippets.
-var MeetingsTranscriptsListSnippetsMeeting = &Operation{
-	ID: "MeetingsTranscriptsListSnippetsMeeting", Area: "meetings", Group: "transcripts", Command: "list-snippets-meeting",
+// MeetingsGetMeetingTranscriptsByTranscriptIdSnippets is "List Snippets of a Meeting Transcript": GET /meetingTranscripts/{transcriptId}/snippets.
+var MeetingsGetMeetingTranscriptsByTranscriptIdSnippets = &Operation{
+	ID: "MeetingsGetMeetingTranscriptsByTranscriptIdSnippets", Area: "meetings", Group: "transcripts", Command: "list-snippets-meeting",
 	Summary:     "List Snippets of a Meeting Transcript",
 	Description: "Lists snippets of a meeting transcript specified by `transcriptId`.\n\nUse this operation to list snippets of a meeting transcript when they are ready.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingTranscripts/{transcriptId}/snippets",
@@ -839,9 +839,9 @@ var MeetingsTranscriptsListSnippetsMeeting = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsTranscriptsGetSnippet is "Get a Transcript Snippet": GET /meetingTranscripts/{transcriptId}/snippets/{snippetId}.
-var MeetingsTranscriptsGetSnippet = &Operation{
-	ID: "MeetingsTranscriptsGetSnippet", Area: "meetings", Group: "transcripts", Command: "get-snippet",
+// MeetingsGetMeetingTranscriptsByTranscriptIdSnippetsBySnippetId is "Get a Transcript Snippet": GET /meetingTranscripts/{transcriptId}/snippets/{snippetId}.
+var MeetingsGetMeetingTranscriptsByTranscriptIdSnippetsBySnippetId = &Operation{
+	ID: "MeetingsGetMeetingTranscriptsByTranscriptIdSnippetsBySnippetId", Area: "meetings", Group: "transcripts", Command: "get-snippet",
 	Summary:     "Get a Transcript Snippet",
 	Description: "Retrieves details for a transcript snippet specified by `snippetId` from the meeting transcript specified by `transcriptId`.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingTranscripts/{transcriptId}/snippets/{snippetId}",
@@ -851,9 +851,9 @@ var MeetingsTranscriptsGetSnippet = &Operation{
 	},
 }
 
-// MeetingsTranscriptsUpdateSnippet is "Update a Transcript Snippet": PUT /meetingTranscripts/{transcriptId}/snippets/{snippetId}.
-var MeetingsTranscriptsUpdateSnippet = &Operation{
-	ID: "MeetingsTranscriptsUpdateSnippet", Area: "meetings", Group: "transcripts", Command: "update-snippet",
+// MeetingsPutMeetingTranscriptsByTranscriptIdSnippetsBySnippetId is "Update a Transcript Snippet": PUT /meetingTranscripts/{transcriptId}/snippets/{snippetId}.
+var MeetingsPutMeetingTranscriptsByTranscriptIdSnippetsBySnippetId = &Operation{
+	ID: "MeetingsPutMeetingTranscriptsByTranscriptIdSnippetsBySnippetId", Area: "meetings", Group: "transcripts", Command: "update-snippet",
 	Summary:     "Update a Transcript Snippet",
 	Description: "Updates details for a transcript snippet specified by `snippetId` from the meeting transcript specified by `transcriptId`.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetingTranscripts/{transcriptId}/snippets/{snippetId}",
@@ -867,9 +867,9 @@ var MeetingsTranscriptsUpdateSnippet = &Operation{
 	}},
 }
 
-// MeetingsTranscriptsDelete is "Delete a Transcript": DELETE /meetingTranscripts/{transcriptId}.
-var MeetingsTranscriptsDelete = &Operation{
-	ID: "MeetingsTranscriptsDelete", Area: "meetings", Group: "transcripts", Command: "delete",
+// MeetingsDeleteMeetingTranscriptsByTranscriptId is "Delete a Transcript": DELETE /meetingTranscripts/{transcriptId}.
+var MeetingsDeleteMeetingTranscriptsByTranscriptId = &Operation{
+	ID: "MeetingsDeleteMeetingTranscriptsByTranscriptId", Area: "meetings", Group: "transcripts", Command: "delete",
 	Summary:     "Delete a Transcript",
 	Description: "Removes a transcript with a specified transcript ID. The deleted transcript cannot be recovered. If a Compliance Officer deletes another user's transcript, the transcript will be inaccessible to regular users (host, attendees), but will be still available to the Compliance Officer.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetingTranscripts/{transcriptId}",
@@ -882,9 +882,9 @@ var MeetingsTranscriptsDelete = &Operation{
 	}},
 }
 
-// MeetingsMeetingSummaryListUsageReports is "List Meeting Usage Reports": GET /meetingReports/usage.
-var MeetingsMeetingSummaryListUsageReports = &Operation{
-	ID: "MeetingsMeetingSummaryListUsageReports", Area: "meetings", Group: "meeting-summary", Command: "list-usage-reports",
+// MeetingsGetMeetingReportsUsage is "List Meeting Usage Reports": GET /meetingReports/usage.
+var MeetingsGetMeetingReportsUsage = &Operation{
+	ID: "MeetingsGetMeetingReportsUsage", Area: "meetings", Group: "meeting-summary", Command: "list-usage-reports",
 	Summary:     "List Meeting Usage Reports",
 	Description: "List meeting usage reports of all the users on the specified site by an admin. You can specify a date range and the maximum number of meeting usage reports to return.\n\nThe list returned is sorted in descending order by the date and time the meetings were started.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* `siteUrl` is required, and the meeting usage reports of the specified site are listed. All available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default timezone is `UTC` if not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingReports/usage",
@@ -900,9 +900,9 @@ var MeetingsMeetingSummaryListUsageReports = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsMeetingSummaryListAttendeeReports is "List Meeting Attendee Reports": GET /meetingReports/attendees.
-var MeetingsMeetingSummaryListAttendeeReports = &Operation{
-	ID: "MeetingsMeetingSummaryListAttendeeReports", Area: "meetings", Group: "meeting-summary", Command: "list-attendee-reports",
+// MeetingsGetMeetingReportsAttendees is "List Meeting Attendee Reports": GET /meetingReports/attendees.
+var MeetingsGetMeetingReportsAttendees = &Operation{
+	ID: "MeetingsGetMeetingReportsAttendees", Area: "meetings", Group: "meeting-summary", Command: "list-attendee-reports",
 	Summary:     "List Meeting Attendee Reports",
 	Description: "Lists of meeting attendee reports by a date range, the maximum number of meeting attendee reports, a meeting ID, a meeting number or a meeting title.\n\nIf the requesting user is an admin, the API returns meeting attendee reports of the meetings hosted by all the users on the specified site filtered by meeting ID, meeting number or meeting title.\n\nIf it's a normal meeting host, the API returns meeting attendee reports of the meetings hosted by the user himself on the specified site filtered by meeting ID, meeting number or meeting title.\n\nThe list returned is grouped by meeting instances. Both the groups and items of each group are sorted in descending order of `joinedTime`. For example, if `meetingId` is specified and it's a meeting series ID, the returned list is grouped by meeting instances of that series. The groups are sorted in descending order of `joinedTime`, and within each group the items are also sorted in descending order of `joinedTime`. Please refer to [Meetings Overview](/docs/meetings) for details of meeting series, scheduled meeting and meeting instance.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* `siteUrl` is required, and the meeting attendee reports of the specified site are listed. All available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* `meetingId`, `meetingNumber` and `meetingTitle` are optional parameters to query the meeting attendee reports, but at least one of them should be specified. If more than one parameter in the sequence of `meetingId`, `meetingNumber`, and `meetingTitle` are specified, the first one in the sequence is used. Currently, only ended meeting instance IDs and meeting series IDs are supported for `meetingId`. IDs of scheduled meetings or personal room meetings are not supported.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default timezone is `UTC` if not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/meetingReports/attendees",
@@ -920,9 +920,9 @@ var MeetingsMeetingSummaryListAttendeeReports = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsMeetingsGetAdmin is "Get a Meeting By an Admin": GET /admin/meetings/{meetingId}.
-var MeetingsMeetingsGetAdmin = &Operation{
-	ID: "MeetingsMeetingsGetAdmin", Area: "meetings", Group: "meetings", Command: "get-admin",
+// MeetingsGetAdminMeetingsByMeetingId is "Get a Meeting By an Admin": GET /admin/meetings/{meetingId}.
+var MeetingsGetAdminMeetingsByMeetingId = &Operation{
+	ID: "MeetingsGetAdminMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "get-admin",
 	Summary:     "Get a Meeting By an Admin",
 	Description: "Retrieves details for a meeting with a specified meeting ID by an admin. The following sensitive attributes are hidden from the response: `agenda`, `hostKey`, `password`, `phoneAndVideoSystemPassword`, `panelistPassword`, `phoneAndVideoSystemPanelistPassword`, `webLink`, `sipAddress`, `dialInIpAddress`, `registration` and `telephony.accessCode`.\n\n* If the `meetingId` value specified is for a meeting series and `current` is `true`, the operation returns details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start or the upcoming scheduled meeting of the meeting series.\n\n* If the `meetingId` value specified is for a meeting series and `current` is `false` or `current` is not specified, the operation returns details for the entire meeting series.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns details for that scheduled meeting.\n\n* If the `meetingId` value specified is for a meeting instance which is happening or has happened, the operation returns details for that meeting instance.\n\n* `trackingCodes` is not supported for ended meeting instances.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meetings/{meetingId}",
@@ -933,9 +933,9 @@ var MeetingsMeetingsGetAdmin = &Operation{
 	},
 }
 
-// MeetingsMeetingsListAdmin is "List Meetings By an Admin": GET /admin/meetings.
-var MeetingsMeetingsListAdmin = &Operation{
-	ID: "MeetingsMeetingsListAdmin", Area: "meetings", Group: "meetings", Command: "list-admin",
+// MeetingsGetAdminMeetings is "List Meetings By an Admin": GET /admin/meetings.
+var MeetingsGetAdminMeetings = &Operation{
+	ID: "MeetingsGetAdminMeetings", Area: "meetings", Group: "meetings", Command: "list-admin",
 	Summary:     "List Meetings By an Admin",
 	Description: "Retrieves details for meetings by an admin with a specified meeting number or web link. Please note that there are various products in the [Webex Suite](https://www.webex.com/collaboration-suite.html) such as `Meetings` and `Events`. Currently, only meetings of the `Meetings` product are supported by this API, meetings of others in the suite are not supported. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` will not be listed, but the ended and ongoing ad-hoc meeting instances will be listed. The following sensitive attributes are hidden from the response: `agenda`, `hostKey`, `password`, `phoneAndVideoSystemPassword`, `panelistPassword`, `phoneAndVideoSystemPanelistPassword`, `webLink`, `sipAddress`, `dialInIpAddress`, `registration` and `telephony.accessCode`.\n\n* If `meetingNumber` is specified, the operation returns an array of meeting objects specified by the `meetingNumber`. Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`, and each object contains the simultaneous interpretation object. Please note that `meetingNumber` and `webLink` are mutually exclusive and they cannot be specified simultaneously.\n\n* If `webLink` is specified, the operation returns an array of meeting objects specified by the `webLink`. Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`, and each object contains the simultaneous interpretation object. Please note that `meetingNumber` and `webLink` are mutually exclusive and they cannot be specified simultaneously.\n\n* The `current` parameter only applies to meeting series. If it's `false`, the `start` and `end` attributes of each returned meeting series object are for the first scheduled meeting of that series. If it's `true` or not specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or the upcoming scheduled meeting of that series.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meetings",
@@ -948,18 +948,18 @@ var MeetingsMeetingsListAdmin = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsCreate is "Create a Meeting": POST /meetings.
-var MeetingsMeetingsCreate = &Operation{
-	ID: "MeetingsMeetingsCreate", Area: "meetings", Group: "meetings", Command: "create",
+// MeetingsPostMeetings is "Create a Meeting": POST /meetings.
+var MeetingsPostMeetings = &Operation{
+	ID: "MeetingsPostMeetings", Area: "meetings", Group: "meetings", Command: "create",
 	Summary:     "Create a Meeting",
 	Description: "Creates a new meeting. Regular users can schedule up to 100 meetings in 24 hours and admin users up to 3000 overall or 800 for a single user. Please note that the failed requests are also counted toward the limits.\n\n* The `spark:all` scope is required when `roomId` is specified.\n\n* If the parameter `adhoc` is `true` and `roomId` is specified, an ad-hoc meeting is created for the target room. An ad-hoc meeting is a non-recurring instant meeting for the target room which is supposed to be started immediately after being created for a quick collaboration. There's only one ad-hoc meeting for a room at the same time. So, if there's already an ongoing ad-hoc meeting for the room, the API returns this ongoing meeting instead of creating a new one. If it's a [direct](/docs/api/v1/rooms/get-room-details) room, both members of the room can create an ad-hoc meeting for the room. If it's a [group](/docs/api/v1/rooms/get-room-details) room, only room members that are in the same [organization](/docs/api/v1/organizations/get-organization-details) as the room can create an ad-hoc meeting for the room. Please note that an ad-hoc meeting is for the purpose of an instant collaboration with people in a room, user should not persist the `id` and `meetingNumber` of the ad-hoc meeting when it's been created since this meeting may become an inactive ad-hoc meeting for the room if it's not been started after being created for a while or it has been started and ended. Each time a user needs an ad-hoc meeting for a room, they should create one instead of reusing the previous persisted one. Moreover, for the same reason, no email will be sent when an ad-hoc meeting is created. Ad-hoc meetings cannot be updated by [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) or deleted by [Delete a Meeting](/docs/api/v1/meetings/delete-a-meeting). Ad-hoc meetings cannot be listed by [List Meetings](/docs/api/v1/meetings/list-meetings) and the scheduled meetings of an ad-hoc meeting cannot be listed by [List Meetings of a Meeting Series](/docs/api/v1/meetings/list-meetings-of-a-meeting-series), but the ended and ongoing instances of ad-hoc meetings can be listed by [List Meetings](/docs/api/v1/meetings/list-meetings) and [List Meetings of a Meeting Series](/docs/api/v1/meetings/list-meetings-of-a-meeting-series).\n\n* If the parameter `adhoc` is `true`, `roomId` is required and the others are optional or ignored.\n\n* The default value of `title` for an ad-hoc meeting is the user's name if not specified. The following parameters for an ad-hoc meeting have default values and the user's input values will be ignored: `scheduledType` is always `meeting`; `start` and `end` are 5 minutes after the current time and 20 minutes after the current time respectively; `timezone` is `UTC`; `allowAnyUserToBeCoHost`, `allowAuthenticatedDevices`, `enabledJoinBeforeHost`, `enableConnectAudioBeforeHost` are always `true`; `allowFirstUserToBeCoHost`, `enableAutomaticLock`, `publicMeeting`, `sendEmail` are always `false`; `invitees` is the room members except \"me\"; `joinBeforeHostMinutes` is 5; `automaticLockMinutes` is null; `unlockedMeetingJoinSecurity` is `allowJoinWithLobby`. An ad-hoc meeting can be started immediately even if the `start` is 5 minutes after the current time.\n\n* The following parameters are not supported and will be ignored for an ad-hoc meeting: `templateId`, `recurrence`, `excludePassword`, `reminderTime`, `registration`, `integrationTags`, `enabledWebcastView`, and `panelistPassword`.\n\n* If the value of the parameter `recurrence` is null, a non-recurring meeting is created.\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* If the parameter `templateId` has a value, the meeting is created based on the meeting template specified by `templateId`. The list of meeting templates that is available for the authenticated user can be retrieved from [List Meeting Templates](/docs/api/v1/meetings/list-meeting-templates).\n\n* If the parameter `siteUrl` has a value, the meeting is created on the specified site. Otherwise, the meeting is created on the user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.\n\n* If the parameter `scheduledType` equals \"personalRoomMeeting\", the meeting is created in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).\n\n* If the parameter `roomId` has a value, the meeting is created for the Webex space specified by `roomId`. If `roomId` is specified but the user calling the API is not a member of the Webex space specified by `roomId`, the API will fail even if the user has the admin-level scopes or he is calling the API on behalf of another user which is specified by `hostEmail` and is a member of the Webex space.\n\n* If the parameter `enabledAudioWatermark` is `true`, `scheduledType` equals or defaults to `meeting`, and `audioConnectionOptions.audioConnectionType` equals `VoIP`, the audio for this meeting will have a watermark. In this case, a unique identifier is embedded into the audio that plays out of each Webex app and device. An administrator can use this watermark when analyzing an unauthorized recording to identify which Webex app or device was the source of the recording.\n\n* If the parameter `enabledVisualWatermark` is `true`, the video for this meeting will have a watermark. In this case, Webex superimposes a watermark image pattern on top of the meeting video and shared content to deter participants from leaking meeting information. Each participant viewing the meeting sees a watermark image pattern with their email address. If the participant is not signed in, the watermark image pattern includes their display name and email address.\n\n* The default value of `visualWatermarkOpacity` is 10 if not specified. The value must be between 5 and 80, inclusive. A smaller value means less distraction for meeting participants, while a larger value shows a clearer watermark. It's supported when `enabledVisualWatermark` is `true`.\n\n* When `enabledLiveStream` is `true`, `liveStream` must be specified. With these setting, the RTMP streaming specified by `liveStream.rtmpUrl` can be started and viewed during the meeting without any ad-hoc settings.\n\n* The `registration` can be specified when creating a meeting, but it can't be updated by [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) or [Patch a Meeting](/docs/api/v1/meetings/patch-a-meeting). Create a registration form for a meeting that doesn't have one or update the registration form for a meeting that already has one by using [Update Meeting Registration Form](/docs/api/v1/meetings/update-meeting-registration-form). Delete the registration form for a meeting by using [Delete Meeting Registration Form](/docs/api/v1/meetings/delete-meeting-registration-form).\n\n* You can't create a meeting that starts 10 years or more in the future.\n\n* If all meeting invitees of a meeting should not receive emails, the host can create a meeting with invitees, and the parameter `sendEmail` is set to `false`. If only some meeting invitees should not receive emails and others can, the host should not invite these invitees along with creating a meeting request. Instead, the host should add the invitees by [Create a Meeting Invitee](/docs/api/v1/meeting-invitees/create-a-meeting-invitee) or [Create Meeting Invitees](/docs/api/v1/meeting-invitees/create-meeting-invitees) with the parameter `sendEmail` is set to `false` after the meeting has been created.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings",
 	Body: &Body{},
 }
 
-// MeetingsMeetingsList is "List Meetings": GET /meetings.
-var MeetingsMeetingsList = &Operation{
-	ID: "MeetingsMeetingsList", Area: "meetings", Group: "meetings", Command: "list",
+// MeetingsGetMeetings is "List Meetings": GET /meetings.
+var MeetingsGetMeetings = &Operation{
+	ID: "MeetingsGetMeetings", Area: "meetings", Group: "meetings", Command: "list",
 	Summary:     "List Meetings",
 	Description: "<div><Callout type=\"info\">The previous `List Meetings of a Meeting Series` API is merged into the [List Meetings](/docs/api/v1/meetings/list-meetings) API.</Callout></div>\n\nRetrieves details for meetings with a specified meeting number, web link, meeting type, etc. Please note that there are various products in the [Webex Suite](https://www.webex.com/collaboration-suite.html) such as `Meetings` and `Events`. Currently, only meetings of the `Meetings` product are supported by this API, meetings of others in the suite are not supported. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` will not be listed, but the ended and ongoing ad-hoc meeting instances will be listed.\n\nLists scheduled meeting and meeting instances of a meeting series identified by `meetingSeriesId`. Scheduled meetings of an ad-hoc meeting created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` are not listed, but the ended and ongoing meeting instances of it are. Each _scheduled meeting_ or _meeting_ instance of a _meeting series_ has its own `start`, `end`, etc. Thus, for example, when a daily meeting has been scheduled from `2019-04-01` to `2019-04-10`, there are 10 scheduled meeting instances in this series, one instance for each day, and each one has its own attributes. When a scheduled meeting has been started and ended or is happening, there are even more ended or in-progress meeting instances.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* The default value of `meetingSeries` will be used if `meetingType` is not specified. When listing meetings with `meetingType=meetingSeries` implicitly or explicitly, the API returns all the recurring meeting series where the user is the meeting host or an invitee to the meeting. Please note that a meeting with no `recurrence` attribute is considered a meeting series with only one occurrence and it can also be listed with `meetingType=meetingSeries`. A recurring meeting series may have multiple occurrences which are scattered over weeks, months, or years. So, any meeting series that overlaps with the time range specified by `from` and `to` will be listed. For example, a monthly meeting series with `start=2024-01-01T10:00:00Z`, `end=2024-01-01T11:00:00Z` and `recurrence=FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=1;UNTIL=20250210T000000Z` can be listed with `meetingType=meetingSeries&from=2024-10-01&to=2024-11-01` even if the `start` and `end` are not in the specified time range.\n\n* If `meetingType` is specified and equals `meeting`, it lists ongoing and ended instances of the meeting series. The default value of `from` and `to` is: `from` equals the current date and time minus 7 days, and `to` equals the current date and time.\n\n* If `meetingSeriesId` is specified, `meetingNumber`, `webLink`, `roomId`, `current`, `integrationTag`, `scheduledType`, `siteUrl` will be ignored.\n\n* If `meetingNumber` is specified, the operation returns an array of meeting objects specified by the `meetingNumber`. Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`, and each object contains the simultaneous interpretation object. When `meetingNumber` is specified, parameters of `from`, `to`, `meetingType`, `state`, `isModified` and `siteUrl` will be ignored. Please note that `meetingNumber`, `webLink` and `roomId` are mutually exclusive and they cannot be specified simultaneously.\n\n* If `webLink` is specified, the operation returns an array of meeting objects specified by the `webLink`. Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`, and each object contains the simultaneous interpretation object. When `webLink` is specified, parameters of `from`, `to`, `meetingType`, `state`, `isModified` and `siteUrl` will be ignored. Please note that `meetingNumber`, `webLink` and `roomId` are mutually exclusive and they cannot be specified simultaneously.\n\n* If `roomId` is specified, the operation returns an array of meeting objects of the Webex space specified by the `roomId`. When `roomId` is specified, parameters of `current`, `meetingType`, `state` and `isModified` will be ignored. The meeting objects are queried on the user's preferred site if no `siteUrl` is specified; otherwise, queried on the specified site. `meetingNumber`, `webLink` and `roomId` are mutually exclusive and they cannot be specified simultaneously.\n\n* If `state` parameter is specified, the returned array only has items in the specified state. If `state` is not specified, return items of all states.\n\n* If `meetingType` equals \"meetingSeries\", the `scheduledType` parameter can be \"meeting\", \"webinar\" or null. If `scheduledType` is specified, the returned array only has items of the specified scheduled type; otherwise, it has items of \"meeting\" and \"webinar\".\n\n* If `meetingType` equals \"scheduledMeeting\", the `scheduledType` parameter can be \"meeting\", \"webinar\", \"personalRoomMeeting\" or null. If `scheduledType` is specified, the returned array only has items of the specified scheduled type; otherwise, it has items of all scheduled types.\n\n* If `meetingType` equals \"meeting\", the `scheduledType` parameter can be \"meeting\", \"webinar\" or null. If `scheduledType` is specified, the returned array only has items of the specified scheduled type; otherwise, it has items of \"meeting\" and \"webinar\". Please note that ended or in-progress meeting instances of [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) also fall into the category of \"meeting\" `scheduledType`.\n\n* If `meetingType` equals \"meeting\", a maximum of 10000 meeting instances can be listed even if pagination is enabled.\n\n* If `isModified` parameter is specified, the returned array only has items which have been modified to exceptional meetings. This parameter only applies to scheduled meeting.\n\n* If any of the `hasChat`, `hasRecording`, `hasTranscription`, `hasSummary`, `hasClosedCaption`, `hasPolls `, `hasQA` and `hasSlido` parameters is specified, the `meetingType` must be \"meeting\" and `state` must be \"ended\". These parameters are null by default.\n\n* The `current` parameter only applies to meeting series. If it's `false`, the `start` and `end` attributes of each returned meeting series object are for the first scheduled meeting of that series. If it's `true` or not specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or the upcoming scheduled meeting of that series.\n\n* If `from` and `to` are specified, the operation returns an array of meeting objects in that specified time range.\n\n* If the parameter `siteUrl` has a value, the operation lists meetings on the specified site; otherwise, lists meetings on the user's all sites. All available Webex sites of the user can be retrieved by `Get Site List` API.\n\n* `trackingCodes` is not supported for ended meeting instances.\n\n* A full admin or a content admin can list all the ended and ongoing meeting instances of the organization he manages with the `meeting:admin_schedule_read` scope and `meetingType=meeting` parameter.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `password`: Meeting password. Required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, cohost or invitee of the meeting.\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings",
@@ -994,9 +994,9 @@ var MeetingsMeetingsList = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsMeetingsGet is "Get a Meeting": GET /meetings/{meetingId}.
-var MeetingsMeetingsGet = &Operation{
-	ID: "MeetingsMeetingsGet", Area: "meetings", Group: "meetings", Command: "get",
+// MeetingsGetMeetingsByMeetingId is "Get a Meeting": GET /meetings/{meetingId}.
+var MeetingsGetMeetingsByMeetingId = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "get",
 	Summary:     "Get a Meeting",
 	Description: "Retrieves details for a meeting with a specified meeting ID.\n\n* If the `meetingId` value specified is for a meeting series and `current` is `true`, the operation returns details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start or the upcoming scheduled meeting of the meeting series.\n\n* If the `meetingId` value specified is for a meeting series and `current` is `false` or `current` is not specified, the operation returns details for the entire meeting series.\n\n* If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns details for that scheduled meeting.\n\n* If the `meetingId` value specified is for a meeting instance which is happening or has happened, the operation returns details for that meeting instance.\n\n* `trackingCodes` is not supported for ended meeting instances.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `password`: Meeting password. Required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, cohost or invitee of the meeting.\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}",
@@ -1009,9 +1009,9 @@ var MeetingsMeetingsGet = &Operation{
 	},
 }
 
-// MeetingsMeetingsPatch is "Patch a Meeting": PATCH /meetings/{meetingId}.
-var MeetingsMeetingsPatch = &Operation{
-	ID: "MeetingsMeetingsPatch", Area: "meetings", Group: "meetings", Command: "patch",
+// MeetingsPatchMeetingsByMeetingId is "Patch a Meeting": PATCH /meetings/{meetingId}.
+var MeetingsPatchMeetingsByMeetingId = &Operation{
+	ID: "MeetingsPatchMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "patch",
 	Summary:     "Patch a Meeting",
 	Description: "<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be patched during this time. If the meeting is started by the host or cohost and then ended normally, it can be patched immediately after it ends.</Callout>\n</div>\n\nUpdates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the string \"null\".\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting in the API that was created via a calendar connector is not allowed. The meeting may be updated in Webex, but the calendar event may not be updated, resulting in duplicate entries. This action is therefore blocked. In case you must overwrite this behavior, please contact devsupport@webex.com.",
 	Method:      "PATCH", Host: HostWebex, Path: "/meetings/{meetingId}",
@@ -1021,9 +1021,9 @@ var MeetingsMeetingsPatch = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsUpdate is "Update a Meeting": PUT /meetings/{meetingId}.
-var MeetingsMeetingsUpdate = &Operation{
-	ID: "MeetingsMeetingsUpdate", Area: "meetings", Group: "meetings", Command: "update",
+// MeetingsPutMeetingsByMeetingId is "Update a Meeting": PUT /meetings/{meetingId}.
+var MeetingsPutMeetingsByMeetingId = &Operation{
+	ID: "MeetingsPutMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "update",
 	Summary:     "Update a Meeting",
 	Description: "<div>\n<Callout type=\"warning\">The PUT method is still supported and behaves the same as before, will be deprecated in the future. Use the PATCH method instead.</Callout>\n</div>\n\n<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be updated during this time. If the meeting is started by the host or cohost and then ended normally, it can be updated immediately after it ends.</Callout>\n</div>\n\nUpdates details for a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting created using the API via a calendar connector is not supported. While the meeting may be updated in Webex, the calendar event may not be updated resulting in duplicate entries. If you need to override this behavior, contact devsupport@webex.com.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/{meetingId}",
@@ -1033,9 +1033,9 @@ var MeetingsMeetingsUpdate = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsDelete is "Delete a Meeting": DELETE /meetings/{meetingId}.
-var MeetingsMeetingsDelete = &Operation{
-	ID: "MeetingsMeetingsDelete", Area: "meetings", Group: "meetings", Command: "delete",
+// MeetingsDeleteMeetingsByMeetingId is "Delete a Meeting": DELETE /meetings/{meetingId}.
+var MeetingsDeleteMeetingsByMeetingId = &Operation{
+	ID: "MeetingsDeleteMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "delete",
 	Summary:     "Delete a Meeting",
 	Description: "<div>\n<Callout type=\"warning\">If only guests are waiting in the lobby and the host or cohost has not started the meeting, the meeting state remains `inProgress` for 5 minutes after the last guest leaves. The meeting cannot be deleted during this time. If the meeting is started by the host or cohost and then ended normally, it can be deleted immediately after it ends.</Callout>\n</div>\n\nDeletes a meeting with a specified meeting ID. The deleted meeting cannot be recovered. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be deleted.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation deletes that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation deletes the entire meeting series.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/{meetingId}",
@@ -1046,9 +1046,9 @@ var MeetingsMeetingsDelete = &Operation{
 	},
 }
 
-// MeetingsMeetingsJoin is "Join a Meeting": POST /meetings/join.
-var MeetingsMeetingsJoin = &Operation{
-	ID: "MeetingsMeetingsJoin", Area: "meetings", Group: "meetings", Command: "join",
+// MeetingsPostMeetingsJoin is "Join a Meeting": POST /meetings/join.
+var MeetingsPostMeetingsJoin = &Operation{
+	ID: "MeetingsPostMeetingsJoin", Area: "meetings", Group: "meetings", Command: "join",
 	Summary:     "Join a Meeting",
 	Description: "Retrieves links for a meeting with a specified `meetingId`, `meetingNumber`, or `webLink` that allow users to start or join the meeting directly without logging in and entering a password.\n\n* Please note that `meetingId`, `meetingNumber` and `webLink` are mutually exclusive and they cannot be specified simultaneously.\n\n* If `joinDirectly` is true or not specified, the response will have HTTP response code 302 and the request will be redirected to `joinLink`; otherwise, the response will have HTTP response code 200 and `joinLink` will be returned in response body.\n\n* Only the meeting host or cohost can generate the `startLink`.\n\n* An admin user or a [Service App](/docs/service-apps) can generate the `startLink` and `joinLink` on behalf of another meeting host using the `hostEmail` parameter. When a [Service App](/docs/service-apps) generates the `startLink` and `joinLink`, the `hostEmail` parameter is required. The `hostEmail` parameter only applies to meetings, not webinars.\n\n* For Service Apps, `hostEmail` must be provided in the request.\n\n* Generating a join link or a start link before the time specified by `joinBeforeHostMinutes` for a webinar is not supported.\n\n* The `joinLink` and `startLink` generated by the API only work in a web browser, not in mobile apps. When the `joinLink` or `startLink` is used in a mobile app, the user can't join or start the meeting directly by the dial-in or dial-out phone numbers displayed in the app.\n\n* When `createJoinLinkAsWebLink` or `createStartLinkAsWebLink` is set to true, a user cannot join or start the meeting using the `joinLink` or `startLink` returned in the response, and must complete the login flow. Those options are typically useful if mandatory user login is configured in Control Hub.\n\n* Appending the parameter `&launchApp=true` to the weblink will launch directly into the browser experience without showing the user the download selection for the native client.\n\n* [Embedded Apps](/docs/embedded-apps) are not supported in a meeting which is started from the `startLink` generated by this API.\n\n<div><Callout type=\"warning\">When the `email` or `displayName` is omitted from the API request, the backend inserts the data from the user making the request. That may lead to situations where an attendee is shown in the roster with the hostname which should be avoided. In the future, we will make those two fields required.</Callout></div>",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/join",
@@ -1068,9 +1068,9 @@ var MeetingsMeetingsJoin = &Operation{
 	}},
 }
 
-// MeetingsMeetingsListTemplates is "List Meeting Templates": GET /meetings/templates.
-var MeetingsMeetingsListTemplates = &Operation{
-	ID: "MeetingsMeetingsListTemplates", Area: "meetings", Group: "meetings", Command: "list-templates",
+// MeetingsGetMeetingsTemplates is "List Meeting Templates": GET /meetings/templates.
+var MeetingsGetMeetingsTemplates = &Operation{
+	ID: "MeetingsGetMeetingsTemplates", Area: "meetings", Group: "meetings", Command: "list-templates",
 	Summary:     "List Meeting Templates",
 	Description: "Retrieves the list of meeting templates that is available for the authenticated user.\n\nThere are separate lists of meeting templates for different `templateType`, `locale` and `siteUrl`.\n\n* If `templateType` is specified, the operation returns an array of meeting template objects specified by the `templateType`; otherwise, returns an array of meeting template objects of all template types.\n\n* If `locale` is specified, the operation returns an array of meeting template objects specified by the `locale`; otherwise, returns an array of meeting template objects of the default `en_US` locale. Refer to [Meeting Template Locales](/docs/meetings#meeting-template-locales) for all the locales supported by Webex.\n\n* If the parameter `siteUrl` has a value, the operation lists meeting templates on the specified site; otherwise, lists meeting templates on the user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/templates",
@@ -1085,9 +1085,9 @@ var MeetingsMeetingsListTemplates = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsGetTemplate is "Get a Meeting Template": GET /meetings/templates/{templateId}.
-var MeetingsMeetingsGetTemplate = &Operation{
-	ID: "MeetingsMeetingsGetTemplate", Area: "meetings", Group: "meetings", Command: "get-template",
+// MeetingsGetMeetingsTemplatesByTemplateId is "Get a Meeting Template": GET /meetings/templates/{templateId}.
+var MeetingsGetMeetingsTemplatesByTemplateId = &Operation{
+	ID: "MeetingsGetMeetingsTemplatesByTemplateId", Area: "meetings", Group: "meetings", Command: "get-template",
 	Summary:     "Get a Meeting Template",
 	Description: "Retrieves details for a meeting template with a specified meeting template ID.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/templates/{templateId}",
@@ -1098,9 +1098,9 @@ var MeetingsMeetingsGetTemplate = &Operation{
 	},
 }
 
-// MeetingsMeetingsGetControlStatus is "Get Meeting Control Status": GET /meetings/controls.
-var MeetingsMeetingsGetControlStatus = &Operation{
-	ID: "MeetingsMeetingsGetControlStatus", Area: "meetings", Group: "meetings", Command: "get-control-status",
+// MeetingsGetMeetingsControls is "Get Meeting Control Status": GET /meetings/controls.
+var MeetingsGetMeetingsControls = &Operation{
+	ID: "MeetingsGetMeetingsControls", Area: "meetings", Group: "meetings", Command: "get-control-status",
 	Summary:     "Get Meeting Control Status",
 	Description: "Get the meeting control of a live meeting, which is consisted of meeting control status on \"locked\" and \"recording\" to reflect whether the meeting is currently locked and there is recording in progress.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/controls",
@@ -1109,9 +1109,9 @@ var MeetingsMeetingsGetControlStatus = &Operation{
 	},
 }
 
-// MeetingsMeetingsUpdateControlStatus is "Update Meeting Control Status": PUT /meetings/controls.
-var MeetingsMeetingsUpdateControlStatus = &Operation{
-	ID: "MeetingsMeetingsUpdateControlStatus", Area: "meetings", Group: "meetings", Command: "update-control-status",
+// MeetingsPutMeetingsControls is "Update Meeting Control Status": PUT /meetings/controls.
+var MeetingsPutMeetingsControls = &Operation{
+	ID: "MeetingsPutMeetingsControls", Area: "meetings", Group: "meetings", Command: "update-control-status",
 	Summary:     "Update Meeting Control Status",
 	Description: "To start, pause, resume, or stop a meeting recording; To lock or unlock an on-going meeting.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/controls",
@@ -1125,9 +1125,9 @@ var MeetingsMeetingsUpdateControlStatus = &Operation{
 	}},
 }
 
-// MeetingsMeetingsListSessionTypes is "List Meeting Session Types": GET /meetings/sessionTypes.
-var MeetingsMeetingsListSessionTypes = &Operation{
-	ID: "MeetingsMeetingsListSessionTypes", Area: "meetings", Group: "meetings", Command: "list-session-types",
+// MeetingsGetMeetingsSessionTypes is "List Meeting Session Types": GET /meetings/sessionTypes.
+var MeetingsGetMeetingsSessionTypes = &Operation{
+	ID: "MeetingsGetMeetingsSessionTypes", Area: "meetings", Group: "meetings", Command: "list-session-types",
 	Summary:     "List Meeting Session Types",
 	Description: "List all the meeting session types enabled for a given user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/sessionTypes",
@@ -1138,9 +1138,9 @@ var MeetingsMeetingsListSessionTypes = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsGetSessionType is "Get a Meeting Session Type": GET /meetings/sessionTypes/{sessionTypeId}.
-var MeetingsMeetingsGetSessionType = &Operation{
-	ID: "MeetingsMeetingsGetSessionType", Area: "meetings", Group: "meetings", Command: "get-session-type",
+// MeetingsGetMeetingsSessionTypesBySessionTypeId is "Get a Meeting Session Type": GET /meetings/sessionTypes/{sessionTypeId}.
+var MeetingsGetMeetingsSessionTypesBySessionTypeId = &Operation{
+	ID: "MeetingsGetMeetingsSessionTypesBySessionTypeId", Area: "meetings", Group: "meetings", Command: "get-session-type",
 	Summary:     "Get a Meeting Session Type",
 	Description: "Retrieves details for a meeting session type with a specified session type ID.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/sessionTypes/{sessionTypeId}",
@@ -1151,9 +1151,9 @@ var MeetingsMeetingsGetSessionType = &Operation{
 	},
 }
 
-// MeetingsMeetingsGetRegistrationForm is "Get registration form for a meeting": GET /meetings/{meetingId}/registration.
-var MeetingsMeetingsGetRegistrationForm = &Operation{
-	ID: "MeetingsMeetingsGetRegistrationForm", Area: "meetings", Group: "meetings", Command: "get-registration-form",
+// MeetingsGetMeetingsByMeetingIdRegistration is "Get registration form for a meeting": GET /meetings/{meetingId}/registration.
+var MeetingsGetMeetingsByMeetingIdRegistration = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdRegistration", Area: "meetings", Group: "meetings", Command: "get-registration-form",
 	Summary:     "Get registration form for a meeting",
 	Description: "Get a meeting's registration form to understand which fields are required.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/registration",
@@ -1164,9 +1164,9 @@ var MeetingsMeetingsGetRegistrationForm = &Operation{
 	},
 }
 
-// MeetingsMeetingsUpdateRegistrationForm is "Update Meeting Registration Form": PUT /meetings/{meetingId}/registration.
-var MeetingsMeetingsUpdateRegistrationForm = &Operation{
-	ID: "MeetingsMeetingsUpdateRegistrationForm", Area: "meetings", Group: "meetings", Command: "update-registration-form",
+// MeetingsPutMeetingsByMeetingIdRegistration is "Update Meeting Registration Form": PUT /meetings/{meetingId}/registration.
+var MeetingsPutMeetingsByMeetingIdRegistration = &Operation{
+	ID: "MeetingsPutMeetingsByMeetingIdRegistration", Area: "meetings", Group: "meetings", Command: "update-registration-form",
 	Summary:     "Update Meeting Registration Form",
 	Description: "Enable or update a registration form for a meeting.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/{meetingId}/registration",
@@ -1176,9 +1176,9 @@ var MeetingsMeetingsUpdateRegistrationForm = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsDeleteRegistrationForm is "Delete Meeting Registration Form": DELETE /meetings/{meetingId}/registration.
-var MeetingsMeetingsDeleteRegistrationForm = &Operation{
-	ID: "MeetingsMeetingsDeleteRegistrationForm", Area: "meetings", Group: "meetings", Command: "delete-registration-form",
+// MeetingsDeleteMeetingsByMeetingIdRegistration is "Delete Meeting Registration Form": DELETE /meetings/{meetingId}/registration.
+var MeetingsDeleteMeetingsByMeetingIdRegistration = &Operation{
+	ID: "MeetingsDeleteMeetingsByMeetingIdRegistration", Area: "meetings", Group: "meetings", Command: "delete-registration-form",
 	Summary:     "Delete Meeting Registration Form",
 	Description: "Disable the registration form for a meeting.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/{meetingId}/registration",
@@ -1188,9 +1188,9 @@ var MeetingsMeetingsDeleteRegistrationForm = &Operation{
 	},
 }
 
-// MeetingsMeetingsRegisterRegistrant is "Register a Meeting Registrant": POST /meetings/{meetingId}/registrants.
-var MeetingsMeetingsRegisterRegistrant = &Operation{
-	ID: "MeetingsMeetingsRegisterRegistrant", Area: "meetings", Group: "meetings", Command: "register-registrant",
+// MeetingsPostMeetingsByMeetingIdRegistrants is "Register a Meeting Registrant": POST /meetings/{meetingId}/registrants.
+var MeetingsPostMeetingsByMeetingIdRegistrants = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrants", Area: "meetings", Group: "meetings", Command: "register-registrant",
 	Summary:     "Register a Meeting Registrant",
 	Description: "Register a new registrant for a meeting. When a meeting or webinar is created, this API can only be used if Registration is checked on the page or the registration attribute is specified through the [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) API.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants",
@@ -1202,9 +1202,9 @@ var MeetingsMeetingsRegisterRegistrant = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsListRegistrants is "List Meeting Registrants": GET /meetings/{meetingId}/registrants.
-var MeetingsMeetingsListRegistrants = &Operation{
-	ID: "MeetingsMeetingsListRegistrants", Area: "meetings", Group: "meetings", Command: "list-registrants",
+// MeetingsGetMeetingsByMeetingIdRegistrants is "List Meeting Registrants": GET /meetings/{meetingId}/registrants.
+var MeetingsGetMeetingsByMeetingIdRegistrants = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdRegistrants", Area: "meetings", Group: "meetings", Command: "list-registrants",
 	Summary:     "List Meeting Registrants",
 	Description: "Meeting's host and cohost can retrieve the list of registrants for a meeting with a specified meeting Id.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/registrants",
@@ -1220,9 +1220,9 @@ var MeetingsMeetingsListRegistrants = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsBatchRegisterRegistrants is "Batch register Meeting Registrants": POST /meetings/{meetingId}/registrants/bulkInsert.
-var MeetingsMeetingsBatchRegisterRegistrants = &Operation{
-	ID: "MeetingsMeetingsBatchRegisterRegistrants", Area: "meetings", Group: "meetings", Command: "batch-register-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsBulkInsert is "Batch register Meeting Registrants": POST /meetings/{meetingId}/registrants/bulkInsert.
+var MeetingsPostMeetingsByMeetingIdRegistrantsBulkInsert = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsBulkInsert", Area: "meetings", Group: "meetings", Command: "batch-register-registrants",
 	Summary:     "Batch register Meeting Registrants",
 	Description: "Bulk register new registrants for a meeting. When a meeting or webinar is created, this API can only be used if Registration is checked on the page or the registration attribute is specified through the [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) API.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/bulkInsert",
@@ -1234,9 +1234,9 @@ var MeetingsMeetingsBatchRegisterRegistrants = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsGetDetailedInformationRegistrant is "Get Detailed Information for a Meeting Registrant": GET /meetings/{meetingId}/registrants/{registrantId}.
-var MeetingsMeetingsGetDetailedInformationRegistrant = &Operation{
-	ID: "MeetingsMeetingsGetDetailedInformationRegistrant", Area: "meetings", Group: "meetings", Command: "get-detailed-information-registrant",
+// MeetingsGetMeetingsByMeetingIdRegistrantsByRegistrantId is "Get Detailed Information for a Meeting Registrant": GET /meetings/{meetingId}/registrants/{registrantId}.
+var MeetingsGetMeetingsByMeetingIdRegistrantsByRegistrantId = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdRegistrantsByRegistrantId", Area: "meetings", Group: "meetings", Command: "get-detailed-information-registrant",
 	Summary:     "Get Detailed Information for a Meeting Registrant",
 	Description: "Retrieves details for a meeting registrant with a specified registrant Id.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/{registrantId}",
@@ -1248,9 +1248,9 @@ var MeetingsMeetingsGetDetailedInformationRegistrant = &Operation{
 	},
 }
 
-// MeetingsMeetingsDeleteRegistrant is "Delete a Meeting Registrant": DELETE /meetings/{meetingId}/registrants/{registrantId}.
-var MeetingsMeetingsDeleteRegistrant = &Operation{
-	ID: "MeetingsMeetingsDeleteRegistrant", Area: "meetings", Group: "meetings", Command: "delete-registrant",
+// MeetingsDeleteMeetingsByMeetingIdRegistrantsByRegistrantId is "Delete a Meeting Registrant": DELETE /meetings/{meetingId}/registrants/{registrantId}.
+var MeetingsDeleteMeetingsByMeetingIdRegistrantsByRegistrantId = &Operation{
+	ID: "MeetingsDeleteMeetingsByMeetingIdRegistrantsByRegistrantId", Area: "meetings", Group: "meetings", Command: "delete-registrant",
 	Summary:     "Delete a Meeting Registrant",
 	Description: "Meeting's host or cohost can delete a registrant with a specified registrant ID.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/{registrantId}",
@@ -1262,9 +1262,9 @@ var MeetingsMeetingsDeleteRegistrant = &Operation{
 	},
 }
 
-// MeetingsMeetingsQueryRegistrants is "Query Meeting Registrants": POST /meetings/{meetingId}/registrants/query.
-var MeetingsMeetingsQueryRegistrants = &Operation{
-	ID: "MeetingsMeetingsQueryRegistrants", Area: "meetings", Group: "meetings", Command: "query-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsQuery is "Query Meeting Registrants": POST /meetings/{meetingId}/registrants/query.
+var MeetingsPostMeetingsByMeetingIdRegistrantsQuery = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsQuery", Area: "meetings", Group: "meetings", Command: "query-registrants",
 	Summary:     "Query Meeting Registrants",
 	Description: "Meeting's host and cohost can query the list of registrants for a meeting with a specified meeting ID and registrants email.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/query",
@@ -1282,9 +1282,9 @@ var MeetingsMeetingsQueryRegistrants = &Operation{
 	}},
 }
 
-// MeetingsMeetingsBatchUpdateRegistrantsStatus is "Batch Update Meeting Registrants status": POST /meetings/{meetingId}/registrants/{statusOpType}.
-var MeetingsMeetingsBatchUpdateRegistrantsStatus = &Operation{
-	ID: "MeetingsMeetingsBatchUpdateRegistrantsStatus", Area: "meetings", Group: "meetings", Command: "batch-update-registrants-status",
+// MeetingsPostMeetingsByMeetingIdRegistrantsByStatusOpType is "Batch Update Meeting Registrants status": POST /meetings/{meetingId}/registrants/{statusOpType}.
+var MeetingsPostMeetingsByMeetingIdRegistrantsByStatusOpType = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsByStatusOpType", Area: "meetings", Group: "meetings", Command: "batch-update-registrants-status",
 	Summary:     "Batch Update Meeting Registrants status",
 	Description: "Meeting's host or cohost can update the set of registrants for a meeting. `cancel` means the registrant(s) will be moved back to the registration list. `bulkDelete` means the registrant(s) will be deleted.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/{statusOpType}",
@@ -1297,9 +1297,9 @@ var MeetingsMeetingsBatchUpdateRegistrantsStatus = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsUpdateSimultaneousInterpretation is "Update Meeting Simultaneous interpretation": PUT /meetings/{meetingId}/simultaneousInterpretation.
-var MeetingsMeetingsUpdateSimultaneousInterpretation = &Operation{
-	ID: "MeetingsMeetingsUpdateSimultaneousInterpretation", Area: "meetings", Group: "meetings", Command: "update-simultaneous-interpretation",
+// MeetingsPutMeetingsByMeetingIdSimultaneousInterpretation is "Update Meeting Simultaneous interpretation": PUT /meetings/{meetingId}/simultaneousInterpretation.
+var MeetingsPutMeetingsByMeetingIdSimultaneousInterpretation = &Operation{
+	ID: "MeetingsPutMeetingsByMeetingIdSimultaneousInterpretation", Area: "meetings", Group: "meetings", Command: "update-simultaneous-interpretation",
 	Summary:     "Update Meeting Simultaneous interpretation",
 	Description: "Updates simultaneous interpretation options of a meeting with a specified meeting ID. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/{meetingId}/simultaneousInterpretation",
@@ -1309,9 +1309,9 @@ var MeetingsMeetingsUpdateSimultaneousInterpretation = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsCreateInterpreter is "Create a Meeting Interpreter": POST /meetings/{meetingId}/interpreters.
-var MeetingsMeetingsCreateInterpreter = &Operation{
-	ID: "MeetingsMeetingsCreateInterpreter", Area: "meetings", Group: "meetings", Command: "create-interpreter",
+// MeetingsPostMeetingsByMeetingIdInterpreters is "Create a Meeting Interpreter": POST /meetings/{meetingId}/interpreters.
+var MeetingsPostMeetingsByMeetingIdInterpreters = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdInterpreters", Area: "meetings", Group: "meetings", Command: "create-interpreter",
 	Summary:     "Create a Meeting Interpreter",
 	Description: "Assign an interpreter to a bi-directional simultaneous interpretation language channel for a meeting.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/interpreters",
@@ -1328,9 +1328,9 @@ var MeetingsMeetingsCreateInterpreter = &Operation{
 	}},
 }
 
-// MeetingsMeetingsListInterpreters is "List Meeting Interpreters": GET /meetings/{meetingId}/interpreters.
-var MeetingsMeetingsListInterpreters = &Operation{
-	ID: "MeetingsMeetingsListInterpreters", Area: "meetings", Group: "meetings", Command: "list-interpreters",
+// MeetingsGetMeetingsByMeetingIdInterpreters is "List Meeting Interpreters": GET /meetings/{meetingId}/interpreters.
+var MeetingsGetMeetingsByMeetingIdInterpreters = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdInterpreters", Area: "meetings", Group: "meetings", Command: "list-interpreters",
 	Summary:     "List Meeting Interpreters",
 	Description: "Lists meeting interpreters for a meeting with a specified `meetingId`.\n\nThis operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects. If the specified `meetingId` is for a meeting series, the interpreters for the series will be listed; if the `meetingId` is for a scheduled meeting, the interpreters for the particular scheduled meeting will be listed; if the `meetingId` is for an ended or ongoing meeting instance, the interpreters for the particular meeting instance will be listed. See the [Webex Meetings](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) guide for more information about the types of meetings.\n\nThe list returned is sorted in descending order by when interpreters were created.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/interpreters",
@@ -1341,9 +1341,9 @@ var MeetingsMeetingsListInterpreters = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsGetInterpreter is "Get a Meeting Interpreter": GET /meetings/{meetingId}/interpreters/{interpreterId}.
-var MeetingsMeetingsGetInterpreter = &Operation{
-	ID: "MeetingsMeetingsGetInterpreter", Area: "meetings", Group: "meetings", Command: "get-interpreter",
+// MeetingsGetMeetingsByMeetingIdInterpretersByInterpreterId is "Get a Meeting Interpreter": GET /meetings/{meetingId}/interpreters/{interpreterId}.
+var MeetingsGetMeetingsByMeetingIdInterpretersByInterpreterId = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdInterpretersByInterpreterId", Area: "meetings", Group: "meetings", Command: "get-interpreter",
 	Summary:     "Get a Meeting Interpreter",
 	Description: "Retrieves details for a meeting interpreter identified by `meetingId` and `interpreterId` in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/interpreters/{interpreterId}",
@@ -1354,9 +1354,9 @@ var MeetingsMeetingsGetInterpreter = &Operation{
 	},
 }
 
-// MeetingsMeetingsUpdateInterpreter is "Update a Meeting Interpreter": PUT /meetings/{meetingId}/interpreters/{interpreterId}.
-var MeetingsMeetingsUpdateInterpreter = &Operation{
-	ID: "MeetingsMeetingsUpdateInterpreter", Area: "meetings", Group: "meetings", Command: "update-interpreter",
+// MeetingsPutMeetingsByMeetingIdInterpretersByInterpreterId is "Update a Meeting Interpreter": PUT /meetings/{meetingId}/interpreters/{interpreterId}.
+var MeetingsPutMeetingsByMeetingIdInterpretersByInterpreterId = &Operation{
+	ID: "MeetingsPutMeetingsByMeetingIdInterpretersByInterpreterId", Area: "meetings", Group: "meetings", Command: "update-interpreter",
 	Summary:     "Update a Meeting Interpreter",
 	Description: "Updates details for a meeting interpreter identified by `meetingId` and `interpreterId` in the URI.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/{meetingId}/interpreters/{interpreterId}",
@@ -1374,9 +1374,9 @@ var MeetingsMeetingsUpdateInterpreter = &Operation{
 	}},
 }
 
-// MeetingsMeetingsDeleteInterpreter is "Delete a Meeting Interpreter": DELETE /meetings/{meetingId}/interpreters/{interpreterId}.
-var MeetingsMeetingsDeleteInterpreter = &Operation{
-	ID: "MeetingsMeetingsDeleteInterpreter", Area: "meetings", Group: "meetings", Command: "delete-interpreter",
+// MeetingsDeleteMeetingsByMeetingIdInterpretersByInterpreterId is "Delete a Meeting Interpreter": DELETE /meetings/{meetingId}/interpreters/{interpreterId}.
+var MeetingsDeleteMeetingsByMeetingIdInterpretersByInterpreterId = &Operation{
+	ID: "MeetingsDeleteMeetingsByMeetingIdInterpretersByInterpreterId", Area: "meetings", Group: "meetings", Command: "delete-interpreter",
 	Summary:     "Delete a Meeting Interpreter",
 	Description: "Removes a meeting interpreter identified by `meetingId` and `interpreterId` in the URI. The deleted meeting interpreter cannot be recovered.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/{meetingId}/interpreters/{interpreterId}",
@@ -1388,9 +1388,9 @@ var MeetingsMeetingsDeleteInterpreter = &Operation{
 	},
 }
 
-// MeetingsMeetingsListBreakoutSessions is "List Meeting Breakout Sessions": GET /meetings/{meetingId}/breakoutSessions.
-var MeetingsMeetingsListBreakoutSessions = &Operation{
-	ID: "MeetingsMeetingsListBreakoutSessions", Area: "meetings", Group: "meetings", Command: "list-breakout-sessions",
+// MeetingsGetMeetingsByMeetingIdBreakoutSessions is "List Meeting Breakout Sessions": GET /meetings/{meetingId}/breakoutSessions.
+var MeetingsGetMeetingsByMeetingIdBreakoutSessions = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdBreakoutSessions", Area: "meetings", Group: "meetings", Command: "list-breakout-sessions",
 	Summary:     "List Meeting Breakout Sessions",
 	Description: "Lists meeting breakout sessions for a meeting with a specified `meetingId`.\n\nThis operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects. See the [Webex Meetings](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) guide for more information about the types of meetings.\n\n* If the meeting of `meetingId` is in progress, the operation returns the breakout sessions which are currently held in the meeting.\n\n* If the meeting of `meetingId` is ended meeting instance, the operation returns the breakout sessions which happended during the meeting instance.\n\n* Otherwise, if it's a meeting series or scheduled meeting and it's not in progress, the operation returns the breakout sessions which are created when the meeting is scheduled.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/breakoutSessions",
@@ -1401,9 +1401,9 @@ var MeetingsMeetingsListBreakoutSessions = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsUpdateBreakoutSessions is "Update Meeting Breakout Sessions": PUT /meetings/{meetingId}/breakoutSessions.
-var MeetingsMeetingsUpdateBreakoutSessions = &Operation{
-	ID: "MeetingsMeetingsUpdateBreakoutSessions", Area: "meetings", Group: "meetings", Command: "update-breakout-sessions",
+// MeetingsPutMeetingsByMeetingIdBreakoutSessions is "Update Meeting Breakout Sessions": PUT /meetings/{meetingId}/breakoutSessions.
+var MeetingsPutMeetingsByMeetingIdBreakoutSessions = &Operation{
+	ID: "MeetingsPutMeetingsByMeetingIdBreakoutSessions", Area: "meetings", Group: "meetings", Command: "update-breakout-sessions",
 	Summary:     "Update Meeting Breakout Sessions",
 	Description: "Updates breakout sessions of a meeting with a specified meeting ID in the pre-meeting state. This operation applies to meeting series and scheduled meetings.",
 	Method:      "PUT", Host: HostWebex, Path: "/meetings/{meetingId}/breakoutSessions",
@@ -1413,9 +1413,9 @@ var MeetingsMeetingsUpdateBreakoutSessions = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsDeleteBreakoutSessions is "Delete Meeting Breakout Sessions": DELETE /meetings/{meetingId}/breakoutSessions.
-var MeetingsMeetingsDeleteBreakoutSessions = &Operation{
-	ID: "MeetingsMeetingsDeleteBreakoutSessions", Area: "meetings", Group: "meetings", Command: "delete-breakout-sessions",
+// MeetingsDeleteMeetingsByMeetingIdBreakoutSessions is "Delete Meeting Breakout Sessions": DELETE /meetings/{meetingId}/breakoutSessions.
+var MeetingsDeleteMeetingsByMeetingIdBreakoutSessions = &Operation{
+	ID: "MeetingsDeleteMeetingsByMeetingIdBreakoutSessions", Area: "meetings", Group: "meetings", Command: "delete-breakout-sessions",
 	Summary:     "Delete Meeting Breakout Sessions",
 	Description: "Deletes breakout sessions with a specified meeting ID. The deleted breakout sessions cannot be recovered. The value of `enabledBreakoutSessions` attribute is set to `false` automatically.\nThis operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances.",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetings/{meetingId}/breakoutSessions",
@@ -1426,9 +1426,9 @@ var MeetingsMeetingsDeleteBreakoutSessions = &Operation{
 	},
 }
 
-// MeetingsMeetingsGetSurvey is "Get a Meeting Survey": GET /meetings/{meetingId}/survey.
-var MeetingsMeetingsGetSurvey = &Operation{
-	ID: "MeetingsMeetingsGetSurvey", Area: "meetings", Group: "meetings", Command: "get-survey",
+// MeetingsGetMeetingsByMeetingIdSurvey is "Get a Meeting Survey": GET /meetings/{meetingId}/survey.
+var MeetingsGetMeetingsByMeetingIdSurvey = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdSurvey", Area: "meetings", Group: "meetings", Command: "get-survey",
 	Summary:     "Get a Meeting Survey",
 	Description: "Retrieves details for a meeting survey identified by `meetingId`.\n\n#### Request Header\n\n* `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site they manage and the API will return survey details of that user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/survey",
@@ -1438,9 +1438,9 @@ var MeetingsMeetingsGetSurvey = &Operation{
 	},
 }
 
-// MeetingsMeetingsListSurveyResults is "List Meeting Survey Results": GET /meetings/{meetingId}/surveyResults.
-var MeetingsMeetingsListSurveyResults = &Operation{
-	ID: "MeetingsMeetingsListSurveyResults", Area: "meetings", Group: "meetings", Command: "list-survey-results",
+// MeetingsGetMeetingsByMeetingIdSurveyResults is "List Meeting Survey Results": GET /meetings/{meetingId}/surveyResults.
+var MeetingsGetMeetingsByMeetingIdSurveyResults = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdSurveyResults", Area: "meetings", Group: "meetings", Command: "list-survey-results",
 	Summary:     "List Meeting Survey Results",
 	Description: "Retrieves results for a meeting survey identified by `meetingId`.\n\n#### Request Header\n\n* `timezone`: Time zone for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.\n\n* `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site they manage and the API will return the survey results of that user.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/surveyResults",
@@ -1455,9 +1455,9 @@ var MeetingsMeetingsListSurveyResults = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsGetSurveyLinks is "Get Meeting Survey Links": POST /meetings/{meetingId}/surveyLinks.
-var MeetingsMeetingsGetSurveyLinks = &Operation{
-	ID: "MeetingsMeetingsGetSurveyLinks", Area: "meetings", Group: "meetings", Command: "get-survey-links",
+// MeetingsPostMeetingsByMeetingIdSurveyLinks is "Get Meeting Survey Links": POST /meetings/{meetingId}/surveyLinks.
+var MeetingsPostMeetingsByMeetingIdSurveyLinks = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdSurveyLinks", Area: "meetings", Group: "meetings", Command: "get-survey-links",
 	Summary:     "Get Meeting Survey Links",
 	Description: "Get survey links of a meeting for different users.\n\n#### Request Header\n\n* `timezone`: Time zone for the `meetingStartTimeFrom` and `meetingStartTimeTo` parameters and defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/surveyLinks",
@@ -1473,9 +1473,9 @@ var MeetingsMeetingsGetSurveyLinks = &Operation{
 	}},
 }
 
-// MeetingsMeetingsCreateInvitationSources is "Create Invitation Sources": POST /meetings/{meetingId}/invitationSources.
-var MeetingsMeetingsCreateInvitationSources = &Operation{
-	ID: "MeetingsMeetingsCreateInvitationSources", Area: "meetings", Group: "meetings", Command: "create-invitation-sources",
+// MeetingsPostMeetingsByMeetingIdInvitationSources is "Create Invitation Sources": POST /meetings/{meetingId}/invitationSources.
+var MeetingsPostMeetingsByMeetingIdInvitationSources = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdInvitationSources", Area: "meetings", Group: "meetings", Command: "create-invitation-sources",
 	Summary:     "Create Invitation Sources",
 	Description: "Creates one or more invitation sources for a meeting.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/invitationSources",
@@ -1485,9 +1485,9 @@ var MeetingsMeetingsCreateInvitationSources = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsListInvitationSources is "List Invitation Sources": GET /meetings/{meetingId}/invitationSources.
-var MeetingsMeetingsListInvitationSources = &Operation{
-	ID: "MeetingsMeetingsListInvitationSources", Area: "meetings", Group: "meetings", Command: "list-invitation-sources",
+// MeetingsGetMeetingsByMeetingIdInvitationSources is "List Invitation Sources": GET /meetings/{meetingId}/invitationSources.
+var MeetingsGetMeetingsByMeetingIdInvitationSources = &Operation{
+	ID: "MeetingsGetMeetingsByMeetingIdInvitationSources", Area: "meetings", Group: "meetings", Command: "list-invitation-sources",
 	Summary:     "List Invitation Sources",
 	Description: "Lists invitation sources for a meeting.\n\n#### Request Header\n\n* `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site they manage and the API will return recording details of that user.\n\n* `personId`:  Unique identifier for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/{meetingId}/invitationSources",
@@ -1499,9 +1499,9 @@ var MeetingsMeetingsListInvitationSources = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsListTrackingCodes is "List Meeting Tracking Codes": GET /meetings/trackingCodes.
-var MeetingsMeetingsListTrackingCodes = &Operation{
-	ID: "MeetingsMeetingsListTrackingCodes", Area: "meetings", Group: "meetings", Command: "list-tracking-codes",
+// MeetingsGetMeetingsTrackingCodes is "List Meeting Tracking Codes": GET /meetings/trackingCodes.
+var MeetingsGetMeetingsTrackingCodes = &Operation{
+	ID: "MeetingsGetMeetingsTrackingCodes", Area: "meetings", Group: "meetings", Command: "list-tracking-codes",
 	Summary:     "List Meeting Tracking Codes",
 	Description: "Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options can be used to create or update a meeting on the specified site.\n\n* The `options` here differ from those in the [site-level tracking codes](/docs/api/v1/tracking-codes/get-a-tracking-code) and the [user-level tracking codes](/docs/api/v1/tracking-codes/get-user-tracking-codes). It is the result of a selective combination of the two.\n\n* For a tracking code, if there is no user-level tracking code, the API returns the site-level options, and the `defaultValue` of the site-level default option is `true`. If there is a user-level tracking code, it is merged into the `options`. Meanwhile, the `defaultValue` of this user-level option is `true` and the site-level default option becomes non default.\n\n* If `siteUrl` is specified, tracking codes of the specified site will be listed; otherwise, tracking codes of the user's preferred site will be listed. All available Webex sites and the preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.",
 	Method:      "GET", Host: HostWebex, Path: "/meetings/trackingCodes",
@@ -1513,9 +1513,9 @@ var MeetingsMeetingsListTrackingCodes = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsReassignHost is "Reassign Meetings to a New Host": POST /meetings/reassignHost.
-var MeetingsMeetingsReassignHost = &Operation{
-	ID: "MeetingsMeetingsReassignHost", Area: "meetings", Group: "meetings", Command: "reassign-host",
+// MeetingsPostMeetingsReassignHost is "Reassign Meetings to a New Host": POST /meetings/reassignHost.
+var MeetingsPostMeetingsReassignHost = &Operation{
+	ID: "MeetingsPostMeetingsReassignHost", Area: "meetings", Group: "meetings", Command: "reassign-host",
 	Summary:     "Reassign Meetings to a New Host",
 	Description: "Reassigns a list of meetings to a new host by an admin user.\n\nAll the meetings of `meetingIds` should belong to the same site, which is the `siteUrl` in the request header, if specified, or the admin user's preferred site, if not specified. All available Webex sites and the preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\nIf the user of `hostEmail` is not qualified to be a host of the target site, the API returns an error with the HTTP status code `403`. If all the meetings referenced by `meetingIds` have been reassigned the new host successfully, the API returns an empty response with the HTTP status code `204`. Otherwise, if all the meetings of `meetingIds` fail or some of them fail, the API returns a \"Multi-Status\" response with status code of `207`, and individual errors for each meeting in the response body.\n\nIf a meeting already has several ended meeting instances before it's assigned to a new host, the existing ended instances are accessible to the original host and not accessible to the new host, but the new meeting instances which happen after the reassignment are only accessible to the new host.\n\nAfter the reassignment, the original host will receive an email of meeting cancellation. However, the meeting in the original host's calendar will not necessarily be removed because user's calendar, e.g. Outlook calendar, is not managed by the meeting system directly.\n\n**Note**: Only IDs of meeting series are supported for the `meetingIds`. IDs of scheduled meetings, meeting instances, or scheduled personal room meetings are not supported. To learn more about different types of meetings, please refer to [Meeting Series, Scheduled Meetings, and Meeting Instances](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances).\n\nThere are several limitations when reassigning meetings:\n\n* Users cannot assign an in-progress meeting.\n\n* Users cannot assign a meeting to a user who is not a Webex user, or an attendee who does not have host privilege.\n\n* Users cannot assign a meeting with calling/callback to a host user who does not have calling/callback privileges\n\n* Users cannot assign a meeting with session type A to a host user who does not have session type A privileges.\n\n* Users cannot assign an MC or Webinar to a new host who does not have an MC license or a Webinar license.\n\n* Users cannot assign a TC/EC1.0/SC meeting, or a meeting that is created by on-behalf to a new host.\n\n* Users can reassign hosts for meetings from third-party integrations, such as Outlook or Google. Note that this is not recommended because it may result in inconsistent data between both parties.\n\n#### Request Header\n\n* `siteUrl`: Optional request header parameter. All the meetings of `meetingIds` should belong to the site referenced by siteUrl if specified. Otherwise, the meetings should belong to the admin user's preferred sites. All available Webex sites and the preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/reassignHost",
@@ -1528,9 +1528,9 @@ var MeetingsMeetingsReassignHost = &Operation{
 	}},
 }
 
-// MeetingsMeetingsEnd is "End a Meeting": POST /meetings/{meetingId}/end.
-var MeetingsMeetingsEnd = &Operation{
-	ID: "MeetingsMeetingsEnd", Area: "meetings", Group: "meetings", Command: "end",
+// MeetingsPostMeetingsByMeetingIdEnd is "End a Meeting": POST /meetings/{meetingId}/end.
+var MeetingsPostMeetingsByMeetingIdEnd = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdEnd", Area: "meetings", Group: "meetings", Command: "end",
 	Summary:     "End a Meeting",
 	Description: "Ends a meeting with a specified meeting ID. This operation applies to meeting series, scheduled meetings, and in-progress meetings. Only the meeting host, cohost, or compliance officer can end a meeting with this API.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation ends that meeting without impacting other scheduled meetings of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation ends the current meeting occurrence.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/end",
@@ -1542,9 +1542,9 @@ var MeetingsMeetingsEnd = &Operation{
 	}},
 }
 
-// MeetingsMeetingsBatchApproveRegistrants is "Batch Approve Meeting Registrants": POST /meetings/{meetingId}/registrants/approve.
-var MeetingsMeetingsBatchApproveRegistrants = &Operation{
-	ID: "MeetingsMeetingsBatchApproveRegistrants", Area: "meetings", Group: "meetings", Command: "batch-approve-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsApprove is "Batch Approve Meeting Registrants": POST /meetings/{meetingId}/registrants/approve.
+var MeetingsPostMeetingsByMeetingIdRegistrantsApprove = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsApprove", Area: "meetings", Group: "meetings", Command: "batch-approve-registrants",
 	Summary:     "Batch Approve Meeting Registrants",
 	Description: "Batch approve a set of registrants for a meeting by the meeting host or cohost.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/approve",
@@ -1556,9 +1556,9 @@ var MeetingsMeetingsBatchApproveRegistrants = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsBatchRejectRegistrants is "Batch Reject Meeting Registrants": POST /meetings/{meetingId}/registrants/reject.
-var MeetingsMeetingsBatchRejectRegistrants = &Operation{
-	ID: "MeetingsMeetingsBatchRejectRegistrants", Area: "meetings", Group: "meetings", Command: "batch-reject-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsReject is "Batch Reject Meeting Registrants": POST /meetings/{meetingId}/registrants/reject.
+var MeetingsPostMeetingsByMeetingIdRegistrantsReject = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsReject", Area: "meetings", Group: "meetings", Command: "batch-reject-registrants",
 	Summary:     "Batch Reject Meeting Registrants",
 	Description: "Batch reject a set of registrants for a meeting by the meeting host or cohost.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/reject",
@@ -1570,9 +1570,9 @@ var MeetingsMeetingsBatchRejectRegistrants = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsBatchCancelRegistrants is "Batch Cancel Meeting Registrants": POST /meetings/{meetingId}/registrants/cancel.
-var MeetingsMeetingsBatchCancelRegistrants = &Operation{
-	ID: "MeetingsMeetingsBatchCancelRegistrants", Area: "meetings", Group: "meetings", Command: "batch-cancel-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsCancel is "Batch Cancel Meeting Registrants": POST /meetings/{meetingId}/registrants/cancel.
+var MeetingsPostMeetingsByMeetingIdRegistrantsCancel = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsCancel", Area: "meetings", Group: "meetings", Command: "batch-cancel-registrants",
 	Summary:     "Batch Cancel Meeting Registrants",
 	Description: "Batch cancel a set of registrants for a meeting by the meeting host or cohost.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/cancel",
@@ -1584,9 +1584,9 @@ var MeetingsMeetingsBatchCancelRegistrants = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsBatchDeleteRegistrants is "Batch Delete Meeting Registrants": POST /meetings/{meetingId}/registrants/bulkDelete.
-var MeetingsMeetingsBatchDeleteRegistrants = &Operation{
-	ID: "MeetingsMeetingsBatchDeleteRegistrants", Area: "meetings", Group: "meetings", Command: "batch-delete-registrants",
+// MeetingsPostMeetingsByMeetingIdRegistrantsBulkDelete is "Batch Delete Meeting Registrants": POST /meetings/{meetingId}/registrants/bulkDelete.
+var MeetingsPostMeetingsByMeetingIdRegistrantsBulkDelete = &Operation{
+	ID: "MeetingsPostMeetingsByMeetingIdRegistrantsBulkDelete", Area: "meetings", Group: "meetings", Command: "batch-delete-registrants",
 	Summary:     "Batch Delete Meeting Registrants",
 	Description: "Batch delete a set of registrants for a meeting by the meeting host or cohost.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings/{meetingId}/registrants/bulkDelete",
@@ -1598,9 +1598,9 @@ var MeetingsMeetingsBatchDeleteRegistrants = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsListGroup is "List Group Meetings": GET /group/meetings.
-var MeetingsMeetingsListGroup = &Operation{
-	ID: "MeetingsMeetingsListGroup", Area: "meetings", Group: "meetings", Command: "list-group",
+// MeetingsGetGroupMeetings is "List Group Meetings": GET /group/meetings.
+var MeetingsGetGroupMeetings = &Operation{
+	ID: "MeetingsGetGroupMeetings", Area: "meetings", Group: "meetings", Command: "list-group",
 	Summary:     "List Group Meetings",
 	Description: "List group meetings with a specified meeting number or web link by a service app which has group meeting access. You can specify the `personId` parameter or `hostEmail` header of whom the meetings will be retrieved. Please note that there are various products in the [Webex Suite](https://www.webex.com/collaboration-suite.html) such as `Meetings` and `Events`. Currently, only meetings of the `Meetings` product are supported by this API, meetings of others in the suite are not supported. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` will not be listed.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only meetings hosted by the person of `personId` or `hostEmail` will be listed.\n\n* `meetingNumber` and `webLink` are mutually exclusive and they cannot be specified simultaneously, but one of them must be specified. The operation returns an array of meeting objects specified by the `meetingNumber` or `webLink`.\n\n* Each object in the array can be a scheduled meeting or a meeting series depending on whether the `current` parameter is `true` or `false`. If it's `false`, the `start` and `end` attributes are for the first scheduled meeting of that series. If it's `true` or not specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or the upcoming scheduled meeting of that series.\n\n* To learn more about which attributes are available for different meeting states, please refer to [Available Meeting Attributes for Different Meeting States](/docs/meetings#available-meeting-attributes-for-different-meeting-states).\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for time stamps in response body, defined in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default value is `UTC` if not specified.\n\n* `hostEmail`: Email of the user whose meetings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "GET", Host: HostWebex, Path: "/group/meetings",
@@ -1615,9 +1615,9 @@ var MeetingsMeetingsListGroup = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsMeetingsPatchGroup is "Patch a Group Meeting": PATCH /group/meetings/{meetingId}.
-var MeetingsMeetingsPatchGroup = &Operation{
-	ID: "MeetingsMeetingsPatchGroup", Area: "meetings", Group: "meetings", Command: "patch-group",
+// MeetingsPatchGroupMeetingsByMeetingId is "Patch a Group Meeting": PATCH /group/meetings/{meetingId}.
+var MeetingsPatchGroupMeetingsByMeetingId = &Operation{
+	ID: "MeetingsPatchGroupMeetingsByMeetingId", Area: "meetings", Group: "meetings", Command: "patch-group",
 	Summary:     "Patch a Group Meeting",
 	Description: "Patches details for a group meeting with a specified meeting ID by a service app which has group meeting access. This operation applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) with `adhoc` of `true` and a `roomId` cannot be updated.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only meetings hosted by the person of `personId` or `hostEmail` will be patch.\n\n* If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting without impact on other scheduled meeting of the parent meeting series.\n\n* If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series. **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional scheduled meeting in this series is cancelled when the meeting series is updated.\n\n* The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the string \"null\".\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* You can't update a meeting that starts 10 years or more in the future.\n\n* Updating a meeting in the API that was created via a calendar connector is not allowed. The meeting may be updated in Webex, but the calendar event may not be updated, resulting in duplicate entries. This action is therefore blocked. In case you must overwrite this behavior, please contact devsupport@webex.com.\n\n#### Request Header\n\n* `hostEmail`: Email of the user whose meeting will be patched. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "PATCH", Host: HostWebex, Path: "/group/meetings/{meetingId}",
@@ -1629,9 +1629,9 @@ var MeetingsMeetingsPatchGroup = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsMeetingsUpdateGroupControlStatus is "Update Group Meeting Control Status": POST /group/meetings/controls.
-var MeetingsMeetingsUpdateGroupControlStatus = &Operation{
-	ID: "MeetingsMeetingsUpdateGroupControlStatus", Area: "meetings", Group: "meetings", Command: "update-group-control-status",
+// MeetingsPostGroupMeetingsControls is "Update Group Meeting Control Status": POST /group/meetings/controls.
+var MeetingsPostGroupMeetingsControls = &Operation{
+	ID: "MeetingsPostGroupMeetingsControls", Area: "meetings", Group: "meetings", Command: "update-group-control-status",
 	Summary:     "Update Group Meeting Control Status",
 	Description: "Update meeting recording control status by a service app which has group meeting access. The service app can use this API to start, stop, pause, or resume meeting recording by providing an `action` value. The `personId` parameter or `hostEmail` header of the person to whom the meeting belongs must be specified. The service app which invokes the API manages one or more groups, and it also manages one or more sites. The user specified by `hostEmail` or `personId` must be in a group that is managed by the service app. The meeting specified by `meetingId` must be on a site that is managed by the service app. Please note that once the meeting recording has been controlled by a person in the meeting, the recording control of this meeting can no longer be controlled by the service app via the API.",
 	Method:      "POST", Host: HostWebex, Path: "/group/meetings/controls",
@@ -1645,9 +1645,9 @@ var MeetingsMeetingsUpdateGroupControlStatus = &Operation{
 	}},
 }
 
-// MeetingsTrackingCodesList is "List Tracking Codes": GET /admin/meeting/config/trackingCodes.
-var MeetingsTrackingCodesList = &Operation{
-	ID: "MeetingsTrackingCodesList", Area: "meetings", Group: "tracking-codes", Command: "list",
+// MeetingsGetAdminMeetingConfigTrackingCodes is "List Tracking Codes": GET /admin/meeting/config/trackingCodes.
+var MeetingsGetAdminMeetingConfigTrackingCodes = &Operation{
+	ID: "MeetingsGetAdminMeetingConfigTrackingCodes", Area: "meetings", Group: "tracking-codes", Command: "list",
 	Summary:     "List Tracking Codes",
 	Description: "Lists tracking codes on a site by an admin user.\n\n* If `siteUrl` is specified, tracking codes of the specified site will be listed; otherwise, tracking codes of the user's preferred site will be listed. All available Webex sites and the preferred sites of a user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub. This is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, the response returns the mapped tracking codes.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/config/trackingCodes",
@@ -1657,18 +1657,18 @@ var MeetingsTrackingCodesList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsTrackingCodesCreate is "Create a Tracking Code": POST /admin/meeting/config/trackingCodes.
-var MeetingsTrackingCodesCreate = &Operation{
-	ID: "MeetingsTrackingCodesCreate", Area: "meetings", Group: "tracking-codes", Command: "create",
+// MeetingsPostAdminMeetingConfigTrackingCodes is "Create a Tracking Code": POST /admin/meeting/config/trackingCodes.
+var MeetingsPostAdminMeetingConfigTrackingCodes = &Operation{
+	ID: "MeetingsPostAdminMeetingConfigTrackingCodes", Area: "meetings", Group: "tracking-codes", Command: "create",
 	Summary:     "Create a Tracking Code",
 	Description: "Create a new tracking code by an admin user.\n\n* The `siteUrl` is required. The operation creates a tracking code for the specified site. All or a user's available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* The `inputMode` of `hostProfileSelect` is only available for a host profile and sign-up pages and does not apply to the meeting scheduler page or the meeting start page. The value for `scheduleStartCodes` must be `null` or the value for all services must be `notUsed` when the `inputMode` is `hostProfileSelect`.\n\n* The `hostProfileCode` of `required` is only allowed for a Site Admin managed site, and not for a Control Hub managed site.\n\n* When the `hostProfileCode` is `adminSet`, only `adminSet`, `notUsed`, and `notApplicable` are available for the types of `scheduleStartCodes`. When the `hostProfileCode` is not `adminSet`, only `optional`, `required`, `notUsed`, and `notApplicable` are available for `scheduleStartCodes`.\n\n* If the type of the `All` service has a value other than `notApplicable`, and another service, e.g. `EventCenter`, is missing from the `scheduleStartCodes`, then the type of this missing `EventCenter` service shares the same type as the `All` service. If the type of `All` service has a value other than `notApplicable`, and another service, e.g. `EventCenter`, has a type, then the type specified should be the same as the `All` service.\n\n* If the `All` service is missing from the `scheduleStartCodes`, any of the other four services, e.g. `EventCenter`, have a default type of `notUsed` if it is also missing from the `scheduleStartCodes`.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, they cannot create tracking codes when the mapping process is in progress or the mapping process is completed.",
 	Method:      "POST", Host: HostWebex, Path: "/admin/meeting/config/trackingCodes",
 	Body: &Body{},
 }
 
-// MeetingsTrackingCodesGet is "Get a Tracking Code": GET /admin/meeting/config/trackingCodes/{trackingCodeId}.
-var MeetingsTrackingCodesGet = &Operation{
-	ID: "MeetingsTrackingCodesGet", Area: "meetings", Group: "tracking-codes", Command: "get",
+// MeetingsGetAdminMeetingConfigTrackingCodesByTrackingCodeId is "Get a Tracking Code": GET /admin/meeting/config/trackingCodes/{trackingCodeId}.
+var MeetingsGetAdminMeetingConfigTrackingCodesByTrackingCodeId = &Operation{
+	ID: "MeetingsGetAdminMeetingConfigTrackingCodesByTrackingCodeId", Area: "meetings", Group: "tracking-codes", Command: "get",
 	Summary:     "Get a Tracking Code",
 	Description: "Retrieves details for a tracking code by an admin user.\n\n* If `siteUrl` is specified, the tracking code is retrieved from the specified site; otherwise, the tracking code is retrieved from the user's preferred site. All available Webex sites and the preferred sites of a user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, the response returns details for a mapped tracking code.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/config/trackingCodes/{trackingCodeId}",
@@ -1678,9 +1678,9 @@ var MeetingsTrackingCodesGet = &Operation{
 	},
 }
 
-// MeetingsTrackingCodesUpdate is "Update a Tracking Code": PUT /admin/meeting/config/trackingCodes/{trackingCodeId}.
-var MeetingsTrackingCodesUpdate = &Operation{
-	ID: "MeetingsTrackingCodesUpdate", Area: "meetings", Group: "tracking-codes", Command: "update",
+// MeetingsPutAdminMeetingConfigTrackingCodesByTrackingCodeId is "Update a Tracking Code": PUT /admin/meeting/config/trackingCodes/{trackingCodeId}.
+var MeetingsPutAdminMeetingConfigTrackingCodesByTrackingCodeId = &Operation{
+	ID: "MeetingsPutAdminMeetingConfigTrackingCodesByTrackingCodeId", Area: "meetings", Group: "tracking-codes", Command: "update",
 	Summary:     "Update a Tracking Code",
 	Description: "Updates details for a tracking code by an admin user.\n\n* The `siteUrl` is required. The operation updates a tracking code for the specified site. All of a user's available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* The `inputMode` of `hostProfileSelect` is only available for the host profile and sign-up pages and it doesn't apply to the meeting scheduler page or meeting start page. Therefore, `scheduleStartCodes` must be `null` or type of all services must be `notUsed` when the `inputMode` is `hostProfileSelect`.\n\n* Currently, the `hostProfileCode` of `required` is only allowed for a Site Admin managed site, and not allowed for a Control Hub managed site.\n\n* When the `hostProfileCode` is `adminSet`, only `adminSet`, `notUsed` and `notApplicable` are available for the types of `scheduleStartCodes`. When the `hostProfileCode` is not `adminSet`, only `optional`, `required`, `notUsed` and `notApplicable` are available for types of `scheduleStartCodes`.\n\n* If the type of the `All` service has a value other than `notApplicable`, and another service, e.g. `EventCenter`, is missing from the `scheduleStartCodes`, then the type of this missing `EventCenter` service shares the same type as the `All` service silently. If the type of `All` service has a value other than `notApplicable`, and another service, e.g. `EventCenter`, has a type, then the type specified should be the same as the `All` service.\n\n* If the `All` service is missing from the `scheduleStartCodes`, any of the other four services, e.g. `EventCenter`, has a default type of `notUsed` if that service is also missing from the `scheduleStartCodes`.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, they cannot update tracking codes when the mapping process is in progress or the mapping process is completed.",
 	Method:      "PUT", Host: HostWebex, Path: "/admin/meeting/config/trackingCodes/{trackingCodeId}",
@@ -1690,9 +1690,9 @@ var MeetingsTrackingCodesUpdate = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsTrackingCodesDelete is "Delete a Tracking Code": DELETE /admin/meeting/config/trackingCodes/{trackingCodeId}.
-var MeetingsTrackingCodesDelete = &Operation{
-	ID: "MeetingsTrackingCodesDelete", Area: "meetings", Group: "tracking-codes", Command: "delete",
+// MeetingsDeleteAdminMeetingConfigTrackingCodesByTrackingCodeId is "Delete a Tracking Code": DELETE /admin/meeting/config/trackingCodes/{trackingCodeId}.
+var MeetingsDeleteAdminMeetingConfigTrackingCodesByTrackingCodeId = &Operation{
+	ID: "MeetingsDeleteAdminMeetingConfigTrackingCodesByTrackingCodeId", Area: "meetings", Group: "tracking-codes", Command: "delete",
 	Summary:     "Delete a Tracking Code",
 	Description: "Deletes a tracking code by an admin user.\n\n* The `siteUrl` is required. The operation deletes a tracking code for the specified site. All of a user's available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, they cannot delete tracking codes when the mapping process is in progress or the mapping process is completed.",
 	Method:      "DELETE", Host: HostWebex, Path: "/admin/meeting/config/trackingCodes/{trackingCodeId}",
@@ -1702,9 +1702,9 @@ var MeetingsTrackingCodesDelete = &Operation{
 	},
 }
 
-// MeetingsTrackingCodesGetUser is "Get User Tracking Codes": GET /admin/meeting/userconfig/trackingCodes.
-var MeetingsTrackingCodesGetUser = &Operation{
-	ID: "MeetingsTrackingCodesGetUser", Area: "meetings", Group: "tracking-codes", Command: "get-user",
+// MeetingsGetAdminMeetingUserconfigTrackingCodes is "Get User Tracking Codes": GET /admin/meeting/userconfig/trackingCodes.
+var MeetingsGetAdminMeetingUserconfigTrackingCodes = &Operation{
+	ID: "MeetingsGetAdminMeetingUserconfigTrackingCodes", Area: "meetings", Group: "tracking-codes", Command: "get-user",
 	Summary:     "Get User Tracking Codes",
 	Description: "Lists user's tracking codes by an admin user.\n\n* At least one parameter, either `personId`, or `email` is required. `personId` must come before `email` if both are specified. Please note that `email` is specified in the request header.\n\n* If `siteUrl` is specified, the tracking codes of the specified site will be listed; otherwise, the tracking codes of a user's preferred site are listed. All available Webex sites and preferred sites of a user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API. Please note that the user here is the admin user who invokes the API, not the user specified by `personId` or email.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, the response returns the user's mapped tracking codes.\n\n#### Request Header\n\n* `email`: Email address for the user whose tracking codes are being retrieved. The admin users can specify the email of a user on a site they manage and the API returns details for the user's tracking codes. At least one parameter of `personId` or `email` is required.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/userconfig/trackingCodes",
@@ -1715,18 +1715,18 @@ var MeetingsTrackingCodesGetUser = &Operation{
 	},
 }
 
-// MeetingsTrackingCodesUpdateUser is "Update User Tracking Codes": PUT /admin/meeting/userconfig/trackingCodes.
-var MeetingsTrackingCodesUpdateUser = &Operation{
-	ID: "MeetingsTrackingCodesUpdateUser", Area: "meetings", Group: "tracking-codes", Command: "update-user",
+// MeetingsPutAdminMeetingUserconfigTrackingCodes is "Update User Tracking Codes": PUT /admin/meeting/userconfig/trackingCodes.
+var MeetingsPutAdminMeetingUserconfigTrackingCodes = &Operation{
+	ID: "MeetingsPutAdminMeetingUserconfigTrackingCodes", Area: "meetings", Group: "tracking-codes", Command: "update-user",
 	Summary:     "Update User Tracking Codes",
 	Description: "Updates tracking codes for a specified user by an admin user.\n\n* The `siteUrl` is required. The operation updates a user's tracking code on the specified site. All a user's available Webex sites can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API. Please note that the user here is the admin user who invokes the API, not the user specified by `personId` or `email`.\n\n* A name that is not found in the site-level tracking codes cannot be set for a user's tracking codes. All available site-level tracking codes for a site can be retrieved by the [List Tracking Codes](/docs/api/v1/tracking-codes/list-tracking-codes) API.\n\n* If the `inputMode` of a user's tracking code is `select` or `hostProfileSelect`, its value must be one of the site-level options of that tracking code. All available site-level tracking codes for a site can be retrieved by the [List Tracking Codes](/docs/api/v1/tracking-codes/list-tracking-codes) API.\n\n* Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user profile attributes, they cannot update user's tracking codes when the mapping process is in progress or the mapping process is completed.",
 	Method:      "PUT", Host: HostWebex, Path: "/admin/meeting/userconfig/trackingCodes",
 	Body: &Body{},
 }
 
-// MeetingsPeopleList is "List People": GET /people.
-var MeetingsPeopleList = &Operation{
-	ID: "MeetingsPeopleList", Area: "meetings", Group: "people", Command: "list",
+// MeetingsGetPeople is "List People": GET /people.
+var MeetingsGetPeople = &Operation{
+	ID: "MeetingsGetPeople", Area: "meetings", Group: "people", Command: "list",
 	Summary:     "List People",
 	Description: "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/people",
@@ -1744,9 +1744,9 @@ var MeetingsPeopleList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsPeopleCreatePerson is "Create a Person": POST /people.
-var MeetingsPeopleCreatePerson = &Operation{
-	ID: "MeetingsPeopleCreatePerson", Area: "meetings", Group: "people", Command: "create-person",
+// MeetingsPostPeople is "Create a Person": POST /people.
+var MeetingsPostPeople = &Operation{
+	ID: "MeetingsPostPeople", Area: "meetings", Group: "people", Command: "create-person",
 	Summary:     "Create a Person",
 	Description: "Create a new user account for a given organization. Only an admin can create a new user account.\n\nAt least one of the following body parameters is required to create a new user: `displayName`, `firstName`, `lastName`.\n\nCurrently, users may have only one email address associated with their account. The `emails` parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.\n\nAdmin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person was created still. One way to get into this state is if an invalid phone number is assigned to a user. The people API aggregates calls to several other microservices, and one may have failed. A best practice is to check if the user exists before retrying. This can be done with the user's email address and a GET /people.\n\nWhen doing attendee management, append `#attendee` to the `siteUrl` parameter (e.g. `mysite.webex.com#attendee`) to make the new user an attendee for a site.\n\n**NOTES**:\n\n* For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and `licenses` string in the same request.\n\n* `SipAddresses` are asigned via an asynchronous process. This means that the POST response may not show the SIPAddresses immediately. Instead you can verify them with a separate GET to /people, after they were newly configured.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "POST", Host: HostWebex, Path: "/people",
@@ -1757,9 +1757,9 @@ var MeetingsPeopleCreatePerson = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsPeopleGetPerson is "Get Person Details": GET /people/{personId}.
-var MeetingsPeopleGetPerson = &Operation{
-	ID: "MeetingsPeopleGetPerson", Area: "meetings", Group: "people", Command: "get-person",
+// MeetingsGetPeopleByPersonId is "Get Person Details": GET /people/{personId}.
+var MeetingsGetPeopleByPersonId = &Operation{
+	ID: "MeetingsGetPeopleByPersonId", Area: "meetings", Group: "people", Command: "get-person",
 	Summary:     "Get Person Details",
 	Description: "Shows details for a person, by ID.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/people/{personId}",
@@ -1769,9 +1769,9 @@ var MeetingsPeopleGetPerson = &Operation{
 	},
 }
 
-// MeetingsPeopleUpdatePerson is "Update a Person": PUT /people/{personId}.
-var MeetingsPeopleUpdatePerson = &Operation{
-	ID: "MeetingsPeopleUpdatePerson", Area: "meetings", Group: "people", Command: "update-person",
+// MeetingsPutPeopleByPersonId is "Update a Person": PUT /people/{personId}.
+var MeetingsPutPeopleByPersonId = &Operation{
+	ID: "MeetingsPutPeopleByPersonId", Area: "meetings", Group: "people", Command: "update-person",
 	Summary:     "Update a Person",
 	Description: "Update details for a person, by ID.\n\nSpecify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.\n\nInclude all details for the person. This action expects all user details to be present in the request. A common approach is to first [GET the person's details](/docs/api/v1/people/get-person-details), make changes, then PUT both the changed and unchanged values.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.\n\nWhen doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to the respective `siteUrl` and remove the meeting host license for this site from the license array.\nTo update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the `siteurl` parameter.\n\nTo remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.\n\n**NOTE**:\n\n* When assigning a Webex Calling license, either a telephone number or extension must already be assigned to the person or provided in the request payload.\n\n* When `callingData` is set to `true`, a Webex Calling license must be included in the `licenses` array.\n\n* The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user is already an existing calling user.\n\n* The `extension` field should be used to update the Webex Calling extension for a person. The extension value should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen in the response payload of [List People](/docs/api/v1/people/list-people) or [Get Person Details](/docs/api/v1/people/get-person-details), cannot be used to set the Webex Calling extension for a person.\n\n* When updating a user with multiple email addresses using a PUT request, ensure that the primary email address is listed first in the array. Note that the order of email addresses returned by a GET request is not guaranteed..\n\n* The People API is a combination of several microservices, each responsible for specific attributes of a person. As a result, a PUT request that returns an error response code may still have altered some values of the person's data. Therefore, it is recommended to perform a GET request after encountering an error to verify the current state of the resource. \n\n* Some licenses are implicitly assigned by the system and cannot be admin controlled. They are necessary for the baseline function of the Webex system. If you get an error about implicitly assigned licensed that cannot be removed, please ensure you have the corresponding license in your PUT request.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "PUT", Host: HostWebex, Path: "/people/{personId}",
@@ -1784,9 +1784,9 @@ var MeetingsPeopleUpdatePerson = &Operation{
 	Body: &Body{},
 }
 
-// MeetingsPeopleDeletePerson is "Delete a Person": DELETE /people/{personId}.
-var MeetingsPeopleDeletePerson = &Operation{
-	ID: "MeetingsPeopleDeletePerson", Area: "meetings", Group: "people", Command: "delete-person",
+// MeetingsDeletePeopleByPersonId is "Delete a Person": DELETE /people/{personId}.
+var MeetingsDeletePeopleByPersonId = &Operation{
+	ID: "MeetingsDeletePeopleByPersonId", Area: "meetings", Group: "people", Command: "delete-person",
 	Summary:     "Delete a Person",
 	Description: "Remove a person from the system.\n\n**Required Administrator Roles:**\n\nThe following administrators have permission to use this API:\n\n**Customer Organization:**\n- Full administrator\n- User administrator\n\n**Partner/External Access:**\n- External full administrator\n\n**Note:** External read-only administrators, provisioning administrators, and device administrators cannot delete users.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/people/{personId}",
@@ -1795,9 +1795,9 @@ var MeetingsPeopleDeletePerson = &Operation{
 	},
 }
 
-// MeetingsPeopleGetMyOwn is "Get My Own Details": GET /people/me.
-var MeetingsPeopleGetMyOwn = &Operation{
-	ID: "MeetingsPeopleGetMyOwn", Area: "meetings", Group: "people", Command: "get-my-own",
+// MeetingsGetPeopleMe is "Get My Own Details": GET /people/me.
+var MeetingsGetPeopleMe = &Operation{
+	ID: "MeetingsGetPeopleMe", Area: "meetings", Group: "people", Command: "get-my-own",
 	Summary:     "Get My Own Details",
 	Description: "Get profile details for the authenticated user. This is the same as GET `/people/{personId}` using the Person ID associated with your Auth token.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.",
 	Method:      "GET", Host: HostWebex, Path: "/people/me",
@@ -1806,9 +1806,9 @@ var MeetingsPeopleGetMyOwn = &Operation{
 	},
 }
 
-// MeetingsRecordingReportListAuditSummaries is "List of Recording Audit Report Summaries": GET /recordingReport/accessSummary.
-var MeetingsRecordingReportListAuditSummaries = &Operation{
-	ID: "MeetingsRecordingReportListAuditSummaries", Area: "meetings", Group: "recording-report", Command: "list-audit-summaries",
+// MeetingsGetRecordingReportAccessSummary is "List of Recording Audit Report Summaries": GET /recordingReport/accessSummary.
+var MeetingsGetRecordingReportAccessSummary = &Operation{
+	ID: "MeetingsGetRecordingReportAccessSummary", Area: "meetings", Group: "recording-report", Command: "list-audit-summaries",
 	Summary:     "List of Recording Audit Report Summaries",
 	Description: "Lists of recording audit report summaries. You can specify a date range and the maximum number of recording audit report summaries to return.\n\nOnly recording audit report summaries of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the recording audit report summaries of the specified site will be listed; otherwise, recording audit report summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/recordingReport/accessSummary",
@@ -1824,9 +1824,9 @@ var MeetingsRecordingReportListAuditSummaries = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsRecordingReportGetAudit is "Get Recording Audit Report Details": GET /recordingReport/accessDetail.
-var MeetingsRecordingReportGetAudit = &Operation{
-	ID: "MeetingsRecordingReportGetAudit", Area: "meetings", Group: "recording-report", Command: "get-audit",
+// MeetingsGetRecordingReportAccessDetail is "Get Recording Audit Report Details": GET /recordingReport/accessDetail.
+var MeetingsGetRecordingReportAccessDetail = &Operation{
+	ID: "MeetingsGetRecordingReportAccessDetail", Area: "meetings", Group: "recording-report", Command: "get-audit",
 	Summary:     "Get Recording Audit Report Details",
 	Description: "Retrieves details for a recording audit report with a specified recording ID.\n\nOnly recording audit report details of meetings hosted by or shared with the authenticated user may be retrieved.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/recordingReport/accessDetail",
@@ -1839,9 +1839,9 @@ var MeetingsRecordingReportGetAudit = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsRecordingReportListMeetingArchiveSummaries is "List Meeting Archive Summaries": GET /recordingReport/meetingArchiveSummaries.
-var MeetingsRecordingReportListMeetingArchiveSummaries = &Operation{
-	ID: "MeetingsRecordingReportListMeetingArchiveSummaries", Area: "meetings", Group: "recording-report", Command: "list-meeting-archive-summaries",
+// MeetingsGetRecordingReportMeetingArchiveSummaries is "List Meeting Archive Summaries": GET /recordingReport/meetingArchiveSummaries.
+var MeetingsGetRecordingReportMeetingArchiveSummaries = &Operation{
+	ID: "MeetingsGetRecordingReportMeetingArchiveSummaries", Area: "meetings", Group: "recording-report", Command: "list-meeting-archive-summaries",
 	Summary:     "List Meeting Archive Summaries",
 	Description: "Lists of meeting archive summaries. You can specify a date range and the maximum number of meeting archive summaries to return.\n\nMeeting archive summaries are only available to full administrators, not even the meeting host.\n\nThe list returned is sorted in descending order by the date and time that the archives were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the meeting archive summaries of the specified site will be listed; otherwise, meeting archive summaries of the user's preferred site will be listed. All available Webex sites and the preferred site of the user can be retrieved by the `Get Site List` API.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/recordingReport/meetingArchiveSummaries",
@@ -1856,9 +1856,9 @@ var MeetingsRecordingReportListMeetingArchiveSummaries = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsRecordingReportGetMeetingArchive is "Get Meeting Archive Details": GET /recordingReport/meetingArchives/{archiveId}.
-var MeetingsRecordingReportGetMeetingArchive = &Operation{
-	ID: "MeetingsRecordingReportGetMeetingArchive", Area: "meetings", Group: "recording-report", Command: "get-meeting-archive",
+// MeetingsGetRecordingReportMeetingArchivesByArchiveId is "Get Meeting Archive Details": GET /recordingReport/meetingArchives/{archiveId}.
+var MeetingsGetRecordingReportMeetingArchivesByArchiveId = &Operation{
+	ID: "MeetingsGetRecordingReportMeetingArchivesByArchiveId", Area: "meetings", Group: "recording-report", Command: "get-meeting-archive",
 	Summary:     "Get Meeting Archive Details",
 	Description: "Retrieves details for a meeting archive report with a specified archive ID, which contains recording metadata.\n\nMeeting archive details are only available to full administrators, not even the meeting host.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.",
 	Method:      "GET", Host: HostWebex, Path: "/recordingReport/meetingArchives/{archiveId}",
@@ -1868,9 +1868,9 @@ var MeetingsRecordingReportGetMeetingArchive = &Operation{
 	},
 }
 
-// MeetingsRecordingsList is "List Recordings": GET /recordings.
-var MeetingsRecordingsList = &Operation{
-	ID: "MeetingsRecordingsList", Area: "meetings", Group: "recordings", Command: "list",
+// MeetingsGetRecordings is "List Recordings": GET /recordings.
+var MeetingsGetRecordings = &Operation{
+	ID: "MeetingsGetRecordings", Area: "meetings", Group: "recordings", Command: "list",
 	Summary:     "List Recordings",
 	Description: "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings](/docs/api/v1/recordings/query-recordings) API instead.</Callout></div>\n\nLists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "GET", Host: HostWebex, Path: "/recordings",
@@ -1892,9 +1892,9 @@ var MeetingsRecordingsList = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsRecordingsListAdminComplianceOfficer is "List Recordings For an Admin or Compliance Officer": GET /admin/recordings.
-var MeetingsRecordingsListAdminComplianceOfficer = &Operation{
-	ID: "MeetingsRecordingsListAdminComplianceOfficer", Area: "meetings", Group: "recordings", Command: "list-admin-compliance-officer",
+// MeetingsGetAdminRecordings is "List Recordings For an Admin or Compliance Officer": GET /admin/recordings.
+var MeetingsGetAdminRecordings = &Operation{
+	ID: "MeetingsGetAdminRecordings", Area: "meetings", Group: "recordings", Command: "list-admin-compliance-officer",
 	Summary:     "List Recordings For an Admin or Compliance Officer",
 	Description: "<div><Callout type=\"warning\">This API is still supported and behaves the same as before, but will be deprecated in the future. Due to limited support for special characters when filtering recordings by `topic`, it is recommended to use the new [Query Recordings For an Admin or Compliance Officer](/docs/api/v1/recordings/query-recordings-for-an-admin-or-compliance-officer) API instead.</Callout></div>\n\nList recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the maximum number of recordings to return.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "GET", Host: HostWebex, Path: "/admin/recordings",
@@ -1915,9 +1915,9 @@ var MeetingsRecordingsListAdminComplianceOfficer = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsRecordingsDeleteAdmin is "Delete a Recording By an Admin": DELETE /admin/recordings/{recordingId}.
-var MeetingsRecordingsDeleteAdmin = &Operation{
-	ID: "MeetingsRecordingsDeleteAdmin", Area: "meetings", Group: "recordings", Command: "delete-admin",
+// MeetingsDeleteAdminRecordingsByRecordingId is "Delete a Recording By an Admin": DELETE /admin/recordings/{recordingId}.
+var MeetingsDeleteAdminRecordingsByRecordingId = &Operation{
+	ID: "MeetingsDeleteAdminRecordingsByRecordingId", Area: "meetings", Group: "recordings", Command: "delete-admin",
 	Summary:     "Delete a Recording By an Admin",
 	Description: "Removes a recording with a specified recording ID by an admin. The deleted recording cannot be recovered. It will be inaccessible to regular users (host, attendees and shared) or an admin, but it will be still available to the Compliance Officer.\n\nAny recording on a site which is managed by the admin can be deleted by him.\n\nThe `temporaryDirectDownloadLinks` of a recording which are retrieved by the [Get Recording Details](/docs/api/v1/recordings/get-recording-details) API are still available to Compliance Officers even if the recording has been deleted.",
 	Method:      "DELETE", Host: HostWebex, Path: "/admin/recordings/{recordingId}",
@@ -1926,9 +1926,9 @@ var MeetingsRecordingsDeleteAdmin = &Operation{
 	},
 }
 
-// MeetingsRecordingsGet is "Get Recording Details": GET /recordings/{recordingId}.
-var MeetingsRecordingsGet = &Operation{
-	ID: "MeetingsRecordingsGet", Area: "meetings", Group: "recordings", Command: "get",
+// MeetingsGetRecordingsByRecordingId is "Get Recording Details": GET /recordings/{recordingId}.
+var MeetingsGetRecordingsByRecordingId = &Operation{
+	ID: "MeetingsGetRecordingsByRecordingId", Area: "meetings", Group: "recordings", Command: "get",
 	Summary:     "Get Recording Details",
 	Description: "Retrieves details for a recording with a specified recording ID.\n\nOnly recordings of meetings hosted by or shared with the authenticated user may be retrieved.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*\n\n* `siteUrl`: Optional request header parameter. If specified, retrieve the recording details from that site; otherwise, retrieve it from the site which is implied based on the recording ID.",
 	Method:      "GET", Host: HostWebex, Path: "/recordings/{recordingId}",
@@ -1940,9 +1940,9 @@ var MeetingsRecordingsGet = &Operation{
 	},
 }
 
-// MeetingsRecordingsDelete is "Delete a Recording": DELETE /recordings/{recordingId}.
-var MeetingsRecordingsDelete = &Operation{
-	ID: "MeetingsRecordingsDelete", Area: "meetings", Group: "recordings", Command: "delete",
+// MeetingsDeleteRecordingsByRecordingId is "Delete a Recording": DELETE /recordings/{recordingId}.
+var MeetingsDeleteRecordingsByRecordingId = &Operation{
+	ID: "MeetingsDeleteRecordingsByRecordingId", Area: "meetings", Group: "recordings", Command: "delete",
 	Summary:     "Delete a Recording",
 	Description: "Removes a recording with a specified recording ID. The deleted recording cannot be recovered. If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users (host, attendees and shared), but will be still available to the Compliance Officer.\n\nOnly recordings of meetings hosted by the authenticated user can be deleted.\n\nThe `temporaryDirectDownloadLinks` of a recording which are retrieved by the [Get Recording Details](/docs/api/v1/recordings/get-recording-details) API are still available to Compliance Officers even if the recording has been deleted.",
 	Method:      "DELETE", Host: HostWebex, Path: "/recordings/{recordingId}",
@@ -1956,9 +1956,9 @@ var MeetingsRecordingsDelete = &Operation{
 	}},
 }
 
-// MeetingsRecordingsMoveRecycleBin is "Move Recordings into the Recycle Bin": POST /recordings/softDelete.
-var MeetingsRecordingsMoveRecycleBin = &Operation{
-	ID: "MeetingsRecordingsMoveRecycleBin", Area: "meetings", Group: "recordings", Command: "move-recycle-bin",
+// MeetingsPostRecordingsSoftDelete is "Move Recordings into the Recycle Bin": POST /recordings/softDelete.
+var MeetingsPostRecordingsSoftDelete = &Operation{
+	ID: "MeetingsPostRecordingsSoftDelete", Area: "meetings", Group: "recordings", Command: "move-recycle-bin",
 	Summary:     "Move Recordings into the Recycle Bin",
 	Description: "Move recordings into the recycle bin with recording IDs. Recordings in the recycle bin can be recovered by [Restore Recordings from Recycle Bin](/docs/api/v1/recordings/restore-recordings-from-recycle-bin) API. If you'd like to empty recordings from the recycle bin, you can use [Purge Recordings from Recycle Bin](/docs/api/v1/recordings/purge-recordings-from-recycle-bin) API to purge all or some of them.\n\nOnly recordings of meetings hosted by the authenticated user can be moved into the recycle bin.\n\n* `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/softDelete",
@@ -1971,9 +1971,9 @@ var MeetingsRecordingsMoveRecycleBin = &Operation{
 	}},
 }
 
-// MeetingsRecordingsRestoreRecycleBin is "Restore Recordings from Recycle Bin": POST /recordings/restore.
-var MeetingsRecordingsRestoreRecycleBin = &Operation{
-	ID: "MeetingsRecordingsRestoreRecycleBin", Area: "meetings", Group: "recordings", Command: "restore-recycle-bin",
+// MeetingsPostRecordingsRestore is "Restore Recordings from Recycle Bin": POST /recordings/restore.
+var MeetingsPostRecordingsRestore = &Operation{
+	ID: "MeetingsPostRecordingsRestore", Area: "meetings", Group: "recordings", Command: "restore-recycle-bin",
 	Summary:     "Restore Recordings from Recycle Bin",
 	Description: "Restore all or some recordings from the recycle bin. Only recordings of meetings hosted by the authenticated user can be restored from recycle bin.\n\n* If `restoreAll` is `true`, `recordingIds` should be empty.\n\n* If `restoreAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/restore",
@@ -1987,9 +1987,9 @@ var MeetingsRecordingsRestoreRecycleBin = &Operation{
 	}},
 }
 
-// MeetingsRecordingsPurgeRecycleBin is "Purge Recordings from Recycle Bin": POST /recordings/purge.
-var MeetingsRecordingsPurgeRecycleBin = &Operation{
-	ID: "MeetingsRecordingsPurgeRecycleBin", Area: "meetings", Group: "recordings", Command: "purge-recycle-bin",
+// MeetingsPostRecordingsPurge is "Purge Recordings from Recycle Bin": POST /recordings/purge.
+var MeetingsPostRecordingsPurge = &Operation{
+	ID: "MeetingsPostRecordingsPurge", Area: "meetings", Group: "recordings", Command: "purge-recycle-bin",
 	Summary:     "Purge Recordings from Recycle Bin",
 	Description: "Purge recordings from recycle bin with recording IDs or purge all the recordings that are in the recycle bin.\n\nOnly recordings of meetings hosted by the authenticated user can be purged from recycle bin.\n\n* If `purgeAll` is `true`, `recordingIds` should be empty.\n\n* If `purgeAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.\n\n* All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/purge",
@@ -2003,9 +2003,9 @@ var MeetingsRecordingsPurgeRecycleBin = &Operation{
 	}},
 }
 
-// MeetingsRecordingsShare is "Share a Recording": POST /recordings/{recordingId}/accessList.
-var MeetingsRecordingsShare = &Operation{
-	ID: "MeetingsRecordingsShare", Area: "meetings", Group: "recordings", Command: "share",
+// MeetingsPostRecordingsByRecordingIdAccessList is "Share a Recording": POST /recordings/{recordingId}/accessList.
+var MeetingsPostRecordingsByRecordingIdAccessList = &Operation{
+	ID: "MeetingsPostRecordingsByRecordingIdAccessList", Area: "meetings", Group: "recordings", Command: "share",
 	Summary:     "Share a Recording",
 	Description: "Share or unshare a recording with other users by recording ID and email addresses.",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/{recordingId}/accessList",
@@ -2020,9 +2020,9 @@ var MeetingsRecordingsShare = &Operation{
 	}},
 }
 
-// MeetingsRecordingsListGroup is "List Group Recordings": GET /group/recordings.
-var MeetingsRecordingsListGroup = &Operation{
-	ID: "MeetingsRecordingsListGroup", Area: "meetings", Group: "recordings", Command: "list-group",
+// MeetingsGetGroupRecordings is "List Group Recordings": GET /group/recordings.
+var MeetingsGetGroupRecordings = &Operation{
+	ID: "MeetingsGetGroupRecordings", Area: "meetings", Group: "recordings", Command: "list-group",
 	Summary:     "List Group Recordings",
 	Description: "List group recordings for a service app which has group recording access. You can specify a date range, the maximum number of recordings to return, and `personId` or `hostEmail` of whom the recordings will be retrieved.\n\n* The list returned is sorted in descending order by the date and time that the recordings were created.\n\n* Only recordings which are in the `available` status and not shared by others can be listed. Those in the `deleted` or `purged` status or shared by others can't be listed.\n\n* Long result sets are split into [pages](/docs/basics#pagination).\n\n* If `siteUrl` is specified, the API lists group recordings on the specified site; otherwise, the API lists group recordings on all the sites managed by the service app. All the sites managed by a service app can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only recordings of meetings hosted by the person of `personId` or `hostEmail` will be returned.\n\n#### Request Header\n\n* `timezone`: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.\n\n* `hostEmail`: Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "GET", Host: HostWebex, Path: "/group/recordings",
@@ -2042,9 +2042,9 @@ var MeetingsRecordingsListGroup = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsRecordingsGetGroup is "Get Group Recording Details": GET /group/recordings/{recordingId}.
-var MeetingsRecordingsGetGroup = &Operation{
-	ID: "MeetingsRecordingsGetGroup", Area: "meetings", Group: "recordings", Command: "get-group",
+// MeetingsGetGroupRecordingsByRecordingId is "Get Group Recording Details": GET /group/recordings/{recordingId}.
+var MeetingsGetGroupRecordingsByRecordingId = &Operation{
+	ID: "MeetingsGetGroupRecordingsByRecordingId", Area: "meetings", Group: "recordings", Command: "get-group",
 	Summary:     "Get Group Recording Details",
 	Description: "Retrieves details for a group recording for a service app which has group recording access.\n\n* Only recordings which are in the `available` status and not shared by others can be listed. Those in the `deleted` or `purged` status or shared by others can't be listed.\n\n* One of the `personId` parameter and `hostEmail` header must be specified so that only recordings of meetings hosted by the person of `personId` or `hostEmail` will be returned.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*\n\n* `hostEmail`: Email of the user whose recordings will be retrieved. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified.",
 	Method:      "GET", Host: HostWebex, Path: "/group/recordings/{recordingId}",
@@ -2056,9 +2056,9 @@ var MeetingsRecordingsGetGroup = &Operation{
 	},
 }
 
-// MeetingsRecordingsShareLink is "Share a Recording Link": POST /recordings/accessList.
-var MeetingsRecordingsShareLink = &Operation{
-	ID: "MeetingsRecordingsShareLink", Area: "meetings", Group: "recordings", Command: "share-link",
+// MeetingsPostRecordingsAccessList is "Share a Recording Link": POST /recordings/accessList.
+var MeetingsPostRecordingsAccessList = &Operation{
+	ID: "MeetingsPostRecordingsAccessList", Area: "meetings", Group: "recordings", Command: "share-link",
 	Summary:     "Share a Recording Link",
 	Description: "Share or unshare a recording with other users by recording link and email addresses.",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/accessList",
@@ -2071,9 +2071,9 @@ var MeetingsRecordingsShareLink = &Operation{
 	}},
 }
 
-// MeetingsRecordingsQuery is "Query Recordings": POST /recordings/query.
-var MeetingsRecordingsQuery = &Operation{
-	ID: "MeetingsRecordingsQuery", Area: "meetings", Group: "recordings", Command: "query",
+// MeetingsPostRecordingsQuery is "Query Recordings": POST /recordings/query.
+var MeetingsPostRecordingsQuery = &Operation{
+	ID: "MeetingsPostRecordingsQuery", Area: "meetings", Group: "recordings", Command: "query",
 	Summary:     "Query Recordings",
 	Description: "Queries recordings with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, hostEmail, topic, format, serviceType, and status.\n\nOnly recordings of meetings hosted by or shared with the authenticated user will be listed.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.\n\n* If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "POST", Host: HostWebex, Path: "/recordings/query",
@@ -2095,9 +2095,9 @@ var MeetingsRecordingsQuery = &Operation{
 	}},
 }
 
-// MeetingsRecordingsQueryAdminComplianceOfficer is "Query Recordings For an Admin or Compliance Officer": POST /admin/recordings/query.
-var MeetingsRecordingsQueryAdminComplianceOfficer = &Operation{
-	ID: "MeetingsRecordingsQueryAdminComplianceOfficer", Area: "meetings", Group: "recordings", Command: "query-admin-compliance-officer",
+// MeetingsPostAdminRecordingsQuery is "Query Recordings For an Admin or Compliance Officer": POST /admin/recordings/query.
+var MeetingsPostAdminRecordingsQuery = &Operation{
+	ID: "MeetingsPostAdminRecordingsQuery", Area: "meetings", Group: "recordings", Command: "query-admin-compliance-officer",
 	Summary:     "Query Recordings For an Admin or Compliance Officer",
 	Description: "Queries recordings for an admin or compliance officer with filters in the request body. You can specify a date range, a parent meeting ID, the maximum number of recordings to return, and additional filters such as siteUrl, integrationTag, topic, format, serviceType, and status.\n\nThe list returned is sorted in descending order by the date and time that the recordings were created.\n\nLong result sets are split into [pages](/docs/basics#pagination).\n\n* If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please note that when `meetingId` is specified, parameters of `siteUrl`, `from`, and `to` will be ignored.\n\n* If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.\n\n#### Request Header\n\n* `timezone`: *[Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in conformance with the [IANA time zone database](https://www.iana.org/time-zones). The default is UTC if `timezone` is not defined.*",
 	Method:      "POST", Host: HostWebex, Path: "/admin/recordings/query",
@@ -2119,9 +2119,9 @@ var MeetingsRecordingsQueryAdminComplianceOfficer = &Operation{
 	}},
 }
 
-// MeetingsSiteGetMeetingCommonSettingsConfiguration is "Get Meeting Common Settings Configuration": GET /admin/meeting/config/commonSettings.
-var MeetingsSiteGetMeetingCommonSettingsConfiguration = &Operation{
-	ID: "MeetingsSiteGetMeetingCommonSettingsConfiguration", Area: "meetings", Group: "site", Command: "get-meeting-common-settings-configuration",
+// MeetingsGetAdminMeetingConfigCommonSettings is "Get Meeting Common Settings Configuration": GET /admin/meeting/config/commonSettings.
+var MeetingsGetAdminMeetingConfigCommonSettings = &Operation{
+	ID: "MeetingsGetAdminMeetingConfigCommonSettings", Area: "meetings", Group: "site", Command: "get-meeting-common-settings-configuration",
 	Summary:     "Get Meeting Common Settings Configuration",
 	Description: "Site administrators can use this API to get a list of functions, options, and privileges that are configured for their Webex service sites.\n\n* If `siteUrl` is specified, common settings of the meeting's configuration of the specified site will be queried; otherwise, the API will query from the site administrator's preferred site. All available Webex sites and preferred site of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meeting/config/commonSettings",
@@ -2130,18 +2130,18 @@ var MeetingsSiteGetMeetingCommonSettingsConfiguration = &Operation{
 	},
 }
 
-// MeetingsSiteUpdateMeetingCommonSettingsConfiguration is "Update Meeting Common Settings Configuration": PATCH /admin/meeting/config/commonSettings.
-var MeetingsSiteUpdateMeetingCommonSettingsConfiguration = &Operation{
-	ID: "MeetingsSiteUpdateMeetingCommonSettingsConfiguration", Area: "meetings", Group: "site", Command: "update-meeting-common-settings-configuration",
+// MeetingsPatchAdminMeetingConfigCommonSettings is "Update Meeting Common Settings Configuration": PATCH /admin/meeting/config/commonSettings.
+var MeetingsPatchAdminMeetingConfigCommonSettings = &Operation{
+	ID: "MeetingsPatchAdminMeetingConfigCommonSettings", Area: "meetings", Group: "site", Command: "update-meeting-common-settings-configuration",
 	Summary:     "Update Meeting Common Settings Configuration",
 	Description: "Site administrators can use this API to update the option of features, options and privileges that are configured for their WebEx service sites.",
 	Method:      "PATCH", Host: HostWebex, Path: "/admin/meeting/config/commonSettings",
 	Body: &Body{},
 }
 
-// MeetingsSlidoListComplianceEvents is "List Compliance Events": GET /slido/compliance/events.
-var MeetingsSlidoListComplianceEvents = &Operation{
-	ID: "MeetingsSlidoListComplianceEvents", Area: "meetings", Group: "slido", Command: "list-compliance-events",
+// MeetingsGetSlidoComplianceEvents is "List Compliance Events": GET /slido/compliance/events.
+var MeetingsGetSlidoComplianceEvents = &Operation{
+	ID: "MeetingsGetSlidoComplianceEvents", Area: "meetings", Group: "slido", Command: "list-compliance-events",
 	Summary:     "List Compliance Events",
 	Description: "Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)\n\nEvents capture who performed the action and on what resource.\n\nThe events are paginated by the server into pages of max 256 items per page without any order.\n\nThe events are available within 15 minutes after they happened.\n\nEvery resource has properties:\n* type - event type\n\n* ... event specific ids\n\n* ... event specific properties\n",
 	Method:      "GET", Host: HostWebex, Path: "/slido/compliance/events",
@@ -2152,9 +2152,9 @@ var MeetingsSlidoListComplianceEvents = &Operation{
 	},
 }
 
-// MeetingsVideoMeshListClustersAvailability is "List Clusters Availability": GET /videoMesh/clusters/availability.
-var MeetingsVideoMeshListClustersAvailability = &Operation{
-	ID: "MeetingsVideoMeshListClustersAvailability", Area: "meetings", Group: "video-mesh", Command: "list-clusters-availability",
+// MeetingsGetVideoMeshClustersAvailability is "List Clusters Availability": GET /videoMesh/clusters/availability.
+var MeetingsGetVideoMeshClustersAvailability = &Operation{
+	ID: "MeetingsGetVideoMeshClustersAvailability", Area: "meetings", Group: "video-mesh", Command: "list-clusters-availability",
 	Summary:     "List Clusters Availability",
 	Description: "Returns the availability details for all Video Mesh clusters in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters/availability",
@@ -2167,9 +2167,9 @@ var MeetingsVideoMeshListClustersAvailability = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetClusterAvailability is "Get Cluster Availability": GET /videoMesh/clusters/availability/{clusterId}.
-var MeetingsVideoMeshGetClusterAvailability = &Operation{
-	ID: "MeetingsVideoMeshGetClusterAvailability", Area: "meetings", Group: "video-mesh", Command: "get-cluster-availability",
+// MeetingsGetVideoMeshClustersAvailabilityByClusterId is "Get Cluster Availability": GET /videoMesh/clusters/availability/{clusterId}.
+var MeetingsGetVideoMeshClustersAvailabilityByClusterId = &Operation{
+	ID: "MeetingsGetVideoMeshClustersAvailabilityByClusterId", Area: "meetings", Group: "video-mesh", Command: "get-cluster-availability",
 	Summary:     "Get Cluster Availability",
 	Description: "Returns the availability details of a single Video Mesh cluster in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters/availability/{clusterId}",
@@ -2181,9 +2181,9 @@ var MeetingsVideoMeshGetClusterAvailability = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListNodeAvailability is "List Node Availability": GET /videoMesh/nodes/availability.
-var MeetingsVideoMeshListNodeAvailability = &Operation{
-	ID: "MeetingsVideoMeshListNodeAvailability", Area: "meetings", Group: "video-mesh", Command: "list-node-availability",
+// MeetingsGetVideoMeshNodesAvailability is "List Node Availability": GET /videoMesh/nodes/availability.
+var MeetingsGetVideoMeshNodesAvailability = &Operation{
+	ID: "MeetingsGetVideoMeshNodesAvailability", Area: "meetings", Group: "video-mesh", Command: "list-node-availability",
 	Summary:     "List Node Availability",
 	Description: "Returns the availability details of all nodes in a Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/nodes/availability",
@@ -2196,9 +2196,9 @@ var MeetingsVideoMeshListNodeAvailability = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetNodeAvailability is "Get Node Availability": GET /videoMesh/nodes/availability/{nodeId}.
-var MeetingsVideoMeshGetNodeAvailability = &Operation{
-	ID: "MeetingsVideoMeshGetNodeAvailability", Area: "meetings", Group: "video-mesh", Command: "get-node-availability",
+// MeetingsGetVideoMeshNodesAvailabilityByNodeId is "Get Node Availability": GET /videoMesh/nodes/availability/{nodeId}.
+var MeetingsGetVideoMeshNodesAvailabilityByNodeId = &Operation{
+	ID: "MeetingsGetVideoMeshNodesAvailabilityByNodeId", Area: "meetings", Group: "video-mesh", Command: "get-node-availability",
 	Summary:     "Get Node Availability",
 	Description: "Returns the availability details of a single node in a Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/nodes/availability/{nodeId}",
@@ -2210,9 +2210,9 @@ var MeetingsVideoMeshGetNodeAvailability = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListMediaHealthMonitoringToolTestResultsV2 is "List Media Health Monitoring Tool Test results V2": GET /videoMesh/testResults/mediaHealthMonitorTest.
-var MeetingsVideoMeshListMediaHealthMonitoringToolTestResultsV2 = &Operation{
-	ID: "MeetingsVideoMeshListMediaHealthMonitoringToolTestResultsV2", Area: "meetings", Group: "video-mesh", Command: "list-media-health-monitoring-tool-test-results-v2",
+// MeetingsGetVideoMeshTestResultsMediaHealthMonitorTest is "List Media Health Monitoring Tool Test results V2": GET /videoMesh/testResults/mediaHealthMonitorTest.
+var MeetingsGetVideoMeshTestResultsMediaHealthMonitorTest = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsMediaHealthMonitorTest", Area: "meetings", Group: "video-mesh", Command: "list-media-health-monitoring-tool-test-results-v2",
 	Summary:     "List Media Health Monitoring Tool Test results V2",
 	Description: "Returns the test results of the Media Health Monitoring Tool tests for an organization.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\nOn-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/mediaHealthMonitorTest",
@@ -2226,9 +2226,9 @@ var MeetingsVideoMeshListMediaHealthMonitoringToolTestResultsV2 = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsClustersV2 is "Get Media Health Monitoring Tool Test results for clusters V2": GET /videoMesh/testResults/mediaHealthMonitorTest/clusters.
-var MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsClustersV2 = &Operation{
-	ID: "MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsClustersV2", Area: "meetings", Group: "video-mesh", Command: "get-media-health-monitoring-tool-test-results-clusters-v2",
+// MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestClusters is "Get Media Health Monitoring Tool Test results for clusters V2": GET /videoMesh/testResults/mediaHealthMonitorTest/clusters.
+var MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestClusters = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestClusters", Area: "meetings", Group: "video-mesh", Command: "get-media-health-monitoring-tool-test-results-clusters-v2",
 	Summary:     "Get Media Health Monitoring Tool Test results for clusters V2",
 	Description: "Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\nOn-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/mediaHealthMonitorTest/clusters",
@@ -2241,9 +2241,9 @@ var MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsClustersV2 = &Operat
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsNodeV2 is "Get Media Health Monitoring Tool Test results for node V2": GET /videoMesh/testResults/mediaHealthMonitorTest/nodes.
-var MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsNodeV2 = &Operation{
-	ID: "MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsNodeV2", Area: "meetings", Group: "video-mesh", Command: "get-media-health-monitoring-tool-test-results-node-v2",
+// MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestNodes is "Get Media Health Monitoring Tool Test results for node V2": GET /videoMesh/testResults/mediaHealthMonitorTest/nodes.
+var MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestNodes = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsMediaHealthMonitorTestNodes", Area: "meetings", Group: "video-mesh", Command: "get-media-health-monitoring-tool-test-results-node-v2",
 	Summary:     "Get Media Health Monitoring Tool Test results for node V2",
 	Description: "Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\nOn-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/mediaHealthMonitorTest/nodes",
@@ -2256,9 +2256,9 @@ var MeetingsVideoMeshGetMediaHealthMonitoringToolTestResultsNodeV2 = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListOverflowCloud is "List Overflow to Cloud details": GET /videoMesh/cloudOverflow.
-var MeetingsVideoMeshListOverflowCloud = &Operation{
-	ID: "MeetingsVideoMeshListOverflowCloud", Area: "meetings", Group: "video-mesh", Command: "list-overflow-cloud",
+// MeetingsGetVideoMeshCloudOverflow is "List Overflow to Cloud details": GET /videoMesh/cloudOverflow.
+var MeetingsGetVideoMeshCloudOverflow = &Operation{
+	ID: "MeetingsGetVideoMeshCloudOverflow", Area: "meetings", Group: "video-mesh", Command: "list-overflow-cloud",
 	Summary:     "List Overflow to Cloud details",
 	Description: "Returns details of overflows to the cloud in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/cloudOverflow",
@@ -2271,9 +2271,9 @@ var MeetingsVideoMeshListOverflowCloud = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListClusterRedirect is "List Cluster Redirect details": GET /videoMesh/callRedirects.
-var MeetingsVideoMeshListClusterRedirect = &Operation{
-	ID: "MeetingsVideoMeshListClusterRedirect", Area: "meetings", Group: "video-mesh", Command: "list-cluster-redirect",
+// MeetingsGetVideoMeshCallRedirects is "List Cluster Redirect details": GET /videoMesh/callRedirects.
+var MeetingsGetVideoMeshCallRedirects = &Operation{
+	ID: "MeetingsGetVideoMeshCallRedirects", Area: "meetings", Group: "video-mesh", Command: "list-cluster-redirect",
 	Summary:     "List Cluster Redirect details",
 	Description: "Returns the redirect details of all Video Mesh clusters in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/callRedirects",
@@ -2286,9 +2286,9 @@ var MeetingsVideoMeshListClusterRedirect = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetClusterRedirect is "Get Cluster Redirect details": GET /videoMesh/clusters/callRedirects.
-var MeetingsVideoMeshGetClusterRedirect = &Operation{
-	ID: "MeetingsVideoMeshGetClusterRedirect", Area: "meetings", Group: "video-mesh", Command: "get-cluster-redirect",
+// MeetingsGetVideoMeshClustersCallRedirects is "Get Cluster Redirect details": GET /videoMesh/clusters/callRedirects.
+var MeetingsGetVideoMeshClustersCallRedirects = &Operation{
+	ID: "MeetingsGetVideoMeshClustersCallRedirects", Area: "meetings", Group: "video-mesh", Command: "get-cluster-redirect",
 	Summary:     "Get Cluster Redirect details",
 	Description: "Returns details of cluster redirects for a single Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters/callRedirects",
@@ -2300,9 +2300,9 @@ var MeetingsVideoMeshGetClusterRedirect = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListClustersUtilization is "List Clusters Utilization": GET /videoMesh/utilization.
-var MeetingsVideoMeshListClustersUtilization = &Operation{
-	ID: "MeetingsVideoMeshListClustersUtilization", Area: "meetings", Group: "video-mesh", Command: "list-clusters-utilization",
+// MeetingsGetVideoMeshUtilization is "List Clusters Utilization": GET /videoMesh/utilization.
+var MeetingsGetVideoMeshUtilization = &Operation{
+	ID: "MeetingsGetVideoMeshUtilization", Area: "meetings", Group: "video-mesh", Command: "list-clusters-utilization",
 	Summary:     "List Clusters Utilization",
 	Description: "Returns the utilization details of all Video Mesh clusters in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/utilization",
@@ -2315,9 +2315,9 @@ var MeetingsVideoMeshListClustersUtilization = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetClusterUtilization is "Get Cluster Utilization details": GET /videoMesh/clusters/utilization.
-var MeetingsVideoMeshGetClusterUtilization = &Operation{
-	ID: "MeetingsVideoMeshGetClusterUtilization", Area: "meetings", Group: "video-mesh", Command: "get-cluster-utilization",
+// MeetingsGetVideoMeshClustersUtilization is "Get Cluster Utilization details": GET /videoMesh/clusters/utilization.
+var MeetingsGetVideoMeshClustersUtilization = &Operation{
+	ID: "MeetingsGetVideoMeshClustersUtilization", Area: "meetings", Group: "video-mesh", Command: "get-cluster-utilization",
 	Summary:     "Get Cluster Utilization details",
 	Description: "Returns the utilization details for a single Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters/utilization",
@@ -2329,9 +2329,9 @@ var MeetingsVideoMeshGetClusterUtilization = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListReachabilityTestResultsV2 is "List Reachability Test results V2": GET /videoMesh/testResults/reachabilityTest.
-var MeetingsVideoMeshListReachabilityTestResultsV2 = &Operation{
-	ID: "MeetingsVideoMeshListReachabilityTestResultsV2", Area: "meetings", Group: "video-mesh", Command: "list-reachability-test-results-v2",
+// MeetingsGetVideoMeshTestResultsReachabilityTest is "List Reachability Test results V2": GET /videoMesh/testResults/reachabilityTest.
+var MeetingsGetVideoMeshTestResultsReachabilityTest = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsReachabilityTest", Area: "meetings", Group: "video-mesh", Command: "list-reachability-test-results-v2",
 	Summary:     "List Reachability Test results V2",
 	Description: "Returns the test results of the Reachability tests for an organization.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\n1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.\n\n<br/>\n\n2. You can now view the destination IP address of the destination cluster in the JSON response.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/reachabilityTest",
@@ -2345,9 +2345,9 @@ var MeetingsVideoMeshListReachabilityTestResultsV2 = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetReachabilityTestResultsClusterV2 is "Get Reachability Test results for cluster V2": GET /videoMesh/testResults/reachabilityTest/clusters.
-var MeetingsVideoMeshGetReachabilityTestResultsClusterV2 = &Operation{
-	ID: "MeetingsVideoMeshGetReachabilityTestResultsClusterV2", Area: "meetings", Group: "video-mesh", Command: "get-reachability-test-results-cluster-v2",
+// MeetingsGetVideoMeshTestResultsReachabilityTestClusters is "Get Reachability Test results for cluster V2": GET /videoMesh/testResults/reachabilityTest/clusters.
+var MeetingsGetVideoMeshTestResultsReachabilityTestClusters = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsReachabilityTestClusters", Area: "meetings", Group: "video-mesh", Command: "get-reachability-test-results-cluster-v2",
 	Summary:     "Get Reachability Test results for cluster V2",
 	Description: "Returns the test results of the Reachability tests for a single Video Mesh cluster.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\n1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.\n\n<br/>\n\n2. You can now view the destination IP address of the destination cluster in the JSON response.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/reachabilityTest/clusters",
@@ -2360,9 +2360,9 @@ var MeetingsVideoMeshGetReachabilityTestResultsClusterV2 = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetReachabilityTestResultsNodeV2 is "Get Reachability Test results for node V2": GET /videoMesh/testResults/reachabilityTest/nodes.
-var MeetingsVideoMeshGetReachabilityTestResultsNodeV2 = &Operation{
-	ID: "MeetingsVideoMeshGetReachabilityTestResultsNodeV2", Area: "meetings", Group: "video-mesh", Command: "get-reachability-test-results-node-v2",
+// MeetingsGetVideoMeshTestResultsReachabilityTestNodes is "Get Reachability Test results for node V2": GET /videoMesh/testResults/reachabilityTest/nodes.
+var MeetingsGetVideoMeshTestResultsReachabilityTestNodes = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsReachabilityTestNodes", Area: "meetings", Group: "video-mesh", Command: "get-reachability-test-results-node-v2",
 	Summary:     "Get Reachability Test results for node V2",
 	Description: "Returns the test results of the Reachability tests for a single Video Mesh node.\n\n<br/>\n\nChanges in V2:\n\n<br/>\n\n1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.\n\n<br/>\n\n2. You can now view the destination IP address of the destination cluster in the JSON response.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/reachabilityTest/nodes",
@@ -2375,9 +2375,9 @@ var MeetingsVideoMeshGetReachabilityTestResultsNodeV2 = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListCluster is "List Cluster Details": GET /videoMesh/clusters.
-var MeetingsVideoMeshListCluster = &Operation{
-	ID: "MeetingsVideoMeshListCluster", Area: "meetings", Group: "video-mesh", Command: "list-cluster",
+// MeetingsGetVideoMeshClusters is "List Cluster Details": GET /videoMesh/clusters.
+var MeetingsGetVideoMeshClusters = &Operation{
+	ID: "MeetingsGetVideoMeshClusters", Area: "meetings", Group: "video-mesh", Command: "list-cluster",
 	Summary:     "List Cluster Details",
 	Description: "Returns the cluster details of all Video Mesh clusters in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters",
@@ -2387,9 +2387,9 @@ var MeetingsVideoMeshListCluster = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MeetingsVideoMeshGetCluster is "Get Cluster Details": GET /videoMesh/clusters/{clusterId}.
-var MeetingsVideoMeshGetCluster = &Operation{
-	ID: "MeetingsVideoMeshGetCluster", Area: "meetings", Group: "video-mesh", Command: "get-cluster",
+// MeetingsGetVideoMeshClustersByClusterId is "Get Cluster Details": GET /videoMesh/clusters/{clusterId}.
+var MeetingsGetVideoMeshClustersByClusterId = &Operation{
+	ID: "MeetingsGetVideoMeshClustersByClusterId", Area: "meetings", Group: "video-mesh", Command: "get-cluster",
 	Summary:     "Get Cluster Details",
 	Description: "Returns the cluster details for a single Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clusters/{clusterId}",
@@ -2398,9 +2398,9 @@ var MeetingsVideoMeshGetCluster = &Operation{
 	},
 }
 
-// MeetingsVideoMeshTriggerOnDemandTestCluster is "Trigger on-demand test for cluster": POST /videoMesh/triggerTest/clusters/{clusterId}.
-var MeetingsVideoMeshTriggerOnDemandTestCluster = &Operation{
-	ID: "MeetingsVideoMeshTriggerOnDemandTestCluster", Area: "meetings", Group: "video-mesh", Command: "trigger-on-demand-test-cluster",
+// MeetingsPostVideoMeshTriggerTestClustersByClusterId is "Trigger on-demand test for cluster": POST /videoMesh/triggerTest/clusters/{clusterId}.
+var MeetingsPostVideoMeshTriggerTestClustersByClusterId = &Operation{
+	ID: "MeetingsPostVideoMeshTriggerTestClustersByClusterId", Area: "meetings", Group: "video-mesh", Command: "trigger-on-demand-test-cluster",
 	Summary:     "Trigger on-demand test for cluster",
 	Description: "Triggers an on-demand test for a cluster.\nThe test is run on a maximum of 10 nodes present in the cluster, chosen at random, or based on input from the user.",
 	Method:      "POST", Host: HostWebex, Path: "/videoMesh/triggerTest/clusters/{clusterId}",
@@ -2413,9 +2413,9 @@ var MeetingsVideoMeshTriggerOnDemandTestCluster = &Operation{
 	}},
 }
 
-// MeetingsVideoMeshTriggerOnDemandTestNode is "Trigger on-demand test for node": POST /videoMesh/triggerTest/nodes/{nodeId}.
-var MeetingsVideoMeshTriggerOnDemandTestNode = &Operation{
-	ID: "MeetingsVideoMeshTriggerOnDemandTestNode", Area: "meetings", Group: "video-mesh", Command: "trigger-on-demand-test-node",
+// MeetingsPostVideoMeshTriggerTestNodesByNodeId is "Trigger on-demand test for node": POST /videoMesh/triggerTest/nodes/{nodeId}.
+var MeetingsPostVideoMeshTriggerTestNodesByNodeId = &Operation{
+	ID: "MeetingsPostVideoMeshTriggerTestNodesByNodeId", Area: "meetings", Group: "video-mesh", Command: "trigger-on-demand-test-node",
 	Summary:     "Trigger on-demand test for node",
 	Description: "Triggers an on-demand test for a node.",
 	Method:      "POST", Host: HostWebex, Path: "/videoMesh/triggerTest/nodes/{nodeId}",
@@ -2427,9 +2427,9 @@ var MeetingsVideoMeshTriggerOnDemandTestNode = &Operation{
 	}},
 }
 
-// MeetingsVideoMeshGetTriggeredTestStatus is "Get Triggered test status": GET /videoMesh/testStatus.
-var MeetingsVideoMeshGetTriggeredTestStatus = &Operation{
-	ID: "MeetingsVideoMeshGetTriggeredTestStatus", Area: "meetings", Group: "video-mesh", Command: "get-triggered-test-status",
+// MeetingsGetVideoMeshTestStatus is "Get Triggered test status": GET /videoMesh/testStatus.
+var MeetingsGetVideoMeshTestStatus = &Operation{
+	ID: "MeetingsGetVideoMeshTestStatus", Area: "meetings", Group: "video-mesh", Command: "get-triggered-test-status",
 	Summary:     "Get Triggered test status",
 	Description: "Returns the status of the test triggered using the Trigger on-demand test API.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testStatus",
@@ -2438,9 +2438,9 @@ var MeetingsVideoMeshGetTriggeredTestStatus = &Operation{
 	},
 }
 
-// MeetingsVideoMeshGetTriggeredTestResults is "Get Triggered test results": GET /videoMesh/testResults.
-var MeetingsVideoMeshGetTriggeredTestResults = &Operation{
-	ID: "MeetingsVideoMeshGetTriggeredTestResults", Area: "meetings", Group: "video-mesh", Command: "get-triggered-test-results",
+// MeetingsGetVideoMeshTestResults is "Get Triggered test results": GET /videoMesh/testResults.
+var MeetingsGetVideoMeshTestResults = &Operation{
+	ID: "MeetingsGetVideoMeshTestResults", Area: "meetings", Group: "video-mesh", Command: "get-triggered-test-results",
 	Summary:     "Get Triggered test results",
 	Description: "Returns the results of the test triggered using the command ID.<br/>\n<b>NOTE:</b> The response format depends on the type of test triggered and it is the same as that of [NetworkTest API](/docs/api/v1/video-mesh/list-network-test-results), [MediaHealthMonitorTest API](/docs/api/v1/video-mesh/list-media-health-monitoring-tool-test-results-v2), and [ReachabilityTest API](/docs/api/v1/video-mesh/list-reachability-test-results-v2) respectively.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults",
@@ -2449,9 +2449,9 @@ var MeetingsVideoMeshGetTriggeredTestResults = &Operation{
 	},
 }
 
-// MeetingsVideoMeshListNetworkTestResults is "List Network Test results": GET /videoMesh/testResults/networkTest.
-var MeetingsVideoMeshListNetworkTestResults = &Operation{
-	ID: "MeetingsVideoMeshListNetworkTestResults", Area: "meetings", Group: "video-mesh", Command: "list-network-test-results",
+// MeetingsGetVideoMeshTestResultsNetworkTest is "List Network Test results": GET /videoMesh/testResults/networkTest.
+var MeetingsGetVideoMeshTestResultsNetworkTest = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsNetworkTest", Area: "meetings", Group: "video-mesh", Command: "list-network-test-results",
 	Summary:     "List Network Test results",
 	Description: "Returns the test results of the Network tests triggered for an organization. The tests listed below are run as a part of the Network Test execution on the node.\n\n<b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run between the Video Mesh node and cloud services.<br/>\n<b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS servers configured on the Video Mesh node's network.<br/>\n<b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via HTTPS protocol.<br/>\n<b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/networkTest",
@@ -2465,9 +2465,9 @@ var MeetingsVideoMeshListNetworkTestResults = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetNetworkTestResultsCluster is "Get Network Test results for cluster": GET /videoMesh/testResults/networkTest/clusters.
-var MeetingsVideoMeshGetNetworkTestResultsCluster = &Operation{
-	ID: "MeetingsVideoMeshGetNetworkTestResultsCluster", Area: "meetings", Group: "video-mesh", Command: "get-network-test-results-cluster",
+// MeetingsGetVideoMeshTestResultsNetworkTestClusters is "Get Network Test results for cluster": GET /videoMesh/testResults/networkTest/clusters.
+var MeetingsGetVideoMeshTestResultsNetworkTestClusters = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsNetworkTestClusters", Area: "meetings", Group: "video-mesh", Command: "get-network-test-results-cluster",
 	Summary:     "Get Network Test results for cluster",
 	Description: "Returns the test results of the Network tests triggered for a single Video Mesh cluster. The tests listed below are run as a part of the Network Test execution on the node.\n\n<b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run between the Video Mesh node and cloud services.<br/>\n<b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS servers configured on the Video Mesh node's network.<br/>\n<b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via HTTPS protocol.<br/>\n<b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/networkTest/clusters",
@@ -2480,9 +2480,9 @@ var MeetingsVideoMeshGetNetworkTestResultsCluster = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetNetworkTestResultsNode is "Get Network Test results for node": GET /videoMesh/testResults/networkTest/nodes.
-var MeetingsVideoMeshGetNetworkTestResultsNode = &Operation{
-	ID: "MeetingsVideoMeshGetNetworkTestResultsNode", Area: "meetings", Group: "video-mesh", Command: "get-network-test-results-node",
+// MeetingsGetVideoMeshTestResultsNetworkTestNodes is "Get Network Test results for node": GET /videoMesh/testResults/networkTest/nodes.
+var MeetingsGetVideoMeshTestResultsNetworkTestNodes = &Operation{
+	ID: "MeetingsGetVideoMeshTestResultsNetworkTestNodes", Area: "meetings", Group: "video-mesh", Command: "get-network-test-results-node",
 	Summary:     "Get Network Test results for node",
 	Description: "Returns the test results of the Network tests triggered for a single Video Mesh node. The tests listed below are run as a part of the Network Test execution on the node.\n\n<b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run between the Video Mesh node and cloud services.<br/>\n<b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS servers configured on the Video Mesh node's network.<br/>\n<b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via HTTPS protocol.<br/>\n<b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud services via Websocket.<br/>",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/testResults/networkTest/nodes",
@@ -2495,9 +2495,9 @@ var MeetingsVideoMeshGetNetworkTestResultsNode = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListClusterClientTypeDistribution is "List Cluster Client Type Distribution details": GET /videoMesh/clientTypeDistribution.
-var MeetingsVideoMeshListClusterClientTypeDistribution = &Operation{
-	ID: "MeetingsVideoMeshListClusterClientTypeDistribution", Area: "meetings", Group: "video-mesh", Command: "list-cluster-client-type-distribution",
+// MeetingsGetVideoMeshClientTypeDistribution is "List Cluster Client Type Distribution details": GET /videoMesh/clientTypeDistribution.
+var MeetingsGetVideoMeshClientTypeDistribution = &Operation{
+	ID: "MeetingsGetVideoMeshClientTypeDistribution", Area: "meetings", Group: "video-mesh", Command: "list-cluster-client-type-distribution",
 	Summary:     "List Cluster Client Type Distribution details",
 	Description: "Returns the client type distribution details for all Video Mesh clusters in an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clientTypeDistribution",
@@ -2511,9 +2511,9 @@ var MeetingsVideoMeshListClusterClientTypeDistribution = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshGetClusterClientTypeDistribution is "Get Cluster Client Type Distribution details": GET /videoMesh/clientTypeDistribution/clusters.
-var MeetingsVideoMeshGetClusterClientTypeDistribution = &Operation{
-	ID: "MeetingsVideoMeshGetClusterClientTypeDistribution", Area: "meetings", Group: "video-mesh", Command: "get-cluster-client-type-distribution",
+// MeetingsGetVideoMeshClientTypeDistributionClusters is "Get Cluster Client Type Distribution details": GET /videoMesh/clientTypeDistribution/clusters.
+var MeetingsGetVideoMeshClientTypeDistributionClusters = &Operation{
+	ID: "MeetingsGetVideoMeshClientTypeDistributionClusters", Area: "meetings", Group: "video-mesh", Command: "get-cluster-client-type-distribution",
 	Summary:     "Get Cluster Client Type Distribution details",
 	Description: "Returns the client type distribution details for a single Video Mesh cluster.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/clientTypeDistribution/clusters",
@@ -2526,9 +2526,9 @@ var MeetingsVideoMeshGetClusterClientTypeDistribution = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MeetingsVideoMeshListEventThresholdConfiguration is "List Event Threshold Configuration": GET /videoMesh/eventThresholds.
-var MeetingsVideoMeshListEventThresholdConfiguration = &Operation{
-	ID: "MeetingsVideoMeshListEventThresholdConfiguration", Area: "meetings", Group: "video-mesh", Command: "list-event-threshold-configuration",
+// MeetingsGetVideoMeshEventThresholds is "List Event Threshold Configuration": GET /videoMesh/eventThresholds.
+var MeetingsGetVideoMeshEventThresholds = &Operation{
+	ID: "MeetingsGetVideoMeshEventThresholds", Area: "meetings", Group: "video-mesh", Command: "list-event-threshold-configuration",
 	Summary:     "List Event Threshold Configuration",
 	Description: "Returns the event threshold configurations for `orgId` or `clusterId`, with optional filters `eventName` and `eventScope`.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/eventThresholds",
@@ -2541,18 +2541,18 @@ var MeetingsVideoMeshListEventThresholdConfiguration = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "eventThresholds", OmitEmpty: true},
 }
 
-// MeetingsVideoMeshUpdateEventThresholdConfiguration is "Update Event Threshold Configuration": PATCH /videoMesh/eventThresholds.
-var MeetingsVideoMeshUpdateEventThresholdConfiguration = &Operation{
-	ID: "MeetingsVideoMeshUpdateEventThresholdConfiguration", Area: "meetings", Group: "video-mesh", Command: "update-event-threshold-configuration",
+// MeetingsPatchVideoMeshEventThresholds is "Update Event Threshold Configuration": PATCH /videoMesh/eventThresholds.
+var MeetingsPatchVideoMeshEventThresholds = &Operation{
+	ID: "MeetingsPatchVideoMeshEventThresholds", Area: "meetings", Group: "video-mesh", Command: "update-event-threshold-configuration",
 	Summary:     "Update Event Threshold Configuration",
 	Description: "Updates an existing event threshold configuration for given Event Threshold IDs.",
 	Method:      "PATCH", Host: HostWebex, Path: "/videoMesh/eventThresholds",
 	Body: &Body{},
 }
 
-// MeetingsVideoMeshGetEventThresholdConfiguration is "Get Event Threshold Configuration": GET /videoMesh/eventThresholds/{eventThresholdId}.
-var MeetingsVideoMeshGetEventThresholdConfiguration = &Operation{
-	ID: "MeetingsVideoMeshGetEventThresholdConfiguration", Area: "meetings", Group: "video-mesh", Command: "get-event-threshold-configuration",
+// MeetingsGetVideoMeshEventThresholdsByEventThresholdId is "Get Event Threshold Configuration": GET /videoMesh/eventThresholds/{eventThresholdId}.
+var MeetingsGetVideoMeshEventThresholdsByEventThresholdId = &Operation{
+	ID: "MeetingsGetVideoMeshEventThresholdsByEventThresholdId", Area: "meetings", Group: "video-mesh", Command: "get-event-threshold-configuration",
 	Summary:     "Get Event Threshold Configuration",
 	Description: "Returns the event threshold configurations for `eventThresholdId`.",
 	Method:      "GET", Host: HostWebex, Path: "/videoMesh/eventThresholds/{eventThresholdId}",
@@ -2561,9 +2561,9 @@ var MeetingsVideoMeshGetEventThresholdConfiguration = &Operation{
 	},
 }
 
-// MeetingsVideoMeshResetEventThresholdConfiguration is "Reset Event Threshold Configuration": POST /videoMesh/eventThresholds/reset.
-var MeetingsVideoMeshResetEventThresholdConfiguration = &Operation{
-	ID: "MeetingsVideoMeshResetEventThresholdConfiguration", Area: "meetings", Group: "video-mesh", Command: "reset-event-threshold-configuration",
+// MeetingsPostVideoMeshEventThresholdsReset is "Reset Event Threshold Configuration": POST /videoMesh/eventThresholds/reset.
+var MeetingsPostVideoMeshEventThresholdsReset = &Operation{
+	ID: "MeetingsPostVideoMeshEventThresholdsReset", Area: "meetings", Group: "video-mesh", Command: "reset-event-threshold-configuration",
 	Summary:     "Reset Event Threshold Configuration",
 	Description: "Resets the existing event threshold configuration for given Event Threshold IDs to default value. To stop receiving webhook events, use the [Webhooks API](docs/api/v1/webhooks) to delete the webhook in question.",
 	Method:      "POST", Host: HostWebex, Path: "/videoMesh/eventThresholds/reset",
@@ -2572,9 +2572,9 @@ var MeetingsVideoMeshResetEventThresholdConfiguration = &Operation{
 	}},
 }
 
-// MeetingsWebhooksList is "List Webhooks": GET /webhooks.
-var MeetingsWebhooksList = &Operation{
-	ID: "MeetingsWebhooksList", Area: "meetings", Group: "webhooks", Command: "list",
+// MeetingsGetWebhooks is "List Webhooks": GET /webhooks.
+var MeetingsGetWebhooks = &Operation{
+	ID: "MeetingsGetWebhooks", Area: "meetings", Group: "webhooks", Command: "list",
 	Summary:     "List Webhooks",
 	Description: "List all of your webhooks.",
 	Method:      "GET", Host: HostWebex, Path: "/webhooks",
@@ -2585,9 +2585,9 @@ var MeetingsWebhooksList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MeetingsWebhooksCreate is "Create a Webhook": POST /webhooks.
-var MeetingsWebhooksCreate = &Operation{
-	ID: "MeetingsWebhooksCreate", Area: "meetings", Group: "webhooks", Command: "create",
+// MeetingsPostWebhooks is "Create a Webhook": POST /webhooks.
+var MeetingsPostWebhooks = &Operation{
+	ID: "MeetingsPostWebhooks", Area: "meetings", Group: "webhooks", Command: "create",
 	Summary:     "Create a Webhook",
 	Description: "Creates a webhook.\n\nTo learn more about how to create and use webhooks, see The [Webhooks Guide](/docs/api/guides/webhooks).",
 	Method:      "POST", Host: HostWebex, Path: "/webhooks",
@@ -2602,9 +2602,9 @@ var MeetingsWebhooksCreate = &Operation{
 	}},
 }
 
-// MeetingsWebhooksGet is "Get Webhook Details": GET /webhooks/{webhookId}.
-var MeetingsWebhooksGet = &Operation{
-	ID: "MeetingsWebhooksGet", Area: "meetings", Group: "webhooks", Command: "get",
+// MeetingsGetWebhooksByWebhookId is "Get Webhook Details": GET /webhooks/{webhookId}.
+var MeetingsGetWebhooksByWebhookId = &Operation{
+	ID: "MeetingsGetWebhooksByWebhookId", Area: "meetings", Group: "webhooks", Command: "get",
 	Summary:     "Get Webhook Details",
 	Description: "Shows details for a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -2613,9 +2613,9 @@ var MeetingsWebhooksGet = &Operation{
 	},
 }
 
-// MeetingsWebhooksUpdate is "Update a Webhook": PUT /webhooks/{webhookId}.
-var MeetingsWebhooksUpdate = &Operation{
-	ID: "MeetingsWebhooksUpdate", Area: "meetings", Group: "webhooks", Command: "update",
+// MeetingsPutWebhooksByWebhookId is "Update a Webhook": PUT /webhooks/{webhookId}.
+var MeetingsPutWebhooksByWebhookId = &Operation{
+	ID: "MeetingsPutWebhooksByWebhookId", Area: "meetings", Group: "webhooks", Command: "update",
 	Summary:     "Update a Webhook",
 	Description: "Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated.\nThe fields that can be updated are `name`, `targetURL`, `secret` and `status`. All other fields, if supplied, are ignored.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "PUT", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -2631,9 +2631,9 @@ var MeetingsWebhooksUpdate = &Operation{
 	}},
 }
 
-// MeetingsWebhooksDelete is "Delete a Webhook": DELETE /webhooks/{webhookId}.
-var MeetingsWebhooksDelete = &Operation{
-	ID: "MeetingsWebhooksDelete", Area: "meetings", Group: "webhooks", Command: "delete",
+// MeetingsDeleteWebhooksByWebhookId is "Delete a Webhook": DELETE /webhooks/{webhookId}.
+var MeetingsDeleteWebhooksByWebhookId = &Operation{
+	ID: "MeetingsDeleteWebhooksByWebhookId", Area: "meetings", Group: "webhooks", Command: "delete",
 	Summary:     "Delete a Webhook",
 	Description: "Deletes a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -2642,9 +2642,9 @@ var MeetingsWebhooksDelete = &Operation{
 	},
 }
 
-// MeetingsSummariesGetMeetingId is "Get Summary by Meeting ID": GET /meetingSummaries.
-var MeetingsSummariesGetMeetingId = &Operation{
-	ID: "MeetingsSummariesGetMeetingId", Area: "meetings", Group: "summaries", Command: "get-meeting-id",
+// MeetingsGetMeetingSummaries is "Get Summary by Meeting ID": GET /meetingSummaries.
+var MeetingsGetMeetingSummaries = &Operation{
+	ID: "MeetingsGetMeetingSummaries", Area: "meetings", Group: "summaries", Command: "get-meeting-id",
 	Summary:     "Get Summary by Meeting ID",
 	Description: "Get the summary of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) by the meeting ID.\n\nPlease note that only **meeting instances** in state `ended` are supported, and currently the meeting ID of a meeting series, a scheduled meeting, an in-progress meeting instance, or a scheduled personal room meeting is not supported for this API. This API can only fetch summaries that you have access to, and if a meeting summary is deleted, you won't be able to see it either. And, this is an API for normal user. If you are a compliance officer, please use the Get Summary For Compliance Officer API",
 	Method:      "GET", Host: HostWebex, Path: "/meetingSummaries",
@@ -2653,9 +2653,9 @@ var MeetingsSummariesGetMeetingId = &Operation{
 	},
 }
 
-// MeetingsSummariesGetComplianceOfficer is "Get Summary For Compliance Officer": GET /admin/meetingSummaries.
-var MeetingsSummariesGetComplianceOfficer = &Operation{
-	ID: "MeetingsSummariesGetComplianceOfficer", Area: "meetings", Group: "summaries", Command: "get-compliance-officer",
+// MeetingsGetAdminMeetingSummaries is "Get Summary For Compliance Officer": GET /admin/meetingSummaries.
+var MeetingsGetAdminMeetingSummaries = &Operation{
+	ID: "MeetingsGetAdminMeetingSummaries", Area: "meetings", Group: "summaries", Command: "get-compliance-officer",
 	Summary:     "Get Summary For Compliance Officer",
 	Description: "Lists available or deleted summaries of an ended [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) by meeting ID. This API can only be accessed by compliance officers. With this API, a compliance officer can list summaries of any ended meeting instances in his organization including available and deleted summaries",
 	Method:      "GET", Host: HostWebex, Path: "/admin/meetingSummaries",
@@ -2664,9 +2664,9 @@ var MeetingsSummariesGetComplianceOfficer = &Operation{
 	},
 }
 
-// MeetingsSummariesDelete is "Delete a Summary": DELETE /meetingSummaries/{summaryId}.
-var MeetingsSummariesDelete = &Operation{
-	ID: "MeetingsSummariesDelete", Area: "meetings", Group: "summaries", Command: "delete",
+// MeetingsDeleteMeetingSummariesBySummaryId is "Delete a Summary": DELETE /meetingSummaries/{summaryId}.
+var MeetingsDeleteMeetingSummariesBySummaryId = &Operation{
+	ID: "MeetingsDeleteMeetingSummariesBySummaryId", Area: "meetings", Group: "summaries", Command: "delete",
 	Summary:     "Delete a Summary",
 	Description: "Removes a summary with a specified summary ID. The deleted summary cannot be recovered. A deleted summary can not be accessed by regular users, i.e. host or attendees, but can be access by compliance officers",
 	Method:      "DELETE", Host: HostWebex, Path: "/meetingSummaries/{summaryId}",
@@ -2675,9 +2675,9 @@ var MeetingsSummariesDelete = &Operation{
 	},
 }
 
-// MeetingsSlidosecurepremiumListComplianceEvents is "List Compliance Events": GET /slido/compliance/events.
-var MeetingsSlidosecurepremiumListComplianceEvents = &Operation{
-	ID: "MeetingsSlidosecurepremiumListComplianceEvents", Area: "meetings", Group: "slidosecurepremium", Command: "list-compliance-events",
+// meetingsGetSlidoComplianceEvents_2 is "List Compliance Events": GET /slido/compliance/events.
+var meetingsGetSlidoComplianceEvents_2 = &Operation{
+	ID: "meetingsGetSlidoComplianceEvents_2", Area: "meetings", Group: "slidosecurepremium", Command: "list-compliance-events",
 	Summary:     "List Compliance Events",
 	Description: "Lists events representing actions that occurred during a Slido Secure Premium session (creating a poll, modifying a poll, activating a poll, posting an answer, etc.)\n\nEvents capture who performed the action and on what resource.\n\nThe events are paginated by the server into pages of max 256 items per page without any order.\n\nThe events are available within 15 minutes after they happened.\n\nEvery resource has properties:\n* type - event type\n\n* ... event specific ids\n\n* ... event specific properties\n",
 	Method:      "GET", Host: HostWebex, Path: "/slido/compliance/events",

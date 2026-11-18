@@ -57,7 +57,7 @@ func main() {
 	}
 	org := webexapi.DecodeOrgID(os.Getenv("WEBEX_ORG"))
 
-	teams, err := webexops.All(ctx, client, hosts, webexops.CcTeamList, webexops.Args{
+	teams, err := webexops.All(ctx, client, hosts, webexops.CcGetOrganizationByOrgidV2Team, webexops.Args{
 		Params: map[string]string{"orgid": org},
 	})
 	if err != nil {
@@ -76,4 +76,4 @@ func main() {
 - **Hosts:** `HostsFor` refuses a Contact Center data center that is not in `CCRegions`, since it becomes part of the host the token is sent to.
 - **Paging:** each list's paging was derived from its collection and, where Webex differs, measured against a live organization. `All` and `Visit` fail rather than return part of a list. A failed request returns its own error, such as an `APIError` or the context's error. A response that doesn't page as expected returns an error matching `webexapi.ErrIncompleteList`: for example, a missing item array or total, a page that repeats, or a next link to another host.
 - **Hooks:** `BeforeSend`, `AfterResponse` and `OnRetry` let a program log requests or stop them before they are sent. The CLI uses them for `--debug`, `--dry-run` and read-only mode.
-- **Generated names:** the operation table is regenerated when Cisco's collections change. Once published, a name always means the same method and path. If Cisco removes that route, the name is removed too, and a program that uses it fails to build rather than calling something else.
+- **Names:** each operation is named by its area, method and path. For example, `GET /organization/{orgid}/v2/team` in Contact Center is `CcGetOrganizationByOrgidV2Team`, and `POST /telephony/calls/dial` in Calling is `CallingPostTelephonyCallsDial`. A name always means that request. If Cisco removes the route, the name goes too, and a program that uses it fails to build rather than calling something else. A few routes that Cisco lists twice with different requests have no name; find them in `webexops.Operations(area)` by `Method` and `Path`.

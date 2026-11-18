@@ -24,84 +24,84 @@ var messagingGroups = []Group{
 
 // messagingOperations are the Webex Messaging operations, in collection order.
 var messagingOperations = []*Operation{
-	MessagingAttachmentActionsCreate,
-	MessagingAttachmentActionsGet,
-	MessagingEcmFolderLinkingList,
-	MessagingEcmFolderLinkingCreateConfiguration,
-	MessagingEcmFolderLinkingGet,
-	MessagingEcmFolderLinkingUpdateLinked,
-	MessagingEcmFolderLinkingUnlinkLinked,
-	MessagingEventsList,
-	MessagingEventsGet,
-	MessagingMembershipsList,
-	MessagingMembershipsCreate,
-	MessagingMembershipsGet,
-	MessagingMembershipsUpdate,
-	MessagingMembershipsDelete,
-	MessagingMessagesList,
-	MessagingMessagesListDirect,
-	MessagingMessagesEdit,
-	MessagingMessagesGet,
-	MessagingMessagesDelete,
-	MessagingPeopleList,
-	MessagingPeopleCreatePerson,
-	MessagingPeopleGetPerson,
-	MessagingPeopleUpdatePerson,
-	MessagingPeopleDeletePerson,
-	MessagingPeopleGetMyOwn,
-	MessagingRoomTabsList,
-	MessagingRoomTabsCreate,
-	MessagingRoomTabsGet,
-	MessagingRoomTabsUpdate,
-	MessagingRoomTabsDelete,
-	MessagingRoomsList,
-	MessagingRoomsCreate,
-	MessagingRoomsGet,
-	MessagingRoomsUpdate,
-	MessagingRoomsDelete,
-	MessagingRoomsGetMeeting,
-	MessagingTeamMembershipsList,
-	MessagingTeamMembershipsCreate,
-	MessagingTeamMembershipsGet,
-	MessagingTeamMembershipsUpdate,
-	MessagingTeamMembershipsDelete,
-	MessagingTeamsList,
-	MessagingTeamsCreate,
-	MessagingTeamsGet,
-	MessagingTeamsUpdate,
-	MessagingTeamsDelete,
-	MessagingWebhooksList,
-	MessagingWebhooksCreate,
-	MessagingWebhooksGet,
-	MessagingWebhooksUpdate,
-	MessagingWebhooksDelete,
-	MessagingHdsGetTestResultsNode,
-	MessagingHdsGetCluster,
-	MessagingHdsGetOrg,
-	MessagingHdsGetNode,
-	MessagingHdsGetDatabaseOrg,
-	MessagingHdsGetMultiTenantOrg,
-	MessagingHdsGetAvailabilityCluster,
-	MessagingHdsGetDatabaseConfigOrg,
-	MessagingHdsListTenantsOrg,
-	MessagingHdsListNodesCluster,
-	MessagingHdsListClustersOrg,
-	MessagingHdsGetAlarmsNode,
-	MessagingHdsGetUsageNode,
+	MessagingPostAttachmentActions,
+	MessagingGetAttachmentActionsById,
+	MessagingGetRoomLinkedFolders,
+	MessagingPostRoomLinkedFolders,
+	MessagingGetRoomLinkedFoldersById,
+	MessagingPutRoomLinkedFoldersById,
+	MessagingDeleteRoomLinkedFoldersById,
+	MessagingGetEvents,
+	MessagingGetEventsByEventId,
+	MessagingGetMemberships,
+	MessagingPostMemberships,
+	MessagingGetMembershipsByMembershipId,
+	MessagingPutMembershipsByMembershipId,
+	MessagingDeleteMembershipsByMembershipId,
+	MessagingGetMessages,
+	MessagingGetMessagesDirect,
+	MessagingPutMessagesByMessageId,
+	MessagingGetMessagesByMessageId,
+	MessagingDeleteMessagesByMessageId,
+	MessagingGetPeople,
+	MessagingPostPeople,
+	MessagingGetPeopleByPersonId,
+	MessagingPutPeopleByPersonId,
+	MessagingDeletePeopleByPersonId,
+	MessagingGetPeopleMe,
+	MessagingGetRoomTabs,
+	MessagingPostRoomTabs,
+	MessagingGetRoomTabsById,
+	MessagingPutRoomTabsById,
+	MessagingDeleteRoomTabsById,
+	MessagingGetRooms,
+	MessagingPostRooms,
+	MessagingGetRoomsByRoomId,
+	MessagingPutRoomsByRoomId,
+	MessagingDeleteRoomsByRoomId,
+	MessagingGetRoomsByRoomIdMeetingInfo,
+	MessagingGetTeamMemberships,
+	MessagingPostTeamMemberships,
+	MessagingGetTeamMembershipsByMembershipId,
+	MessagingPutTeamMembershipsByMembershipId,
+	MessagingDeleteTeamMembershipsByMembershipId,
+	MessagingGetTeams,
+	MessagingPostTeams,
+	MessagingGetTeamsByTeamId,
+	MessagingPutTeamsByTeamId,
+	MessagingDeleteTeamsByTeamId,
+	MessagingGetWebhooks,
+	MessagingPostWebhooks,
+	MessagingGetWebhooksByWebhookId,
+	MessagingPutWebhooksByWebhookId,
+	MessagingDeleteWebhooksByWebhookId,
+	MessagingGetHdsTestResultsNodesByNodeIdNetworkTest,
+	MessagingGetHdsClustersByClusterId,
+	MessagingGetHdsOrganizationsByOrganizationId,
+	MessagingGetHdsNodesByNodeId,
+	MessagingGetHdsOrganizationsByOrganizationIdDatabaseDetails,
+	MessagingGetHdsOrganizationsByOrganizationIdMultiTenant,
+	MessagingGetHdsClustersByClusterIdAvailability,
+	MessagingGetHdsOrganizationsByOrganizationIdDatabase,
+	MessagingGetHdsOrganizationsByOrganizationIdTenants,
+	MessagingGetHdsClustersByClusterIdNodes,
+	MessagingGetHdsOrganizationsByOrganizationIdClusters,
+	MessagingGetHdsNodesByNodeIdAlarms,
+	MessagingGetHdsNodesByNodeIdResourceUsage,
 }
 
-// MessagingAttachmentActionsCreate is "Create an Attachment Action": POST /attachment/actions.
-var MessagingAttachmentActionsCreate = &Operation{
-	ID: "MessagingAttachmentActionsCreate", Area: "messaging", Group: "attachment-actions", Command: "create",
+// MessagingPostAttachmentActions is "Create an Attachment Action": POST /attachment/actions.
+var MessagingPostAttachmentActions = &Operation{
+	ID: "MessagingPostAttachmentActions", Area: "messaging", Group: "attachment-actions", Command: "create",
 	Summary:     "Create an Attachment Action",
 	Description: "Create a new attachment action.",
 	Method:      "POST", Host: HostWebex, Path: "/attachment/actions",
 	Body: &Body{},
 }
 
-// MessagingAttachmentActionsGet is "Get Attachment Action Details": GET /attachment/actions/{id}.
-var MessagingAttachmentActionsGet = &Operation{
-	ID: "MessagingAttachmentActionsGet", Area: "messaging", Group: "attachment-actions", Command: "get",
+// MessagingGetAttachmentActionsById is "Get Attachment Action Details": GET /attachment/actions/{id}.
+var MessagingGetAttachmentActionsById = &Operation{
+	ID: "MessagingGetAttachmentActionsById", Area: "messaging", Group: "attachment-actions", Command: "get",
 	Summary:     "Get Attachment Action Details",
 	Description: "Shows details for a attachment action, by ID.\n\nSpecify the attachment action ID in the `id` URI parameter.",
 	Method:      "GET", Host: HostWebex, Path: "/attachment/actions/{id}",
@@ -110,9 +110,9 @@ var MessagingAttachmentActionsGet = &Operation{
 	},
 }
 
-// MessagingEcmFolderLinkingList is "List ECM folder": GET /room/linkedFolders.
-var MessagingEcmFolderLinkingList = &Operation{
-	ID: "MessagingEcmFolderLinkingList", Area: "messaging", Group: "ecm-folder-linking", Command: "list",
+// MessagingGetRoomLinkedFolders is "List ECM folder": GET /room/linkedFolders.
+var MessagingGetRoomLinkedFolders = &Operation{
+	ID: "MessagingGetRoomLinkedFolders", Area: "messaging", Group: "ecm-folder-linking", Command: "list",
 	Summary:     "List ECM folder",
 	Description: "Lists the ECM folder of a room specified by the `roomId` query parameter.",
 	Method:      "GET", Host: HostWebex, Path: "/room/linkedFolders",
@@ -122,9 +122,9 @@ var MessagingEcmFolderLinkingList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MessagingEcmFolderLinkingCreateConfiguration is "Create an ECM folder configuration": POST /room/linkedFolders.
-var MessagingEcmFolderLinkingCreateConfiguration = &Operation{
-	ID: "MessagingEcmFolderLinkingCreateConfiguration", Area: "messaging", Group: "ecm-folder-linking", Command: "create-configuration",
+// MessagingPostRoomLinkedFolders is "Create an ECM folder configuration": POST /room/linkedFolders.
+var MessagingPostRoomLinkedFolders = &Operation{
+	ID: "MessagingPostRoomLinkedFolders", Area: "messaging", Group: "ecm-folder-linking", Command: "create-configuration",
 	Summary:     "Create an ECM folder configuration",
 	Description: "Adds an existing ECM folder to a room as (default or reference) file storage. There is no data validation happening for the request. Please ensure the correct `driveId` and `itemId.` These can be collected from the MS Graph API. The `contentUrl` and `displayName` are used only for user convenience. The folder will be configured with the MS folder name as `displayName`, and the `contentURL` may be updated or corrected as needed. To assess final configuration, please make a GET request on the linkedFolder.",
 	Method:      "POST", Host: HostWebex, Path: "/room/linkedFolders",
@@ -138,9 +138,9 @@ var MessagingEcmFolderLinkingCreateConfiguration = &Operation{
 	}},
 }
 
-// MessagingEcmFolderLinkingGet is "Get ECM Folder Details": GET /room/linkedFolders/{id}.
-var MessagingEcmFolderLinkingGet = &Operation{
-	ID: "MessagingEcmFolderLinkingGet", Area: "messaging", Group: "ecm-folder-linking", Command: "get",
+// MessagingGetRoomLinkedFoldersById is "Get ECM Folder Details": GET /room/linkedFolders/{id}.
+var MessagingGetRoomLinkedFoldersById = &Operation{
+	ID: "MessagingGetRoomLinkedFoldersById", Area: "messaging", Group: "ecm-folder-linking", Command: "get",
 	Summary:     "Get ECM Folder Details",
 	Description: "Get details for a room ECM folder with the specified folder id.",
 	Method:      "GET", Host: HostWebex, Path: "/room/linkedFolders/{id}",
@@ -149,9 +149,9 @@ var MessagingEcmFolderLinkingGet = &Operation{
 	},
 }
 
-// MessagingEcmFolderLinkingUpdateLinked is "Update an ECM Linked Folder": PUT /room/linkedFolders/{id}.
-var MessagingEcmFolderLinkingUpdateLinked = &Operation{
-	ID: "MessagingEcmFolderLinkingUpdateLinked", Area: "messaging", Group: "ecm-folder-linking", Command: "update-linked",
+// MessagingPutRoomLinkedFoldersById is "Update an ECM Linked Folder": PUT /room/linkedFolders/{id}.
+var MessagingPutRoomLinkedFoldersById = &Operation{
+	ID: "MessagingPutRoomLinkedFoldersById", Area: "messaging", Group: "ecm-folder-linking", Command: "update-linked",
 	Summary:     "Update an ECM Linked Folder",
 	Description: "Updates the configuration of the specified Room folder. There is no data validation happening for the request. Please ensure the correct `driveId` and `itemId.` These can be collected from the MS Graph API. The `contentUrl` and `displayName` are used only for user convenience. The folder will be configured with the MS folder name as `displayName`, and the `contentURL` may be updated or corrected as needed. To assess final configuration, please make a GET request on the linkedFolder.",
 	Method:      "PUT", Host: HostWebex, Path: "/room/linkedFolders/{id}",
@@ -168,9 +168,9 @@ var MessagingEcmFolderLinkingUpdateLinked = &Operation{
 	}},
 }
 
-// MessagingEcmFolderLinkingUnlinkLinked is "Unlink an ECM linked folder": DELETE /room/linkedFolders/{id}.
-var MessagingEcmFolderLinkingUnlinkLinked = &Operation{
-	ID: "MessagingEcmFolderLinkingUnlinkLinked", Area: "messaging", Group: "ecm-folder-linking", Command: "unlink-linked",
+// MessagingDeleteRoomLinkedFoldersById is "Unlink an ECM linked folder": DELETE /room/linkedFolders/{id}.
+var MessagingDeleteRoomLinkedFoldersById = &Operation{
+	ID: "MessagingDeleteRoomLinkedFoldersById", Area: "messaging", Group: "ecm-folder-linking", Command: "unlink-linked",
 	Summary:     "Unlink an ECM linked folder",
 	Description: "Unlinks the room-linked folder with the specified ID from the space.",
 	Method:      "DELETE", Host: HostWebex, Path: "/room/linkedFolders/{id}",
@@ -179,9 +179,9 @@ var MessagingEcmFolderLinkingUnlinkLinked = &Operation{
 	},
 }
 
-// MessagingEventsList is "List Events": GET /events.
-var MessagingEventsList = &Operation{
-	ID: "MessagingEventsList", Area: "messaging", Group: "events", Command: "list",
+// MessagingGetEvents is "List Events": GET /events.
+var MessagingGetEvents = &Operation{
+	ID: "MessagingGetEvents", Area: "messaging", Group: "events", Command: "list",
 	Summary:     "List Events",
 	Description: "List events in your organization. Several query parameters are available to filter the events returned in the response.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/events",
@@ -198,9 +198,9 @@ var MessagingEventsList = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MessagingEventsGet is "Get Event Details": GET /events/{eventId}.
-var MessagingEventsGet = &Operation{
-	ID: "MessagingEventsGet", Area: "messaging", Group: "events", Command: "get",
+// MessagingGetEventsByEventId is "Get Event Details": GET /events/{eventId}.
+var MessagingGetEventsByEventId = &Operation{
+	ID: "MessagingGetEventsByEventId", Area: "messaging", Group: "events", Command: "get",
 	Summary:     "Get Event Details",
 	Description: "Shows details for an event, by event ID.\n\nSpecify the event ID in the `eventId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/events/{eventId}",
@@ -209,9 +209,9 @@ var MessagingEventsGet = &Operation{
 	},
 }
 
-// MessagingMembershipsList is "List Memberships": GET /memberships.
-var MessagingMembershipsList = &Operation{
-	ID: "MessagingMembershipsList", Area: "messaging", Group: "memberships", Command: "list",
+// MessagingGetMemberships is "List Memberships": GET /memberships.
+var MessagingGetMemberships = &Operation{
+	ID: "MessagingGetMemberships", Area: "messaging", Group: "memberships", Command: "list",
 	Summary:     "List Memberships",
 	Description: "Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.\n\nUse query parameters to filter the response.\n\nUse `roomId` to list memberships for a room, by ID.\n\n**NOTE**: For moderated team spaces, the list of memberships will include only the space moderators if the user is a team member but not a direct participant of the space.\n\nUse either `personId` or `personEmail` to filter the results. The `roomId` parameter is required when using these parameters.\n\nWhen the requester is a compliance officer, they can query by `personId` or `personEmail` **WITHOUT** specifying a `roomId`. The response will include **ALL** memberships for the user where a space is owned by an org to which the user belongs.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/memberships",
@@ -224,9 +224,9 @@ var MessagingMembershipsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingMembershipsCreate is "Create a Membership": POST /memberships.
-var MessagingMembershipsCreate = &Operation{
-	ID: "MessagingMembershipsCreate", Area: "messaging", Group: "memberships", Command: "create",
+// MessagingPostMemberships is "Create a Membership": POST /memberships.
+var MessagingPostMemberships = &Operation{
+	ID: "MessagingPostMemberships", Area: "messaging", Group: "memberships", Command: "create",
 	Summary:     "Create a Membership",
 	Description: "Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers cannot add people to empty (team) spaces.",
 	Method:      "POST", Host: HostWebex, Path: "/memberships",
@@ -238,9 +238,9 @@ var MessagingMembershipsCreate = &Operation{
 	}},
 }
 
-// MessagingMembershipsGet is "Get Membership Details": GET /memberships/{membershipId}.
-var MessagingMembershipsGet = &Operation{
-	ID: "MessagingMembershipsGet", Area: "messaging", Group: "memberships", Command: "get",
+// MessagingGetMembershipsByMembershipId is "Get Membership Details": GET /memberships/{membershipId}.
+var MessagingGetMembershipsByMembershipId = &Operation{
+	ID: "MessagingGetMembershipsByMembershipId", Area: "messaging", Group: "memberships", Command: "get",
 	Summary:     "Get Membership Details",
 	Description: "Get details for a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.",
 	Method:      "GET", Host: HostWebex, Path: "/memberships/{membershipId}",
@@ -249,9 +249,9 @@ var MessagingMembershipsGet = &Operation{
 	},
 }
 
-// MessagingMembershipsUpdate is "Update a Membership": PUT /memberships/{membershipId}.
-var MessagingMembershipsUpdate = &Operation{
-	ID: "MessagingMembershipsUpdate", Area: "messaging", Group: "memberships", Command: "update",
+// MessagingPutMembershipsByMembershipId is "Update a Membership": PUT /memberships/{membershipId}.
+var MessagingPutMembershipsByMembershipId = &Operation{
+	ID: "MessagingPutMembershipsByMembershipId", Area: "messaging", Group: "memberships", Command: "update",
 	Summary:     "Update a Membership",
 	Description: "Updates properties for a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.",
 	Method:      "PUT", Host: HostWebex, Path: "/memberships/{membershipId}",
@@ -264,9 +264,9 @@ var MessagingMembershipsUpdate = &Operation{
 	}},
 }
 
-// MessagingMembershipsDelete is "Delete a Membership": DELETE /memberships/{membershipId}.
-var MessagingMembershipsDelete = &Operation{
-	ID: "MessagingMembershipsDelete", Area: "messaging", Group: "memberships", Command: "delete",
+// MessagingDeleteMembershipsByMembershipId is "Delete a Membership": DELETE /memberships/{membershipId}.
+var MessagingDeleteMembershipsByMembershipId = &Operation{
+	ID: "MessagingDeleteMembershipsByMembershipId", Area: "messaging", Group: "memberships", Command: "delete",
 	Summary:     "Delete a Membership",
 	Description: "Deletes a membership by ID.\n\nSpecify the membership ID in the `membershipId` URI parameter.\n\nThe membership for the last moderator of a [Team](/docs/api/v1/teams)'s General space may not be deleted; [promote another user](/docs/api/v1/team-memberships/update-a-team-membership) to team moderator first.",
 	Method:      "DELETE", Host: HostWebex, Path: "/memberships/{membershipId}",
@@ -275,9 +275,9 @@ var MessagingMembershipsDelete = &Operation{
 	},
 }
 
-// MessagingMessagesList is "List Messages": GET /messages.
-var MessagingMessagesList = &Operation{
-	ID: "MessagingMessagesList", Area: "messaging", Group: "messages", Command: "list",
+// MessagingGetMessages is "List Messages": GET /messages.
+var MessagingGetMessages = &Operation{
+	ID: "MessagingGetMessages", Area: "messaging", Group: "messages", Command: "list",
 	Summary:     "List Messages",
 	Description: "Lists all messages in a room.  Each message will include content attachments if present.\n\nThe list sorts the messages in descending order by creation date.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/messages",
@@ -293,9 +293,9 @@ var MessagingMessagesList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingMessagesListDirect is "List Direct Messages": GET /messages/direct.
-var MessagingMessagesListDirect = &Operation{
-	ID: "MessagingMessagesListDirect", Area: "messaging", Group: "messages", Command: "list-direct",
+// MessagingGetMessagesDirect is "List Direct Messages": GET /messages/direct.
+var MessagingGetMessagesDirect = &Operation{
+	ID: "MessagingGetMessagesDirect", Area: "messaging", Group: "messages", Command: "list-direct",
 	Summary:     "List Direct Messages",
 	Description: "List all messages in a 1:1 (direct) room. Use the `personId` or `personEmail` query parameter to specify the room. Each message will include content attachments if present.\n\nThe list sorts the messages in descending order by creation date.",
 	Method:      "GET", Host: HostWebex, Path: "/messages/direct",
@@ -307,9 +307,9 @@ var MessagingMessagesListDirect = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MessagingMessagesEdit is "Edit a Message": PUT /messages/{messageId}.
-var MessagingMessagesEdit = &Operation{
-	ID: "MessagingMessagesEdit", Area: "messaging", Group: "messages", Command: "edit",
+// MessagingPutMessagesByMessageId is "Edit a Message": PUT /messages/{messageId}.
+var MessagingPutMessagesByMessageId = &Operation{
+	ID: "MessagingPutMessagesByMessageId", Area: "messaging", Group: "messages", Command: "edit",
 	Summary:     "Edit a Message",
 	Description: "Update a message you have posted not more than 10 times.\n\nSpecify the `messageId` of the message you want to edit.\n\nEdits of messages containing files or attachments are not currently supported.\nIf a user attempts to edit a message containing files or attachments a `400 Bad Request` will be returned by the API with a message stating that the feature is currently unsupported.\n\nThere is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits per message.\n    If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request with a message stating the edit limit has been reached.\n\nWhile only the `roomId` and `text` or `markdown` attributes are *required* in the request body, a common pattern for editing message is to first call `GET /messages/{id}` for the message you wish to edit and to then update the `text` or `markdown` attribute accordingly, passing the updated message object in the request body of the `PUT /messages/{id}` request.\nWhen this pattern is used on a message that included markdown, the `html` attribute must be deleted prior to making the `PUT` request.",
 	Method:      "PUT", Host: HostWebex, Path: "/messages/{messageId}",
@@ -323,9 +323,9 @@ var MessagingMessagesEdit = &Operation{
 	}},
 }
 
-// MessagingMessagesGet is "Get Message Details": GET /messages/{messageId}.
-var MessagingMessagesGet = &Operation{
-	ID: "MessagingMessagesGet", Area: "messaging", Group: "messages", Command: "get",
+// MessagingGetMessagesByMessageId is "Get Message Details": GET /messages/{messageId}.
+var MessagingGetMessagesByMessageId = &Operation{
+	ID: "MessagingGetMessagesByMessageId", Area: "messaging", Group: "messages", Command: "get",
 	Summary:     "Get Message Details",
 	Description: "Show details for a message, by message ID.\n\nSpecify the message ID in the `messageId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/messages/{messageId}",
@@ -334,9 +334,9 @@ var MessagingMessagesGet = &Operation{
 	},
 }
 
-// MessagingMessagesDelete is "Delete a Message": DELETE /messages/{messageId}.
-var MessagingMessagesDelete = &Operation{
-	ID: "MessagingMessagesDelete", Area: "messaging", Group: "messages", Command: "delete",
+// MessagingDeleteMessagesByMessageId is "Delete a Message": DELETE /messages/{messageId}.
+var MessagingDeleteMessagesByMessageId = &Operation{
+	ID: "MessagingDeleteMessagesByMessageId", Area: "messaging", Group: "messages", Command: "delete",
 	Summary:     "Delete a Message",
 	Description: "Delete a message, by message ID.\n\nSpecify the message ID in the `messageId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/messages/{messageId}",
@@ -345,9 +345,9 @@ var MessagingMessagesDelete = &Operation{
 	},
 }
 
-// MessagingPeopleList is "List People": GET /people.
-var MessagingPeopleList = &Operation{
-	ID: "MessagingPeopleList", Area: "messaging", Group: "people", Command: "list",
+// MessagingGetPeople is "List People": GET /people.
+var MessagingGetPeople = &Operation{
+	ID: "MessagingGetPeople", Area: "messaging", Group: "people", Command: "list",
 	Summary:     "List People",
 	Description: "List people in your organization. For most users, either the `email` or `displayName` parameter is required. Admin users can omit these fields and list all users in their organization.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/). Calling /people frequently to poll `status` information for a large set of users will quickly lead to `429` errors and throttling of such requests and is therefore discouraged.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=\n\nLookup by `email` is only supported for people within the same org or where a partner admin relationship is in place.\n\nLookup by `roles` is only supported for Admin users for the people within the same org.\n\nLong result sets will be split into [pages](/docs/basics#pagination).",
 	Method:      "GET", Host: HostWebex, Path: "/people",
@@ -365,9 +365,9 @@ var MessagingPeopleList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingPeopleCreatePerson is "Create a Person": POST /people.
-var MessagingPeopleCreatePerson = &Operation{
-	ID: "MessagingPeopleCreatePerson", Area: "messaging", Group: "people", Command: "create-person",
+// MessagingPostPeople is "Create a Person": POST /people.
+var MessagingPostPeople = &Operation{
+	ID: "MessagingPostPeople", Area: "messaging", Group: "people", Command: "create-person",
 	Summary:     "Create a Person",
 	Description: "Create a new user account for a given organization. Only an admin can create a new user account.\n\nAt least one of the following body parameters is required to create a new user: `displayName`, `firstName`, `lastName`.\n\nCurrently, users may have only one email address associated with their account. The `emails` parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.\n\nAdmin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person was created still. One way to get into this state is if an invalid phone number is assigned to a user. The people API aggregates calls to several other microservices, and one may have failed. A best practice is to check if the user exists before retrying. This can be done with the user's email address and a GET /people.\n\nWhen doing attendee management, append `#attendee` to the `siteUrl` parameter (e.g. `mysite.webex.com#attendee`) to make the new user an attendee for a site.\n\n**NOTES**:\n\n* For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and `licenses` string in the same request.\n\n* `SipAddresses` are asigned via an asynchronous process. This means that the POST response may not show the SIPAddresses immediately. Instead you can verify them with a separate GET to /people, after they were newly configured.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "POST", Host: HostWebex, Path: "/people",
@@ -378,9 +378,9 @@ var MessagingPeopleCreatePerson = &Operation{
 	Body: &Body{},
 }
 
-// MessagingPeopleGetPerson is "Get Person Details": GET /people/{personId}.
-var MessagingPeopleGetPerson = &Operation{
-	ID: "MessagingPeopleGetPerson", Area: "messaging", Group: "people", Command: "get-person",
+// MessagingGetPeopleByPersonId is "Get Person Details": GET /people/{personId}.
+var MessagingGetPeopleByPersonId = &Operation{
+	ID: "MessagingGetPeopleByPersonId", Area: "messaging", Group: "people", Command: "get-person",
 	Summary:     "Get Person Details",
 	Description: "Shows details for a person, by ID.\n\nResponse properties associated with a user's presence status, such as `status` or `lastActivity`, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as `true`.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/people/{personId}",
@@ -390,9 +390,9 @@ var MessagingPeopleGetPerson = &Operation{
 	},
 }
 
-// MessagingPeopleUpdatePerson is "Update a Person": PUT /people/{personId}.
-var MessagingPeopleUpdatePerson = &Operation{
-	ID: "MessagingPeopleUpdatePerson", Area: "messaging", Group: "people", Command: "update-person",
+// MessagingPutPeopleByPersonId is "Update a Person": PUT /people/{personId}.
+var MessagingPutPeopleByPersonId = &Operation{
+	ID: "MessagingPutPeopleByPersonId", Area: "messaging", Group: "people", Command: "update-person",
 	Summary:     "Update a Person",
 	Description: "Update details for a person, by ID.\n\nSpecify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.\n\nInclude all details for the person. This action expects all user details to be present in the request. A common approach is to first [GET the person's details](/docs/api/v1/people/get-person-details), make changes, then PUT both the changed and unchanged values.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.\n\nWhen doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to the respective `siteUrl` and remove the meeting host license for this site from the license array.\nTo update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the `siteurl` parameter.\n\nTo remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.\n\n**NOTE**:\n\n* When assigning a Webex Calling license, either a telephone number or extension must already be assigned to the person or provided in the request payload.\n\n* When `callingData` is set to `true`, a Webex Calling license must be included in the `licenses` array.\n\n* The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user is already an existing calling user.\n\n* The `extension` field should be used to update the Webex Calling extension for a person. The extension value should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen in the response payload of [List People](/docs/api/v1/people/list-people) or [Get Person Details](/docs/api/v1/people/get-person-details), cannot be used to set the Webex Calling extension for a person.\n\n* When updating a user with multiple email addresses using a PUT request, ensure that the primary email address is listed first in the array. Note that the order of email addresses returned by a GET request is not guaranteed..\n\n* The People API is a combination of several microservices, each responsible for specific attributes of a person. As a result, a PUT request that returns an error response code may still have altered some values of the person's data. Therefore, it is recommended to perform a GET request after encountering an error to verify the current state of the resource. \n\n* Some licenses are implicitly assigned by the system and cannot be admin controlled. They are necessary for the baseline function of the Webex system. If you get an error about implicitly assigned licensed that cannot be removed, please ensure you have the corresponding license in your PUT request.\n\n* When assigning multiple licenses in a single request, the system will assign all valid and available licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining licenses. As a result, it is possible that not all requested licenses are assigned to the user.",
 	Method:      "PUT", Host: HostWebex, Path: "/people/{personId}",
@@ -405,9 +405,9 @@ var MessagingPeopleUpdatePerson = &Operation{
 	Body: &Body{},
 }
 
-// MessagingPeopleDeletePerson is "Delete a Person": DELETE /people/{personId}.
-var MessagingPeopleDeletePerson = &Operation{
-	ID: "MessagingPeopleDeletePerson", Area: "messaging", Group: "people", Command: "delete-person",
+// MessagingDeletePeopleByPersonId is "Delete a Person": DELETE /people/{personId}.
+var MessagingDeletePeopleByPersonId = &Operation{
+	ID: "MessagingDeletePeopleByPersonId", Area: "messaging", Group: "people", Command: "delete-person",
 	Summary:     "Delete a Person",
 	Description: "Remove a person from the system.\n\n**Required Administrator Roles:**\n\nThe following administrators have permission to use this API:\n\n**Customer Organization:**\n- Full administrator\n- User administrator\n\n**Partner/External Access:**\n- External full administrator\n\n**Note:** External read-only administrators, provisioning administrators, and device administrators cannot delete users.\n\nSpecify the person ID in the `personId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/people/{personId}",
@@ -416,9 +416,9 @@ var MessagingPeopleDeletePerson = &Operation{
 	},
 }
 
-// MessagingPeopleGetMyOwn is "Get My Own Details": GET /people/me.
-var MessagingPeopleGetMyOwn = &Operation{
-	ID: "MessagingPeopleGetMyOwn", Area: "messaging", Group: "people", Command: "get-my-own",
+// MessagingGetPeopleMe is "Get My Own Details": GET /people/me.
+var MessagingGetPeopleMe = &Operation{
+	ID: "MessagingGetPeopleMe", Area: "messaging", Group: "people", Command: "get-my-own",
 	Summary:     "Get My Own Details",
 	Description: "Get profile details for the authenticated user. This is the same as GET `/people/{personId}` using the Person ID associated with your Auth token.\n\nAdmin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData` parameter as true.",
 	Method:      "GET", Host: HostWebex, Path: "/people/me",
@@ -427,9 +427,9 @@ var MessagingPeopleGetMyOwn = &Operation{
 	},
 }
 
-// MessagingRoomTabsList is "List Room Tabs": GET /room/tabs.
-var MessagingRoomTabsList = &Operation{
-	ID: "MessagingRoomTabsList", Area: "messaging", Group: "room-tabs", Command: "list",
+// MessagingGetRoomTabs is "List Room Tabs": GET /room/tabs.
+var MessagingGetRoomTabs = &Operation{
+	ID: "MessagingGetRoomTabs", Area: "messaging", Group: "room-tabs", Command: "list",
 	Summary:     "List Room Tabs",
 	Description: "Lists all Room Tabs of a room specified by the `roomId` query parameter.",
 	Method:      "GET", Host: HostWebex, Path: "/room/tabs",
@@ -439,9 +439,9 @@ var MessagingRoomTabsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// MessagingRoomTabsCreate is "Create a Room Tab": POST /room/tabs.
-var MessagingRoomTabsCreate = &Operation{
-	ID: "MessagingRoomTabsCreate", Area: "messaging", Group: "room-tabs", Command: "create",
+// MessagingPostRoomTabs is "Create a Room Tab": POST /room/tabs.
+var MessagingPostRoomTabs = &Operation{
+	ID: "MessagingPostRoomTabs", Area: "messaging", Group: "room-tabs", Command: "create",
 	Summary:     "Create a Room Tab",
 	Description: "Add a tab with a specified URL to a room.",
 	Method:      "POST", Host: HostWebex, Path: "/room/tabs",
@@ -452,9 +452,9 @@ var MessagingRoomTabsCreate = &Operation{
 	}},
 }
 
-// MessagingRoomTabsGet is "Get Room Tab Details": GET /room/tabs/{id}.
-var MessagingRoomTabsGet = &Operation{
-	ID: "MessagingRoomTabsGet", Area: "messaging", Group: "room-tabs", Command: "get",
+// MessagingGetRoomTabsById is "Get Room Tab Details": GET /room/tabs/{id}.
+var MessagingGetRoomTabsById = &Operation{
+	ID: "MessagingGetRoomTabsById", Area: "messaging", Group: "room-tabs", Command: "get",
 	Summary:     "Get Room Tab Details",
 	Description: "Get details for a Room Tab with the specified room tab ID.",
 	Method:      "GET", Host: HostWebex, Path: "/room/tabs/{id}",
@@ -463,9 +463,9 @@ var MessagingRoomTabsGet = &Operation{
 	},
 }
 
-// MessagingRoomTabsUpdate is "Update a Room Tab": PUT /room/tabs/{id}.
-var MessagingRoomTabsUpdate = &Operation{
-	ID: "MessagingRoomTabsUpdate", Area: "messaging", Group: "room-tabs", Command: "update",
+// MessagingPutRoomTabsById is "Update a Room Tab": PUT /room/tabs/{id}.
+var MessagingPutRoomTabsById = &Operation{
+	ID: "MessagingPutRoomTabsById", Area: "messaging", Group: "room-tabs", Command: "update",
 	Summary:     "Update a Room Tab",
 	Description: "Updates the content URL of the specified Room Tab ID.",
 	Method:      "PUT", Host: HostWebex, Path: "/room/tabs/{id}",
@@ -479,9 +479,9 @@ var MessagingRoomTabsUpdate = &Operation{
 	}},
 }
 
-// MessagingRoomTabsDelete is "Delete a Room Tab": DELETE /room/tabs/{id}.
-var MessagingRoomTabsDelete = &Operation{
-	ID: "MessagingRoomTabsDelete", Area: "messaging", Group: "room-tabs", Command: "delete",
+// MessagingDeleteRoomTabsById is "Delete a Room Tab": DELETE /room/tabs/{id}.
+var MessagingDeleteRoomTabsById = &Operation{
+	ID: "MessagingDeleteRoomTabsById", Area: "messaging", Group: "room-tabs", Command: "delete",
 	Summary:     "Delete a Room Tab",
 	Description: "Deletes a Room Tab with the specified ID.",
 	Method:      "DELETE", Host: HostWebex, Path: "/room/tabs/{id}",
@@ -490,9 +490,9 @@ var MessagingRoomTabsDelete = &Operation{
 	},
 }
 
-// MessagingRoomsList is "List Rooms": GET /rooms.
-var MessagingRoomsList = &Operation{
-	ID: "MessagingRoomsList", Area: "messaging", Group: "rooms", Command: "list",
+// MessagingGetRooms is "List Rooms": GET /rooms.
+var MessagingGetRooms = &Operation{
+	ID: "MessagingGetRooms", Area: "messaging", Group: "rooms", Command: "list",
 	Summary:     "List Rooms",
 	Description: "List rooms to which the authenticated user belongs to.\n\nThe `title` of the room for 1:1 rooms will be the display name of the other person. Please use the [memberships API](https://developer.webex.com/docs/api/v1/memberships) to list the people in the space.\n\nLong result sets will be split into [pages](/docs/basics#pagination).\n\nKnown Limitations:\nThe underlying database does not support natural sorting by `lastactivity` and will only sort on limited set of results, which are pulled from the database in order of `roomId`. For users or bots in more than 3000 spaces this can result in anomalies such as spaces that have had recent activity not being returned in the results when sorting by `lastacivity`.",
 	Method:      "GET", Host: HostWebex, Path: "/rooms",
@@ -509,9 +509,9 @@ var MessagingRoomsList = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MessagingRoomsCreate is "Create a Room": POST /rooms.
-var MessagingRoomsCreate = &Operation{
-	ID: "MessagingRoomsCreate", Area: "messaging", Group: "rooms", Command: "create",
+// MessagingPostRooms is "Create a Room": POST /rooms.
+var MessagingPostRooms = &Operation{
+	ID: "MessagingPostRooms", Area: "messaging", Group: "rooms", Command: "create",
 	Summary:     "Create a Room",
 	Description: "Creates a room. The authenticated user is automatically added as a member of the room. See the [Memberships API](/docs/api/v1/memberships) to learn how to add more people to the room.\n\nTo create a 1:1 room, use the [Create Messages](/docs/api/v1/messages/create-a-message) endpoint to send a message directly to another person by using the `toPersonId` or `toPersonEmail` parameters.\n\nBots are not able to create and simultaneously classify a room. A bot may update a space classification after a person of the same owning organization joined the space as the first human user.\nA space can only be put into announcement mode when it is locked.",
 	Method:      "POST", Host: HostWebex, Path: "/rooms",
@@ -526,9 +526,9 @@ var MessagingRoomsCreate = &Operation{
 	}},
 }
 
-// MessagingRoomsGet is "Get Room Details": GET /rooms/{roomId}.
-var MessagingRoomsGet = &Operation{
-	ID: "MessagingRoomsGet", Area: "messaging", Group: "rooms", Command: "get",
+// MessagingGetRoomsByRoomId is "Get Room Details": GET /rooms/{roomId}.
+var MessagingGetRoomsByRoomId = &Operation{
+	ID: "MessagingGetRoomsByRoomId", Area: "messaging", Group: "rooms", Command: "get",
 	Summary:     "Get Room Details",
 	Description: "Shows details for a room, by ID.\n\nThe `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer lists 1:1 rooms, the \"other\" person cannot be determined. This means that the room's title may not be filled in and instead shows \"Empty Title\". Please use the [memberships API](https://developer.webex.com/docs/api/v1/memberships) to list the other person in the space.\n\nSpecify the room ID in the `roomId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/rooms/{roomId}",
@@ -537,9 +537,9 @@ var MessagingRoomsGet = &Operation{
 	},
 }
 
-// MessagingRoomsUpdate is "Update a Room": PUT /rooms/{roomId}.
-var MessagingRoomsUpdate = &Operation{
-	ID: "MessagingRoomsUpdate", Area: "messaging", Group: "rooms", Command: "update",
+// MessagingPutRoomsByRoomId is "Update a Room": PUT /rooms/{roomId}.
+var MessagingPutRoomsByRoomId = &Operation{
+	ID: "MessagingPutRoomsByRoomId", Area: "messaging", Group: "rooms", Command: "update",
 	Summary:     "Update a Room",
 	Description: "Updates details for a room, by ID.\n\nSpecify the room ID in the `roomId` parameter in the URI.\nA space can only be put into announcement mode when it is locked.\nAny space participant or compliance officer can convert a space from public to private. Only a compliance officer can convert a space from private to public and only if the space is classified with the lowest category (usually `public`), and the space has a description.\nTo remove a `description` please use a space character ` ` by itself.\n\n<div><Callout type=\"info\">When using this method for moving a space under a team, ensure that all moderators in the space are also team members. If a moderator is not part of the team, demote or remove them as a moderator. Alternatively, add the non-team moderators to the team. This ensures compliance with the requirement that all space moderators must be team members for successful operation execution.\n</Callout></div>\n\n<div><Callout type=\"info\">A Compliance Officer who is not a member of a space can only update the `classificationId`, `isAnnouncementOnly`, `description`, and `isPublic` fields.\n</Callout></div>",
 	Method:      "PUT", Host: HostWebex, Path: "/rooms/{roomId}",
@@ -558,9 +558,9 @@ var MessagingRoomsUpdate = &Operation{
 	}},
 }
 
-// MessagingRoomsDelete is "Delete a Room": DELETE /rooms/{roomId}.
-var MessagingRoomsDelete = &Operation{
-	ID: "MessagingRoomsDelete", Area: "messaging", Group: "rooms", Command: "delete",
+// MessagingDeleteRoomsByRoomId is "Delete a Room": DELETE /rooms/{roomId}.
+var MessagingDeleteRoomsByRoomId = &Operation{
+	ID: "MessagingDeleteRoomsByRoomId", Area: "messaging", Group: "rooms", Command: "delete",
 	Summary:     "Delete a Room",
 	Description: "Deletes a room, by ID. Deleted rooms cannot be recovered.\nAs a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed from the room instead.\n\nDeleting a room that is part of a team will archive the room instead.\n\nA Compliance Officer has no special privileges, i.e. they cannot delete rooms they are not part of.\n\nSpecify the room ID in the `roomId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/rooms/{roomId}",
@@ -569,9 +569,9 @@ var MessagingRoomsDelete = &Operation{
 	},
 }
 
-// MessagingRoomsGetMeeting is "Get Room Meeting Details": GET /rooms/{roomId}/meetingInfo.
-var MessagingRoomsGetMeeting = &Operation{
-	ID: "MessagingRoomsGetMeeting", Area: "messaging", Group: "rooms", Command: "get-meeting",
+// MessagingGetRoomsByRoomIdMeetingInfo is "Get Room Meeting Details": GET /rooms/{roomId}/meetingInfo.
+var MessagingGetRoomsByRoomIdMeetingInfo = &Operation{
+	ID: "MessagingGetRoomsByRoomIdMeetingInfo", Area: "messaging", Group: "rooms", Command: "get-meeting",
 	Summary:     "Get Room Meeting Details",
 	Description: "<div>\n<callout type=\"warning\">\nThe meetingInfo API is deprecated and will be EOL on Jan 31, 2025. Meetings in the WSMP must be scheduled and licensed via the meetings backend.\nThe [Create a Meeting](/docs/api/v1/meetings/create-a-meeting) endpoint will provide the SIP address for the meeting to call.\n</callout>\n</div>\n\nShows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.\n\nSpecify the room ID in the `roomId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/rooms/{roomId}/meetingInfo",
@@ -580,9 +580,9 @@ var MessagingRoomsGetMeeting = &Operation{
 	},
 }
 
-// MessagingTeamMembershipsList is "List Team Memberships": GET /team/memberships.
-var MessagingTeamMembershipsList = &Operation{
-	ID: "MessagingTeamMembershipsList", Area: "messaging", Group: "team-memberships", Command: "list",
+// MessagingGetTeamMemberships is "List Team Memberships": GET /team/memberships.
+var MessagingGetTeamMemberships = &Operation{
+	ID: "MessagingGetTeamMemberships", Area: "messaging", Group: "team-memberships", Command: "list",
 	Summary:     "List Team Memberships",
 	Description: "Lists all team memberships for a given team, specified by the `teamId` query parameter.\n\nUse query parameters to filter the response.",
 	Method:      "GET", Host: HostWebex, Path: "/team/memberships",
@@ -593,9 +593,9 @@ var MessagingTeamMembershipsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingTeamMembershipsCreate is "Create a Team Membership": POST /team/memberships.
-var MessagingTeamMembershipsCreate = &Operation{
-	ID: "MessagingTeamMembershipsCreate", Area: "messaging", Group: "team-memberships", Command: "create",
+// MessagingPostTeamMemberships is "Create a Team Membership": POST /team/memberships.
+var MessagingPostTeamMemberships = &Operation{
+	ID: "MessagingPostTeamMemberships", Area: "messaging", Group: "team-memberships", Command: "create",
 	Summary:     "Create a Team Membership",
 	Description: "Add someone to a team by Person ID or email address, optionally making them a moderator.",
 	Method:      "POST", Host: HostWebex, Path: "/team/memberships",
@@ -607,9 +607,9 @@ var MessagingTeamMembershipsCreate = &Operation{
 	}},
 }
 
-// MessagingTeamMembershipsGet is "Get Team Membership Details": GET /team/memberships/{membershipId}.
-var MessagingTeamMembershipsGet = &Operation{
-	ID: "MessagingTeamMembershipsGet", Area: "messaging", Group: "team-memberships", Command: "get",
+// MessagingGetTeamMembershipsByMembershipId is "Get Team Membership Details": GET /team/memberships/{membershipId}.
+var MessagingGetTeamMembershipsByMembershipId = &Operation{
+	ID: "MessagingGetTeamMembershipsByMembershipId", Area: "messaging", Group: "team-memberships", Command: "get",
 	Summary:     "Get Team Membership Details",
 	Description: "Shows details for a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.",
 	Method:      "GET", Host: HostWebex, Path: "/team/memberships/{membershipId}",
@@ -618,9 +618,9 @@ var MessagingTeamMembershipsGet = &Operation{
 	},
 }
 
-// MessagingTeamMembershipsUpdate is "Update a Team Membership": PUT /team/memberships/{membershipId}.
-var MessagingTeamMembershipsUpdate = &Operation{
-	ID: "MessagingTeamMembershipsUpdate", Area: "messaging", Group: "team-memberships", Command: "update",
+// MessagingPutTeamMembershipsByMembershipId is "Update a Team Membership": PUT /team/memberships/{membershipId}.
+var MessagingPutTeamMembershipsByMembershipId = &Operation{
+	ID: "MessagingPutTeamMembershipsByMembershipId", Area: "messaging", Group: "team-memberships", Command: "update",
 	Summary:     "Update a Team Membership",
 	Description: "Updates a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.",
 	Method:      "PUT", Host: HostWebex, Path: "/team/memberships/{membershipId}",
@@ -632,9 +632,9 @@ var MessagingTeamMembershipsUpdate = &Operation{
 	}},
 }
 
-// MessagingTeamMembershipsDelete is "Delete a Team Membership": DELETE /team/memberships/{membershipId}.
-var MessagingTeamMembershipsDelete = &Operation{
-	ID: "MessagingTeamMembershipsDelete", Area: "messaging", Group: "team-memberships", Command: "delete",
+// MessagingDeleteTeamMembershipsByMembershipId is "Delete a Team Membership": DELETE /team/memberships/{membershipId}.
+var MessagingDeleteTeamMembershipsByMembershipId = &Operation{
+	ID: "MessagingDeleteTeamMembershipsByMembershipId", Area: "messaging", Group: "team-memberships", Command: "delete",
 	Summary:     "Delete a Team Membership",
 	Description: "Deletes a team membership, by ID.\n\nSpecify the team membership ID in the `membershipId` URI parameter.\n\nThe team membership for the last moderator of a team may not be deleted; [promote another user](/docs/api/v1/team-memberships/update-a-team-membership) to team moderator first.",
 	Method:      "DELETE", Host: HostWebex, Path: "/team/memberships/{membershipId}",
@@ -643,9 +643,9 @@ var MessagingTeamMembershipsDelete = &Operation{
 	},
 }
 
-// MessagingTeamsList is "List Teams": GET /teams.
-var MessagingTeamsList = &Operation{
-	ID: "MessagingTeamsList", Area: "messaging", Group: "teams", Command: "list",
+// MessagingGetTeams is "List Teams": GET /teams.
+var MessagingGetTeams = &Operation{
+	ID: "MessagingGetTeams", Area: "messaging", Group: "teams", Command: "list",
 	Summary:     "List Teams",
 	Description: "Lists teams to which the authenticated user belongs.",
 	Method:      "GET", Host: HostWebex, Path: "/teams",
@@ -655,9 +655,9 @@ var MessagingTeamsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingTeamsCreate is "Create a Team": POST /teams.
-var MessagingTeamsCreate = &Operation{
-	ID: "MessagingTeamsCreate", Area: "messaging", Group: "teams", Command: "create",
+// MessagingPostTeams is "Create a Team": POST /teams.
+var MessagingPostTeams = &Operation{
+	ID: "MessagingPostTeams", Area: "messaging", Group: "teams", Command: "create",
 	Summary:     "Create a Team",
 	Description: "Creates a team.\n\nThe authenticated user is automatically added as a member of the team. See the [Team Memberships API](/docs/api/v1/team-memberships) to learn how to add more people to the team.",
 	Method:      "POST", Host: HostWebex, Path: "/teams",
@@ -667,9 +667,9 @@ var MessagingTeamsCreate = &Operation{
 	}},
 }
 
-// MessagingTeamsGet is "Get Team Details": GET /teams/{teamId}.
-var MessagingTeamsGet = &Operation{
-	ID: "MessagingTeamsGet", Area: "messaging", Group: "teams", Command: "get",
+// MessagingGetTeamsByTeamId is "Get Team Details": GET /teams/{teamId}.
+var MessagingGetTeamsByTeamId = &Operation{
+	ID: "MessagingGetTeamsByTeamId", Area: "messaging", Group: "teams", Command: "get",
 	Summary:     "Get Team Details",
 	Description: "Shows details for a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/teams/{teamId}",
@@ -679,9 +679,9 @@ var MessagingTeamsGet = &Operation{
 	},
 }
 
-// MessagingTeamsUpdate is "Update a Team": PUT /teams/{teamId}.
-var MessagingTeamsUpdate = &Operation{
-	ID: "MessagingTeamsUpdate", Area: "messaging", Group: "teams", Command: "update",
+// MessagingPutTeamsByTeamId is "Update a Team": PUT /teams/{teamId}.
+var MessagingPutTeamsByTeamId = &Operation{
+	ID: "MessagingPutTeamsByTeamId", Area: "messaging", Group: "teams", Command: "update",
 	Summary:     "Update a Team",
 	Description: "Updates details for a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
 	Method:      "PUT", Host: HostWebex, Path: "/teams/{teamId}",
@@ -694,9 +694,9 @@ var MessagingTeamsUpdate = &Operation{
 	}},
 }
 
-// MessagingTeamsDelete is "Delete a Team": DELETE /teams/{teamId}.
-var MessagingTeamsDelete = &Operation{
-	ID: "MessagingTeamsDelete", Area: "messaging", Group: "teams", Command: "delete",
+// MessagingDeleteTeamsByTeamId is "Delete a Team": DELETE /teams/{teamId}.
+var MessagingDeleteTeamsByTeamId = &Operation{
+	ID: "MessagingDeleteTeamsByTeamId", Area: "messaging", Group: "teams", Command: "delete",
 	Summary:     "Delete a Team",
 	Description: "Deletes a team, by ID.\n\nSpecify the team ID in the `teamId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/teams/{teamId}",
@@ -705,9 +705,9 @@ var MessagingTeamsDelete = &Operation{
 	},
 }
 
-// MessagingWebhooksList is "List Webhooks": GET /webhooks.
-var MessagingWebhooksList = &Operation{
-	ID: "MessagingWebhooksList", Area: "messaging", Group: "webhooks", Command: "list",
+// MessagingGetWebhooks is "List Webhooks": GET /webhooks.
+var MessagingGetWebhooks = &Operation{
+	ID: "MessagingGetWebhooks", Area: "messaging", Group: "webhooks", Command: "list",
 	Summary:     "List Webhooks",
 	Description: "List all of your webhooks.",
 	Method:      "GET", Host: HostWebex, Path: "/webhooks",
@@ -718,9 +718,9 @@ var MessagingWebhooksList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// MessagingWebhooksCreate is "Create a Webhook": POST /webhooks.
-var MessagingWebhooksCreate = &Operation{
-	ID: "MessagingWebhooksCreate", Area: "messaging", Group: "webhooks", Command: "create",
+// MessagingPostWebhooks is "Create a Webhook": POST /webhooks.
+var MessagingPostWebhooks = &Operation{
+	ID: "MessagingPostWebhooks", Area: "messaging", Group: "webhooks", Command: "create",
 	Summary:     "Create a Webhook",
 	Description: "Creates a webhook.\n\nTo learn more about how to create and use webhooks, see The [Webhooks Guide](/docs/api/guides/webhooks).",
 	Method:      "POST", Host: HostWebex, Path: "/webhooks",
@@ -735,9 +735,9 @@ var MessagingWebhooksCreate = &Operation{
 	}},
 }
 
-// MessagingWebhooksGet is "Get Webhook Details": GET /webhooks/{webhookId}.
-var MessagingWebhooksGet = &Operation{
-	ID: "MessagingWebhooksGet", Area: "messaging", Group: "webhooks", Command: "get",
+// MessagingGetWebhooksByWebhookId is "Get Webhook Details": GET /webhooks/{webhookId}.
+var MessagingGetWebhooksByWebhookId = &Operation{
+	ID: "MessagingGetWebhooksByWebhookId", Area: "messaging", Group: "webhooks", Command: "get",
 	Summary:     "Get Webhook Details",
 	Description: "Shows details for a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -746,9 +746,9 @@ var MessagingWebhooksGet = &Operation{
 	},
 }
 
-// MessagingWebhooksUpdate is "Update a Webhook": PUT /webhooks/{webhookId}.
-var MessagingWebhooksUpdate = &Operation{
-	ID: "MessagingWebhooksUpdate", Area: "messaging", Group: "webhooks", Command: "update",
+// MessagingPutWebhooksByWebhookId is "Update a Webhook": PUT /webhooks/{webhookId}.
+var MessagingPutWebhooksByWebhookId = &Operation{
+	ID: "MessagingPutWebhooksByWebhookId", Area: "messaging", Group: "webhooks", Command: "update",
 	Summary:     "Update a Webhook",
 	Description: "Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated.\nThe fields that can be updated are `name`, `targetURL`, `secret` and `status`. All other fields, if supplied, are ignored.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "PUT", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -764,9 +764,9 @@ var MessagingWebhooksUpdate = &Operation{
 	}},
 }
 
-// MessagingWebhooksDelete is "Delete a Webhook": DELETE /webhooks/{webhookId}.
-var MessagingWebhooksDelete = &Operation{
-	ID: "MessagingWebhooksDelete", Area: "messaging", Group: "webhooks", Command: "delete",
+// MessagingDeleteWebhooksByWebhookId is "Delete a Webhook": DELETE /webhooks/{webhookId}.
+var MessagingDeleteWebhooksByWebhookId = &Operation{
+	ID: "MessagingDeleteWebhooksByWebhookId", Area: "messaging", Group: "webhooks", Command: "delete",
 	Summary:     "Delete a Webhook",
 	Description: "Deletes a webhook, by ID.\n\nSpecify the webhook ID in the `webhookId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/webhooks/{webhookId}",
@@ -775,9 +775,9 @@ var MessagingWebhooksDelete = &Operation{
 	},
 }
 
-// MessagingHdsGetTestResultsNode is "Get test results for HDS node": GET /hds/testResults/nodes/{nodeId}/networkTest.
-var MessagingHdsGetTestResultsNode = &Operation{
-	ID: "MessagingHdsGetTestResultsNode", Area: "messaging", Group: "hds", Command: "get-test-results-node",
+// MessagingGetHdsTestResultsNodesByNodeIdNetworkTest is "Get test results for HDS node": GET /hds/testResults/nodes/{nodeId}/networkTest.
+var MessagingGetHdsTestResultsNodesByNodeIdNetworkTest = &Operation{
+	ID: "MessagingGetHdsTestResultsNodesByNodeIdNetworkTest", Area: "messaging", Group: "hds", Command: "get-test-results-node",
 	Summary:     "Get test results for HDS node",
 	Description: "Get the latest results of the network tests triggered for a single HDS node. The test results are generated as part of the Network Test execution on the node. The network tests include the Bandwidth Test, DNS Resolution Test, and HTTPS Connectivity Test.\n The results from the latest test run are provided, covering up to the past 90 days if available.\nTo obtain the Node ID needed for this API, use the [Get cluster details API](</docs/api/v1/hds/get-cluster-details>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/testResults/nodes/{nodeId}/networkTest",
@@ -787,9 +787,9 @@ var MessagingHdsGetTestResultsNode = &Operation{
 	},
 }
 
-// MessagingHdsGetCluster is "Get cluster details": GET /hds/clusters/{clusterId}.
-var MessagingHdsGetCluster = &Operation{
-	ID: "MessagingHdsGetCluster", Area: "messaging", Group: "hds", Command: "get-cluster",
+// MessagingGetHdsClustersByClusterId is "Get cluster details": GET /hds/clusters/{clusterId}.
+var MessagingGetHdsClustersByClusterId = &Operation{
+	ID: "MessagingGetHdsClustersByClusterId", Area: "messaging", Group: "hds", Command: "get-cluster",
 	Summary:     "Get cluster details",
 	Description: "Retrieve details for a specific HDS cluster, such as the cluster name, cluster status, upgrade schedule, and HDS nodes in the cluster.\nTo obtain the Cluster ID needed for this API, use the [Get organization details API](</docs/api/v1/hds/get-organization-details>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/clusters/{clusterId}",
@@ -798,9 +798,9 @@ var MessagingHdsGetCluster = &Operation{
 	},
 }
 
-// MessagingHdsGetOrg is "Get organization details": GET /hds/organizations/{organizationId}.
-var MessagingHdsGetOrg = &Operation{
-	ID: "MessagingHdsGetOrg", Area: "messaging", Group: "hds", Command: "get-org",
+// MessagingGetHdsOrganizationsByOrganizationId is "Get organization details": GET /hds/organizations/{organizationId}.
+var MessagingGetHdsOrganizationsByOrganizationId = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationId", Area: "messaging", Group: "hds", Command: "get-org",
 	Summary:     "Get organization details",
 	Description: "Retrieve details for an HDS organization, such as the organization name, type of organization.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/organizations/{organizationId}",
@@ -809,9 +809,9 @@ var MessagingHdsGetOrg = &Operation{
 	},
 }
 
-// MessagingHdsGetNode is "Get node details": GET /hds/nodes/{nodeId}.
-var MessagingHdsGetNode = &Operation{
-	ID: "MessagingHdsGetNode", Area: "messaging", Group: "hds", Command: "get-node",
+// MessagingGetHdsNodesByNodeId is "Get node details": GET /hds/nodes/{nodeId}.
+var MessagingGetHdsNodesByNodeId = &Operation{
+	ID: "MessagingGetHdsNodesByNodeId", Area: "messaging", Group: "hds", Command: "get-node",
 	Summary:     "Get node details",
 	Description: "Retrieve details for a specific HDS node, such as host name, release version, proxy details, deployment and build type, availability details, etc.\nTo obtain the Node ID needed for this API, use the [Get cluster details API](</docs/api/v1/hds/get-cluster-details>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/nodes/{nodeId}",
@@ -820,9 +820,9 @@ var MessagingHdsGetNode = &Operation{
 	},
 }
 
-// MessagingHdsGetDatabaseOrg is "Get database details for the HDS organization": GET /hds/organizations/{organizationId}/database/details.
-var MessagingHdsGetDatabaseOrg = &Operation{
-	ID: "MessagingHdsGetDatabaseOrg", Area: "messaging", Group: "hds", Command: "get-database-org",
+// MessagingGetHdsOrganizationsByOrganizationIdDatabaseDetails is "Get database details for the HDS organization": GET /hds/organizations/{organizationId}/database/details.
+var MessagingGetHdsOrganizationsByOrganizationIdDatabaseDetails = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationIdDatabaseDetails", Area: "messaging", Group: "hds", Command: "get-database-org",
 	Summary:     "Get database details for the HDS organization",
 	Description: "Retrieve details of database information for an HDS organization, such as database type and version used.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/organizations/{organizationId}/database/details",
@@ -831,9 +831,9 @@ var MessagingHdsGetDatabaseOrg = &Operation{
 	},
 }
 
-// MessagingHdsGetMultiTenantOrg is "Get Multi-Tenant HDS organization details": GET /hds/organizations/{organizationId}/multiTenant.
-var MessagingHdsGetMultiTenantOrg = &Operation{
-	ID: "MessagingHdsGetMultiTenantOrg", Area: "messaging", Group: "hds", Command: "get-multi-tenant-org",
+// MessagingGetHdsOrganizationsByOrganizationIdMultiTenant is "Get Multi-Tenant HDS organization details": GET /hds/organizations/{organizationId}/multiTenant.
+var MessagingGetHdsOrganizationsByOrganizationIdMultiTenant = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationIdMultiTenant", Area: "messaging", Group: "hds", Command: "get-multi-tenant-org",
 	Summary:     "Get Multi-Tenant HDS organization details",
 	Description: "Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/organizations/{organizationId}/multiTenant",
@@ -842,9 +842,9 @@ var MessagingHdsGetMultiTenantOrg = &Operation{
 	},
 }
 
-// MessagingHdsGetAvailabilityCluster is "Get availability details for HDS cluster": GET /hds/clusters/{clusterId}/availability.
-var MessagingHdsGetAvailabilityCluster = &Operation{
-	ID: "MessagingHdsGetAvailabilityCluster", Area: "messaging", Group: "hds", Command: "get-availability-cluster",
+// MessagingGetHdsClustersByClusterIdAvailability is "Get availability details for HDS cluster": GET /hds/clusters/{clusterId}/availability.
+var MessagingGetHdsClustersByClusterIdAvailability = &Operation{
+	ID: "MessagingGetHdsClustersByClusterIdAvailability", Area: "messaging", Group: "hds", Command: "get-availability-cluster",
 	Summary:     "Get availability details for HDS cluster",
 	Description: "Get the availability details for an HDS cluster, where each segment specifies the start and end times, as well as the number of online, offline, and total nodes within that segment.\nTo obtain the Cluster ID needed for this API, use the [Get organization details API](</docs/api/v1/hds/get-organization-details>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/clusters/{clusterId}/availability",
@@ -856,9 +856,9 @@ var MessagingHdsGetAvailabilityCluster = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MessagingHdsGetDatabaseConfigOrg is "Get database details for the HDS organization": GET /hds/organizations/{organizationId}/database.
-var MessagingHdsGetDatabaseConfigOrg = &Operation{
-	ID: "MessagingHdsGetDatabaseConfigOrg", Area: "messaging", Group: "hds", Command: "get-database-config-org",
+// MessagingGetHdsOrganizationsByOrganizationIdDatabase is "Get database details for the HDS organization": GET /hds/organizations/{organizationId}/database.
+var MessagingGetHdsOrganizationsByOrganizationIdDatabase = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationIdDatabase", Area: "messaging", Group: "hds", Command: "get-database-config-org",
 	Aliases:     []string{"get-database-org-2"},
 	Summary:     "Get database details for the HDS organization",
 	Description: "Retrieve details of database information for an HDS organization, such as database type and version used.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
@@ -868,9 +868,9 @@ var MessagingHdsGetDatabaseConfigOrg = &Operation{
 	},
 }
 
-// MessagingHdsListTenantsOrg is "Get Multi-Tenant HDS organization details": GET /hds/organizations/{organizationId}/tenants.
-var MessagingHdsListTenantsOrg = &Operation{
-	ID: "MessagingHdsListTenantsOrg", Area: "messaging", Group: "hds", Command: "list-tenants-org",
+// MessagingGetHdsOrganizationsByOrganizationIdTenants is "Get Multi-Tenant HDS organization details": GET /hds/organizations/{organizationId}/tenants.
+var MessagingGetHdsOrganizationsByOrganizationIdTenants = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationIdTenants", Area: "messaging", Group: "hds", Command: "list-tenants-org",
 	Aliases:     []string{"get-multi-tenant-org-2"},
 	Summary:     "Get Multi-Tenant HDS organization details",
 	Description: "Retrieve details of Multi-Tenant HDS organization such as Organization Name and ID, CMK state and state of Tenants Organizations.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
@@ -881,9 +881,9 @@ var MessagingHdsListTenantsOrg = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "tenants", OmitEmpty: true},
 }
 
-// MessagingHdsListNodesCluster is "List nodes for an HDS cluster": GET /hds/clusters/{clusterId}/nodes.
-var MessagingHdsListNodesCluster = &Operation{
-	ID: "MessagingHdsListNodesCluster", Area: "messaging", Group: "hds", Command: "list-nodes-cluster",
+// MessagingGetHdsClustersByClusterIdNodes is "List nodes for an HDS cluster": GET /hds/clusters/{clusterId}/nodes.
+var MessagingGetHdsClustersByClusterIdNodes = &Operation{
+	ID: "MessagingGetHdsClustersByClusterIdNodes", Area: "messaging", Group: "hds", Command: "list-nodes-cluster",
 	Summary:     "List nodes for an HDS cluster",
 	Description: "Retrieve a list of all nodes for a specific HDS cluster, including availability, proxy details, deployment type, and release version.\nTo obtain the Cluster ID needed for this API, use the [List clusters for an HDS organization API](</docs/api/v1/hds/list-hds-organization-clusters>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/clusters/{clusterId}/nodes",
@@ -893,9 +893,9 @@ var MessagingHdsListNodesCluster = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "nodes", OmitEmpty: true},
 }
 
-// MessagingHdsListClustersOrg is "List clusters for an HDS organization": GET /hds/organizations/{organizationId}/clusters.
-var MessagingHdsListClustersOrg = &Operation{
-	ID: "MessagingHdsListClustersOrg", Area: "messaging", Group: "hds", Command: "list-clusters-org",
+// MessagingGetHdsOrganizationsByOrganizationIdClusters is "List clusters for an HDS organization": GET /hds/organizations/{organizationId}/clusters.
+var MessagingGetHdsOrganizationsByOrganizationIdClusters = &Operation{
+	ID: "MessagingGetHdsOrganizationsByOrganizationIdClusters", Area: "messaging", Group: "hds", Command: "list-clusters-org",
 	Summary:     "List clusters for an HDS organization",
 	Description: "Retrieve a list of all clusters for a specific HDS organization, including cluster status, release channel, and upgrade schedule details.\nTo obtain the Organization ID needed for this API, use the [Organizations API](</docs/api/v1/organizations/list-organizations>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/organizations/{organizationId}/clusters",
@@ -905,9 +905,9 @@ var MessagingHdsListClustersOrg = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "clusters", OmitEmpty: true},
 }
 
-// MessagingHdsGetAlarmsNode is "Get alarms for an HDS node": GET /hds/nodes/{nodeId}/alarms.
-var MessagingHdsGetAlarmsNode = &Operation{
-	ID: "MessagingHdsGetAlarmsNode", Area: "messaging", Group: "hds", Command: "get-alarms-node",
+// MessagingGetHdsNodesByNodeIdAlarms is "Get alarms for an HDS node": GET /hds/nodes/{nodeId}/alarms.
+var MessagingGetHdsNodesByNodeIdAlarms = &Operation{
+	ID: "MessagingGetHdsNodesByNodeIdAlarms", Area: "messaging", Group: "hds", Command: "get-alarms-node",
 	Summary:     "Get alarms for an HDS node",
 	Description: "Returns the alarm details for a single HDS node for the provided time range (last 24 hours).\nTo obtain the Node ID needed for this API, use the [List nodes for an HDS cluster API](</docs/api/v1/hds/list-hds-cluster-nodes>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/nodes/{nodeId}/alarms",
@@ -919,9 +919,9 @@ var MessagingHdsGetAlarmsNode = &Operation{
 	TimeRange: TimeISO,
 }
 
-// MessagingHdsGetUsageNode is "Get resource usage for an HDS node": GET /hds/nodes/{nodeId}/resourceUsage.
-var MessagingHdsGetUsageNode = &Operation{
-	ID: "MessagingHdsGetUsageNode", Area: "messaging", Group: "hds", Command: "get-usage-node",
+// MessagingGetHdsNodesByNodeIdResourceUsage is "Get resource usage for an HDS node": GET /hds/nodes/{nodeId}/resourceUsage.
+var MessagingGetHdsNodesByNodeIdResourceUsage = &Operation{
+	ID: "MessagingGetHdsNodesByNodeIdResourceUsage", Area: "messaging", Group: "hds", Command: "get-usage-node",
 	Summary:     "Get resource usage for an HDS node",
 	Description: "Retrieve CPU, memory, and disk resource usage details for a specific HDS node over the requested time range.\nTo obtain the Node ID needed for this API, use the [List nodes for an HDS cluster API](</docs/api/v1/hds/list-hds-cluster-nodes>)",
 	Method:      "GET", Host: HostWebex, Path: "/hds/nodes/{nodeId}/resourceUsage",

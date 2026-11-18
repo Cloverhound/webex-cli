@@ -22,124 +22,124 @@ var deviceGroups = []Group{
 
 // deviceOperations are the Webex Device operations, in collection order.
 var deviceOperations = []*Operation{
-	DeviceDeviceCallGetMembers,
-	DeviceDeviceCallUpdateMembers,
-	DeviceDeviceCallSearchMembers,
-	DeviceDeviceCallApplyChanges,
-	DeviceDeviceCallGetSettings,
-	DeviceDeviceCallUpdateSettings,
-	DeviceDeviceCallGetLocationSettings,
-	DeviceDeviceCallGetWebexCalling,
-	DeviceDeviceCallUpdateThirdParty,
-	DeviceDeviceCallGetPerson,
-	DeviceDeviceCallUpdateHotelingSettingsPersonPrimary,
-	DeviceDeviceCallGetWorkspace,
-	DeviceDeviceCallUpdateWorkspace,
-	DeviceDeviceCallListSupported,
-	DeviceDeviceCallGetOverrideSettings,
-	DeviceDeviceCallCreateLineKeyTemplate,
-	DeviceDeviceCallListLineKeyTemplates,
-	DeviceDeviceCallGetLineKeyTemplate,
-	DeviceDeviceCallUpdateLineKeyTemplate,
-	DeviceDeviceCallDeleteLineKeyTemplate,
-	DeviceDeviceCallPreviewApplyLineKeyTemplate,
-	DeviceDeviceCallApplyLineKeyTemplate,
-	DeviceDeviceCallListApplyLineKeyTemplateJobs,
-	DeviceDeviceCallGetJobStatusApplyLineKeyTemplateJob,
-	DeviceDeviceCallGetJobErrorsApplyLineKeyTemplateJob,
-	DeviceDeviceCallGetDectTypeListDeprecated,
-	DeviceDeviceCallGetDectTypeList,
-	DeviceDeviceCallValidateListMacAddress,
-	DeviceDeviceCallUpdateSettingsAcrossOrgLocationJob,
-	DeviceDeviceCallListChangeSettingsJobs,
-	DeviceDeviceCallGetChangeSettingsJobStatus,
-	DeviceDeviceCallListChangeSettingsJobErrors,
-	DeviceDeviceCallGetLayoutId,
-	DeviceDeviceCallUpdateLayoutId,
-	DeviceDeviceCallRebuildPhonesConfiguration,
-	DeviceDeviceCallListRebuildPhonesJobs,
-	DeviceDeviceCallGetJobStatusRebuildPhonesJob,
-	DeviceDeviceCallGetJobErrorsRebuildPhonesJob,
-	DeviceDeviceCallGetSettingsPerson,
-	DeviceDeviceCallUpdateSettingsPerson,
-	DeviceDeviceCallGetSettingsWorkspace,
-	DeviceDeviceCallUpdateSettingsWorkspace,
-	DeviceDeviceCallListBackgroundImages,
-	DeviceDeviceCallDeleteBackgroundImages,
-	DeviceDeviceCallUploadBackgroundImage,
-	DeviceDeviceCallGetUserCount,
-	DeviceDeviceCallGetCountMembers,
-	DeviceDeviceCallGetCountAvailableMembers,
-	DeviceDeviceCallListSupported_2,
-	DeviceDeviceCallGetValidationSchema,
-	DeviceDeviceCallGetSettingsGroups,
-	DeviceDeviceCallGetCustomerDynamicSettings,
-	DeviceDeviceCallGetLocationDynamicSettings,
-	DeviceDeviceCallGetDynamicSettings,
-	DeviceDeviceCallUpdateSpecifiedSettings,
-	DeviceDeviceCallUpdatesDynamicSettingsAcrossOrgLocation,
-	DeviceDeviceCallListDynamicSettingsJobs,
-	DeviceDeviceCallGetDynamicSettingsJobStatus,
-	DeviceDeviceCallListDynamicSettingsJobErrors,
-	DeviceDeviceCallListSupported_3,
-	DeviceDeviceCallGetSettingsGroups_2,
-	DeviceDeviceCallGetCustomerDynamicSettings_2,
-	DeviceDeviceCallGetLocationDynamicSettings_2,
-	DeviceDeviceCallGetDynamicSettings_2,
-	DeviceDeviceCallUpdateDynamicSettings,
-	DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation,
-	DeviceDeviceCallListDynamicSettingsJobs_2,
-	DeviceDeviceCallGetDynamicSettingsJobStatus_2,
-	DeviceDeviceCallListDynamicSettingsJobErrors_2,
-	DeviceDeviceConfigurationsList,
-	DeviceDeviceConfigurationsUpdate,
-	DeviceDevicesList,
-	DeviceDevicesCreateMacAddress,
-	DeviceDevicesGet,
-	DeviceDevicesDelete,
-	DeviceDevicesUpdateTags,
-	DeviceDevicesCreateActivationCode,
-	DeviceHotDeskListSessions,
-	DeviceHotDeskDeleteSession,
-	DeviceWorkspaceLocationsList,
-	DeviceWorkspaceLocationsCreate,
-	DeviceWorkspaceLocationsGet,
-	DeviceWorkspaceLocationsUpdate,
-	DeviceWorkspaceLocationsDelete,
-	DeviceWorkspaceLocationsListFloors,
-	DeviceWorkspaceLocationsCreateFloor,
-	DeviceWorkspaceLocationsGetFloor,
-	DeviceWorkspaceLocationsUpdateFloor,
-	DeviceWorkspaceLocationsDeleteFloor,
-	DeviceWorkspaceMetricsWorkspaceMetrics,
-	DeviceWorkspaceMetricsDuration,
-	DeviceWorkspacePersonalizationPersonalize,
-	DeviceWorkspacePersonalizationGetTask,
-	DeviceWorkspacesList,
-	DeviceWorkspacesCreate,
-	DeviceWorkspacesGet,
-	DeviceWorkspacesUpdate,
-	DeviceWorkspacesDelete,
-	DeviceWorkspacesGetCapabilities,
-	DeviceWorkspacesGet_2,
-	DeviceXapiQueryStatus,
-	DeviceXapiExecuteCommand,
-	DeviceXapiQuerySchema,
-	DeviceLocationsList,
-	DeviceLocationsCreate,
-	DeviceLocationsGet,
-	DeviceLocationsUpdate,
-	DeviceLocationsDelete,
-	DeviceLocationsListFloors,
-	DeviceLocationsCreateFloor,
-	DeviceLocationsGetFloor,
-	DeviceLocationsUpdateFloor,
-	DeviceLocationsDeleteFloor,
+	DeviceGetTelephonyConfigDevicesByDeviceIdMembers,
+	DevicePutTelephonyConfigDevicesByDeviceIdMembers,
+	DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembers,
+	DevicePostTelephonyConfigDevicesByDeviceIdActionsApplyChangesInvoke,
+	DeviceGetTelephonyConfigDevicesByDeviceIdSettings,
+	DevicePutTelephonyConfigDevicesByDeviceIdSettings,
+	DeviceGetTelephonyConfigLocationsByLocationIdDevicesSettings,
+	DeviceGetTelephonyConfigDevicesByDeviceId,
+	DevicePutTelephonyConfigDevicesByDeviceId,
+	DeviceGetTelephonyConfigPeopleByPersonIdDevices,
+	DevicePutTelephonyConfigPeopleByPersonIdDevicesSettingsHoteling,
+	DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevices,
+	DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevices,
+	DeviceGetTelephonyConfigSupportedDevices,
+	DeviceGetTelephonyConfigDevicesSettings,
+	DevicePostTelephonyConfigDevicesLineKeyTemplates,
+	DeviceGetTelephonyConfigDevicesLineKeyTemplates,
+	DeviceGetTelephonyConfigDevicesLineKeyTemplatesByTemplateId,
+	DevicePutTelephonyConfigDevicesLineKeyTemplatesByTemplateId,
+	DeviceDeleteTelephonyConfigDevicesLineKeyTemplatesByTemplateId,
+	DevicePostTelephonyConfigDevicesActionsPreviewApplyLineKeyTemplateInvoke,
+	DevicePostTelephonyConfigJobsDevicesApplyLineKeyTemplate,
+	DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplate,
+	DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobId,
+	DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobIdErrors,
+	DeviceGetTelephonyConfigDevicesDectsSupportedDevices,
+	DeviceGetTelephonyConfigDevicesDectNetworksSupportedDevices,
+	DevicePostTelephonyConfigDevicesActionsValidateMacsInvoke,
+	DevicePostTelephonyConfigJobsDevicesCallDeviceSettings,
+	DeviceGetTelephonyConfigJobsDevicesCallDeviceSettings,
+	DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobId,
+	DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobIdErrors,
+	DeviceGetTelephonyConfigDevicesByDeviceIdLayout,
+	DevicePutTelephonyConfigDevicesByDeviceIdLayout,
+	DevicePostTelephonyConfigJobsDevicesRebuildPhones,
+	DeviceGetTelephonyConfigJobsDevicesRebuildPhones,
+	DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobId,
+	DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobIdErrors,
+	DeviceGetTelephonyConfigPeopleByPersonIdDevicesSettings,
+	DevicePutTelephonyConfigPeopleByPersonIdDevicesSettings,
+	DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings,
+	DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings,
+	DeviceGetTelephonyConfigDevicesBackgroundImages,
+	DeviceDeleteTelephonyConfigDevicesBackgroundImages,
+	DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke,
+	DeviceGetTelephonyConfigPeopleByPersonIdDevicesCount,
+	DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembersCount,
+	DeviceGetTelephonyConfigDevicesAvailableMembersCount,
+	deviceGetTelephonyConfigSupportedDevices_2,
+	DeviceGetTelephonyConfigDevicesDynamicSettingsValidationSchema,
+	DeviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups,
+	DevicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke,
+	DevicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke,
+	DevicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke,
+	DevicePutTelephonyConfigDevicesByDeviceIdDynamicSettings,
+	DevicePostTelephonyConfigJobsDevicesDynamicDeviceSettings,
+	DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings,
+	DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId,
+	DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors,
+	deviceGetTelephonyConfigSupportedDevices_3,
+	deviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups_2,
+	devicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke_2,
+	devicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke_2,
+	devicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke_2,
+	devicePutTelephonyConfigDevicesByDeviceIdDynamicSettings_2,
+	devicePostTelephonyConfigJobsDevicesDynamicDeviceSettings_2,
+	deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings_2,
+	deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId_2,
+	deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors_2,
+	DeviceGetDeviceConfigurations,
+	DevicePatchDeviceConfigurations,
+	DeviceGetDevices,
+	DevicePostDevices,
+	DeviceGetDevicesByDeviceId,
+	DeviceDeleteDevicesByDeviceId,
+	DevicePatchDevicesByDeviceId,
+	DevicePostDevicesActivationCode,
+	DeviceGetHotdeskSessions,
+	DeviceDeleteHotdeskSessionsBySessionId,
+	DeviceGetWorkspaceLocations,
+	DevicePostWorkspaceLocations,
+	DeviceGetWorkspaceLocationsByLocationId,
+	DevicePutWorkspaceLocationsByLocationId,
+	DeviceDeleteWorkspaceLocationsByLocationId,
+	DeviceGetWorkspaceLocationsByLocationIdFloors,
+	DevicePostWorkspaceLocationsByLocationIdFloors,
+	DeviceGetWorkspaceLocationsByLocationIdFloorsByFloorId,
+	DevicePutWorkspaceLocationsByLocationIdFloorsByFloorId,
+	DeviceDeleteWorkspaceLocationsByLocationIdFloorsByFloorId,
+	DeviceGetWorkspaceMetrics,
+	DeviceGetWorkspaceDurationMetrics,
+	DevicePostWorkspacesByWorkspaceIdPersonalize,
+	DeviceGetWorkspacesByWorkspaceIdPersonalizationTask,
+	DeviceGetWorkspaces,
+	DevicePostWorkspaces,
+	deviceGetWorkspacesByWorkspaceId_1,
+	DevicePutWorkspacesByWorkspaceId,
+	DeviceDeleteWorkspacesByWorkspaceId,
+	DeviceGetWorkspacesByWorkspaceIdCapabilities,
+	deviceGetWorkspacesByWorkspaceId_2,
+	DeviceGetXapiStatus,
+	DevicePostXapiCommandByCommandName,
+	DeviceGetXapiSchema,
+	DeviceGetLocations,
+	DevicePostLocations,
+	DeviceGetLocationsByLocationId,
+	DevicePutLocationsByLocationId,
+	DeviceDeleteLocationsByLocationId,
+	DeviceGetLocationsByLocationIdFloors,
+	DevicePostLocationsByLocationIdFloors,
+	DeviceGetLocationsByLocationIdFloorsByFloorId,
+	DevicePutLocationsByLocationIdFloorsByFloorId,
+	DeviceDeleteLocationsByLocationIdFloorsByFloorId,
 }
 
-// DeviceDeviceCallGetMembers is "Get Device Members": GET /telephony/config/devices/{deviceId}/members.
-var DeviceDeviceCallGetMembers = &Operation{
-	ID: "DeviceDeviceCallGetMembers", Area: "device", Group: "device-call", Command: "get-members",
+// DeviceGetTelephonyConfigDevicesByDeviceIdMembers is "Get Device Members": GET /telephony/config/devices/{deviceId}/members.
+var DeviceGetTelephonyConfigDevicesByDeviceIdMembers = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceIdMembers", Area: "device", Group: "device-call", Command: "get-members",
 	Summary:     "Get Device Members",
 	Description: "Get the list of all the members of the device including primary and secondary users.\n\nA device member can be either a person or a workspace. An admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/members",
@@ -149,9 +149,9 @@ var DeviceDeviceCallGetMembers = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateMembers is "Update Members on the device": PUT /telephony/config/devices/{deviceId}/members.
-var DeviceDeviceCallUpdateMembers = &Operation{
-	ID: "DeviceDeviceCallUpdateMembers", Area: "device", Group: "device-call", Command: "update-members",
+// DevicePutTelephonyConfigDevicesByDeviceIdMembers is "Update Members on the device": PUT /telephony/config/devices/{deviceId}/members.
+var DevicePutTelephonyConfigDevicesByDeviceIdMembers = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesByDeviceIdMembers", Area: "device", Group: "device-call", Command: "update-members",
 	Summary:     "Update Members on the device",
 	Description: "Modify member details on the device.\n\nA device member can be either a person, virtual line or a workspace. An admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nModifying members on the device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/members",
@@ -162,9 +162,9 @@ var DeviceDeviceCallUpdateMembers = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallSearchMembers is "Search Members": GET /telephony/config/devices/{deviceId}/availableMembers.
-var DeviceDeviceCallSearchMembers = &Operation{
-	ID: "DeviceDeviceCallSearchMembers", Area: "device", Group: "device-call", Command: "search-members",
+// DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembers is "Search Members": GET /telephony/config/devices/{deviceId}/availableMembers.
+var DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembers = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembers", Area: "device", Group: "device-call", Command: "search-members",
 	Summary:     "Search Members",
 	Description: "Search members that can be assigned to the device.\n\nA device member can be either a person or a workspace. A admin can access the list of member details, modify member details and\nsearch for available members on a device.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/availableMembers",
@@ -183,9 +183,9 @@ var DeviceDeviceCallSearchMembers = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "members", OmitEmpty: true},
 }
 
-// DeviceDeviceCallApplyChanges is "Apply Changes for a specific device": POST /telephony/config/devices/{deviceId}/actions/applyChanges/invoke.
-var DeviceDeviceCallApplyChanges = &Operation{
-	ID: "DeviceDeviceCallApplyChanges", Area: "device", Group: "device-call", Command: "apply-changes",
+// DevicePostTelephonyConfigDevicesByDeviceIdActionsApplyChangesInvoke is "Apply Changes for a specific device": POST /telephony/config/devices/{deviceId}/actions/applyChanges/invoke.
+var DevicePostTelephonyConfigDevicesByDeviceIdActionsApplyChangesInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigDevicesByDeviceIdActionsApplyChangesInvoke", Area: "device", Group: "device-call", Command: "apply-changes",
 	Summary:     "Apply Changes for a specific device",
 	Description: "Issues request to the device to download and apply changes to the configuration.\n\nApplying changes for a specific device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/actions/applyChanges/invoke",
@@ -195,9 +195,9 @@ var DeviceDeviceCallApplyChanges = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetSettings is "Get Device Settings": GET /telephony/config/devices/{deviceId}/settings.
-var DeviceDeviceCallGetSettings = &Operation{
-	ID: "DeviceDeviceCallGetSettings", Area: "device", Group: "device-call", Command: "get-settings",
+// DeviceGetTelephonyConfigDevicesByDeviceIdSettings is "Get Device Settings": GET /telephony/config/devices/{deviceId}/settings.
+var DeviceGetTelephonyConfigDevicesByDeviceIdSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceIdSettings", Area: "device", Group: "device-call", Command: "get-settings",
 	Summary:     "Get Device Settings",
 	Description: "Get override settings for a device.\n\nDevice settings lists all the applicable settings for MPP, ATA and Wifi devices at the device level. An admin can also modify the settings. DECT devices do not support settings at the device level.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/settings",
@@ -208,9 +208,9 @@ var DeviceDeviceCallGetSettings = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateSettings is "Update device settings": PUT /telephony/config/devices/{deviceId}/settings.
-var DeviceDeviceCallUpdateSettings = &Operation{
-	ID: "DeviceDeviceCallUpdateSettings", Area: "device", Group: "device-call", Command: "update-settings",
+// DevicePutTelephonyConfigDevicesByDeviceIdSettings is "Update device settings": PUT /telephony/config/devices/{deviceId}/settings.
+var DevicePutTelephonyConfigDevicesByDeviceIdSettings = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesByDeviceIdSettings", Area: "device", Group: "device-call", Command: "update-settings",
 	Summary:     "Update device settings",
 	Description: "Modify override settings for a device.\n\nDevice settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can also modify the settings. NOTE: DECT devices do not support settings at the device level.\n\nUpdating settings on the device requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/settings",
@@ -222,9 +222,9 @@ var DeviceDeviceCallUpdateSettings = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallGetLocationSettings is "Get Location Device Settings": GET /telephony/config/locations/{locationId}/devices/settings.
-var DeviceDeviceCallGetLocationSettings = &Operation{
-	ID: "DeviceDeviceCallGetLocationSettings", Area: "device", Group: "device-call", Command: "get-location-settings",
+// DeviceGetTelephonyConfigLocationsByLocationIdDevicesSettings is "Get Location Device Settings": GET /telephony/config/locations/{locationId}/devices/settings.
+var DeviceGetTelephonyConfigLocationsByLocationIdDevicesSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigLocationsByLocationIdDevicesSettings", Area: "device", Group: "device-call", Command: "get-location-settings",
 	Summary:     "Get Location Device Settings",
 	Description: "Get device override settings for a location.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/locations/{locationId}/devices/settings",
@@ -234,9 +234,9 @@ var DeviceDeviceCallGetLocationSettings = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetWebexCalling is "Get Webex Calling Device Details": GET /telephony/config/devices/{deviceId}.
-var DeviceDeviceCallGetWebexCalling = &Operation{
-	ID: "DeviceDeviceCallGetWebexCalling", Area: "device", Group: "device-call", Command: "get-webex-calling",
+// DeviceGetTelephonyConfigDevicesByDeviceId is "Get Webex Calling Device Details": GET /telephony/config/devices/{deviceId}.
+var DeviceGetTelephonyConfigDevicesByDeviceId = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceId", Area: "device", Group: "device-call", Command: "get-webex-calling",
 	Summary:     "Get Webex Calling Device Details",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>\n\nRetrieves Webex Calling device details that include information needed for third-party device management.\n\nWebex calling devices are associated with a specific user Workspace or Virtual Line. Webex Calling devices share the location with the entity that owns them.\n\nPerson or workspace to which the device is assigned. Its fields point to a primary line/port of the device.\n\nRequires a full, location, user, or read-only admin auth token with the scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}",
@@ -246,9 +246,9 @@ var DeviceDeviceCallGetWebexCalling = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateThirdParty is "Update Third Party Device": PUT /telephony/config/devices/{deviceId}.
-var DeviceDeviceCallUpdateThirdParty = &Operation{
-	ID: "DeviceDeviceCallUpdateThirdParty", Area: "device", Group: "device-call", Command: "update-third-party",
+// DevicePutTelephonyConfigDevicesByDeviceId is "Update Third Party Device": PUT /telephony/config/devices/{deviceId}.
+var DevicePutTelephonyConfigDevicesByDeviceId = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesByDeviceId", Area: "device", Group: "device-call", Command: "update-third-party",
 	Summary:     "Update Third Party Device",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>\n\nModify a device's `sipPassword`.\n\nUpdating `sipPassword` on the device requires a full or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}",
@@ -261,9 +261,9 @@ var DeviceDeviceCallUpdateThirdParty = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetPerson is "Get Person Devices": GET /telephony/config/people/{personId}/devices.
-var DeviceDeviceCallGetPerson = &Operation{
-	ID: "DeviceDeviceCallGetPerson", Area: "device", Group: "device-call", Command: "get-person",
+// DeviceGetTelephonyConfigPeopleByPersonIdDevices is "Get Person Devices": GET /telephony/config/people/{personId}/devices.
+var DeviceGetTelephonyConfigPeopleByPersonIdDevices = &Operation{
+	ID: "DeviceGetTelephonyConfigPeopleByPersonIdDevices", Area: "device", Group: "device-call", Command: "get-person",
 	Summary:     "Get Person Devices",
 	Description: "Get all devices for a person.\n\nThis requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/devices",
@@ -273,9 +273,9 @@ var DeviceDeviceCallGetPerson = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateHotelingSettingsPersonPrimary is "Modify Hoteling Settings for a Person's Primary Devices": PUT /telephony/config/people/{personId}/devices/settings/hoteling.
-var DeviceDeviceCallUpdateHotelingSettingsPersonPrimary = &Operation{
-	ID: "DeviceDeviceCallUpdateHotelingSettingsPersonPrimary", Area: "device", Group: "device-call", Command: "update-hoteling-settings-person-primary",
+// DevicePutTelephonyConfigPeopleByPersonIdDevicesSettingsHoteling is "Modify Hoteling Settings for a Person's Primary Devices": PUT /telephony/config/people/{personId}/devices/settings/hoteling.
+var DevicePutTelephonyConfigPeopleByPersonIdDevicesSettingsHoteling = &Operation{
+	ID: "DevicePutTelephonyConfigPeopleByPersonIdDevicesSettingsHoteling", Area: "device", Group: "device-call", Command: "update-hoteling-settings-person-primary",
 	Summary:     "Modify Hoteling Settings for a Person's Primary Devices",
 	Description: "Modify hoteling login configuration on a person's Webex Calling Devices which are in effect when the device is the user's primary device and device type is PRIMARY. To view the current hoteling login settings, see the `hoteling` field in [Get Person Devices](/docs/api/v1/device-call-settings/get-person-devices).\n\nModifying devices for a person requires a full administrator or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/{personId}/devices/settings/hoteling",
@@ -286,9 +286,9 @@ var DeviceDeviceCallUpdateHotelingSettingsPersonPrimary = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallGetWorkspace is "Get Workspace Devices": GET /telephony/config/workspaces/{workspaceId}/devices.
-var DeviceDeviceCallGetWorkspace = &Operation{
-	ID: "DeviceDeviceCallGetWorkspace", Area: "device", Group: "device-call", Command: "get-workspace",
+// DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevices is "Get Workspace Devices": GET /telephony/config/workspaces/{workspaceId}/devices.
+var DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevices = &Operation{
+	ID: "DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevices", Area: "device", Group: "device-call", Command: "get-workspace",
 	Summary:     "Get Workspace Devices",
 	Description: "Get all devices for a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/workspaces/{workspaceId}/devices",
@@ -298,9 +298,9 @@ var DeviceDeviceCallGetWorkspace = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateWorkspace is "Modify Workspace Devices": PUT /telephony/config/workspaces/{workspaceId}/devices.
-var DeviceDeviceCallUpdateWorkspace = &Operation{
-	ID: "DeviceDeviceCallUpdateWorkspace", Area: "device", Group: "device-call", Command: "update-workspace",
+// DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevices is "Modify Workspace Devices": PUT /telephony/config/workspaces/{workspaceId}/devices.
+var DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevices = &Operation{
+	ID: "DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevices", Area: "device", Group: "device-call", Command: "update-workspace",
 	Summary:     "Modify Workspace Devices",
 	Description: "Modify devices for a workspace.\n\nModifying devices for a workspace requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/workspaces/{workspaceId}/devices",
@@ -315,9 +315,9 @@ var DeviceDeviceCallUpdateWorkspace = &Operation{
 	}},
 }
 
-// DeviceDeviceCallListSupported is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var DeviceDeviceCallListSupported = &Operation{
-	ID: "DeviceDeviceCallListSupported", Area: "device", Group: "device-call", Command: "list-supported",
+// DeviceGetTelephonyConfigSupportedDevices is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var DeviceGetTelephonyConfigSupportedDevices = &Operation{
+	ID: "DeviceGetTelephonyConfigSupportedDevices", Area: "device", Group: "device-call", Command: "list-supported",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -329,9 +329,9 @@ var DeviceDeviceCallListSupported = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "devices", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetOverrideSettings is "Read the device override settings for a organization": GET /telephony/config/devices/settings.
-var DeviceDeviceCallGetOverrideSettings = &Operation{
-	ID: "DeviceDeviceCallGetOverrideSettings", Area: "device", Group: "device-call", Command: "get-override-settings",
+// DeviceGetTelephonyConfigDevicesSettings is "Read the device override settings for a organization": GET /telephony/config/devices/settings.
+var DeviceGetTelephonyConfigDevicesSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesSettings", Area: "device", Group: "device-call", Command: "get-override-settings",
 	Summary:     "Read the device override settings for a organization",
 	Description: "Get device override settings for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/settings",
@@ -340,9 +340,9 @@ var DeviceDeviceCallGetOverrideSettings = &Operation{
 	},
 }
 
-// DeviceDeviceCallCreateLineKeyTemplate is "Create a Line Key Template": POST /telephony/config/devices/lineKeyTemplates.
-var DeviceDeviceCallCreateLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallCreateLineKeyTemplate", Area: "device", Group: "device-call", Command: "create-line-key-template",
+// DevicePostTelephonyConfigDevicesLineKeyTemplates is "Create a Line Key Template": POST /telephony/config/devices/lineKeyTemplates.
+var DevicePostTelephonyConfigDevicesLineKeyTemplates = &Operation{
+	ID: "DevicePostTelephonyConfigDevicesLineKeyTemplates", Area: "device", Group: "device-call", Command: "create-line-key-template",
 	Summary:     "Create a Line Key Template",
 	Description: "Create a Line Key Template in this organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows customers to create a `Line Key Template` for a device model.\n\nCreating a Line Key Template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/devices/lineKeyTemplates",
@@ -352,9 +352,9 @@ var DeviceDeviceCallCreateLineKeyTemplate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListLineKeyTemplates is "Read the list of Line Key Templates": GET /telephony/config/devices/lineKeyTemplates.
-var DeviceDeviceCallListLineKeyTemplates = &Operation{
-	ID: "DeviceDeviceCallListLineKeyTemplates", Area: "device", Group: "device-call", Command: "list-line-key-templates",
+// DeviceGetTelephonyConfigDevicesLineKeyTemplates is "Read the list of Line Key Templates": GET /telephony/config/devices/lineKeyTemplates.
+var DeviceGetTelephonyConfigDevicesLineKeyTemplates = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesLineKeyTemplates", Area: "device", Group: "device-call", Command: "list-line-key-templates",
 	Summary:     "Read the list of Line Key Templates",
 	Description: "List all Line Key Templates available for this organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve the list of Line Key Templates that are available for the organization.\n\nRetrieving this list requires a full, user or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/lineKeyTemplates",
@@ -364,9 +364,9 @@ var DeviceDeviceCallListLineKeyTemplates = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "lineKeyTemplates", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetLineKeyTemplate is "Get details of a Line Key Template": GET /telephony/config/devices/lineKeyTemplates/{templateId}.
-var DeviceDeviceCallGetLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallGetLineKeyTemplate", Area: "device", Group: "device-call", Command: "get-line-key-template",
+// DeviceGetTelephonyConfigDevicesLineKeyTemplatesByTemplateId is "Get details of a Line Key Template": GET /telephony/config/devices/lineKeyTemplates/{templateId}.
+var DeviceGetTelephonyConfigDevicesLineKeyTemplatesByTemplateId = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesLineKeyTemplatesByTemplateId", Area: "device", Group: "device-call", Command: "get-line-key-template",
 	Summary:     "Get details of a Line Key Template",
 	Description: "Get detailed information about a Line Key Template by template ID in an organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve a line key template by its ID in an organization.\n\nRetrieving a line key template requires a full, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/lineKeyTemplates/{templateId}",
@@ -376,9 +376,9 @@ var DeviceDeviceCallGetLineKeyTemplate = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateLineKeyTemplate is "Modify a Line Key Template": PUT /telephony/config/devices/lineKeyTemplates/{templateId}.
-var DeviceDeviceCallUpdateLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallUpdateLineKeyTemplate", Area: "device", Group: "device-call", Command: "update-line-key-template",
+// DevicePutTelephonyConfigDevicesLineKeyTemplatesByTemplateId is "Modify a Line Key Template": PUT /telephony/config/devices/lineKeyTemplates/{templateId}.
+var DevicePutTelephonyConfigDevicesLineKeyTemplatesByTemplateId = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesLineKeyTemplatesByTemplateId", Area: "device", Group: "device-call", Command: "update-line-key-template",
 	Summary:     "Modify a Line Key Template",
 	Description: "Modify a Line Key Template by its template ID in an organization.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to modify an existing Line Key Template by its ID in an organization.\n\nModifying an existing Line Key Template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/lineKeyTemplates/{templateId}",
@@ -389,9 +389,9 @@ var DeviceDeviceCallUpdateLineKeyTemplate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallDeleteLineKeyTemplate is "Delete a Line Key Template": DELETE /telephony/config/devices/lineKeyTemplates/{templateId}.
-var DeviceDeviceCallDeleteLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallDeleteLineKeyTemplate", Area: "device", Group: "device-call", Command: "delete-line-key-template",
+// DeviceDeleteTelephonyConfigDevicesLineKeyTemplatesByTemplateId is "Delete a Line Key Template": DELETE /telephony/config/devices/lineKeyTemplates/{templateId}.
+var DeviceDeleteTelephonyConfigDevicesLineKeyTemplatesByTemplateId = &Operation{
+	ID: "DeviceDeleteTelephonyConfigDevicesLineKeyTemplatesByTemplateId", Area: "device", Group: "device-call", Command: "delete-line-key-template",
 	Summary:     "Delete a Line Key Template",
 	Description: "Delete a Line Key Template by its template ID in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to delete an existing Line Key Templates by its ID in an organization.\n\nDeleting an existing line key template requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/devices/lineKeyTemplates/{templateId}",
@@ -401,9 +401,9 @@ var DeviceDeviceCallDeleteLineKeyTemplate = &Operation{
 	},
 }
 
-// DeviceDeviceCallPreviewApplyLineKeyTemplate is "Preview Apply Line Key Template": POST /telephony/config/devices/actions/previewApplyLineKeyTemplate/invoke.
-var DeviceDeviceCallPreviewApplyLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallPreviewApplyLineKeyTemplate", Area: "device", Group: "device-call", Command: "preview-apply-line-key-template",
+// DevicePostTelephonyConfigDevicesActionsPreviewApplyLineKeyTemplateInvoke is "Preview Apply Line Key Template": POST /telephony/config/devices/actions/previewApplyLineKeyTemplate/invoke.
+var DevicePostTelephonyConfigDevicesActionsPreviewApplyLineKeyTemplateInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigDevicesActionsPreviewApplyLineKeyTemplateInvoke", Area: "device", Group: "device-call", Command: "preview-apply-line-key-template",
 	Summary:     "Preview Apply Line Key Template",
 	Description: "Preview the number of devices that will be affected by the application of a Line Key Template or when resetting devices to their factory Line Key settings.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to preview the number of devices that will be affected if a customer were to apply a Line Key Template or apply factory default Line Key settings to devices.\n\nRetrieving the number of devices affected requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/devices/actions/previewApplyLineKeyTemplate/invoke",
@@ -413,9 +413,9 @@ var DeviceDeviceCallPreviewApplyLineKeyTemplate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallApplyLineKeyTemplate is "Apply a Line Key Template": POST /telephony/config/jobs/devices/applyLineKeyTemplate.
-var DeviceDeviceCallApplyLineKeyTemplate = &Operation{
-	ID: "DeviceDeviceCallApplyLineKeyTemplate", Area: "device", Group: "device-call", Command: "apply-line-key-template",
+// DevicePostTelephonyConfigJobsDevicesApplyLineKeyTemplate is "Apply a Line Key Template": POST /telephony/config/jobs/devices/applyLineKeyTemplate.
+var DevicePostTelephonyConfigJobsDevicesApplyLineKeyTemplate = &Operation{
+	ID: "DevicePostTelephonyConfigJobsDevicesApplyLineKeyTemplate", Area: "device", Group: "device-call", Command: "apply-line-key-template",
 	Summary:     "Apply a Line Key Template",
 	Description: "Apply a Line Key Template or reset devices to their factory Line Key settings.\n\nLine Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to apply a line key template or apply factory default Line Key settings to devices in a set of locations or across all locations in the organization.\n\nApplying a Line Key Template or resetting devices to their default Line Key configuration requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/devices/applyLineKeyTemplate",
@@ -425,9 +425,9 @@ var DeviceDeviceCallApplyLineKeyTemplate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListApplyLineKeyTemplateJobs is "Get List of Apply Line Key Template jobs": GET /telephony/config/jobs/devices/applyLineKeyTemplate.
-var DeviceDeviceCallListApplyLineKeyTemplateJobs = &Operation{
-	ID: "DeviceDeviceCallListApplyLineKeyTemplateJobs", Area: "device", Group: "device-call", Command: "list-apply-line-key-template-jobs",
+// DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplate is "Get List of Apply Line Key Template jobs": GET /telephony/config/jobs/devices/applyLineKeyTemplate.
+var DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplate = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplate", Area: "device", Group: "device-call", Command: "list-apply-line-key-template-jobs",
 	Summary:     "Get List of Apply Line Key Template jobs",
 	Description: "Get the list of all apply line key templates jobs in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve all the apply line key templates jobs in an organization.\n\nRetrieving the list of apply line key templates jobs in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/applyLineKeyTemplate",
@@ -437,9 +437,9 @@ var DeviceDeviceCallListApplyLineKeyTemplateJobs = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetJobStatusApplyLineKeyTemplateJob is "Get the job status of an Apply Line Key Template job": GET /telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}.
-var DeviceDeviceCallGetJobStatusApplyLineKeyTemplateJob = &Operation{
-	ID: "DeviceDeviceCallGetJobStatusApplyLineKeyTemplateJob", Area: "device", Group: "device-call", Command: "get-job-status-apply-line-key-template-job",
+// DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobId is "Get the job status of an Apply Line Key Template job": GET /telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}.
+var DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobId = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobId", Area: "device", Group: "device-call", Command: "get-job-status-apply-line-key-template-job",
 	Summary:     "Get the job status of an Apply Line Key Template job",
 	Description: "Get the status of an apply line key template job by its job ID.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to check the status of an apply line key templates job by job ID in an organization.\n\nChecking the the status of an apply line key templates job in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}",
@@ -449,9 +449,9 @@ var DeviceDeviceCallGetJobStatusApplyLineKeyTemplateJob = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetJobErrorsApplyLineKeyTemplateJob is "Get job errors for an Apply Line Key Template job": GET /telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}/errors.
-var DeviceDeviceCallGetJobErrorsApplyLineKeyTemplateJob = &Operation{
-	ID: "DeviceDeviceCallGetJobErrorsApplyLineKeyTemplateJob", Area: "device", Group: "device-call", Command: "get-job-errors-apply-line-key-template-job",
+// DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobIdErrors is "Get job errors for an Apply Line Key Template job": GET /telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}/errors.
+var DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobIdErrors = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesApplyLineKeyTemplateByJobIdErrors", Area: "device", Group: "device-call", Command: "get-job-errors-apply-line-key-template-job",
 	Summary:     "Get job errors for an Apply Line Key Template job",
 	Description: "GET job errors for an apply Line Key Template job in an organization.\n\nLine Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone display.\nA Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular device model.\nThis API allows users to retrieve all the errors of an apply line key templates job by job ID in an organization.\n\nRetrieving all the errors of an apply line key templates job in an organization requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/applyLineKeyTemplate/{jobId}/errors",
@@ -461,9 +461,9 @@ var DeviceDeviceCallGetJobErrorsApplyLineKeyTemplateJob = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetDectTypeListDeprecated is "Read the DECT device type list - Deprecated": GET /telephony/config/devices/dects/supportedDevices.
-var DeviceDeviceCallGetDectTypeListDeprecated = &Operation{
-	ID: "DeviceDeviceCallGetDectTypeListDeprecated", Area: "device", Group: "device-call", Command: "get-dect-type-list-deprecated",
+// DeviceGetTelephonyConfigDevicesDectsSupportedDevices is "Read the DECT device type list - Deprecated": GET /telephony/config/devices/dects/supportedDevices.
+var DeviceGetTelephonyConfigDevicesDectsSupportedDevices = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesDectsSupportedDevices", Area: "device", Group: "device-call", Command: "get-dect-type-list-deprecated",
 	Summary:     "Read the DECT device type list - Deprecated",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP).</Callout></div>\n\n<div><Callout type=\"warning\">The REST path for this API has changed to [GET /telephony/config/devices/dectNetworks/supportedDevices{?orgId}]. The use of this old REST path is deprecated and will be decommissioned on October 10, 2024. Please start using it for all future projects.</Callout></div>\n\nGet DECT device type list with base stations and line ports supported count. This is a static list.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dects/supportedDevices",
@@ -472,9 +472,9 @@ var DeviceDeviceCallGetDectTypeListDeprecated = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetDectTypeList is "Read the DECT device type list": GET /telephony/config/devices/dectNetworks/supportedDevices.
-var DeviceDeviceCallGetDectTypeList = &Operation{
-	ID: "DeviceDeviceCallGetDectTypeList", Area: "device", Group: "device-call", Command: "get-dect-type-list",
+// DeviceGetTelephonyConfigDevicesDectNetworksSupportedDevices is "Read the DECT device type list": GET /telephony/config/devices/dectNetworks/supportedDevices.
+var DeviceGetTelephonyConfigDevicesDectNetworksSupportedDevices = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesDectNetworksSupportedDevices", Area: "device", Group: "device-call", Command: "get-dect-type-list",
 	Summary:     "Read the DECT device type list",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP).</Callout></div>\n\nGet DECT device type list with base stations and line ports supported count. This is a static list.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dectNetworks/supportedDevices",
@@ -483,9 +483,9 @@ var DeviceDeviceCallGetDectTypeList = &Operation{
 	},
 }
 
-// DeviceDeviceCallValidateListMacAddress is "Validate a list of MAC address": POST /telephony/config/devices/actions/validateMacs/invoke.
-var DeviceDeviceCallValidateListMacAddress = &Operation{
-	ID: "DeviceDeviceCallValidateListMacAddress", Area: "device", Group: "device-call", Command: "validate-list-mac-address",
+// DevicePostTelephonyConfigDevicesActionsValidateMacsInvoke is "Validate a list of MAC address": POST /telephony/config/devices/actions/validateMacs/invoke.
+var DevicePostTelephonyConfigDevicesActionsValidateMacsInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigDevicesActionsValidateMacsInvoke", Area: "device", Group: "device-call", Command: "validate-list-mac-address",
 	Summary:     "Validate a list of MAC address",
 	Description: "Validate a list of MAC addresses.\n\nValidating this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/devices/actions/validateMacs/invoke",
@@ -497,9 +497,9 @@ var DeviceDeviceCallValidateListMacAddress = &Operation{
 	}},
 }
 
-// DeviceDeviceCallUpdateSettingsAcrossOrgLocationJob is "Change Device Settings Across Organization Or Location Job": POST /telephony/config/jobs/devices/callDeviceSettings.
-var DeviceDeviceCallUpdateSettingsAcrossOrgLocationJob = &Operation{
-	ID: "DeviceDeviceCallUpdateSettingsAcrossOrgLocationJob", Area: "device", Group: "device-call", Command: "update-settings-across-org-location-job",
+// DevicePostTelephonyConfigJobsDevicesCallDeviceSettings is "Change Device Settings Across Organization Or Location Job": POST /telephony/config/jobs/devices/callDeviceSettings.
+var DevicePostTelephonyConfigJobsDevicesCallDeviceSettings = &Operation{
+	ID: "DevicePostTelephonyConfigJobsDevicesCallDeviceSettings", Area: "device", Group: "device-call", Command: "update-settings-across-org-location-job",
 	Summary:     "Change Device Settings Across Organization Or Location Job",
 	Description: "Change device settings across organization or locations jobs.\n\nPerforms bulk and asynchronous processing for all types of device settings initiated by organization and system admins in a stateful persistent manner. This job will modify the requested device settings across all the devices. Whenever a location ID is specified in the request, it will modify the requested device settings only for the devices that are part of the provided location within an organization.\n\nReturns a unique job ID which can then be utilized further to retrieve status and errors for the same.\n\nOnly one job per customer can be running at any given time within the same organization. An attempt to run multiple jobs at the same time will result in a 409 error response.\n\nRunning a job requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/devices/callDeviceSettings",
@@ -509,9 +509,9 @@ var DeviceDeviceCallUpdateSettingsAcrossOrgLocationJob = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListChangeSettingsJobs is "List Change Device Settings Jobs": GET /telephony/config/jobs/devices/callDeviceSettings.
-var DeviceDeviceCallListChangeSettingsJobs = &Operation{
-	ID: "DeviceDeviceCallListChangeSettingsJobs", Area: "device", Group: "device-call", Command: "list-change-settings-jobs",
+// DeviceGetTelephonyConfigJobsDevicesCallDeviceSettings is "List Change Device Settings Jobs": GET /telephony/config/jobs/devices/callDeviceSettings.
+var DeviceGetTelephonyConfigJobsDevicesCallDeviceSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesCallDeviceSettings", Area: "device", Group: "device-call", Command: "list-change-settings-jobs",
 	Summary:     "List Change Device Settings Jobs",
 	Description: "List change device settings jobs.\n\nLists all the jobs for jobType `calldevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/callDeviceSettings",
@@ -523,9 +523,9 @@ var DeviceDeviceCallListChangeSettingsJobs = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetChangeSettingsJobStatus is "Get Change Device Settings Job Status": GET /telephony/config/jobs/devices/callDeviceSettings/{jobId}.
-var DeviceDeviceCallGetChangeSettingsJobStatus = &Operation{
-	ID: "DeviceDeviceCallGetChangeSettingsJobStatus", Area: "device", Group: "device-call", Command: "get-change-settings-job-status",
+// DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobId is "Get Change Device Settings Job Status": GET /telephony/config/jobs/devices/callDeviceSettings/{jobId}.
+var DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobId = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobId", Area: "device", Group: "device-call", Command: "get-change-settings-job-status",
 	Summary:     "Get Change Device Settings Job Status",
 	Description: "Get change device settings job status.\n\nProvides details of the job with `jobId` of `jobType` `calldevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/callDeviceSettings/{jobId}",
@@ -534,9 +534,9 @@ var DeviceDeviceCallGetChangeSettingsJobStatus = &Operation{
 	},
 }
 
-// DeviceDeviceCallListChangeSettingsJobErrors is "List Change Device Settings Job Errors": GET /telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors.
-var DeviceDeviceCallListChangeSettingsJobErrors = &Operation{
-	ID: "DeviceDeviceCallListChangeSettingsJobErrors", Area: "device", Group: "device-call", Command: "list-change-settings-job-errors",
+// DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobIdErrors is "List Change Device Settings Job Errors": GET /telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors.
+var DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobIdErrors = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesCallDeviceSettingsByJobIdErrors", Area: "device", Group: "device-call", Command: "list-change-settings-job-errors",
 	Summary:     "List Change Device Settings Job Errors",
 	Description: "List change device settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `calldevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors",
@@ -549,9 +549,9 @@ var DeviceDeviceCallListChangeSettingsJobErrors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetLayoutId is "Get Device Layout by Device ID": GET /telephony/config/devices/{deviceId}/layout.
-var DeviceDeviceCallGetLayoutId = &Operation{
-	ID: "DeviceDeviceCallGetLayoutId", Area: "device", Group: "device-call", Command: "get-layout-id",
+// DeviceGetTelephonyConfigDevicesByDeviceIdLayout is "Get Device Layout by Device ID": GET /telephony/config/devices/{deviceId}/layout.
+var DeviceGetTelephonyConfigDevicesByDeviceIdLayout = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceIdLayout", Area: "device", Group: "device-call", Command: "get-layout-id",
 	Summary:     "Get Device Layout by Device ID",
 	Description: "Get layout information of a device by device ID in an organization.\n\nDevice layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user’s monitoring list.\n\n**Note:** When `layoutMode` is DEFAULT, the response includes only `layoutMode` and `userReorderEnabled`. The `lineKeys` field is omitted as the device uses system-assigned default line-key assignments. When `layoutMode` is CUSTOM, the response includes the `lineKeys` array with the custom line-key configuration.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/layout",
@@ -561,9 +561,9 @@ var DeviceDeviceCallGetLayoutId = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateLayoutId is "Modify Device Layout by Device ID": PUT /telephony/config/devices/{deviceId}/layout.
-var DeviceDeviceCallUpdateLayoutId = &Operation{
-	ID: "DeviceDeviceCallUpdateLayoutId", Area: "device", Group: "device-call", Command: "update-layout-id",
+// DevicePutTelephonyConfigDevicesByDeviceIdLayout is "Modify Device Layout by Device ID": PUT /telephony/config/devices/{deviceId}/layout.
+var DevicePutTelephonyConfigDevicesByDeviceIdLayout = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesByDeviceIdLayout", Area: "device", Group: "device-call", Command: "update-layout-id",
 	Summary:     "Modify Device Layout by Device ID",
 	Description: "Modify the layout of a device by device ID in an organization.\n\nDevice layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion Modules (KEM) with the existing configured line members and the user’s monitoring list.\n\n**Note:** When setting `layoutMode` to DEFAULT, do not include the `lineKeys` field in the request body. The device will use system-assigned default line-key assignments. When setting `layoutMode` to CUSTOM, you must include the `lineKeys` array to specify the custom line-key configuration.\n\nThis API requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/layout",
@@ -574,9 +574,9 @@ var DeviceDeviceCallUpdateLayoutId = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallRebuildPhonesConfiguration is "Rebuild Phones Configuration": POST /telephony/config/jobs/devices/rebuildPhones.
-var DeviceDeviceCallRebuildPhonesConfiguration = &Operation{
-	ID: "DeviceDeviceCallRebuildPhonesConfiguration", Area: "device", Group: "device-call", Command: "rebuild-phones-configuration",
+// DevicePostTelephonyConfigJobsDevicesRebuildPhones is "Rebuild Phones Configuration": POST /telephony/config/jobs/devices/rebuildPhones.
+var DevicePostTelephonyConfigJobsDevicesRebuildPhones = &Operation{
+	ID: "DevicePostTelephonyConfigJobsDevicesRebuildPhones", Area: "device", Group: "device-call", Command: "rebuild-phones-configuration",
 	Summary:     "Rebuild Phones Configuration",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nRebuild all phone configurations for the specified location.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/devices/rebuildPhones",
@@ -588,9 +588,9 @@ var DeviceDeviceCallRebuildPhonesConfiguration = &Operation{
 	}},
 }
 
-// DeviceDeviceCallListRebuildPhonesJobs is "List Rebuild Phones Jobs": GET /telephony/config/jobs/devices/rebuildPhones.
-var DeviceDeviceCallListRebuildPhonesJobs = &Operation{
-	ID: "DeviceDeviceCallListRebuildPhonesJobs", Area: "device", Group: "device-call", Command: "list-rebuild-phones-jobs",
+// DeviceGetTelephonyConfigJobsDevicesRebuildPhones is "List Rebuild Phones Jobs": GET /telephony/config/jobs/devices/rebuildPhones.
+var DeviceGetTelephonyConfigJobsDevicesRebuildPhones = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesRebuildPhones", Area: "device", Group: "device-call", Command: "list-rebuild-phones-jobs",
 	Summary:     "List Rebuild Phones Jobs",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet the list of all Rebuild Phones jobs in an organization.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/rebuildPhones",
@@ -600,9 +600,9 @@ var DeviceDeviceCallListRebuildPhonesJobs = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetJobStatusRebuildPhonesJob is "Get the Job Status of a Rebuild Phones Job": GET /telephony/config/jobs/devices/rebuildPhones/{jobId}.
-var DeviceDeviceCallGetJobStatusRebuildPhonesJob = &Operation{
-	ID: "DeviceDeviceCallGetJobStatusRebuildPhonesJob", Area: "device", Group: "device-call", Command: "get-job-status-rebuild-phones-job",
+// DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobId is "Get the Job Status of a Rebuild Phones Job": GET /telephony/config/jobs/devices/rebuildPhones/{jobId}.
+var DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobId = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobId", Area: "device", Group: "device-call", Command: "get-job-status-rebuild-phones-job",
 	Summary:     "Get the Job Status of a Rebuild Phones Job",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet the details of a rebuild phones job by its job ID.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/rebuildPhones/{jobId}",
@@ -612,9 +612,9 @@ var DeviceDeviceCallGetJobStatusRebuildPhonesJob = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetJobErrorsRebuildPhonesJob is "Get Job Errors for a Rebuild Phones Job": GET /telephony/config/jobs/devices/rebuildPhones/{jobId}/errors.
-var DeviceDeviceCallGetJobErrorsRebuildPhonesJob = &Operation{
-	ID: "DeviceDeviceCallGetJobErrorsRebuildPhonesJob", Area: "device", Group: "device-call", Command: "get-job-errors-rebuild-phones-job",
+// DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobIdErrors is "Get Job Errors for a Rebuild Phones Job": GET /telephony/config/jobs/devices/rebuildPhones/{jobId}/errors.
+var DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobIdErrors = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesRebuildPhonesByJobIdErrors", Area: "device", Group: "device-call", Command: "get-job-errors-rebuild-phones-job",
 	Summary:     "Get Job Errors for a Rebuild Phones Job",
 	Description: "<div><Callout type=\"warning\">Not supported for Webex for Government (FedRAMP)</Callout></div>.\n\nGet errors for a rebuild phones job in an organization.\n\nRebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e. a change in the network configuration of devices in a location from public to private and vice-versa.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/rebuildPhones/{jobId}/errors",
@@ -624,9 +624,9 @@ var DeviceDeviceCallGetJobErrorsRebuildPhonesJob = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetSettingsPerson is "Get Device Settings for a Person": GET /telephony/config/people/{personId}/devices/settings.
-var DeviceDeviceCallGetSettingsPerson = &Operation{
-	ID: "DeviceDeviceCallGetSettingsPerson", Area: "device", Group: "device-call", Command: "get-settings-person",
+// DeviceGetTelephonyConfigPeopleByPersonIdDevicesSettings is "Get Device Settings for a Person": GET /telephony/config/people/{personId}/devices/settings.
+var DeviceGetTelephonyConfigPeopleByPersonIdDevicesSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigPeopleByPersonIdDevicesSettings", Area: "device", Group: "device-call", Command: "get-settings-person",
 	Summary:     "Get Device Settings for a Person",
 	Description: "Device settings list the compression settings for a person.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/devices/settings",
@@ -636,9 +636,9 @@ var DeviceDeviceCallGetSettingsPerson = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateSettingsPerson is "Update Device Settings for a Person": PUT /telephony/config/people/{personId}/devices/settings.
-var DeviceDeviceCallUpdateSettingsPerson = &Operation{
-	ID: "DeviceDeviceCallUpdateSettingsPerson", Area: "device", Group: "device-call", Command: "update-settings-person",
+// DevicePutTelephonyConfigPeopleByPersonIdDevicesSettings is "Update Device Settings for a Person": PUT /telephony/config/people/{personId}/devices/settings.
+var DevicePutTelephonyConfigPeopleByPersonIdDevicesSettings = &Operation{
+	ID: "DevicePutTelephonyConfigPeopleByPersonIdDevicesSettings", Area: "device", Group: "device-call", Command: "update-settings-person",
 	Summary:     "Update Device Settings for a Person",
 	Description: "Update device settings modifies the compression settings for a person.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/{personId}/devices/settings",
@@ -651,9 +651,9 @@ var DeviceDeviceCallUpdateSettingsPerson = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetSettingsWorkspace is "Get Device Settings for a Workspace": GET /telephony/config/workspaces/{workspaceId}/devices/settings.
-var DeviceDeviceCallGetSettingsWorkspace = &Operation{
-	ID: "DeviceDeviceCallGetSettingsWorkspace", Area: "device", Group: "device-call", Command: "get-settings-workspace",
+// DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings is "Get Device Settings for a Workspace": GET /telephony/config/workspaces/{workspaceId}/devices/settings.
+var DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings", Area: "device", Group: "device-call", Command: "get-settings-workspace",
 	Summary:     "Get Device Settings for a Workspace",
 	Description: "Device settings list the compression settings for a workspace.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, user, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/workspaces/{workspaceId}/devices/settings",
@@ -663,9 +663,9 @@ var DeviceDeviceCallGetSettingsWorkspace = &Operation{
 	},
 }
 
-// DeviceDeviceCallUpdateSettingsWorkspace is "Update Device Settings for a Workspace": PUT /telephony/config/workspaces/{workspaceId}/devices/settings.
-var DeviceDeviceCallUpdateSettingsWorkspace = &Operation{
-	ID: "DeviceDeviceCallUpdateSettingsWorkspace", Area: "device", Group: "device-call", Command: "update-settings-workspace",
+// DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings is "Update Device Settings for a Workspace": PUT /telephony/config/workspaces/{workspaceId}/devices/settings.
+var DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings = &Operation{
+	ID: "DevicePutTelephonyConfigWorkspacesByWorkspaceIdDevicesSettings", Area: "device", Group: "device-call", Command: "update-settings-workspace",
 	Summary:     "Update Device Settings for a Workspace",
 	Description: "Update device settings modifies the compression settings for a workspace.\n\nDevice settings customize a device's behavior and performance. The compression field optimizes call quality for inbound and outbound calls.\n\nThis API requires a full, location, or user administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/workspaces/{workspaceId}/devices/settings",
@@ -678,9 +678,9 @@ var DeviceDeviceCallUpdateSettingsWorkspace = &Operation{
 	}},
 }
 
-// DeviceDeviceCallListBackgroundImages is "Read the List of Background Images": GET /telephony/config/devices/backgroundImages.
-var DeviceDeviceCallListBackgroundImages = &Operation{
-	ID: "DeviceDeviceCallListBackgroundImages", Area: "device", Group: "device-call", Command: "list-background-images",
+// DeviceGetTelephonyConfigDevicesBackgroundImages is "Read the List of Background Images": GET /telephony/config/devices/backgroundImages.
+var DeviceGetTelephonyConfigDevicesBackgroundImages = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesBackgroundImages", Area: "device", Group: "device-call", Command: "list-background-images",
 	Summary:     "Read the List of Background Images",
 	Description: "Gets the list of device background images for an organization.\n\nWebex Calling supports the upload of up to 100 background image files for each org. These image files can then be referenced by MPP phones in that org for use as their background image.\n\nRetrieving this list requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/backgroundImages",
@@ -690,9 +690,9 @@ var DeviceDeviceCallListBackgroundImages = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "backgroundImages", OmitEmpty: true},
 }
 
-// DeviceDeviceCallDeleteBackgroundImages is "Delete Device Background Images": DELETE /telephony/config/devices/backgroundImages.
-var DeviceDeviceCallDeleteBackgroundImages = &Operation{
-	ID: "DeviceDeviceCallDeleteBackgroundImages", Area: "device", Group: "device-call", Command: "delete-background-images",
+// DeviceDeleteTelephonyConfigDevicesBackgroundImages is "Delete Device Background Images": DELETE /telephony/config/devices/backgroundImages.
+var DeviceDeleteTelephonyConfigDevicesBackgroundImages = &Operation{
+	ID: "DeviceDeleteTelephonyConfigDevicesBackgroundImages", Area: "device", Group: "device-call", Command: "delete-background-images",
 	Summary:     "Delete Device Background Images",
 	Description: "Delete the list of designated device background images for an organization. Maximum is 10 images per request.\n\nDeleting a device background image requires a full or device administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/devices/backgroundImages",
@@ -702,9 +702,9 @@ var DeviceDeviceCallDeleteBackgroundImages = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallUploadBackgroundImage is "Upload a Device Background Image": POST /telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke.
-var DeviceDeviceCallUploadBackgroundImage = &Operation{
-	ID: "DeviceDeviceCallUploadBackgroundImage", Area: "device", Group: "device-call", Command: "upload-background-image",
+// DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke is "Upload a Device Background Image": POST /telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke.
+var DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke", Area: "device", Group: "device-call", Command: "upload-background-image",
 	Summary:     "Upload a Device Background Image",
 	Description: "Configure a device's background image by uploading an image with file format, `.jpeg` or `.png`, encoded image file. Maximum image file size allowed to upload is 625 KB.\n\nThe request must be a multipart/form-data request rather than JSON, using the image/jpeg or image/png content-type.\n\nWebex Calling supports the upload of up to 100 background image files for each org. These image files can then be referenced by MPP phones in that org for use as their background image.\n\nUploading a device background image requires a full or device administrator auth token with a scope of `spark-admin:telephony_config_write`.\n\n**WARNING:** This API is not callable using the developer portal web interface due to the lack of support for multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke",
@@ -714,9 +714,9 @@ var DeviceDeviceCallUploadBackgroundImage = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetUserCount is "Get User Devices Count": GET /telephony/config/people/{personId}/devices/count.
-var DeviceDeviceCallGetUserCount = &Operation{
-	ID: "DeviceDeviceCallGetUserCount", Area: "device", Group: "device-call", Command: "get-user-count",
+// DeviceGetTelephonyConfigPeopleByPersonIdDevicesCount is "Get User Devices Count": GET /telephony/config/people/{personId}/devices/count.
+var DeviceGetTelephonyConfigPeopleByPersonIdDevicesCount = &Operation{
+	ID: "DeviceGetTelephonyConfigPeopleByPersonIdDevicesCount", Area: "device", Group: "device-call", Command: "get-user-count",
 	Summary:     "Get User Devices Count",
 	Description: "Get the total device and application count for a person.\n\nThe device count can be used to determine if more devices can be added for users with a device count limit. For example, users with standard calling licenses can only have one physical device.\n\nThis requires a full or read-only administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/people/{personId}/devices/count",
@@ -726,9 +726,9 @@ var DeviceDeviceCallGetUserCount = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetCountMembers is "Get Count of Members": GET /telephony/config/devices/{deviceId}/availableMembers/count.
-var DeviceDeviceCallGetCountMembers = &Operation{
-	ID: "DeviceDeviceCallGetCountMembers", Area: "device", Group: "device-call", Command: "get-count-members",
+// DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembersCount is "Get Count of Members": GET /telephony/config/devices/{deviceId}/availableMembers/count.
+var DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembersCount = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesByDeviceIdAvailableMembersCount", Area: "device", Group: "device-call", Command: "get-count-members",
 	Summary:     "Get Count of Members",
 	Description: "Get the count of members that can be assigned to the device.\n\nA device member can be either a person or a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/availableMembers/count",
@@ -743,9 +743,9 @@ var DeviceDeviceCallGetCountMembers = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetCountAvailableMembers is "Get Count of Available Members": GET /telephony/config/devices/availableMembers/count.
-var DeviceDeviceCallGetCountAvailableMembers = &Operation{
-	ID: "DeviceDeviceCallGetCountAvailableMembers", Area: "device", Group: "device-call", Command: "get-count-available-members",
+// DeviceGetTelephonyConfigDevicesAvailableMembersCount is "Get Count of Available Members": GET /telephony/config/devices/availableMembers/count.
+var DeviceGetTelephonyConfigDevicesAvailableMembersCount = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesAvailableMembersCount", Area: "device", Group: "device-call", Command: "get-count-available-members",
 	Summary:     "Get Count of Available Members",
 	Description: "Get the count of members that can be assigned to devices.\n\nA device member can be either a person or a workspace.\n\nThis requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/availableMembers/count",
@@ -761,9 +761,9 @@ var DeviceDeviceCallGetCountAvailableMembers = &Operation{
 	},
 }
 
-// DeviceDeviceCallListSupported_2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var DeviceDeviceCallListSupported_2 = &Operation{
-	ID: "DeviceDeviceCallListSupported_2", Area: "device", Group: "device-call", Command: "list-supported-2",
+// deviceGetTelephonyConfigSupportedDevices_2 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var deviceGetTelephonyConfigSupportedDevices_2 = &Operation{
+	ID: "deviceGetTelephonyConfigSupportedDevices_2", Area: "device", Group: "device-call", Command: "list-supported-2",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -775,9 +775,9 @@ var DeviceDeviceCallListSupported_2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "devices", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetValidationSchema is "Get Validation Schema": GET /telephony/config/devices/dynamicSettings/validationSchema.
-var DeviceDeviceCallGetValidationSchema = &Operation{
-	ID: "DeviceDeviceCallGetValidationSchema", Area: "device", Group: "device-call", Command: "get-validation-schema",
+// DeviceGetTelephonyConfigDevicesDynamicSettingsValidationSchema is "Get Validation Schema": GET /telephony/config/devices/dynamicSettings/validationSchema.
+var DeviceGetTelephonyConfigDevicesDynamicSettingsValidationSchema = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesDynamicSettingsValidationSchema", Area: "device", Group: "device-call", Command: "get-validation-schema",
 	Summary:     "Get Validation Schema",
 	Description: "This API returns the validation schema for `tags` of all or specific `familyOrModelDisplayName`.\n\nThe schema is used to validate the `tag` for devices in the `Webex Calling` platform. The schema includes information about the required fields, data types, and validation rules for each setting.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dynamicSettings/validationSchema",
@@ -787,9 +787,9 @@ var DeviceDeviceCallGetValidationSchema = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetSettingsGroups is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
-var DeviceDeviceCallGetSettingsGroups = &Operation{
-	ID: "DeviceDeviceCallGetSettingsGroups", Area: "device", Group: "device-call", Command: "get-settings-groups",
+// DeviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
+var DeviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups = &Operation{
+	ID: "DeviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups", Area: "device", Group: "device-call", Command: "get-settings-groups",
 	Summary:     "Get Settings Groups",
 	Description: "This API returns the `settingsGroups` that define the structure and association of tags for dynamic device settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure dynamic device settings.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dynamicSettings/settingsGroups",
@@ -800,9 +800,9 @@ var DeviceDeviceCallGetSettingsGroups = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetCustomerDynamicSettings is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetCustomerDynamicSettings = &Operation{
-	ID: "DeviceDeviceCallGetCustomerDynamicSettings", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings",
+// DevicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
+var DevicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings",
 	Summary:     "Get Customer Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke",
@@ -815,9 +815,9 @@ var DeviceDeviceCallGetCustomerDynamicSettings = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetLocationDynamicSettings is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetLocationDynamicSettings = &Operation{
-	ID: "DeviceDeviceCallGetLocationDynamicSettings", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings",
+// DevicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
+var DevicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings",
 	Summary:     "Get Location Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
@@ -831,9 +831,9 @@ var DeviceDeviceCallGetLocationDynamicSettings = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetDynamicSettings is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetDynamicSettings = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettings", Area: "device", Group: "device-call", Command: "get-dynamic-settings",
+// DevicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
+var DevicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke = &Operation{
+	ID: "DevicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke", Area: "device", Group: "device-call", Command: "get-dynamic-settings",
 	Summary:     "Get Device Dynamic Settings",
 	Description: "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
@@ -846,9 +846,9 @@ var DeviceDeviceCallGetDynamicSettings = &Operation{
 	}},
 }
 
-// DeviceDeviceCallUpdateSpecifiedSettings is "Update specified settings for the device.": PUT /telephony/config/devices/{deviceId}/dynamicSettings.
-var DeviceDeviceCallUpdateSpecifiedSettings = &Operation{
-	ID: "DeviceDeviceCallUpdateSpecifiedSettings", Area: "device", Group: "device-call", Command: "update-specified-settings",
+// DevicePutTelephonyConfigDevicesByDeviceIdDynamicSettings is "Update specified settings for the device.": PUT /telephony/config/devices/{deviceId}/dynamicSettings.
+var DevicePutTelephonyConfigDevicesByDeviceIdDynamicSettings = &Operation{
+	ID: "DevicePutTelephonyConfigDevicesByDeviceIdDynamicSettings", Area: "device", Group: "device-call", Command: "update-specified-settings",
 	Summary:     "Update specified settings for the device.",
 	Description: "Modify dynamic settings for a specified device.\n\nThis API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has no effect.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/dynamicSettings",
@@ -859,9 +859,9 @@ var DeviceDeviceCallUpdateSpecifiedSettings = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallUpdatesDynamicSettingsAcrossOrgLocation is "Updates dynamic Device Settings Across Organization Or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
-var DeviceDeviceCallUpdatesDynamicSettingsAcrossOrgLocation = &Operation{
-	ID: "DeviceDeviceCallUpdatesDynamicSettingsAcrossOrgLocation", Area: "device", Group: "device-call", Command: "updates-dynamic-settings-across-org-location",
+// DevicePostTelephonyConfigJobsDevicesDynamicDeviceSettings is "Updates dynamic Device Settings Across Organization Or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
+var DevicePostTelephonyConfigJobsDevicesDynamicDeviceSettings = &Operation{
+	ID: "DevicePostTelephonyConfigJobsDevicesDynamicDeviceSettings", Area: "device", Group: "device-call", Command: "updates-dynamic-settings-across-org-location",
 	Summary:     "Updates dynamic Device Settings Across Organization Or Location",
 	Description: "Creates a job to update device settings at location or organization level.\n\nThe job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices, which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices in that location are affected.\n\nA unique job ID is returned to track status and errors.\n\nOnly one job can run per customer per organization at a time. Additionally, this job cannot run in parallel with other device jobs such as [Call device settings](/docs/api/v1/device-call-settings/change-device-settings-across-organization-or-location-job) and [Rebuild Phones](/docs/api/v1/device-call-settings/rebuild-phones-configuration).\n\nRunning a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -871,9 +871,9 @@ var DeviceDeviceCallUpdatesDynamicSettingsAcrossOrgLocation = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobs is "List dynamic device Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
-var DeviceDeviceCallListDynamicSettingsJobs = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobs", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs",
+// DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings is "List dynamic device Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
+var DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs",
 	Summary:     "List dynamic device Settings Jobs",
 	Description: "List dynamic device settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -885,9 +885,9 @@ var DeviceDeviceCallListDynamicSettingsJobs = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetDynamicSettingsJobStatus is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
-var DeviceDeviceCallGetDynamicSettingsJobStatus = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettingsJobStatus", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status",
+// DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
+var DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status",
 	Summary:     "Get Device Dynamic Settings Job Status",
 	Description: "Get dynamic device settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}",
@@ -896,9 +896,9 @@ var DeviceDeviceCallGetDynamicSettingsJobStatus = &Operation{
 	},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobErrors is "List Dynamic Device Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
-var DeviceDeviceCallListDynamicSettingsJobErrors = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobErrors", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors",
+// DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors is "List Dynamic Device Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
+var DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors = &Operation{
+	ID: "DeviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors",
 	Summary:     "List Dynamic Device Settings Job Errors",
 	Description: "List Update dynamic device settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors",
@@ -911,9 +911,9 @@ var DeviceDeviceCallListDynamicSettingsJobErrors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallListSupported_3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
-var DeviceDeviceCallListSupported_3 = &Operation{
-	ID: "DeviceDeviceCallListSupported_3", Area: "device", Group: "device-call", Command: "list-supported-3",
+// deviceGetTelephonyConfigSupportedDevices_3 is "Read the List of Supported Devices": GET /telephony/config/supportedDevices.
+var deviceGetTelephonyConfigSupportedDevices_3 = &Operation{
+	ID: "deviceGetTelephonyConfigSupportedDevices_3", Area: "device", Group: "device-call", Command: "list-supported-3",
 	Summary:     "Read the List of Supported Devices",
 	Description: "Gets the list of supported devices for an organization.\n\nRetrieving this list requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/supportedDevices",
@@ -925,9 +925,9 @@ var DeviceDeviceCallListSupported_3 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "devices", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetSettingsGroups_2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
-var DeviceDeviceCallGetSettingsGroups_2 = &Operation{
-	ID: "DeviceDeviceCallGetSettingsGroups_2", Area: "device", Group: "device-call", Command: "get-settings-groups-2",
+// deviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups_2 is "Get Settings Groups": GET /telephony/config/devices/dynamicSettings/settingsGroups.
+var deviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups_2 = &Operation{
+	ID: "deviceGetTelephonyConfigDevicesDynamicSettingsSettingsGroups_2", Area: "device", Group: "device-call", Command: "get-settings-groups-2",
 	Summary:     "Get Settings Groups",
 	Description: "This API returns the `settingsGroups` that define the structure and association of tags for device dynamic settings.\n\n The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and configure device dynamic settings.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/devices/dynamicSettings/settingsGroups",
@@ -938,9 +938,9 @@ var DeviceDeviceCallGetSettingsGroups_2 = &Operation{
 	},
 }
 
-// DeviceDeviceCallGetCustomerDynamicSettings_2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetCustomerDynamicSettings_2 = &Operation{
-	ID: "DeviceDeviceCallGetCustomerDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings-2",
+// devicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke_2 is "Get Customer Device Dynamic Settings": POST /telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke.
+var devicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke_2 = &Operation{
+	ID: "devicePostTelephonyConfigListsDevicesDynamicSettingsActionsGetSettingsInvoke_2", Area: "device", Group: "device-call", Command: "get-customer-dynamic-settings-2",
 	Summary:     "Get Customer Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at customer level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/dynamicSettings/actions/getSettings/invoke",
@@ -953,9 +953,9 @@ var DeviceDeviceCallGetCustomerDynamicSettings_2 = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetLocationDynamicSettings_2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetLocationDynamicSettings_2 = &Operation{
-	ID: "DeviceDeviceCallGetLocationDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings-2",
+// devicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke_2 is "Get Location Device Dynamic Settings": POST /telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke.
+var devicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke_2 = &Operation{
+	ID: "devicePostTelephonyConfigListsLocationsByLocationIdDevicesDynamicSettingsActionsGetSettingsInvoke_2", Area: "device", Group: "device-call", Command: "get-location-dynamic-settings-2",
 	Summary:     "Get Location Device Dynamic Settings",
 	Description: "Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by `familyOrModelDisplayName` and `tag` identifier.\n\nThis API lets you request the values of multiple `Device Settings` at once by specifying a list of `familyOrModelDisplayName` and tag combinations for a specific location.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/locations/{locationId}/devices/dynamicSettings/actions/getSettings/invoke",
@@ -969,9 +969,9 @@ var DeviceDeviceCallGetLocationDynamicSettings_2 = &Operation{
 	}},
 }
 
-// DeviceDeviceCallGetDynamicSettings_2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
-var DeviceDeviceCallGetDynamicSettings_2 = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettings_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-2",
+// devicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke_2 is "Get Device Dynamic Settings": POST /telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke.
+var devicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke_2 = &Operation{
+	ID: "devicePostTelephonyConfigListsDevicesByDeviceIdDynamicSettingsActionsGetSettingsInvoke_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-2",
 	Summary:     "Get Device Dynamic Settings",
 	Description: "Retrieve settings for a specified device.\n\nThis API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all settings for the device are returned.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/lists/devices/{deviceId}/dynamicSettings/actions/getSettings/invoke",
@@ -984,9 +984,9 @@ var DeviceDeviceCallGetDynamicSettings_2 = &Operation{
 	}},
 }
 
-// DeviceDeviceCallUpdateDynamicSettings is "Update Device Dynamic Settings": PUT /telephony/config/devices/{deviceId}/dynamicSettings.
-var DeviceDeviceCallUpdateDynamicSettings = &Operation{
-	ID: "DeviceDeviceCallUpdateDynamicSettings", Area: "device", Group: "device-call", Command: "update-dynamic-settings",
+// devicePutTelephonyConfigDevicesByDeviceIdDynamicSettings_2 is "Update Device Dynamic Settings": PUT /telephony/config/devices/{deviceId}/dynamicSettings.
+var devicePutTelephonyConfigDevicesByDeviceIdDynamicSettings_2 = &Operation{
+	ID: "devicePutTelephonyConfigDevicesByDeviceIdDynamicSettings_2", Area: "device", Group: "device-call", Command: "update-dynamic-settings",
 	Summary:     "Update Device Dynamic Settings",
 	Description: "Modify dynamic settings for a specified device.\n\nThis API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has no effect.\n\nThis requires a full, device, or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/devices/{deviceId}/dynamicSettings",
@@ -997,9 +997,9 @@ var DeviceDeviceCallUpdateDynamicSettings = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation is "Update Device Dynamic Settings Across Organization or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
-var DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation = &Operation{
-	ID: "DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation", Area: "device", Group: "device-call", Command: "update-dynamic-settings-across-org-location",
+// devicePostTelephonyConfigJobsDevicesDynamicDeviceSettings_2 is "Update Device Dynamic Settings Across Organization or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
+var devicePostTelephonyConfigJobsDevicesDynamicDeviceSettings_2 = &Operation{
+	ID: "devicePostTelephonyConfigJobsDevicesDynamicDeviceSettings_2", Area: "device", Group: "device-call", Command: "update-dynamic-settings-across-org-location",
 	Summary:     "Update Device Dynamic Settings Across Organization or Location",
 	Description: "Creates a job to update device settings at location or organization level.\n\nThe job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices, which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices in that location are affected.\n\nA unique job ID is returned to track status and errors.\n\nOnly one job can run per customer per organization at a time. Additionally, this job cannot run in parallel with other device jobs such as [Call device settings](/docs/api/v1/device-call-settings/change-device-settings-across-organization-or-location-job) and [Rebuild Phones](/docs/api/v1/device-call-settings/rebuild-phones-configuration).\n\nRunning a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -1009,9 +1009,9 @@ var DeviceDeviceCallUpdateDynamicSettingsAcrossOrgLocation = &Operation{
 	Body: &Body{},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobs_2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
-var DeviceDeviceCallListDynamicSettingsJobs_2 = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobs_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
+// deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings_2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
+var deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings_2 = &Operation{
+	ID: "deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettings_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-jobs-2",
 	Summary:     "List Device Dynamic Settings Jobs",
 	Description: "List device dynamic settings jobs.\n\nLists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one to oldest one irrespective of its status.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings",
@@ -1023,9 +1023,9 @@ var DeviceDeviceCallListDynamicSettingsJobs_2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceCallGetDynamicSettingsJobStatus_2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
-var DeviceDeviceCallGetDynamicSettingsJobStatus_2 = &Operation{
-	ID: "DeviceDeviceCallGetDynamicSettingsJobStatus_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
+// deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId_2 is "Get Device Dynamic Settings Job Status": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}.
+var deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId_2 = &Operation{
+	ID: "deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobId_2", Area: "device", Group: "device-call", Command: "get-dynamic-settings-job-status-2",
 	Summary:     "Get Device Dynamic Settings Job Status",
 	Description: "Get device dynamic settings job status.\n\nProvides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}",
@@ -1034,9 +1034,9 @@ var DeviceDeviceCallGetDynamicSettingsJobStatus_2 = &Operation{
 	},
 }
 
-// DeviceDeviceCallListDynamicSettingsJobErrors_2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
-var DeviceDeviceCallListDynamicSettingsJobErrors_2 = &Operation{
-	ID: "DeviceDeviceCallListDynamicSettingsJobErrors_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
+// deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors_2 is "List Device Dynamic Settings Job Errors": GET /telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors.
+var deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors_2 = &Operation{
+	ID: "deviceGetTelephonyConfigJobsDevicesDynamicDeviceSettingsByJobIdErrors_2", Area: "device", Group: "device-call", Command: "list-dynamic-settings-job-errors-2",
 	Summary:     "List Device Dynamic Settings Job Errors",
 	Description: "List Update device dynamic settings job errors.\n\nLists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.\n\nThis API requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/telephony/config/jobs/devices/dynamicDeviceSettings/{jobId}/errors",
@@ -1049,9 +1049,9 @@ var DeviceDeviceCallListDynamicSettingsJobErrors_2 = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDeviceConfigurationsList is "List Device Configurations for device": GET /deviceConfigurations.
-var DeviceDeviceConfigurationsList = &Operation{
-	ID: "DeviceDeviceConfigurationsList", Area: "device", Group: "device-configurations", Command: "list",
+// DeviceGetDeviceConfigurations is "List Device Configurations for device": GET /deviceConfigurations.
+var DeviceGetDeviceConfigurations = &Operation{
+	ID: "DeviceGetDeviceConfigurations", Area: "device", Group: "device-configurations", Command: "list",
 	Summary:     "List Device Configurations for device",
 	Description: "Lists all device configurations associated with the given device ID. Administrators can list configurations for all devices within an organization.",
 	Method:      "GET", Host: HostWebex, Path: "/deviceConfigurations",
@@ -1061,9 +1061,9 @@ var DeviceDeviceConfigurationsList = &Operation{
 	},
 }
 
-// DeviceDeviceConfigurationsUpdate is "Update Device Configurations": PATCH /deviceConfigurations.
-var DeviceDeviceConfigurationsUpdate = &Operation{
-	ID: "DeviceDeviceConfigurationsUpdate", Area: "device", Group: "device-configurations", Command: "update",
+// DevicePatchDeviceConfigurations is "Update Device Configurations": PATCH /deviceConfigurations.
+var DevicePatchDeviceConfigurations = &Operation{
+	ID: "DevicePatchDeviceConfigurations", Area: "device", Group: "device-configurations", Command: "update",
 	Summary:     "Update Device Configurations",
 	Description: "Edit configurations for the device specified by device ID.",
 	Method:      "PATCH", Host: HostWebex, Path: "/deviceConfigurations",
@@ -1076,9 +1076,9 @@ var DeviceDeviceConfigurationsUpdate = &Operation{
 	}},
 }
 
-// DeviceDevicesList is "List Devices": GET /devices.
-var DeviceDevicesList = &Operation{
-	ID: "DeviceDevicesList", Area: "device", Group: "devices", Command: "list",
+// DeviceGetDevices is "List Devices": GET /devices.
+var DeviceGetDevices = &Operation{
+	ID: "DeviceGetDevices", Area: "device", Group: "devices", Command: "list",
 	Summary:     "List Devices",
 	Description: "Lists all active Webex devices associated with the authenticated user, such as devices activated in personal mode. This requires the `spark:devices_read` scope. Administrators can list all devices within their organization. This requires an administrator auth token with the `spark-admin:devices_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/devices",
@@ -1108,9 +1108,9 @@ var DeviceDevicesList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceDevicesCreateMacAddress is "Create a Device by MAC Address": POST /devices.
-var DeviceDevicesCreateMacAddress = &Operation{
-	ID: "DeviceDevicesCreateMacAddress", Area: "device", Group: "devices", Command: "create-mac-address",
+// DevicePostDevices is "Create a Device by MAC Address": POST /devices.
+var DevicePostDevices = &Operation{
+	ID: "DevicePostDevices", Area: "device", Group: "devices", Command: "create-mac-address",
 	Summary:     "Create a Device by MAC Address",
 	Description: "Create a phone by its MAC address in a specific workspace or for a person.\n\nSpecify the `mac`, `model` and either `workspaceId` or `personId`.\n\n* You can get the `model` from the [supported devices](/docs/api/v1/device-call-settings/read-the-list-of-supported-devices) API.\n\n* Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.\n\n* The `password` field is only required for third party devices. You can obtain the required third party phone configuration from [here](/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third-party-device).\n\n<div><Callout type=\"warning\">Adding a device to a person with a Webex Calling Standard license will disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div><br><div><Callout type=\"warning\">When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to finish before starting the next. This prevents race conditions that can cause errors when assigning primary versus secondary device status.</Callout></div>",
 	Method:      "POST", Host: HostWebex, Path: "/devices",
@@ -1126,9 +1126,9 @@ var DeviceDevicesCreateMacAddress = &Operation{
 	}},
 }
 
-// DeviceDevicesGet is "Get Device Details": GET /devices/{deviceId}.
-var DeviceDevicesGet = &Operation{
-	ID: "DeviceDevicesGet", Area: "device", Group: "devices", Command: "get",
+// DeviceGetDevicesByDeviceId is "Get Device Details": GET /devices/{deviceId}.
+var DeviceGetDevicesByDeviceId = &Operation{
+	ID: "DeviceGetDevicesByDeviceId", Area: "device", Group: "devices", Command: "get",
 	Summary:     "Get Device Details",
 	Description: "Shows details for a device, by ID. This requires an auth token with the `spark:devices_read` scope to see your own device, or `spark-admin:devices_read` to see any other device in your organization.\n\nSpecify the device ID in the `deviceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/devices/{deviceId}",
@@ -1138,9 +1138,9 @@ var DeviceDevicesGet = &Operation{
 	},
 }
 
-// DeviceDevicesDelete is "Delete a Device": DELETE /devices/{deviceId}.
-var DeviceDevicesDelete = &Operation{
-	ID: "DeviceDevicesDelete", Area: "device", Group: "devices", Command: "delete",
+// DeviceDeleteDevicesByDeviceId is "Delete a Device": DELETE /devices/{deviceId}.
+var DeviceDeleteDevicesByDeviceId = &Operation{
+	ID: "DeviceDeleteDevicesByDeviceId", Area: "device", Group: "devices", Command: "delete",
 	Summary:     "Delete a Device",
 	Description: "Deletes a device, by ID. Deleting your own device requires an auth token with the `spark:devices_write` scope. Deleting any other device in the organization will require an administrator auth token with the `spark-admin:devices_write` scope.\n\nSpecify the device ID in the `deviceId` parameter in the URI.\n\n<div><Callout type=\"warning\">Deleting a device from a person with a Webex Calling Standard license will enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>",
 	Method:      "DELETE", Host: HostWebex, Path: "/devices/{deviceId}",
@@ -1150,9 +1150,9 @@ var DeviceDevicesDelete = &Operation{
 	},
 }
 
-// DeviceDevicesUpdateTags is "Modify Device Tags": PATCH /devices/{deviceId}.
-var DeviceDevicesUpdateTags = &Operation{
-	ID: "DeviceDevicesUpdateTags", Area: "device", Group: "devices", Command: "update-tags",
+// DevicePatchDevicesByDeviceId is "Modify Device Tags": PATCH /devices/{deviceId}.
+var DevicePatchDevicesByDeviceId = &Operation{
+	ID: "DevicePatchDevicesByDeviceId", Area: "device", Group: "devices", Command: "update-tags",
 	Summary:     "Modify Device Tags",
 	Description: "Create, delete or update tags on a device. For your own device, this requires an auth token with the `spark:devices_write` scope. An auth token with the `spark-admin:devices_write` scope is required to operate on other devices within the organization.\n\nSpecify the device ID in the `deviceId` parameter in the URI.\n\nInclude only the tag array in the request body, no other device attributes can be changed. This action will overwrite any previous tags. A common approach is to first [GET the devices's details](/docs/api/v1/devices/get-device-details), make changes to the `tags` array, and then PATCH the new complete array with this endpoint.",
 	Method:      "PATCH", Host: HostWebex, Path: "/devices/{deviceId}",
@@ -1167,9 +1167,9 @@ var DeviceDevicesUpdateTags = &Operation{
 	}},
 }
 
-// DeviceDevicesCreateActivationCode is "Create a Device Activation Code": POST /devices/activationCode.
-var DeviceDevicesCreateActivationCode = &Operation{
-	ID: "DeviceDevicesCreateActivationCode", Area: "device", Group: "devices", Command: "create-activation-code",
+// DevicePostDevicesActivationCode is "Create a Device Activation Code": POST /devices/activationCode.
+var DevicePostDevicesActivationCode = &Operation{
+	ID: "DevicePostDevicesActivationCode", Area: "device", Group: "devices", Command: "create-activation-code",
 	Summary:     "Create a Device Activation Code",
 	Description: "Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by `personId`. This requires an auth token with the `spark-admin:devices_write` scope, and either `identity:placeonetimepassword_create` (allows creating activation codes for workspaces only) or `identity:one_time_password` (allows creating activation codes for workspaces or persons).\n\n* Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace calling type to `freeCalling`.\n\n* Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.\n\n* If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.\n\n* If your device is a phone, you must provide the `model` as a field. You can get the `model` from the [supported devices](/docs/api/v1/device-call-settings/read-the-list-of-supported-devices) API.\n\n<div><Callout type=\"warning\">Adding a device to a person with a Webex Calling Standard license will disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div><br><div><Callout type=\"warning\">When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to finish before starting the next. This prevents race conditions that can cause errors when assigning primary versus secondary device status.</Callout></div>",
 	Method:      "POST", Host: HostWebex, Path: "/devices/activationCode",
@@ -1183,9 +1183,9 @@ var DeviceDevicesCreateActivationCode = &Operation{
 	}},
 }
 
-// DeviceHotDeskListSessions is "List Sessions": GET /hotdesk/sessions.
-var DeviceHotDeskListSessions = &Operation{
-	ID: "DeviceHotDeskListSessions", Area: "device", Group: "hot-desk", Command: "list-sessions",
+// DeviceGetHotdeskSessions is "List Sessions": GET /hotdesk/sessions.
+var DeviceGetHotdeskSessions = &Operation{
+	ID: "DeviceGetHotdeskSessions", Area: "device", Group: "hot-desk", Command: "list-sessions",
 	Summary:     "List Sessions",
 	Description: "List hot desk sessions.\n\nUse query parameters to filter the response.\nThe `orgId` parameter is for use by partner administrators acting on a managed organization.\nThe `personId` and `workspaceId` parameters are optional and are used to filter the response to only include sessions for a specific person or workspace.\nWhen used together they are used as an AND filter.",
 	Method:      "GET", Host: HostWebex, Path: "/hotdesk/sessions",
@@ -1197,9 +1197,9 @@ var DeviceHotDeskListSessions = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceHotDeskDeleteSession is "Delete Session": DELETE /hotdesk/sessions/{sessionId}.
-var DeviceHotDeskDeleteSession = &Operation{
-	ID: "DeviceHotDeskDeleteSession", Area: "device", Group: "hot-desk", Command: "delete-session",
+// DeviceDeleteHotdeskSessionsBySessionId is "Delete Session": DELETE /hotdesk/sessions/{sessionId}.
+var DeviceDeleteHotdeskSessionsBySessionId = &Operation{
+	ID: "DeviceDeleteHotdeskSessionsBySessionId", Area: "device", Group: "hot-desk", Command: "delete-session",
 	Summary:     "Delete Session",
 	Description: "Delete a hot desk session.",
 	Method:      "DELETE", Host: HostWebex, Path: "/hotdesk/sessions/{sessionId}",
@@ -1208,9 +1208,9 @@ var DeviceHotDeskDeleteSession = &Operation{
 	},
 }
 
-// DeviceWorkspaceLocationsList is "List Workspace Locations": GET /workspaceLocations.
-var DeviceWorkspaceLocationsList = &Operation{
-	ID: "DeviceWorkspaceLocationsList", Area: "device", Group: "workspace-locations", Command: "list",
+// DeviceGetWorkspaceLocations is "List Workspace Locations": GET /workspaceLocations.
+var DeviceGetWorkspaceLocations = &Operation{
+	ID: "DeviceGetWorkspaceLocations", Area: "device", Group: "workspace-locations", Command: "list",
 	Summary:     "List Workspace Locations",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace locations. Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another\norganization (such as partners). The `displayName`, `address`, `countryCode` and `cityName` parameters are all optional.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceLocations",
@@ -1224,9 +1224,9 @@ var DeviceWorkspaceLocationsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceWorkspaceLocationsCreate is "Create a Workspace Location": POST /workspaceLocations.
-var DeviceWorkspaceLocationsCreate = &Operation{
-	ID: "DeviceWorkspaceLocationsCreate", Area: "device", Group: "workspace-locations", Command: "create",
+// DevicePostWorkspaceLocations is "Create a Workspace Location": POST /workspaceLocations.
+var DevicePostWorkspaceLocations = &Operation{
+	ID: "DevicePostWorkspaceLocations", Area: "device", Group: "workspace-locations", Command: "create",
 	Summary:     "Create a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a location. The `cityName` and `notes` parameters are optional, and omitting them will result in the creation of a location without values for those attributes.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "POST", Host: HostWebex, Path: "/workspaceLocations",
@@ -1241,9 +1241,9 @@ var DeviceWorkspaceLocationsCreate = &Operation{
 	}},
 }
 
-// DeviceWorkspaceLocationsGet is "Get a Workspace Location Details": GET /workspaceLocations/{locationId}.
-var DeviceWorkspaceLocationsGet = &Operation{
-	ID: "DeviceWorkspaceLocationsGet", Area: "device", Group: "workspace-locations", Command: "get",
+// DeviceGetWorkspaceLocationsByLocationId is "Get a Workspace Location Details": GET /workspaceLocations/{locationId}.
+var DeviceGetWorkspaceLocationsByLocationId = &Operation{
+	ID: "DeviceGetWorkspaceLocationsByLocationId", Area: "device", Group: "workspace-locations", Command: "get",
 	Summary:     "Get a Workspace Location Details",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceLocations/{locationId}",
@@ -1252,9 +1252,9 @@ var DeviceWorkspaceLocationsGet = &Operation{
 	},
 }
 
-// DeviceWorkspaceLocationsUpdate is "Update a Workspace Location": PUT /workspaceLocations/{locationId}.
-var DeviceWorkspaceLocationsUpdate = &Operation{
-	ID: "DeviceWorkspaceLocationsUpdate", Area: "device", Group: "workspace-locations", Command: "update",
+// DevicePutWorkspaceLocationsByLocationId is "Update a Workspace Location": PUT /workspaceLocations/{locationId}.
+var DevicePutWorkspaceLocationsByLocationId = &Operation{
+	ID: "DevicePutWorkspaceLocationsByLocationId", Area: "device", Group: "workspace-locations", Command: "update",
 	Summary:     "Update a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI. The request should include all details for the location returned in a previous call to [Get Workspace Location Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `cityName` or `notes` fields will result in those fields no longer being defined for the location.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "PUT", Host: HostWebex, Path: "/workspaceLocations/{locationId}",
@@ -1273,9 +1273,9 @@ var DeviceWorkspaceLocationsUpdate = &Operation{
 	}},
 }
 
-// DeviceWorkspaceLocationsDelete is "Delete a Workspace Location": DELETE /workspaceLocations/{locationId}.
-var DeviceWorkspaceLocationsDelete = &Operation{
-	ID: "DeviceWorkspaceLocationsDelete", Area: "device", Group: "workspace-locations", Command: "delete",
+// DeviceDeleteWorkspaceLocationsByLocationId is "Delete a Workspace Location": DELETE /workspaceLocations/{locationId}.
+var DeviceDeleteWorkspaceLocationsByLocationId = &Operation{
+	ID: "DeviceDeleteWorkspaceLocationsByLocationId", Area: "device", Group: "workspace-locations", Command: "delete",
 	Summary:     "Delete a Workspace Location",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new location can be reassigned to them.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "DELETE", Host: HostWebex, Path: "/workspaceLocations/{locationId}",
@@ -1284,9 +1284,9 @@ var DeviceWorkspaceLocationsDelete = &Operation{
 	},
 }
 
-// DeviceWorkspaceLocationsListFloors is "List Workspace Location Floors": GET /workspaceLocations/{locationId}/floors.
-var DeviceWorkspaceLocationsListFloors = &Operation{
-	ID: "DeviceWorkspaceLocationsListFloors", Area: "device", Group: "workspace-locations", Command: "list-floors",
+// DeviceGetWorkspaceLocationsByLocationIdFloors is "List Workspace Location Floors": GET /workspaceLocations/{locationId}/floors.
+var DeviceGetWorkspaceLocationsByLocationIdFloors = &Operation{
+	ID: "DeviceGetWorkspaceLocationsByLocationIdFloors", Area: "device", Group: "workspace-locations", Command: "list-floors",
 	Summary:     "List Workspace Location Floors",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nList workspace location floors.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceLocations/{locationId}/floors",
@@ -1296,9 +1296,9 @@ var DeviceWorkspaceLocationsListFloors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceWorkspaceLocationsCreateFloor is "Create a Workspace Location Floor": POST /workspaceLocations/{locationId}/floors.
-var DeviceWorkspaceLocationsCreateFloor = &Operation{
-	ID: "DeviceWorkspaceLocationsCreateFloor", Area: "device", Group: "workspace-locations", Command: "create-floor",
+// DevicePostWorkspaceLocationsByLocationIdFloors is "Create a Workspace Location Floor": POST /workspaceLocations/{locationId}/floors.
+var DevicePostWorkspaceLocationsByLocationIdFloors = &Operation{
+	ID: "DevicePostWorkspaceLocationsByLocationIdFloors", Area: "device", Group: "workspace-locations", Command: "create-floor",
 	Summary:     "Create a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nCreate a new floor in the given location. The `displayName` parameter is optional, and omitting it will result in the creation of a floor without that value set.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "POST", Host: HostWebex, Path: "/workspaceLocations/{locationId}/floors",
@@ -1311,9 +1311,9 @@ var DeviceWorkspaceLocationsCreateFloor = &Operation{
 	}},
 }
 
-// DeviceWorkspaceLocationsGetFloor is "Get a Workspace Location Floor Details": GET /workspaceLocations/{locationId}/floors/{floorId}.
-var DeviceWorkspaceLocationsGetFloor = &Operation{
-	ID: "DeviceWorkspaceLocationsGetFloor", Area: "device", Group: "workspace-locations", Command: "get-floor",
+// DeviceGetWorkspaceLocationsByLocationIdFloorsByFloorId is "Get a Workspace Location Floor Details": GET /workspaceLocations/{locationId}/floors/{floorId}.
+var DeviceGetWorkspaceLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DeviceGetWorkspaceLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "workspace-locations", Command: "get-floor",
 	Summary:     "Get a Workspace Location Floor Details",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nShows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:workspace_locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceLocations/{locationId}/floors/{floorId}",
@@ -1323,9 +1323,9 @@ var DeviceWorkspaceLocationsGetFloor = &Operation{
 	},
 }
 
-// DeviceWorkspaceLocationsUpdateFloor is "Update a Workspace Location Floor": PUT /workspaceLocations/{locationId}/floors/{floorId}.
-var DeviceWorkspaceLocationsUpdateFloor = &Operation{
-	ID: "DeviceWorkspaceLocationsUpdateFloor", Area: "device", Group: "workspace-locations", Command: "update-floor",
+// DevicePutWorkspaceLocationsByLocationIdFloorsByFloorId is "Update a Workspace Location Floor": PUT /workspaceLocations/{locationId}/floors/{floorId}.
+var DevicePutWorkspaceLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DevicePutWorkspaceLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "workspace-locations", Command: "update-floor",
 	Summary:     "Update a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nUpdates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all details for the floor returned by a previous call to [Get Workspace Location Floor Details](/docs/api/v1/workspace-locations/get-a-workspace-location-details). Omitting the optional `displayName` field will result in that field no longer being defined for the floor.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "PUT", Host: HostWebex, Path: "/workspaceLocations/{locationId}/floors/{floorId}",
@@ -1339,9 +1339,9 @@ var DeviceWorkspaceLocationsUpdateFloor = &Operation{
 	}},
 }
 
-// DeviceWorkspaceLocationsDeleteFloor is "Delete a Workspace Location Floor": DELETE /workspaceLocations/{locationId}/floors/{floorId}.
-var DeviceWorkspaceLocationsDeleteFloor = &Operation{
-	ID: "DeviceWorkspaceLocationsDeleteFloor", Area: "device", Group: "workspace-locations", Command: "delete-floor",
+// DeviceDeleteWorkspaceLocationsByLocationIdFloorsByFloorId is "Delete a Workspace Location Floor": DELETE /workspaceLocations/{locationId}/floors/{floorId}.
+var DeviceDeleteWorkspaceLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DeviceDeleteWorkspaceLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "workspace-locations", Command: "delete-floor",
 	Summary:     "Delete a Workspace Location Floor",
 	Description: "<div><Callout type=\"warning\">The Workspace Locations API is deprecated and will be decommissioned November 30, 2024. Please use the [/locations API](/docs/api/v1/locations) for future projects, and use `locationId` instead of `workspaceLocationId` when interacting with device or workspace APIs.</Callout></div>\n\nDeletes a floor, by ID.\nRequires an administrator auth token with the `spark-admin:workspace_locations_write` scope.",
 	Method:      "DELETE", Host: HostWebex, Path: "/workspaceLocations/{locationId}/floors/{floorId}",
@@ -1351,9 +1351,9 @@ var DeviceWorkspaceLocationsDeleteFloor = &Operation{
 	},
 }
 
-// DeviceWorkspaceMetricsWorkspaceMetrics is "Workspace Metrics": GET /workspaceMetrics.
-var DeviceWorkspaceMetricsWorkspaceMetrics = &Operation{
-	ID: "DeviceWorkspaceMetricsWorkspaceMetrics", Area: "device", Group: "workspace-metrics", Command: "workspace-metrics",
+// DeviceGetWorkspaceMetrics is "Workspace Metrics": GET /workspaceMetrics.
+var DeviceGetWorkspaceMetrics = &Operation{
+	ID: "DeviceGetWorkspaceMetrics", Area: "device", Group: "workspace-metrics", Command: "workspace-metrics",
 	Summary:     "Workspace Metrics",
 	Description: "Get metric data for the specified workspace and metric name, optionally aggregated over a specified time period.\n\n* The `workspaceId` and `metricName` parameters indicate which workspace to fetch metrics for and what kind of metrics to get.\n\n* When executing an aggregated query, the result bucket start times will be truncated to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation modes `none` and `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.\n\n* If the aggregation mode query parameter is set to `none`, the returned data in the response will be an array of items with the `deviceId`, `timestamp` and the raw `value`.\n\n* If the aggregation mode is `hourly` or `daily`, the returned data in the response will be an array of items with the `start` and `end` of the aggregation time bucket, and the `mean`, `max` and `min` values of the requested value. Note that zeroes and negative values are ignored. For example, this means that the `peopleCount` mean value should be interpreted as the average number of people in the room _when it is in use_.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceMetrics",
@@ -1369,9 +1369,9 @@ var DeviceWorkspaceMetricsWorkspaceMetrics = &Operation{
 	TimeRange: TimeISO,
 }
 
-// DeviceWorkspaceMetricsDuration is "Workspace Duration Metrics": GET /workspaceDurationMetrics.
-var DeviceWorkspaceMetricsDuration = &Operation{
-	ID: "DeviceWorkspaceMetricsDuration", Area: "device", Group: "workspace-metrics", Command: "duration",
+// DeviceGetWorkspaceDurationMetrics is "Workspace Duration Metrics": GET /workspaceDurationMetrics.
+var DeviceGetWorkspaceDurationMetrics = &Operation{
+	ID: "DeviceGetWorkspaceDurationMetrics", Area: "device", Group: "workspace-metrics", Command: "duration",
 	Summary:     "Workspace Duration Metrics",
 	Description: "Get metrics for how much time a workspace has been in the state given by the `measurement` parameter.\n\nFor example, if the measurement is  `timeBooked` then the duration for which the workspace has been booked is returned. The `workspaceId` parameter indicates which workspace to fetch metrics for. If no `measurement` is given, the default value is `timeUsed`.\n\n* When executing a query, the result bucket start times will default to the start of an hour or a day, depending on\nthe aggregation interval. However, the buckets will not contain data from outside the requested time range. For example, when\npassing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at `2020-10-21T10:00:00.000Z`,\nbut the bucket would only aggregate data timestamped after `10:34:56`.\n\n* For aggregation mode `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum\ntime span is 30 days.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaceDurationMetrics",
@@ -1385,9 +1385,9 @@ var DeviceWorkspaceMetricsDuration = &Operation{
 	TimeRange: TimeISO,
 }
 
-// DeviceWorkspacePersonalizationPersonalize is "Personalize a Workspace": POST /workspaces/{workspaceId}/personalize.
-var DeviceWorkspacePersonalizationPersonalize = &Operation{
-	ID: "DeviceWorkspacePersonalizationPersonalize", Area: "device", Group: "workspace-personalization", Command: "personalize",
+// DevicePostWorkspacesByWorkspaceIdPersonalize is "Personalize a Workspace": POST /workspaces/{workspaceId}/personalize.
+var DevicePostWorkspacesByWorkspaceIdPersonalize = &Operation{
+	ID: "DevicePostWorkspacesByWorkspaceIdPersonalize", Area: "device", Group: "workspace-personalization", Command: "personalize",
 	Summary:     "Personalize a Workspace",
 	Description: "Initializes the personalization for a given workspace for the user email provided.\n\nThe personalization process is asynchronous and thus a background task is created when this endpoint is invoked.\nAfter successful invocation of this endpoint a personalization task status URL will be returned in the `Location` header, which will point to the [Get Personalization Task](/docs/api/v1/workspace-personalization/get-personalization-task) endpoint for this workspace.\nThe task should be completed in approximately 30 seconds.",
 	Method:      "POST", Host: HostWebex, Path: "/workspaces/{workspaceId}/personalize",
@@ -1399,9 +1399,9 @@ var DeviceWorkspacePersonalizationPersonalize = &Operation{
 	}},
 }
 
-// DeviceWorkspacePersonalizationGetTask is "Get Personalization Task": GET /workspaces/{workspaceId}/personalizationTask.
-var DeviceWorkspacePersonalizationGetTask = &Operation{
-	ID: "DeviceWorkspacePersonalizationGetTask", Area: "device", Group: "workspace-personalization", Command: "get-task",
+// DeviceGetWorkspacesByWorkspaceIdPersonalizationTask is "Get Personalization Task": GET /workspaces/{workspaceId}/personalizationTask.
+var DeviceGetWorkspacesByWorkspaceIdPersonalizationTask = &Operation{
+	ID: "DeviceGetWorkspacesByWorkspaceIdPersonalizationTask", Area: "device", Group: "workspace-personalization", Command: "get-task",
 	Summary:     "Get Personalization Task",
 	Description: "Returns the status of a personalization task for a given workspace.\n\nWhilst in progress the endpoint will return `Accepted` and provide a `Retry-After` header indicating the number of seconds a client should wait before retrying.\n\nUpon completion of the task, the endpoint will return `OK` with a body detailing if the personalization was successful and an error description if appropriate.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}/personalizationTask",
@@ -1410,9 +1410,9 @@ var DeviceWorkspacePersonalizationGetTask = &Operation{
 	},
 }
 
-// DeviceWorkspacesList is "List Workspaces": GET /workspaces.
-var DeviceWorkspacesList = &Operation{
-	ID: "DeviceWorkspacesList", Area: "device", Group: "workspaces", Command: "list",
+// DeviceGetWorkspaces is "List Workspaces": GET /workspaces.
+var DeviceGetWorkspaces = &Operation{
+	ID: "DeviceGetWorkspaces", Area: "device", Group: "workspaces", Command: "list",
 	Summary:     "List Workspaces",
 	Description: "List workspaces.\n\nUse query parameters to filter the response. The `orgId` parameter can only be used by admin users of another organization (such as partners). The `locationId`, `workspaceLocationId`, `indoorNavigation`, `floorId`, `capacity` and `type` fields will only be present for workspaces that have a value set for them. The special values `notSet` (for filtering on category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a type and/or capacity.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces",
@@ -1440,18 +1440,18 @@ var DeviceWorkspacesList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Start: "start", Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceWorkspacesCreate is "Create a Workspace": POST /workspaces.
-var DeviceWorkspacesCreate = &Operation{
-	ID: "DeviceWorkspacesCreate", Area: "device", Group: "workspaces", Command: "create",
+// DevicePostWorkspaces is "Create a Workspace": POST /workspaces.
+var DevicePostWorkspaces = &Operation{
+	ID: "DevicePostWorkspaces", Area: "device", Group: "workspaces", Command: "create",
 	Summary:     "Create a Workspace",
 	Description: "Create a workspace.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).\n\n* Information for Webex Calling fields may be found here: [locations](/docs/api/v1/locations/list-locations), [available numbers](/docs/api/v1/numbers/get-phone-numbers-for-an-organization-with-given-criterias) and [licenses](/docs/api/v1/licenses).\n\n* The `locationId` and `supportedDevices` fields cannot be changed once configured.\n\n* When creating a `webexCalling` workspace that is not hot desk only, a `locationId` and either a `phoneNumber` or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be automaticaly applied.\n\n* When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable. Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields are provided the API will return an error. The `calling` type is `webexCalling`.",
 	Method:      "POST", Host: HostWebex, Path: "/workspaces",
 	Body: &Body{},
 }
 
-// DeviceWorkspacesGet is "Get Workspace Details": GET /workspaces/{workspaceId}.
-var DeviceWorkspacesGet = &Operation{
-	ID: "DeviceWorkspacesGet", Area: "device", Group: "workspaces", Command: "get",
+// deviceGetWorkspacesByWorkspaceId_1 is "Get Workspace Details": GET /workspaces/{workspaceId}.
+var deviceGetWorkspacesByWorkspaceId_1 = &Operation{
+	ID: "deviceGetWorkspacesByWorkspaceId_1", Area: "device", Group: "workspaces", Command: "get",
 	Summary:     "Get Workspace Details",
 	Description: "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}",
@@ -1461,9 +1461,9 @@ var DeviceWorkspacesGet = &Operation{
 	},
 }
 
-// DeviceWorkspacesUpdate is "Update a Workspace": PUT /workspaces/{workspaceId}.
-var DeviceWorkspacesUpdate = &Operation{
-	ID: "DeviceWorkspacesUpdate", Area: "device", Group: "workspaces", Command: "update",
+// DevicePutWorkspacesByWorkspaceId is "Update a Workspace": PUT /workspaces/{workspaceId}.
+var DevicePutWorkspacesByWorkspaceId = &Operation{
+	ID: "DevicePutWorkspacesByWorkspaceId", Area: "device", Group: "workspaces", Command: "update",
 	Summary:     "Update a Workspace",
 	Description: "Updates details for a workspace by ID.\n\nSpecify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that are present in a [GET request for the workspace details](/docs/api/v1/workspaces/get-workspace-details). Not including the optional `capacity`, `type` or `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`, `calendar` and `calling` fields do not change when omitted from the update request.\n\n* Information for Webex Calling fields may be found here: [locations](/docs/api/v1/locations/list-locations) and [available numbers](/docs/api/v1/numbers/get-phone-numbers-for-an-organization-with-given-criterias).\n\n* Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`, `thirdPartySipCalling` or `webexCalling`.\n\n* Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the workspace contains any devices.\n\n* The `locationId` and `supportedDevices` fields cannot be changed once configured.\n\n* When updating `webexCalling` information on a workspace that is not hot desk only, a `locationId` and either a `phoneNumber` or `extension` or both is required. Furthermore, the `licenses` field can be set with a list of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license ID is omitted, it will be replaced with one from the list provided. If the `licenses` field is omitted, the current calling license will be retained.\n\n* When specifying a hot desk only license on a hot desk only workspace, `deviceHostedMeetingsEnabled`, and `calendar` services are not supported and will be automatically disabled. In addition to this, the `phoneNumber` and `extension` will be removed from the workspace. Attempting to enable any of these services, or provide a `phoneNumber` or `extension` will result in an error. The `calling` type for these requests is `webexCalling`.",
 	Method:      "PUT", Host: HostWebex, Path: "/workspaces/{workspaceId}",
@@ -1473,9 +1473,9 @@ var DeviceWorkspacesUpdate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceWorkspacesDelete is "Delete a Workspace": DELETE /workspaces/{workspaceId}.
-var DeviceWorkspacesDelete = &Operation{
-	ID: "DeviceWorkspacesDelete", Area: "device", Group: "workspaces", Command: "delete",
+// DeviceDeleteWorkspacesByWorkspaceId is "Delete a Workspace": DELETE /workspaces/{workspaceId}.
+var DeviceDeleteWorkspacesByWorkspaceId = &Operation{
+	ID: "DeviceDeleteWorkspacesByWorkspaceId", Area: "device", Group: "workspaces", Command: "delete",
 	Summary:     "Delete a Workspace",
 	Description: "Deletes a workspace by ID.\n\nAlso deletes all devices associated with the workspace. Any deleted devices will need to be reactivated. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "DELETE", Host: HostWebex, Path: "/workspaces/{workspaceId}",
@@ -1484,9 +1484,9 @@ var DeviceWorkspacesDelete = &Operation{
 	},
 }
 
-// DeviceWorkspacesGetCapabilities is "Get Workspace Capabilities": GET /workspaces/{workspaceId}/capabilities.
-var DeviceWorkspacesGetCapabilities = &Operation{
-	ID: "DeviceWorkspacesGetCapabilities", Area: "device", Group: "workspaces", Command: "get-capabilities",
+// DeviceGetWorkspacesByWorkspaceIdCapabilities is "Get Workspace Capabilities": GET /workspaces/{workspaceId}/capabilities.
+var DeviceGetWorkspacesByWorkspaceIdCapabilities = &Operation{
+	ID: "DeviceGetWorkspacesByWorkspaceIdCapabilities", Area: "device", Group: "workspaces", Command: "get-capabilities",
 	Summary:     "Get Workspace Capabilities",
 	Description: "Shows the capabilities for a workspace by ID.\n\nReturns a set of capabilities, including whether or not the capability is supported by any device in the workspace, and if the capability is configured (enabled). For example for a specific capability like `occupancyDetection`, the API will return if the capability is supported and/or configured such that occupancy detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}/capabilities",
@@ -1495,9 +1495,9 @@ var DeviceWorkspacesGetCapabilities = &Operation{
 	},
 }
 
-// DeviceWorkspacesGet_2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
-var DeviceWorkspacesGet_2 = &Operation{
-	ID: "DeviceWorkspacesGet_2", Area: "device", Group: "workspaces", Command: "get-2",
+// deviceGetWorkspacesByWorkspaceId_2 is "Get Workspace Details": GET /workspaces/{workspaceId}.
+var deviceGetWorkspacesByWorkspaceId_2 = &Operation{
+	ID: "deviceGetWorkspacesByWorkspaceId_2", Area: "device", Group: "workspaces", Command: "get-2",
 	Summary:     "Get Workspace Details",
 	Description: "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
 	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}",
@@ -1508,9 +1508,9 @@ var DeviceWorkspacesGet_2 = &Operation{
 	},
 }
 
-// DeviceXapiQueryStatus is "Query Status": GET /xapi/status.
-var DeviceXapiQueryStatus = &Operation{
-	ID: "DeviceXapiQueryStatus", Area: "device", Group: "xapi", Command: "query-status",
+// DeviceGetXapiStatus is "Query Status": GET /xapi/status.
+var DeviceGetXapiStatus = &Operation{
+	ID: "DeviceGetXapiStatus", Area: "device", Group: "xapi", Command: "query-status",
 	Summary:     "Query Status",
 	Description: "Query the current status of the Webex RoomOS Device. You specify the target device in the `deviceId` parameter in the URI. The target device is queried for statuses according to the expression in the `name` parameter.\n\nSee the [xAPI section of the Device Developers Guide](/docs/api/guides/device-developers-guide#xapi) or the [xAPI Command Reference](https://roomos.cisco.com/xapi) for a description of status expressions.",
 	Method:      "GET", Host: HostWebex, Path: "/xapi/status",
@@ -1521,9 +1521,9 @@ var DeviceXapiQueryStatus = &Operation{
 	},
 }
 
-// DeviceXapiExecuteCommand is "Execute Command": POST /xapi/command/{commandName}.
-var DeviceXapiExecuteCommand = &Operation{
-	ID: "DeviceXapiExecuteCommand", Area: "device", Group: "xapi", Command: "execute-command",
+// DevicePostXapiCommandByCommandName is "Execute Command": POST /xapi/command/{commandName}.
+var DevicePostXapiCommandByCommandName = &Operation{
+	ID: "DevicePostXapiCommandByCommandName", Area: "device", Group: "xapi", Command: "execute-command",
 	Summary:     "Execute Command",
 	Description: "Executes a command on the Webex RoomOS Device. Specify the command to execute in the `commandName` URI parameter.\n\nSee the [xAPI section of the Device Developers Guide](/docs/devices#xapi) for a description of command expressions.",
 	Method:      "POST", Host: HostWebex, Path: "/xapi/command/{commandName}",
@@ -1533,9 +1533,9 @@ var DeviceXapiExecuteCommand = &Operation{
 	Body: &Body{},
 }
 
-// DeviceXapiQuerySchema is "Query Schema": GET /xapi/schema.
-var DeviceXapiQuerySchema = &Operation{
-	ID: "DeviceXapiQuerySchema", Area: "device", Group: "xapi", Command: "query-schema",
+// DeviceGetXapiSchema is "Query Schema": GET /xapi/schema.
+var DeviceGetXapiSchema = &Operation{
+	ID: "DeviceGetXapiSchema", Area: "device", Group: "xapi", Command: "query-schema",
 	Summary:     "Query Schema",
 	Description: "Query the schema for statuses and commands of Webex RoomOS Devices. You specify the target devices in the `deviceId` parameter in the URI. Querying command schemas requires the `spark:xapi_commands` scope and querying status schemas requires the `spark:xapi_statuses` scope.\n\nIf no `status` or `command` expressions are specified, the full schema is returned, including both status and command schemas. If you specify any expression, the response is limited to only the types you queried for. For example, if you provide a `status` expression but no `command` expression, only status schemas will be included in the result.\n\nSee the [xAPI section of the Device Developers Guide](/docs/api/guides/device-developers-guide#xapi) or the [xAPI Command Reference](https://roomos.cisco.com/xapi) for a description of status and command expressions.",
 	Method:      "GET", Host: HostWebex, Path: "/xapi/schema",
@@ -1549,9 +1549,9 @@ var DeviceXapiQuerySchema = &Operation{
 	},
 }
 
-// DeviceLocationsList is "List Locations": GET /locations.
-var DeviceLocationsList = &Operation{
-	ID: "DeviceLocationsList", Area: "device", Group: "locations", Command: "list",
+// DeviceGetLocations is "List Locations": GET /locations.
+var DeviceGetLocations = &Operation{
+	ID: "DeviceGetLocations", Area: "device", Group: "locations", Command: "list",
 	Summary:     "List Locations",
 	Description: "List locations for an organization.\n\n* Use query parameters to filter the result set by location name, ID, or organization.\n\n* Long result sets will be split into [pages](/docs/basics#pagination).\n\n* Searching and viewing locations in your organization requires an administrator or location administrator auth token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or `spark-admin:device_read`.",
 	Method:      "GET", Host: HostWebex, Path: "/locations",
@@ -1564,9 +1564,9 @@ var DeviceLocationsList = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
 }
 
-// DeviceLocationsCreate is "Create a Location": POST /locations.
-var DeviceLocationsCreate = &Operation{
-	ID: "DeviceLocationsCreate", Area: "device", Group: "locations", Command: "create",
+// DevicePostLocations is "Create a Location": POST /locations.
+var DevicePostLocations = &Operation{
+	ID: "DevicePostLocations", Area: "device", Group: "locations", Command: "create",
 	Summary:     "Create a Location",
 	Description: "Create a new Location for a given organization. Only an admin in the organization can create a new Location.\n\n* Creating a location in your organization requires a full administrator auth token with a scope of `spark-admin:locations_write`.\n\n* Partners may specify `orgId` query parameter to create location in managed organization.\n\n* The following body parameters are required to create a new location: \n    * `name`\n    * `timeZone`\n    * `preferredLanguage`\n    * `address`\n    * `announcementLanguage`.\n\n* `latitude`, `longitude` and `notes` are optional parameters to create a new location.\n\n* **Important:** While the `name` field supports up to 256 characters, locations that will be enabled for Webex Calling must have names with a maximum of 80 characters. If you plan to enable calling for this location, ensure the name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.",
 	Method:      "POST", Host: HostWebex, Path: "/locations",
@@ -1576,9 +1576,9 @@ var DeviceLocationsCreate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceLocationsGet is "Get Location Details": GET /locations/{locationId}.
-var DeviceLocationsGet = &Operation{
-	ID: "DeviceLocationsGet", Area: "device", Group: "locations", Command: "get",
+// DeviceGetLocationsByLocationId is "Get Location Details": GET /locations/{locationId}.
+var DeviceGetLocationsByLocationId = &Operation{
+	ID: "DeviceGetLocationsByLocationId", Area: "device", Group: "locations", Command: "get",
 	Summary:     "Get Location Details",
 	Description: "Shows details for a location, by ID.\n\n* Specify the location ID in the `locationId` parameter in the URI.\n\n* Use query parameter `orgId` to filter the result set by organization(optional).\n\n* Searching and viewing location in your organization requires an administrator or location administrator auth token with any of the following scopes:\n\n    * `spark-admin:locations_read`\n    * `spark-admin:people_read`\n    * `spark-admin:device_read`",
 	Method:      "GET", Host: HostWebex, Path: "/locations/{locationId}",
@@ -1588,9 +1588,9 @@ var DeviceLocationsGet = &Operation{
 	},
 }
 
-// DeviceLocationsUpdate is "Update a Location": PUT /locations/{locationId}.
-var DeviceLocationsUpdate = &Operation{
-	ID: "DeviceLocationsUpdate", Area: "device", Group: "locations", Command: "update",
+// DevicePutLocationsByLocationId is "Update a Location": PUT /locations/{locationId}.
+var DevicePutLocationsByLocationId = &Operation{
+	ID: "DevicePutLocationsByLocationId", Area: "device", Group: "locations", Command: "update",
 	Summary:     "Update a Location",
 	Description: "Update details for a location, by ID.\n\n* Updating a location in your organization requires a full administrator or location administrator auth token with a scope of `spark-admin:locations_write`.\n\n* Specify the location ID in the `locationId` parameter in the URI.\n\n* Partners may specify `orgId` query parameter to update location in managed organization.\n\n* **Important:** While the `name` field supports up to 256 characters, locations that are enabled for Webex Calling must have names with a maximum of 80 characters. If the location is enabled for calling, ensure the name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.",
 	Method:      "PUT", Host: HostWebex, Path: "/locations/{locationId}",
@@ -1601,9 +1601,9 @@ var DeviceLocationsUpdate = &Operation{
 	Body: &Body{},
 }
 
-// DeviceLocationsDelete is "Delete Location": DELETE /locations/{locationId}.
-var DeviceLocationsDelete = &Operation{
-	ID: "DeviceLocationsDelete", Area: "device", Group: "locations", Command: "delete",
+// DeviceDeleteLocationsByLocationId is "Delete Location": DELETE /locations/{locationId}.
+var DeviceDeleteLocationsByLocationId = &Operation{
+	ID: "DeviceDeleteLocationsByLocationId", Area: "device", Group: "locations", Command: "delete",
 	Summary:     "Delete Location",
 	Description: "Delete a location, by ID.\n\n* Specify the location ID in the `locationId` parameter in the URI.\n\n* Deleting a location in your organization requires a full administrator auth token with a scope of `spark-admin:locations_write`.\n\n* NOTE: Disabling Webex Calling for a Webex Calling enabled location is required prior to deleting a location.",
 	Method:      "DELETE", Host: HostWebex, Path: "/locations/{locationId}",
@@ -1613,9 +1613,9 @@ var DeviceLocationsDelete = &Operation{
 	},
 }
 
-// DeviceLocationsListFloors is "List Location Floors": GET /locations/{locationId}/floors.
-var DeviceLocationsListFloors = &Operation{
-	ID: "DeviceLocationsListFloors", Area: "device", Group: "locations", Command: "list-floors",
+// DeviceGetLocationsByLocationIdFloors is "List Location Floors": GET /locations/{locationId}/floors.
+var DeviceGetLocationsByLocationIdFloors = &Operation{
+	ID: "DeviceGetLocationsByLocationIdFloors", Area: "device", Group: "locations", Command: "list-floors",
 	Summary:     "List Location Floors",
 	Description: "List location floors.\nRequires an administrator auth token with the `spark-admin:locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/locations/{locationId}/floors",
@@ -1625,9 +1625,9 @@ var DeviceLocationsListFloors = &Operation{
 	Paging: &webexapi.Paging{Mode: webexapi.Single, Items: "items", OmitEmpty: true},
 }
 
-// DeviceLocationsCreateFloor is "Create a Location Floor": POST /locations/{locationId}/floors.
-var DeviceLocationsCreateFloor = &Operation{
-	ID: "DeviceLocationsCreateFloor", Area: "device", Group: "locations", Command: "create-floor",
+// DevicePostLocationsByLocationIdFloors is "Create a Location Floor": POST /locations/{locationId}/floors.
+var DevicePostLocationsByLocationIdFloors = &Operation{
+	ID: "DevicePostLocationsByLocationIdFloors", Area: "device", Group: "locations", Command: "create-floor",
 	Summary:     "Create a Location Floor",
 	Description: "Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result in the creation of a floor without that value set.\nRequires an administrator auth token with the `spark-admin:locations_write` scope.",
 	Method:      "POST", Host: HostWebex, Path: "/locations/{locationId}/floors",
@@ -1640,9 +1640,9 @@ var DeviceLocationsCreateFloor = &Operation{
 	}},
 }
 
-// DeviceLocationsGetFloor is "Get Location Floor Details": GET /locations/{locationId}/floors/{floorId}.
-var DeviceLocationsGetFloor = &Operation{
-	ID: "DeviceLocationsGetFloor", Area: "device", Group: "locations", Command: "get-floor",
+// DeviceGetLocationsByLocationIdFloorsByFloorId is "Get Location Floor Details": GET /locations/{locationId}/floors/{floorId}.
+var DeviceGetLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DeviceGetLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "locations", Command: "get-floor",
 	Summary:     "Get Location Floor Details",
 	Description: "Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.\nRequires an administrator auth token with the `spark-admin:locations_read` scope.",
 	Method:      "GET", Host: HostWebex, Path: "/locations/{locationId}/floors/{floorId}",
@@ -1652,9 +1652,9 @@ var DeviceLocationsGetFloor = &Operation{
 	},
 }
 
-// DeviceLocationsUpdateFloor is "Update a Location Floor": PUT /locations/{locationId}/floors/{floorId}.
-var DeviceLocationsUpdateFloor = &Operation{
-	ID: "DeviceLocationsUpdateFloor", Area: "device", Group: "locations", Command: "update-floor",
+// DevicePutLocationsByLocationIdFloorsByFloorId is "Update a Location Floor": PUT /locations/{locationId}/floors/{floorId}.
+var DevicePutLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DevicePutLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "locations", Command: "update-floor",
 	Summary:     "Update a Location Floor",
 	Description: "Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all details for the floor returned by a previous call to [Get Location Floor Details](/docs/api/v1/locations/get-location-floor-details). Omitting the optional `displayName` field will result in that field no longer being defined for the floor.\nRequires an administrator auth token with the `spark-admin:locations_write` scope.",
 	Method:      "PUT", Host: HostWebex, Path: "/locations/{locationId}/floors/{floorId}",
@@ -1668,9 +1668,9 @@ var DeviceLocationsUpdateFloor = &Operation{
 	}},
 }
 
-// DeviceLocationsDeleteFloor is "Delete a Location Floor": DELETE /locations/{locationId}/floors/{floorId}.
-var DeviceLocationsDeleteFloor = &Operation{
-	ID: "DeviceLocationsDeleteFloor", Area: "device", Group: "locations", Command: "delete-floor",
+// DeviceDeleteLocationsByLocationIdFloorsByFloorId is "Delete a Location Floor": DELETE /locations/{locationId}/floors/{floorId}.
+var DeviceDeleteLocationsByLocationIdFloorsByFloorId = &Operation{
+	ID: "DeviceDeleteLocationsByLocationIdFloorsByFloorId", Area: "device", Group: "locations", Command: "delete-floor",
 	Summary:     "Delete a Location Floor",
 	Description: "Deletes a floor, by ID.\nRequires an administrator auth token with the `spark-admin:locations_write` scope.",
 	Method:      "DELETE", Host: HostWebex, Path: "/locations/{locationId}/floors/{floorId}",

@@ -17,9 +17,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
 SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
 OPS_DIR = os.path.join(CLI_DIR, "pkg", "webexops")
-# Every Go name pkg/webexops has published, with the operation it names. Programs
-# compile against these names, so one never moves to another operation.
-NAMES_PATH = os.path.join(SCRIPT_DIR, "operation_names.json")
 
 # Collection name → (CLI area, default host, is_calling)
 COLLECTIONS = {
@@ -349,93 +346,44 @@ def route_word(segment):
     return go_identifier(segment)
 
 
-def candidate_ids(area, group, endpoints):
-    """The Go names a group's new operations would take, in order.
+def route_name(area, method, path):
+    """The Go name of an operation: its area, method and path, such as
+    CcGetOrganizationByOrgidV2Team."""
+    return go_identifier(area) + method.capitalize() + ''.join(route_word(s) for s in path.strip('/').split('/'))
 
-    Extraction numbers commands that share a name (update, update-2), so each member
-    of such a family is named by the family's command and the part of its route
-    after the family's common path rather than by its number."""
-    families = {}
+
+def request_shape(ep):
+    """What a listing says a request carries: its parameter and body field names."""
+    return (tuple(sorted(p['name'] for p in ep.get('path_params', []))),
+            tuple(sorted(p['name'] for p in ep.get('query_params', []))),
+            tuple(sorted(h['name'] for h in ep.get('extra_headers', []))),
+            tuple(sorted((f['name'], f['type']) for f in ep.get('body_fields', []))),
+            bool(ep.get('has_body')), bool(ep.get('complex_body')))
+
+
+def operation_ids(area, endpoints):
+    """The Go names of an area's operations, in order.
+
+    A name is made from the operation's route alone, so it means the same request
+    whatever the CLI commands are called and in whatever order the collection lists
+    them. A route the collection lists more than once is exported once, on its first
+    listing, when every listing sends the same request. When they send different
+    requests, no listing is exported, since none could be told apart by route. The
+    other listings are unexported, for the CLI's commands."""
+    routes = {}
     for i, ep in enumerate(endpoints):
-        families.setdefault(re.sub(r'(-\d+)+$', '', ep['command']), []).append(i)
+        routes.setdefault((ep['method'], ep['path']), []).append(i)
+    exported = {}
     ids = [None] * len(endpoints)
-    for base, members in families.items():
-        if len(members) == 1:
-            ids[members[0]] = go_identifier(area, group, endpoints[members[0]]['command'])
-            continue
-        paths = [endpoints[i]['path'].strip('/').split('/') for i in members]
-        common = 0
-        while all(len(p) > common for p in paths) and len({p[common] for p in paths}) == 1:
-            common += 1
-        rests = {i: ''.join(route_word(s) for s in p[common:]) for i, p in zip(members, paths)}
-        methods = {}
-        for i in members:
-            methods.setdefault(rests[i], set()).add(endpoints[i]['method'])
-        for i in members:
-            ids[i] = go_identifier(area, group, base) + rests[i]
-            if len(methods[rests[i]]) > 1:
-                ids[i] += endpoints[i]['method'].capitalize()
-    return ids
-
-
-def route_of(group, ep):
-    return f"{group} {ep['method']} {ep['path']}"
-
-
-def operation_identities(group, endpoints):
-    """What each of a group's operations is, whatever extraction named it: its
-    group, method, path and parameter names, numbered among listings that share
-    all four."""
-    identities, seen = [], {}
-    for ep in endpoints:
-        params = sorted(p['name'] for key in ('path_params', 'query_params', 'extra_headers', 'body_fields')
-                        for p in ep.get(key, []))
-        identity = f"{route_of(group, ep)} [{','.join(params)}]"
-        seen[identity] = seen.get(identity, 0) + 1
-        identities.append(identity + (f' #{seen[identity]}' if seen[identity] > 1 else ''))
-    return identities
-
-
-def operation_ids(area, group, endpoints, names):
-    """The Go names of a group's operations, in order.
-
-    names records every name published for the area, with the operation it names,
-    and is updated in place. An operation keeps the name recorded for it. When, after
-    that, one listing of a route is left unmatched and one name recorded for the
-    route is left unclaimed, the listing's parameters changed and it keeps that
-    name. Any other operation takes a name that was never published, so a name
-    never moves to another operation, even after its own operation is removed."""
-    identities = operation_identities(group, endpoints)
-    named = {identity: name for name, identity in names.items()}
-    ids = [named.get(identity) for identity in identities]
-    claimed = set(filter(None, ids))
-
-    unmatched = {}
-    for i, ep in enumerate(endpoints):
-        if not ids[i]:
-            unmatched.setdefault(route_of(group, ep), []).append(i)
-    for route, listings in unmatched.items():
-        recorded = [name for name, identity in names.items()
-                    if identity.startswith(route + ' [') and name not in claimed]
-        if len(listings) == 1 and len(recorded) == 1:
-            i = listings[0]
-            ids[i] = recorded[0]
-            names[ids[i]] = identities[i]
-            claimed.add(ids[i])
-
-    for i, (ep, name) in enumerate(zip(endpoints, candidate_ids(area, group, endpoints))):
-        if ids[i]:
-            continue
-        # A name taken by another listing of the same route gets a number; one
-        # taken by another route gives way to a name from the whole route.
-        if name in names and not names[name].startswith(route_of(group, ep) + ' ['):
-            name = go_identifier(area, group) + ep['method'].capitalize() + \
-                ''.join(route_word(s) for s in ep['path'].strip('/').split('/'))
-        base, n = name, 2
-        while name in names:
-            name, n = f'{base}_{n}', n + 1
-        names[name] = identities[i]
-        ids[i] = name
+    for (method, path), listings in routes.items():
+        name = route_name(area, method, path)
+        if exported.setdefault(name, (method, path)) != (method, path):
+            other = exported[name]
+            raise SystemExit(f"{method} {path} and {other[0]} {other[1]} would both be named {name} in "
+                             "pkg/webexops; change route_name in codegen/generate_cli.py.")
+        one_request = len({request_shape(endpoints[i]) for i in listings}) == 1
+        for n, i in enumerate(listings, 1):
+            ids[i] = name if one_request and n == 1 else f'{name[0].lower()}{name[1:]}_{n}'
     return ids
 
 
@@ -488,13 +436,9 @@ def operation_literal(op_id, area, group, op):
     return lines
 
 
-def generate_area_file(area, collection_name, host, is_calling, groups, paging_overrides=None, names=None):
-    """Go source for one area's groups and operations, and its counts. names is the
-    area's record of published Go names; see operation_ids."""
-    if names is None:
-        names = {}
-    used_ids = set()
-    group_lines, op_ids, decls = [], [], []
+def generate_area_file(area, collection_name, host, is_calling, groups, paging_overrides=None):
+    """Go source for one area's groups and operations, and its counts."""
+    group_lines, kept = [], []
     skip_groups = SKIP_GROUPS.get(collection_name, set())
     for group_data in groups:
         group = group_data['group']
@@ -516,17 +460,16 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
         for ep in endpoints:
             if ep['command'] in skip_cmds:
                 print(f"    Skipping command '{ep['command']}' (custom override)")
-        kept = [ep for ep in endpoints if ep['command'] not in skip_cmds]
-        for ep, op_id in zip(kept, operation_ids(area, group, kept, names)):
-            host_of = resolve_base_url(collection_name, ep['path'], host)
-            op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
-            if op_id in used_ids:
-                raise SystemExit(f"Two {collection_name} operations are named {op_id} in {NAMES_PATH}; "
-                                 f"the second is {ep['method']} {ep['path']}.")
-            used_ids.add(op_id)
-            op_ids.append(op_id)
-            decls.append('')
-            decls.extend(operation_literal(op_id, area, group, op))
+            else:
+                kept.append((group, ep))
+
+    op_ids = operation_ids(area, [ep for _, ep in kept])
+    decls = []
+    for (group, ep), op_id in zip(kept, op_ids):
+        host_of = resolve_base_url(collection_name, ep['path'], host)
+        op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
+        decls.append('')
+        decls.extend(operation_literal(op_id, area, group, op))
 
     lines = ['// Code generated by codegen/generate_cli.py; DO NOT EDIT.', '',
              'package webexops', '', 'import "github.com/Cloverhound/webex-cli/pkg/webexapi"', '',
@@ -557,19 +500,13 @@ def main():
         if f.startswith('zz_') and f.endswith('.go'):
             os.remove(os.path.join(OPS_DIR, f))
 
-    names = {}
-    if os.path.exists(NAMES_PATH):
-        with open(NAMES_PATH) as f:
-            names = json.load(f)
-
     areas = []
     for collection_name, groups in spec.items():
         if collection_name not in COLLECTIONS:
             print(f"Skipping unknown collection: {collection_name}")
             continue
         area, host, is_calling = COLLECTIONS[collection_name]
-        source, group_count, op_count = generate_area_file(area, collection_name, host, is_calling, groups,
-                                                           names=names.setdefault(area, {}))
+        source, group_count, op_count = generate_area_file(area, collection_name, host, is_calling, groups)
         with open(os.path.join(OPS_DIR, f'zz_{area}.go'), 'w') as f:
             f.write(source)
         areas.append(area)
@@ -577,9 +514,6 @@ def main():
 
     with open(os.path.join(OPS_DIR, 'zz_areas.go'), 'w') as f:
         f.write(generate_areas_file(sorted(areas)))
-    with open(NAMES_PATH, 'w') as f:
-        json.dump(names, f, indent=1, sort_keys=True)
-        f.write('\n')
 
     print("\nRunning gofmt...")
     result = subprocess.run(['gofmt', '-w', OPS_DIR], capture_output=True, text=True)

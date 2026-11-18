@@ -22,9 +22,25 @@ var testHosts = webexapi.Hosts{Webex: "https://w/v1", Identity: "https://i", CC:
 
 func TestTheTableIsConsistent(t *testing.T) {
 	ids := map[string]bool{}
-	identifier := regexp.MustCompile(`^[A-Z][A-Za-z0-9_]*$`)
+	identifier := regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]*$`)
 	total := 0
+	exported := map[string]bool{}
 	for _, area := range Areas() {
+		// An exported name is the operation's area, method and path.
+		for _, op := range Operations(area) {
+			if op.ID[0] < 'A' || op.ID[0] > 'Z' {
+				continue
+			}
+			route := op.Method + " " + op.Path
+			if exported[area+" "+route] {
+				t.Errorf("%s: %s is exported twice", area, route)
+			}
+			exported[area+" "+route] = true
+			prefix := strings.ToUpper(area[:1]) + area[1:] + strings.ToUpper(op.Method[:1]) + strings.ToLower(op.Method[1:])
+			if !strings.HasPrefix(op.ID, prefix) {
+				t.Errorf("%s does not start with %s", op.ID, prefix)
+			}
+		}
 		groups := map[string]bool{}
 		for _, g := range Groups(area) {
 			if g.Area != area || groups[g.Name] {
@@ -75,13 +91,13 @@ func TestListingsAreCopies(t *testing.T) {
 
 func TestParametersHaveTheirAPINames(t *testing.T) {
 	var org *Param
-	for i, p := range AdminOrgContactsGet.Params {
+	for i, p := range AdminGetContactsOrganizationsByOrgIdContactsByContactId.Params {
 		if p.In == InPath && p.Flag == "orgid" {
-			org = &AdminOrgContactsGet.Params[i]
+			org = &AdminGetContactsOrganizationsByOrgIdContactsByContactId.Params[i]
 		}
 	}
-	if org == nil || org.Name != "orgId" || !strings.Contains(AdminOrgContactsGet.Path, "{orgId}") {
-		t.Fatalf("org parameter %+v in %s", org, AdminOrgContactsGet.Path)
+	if org == nil || org.Name != "orgId" || !strings.Contains(AdminGetContactsOrganizationsByOrgIdContactsByContactId.Path, "{orgId}") {
+		t.Fatalf("org parameter %+v in %s", org, AdminGetContactsOrganizationsByOrgIdContactsByContactId.Path)
 	}
 }
 
@@ -100,7 +116,7 @@ func TestAQueryParameterCanBeSentMoreThanOnce(t *testing.T) {
 }
 
 func TestOrgParametersThatTakeTheUUIDAreMarked(t *testing.T) {
-	for _, op := range append(Operations("cc"), AdminOrgContactsList) {
+	for _, op := range append(Operations("cc"), AdminGetContactsOrganizationsByOrgIdContactsSearch) {
 		for _, p := range op.Params {
 			if strings.EqualFold(p.Name, "orgid") && p.Flag == "orgid" && !p.OrgUUID {
 				t.Errorf("%s: %s parameter %s is not marked OrgUUID", op.ID, p.In, p.Name)
@@ -146,10 +162,10 @@ func TestRequestFillsTheOperation(t *testing.T) {
 		t.Fatalf("%+v", r)
 	}
 	// An upload the collection gives no JSON body for still sends the body given.
-	upload := DeviceDeviceCallUploadBackgroundImage.Request(testHosts, Args{
+	upload := DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke.Request(testHosts, Args{
 		Params: map[string]string{"locationId": "l"}, Body: []byte("--b\r\n"), ContentType: "multipart/form-data; boundary=b",
 	})
-	if DeviceDeviceCallUploadBackgroundImage.Body != nil || string(upload.Body) != "--b\r\n" || upload.ContentType != "multipart/form-data; boundary=b" {
+	if DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke.Body != nil || string(upload.Body) != "--b\r\n" || upload.ContentType != "multipart/form-data; boundary=b" {
 		t.Fatalf("upload %+v", upload)
 	}
 }
@@ -180,11 +196,11 @@ func TestCallAndAllRefuseAMissingPathParameter(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { sent++ }))
 	defer srv.Close()
 	hosts := webexapi.Hosts{CC: srv.URL}
-	_, err := Call(context.Background(), &webexapi.Client{}, hosts, CcTeamList, Args{})
+	_, err := Call(context.Background(), &webexapi.Client{}, hosts, CcGetOrganizationByOrgidV2Team, Args{})
 	if err == nil || !strings.Contains(err.Error(), "orgid") {
 		t.Fatalf("Call: err %v", err)
 	}
-	if _, err := All(context.Background(), &webexapi.Client{}, hosts, CcTeamList, Args{}); err == nil {
+	if _, err := All(context.Background(), &webexapi.Client{}, hosts, CcGetOrganizationByOrgidV2Team, Args{}); err == nil {
 		t.Fatal("All sent a request without its path parameter")
 	}
 	if sent != 0 {

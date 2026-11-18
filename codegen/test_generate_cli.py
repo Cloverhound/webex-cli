@@ -5,9 +5,9 @@ import unittest
 from generate_cli import generate_area_file, operation, resolve_base_url
 
 
-def area_file(area, collection, host, is_calling, group, endpoints, names=None):
+def area_file(area, collection, host, is_calling, group, endpoints):
     source, _, _ = generate_area_file(area, collection, host, is_calling, [{'group': group, 'endpoints': endpoints}],
-                                      paging_overrides={}, names=names)
+                                      paging_overrides={})
     return source
 
 
@@ -91,87 +91,44 @@ class OperationIDTest(unittest.TestCase):
     park = '/telephony/config/locations/{locationId}/callParks/{callParkId}'
     settings = '/telephony/config/locations/{locationId}/callParks/settings'
 
-    def ids(self, endpoints, names=None):
-        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-park', endpoints, names)
+    def ids(self, endpoints):
+        """Every declared operation's Go name, with its method and path."""
+        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-park', endpoints)
         found = re.findall(r'^var (\w+) = &Operation\{.*?Method:\s+"(\w+)", Host: \w+, Path:\s+"([^"]+)"', source, re.S | re.M)
         return {name: (method, path) for name, method, path in found}
 
-    def params(self, endpoints, names):
-        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'call-park', endpoints, names)
-        found = re.findall(r'^var (\w+) = &Operation\{(.*?)\n\}', source, re.S | re.M)
-        return {name: sorted(re.findall(r'Name: "(\w+)", In: InQuery', body)) for name, body in found}
+    def exported(self, endpoints):
+        return {name: route for name, route in self.ids(endpoints).items() if name[0].isupper()}
 
-    def test_a_removed_routes_name_goes_to_no_other_route(self):
-        # Removing the first route makes extraction give its command to the bulk route.
-        names = {}
-        before = self.ids([{'command': 'create', 'method': 'POST', 'path': '/meetingInvitees'},
-                           {'command': 'create-2', 'method': 'POST', 'path': '/meetingInvitees/bulkInsert'}], names)
-        after = self.ids([{'command': 'create', 'method': 'POST', 'path': '/meetingInvitees/bulkInsert'}], names)
-        bulk = next(name for name, route in before.items() if route[1] == '/meetingInvitees/bulkInsert')
-        self.assertEqual(after, {bulk: ('POST', '/meetingInvitees/bulkInsert')})
-
-    def test_listings_of_one_route_keep_their_names_by_their_parameters(self):
-        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
-        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
-                    'query_params': [{'name': 'includeCapabilities'}]}
-        names = {}
-        before = self.params([plain, detailed], names)
-        after = self.params([dict(detailed, command='get'), dict(plain, command='get-2')], names)
-        self.assertEqual(before, after)
-
-    def test_removing_one_listing_of_a_route_leaves_the_others_name(self):
-        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
-        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
-                    'query_params': [{'name': 'includeCapabilities'}]}
-        for kept in (plain, detailed):
-            with self.subTest(kept=kept['command']):
-                names = {}
-                before = self.params([plain, detailed], names)
-                after = self.params([dict(kept, command='get')], names)
-                name, = after
-                self.assertIn(before.get(name), (None, after[name]), 'the remaining listing took another listing\'s name')
-
-    def test_one_of_two_listings_gaining_a_parameter_keeps_its_name(self):
-        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
-        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
-                    'query_params': [{'name': 'includeCapabilities'}]}
-        names = {}
-        before = self.ids([plain, detailed], names)
-        after = self.ids([plain, dict(detailed, query_params=[{'name': 'includeCapabilities'}, {'name': 'max'}])], names)
-        self.assertEqual(sorted(before), sorted(after))
-
-    def test_a_new_parameter_keeps_the_name(self):
-        names = {}
-        before = self.ids([{'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}], names)
-        after = self.ids([{'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
-                           'query_params': [{'name': 'includeCapabilities'}]}], names)
-        self.assertEqual(before, after)
-
-    def test_names_stay_with_their_routes_when_extraction_renumbers_commands(self):
+    def test_an_operation_is_named_by_its_method_and_path_whatever_its_command(self):
         # A reordered collection makes extraction give "update" and "update-2" to
-        # the other route.
-        names = {}
-        before = self.ids([{'command': 'update', 'method': 'PUT', 'path': self.park},
-                           {'command': 'update-2', 'method': 'PUT', 'path': self.settings}], names)
-        after = self.ids([{'command': 'update', 'method': 'PUT', 'path': self.settings},
-                          {'command': 'update-2', 'method': 'PUT', 'path': self.park}], names)
+        # the other route; the names do not move.
+        before = self.exported([{'command': 'update', 'method': 'PUT', 'path': self.park},
+                                {'command': 'update-2', 'method': 'PUT', 'path': self.settings}])
+        after = self.exported([{'command': 'update', 'method': 'PUT', 'path': self.settings},
+                               {'command': 'update-2', 'method': 'PUT', 'path': self.park}])
         self.assertEqual(before, after)
-        self.assertEqual(before, {'CallingCallParkUpdateByCallParkId': ('PUT', self.park),
-                                  'CallingCallParkUpdateSettings': ('PUT', self.settings)})
+        self.assertEqual(before, {
+            'CallingPutTelephonyConfigLocationsByLocationIdCallParksByCallParkId': ('PUT', self.park),
+            'CallingPutTelephonyConfigLocationsByLocationIdCallParksSettings': ('PUT', self.settings)})
 
-    def test_a_route_listed_twice_is_named_twice(self):
-        base = '/telephony/config/people/me/settings/priorityAlert'
-        ids = self.ids([{'command': 'get-priority-alert', 'method': 'GET', 'path': base},
-                        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': base},
-                        {'command': 'get-priority-alert-2', 'method': 'GET', 'path': base + '/criteria/{id}'}])
-        self.assertEqual(ids, {'CallingCallParkGetPriorityAlert': ('GET', base),
-                               'CallingCallParkGetPriorityAlert_2': ('GET', base),
-                               'CallingCallParkGetPriorityAlertCriteriaById': ('GET', base + '/criteria/{id}')})
+    def test_a_route_listed_twice_with_one_request_is_named_once(self):
+        listing = {'method': 'GET', 'path': '/workspaces/{workspaceId}', 'path_params': [{'name': 'workspaceId'}]}
+        ids = self.ids([dict(listing, command='get'), dict(listing, command='get-2')])
+        self.assertEqual(sorted(ids), ['CallingGetWorkspacesByWorkspaceId', 'callingGetWorkspacesByWorkspaceId_2'])
 
-    def test_a_family_on_one_path_is_named_by_method(self):
-        ids = self.ids([{'command': 'set', 'method': 'PUT', 'path': '/things'},
-                        {'command': 'set-2', 'method': 'POST', 'path': '/things'}])
-        self.assertEqual(ids, {'CallingCallParkSetPut': ('PUT', '/things'), 'CallingCallParkSetPost': ('POST', '/things')})
+    def test_a_route_whose_listings_send_different_requests_is_not_named(self):
+        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
+        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
+                    'query_params': [{'name': 'includeCapabilities'}]}
+        ids = self.ids([plain, detailed])
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(self.exported([plain, detailed]), {})
+
+    def test_two_routes_with_one_name_stop_generation(self):
+        with self.assertRaises(SystemExit):
+            self.ids([{'command': 'get', 'method': 'GET', 'path': '/a-b'},
+                      {'command': 'get-2', 'method': 'GET', 'path': '/a/b'}])
 
 
 class FlagTest(unittest.TestCase):
