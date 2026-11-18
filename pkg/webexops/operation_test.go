@@ -171,6 +171,23 @@ func TestCallRedactsTheErrorsOfAIAgentOperations(t *testing.T) {
 	}
 }
 
+func TestCallAndAllRefuseAMissingPathParameter(t *testing.T) {
+	sent := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { sent++ }))
+	defer srv.Close()
+	hosts := webexapi.Hosts{CC: srv.URL}
+	_, err := Call(context.Background(), &webexapi.Client{}, hosts, CcTeamList, Args{})
+	if err == nil || !strings.Contains(err.Error(), "orgid") {
+		t.Fatalf("Call: err %v", err)
+	}
+	if _, err := All(context.Background(), &webexapi.Client{}, hosts, CcTeamList, Args{}); err == nil {
+		t.Fatal("All sent a request without its path parameter")
+	}
+	if sent != 0 {
+		t.Fatalf("%d requests were sent", sent)
+	}
+}
+
 func TestAllReadsAListToItsEnd(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Query().Get("page") == "0" {

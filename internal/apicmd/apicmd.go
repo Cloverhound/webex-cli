@@ -127,10 +127,12 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 			}
 
+			// The CLI sends an empty path flag as it always has, so it goes to the
+			// client directly rather than through webexops.Call and All.
 			api := client.API(op.Path, string(call.Body))
 			ctx := context.Background()
 			if op.Paging != nil && config.Paginate() {
-				items, err := webexops.All(ctx, api, config.Hosts(), op, call)
+				items, err := api.All(ctx, op.List(config.Hosts(), call), *op.Paging)
 				if err != nil {
 					return client.CLIError(err)
 				}
@@ -140,7 +142,7 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 				return show(op, resp, http.StatusOK)
 			}
-			resp, err := webexops.Call(ctx, api, config.Hosts(), op, call)
+			resp, err := api.Send(ctx, op.Request(config.Hosts(), call))
 			if err != nil {
 				return client.CLIError(err)
 			}

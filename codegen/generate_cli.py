@@ -376,22 +376,21 @@ def candidate_ids(area, group, endpoints):
     return ids
 
 
+def route_of(group, ep):
+    return f"{group} {ep['method']} {ep['path']}"
+
+
 def operation_identities(group, endpoints):
     """What each of a group's operations is, whatever extraction named it: its
-    group, method and path, and for a route the group lists more than once, its
-    place among those listings ordered by their parameters."""
-    routes = {}
-    for i, ep in enumerate(endpoints):
-        routes.setdefault((ep['method'], ep['path']), []).append(i)
-
-    def parameters(ep):
-        return sorted(p['name'] for key in ('path_params', 'query_params', 'extra_headers', 'body_fields')
-                      for p in ep.get(key, []))
-
-    identities = [None] * len(endpoints)
-    for (method, path), listings in routes.items():
-        for n, i in enumerate(sorted(listings, key=lambda i: parameters(endpoints[i]))):
-            identities[i] = f'{group} {method} {path}' + (f' #{n + 1}' if n else '')
+    group, method, path and parameter names, numbered among listings that share
+    all four."""
+    identities, seen = [], {}
+    for ep in endpoints:
+        params = sorted(p['name'] for key in ('path_params', 'query_params', 'extra_headers', 'body_fields')
+                        for p in ep.get(key, []))
+        identity = f"{route_of(group, ep)} [{','.join(params)}]"
+        seen[identity] = seen.get(identity, 0) + 1
+        identities.append(identity + (f' #{seen[identity]}' if seen[identity] > 1 else ''))
     return identities
 
 
@@ -399,27 +398,42 @@ def operation_ids(area, group, endpoints, names):
     """The Go names of a group's operations, in order.
 
     names records every name published for the area, with the operation it names,
-    and is updated in place. A recorded operation keeps its name; a new one takes
-    its candidate name unless that was ever published, so a name never moves to
-    another operation, even after its own operation is removed."""
+    and is updated in place. An operation keeps the name recorded for it. When a
+    route's only listing has new parameters, it keeps the one name recorded for that
+    route. Any other operation takes a name that was never published, so a name
+    never moves to another operation, even after its own operation is removed."""
+    identities = operation_identities(group, endpoints)
     named = {identity: name for name, identity in names.items()}
-    ids = []
-    for ep, identity, name in zip(endpoints, operation_identities(group, endpoints),
-                                  candidate_ids(area, group, endpoints)):
-        if identity in named:
-            ids.append(named[identity])
+    ids = [named.get(identity) for identity in identities]
+    claimed = set(filter(None, ids))
+
+    listings = {}
+    for ep in endpoints:
+        listings[route_of(group, ep)] = listings.get(route_of(group, ep), 0) + 1
+    for i, ep in enumerate(endpoints):
+        route = route_of(group, ep)
+        if ids[i] or listings[route] > 1:
+            continue
+        recorded = [name for name, identity in names.items()
+                    if identity.startswith(route + ' [') and name not in claimed]
+        if len(recorded) == 1:
+            ids[i] = recorded[0]
+            names[ids[i]] = identities[i]
+            claimed.add(ids[i])
+
+    for i, (ep, name) in enumerate(zip(endpoints, candidate_ids(area, group, endpoints))):
+        if ids[i]:
             continue
         # A name taken by another listing of the same route gets a number; one
         # taken by another route gives way to a name from the whole route.
-        if name in names and names[name].split(' #')[0] != identity.split(' #')[0]:
+        if name in names and not names[name].startswith(route_of(group, ep) + ' ['):
             name = go_identifier(area, group) + ep['method'].capitalize() + \
                 ''.join(route_word(s) for s in ep['path'].strip('/').split('/'))
         base, n = name, 2
         while name in names:
             name, n = f'{base}_{n}', n + 1
-        names[name] = identity
-        named[identity] = name
-        ids.append(name)
+        names[name] = identities[i]
+        ids[i] = name
     return ids
 
 

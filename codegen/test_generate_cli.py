@@ -119,6 +119,18 @@ class OperationIDTest(unittest.TestCase):
         after = self.params([dict(detailed, command='get'), dict(plain, command='get-2')], names)
         self.assertEqual(before, after)
 
+    def test_removing_one_listing_of_a_route_leaves_the_others_name(self):
+        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
+        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
+                    'query_params': [{'name': 'includeCapabilities'}]}
+        for kept in (plain, detailed):
+            with self.subTest(kept=kept['command']):
+                names = {}
+                before = self.params([plain, detailed], names)
+                after = self.params([dict(kept, command='get')], names)
+                name, = after
+                self.assertIn(before.get(name), (None, after[name]), 'the remaining listing took another listing\'s name')
+
     def test_a_new_parameter_keeps_the_name(self):
         names = {}
         before = self.ids([{'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}], names)

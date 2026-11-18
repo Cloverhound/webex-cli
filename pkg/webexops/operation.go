@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"slices"
 	"sort"
+	"strings"
 
 	"github.com/Cloverhound/webex-cli/pkg/aiagent"
 	"github.com/Cloverhound/webex-cli/pkg/webexapi"
@@ -252,15 +253,37 @@ func (op *Operation) takesOrgUUID(name string) bool {
 	return false
 }
 
-// Call sends an operation.
+// missingPath reports the path parameters args gives no value for.
+func (op *Operation) missingPath(args Args) error {
+	var missing []string
+	for _, p := range op.Params {
+		if p.In == InPath && p.Value == "" && args.Params[p.Name] == "" {
+			missing = append(missing, p.Name)
+		}
+	}
+	if len(missing) > 0 {
+		return fmt.Errorf("%s needs the path parameter %s", op.ID, strings.Join(missing, ", "))
+	}
+	return nil
+}
+
+// Call sends an operation. A path parameter without a value is an error, and
+// nothing is sent.
 func Call(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Operation, args Args) (*webexapi.Response, error) {
+	if err := op.missingPath(args); err != nil {
+		return nil, err
+	}
 	return c.Send(ctx, op.Request(hosts, args))
 }
 
-// All reads every page of an operation's list and returns its items.
+// All reads every page of an operation's list and returns its items. A path
+// parameter without a value is an error, and nothing is sent.
 func All(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Operation, args Args) ([]json.RawMessage, error) {
 	if op.Paging == nil {
 		return nil, fmt.Errorf("%s is not a list that can be read to its end", op.ID)
+	}
+	if err := op.missingPath(args); err != nil {
+		return nil, err
 	}
 	return c.All(ctx, op.List(hosts, args), *op.Paging)
 }

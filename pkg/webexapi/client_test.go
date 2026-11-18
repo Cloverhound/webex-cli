@@ -183,6 +183,31 @@ func TestARedactorThatReturnsNothingHidesTheWholeBody(t *testing.T) {
 	}
 }
 
+func TestErrorsHoldOnlyTheRedactedBody(t *testing.T) {
+	redact := func(b []byte) []byte { return []byte(strings.ReplaceAll(string(b), "secret", "<redacted>")) }
+	for _, status := range []int{400, 451} {
+		srv, _ := statusServer(t, []int{status}, `{"token":"secret","url":"https://x.webexapis.com"}`, nil)
+		resp, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL, Redact: redact})
+		var apiErr *APIError
+		var wrong *WrongRegionError
+		switch {
+		case errors.As(err, &wrong):
+			if strings.Contains(string(wrong.Body), "secret") {
+				t.Errorf("%d: WrongRegionError.Body holds the secret", status)
+			}
+		case errors.As(err, &apiErr):
+			if strings.Contains(string(apiErr.Body), "secret") {
+				t.Errorf("%d: APIError.Body holds the secret", status)
+			}
+		default:
+			t.Errorf("%d: err %v", status, err)
+		}
+		if !strings.Contains(string(resp.Body), "secret") {
+			t.Errorf("%d: the response lost its body", status)
+		}
+	}
+}
+
 func TestARedactorThatEditsItsArgumentLeavesTheResponse(t *testing.T) {
 	srv, _ := statusServer(t, []int{400}, `secret`, nil)
 	redact := func(b []byte) []byte { copy(b, "XXXXXX"); return b }

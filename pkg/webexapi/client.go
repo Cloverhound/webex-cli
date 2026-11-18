@@ -131,8 +131,7 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 		if !ok {
 			return resp, err
 		}
-		// The endpoint is read from what the request's Redact leaves.
-		return resp, newWrongRegionError(resp.Body, apiErr.shownBody())
+		return resp, newWrongRegionError(apiErr.Body)
 	}
 	return resp, err
 }
@@ -200,7 +199,7 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		apiErr := &APIError{Status: resp.Status, Body: data}
 		if r.Redact != nil {
 			// A copy, so a redactor that edits its argument leaves the response as received.
-			apiErr.shown, apiErr.redacted = r.Redact(bytes.Clone(data)), true
+			apiErr.Body = r.Redact(bytes.Clone(data))
 		}
 		return resp, apiErr
 	}
