@@ -268,7 +268,7 @@ Distinct older routes remain separate: `get-database-org` versus `get-database-c
 | Command | Flags |
 |---|---|
 | `get` | `--id` *(required)* |
-| `create` | `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
 
 ### ecm-folder-linking
 
@@ -304,7 +304,7 @@ Distinct older routes remain separate: `get-database-org` versus `get-database-c
 | `list` | `--room-id`, `--parent-id`, `--mentioned-people`, `--before`, `--before-message`, `--max` |
 | `list-direct` | `--parent-id`, `--person-id`, `--person-email` |
 | `get` | `--message-id` *(required)* |
-| `create` | `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
 | `edit` | `--message-id` *(required)*, `--room-id`, `--text`, `--markdown`, `--body`, `--body-file` |
 | `delete` | `--message-id` *(required)* |
 
@@ -315,8 +315,8 @@ Distinct older routes remain separate: `get-database-org` versus `get-database-c
 | `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
 | `get-person` | `--person-id` *(required)*, `--calling-data` |
 | `get-my-own` | `--calling-data` |
-| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
-| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `create-person` | `--calling-data`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-person` | `--person-id` *(required)* |
 
 ### room-tabs

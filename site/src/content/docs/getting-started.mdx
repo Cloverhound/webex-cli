@@ -77,6 +77,14 @@ webex meetings <resource> <action> [flags]    # Webex Meetings APIs
 webex messaging <resource> <action> [flags]   # Webex Messaging APIs
 ```
 
+### Request bodies
+
+A command whose request body is flat has a flag for each body field. Any other body is sent with `--body` (JSON text) or `--body-file` (a JSON file), and the command's `--help` shows Cisco's example of it. In the example, a value in angle brackets such as `<string>` gives the field's type; other values are samples, not a list of allowed values. The example can include fields that Webex sets, such as `id` and `version`.
+
+```bash
+webex cc entry-point create --help
+```
+
 ## Global Flags
 
 | Flag | Description |

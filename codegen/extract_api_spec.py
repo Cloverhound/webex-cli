@@ -117,6 +117,14 @@ def parse_body_fields(raw_body):
     return fields, has_complex
 
 
+def body_example(raw_body):
+    """The collection's example body, indented, for help to show."""
+    try:
+        return json.dumps(json.loads(raw_body), indent=2, ensure_ascii=False)
+    except json.JSONDecodeError:
+        return raw_body.strip()
+
+
 # ── URL path normalization ───────────────────────────────────────────
 
 def normalize_url_path(path_segments, keep_trailing_slash=False):
@@ -275,7 +283,7 @@ def extract_endpoint(item, keep_trailing_slash=False):
                 'description': h.get('description', ''),
             })
 
-    return {
+    endpoint = {
         'original_name': item['name'],
         'method': method,
         'path': url_path,
@@ -291,6 +299,10 @@ def extract_endpoint(item, keep_trailing_slash=False):
         'example_list': example_list(responses) if method == 'GET' else None,
         'extra_headers': extra_headers,
     }
+    # Flags give a flat body's fields; any other body is sent only with --body.
+    if complex_body:
+        endpoint['body_example'] = body_example(body_raw)
+    return endpoint
 
 
 # ── CC version dedup ─────────────────────────────────────────────────

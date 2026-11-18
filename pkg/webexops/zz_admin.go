@@ -409,7 +409,7 @@ var AdminPostIdentityOrganizationsByOrgIdActionsClaimDomain = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "The Webex Identity-assigned organization identifier for a user's organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"data\": [\n    {\n      \"domain\": \"<string>\"\n    },\n    {\n      \"domain\": \"<string>\"\n    }\n  ],\n  \"forceDomainClaim\": \"<boolean>\",\n  \"claimDomainOnly\": \"<boolean>\"\n}"},
 }
 
 // AdminPostIdentityOrganizationsByOrgIdActionsUnverifyDomain is "Unverify Domain": POST /identity/organizations/{orgId}/actions/unverifyDomain.
@@ -555,7 +555,7 @@ var AdminPostGroups = &Operation{
 	Summary:     "Create a Group",
 	Description: "Create a new group for a given organization. The group may optionally be created with group members.",
 	Method:      "POST", Host: HostWebex, Path: "/groups",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"displayName\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"members\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  ],\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:Group\": {\n    \"usage\": \"<string>\",\n    \"owners\": [\n      {\n        \"value\": \"<string>\"\n      },\n      {\n        \"value\": \"<string>\"\n      }\n    ],\n    \"inheritances\": [\n      {\n        \"type\": \"role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"type\": \"role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"managedBy\": [\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // AdminGetGroups is "List and Search Groups": GET /groups.
@@ -586,7 +586,7 @@ var AdminPatchGroupsByGroupId = &Operation{
 	Params: []Param{
 		{Name: "groupId", In: InPath, Flag: "group-id", Required: true, Usage: "A unique identifier for the group."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"remove\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminGetGroupsByGroupId is "Get Group Details": GET /groups/{groupId}.
@@ -765,7 +765,7 @@ var AdminPatchLicensesUsers = &Operation{
 	Summary:     "Assign Licenses to Users",
 	Description: "Assign licenses and attendee `siteUrls` to existing users. Only an admin can assign licenses. Only existing users can be assigned a license. Assign meeting licenses to users outside your organization (Status will be pending until the user accepts the invite)\n\nAt least one of the following body parameters is required to assign license to the user: `email`, `personId`. For Calling license assignment, properties `phoneNumber` or `extension` are required. If `phoneNumber` is not provided then `locationId` is mandatory.\n\nWhen assigning licenses and attendee siteUrls to a user who does not belong to the organization, the licenses and siteUrls remain in pending state until the user accepts them. The `pendingLicenses` and `pendingSiteUrls` are part of the response.",
 	Method:      "PATCH", Host: HostWebex, Path: "/licenses/users",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"email\": \"<string>\",\n  \"personId\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"licenses\": [\n    {\n      \"id\": \"<string>\",\n      \"operation\": \"add\",\n      \"properties\": {\n        \"locationId\": \"<string>\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    },\n    {\n      \"id\": \"<string>\",\n      \"operation\": \"add\",\n      \"properties\": {\n        \"locationId\": \"<string>\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    }\n  ],\n  \"siteUrls\": [\n    {\n      \"siteUrl\": \"<string>\",\n      \"accountType\": \"attendee\",\n      \"operation\": \"add\"\n    },\n    {\n      \"siteUrl\": \"<string>\",\n      \"accountType\": \"attendee\",\n      \"operation\": \"add\"\n    }\n  ]\n}"},
 }
 
 // AdminGetMeetingQualities is "Get Meeting Qualities": GET /meeting/qualities.
@@ -791,7 +791,7 @@ var AdminPostContactsOrganizationsByOrgIdContacts = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": \"<string>\",\n  \"source\": \"CH\",\n  \"displayName\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"companyName\": \"<string>\",\n  \"title\": \"<string>\",\n  \"address\": \"<string>\",\n  \"avatarURL\": \"<string>\",\n  \"primaryContactMethod\": \"PHONE\",\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"other\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"home\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"phoneNumbers\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"fax\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"mobile\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"sipAddresses\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"personal-room\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"personal-room\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"ims\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"xmpp-fed-jid\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"microsoft-sip-uri\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"groupIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // AdminGetContactsOrganizationsByOrgIdContactsByContactId is "Get a Contact": GET /contacts/organizations/{orgId}/contacts/{contactId}.
@@ -816,7 +816,7 @@ var AdminPatchContactsOrganizationsByOrgIdContactsByContactId = &Operation{
 		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 		{Name: "contactId", In: InPath, Flag: "contact-id", Required: true, Usage: "The contact ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": \"<string>\",\n  \"source\": \"Webex4Broadworks\",\n  \"displayName\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"companyName\": \"<string>\",\n  \"title\": \"<string>\",\n  \"address\": \"<string>\",\n  \"avatarURL\": \"<string>\",\n  \"primaryContactMethod\": \"SIPADDRESS\",\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"work\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"room\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"phoneNumbers\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"mobile\",\n      \"primary\": \"<boolean>\",\n      \"operation\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"fax\",\n      \"primary\": \"<boolean>\",\n      \"operation\": \"<string>\"\n    }\n  ],\n  \"sipAddresses\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"enterprise\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"personal-room\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"ims\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"gtalk\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"yahoo\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"groupIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // AdminDeleteContactsOrganizationsByOrgIdContactsByContactId is "Delete a Contact": DELETE /contacts/organizations/{orgId}/contacts/{contactId}.
@@ -857,7 +857,7 @@ var AdminPostContactsOrganizationsByOrgIdContactsBulk = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for the user's organization or the organization he manages."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": \"<string>\",\n  \"contacts\": [\n    {\n      \"source\": \"CH\",\n      \"contactId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"companyName\": \"<string>\",\n      \"title\": \"<string>\",\n      \"address\": \"<string>\",\n      \"avatarURL\": \"<string>\",\n      \"primaryContactMethod\": \"SIPADDRESS\",\n      \"emails\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"room\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"home\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"phoneNumbers\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"pager\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"other\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"sipAddresses\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"personal-room\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"personal-room\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"ims\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"msn\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"microsoft-sip-uri\",\n          \"primary\": \"<boolean>\"\n        }\n      ]\n    },\n    {\n      \"source\": \"Webex4Broadworks\",\n      \"contactId\": \"<string>\",\n      \"displayName\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"companyName\": \"<string>\",\n      \"title\": \"<string>\",\n      \"address\": \"<string>\",\n      \"avatarURL\": \"<string>\",\n      \"primaryContactMethod\": \"SIPADDRESS\",\n      \"emails\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"work\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"home\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"phoneNumbers\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"work\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"mobile\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"sipAddresses\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"cloud-calling\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"cloud-calling\",\n          \"primary\": \"<boolean>\"\n        }\n      ],\n      \"ims\": [\n        {\n          \"value\": \"<string>\",\n          \"type\": \"xmpp-fed-jid\",\n          \"primary\": \"<boolean>\"\n        },\n        {\n          \"value\": \"<string>\",\n          \"type\": \"aim\",\n          \"primary\": \"<boolean>\"\n        }\n      ]\n    }\n  ]\n}"},
 }
 
 // AdminPostContactsOrganizationsByOrgIdContactsBulkDelete is "Bulk Delete Contacts": POST /contacts/organizations/{orgId}/contacts/bulk/delete.
@@ -1064,7 +1064,7 @@ var AdminPostPeople = &Operation{
 		{Name: "callingData", In: InQuery, Flag: "calling-data", Usage: "Include Webex Calling user details in the response."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details and returning only the ID in the response when successful. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // AdminGetPeopleByPersonId is "Get Person Details": GET /people/{personId}.
@@ -1091,7 +1091,7 @@ var AdminPutPeopleByPersonId = &Operation{
 		{Name: "showAllTypes", In: InQuery, Flag: "show-all-types", Usage: "Include additional user data like `#attendee` role."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details in the response. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"displayName\": \"<string>\",\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"loginEnabled\": \"<boolean>\"\n}"},
 }
 
 // AdminDeletePeopleByPersonId is "Delete a Person": DELETE /people/{personId}.
@@ -1606,7 +1606,7 @@ var AdminPostIdentityScimByOrgIdV2Bulk = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for user's organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"failOnErrors\": \"<number>\",\n  \"operations\": [\n    {\n      \"method\": \"POST\",\n      \"path\": \"<string>\",\n      \"data\": \"<string>\",\n      \"bulkId\": \"<string>\"\n    },\n    {\n      \"method\": \"PATCH\",\n      \"path\": \"<string>\",\n      \"data\": \"<string>\",\n      \"bulkId\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminPostIdentityScimByOrgIdV2Groups is "Create a group": POST /identity/scim/{orgId}/v2/Groups.
@@ -1618,7 +1618,7 @@ var AdminPostIdentityScimByOrgIdV2Groups = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"displayName\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"members\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  ],\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:Group\": {\n    \"usage\": \"<string>\",\n    \"owners\": [\n      {\n        \"value\": \"<string>\"\n      },\n      {\n        \"value\": \"<string>\"\n      }\n    ],\n    \"inheritances\": [\n      {\n        \"type\": \"role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"type\": \"role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"managedBy\": [\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // AdminGetIdentityScimByOrgIdV2Groups is "Search groups": GET /identity/scim/{orgId}/v2/Groups.
@@ -1665,7 +1665,7 @@ var AdminPutIdentityScimByOrgIdV2GroupsByGroupId = &Operation{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used."},
 		{Name: "groupId", In: InPath, Flag: "group-id", Required: true, Usage: "A unique identifier for the group."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"displayName\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"members\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  ],\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:Group\": {\n    \"usage\": \"<string>\",\n    \"owners\": [\n      {\n        \"value\": \"<string>\"\n      },\n      {\n        \"value\": \"<string>\"\n      }\n    ],\n    \"inheritances\": [\n      {\n        \"type\": \"location_role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"type\": \"location_role\",\n        \"value\": \"<string>\",\n        \"nested\": \"<boolean>\",\n        \"locationId\": \"<string>\",\n        \"scope\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ],\n    \"managedBy\": [\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"type\": \"<string>\",\n        \"id\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // AdminPatchIdentityScimByOrgIdV2GroupsByGroupId is "Update a group with PATCH": PATCH /identity/scim/{orgId}/v2/Groups/{groupId}.
@@ -1678,7 +1678,7 @@ var AdminPatchIdentityScimByOrgIdV2GroupsByGroupId = &Operation{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used."},
 		{Name: "groupId", In: InPath, Flag: "group-id", Required: true, Usage: "A unique identifier for the group."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"remove\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminDeleteIdentityScimByOrgIdV2GroupsByGroupId is "Delete a group": DELETE /identity/scim/{orgId}/v2/Groups/{groupId}.
@@ -1718,7 +1718,7 @@ var AdminPostIdentityScimByOrgIdV2Users = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for user's organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"userName\": \"<string>\",\n  \"userType\": \"room\",\n  \"title\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"roles\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    }\n  ],\n  \"preferredLanguage\": \"<string>\",\n  \"locale\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"profileUrl\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"name\": {\n    \"givenName\": \"<string>\",\n    \"familyName\": \"<string>\",\n    \"middleName\": \"<string>\",\n    \"honorificPrefix\": \"<string>\",\n    \"honorificSuffix\": \"<string>\"\n  },\n  \"phoneNumbers\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"other\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"home\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"photos\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"resizable\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"thumbnail\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    }\n  ],\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"home\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"room\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"costCenter\": \"<string>\",\n    \"organization\": \"<string>\",\n    \"division\": \"<string>\",\n    \"department\": \"<string>\",\n    \"employeeNumber\": \"<string>\",\n    \"manager\": {\n      \"value\": \"<string>\"\n    }\n  },\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\": {\n    \"accountStatus\": \"transient\",\n    \"sipAddresses\": [\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      },\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      }\n    ],\n    \"managedOrgs\": [\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"managedGroups\": [\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"extensionAttribute*\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"externalAttribute*\": [\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // AdminGetIdentityScimByOrgIdV2Users is "Search users": GET /identity/scim/{orgId}/v2/Users.
@@ -1765,7 +1765,7 @@ var AdminPutIdentityScimByOrgIdV2UsersByUserId = &Operation{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for user's organization."},
 		{Name: "userId", In: InPath, Flag: "user-id", Required: true, Usage: "Webex Identity assigned user identifier."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"userName\": \"<string>\",\n  \"userType\": \"room\",\n  \"title\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"roles\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"<string>\",\n      \"display\": \"<string>\"\n    }\n  ],\n  \"preferredLanguage\": \"<string>\",\n  \"locale\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"profileUrl\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"phoneNumbers\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"fax\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"fax\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"photos\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"thumbnail\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"resizable\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"postalCode\": \"<string>\",\n      \"country\": \"<string>\"\n    }\n  ],\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"type\": \"work\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"type\": \"work\",\n      \"display\": \"<string>\",\n      \"primary\": \"<boolean>\"\n    }\n  ],\n  \"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User\": {\n    \"costCenter\": \"<string>\",\n    \"organization\": \"<string>\",\n    \"division\": \"<string>\",\n    \"department\": \"<string>\",\n    \"employeeNumber\": \"<string>\",\n    \"manager\": {\n      \"value\": \"<string>\"\n    }\n  },\n  \"urn:scim:schemas:extension:cisco:webexidentity:2.0:User\": {\n    \"accountStatus\": \"fraud_transient\",\n    \"sipAddresses\": [\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      },\n      {\n        \"value\": \"<string>\",\n        \"type\": \"enterprise\",\n        \"display\": \"<string>\",\n        \"primary\": \"<boolean>\"\n      }\n    ],\n    \"managedOrgs\": [\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"managedGroups\": [\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      },\n      {\n        \"orgId\": \"<string>\",\n        \"groupId\": \"<string>\",\n        \"role\": \"<string>\"\n      }\n    ],\n    \"extensionAttribute*\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"externalAttribute*\": [\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      },\n      {\n        \"source\": \"<string>\",\n        \"value\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // AdminPatchIdentityScimByOrgIdV2UsersByUserId is "Update a user with PATCH": PATCH /identity/scim/{orgId}/v2/Users/{userId}.
@@ -1778,7 +1778,7 @@ var AdminPatchIdentityScimByOrgIdV2UsersByUserId = &Operation{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, OrgUUID: true, Usage: "Webex Identity assigned organization identifier for user's organization."},
 		{Name: "userId", In: InPath, Flag: "user-id", Required: true, Usage: "Webex Identity assigned user identifier."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"schemas\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"Operations\": [\n    {\n      \"op\": \"replace\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"op\": \"remove\",\n      \"path\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminDeleteIdentityScimByOrgIdV2UsersByUserId is "Delete a user": DELETE /identity/scim/{orgId}/v2/Users/{userId}.
@@ -1866,7 +1866,7 @@ var AdminPostPartnerTagsOrganizationsByOrgIdAssignTags = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, Usage: "The unique identifier for the customer organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminGetPartnerTagsOrganizationsByOrgId is "Get customer organization's tags": GET /partner/tags/organizations/{orgId}.
@@ -1903,7 +1903,7 @@ var AdminPostPartnerTagsOrganizationsByOrgIdSubscriptionsBySubscriptionIdAssignT
 		{Name: "orgId", In: InPath, Flag: "org-id", Required: true, Usage: "The unique identifier for the customer organization."},
 		{Name: "subscriptionId", In: InPath, Flag: "subscription-id", Required: true, Usage: "The unique identifier for the subscription."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // AdminGetPartnerTagsSubscriptions is "Subscription List on a given tag name or a set of tags": GET /partner/tags/subscriptions.

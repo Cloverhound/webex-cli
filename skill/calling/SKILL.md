@@ -263,7 +263,7 @@ webex calling metrics get-call-quality-stats --help
 | `create-network` | `--location-id` *(required)*, `--org-id`, `--name`, `--model`, `--default-access-code-enabled`, `--default-access-code`, `--display-name`, `--body`, `--body-file` |
 | `create-multiple-base-stations` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id`, `--base-station-macs`, `--body`, `--body-file` |
 | `create-handset-network` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id`, `--line1-member-id`, `--custom-display-name`, `--line2-member-id`, `--body`, `--body-file` |
-| `create-list-handsets-network` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-list-handsets-network` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `generate-enable-service-password` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id` |
 | `update-network` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--org-id`, `--name`, `--default-access-code-enabled`, `--default-access-code`, `--display-name`, `--body`, `--body-file` |
 | `update-network-handset` | `--location-id` *(required)*, `--dect-network-id` *(required)*, `--handset-id` *(required)*, `--org-id`, `--line1-member-id`, `--custom-display-name`, `--line2-member-id`, `--body`, `--body-file` |
@@ -350,16 +350,16 @@ webex calling metrics get-call-quality-stats --help
 | `create-dial-plan` | `--org-id`, `--name`, `--route-id`, `--route-type`, `--dial-patterns`, `--body`, `--body-file` |
 | `validate-lgw-fqdn-domain-trunk` | `--org-id`, `--address`, `--domain`, `--port`, `--body`, `--body-file` |
 | `create-trunk` | `--org-id`, `--name`, `--location-id`, `--password`, `--trunk-type`, `--dual-identity-support-enabled`, `--device-type`, `--address`, `--domain`, `--port`, `--max-concurrent-calls`, `--p-charge-info-support-policy`, `--body`, `--body-file` |
-| `create-route-group` | `--org-id`, `--body`, `--body-file` |
+| `create-route-group` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-route-list` | `--org-id`, `--name`, `--location-id`, `--route-group-id`, `--body`, `--body-file` |
 | `create-translation-pattern` | `--org-id`, `--name`, `--matching-pattern`, `--replacement-pattern`, `--body`, `--body-file` |
 | `create-translation-pattern-location` | `--location-id` *(required)*, `--org-id`, `--name`, `--matching-pattern`, `--replacement-pattern`, `--body`, `--body-file` |
-| `update-dial-patterns` | `--dial-plan-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-dial-patterns` | `--dial-plan-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-dial-plan` | `--dial-plan-id` *(required)*, `--org-id`, `--name`, `--route-id`, `--route-type`, `--body`, `--body-file` |
 | `update-trunk` | `--trunk-id` *(required)*, `--org-id`, `--name`, `--password`, `--dual-identity-support-enabled`, `--max-concurrent-calls`, `--p-charge-info-support-policy`, `--body`, `--body-file` |
-| `update-route-group` | `--route-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-route-group` | `--route-group-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-route-list` | `--route-list-id` *(required)*, `--org-id`, `--name`, `--route-group-id`, `--body`, `--body-file` |
-| `update-numbers-route-list` | `--route-list-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-numbers-route-list` | `--route-list-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-translation-pattern` | `--translation-id` *(required)*, `--org-id`, `--name`, `--matching-pattern`, `--replacement-pattern`, `--body`, `--body-file` |
 | `update-translation-pattern-location` | `--location-id` *(required)*, `--translation-id` *(required)*, `--org-id`, `--name`, `--matching-pattern`, `--replacement-pattern`, `--body`, `--body-file` |
 | `delete-dial-plan` | `--dial-plan-id` *(required)*, `--org-id` |
@@ -395,18 +395,18 @@ webex calling metrics get-call-quality-stats --help
 | `get-errors-disable-calling-job` | `--job-id` *(required)*, `--org-id` |
 | `get-disable-calling-job-status` | `--job-id` *(required)*, `--org-id` |
 | `get-captions-settings` | `--location-id` *(required)*, `--org-id` |
-| `enable-webex-calling` | `--org-id`, `--body`, `--body-file` |
+| `enable-webex-calling` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-announcement-language` | `--location-id` *(required)*, `--org-id`, `--announcement-language-code`, `--agent-enabled`, `--service-enabled`, `--body`, `--body-file` |
 | `validate-list-extensions` | `--org-id`, `--extensions`, `--body`, `--body-file` |
 | `validate-extensions` | `--location-id` *(required)*, `--org-id`, `--extensions`, `--body`, `--body-file` |
-| `create-receptionist-contact-directory` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-receptionist-contact-directory` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `disable-webex-calling` | `--org-id`, `--location-id`, `--location-name`, `--force-delete`, `--body`, `--body-file` |
 | `check-delete-check-disabling-webex-calling` | `--location-id` *(required)*, `--org-id` |
 | `pause-disable-calling-job` | `--job-id` *(required)*, `--org-id` |
 | `resume-paused-disable-calling-job` | `--job-id` *(required)*, `--org-id` |
-| `update-webex-calling` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-webex-calling` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-emergency-callback` | `--location-id` *(required)*, `--org-id`, `--selected`, `--location-member-id`, `--elin-expiry-time-minutes`, `--body`, `--body-file` |
-| `update-music-hold` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-music-hold` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-private-network-connect` | `--location-id` *(required)*, `--org-id`, `--network-connection-type`, `--body`, `--body-file` |
 | `update-receptionist-contact-directory` | `--location-id` *(required)*, `--directory-id` *(required)*, `--org-id`, `--name`, `--contacts`, `--body`, `--body-file` |
 | `update-captions-settings` | `--location-id` *(required)*, `--org-id`, `--location-closed-captions-enabled`, `--location-transcripts-enabled`, `--use-org-settings-enabled`, `--body`, `--body-file` |
@@ -511,18 +511,18 @@ webex calling metrics get-call-quality-stats --help
 | `get-available-hoteling-hosts` | `--max`, `--start`, `--name`, `--phone-number` |
 | `create-phone-number-user-single-number-reach` | `--phone-number`, `--name`, `--enabled`, `--do-not-forward-calls-enabled`, `--answer-confirmation-enabled`, `--body`, `--body-file` |
 | `create-phone-number-user-block-list` | `--phone-number`, `--body`, `--body-file` |
-| `create-user-executive-filtering` | `--body`, `--body-file` |
+| `create-user-executive-filtering` | `--body` *(example in `--help`)*, `--body-file` |
 | `create-priority-alert` | `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
-| `create-user-schedule` | `--body`, `--body-file` |
-| `create-event-user-schedule` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body`, `--body-file` |
+| `create-user-schedule` | `--body` *(example in `--help`)*, `--body-file` |
+| `create-event-user-schedule` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `create-notify` | `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
 | `create-user-selective-accept` | `--calls-from`, `--accept-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-selective-forward` | `--forward-to-phone-number`, `--destination-voicemail-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--forward-enabled`, `--body`, `--body-file` |
 | `create-user-selective-reject` | `--calls-from`, `--reject-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-user-sequential-ring` | `--calls-from`, `--ring-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-priority-alert-2` | `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
-| `create-user-schedule-2` | `--body`, `--body-file` |
-| `create-event-user-schedule-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body`, `--body-file` |
+| `create-user-schedule-2` | `--body` *(example in `--help`)*, `--body-file` |
+| `create-event-user-schedule-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `create-notify-2` | `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
 | `create-user-selective-accept-2` | `--calls-from`, `--accept-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-selective-forward-2` | `--forward-to-phone-number`, `--destination-voicemail-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--forward-enabled`, `--body`, `--body-file` |
@@ -535,30 +535,30 @@ webex calling metrics get-call-quality-stats --help
 | `update-my-webexgooverride` | `--enabled`, `--body`, `--body-file` |
 | `update-my-caller-id` | `--calling-line-id-delivery-blocking-enabled`, `--connected-line-identification-restriction-enabled`, `--body`, `--body-file` |
 | `update-my-secondary-owner-caller-id` | `--lineowner-id` *(required)*, `--calling-line-id-delivery-blocking-enabled`, `--connected-line-identification-restriction-enabled`, `--body`, `--body-file` |
-| `update-my-selected-caller-id` | `--body`, `--body-file` |
-| `update-my-secondary-owner-selected-caller-id` | `--lineowner-id` *(required)*, `--body`, `--body-file` |
-| `update-my-endpoints` | `--endpoint-id` *(required)*, `--body`, `--body-file` |
+| `update-my-selected-caller-id` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-secondary-owner-selected-caller-id` | `--lineowner-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-endpoints` | `--endpoint-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-my-executive-assigned-assistants` | `--allow-opt-in-out-enabled`, `--assistant-ids`, `--body`, `--body-file` |
-| `update-my-executive-assistant` | `--body`, `--body-file` |
+| `update-my-executive-assistant` | `--body` *(example in `--help`)*, `--body-file` |
 | `update-user-single-number-reach` | `--alert-all-locations-for-click-to-dial-calls-enabled`, `--body`, `--body-file` |
 | `update-user-single-number-reach-contact` | `--phone-number-id` *(required)*, `--phone-number`, `--name`, `--enabled`, `--do-not-forward-calls-enabled`, `--answer-confirmation-enabled`, `--body`, `--body-file` |
-| `update-my-forward` | `--body`, `--body-file` |
-| `update-my-secondary-owner-forward` | `--lineowner-id` *(required)*, `--body`, `--body-file` |
-| `update-voicemail-person` | `--body`, `--body-file` |
-| `update-my-secondary-owner-voicemail` | `--lineowner-id` *(required)*, `--body`, `--body-file` |
-| `update-my-center` | `--body`, `--body-file` |
-| `update-my-secondary-owner-center` | `--lineowner-id` *(required)*, `--body`, `--body-file` |
+| `update-my-forward` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-secondary-owner-forward` | `--lineowner-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-voicemail-person` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-secondary-owner-voicemail` | `--lineowner-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-center` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-my-secondary-owner-center` | `--lineowner-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-policies-user` | `--connected-line-id-privacy-on-redirected-calls`, `--body`, `--body-file` |
 | `update-user-executive-screening` | `--enabled`, `--alert-type`, `--alert-anywhere-location-enabled`, `--alert-mobility-location-enabled`, `--alert-shared-call-appearance-location-enabled`, `--body`, `--body-file` |
-| `update-user-executive-filtering` | `--body`, `--body-file` |
-| `update-user-executive-filtering-2` | `--id` *(required)*, `--body`, `--body-file` |
+| `update-user-executive-filtering` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-user-executive-filtering-2` | `--id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-do-not-disturb-user` | `--webex-go-override-enabled`, `--enabled`, `--ring-splash-enabled`, `--body`, `--body-file` |
 | `update-user-executive-alert` | `--alerting-mode`, `--next-assistant-number-of-rings`, `--rollover-enabled`, `--rollover-action`, `--rollover-forward-to-phone-number`, `--rollover-wait-time-in-secs`, `--clid-name-mode`, `--custom-clidname`, `--custom-clidname-in-unicode`, `--clid-phone-number-mode`, `--custom-clidphone-number`, `--body`, `--body-file` |
 | `update-barge-in` | `--enabled`, `--tone-enabled`, `--body`, `--body-file` |
 | `update-priority-alert-user` | `--enabled`, `--body`, `--body-file` |
 | `update-priority-alert` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
-| `update-user-schedule` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body`, `--body-file` |
-| `update-user-schedule-event` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--body`, `--body-file` |
+| `update-user-schedule` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-user-schedule-event` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-notify-user` | `--enabled`, `--email-address`, `--body`, `--body-file` |
 | `update-notify` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
 | `update-selective-accept-user` | `--enabled`, `--body`, `--body-file` |
@@ -569,12 +569,12 @@ webex calling metrics get-call-quality-stats --help
 | `update-anonymous-rejection-user` | `--enabled`, `--body`, `--body-file` |
 | `update-selective-reject` | `--id` *(required)*, `--calls-from`, `--reject-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `update-waiting-user` | `--enabled`, `--body`, `--body-file` |
-| `update-sequential-ring-user` | `--body`, `--body-file` |
+| `update-sequential-ring-user` | `--body` *(example in `--help`)*, `--body-file` |
 | `update-sequential-ring-user-2` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--ring-enabled`, `--body`, `--body-file` |
 | `update-priority-alert-user-2` | `--enabled`, `--body`, `--body-file` |
 | `update-priority-alert-2` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
-| `update-user-schedule-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body`, `--body-file` |
-| `update-user-schedule-event-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--body`, `--body-file` |
+| `update-user-schedule-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-user-schedule-event-2` | `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-notify-user-2` | `--enabled`, `--email-address`, `--body`, `--body-file` |
 | `update-notify-2` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--notification-enabled`, `--body`, `--body-file` |
 | `update-selective-accept-user-2` | `--enabled`, `--body`, `--body-file` |
@@ -585,9 +585,9 @@ webex calling metrics get-call-quality-stats --help
 | `update-anonymous-rejection-user-2` | `--enabled`, `--body`, `--body-file` |
 | `update-selective-reject-2` | `--id` *(required)*, `--calls-from`, `--reject-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `update-waiting-user-2` | `--enabled`, `--body`, `--body-file` |
-| `update-sequential-ring-user-2` | `--body`, `--body-file` |
+| `update-sequential-ring-user-2` | `--body` *(example in `--help`)*, `--body-file` |
 | `update-sequential-ring-user-2-2` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--ring-enabled`, `--body`, `--body-file` |
-| `update-my-simultaneous-ring` | `--body`, `--body-file` |
+| `update-my-simultaneous-ring` | `--body` *(example in `--help`)*, `--body-file` |
 | `update-my-simultaneous-ring-2` | `--id` *(required)*, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--ring-enabled`, `--body`, `--body-file` |
 | `update-personal-assistant` | `--enabled`, `--presence`, `--until-date-time`, `--transfer-enabled`, `--transfer-number`, `--alerting`, `--alert-me-first-number-of-rings`, `--body`, `--body-file` |
 | `update-voicemail-pin` | `--passcode`, `--body`, `--body-file` |
@@ -624,7 +624,7 @@ webex calling metrics get-call-quality-stats --help
 | `get-org-call-captions-settings` | `--org-id` |
 | `get-large-org-status` | `--org-id` |
 | `update-voicemail` | `--org-id`, `--message-expiry-enabled`, `--number-of-days-for-message-expiry`, `--strict-deletion-enabled`, `--voice-message-forwarding-enabled`, `--body`, `--body-file` |
-| `update-voicemail-rules` | `--org-id`, `--body`, `--body-file` |
+| `update-voicemail-rules` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-org-music-hold-configuration` | `--org-id`, `--default-org-moh`, `--body`, `--body-file` |
 | `update-org-call-captions-settings` | `--org-id`, `--org-closed-captions-enabled`, `--org-transcripts-enabled`, `--body`, `--body-file` |
 
@@ -709,34 +709,34 @@ webex calling metrics get-call-quality-stats --help
 | `get-dynamic-settings-job-status-2` | `--job-id` *(required)* |
 | `list-dynamic-settings-job-errors-2` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
 | `apply-changes` | `--device-id` *(required)*, `--org-id` |
-| `create-line-key-template` | `--org-id`, `--body`, `--body-file` |
-| `preview-apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
-| `apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
+| `create-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `preview-apply-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `apply-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `validate-list-mac-address` | `--org-id`, `--macs`, `--body`, `--body-file` |
-| `update-settings-across-org-location-job` | `--org-id`, `--body`, `--body-file` |
+| `update-settings-across-org-location-job` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `rebuild-phones-configuration` | `--org-id`, `--location-id`, `--body`, `--body-file` |
 | `upload-background-image` | `--device-id` *(required)*, `--org-id` |
 | `get-customer-dynamic-settings` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
-| `updates-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
+| `updates-dynamic-settings-across-org-location` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `get-customer-dynamic-settings-2` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings-2` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings-2` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
-| `update-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
-| `update-members` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-settings` | `--device-id` *(required)*, `--org-id`, `--device-model`, `--body`, `--body-file` |
+| `update-dynamic-settings-across-org-location` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-members` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-settings` | `--device-id` *(required)*, `--org-id`, `--device-model`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-third-party` | `--device-id` *(required)*, `--org-id`, `--sip-password`, `--body`, `--body-file` |
-| `update-hoteling-settings-person-primary` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-hoteling-settings-person-primary` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-workspace` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--limit-guest-use`, `--guest-hours-limit`, `--body`, `--body-file` |
-| `update-line-key-template` | `--template-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-layout-id` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-line-key-template` | `--template-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-layout-id` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-settings-person` | `--person-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
 | `update-settings-workspace` | `--workspace-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
-| `update-specified-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-specified-settings` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-line-key-template` | `--template-id` *(required)*, `--org-id` |
-| `delete-background-images` | `--org-id`, `--body`, `--body-file` |
+| `delete-background-images` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 
 ### devices
 
@@ -769,11 +769,11 @@ webex calling metrics get-call-quality-stats --help
 | `get-vline-callback-settings` | `--virtual-line-id` *(required)*, `--org-id` |
 | `create-account-admin-redsky` | `--org-id`, `--email`, `--org-prefix`, `--partner-redsky-org-id`, `--body`, `--body-file` |
 | `login-redsky-admin-account` | `--org-id`, `--email`, `--password`, `--red-sky-org-id`, `--body`, `--body-file` |
-| `create-redsky-building-address-location` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-redsky-building-address-location` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-redsky-settings` | `--org-id`, `--enabled`, `--company-id`, `--secret`, `--external-tenant-enabled`, `--email`, `--password`, `--body`, `--body-file` |
 | `update-org-redsky-account-compliance-status` | `--org-id`, `--compliance-status`, `--body`, `--body-file` |
 | `update-location-redsky-compliance-status` | `--location-id` *(required)*, `--org-id`, `--compliance-status`, `--body`, `--body-file` |
-| `update-redsky-building-address-location` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-redsky-building-address-location` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-org-call-notification` | `--org-id`, `--emergency-call-notification-enabled`, `--allow-email-notification-all-location-enabled`, `--email-address`, `--body`, `--body-file` |
 | `update-location-call-notification` | `--location-id` *(required)*, `--org-id`, `--emergency-call-notification-enabled`, `--email-address`, `--body`, `--body-file` |
 | `update-person-callback` | `--person-id` *(required)*, `--org-id`, `--selected`, `--location-member-id`, `--elin-enabled`, `--elin-for-webex-app-enabled`, `--body`, `--body-file` |
@@ -820,12 +820,12 @@ webex calling metrics get-call-quality-stats --help
 | `get-alternate-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
 | `get-forward-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number`, `--owner-name`, `--extension` |
 | `list-announcement-files` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id` |
-| `create` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `create-selective-forward-rule` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-selective-forward-rule` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `switch-mode-call-forward` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-call-forward` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-selective-forward-rule` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-call-forward` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-selective-forward-rule` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--org-id` |
 | `delete-selective-forward-rule` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--rule-id` *(required)*, `--org-id` |
 | `delete-announcement-file` | `--location-id` *(required)*, `--auto-attendant-id` *(required)*, `--file-name` *(required)*, `--org-id` |
@@ -841,10 +841,10 @@ webex calling metrics get-call-quality-stats --help
 | `get-2` | `--location-id` *(required)*, `--org-id` |
 | `list-extensions` | `--org-id`, `--location-id`, `--max`, `--start`, `--extension`, `--location-name`, `--name`, `--order` |
 | `get-extension` | `--location-id` *(required)*, `--call-park-extension-id` *(required)*, `--org-id` |
-| `create` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-extension` | `--location-id` *(required)*, `--org-id`, `--name`, `--extension`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--call-park-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-2` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--call-park-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-2` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-extension` | `--location-id` *(required)*, `--call-park-extension-id` *(required)*, `--org-id`, `--name`, `--extension`, `--body`, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--call-park-id` *(required)*, `--org-id` |
 | `delete-extension` | `--location-id` *(required)*, `--call-park-extension-id` *(required)*, `--org-id` |
@@ -884,19 +884,19 @@ webex calling metrics get-call-quality-stats --help
 | `list-agents-customer-assist` | `--org-id`, `--location-id`, `--queue-id`, `--max`, `--start`, `--name`, `--phone-number`, `--join-enabled`, `--has-cx-essentials`, `--order` |
 | `get-agent-customer-assist` | `--id` *(required)*, `--org-id`, `--has-cx-essentials`, `--max`, `--start` |
 | `get-playlist-usage` | `--play-list-id` *(required)*, `--playlist-usage-type` |
-| `create-customer-assist` | `--location-id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body`, `--body-file` |
-| `create-selective-forward-rule` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `create-supervisor-customer-assist` | `--org-id`, `--has-cx-essentials`, `--body`, `--body-file` |
+| `create-customer-assist` | `--location-id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-selective-forward-rule` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-supervisor-customer-assist` | `--org-id`, `--has-cx-essentials`, `--body` *(example in `--help`)*, `--body-file` |
 | `switch-mode-forward` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-forward` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-selective-forward-rule` | `--location-id` *(required)*, `--queue-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-holiday-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-night-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-forced-forward-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-stranded-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `assign-unassign-agents-supervisor-customer-assist` | `--supervisor-id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body`, `--body-file` |
-| `update-agent-settings-one-more-customer-assist` | `--id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-forward` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-selective-forward-rule` | `--location-id` *(required)*, `--queue-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-holiday-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-night-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-forced-forward-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-stranded-service` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `assign-unassign-agents-supervisor-customer-assist` | `--supervisor-id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-agent-settings-one-more-customer-assist` | `--id` *(required)*, `--org-id`, `--has-cx-essentials`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id` |
 | `delete-announcement-file` | `--location-id` *(required)*, `--queue-id` *(required)*, `--file-name` *(required)*, `--org-id` |
 | `delete-selective-forward-rule` | `--location-id` *(required)*, `--queue-id` *(required)*, `--rule-id` *(required)*, `--org-id` |
@@ -940,7 +940,7 @@ webex calling metrics get-call-quality-stats --help
 | `validate-wrap-up-reason` | `--name`, `--body`, `--body-file` |
 | `update-wrap-up-reason` | `--wrapup-reason-id` *(required)*, `--name`, `--description`, `--queues-to-assign`, `--queues-to-unassign`, `--assign-all-queues-enabled`, `--unassign-all-queues-enabled`, `--body`, `--body-file` |
 | `update-wrap-up-reason-settings` | `--location-id` *(required)*, `--queue-id` *(required)*, `--wrapup-reasons`, `--default-wrapup-reason-id`, `--wrapup-timer-enabled`, `--wrapup-timer`, `--body`, `--body-file` |
-| `update-screen-pop-configuration` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-screen-pop-configuration` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-wrap-up-reason` | `--wrapup-reason-id` *(required)* |
 
 ### hot-desking-sign-in-via-voice-portal
@@ -963,12 +963,12 @@ webex calling metrics get-call-quality-stats --help
 | `get-primary-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
 | `get-alternate-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
 | `get-forward-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number`, `--owner-name`, `--extension` |
-| `create` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `create-selective-forward-rule` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-selective-forward-rule` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `switch-mode-call-forward` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-call-forward` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-selective-forward-rule` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-call-forward` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-selective-forward-rule` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--rule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--org-id` |
 | `delete-selective-forward-rule` | `--location-id` *(required)*, `--hunt-group-id` *(required)*, `--rule-id` *(required)*, `--org-id` |
 
@@ -981,10 +981,10 @@ webex calling metrics get-call-quality-stats --help
 | `get-holiday` | `--mode-id` *(required)*, `--holiday-id` *(required)*, `--org-id` |
 | `list-available-location` | `--location-id` *(required)*, `--org-id` |
 | `get-forward-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number`, `--owner-name`, `--extension` |
-| `create` | `--org-id`, `--body`, `--body-file` |
-| `create-holiday` | `--mode-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--mode-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-holiday` | `--mode-id` *(required)*, `--holiday-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-holiday` | `--mode-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--mode-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-holiday` | `--mode-id` *(required)*, `--holiday-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--mode-id` *(required)*, `--org-id` |
 | `delete-holiday` | `--mode-id` *(required)*, `--holiday-id` *(required)*, `--org-id` |
 
@@ -995,8 +995,8 @@ webex calling metrics get-call-quality-stats --help
 | `list` | `--org-id`, `--max`, `--start`, `--location-id`, `--name`, `--phone-number` |
 | `get` | `--location-id` *(required)*, `--paging-id` *(required)*, `--org-id` |
 | `get-primary-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
-| `create` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--paging-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--location-id` *(required)*, `--paging-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--paging-id` *(required)*, `--org-id` |
 
 ### single-number-reach
@@ -1048,11 +1048,11 @@ webex calling metrics get-call-quality-stats --help
 | `get-outgoing-digit-pattern` | `--location-id` *(required)*, `--org-id` |
 | `get-outgoing-digit-pattern-2` | `--location-id` *(required)*, `--digit-pattern-id` *(required)*, `--org-id` |
 | `generate-example-password` | `--location-id` *(required)*, `--org-id`, `--generate`, `--body`, `--body-file` |
-| `create-outgoing-permission-access-code-customer` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-outgoing-permission-access-code-customer` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-outgoing-permission-digit-pattern` | `--location-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
-| `update-internal-dialing-configuration` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-intercept` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-outgoing-permission` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-internal-dialing-configuration` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-intercept` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-outgoing-permission` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-outgoing-auto-transfer` | `--location-id` *(required)*, `--org-id`, `--auto-transfer-number1`, `--auto-transfer-number2`, `--auto-transfer-number3`, `--body`, `--body-file` |
 | `delete-outgoing-access-code` | `--location-id` *(required)*, `--org-id`, `--delete-codes`, `--body`, `--body-file` |
 | `update-outgoing-digit-pattern` | `--location-id` *(required)*, `--digit-pattern-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
@@ -1067,10 +1067,10 @@ webex calling metrics get-call-quality-stats --help
 | `list` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--name`, `--type` |
 | `get` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id` |
 | `get-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id` |
-| `create` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `create-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--org-id` |
 | `delete-event` | `--location-id` *(required)*, `--type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id` |
 
@@ -1086,10 +1086,10 @@ webex calling metrics get-call-quality-stats --help
 | `get-group-fax-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
 | `get-group-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
 | `get-voiceportal-available-numbers` | `--location-id` *(required)*, `--org-id`, `--max`, `--start`, `--phone-number` |
-| `create-group` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-group` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update` | `--location-id` *(required)*, `--org-id`, `--voicemail-transcription-enabled`, `--body`, `--body-file` |
-| `update-voiceportal` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-group` | `--location-id` *(required)*, `--voicemail-group-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-voiceportal` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-group` | `--location-id` *(required)*, `--voicemail-group-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-group` | `--location-id` *(required)*, `--voicemail-group-id` *(required)*, `--org-id` |
 
 ### locations
@@ -1100,9 +1100,9 @@ webex calling metrics get-call-quality-stats --help
 | `get` | `--location-id` *(required)*, `--org-id` |
 | `list-floors` | `--location-id` *(required)* |
 | `get-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
-| `create` | `--org-id`, `--body`, `--body-file` |
+| `create` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-floor` | `--location-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-floor` | `--location-id` *(required)*, `--floor-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
 | `delete-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
 | `delete` | `--location-id` *(required)*, `--org-id` |
@@ -1117,7 +1117,7 @@ webex calling metrics get-call-quality-stats --help
 | `list-manage-job-errors` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
 | `create-phone-location` | `--location-id` *(required)*, `--org-id`, `--phone-numbers`, `--number-type`, `--number-usage-type`, `--state`, `--subscription-id`, `--carrier-id`, `--body`, `--body-file` |
 | `validate-phone` | `--org-id`, `--phone-numbers`, `--body`, `--body-file` |
-| `initiate-jobs` | `--body`, `--body-file` |
+| `initiate-jobs` | `--body` *(example in `--help`)*, `--body-file` |
 | `pause-manage-job` | `--job-id` *(required)*, `--org-id` |
 | `resume-manage-job` | `--job-id` *(required)*, `--org-id` |
 | `manage-state-location` | `--location-id` *(required)*, `--org-id`, `--phone-numbers`, `--action`, `--body`, `--body-file` |
@@ -1140,8 +1140,8 @@ webex calling metrics get-call-quality-stats --help
 | `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
 | `get-person` | `--person-id` *(required)*, `--calling-data` |
 | `get-my-own` | `--calling-data` |
-| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
-| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `create-person` | `--calling-data`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-person` | `--person-id` *(required)* |
 
 ### pstn
@@ -1153,7 +1153,7 @@ webex calling metrics get-call-quality-stats --help
 | `emergency-address-lookup-verify-address-is-valid` | `--location-id` *(required)*, `--org-id`, `--address1`, `--address2`, `--city`, `--state`, `--postal-code`, `--country`, `--body`, `--body-file` |
 | `create-emergency-address-location` | `--location-id` *(required)*, `--org-id`, `--address1`, `--address2`, `--city`, `--state`, `--postal-code`, `--country`, `--body`, `--body-file` |
 | `setup-connection-location` | `--location-id` *(required)*, `--org-id`, `--id`, `--premise-route-type`, `--premise-route-id`, `--body`, `--body-file` |
-| `update-emergency-address-phone-number` | `--phone-number` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-emergency-address-phone-number` | `--phone-number` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-emergency-address-location` | `--location-id` *(required)*, `--address-id` *(required)*, `--org-id`, `--address1`, `--address2`, `--city`, `--state`, `--postal-code`, `--country`, `--body`, `--body-file` |
 
 ### recording-report
@@ -1261,10 +1261,10 @@ webex calling metrics get-call-quality-stats --help
 | `get-count-shared-line-appearance-members` | `--person-id` *(required)*, `--org-id`, `--location-id`, `--member-name`, `--phone-number`, `--extension` |
 | `get-timezone-announcement-language-settings-person` | `--person-id` *(required)*, `--org-id` |
 | `get-country-calling-configuration` | `--country-code` *(required)*, `--org-id` |
-| `create-schedule-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `create-event-person-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-schedule-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `create-event-person-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `reset-voicemail-pin` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `validate-initiate-move-job` | `--org-id`, `--body`, `--body-file` |
+| `validate-initiate-move-job` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `pause-move-job` | `--job-id` *(required)*, `--org-id` |
 | `resume-move-job` | `--job-id` *(required)*, `--org-id` |
 | `create-access-codes-person` | `--person-id` *(required)*, `--org-id`, `--code`, `--description`, `--body`, `--body-file` |
@@ -1274,35 +1274,35 @@ webex calling metrics get-call-quality-stats --help
 | `create-users-selective-accept-service` | `--person-id` *(required)*, `--org-id`, `--calls-from`, `--accept-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-users-selective-reject-service` | `--person-id` *(required)*, `--org-id`, `--calls-from`, `--reject-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-users-selective-forward-service` | `--person-id` *(required)*, `--org-id`, `--forward-to-phone-number`, `--send-to-voicemail-enabled`, `--calls-from`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--forward-enabled`, `--body`, `--body-file` |
-| `create-person-executive-filtering` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `create-person-executive-filtering` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-application-services-settings` | `--person-id` *(required)*, `--org-id`, `--ring-devices-for-click-to-dial-calls-enabled`, `--ring-devices-for-group-page-enabled`, `--ring-devices-for-call-park-enabled`, `--browser-client-enabled`, `--desktop-client-enabled`, `--tablet-client-enabled`, `--mobile-client-enabled`, `--body`, `--body-file` |
 | `update-barge-settings-person` | `--person-id` *(required)*, `--org-id`, `--enabled`, `--tone-enabled`, `--body`, `--body-file` |
-| `update-forward-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-intercept-settings-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-recording-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-forward-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-intercept-settings-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-recording-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-waiting-settings-person` | `--person-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
-| `update-caller-id-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-caller-id-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-calling-behavior` | `--person-id` *(required)*, `--org-id`, `--behavior-type`, `--profile-id`, `--body`, `--body-file` |
 | `update-do-not-disturb-settings-person` | `--person-id` *(required)*, `--org-id`, `--webex-go-override-enabled`, `--enabled`, `--ring-splash-enabled`, `--body`, `--body-file` |
 | `update-executive-assistant-settings-person` | `--person-id` *(required)*, `--org-id`, `--type`, `--body`, `--body-file` |
 | `update-hoteling-settings-person` | `--person-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
 | `update-person-monitoring-settings` | `--person-id` *(required)*, `--org-id`, `--enable-call-park-notification`, `--monitored-elements`, `--body`, `--body-file` |
 | `update-incoming-permission-settings-person` | `--person-id` *(required)*, `--org-id`, `--use-custom-enabled`, `--external-transfer`, `--internal-calls-enabled`, `--collect-calls-enabled`, `--body`, `--body-file` |
-| `update-person-outgoing-permissions-settings` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-person-outgoing-permissions-settings` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-privacy-settings` | `--person-id` *(required)*, `--org-id`, `--aa-extension-dialing-enabled`, `--aa-naming-dialing-enabled`, `--enable-phone-status-directory-privacy`, `--enable-phone-status-pickup-barge-in-privacy`, `--monitoring-agents`, `--body`, `--body-file` |
 | `update-push-to-talk-settings-person` | `--person-id` *(required)*, `--org-id`, `--allow-auto-answer`, `--connection-type`, `--access-type`, `--members`, `--body`, `--body-file` |
 | `update-receptionist-client-settings-person` | `--person-id` *(required)*, `--org-id`, `--reception-enabled`, `--monitored-members`, `--body`, `--body-file` |
-| `update-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-event-person-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-voicemail-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-music-hold-settings-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-event-person-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--event-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-voicemail-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-music-hold-settings-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-access-codes-person` | `--person-id` *(required)*, `--org-id`, `--delete-codes`, `--body`, `--body-file` |
 | `update-transfer-numbers-person` | `--person-id` *(required)*, `--org-id`, `--use-custom-transfer-numbers`, `--auto-transfer-number1`, `--auto-transfer-number2`, `--auto-transfer-number3`, `--body`, `--body-file` |
 | `update-digit-pattern-control-person` | `--person-id` *(required)*, `--org-id`, `--use-custom-digit-patterns`, `--body`, `--body-file` |
 | `update-digit-pattern-person` | `--person-id` *(required)*, `--digit-pattern-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
-| `assign-unassign-numbers-person` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `assign-unassign-numbers-person` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-preferred-endpoint` | `--person-id` *(required)*, `--org-id`, `--preferred-answer-endpoint-id`, `--body`, `--body-file` |
-| `update-shared-line-appearance-members` | `--person-id` *(required)*, `--application-id` *(required)*, `--body`, `--body-file` |
+| `update-shared-line-appearance-members` | `--person-id` *(required)*, `--application-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-voicemail-passcode` | `--person-id` *(required)*, `--org-id`, `--passcode`, `--body`, `--body-file` |
 | `update-agent-caller-id` | `--person-id` *(required)*, `--selected-caller-id`, `--body`, `--body-file` |
 | `update-bridge-settings-person` | `--person-id` *(required)*, `--org-id`, `--warning-tone-enabled`, `--body`, `--body-file` |
@@ -1315,13 +1315,13 @@ webex calling metrics get-call-quality-stats --help
 | `update-users-selective-reject-service` | `--person-id` *(required)*, `--id` *(required)*, `--org-id`, `--calls-from`, `--reject-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `update-users-selective-forward-list` | `--person-id` *(required)*, `--org-id`, `--enabled`, `--default-phone-number-to-forward`, `--ring-reminder-enabled`, `--destination-voicemail-enabled`, `--body`, `--body-file` |
 | `update-users-selective-forward-service` | `--person-id` *(required)*, `--id` *(required)*, `--org-id`, `--forward-to-phone-number`, `--send-to-voicemail-enabled`, `--calls-from`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--forward-enabled`, `--body`, `--body-file` |
-| `update-shared-line-appearance-members-2` | `--person-id` *(required)*, `--body`, `--body-file` |
+| `update-shared-line-appearance-members-2` | `--person-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-captions-settings` | `--person-id` *(required)*, `--org-id`, `--user-closed-captions-enabled`, `--user-transcripts-enabled`, `--use-location-settings-enabled`, `--body`, `--body-file` |
-| `update-person-executive-filtering-settings` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-person-executive-filtering-settings-2` | `--person-id` *(required)*, `--id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-person-executive-filtering-settings` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-person-executive-filtering-settings-2` | `--person-id` *(required)*, `--id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-executive-alert-settings` | `--person-id` *(required)*, `--org-id`, `--alerting-mode`, `--next-assistant-number-of-rings`, `--rollover-enabled`, `--rollover-action`, `--rollover-forward-to-phone-number`, `--rollover-wait-time-in-secs`, `--clid-name-mode`, `--custom-clidname`, `--custom-clidname-in-unicode`, `--clid-phone-number-mode`, `--custom-clidphone-number`, `--body`, `--body-file` |
 | `update-person-executive-assigned-assistants` | `--person-id` *(required)*, `--org-id`, `--assistant-ids`, `--body`, `--body-file` |
-| `update-person-executive-assistant-settings` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-person-executive-assistant-settings` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-person-executive-screening-settings` | `--person-id` *(required)*, `--org-id`, `--enabled`, `--alert-type`, `--alert-anywhere-location-enabled`, `--alert-mobility-location-enabled`, `--alert-shared-call-appearance-location-enabled`, `--body`, `--body-file` |
 | `update-timezone-announcement-language-settings-person` | `--person-id` *(required)*, `--org-id`, `--announcement-language`, `--time-zone`, `--body`, `--body-file` |
 | `delete-schedule` | `--person-id` *(required)*, `--schedule-type` *(required)*, `--schedule-id` *(required)*, `--org-id` |
@@ -1373,23 +1373,23 @@ webex calling metrics get-call-quality-stats --help
 | `create-access-codes` | `--virtual-line-id` *(required)*, `--org-id`, `--code`, `--description`, `--body`, `--body-file` |
 | `create-digit-pattern-profile` | `--virtual-line-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
 | `reset-voicemail-pin` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-recording` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-recording` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update` | `--virtual-line-id` *(required)*, `--org-id`, `--first-name`, `--last-name`, `--display-name`, `--phone-number`, `--extension`, `--announcement-language`, `--caller-id-last-name`, `--caller-id-first-name`, `--caller-id-number`, `--time-zone`, `--body`, `--body-file` |
 | `update-directory-search` | `--virtual-line-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
-| `update-caller-id` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-caller-id` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-waiting-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
-| `update-forward` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-forward` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-incoming-permission-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--use-custom-enabled`, `--external-transfer`, `--internal-calls-enabled`, `--collect-calls-enabled`, `--body`, `--body-file` |
-| `update-outgoing-permissions-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-outgoing-permissions-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-access-codes` | `--virtual-line-id` *(required)*, `--org-id`, `--delete-codes`, `--body`, `--body-file` |
 | `update-transfer-numbers` | `--virtual-line-id` *(required)*, `--org-id`, `--use-custom-transfer-numbers`, `--auto-transfer-number1`, `--auto-transfer-number2`, `--auto-transfer-number3`, `--body`, `--body-file` |
 | `update-digit-pattern-control-profile` | `--virtual-line-id` *(required)*, `--org-id`, `--use-custom-digit-patterns`, `--body`, `--body-file` |
 | `update-digit-pattern-profile` | `--virtual-line-id` *(required)*, `--digit-pattern-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
-| `update-intercept-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-intercept-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-agent-caller-id` | `--virtual-line-id` *(required)*, `--selected-caller-id`, `--body`, `--body-file` |
-| `update-voicemail` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-voicemail` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-voicemail-passcode` | `--virtual-line-id` *(required)*, `--org-id`, `--passcode`, `--body`, `--body-file` |
-| `update-music-hold-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-music-hold-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-push-to-talk-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--allow-auto-answer`, `--connection-type`, `--access-type`, `--members`, `--body`, `--body-file` |
 | `update-bridge-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--warning-tone-enabled`, `--body`, `--body-file` |
 | `update-barge-settings` | `--virtual-line-id` *(required)*, `--org-id`, `--enabled`, `--tone-enabled`, `--body`, `--body-file` |
@@ -1452,35 +1452,35 @@ webex calling metrics get-call-quality-stats --help
 | `create-selective-accept` | `--workspace-id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--accept-enabled`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-priority-alert` | `--workspace-id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--notification-enabled`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--body`, `--body-file` |
 | `create-selective-forward` | `--workspace-id` *(required)*, `--org-id`, `--calls-from`, `--forward-to-phone-number`, `--destination-voicemail-enabled`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--numbers`, `--forward-enabled`, `--body`, `--body-file` |
-| `update-forward` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-forward` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-waiting-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
-| `update-caller-id` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-caller-id` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-monitoring-settings` | `--workspace-id` *(required)*, `--org-id`, `--enable-call-park-notification`, `--monitored-elements`, `--body`, `--body-file` |
 | `update-incoming-permission-settings` | `--workspace-id` *(required)*, `--org-id`, `--use-custom-enabled`, `--external-transfer`, `--internal-calls-enabled`, `--collect-calls-enabled`, `--body`, `--body-file` |
-| `update-outgoing-permission-settings` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-outgoing-permission-settings` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-access-codes` | `--workspace-id` *(required)*, `--org-id`, `--delete-codes`, `--body`, `--body-file` |
-| `update-intercept-settings` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-intercept-settings` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-transfer-numbers-settings` | `--workspace-id` *(required)*, `--org-id`, `--use-custom-transfer-numbers`, `--auto-transfer-number1`, `--auto-transfer-number2`, `--auto-transfer-number3`, `--body`, `--body-file` |
-| `update-music-hold-settings` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-music-hold-settings` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-digit-pattern-control` | `--workspace-id` *(required)*, `--org-id`, `--use-custom-digit-patterns`, `--body`, `--body-file` |
 | `update-digit-pattern` | `--workspace-id` *(required)*, `--digit-pattern-id` *(required)*, `--org-id`, `--name`, `--pattern`, `--action`, `--transfer-enabled`, `--body`, `--body-file` |
-| `update-recording` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-recording` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-anonymous-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
 | `update-barge-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--tone-enabled`, `--body`, `--body-file` |
 | `update-donotdisturb-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--ring-splash-enabled`, `--body`, `--body-file` |
 | `update-bridge-warning-tone` | `--workspace-id` *(required)*, `--org-id`, `--warning-tone-enabled`, `--body`, `--body-file` |
 | `update-push-to-talk-settings` | `--workspace-id` *(required)*, `--org-id`, `--allow-auto-answer`, `--connection-type`, `--access-type`, `--members`, `--body`, `--body-file` |
 | `update-privacy-settings` | `--workspace-id` *(required)*, `--org-id`, `--aa-extension-dialing-enabled`, `--aa-naming-dialing-enabled`, `--enable-phone-status-directory-privacy`, `--enable-phone-status-pickup-barge-in-privacy`, `--monitoring-agents`, `--body`, `--body-file` |
-| `update-voicemail` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-voicemail` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-voicemail-passcode` | `--place-id` *(required)*, `--org-id`, `--passcode`, `--body`, `--body-file` |
 | `update-sequential-ring` | `--workspace-id` *(required)*, `--id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--ring-enabled`, `--body`, `--body-file` |
 | `update-policy-settings` | `--workspace-id` *(required)*, `--org-id`, `--connected-line-id-privacy-on-redirected-calls`, `--body`, `--body-file` |
-| `update-sequential-ring-settings` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-simultaneous-ring-settings` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-sequential-ring-settings` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-simultaneous-ring-settings` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-simultaneous-ring` | `--workspace-id` *(required)*, `--id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--ring-enabled`, `--body`, `--body-file` |
 | `update-selective-reject-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
 | `update-selective-reject` | `--workspace-id` *(required)*, `--id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--reject-enabled`, `--body`, `--body-file` |
-| `assign-unassign-numbers-associated` | `--workspace-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `assign-unassign-numbers-associated` | `--workspace-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-selective-accept-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
 | `update-selective-accept` | `--workspace-id` *(required)*, `--id` *(required)*, `--org-id`, `--schedule-name`, `--schedule-type`, `--schedule-level`, `--calls-from`, `--anonymous-callers-enabled`, `--unavailable-callers-enabled`, `--phone-numbers`, `--accept-enabled`, `--body`, `--body-file` |
 | `update-priority-alert-settings` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--body`, `--body-file` |
@@ -1506,8 +1506,8 @@ webex calling metrics get-call-quality-stats --help
 | `get` | `--workspace-id` *(required)*, `--include-devices` |
 | `get-capabilities` | `--workspace-id` *(required)* |
 | `get-2` | `--workspace-id` *(required)*, `--include-devices`, `--include-capabilities` |
-| `create` | `--body`, `--body-file` |
-| `update` | `--workspace-id` *(required)*, `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--workspace-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--workspace-id` *(required)* |
 
 ### external-voicemail
@@ -1578,7 +1578,7 @@ webex calling metrics get-call-quality-stats --help
 | `validate-wrap-up-reason` | `--name`, `--body`, `--body-file` |
 | `update-wrap-up-reason` | `--wrapup-reason-id` *(required)*, `--name`, `--description`, `--queues-to-assign`, `--queues-to-unassign`, `--assign-all-queues-enabled`, `--unassign-all-queues-enabled`, `--body`, `--body-file` |
 | `update-wrap-up-reason-settings` | `--location-id` *(required)*, `--queue-id` *(required)*, `--wrapup-reasons`, `--default-wrapup-reason-id`, `--wrapup-timer-enabled`, `--wrapup-timer`, `--body`, `--body-file` |
-| `update-screen-pop-configuration` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-screen-pop-configuration` | `--location-id` *(required)*, `--queue-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-wrap-up-reason` | `--wrapup-reason-id` *(required)* |
 
 ### metrics

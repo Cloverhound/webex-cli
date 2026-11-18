@@ -1417,7 +1417,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdDectNetworksByDectNetworkIdHa
 		{Name: "dectNetworkId", In: InPath, Flag: "dect-network-id", Required: true, Usage: "A unique identifier for the DECT network."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Add handsets in this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"items\": [\n    {\n      \"line1MemberId\": \"<string>\",\n      \"customDisplayName\": \"<string>\",\n      \"line2MemberId\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdDectNetworks is "GET List of DECT networks associated with a Person": GET /telephony/config/people/{personId}/dectNetworks.
@@ -2033,7 +2033,7 @@ var CallingPutTelephonyConfigPremisePstnDialPlansByDialPlanIdDialPatterns = &Ope
 		{Name: "dialPlanId", In: InPath, Flag: "dial-plan-id", Required: true, Usage: "ID of the dial plan being modified."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which dial plan belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"dialPatterns\": [\n    {\n      \"dialPattern\": \"<string>\",\n      \"action\": \"ADD\"\n    },\n    {\n      \"dialPattern\": \"<string>\",\n      \"action\": \"ADD\"\n    }\n  ],\n  \"deleteAllDialPatterns\": \"<boolean>\"\n}"},
 }
 
 // CallingPostTelephonyConfigPremisePstnActionsValidateDialPatternsInvoke is "Validate a Dial Pattern": POST /telephony/config/premisePstn/actions/validateDialPatterns/invoke.
@@ -2266,7 +2266,7 @@ var CallingPostTelephonyConfigPremisePstnRouteGroups = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the Route Group belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"localGateways\": [\n    {\n      \"id\": \"<string>\",\n      \"priority\": \"<number>\",\n      \"name\": \"<string>\",\n      \"locationId\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"priority\": \"<number>\",\n      \"name\": \"<string>\",\n      \"locationId\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPremisePstnRouteGroupsByRouteGroupId is "Read a Route Group for a Organization": GET /telephony/config/premisePstn/routeGroups/{routeGroupId}.
@@ -2291,7 +2291,7 @@ var CallingPutTelephonyConfigPremisePstnRouteGroupsByRouteGroupId = &Operation{
 		{Name: "routeGroupId", In: InPath, Flag: "route-group-id", Required: true, Usage: "Route Group for which details are being requested."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization of the Route Group."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"localGateways\": [\n    {\n      \"id\": \"<string>\",\n      \"priority\": \"<number>\",\n      \"name\": \"<string>\",\n      \"locationId\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"priority\": \"<number>\",\n      \"name\": \"<string>\",\n      \"locationId\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigPremisePstnRouteGroupsByRouteGroupId is "Remove a Route Group from an Organization": DELETE /telephony/config/premisePstn/routeGroups/{routeGroupId}.
@@ -2471,7 +2471,7 @@ var CallingPutTelephonyConfigPremisePstnRouteListsByRouteListIdNumbers = &Operat
 		{Name: "routeListId", In: InPath, Flag: "route-list-id", Required: true, Usage: "ID of the Route List."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the Route List belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"numbers\": [\n    {\n      \"number\": \"<string>\",\n      \"action\": \"DELETE\"\n    },\n    {\n      \"number\": \"<string>\",\n      \"action\": \"ADD\"\n    }\n  ],\n  \"deleteAllNumbers\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigPremisePstnRouteListsByRouteListIdNumbers is "Get Numbers assigned to a Route List": GET /telephony/config/premisePstn/routeLists/{routeListId}/numbers.
@@ -2688,7 +2688,7 @@ var CallingPostTelephonyConfigLocations = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"preferredLanguage\": \"<string>\",\n  \"announcementLanguage\": \"<string>\",\n  \"address\": {\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"postalCode\": \"<string>\",\n    \"country\": \"<string>\",\n    \"address2\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationId is "Get Location Webex Calling Details": GET /telephony/config/locations/{locationId}.
@@ -2713,7 +2713,7 @@ var CallingPutTelephonyConfigLocationsByLocationId = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Updating Webex Calling location attributes for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Updating Webex Calling location attributes for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"announcementLanguage\": \"<string>\",\n  \"callingLineId\": {\n    \"name\": \"<string>\",\n    \"phoneNumber\": \"<string>\"\n  },\n  \"connection\": {\n    \"type\": \"TRUNK\",\n    \"id\": \"<string>\"\n  },\n  \"externalCallerIdName\": \"<string>\",\n  \"pAccessNetworkInfo\": \"<string>\",\n  \"outsideDialDigit\": \"<string>\",\n  \"enforceOutsideDialDigit\": \"<boolean>\",\n  \"routingPrefix\": \"<string>\",\n  \"chargeNumber\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigJobsUpdateRoutingPrefix is "Get a List of Update Routing Prefix jobs": GET /telephony/config/jobs/updateRoutingPrefix.
@@ -2837,7 +2837,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdMusicOnHold = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Update music on hold settings for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update music on hold settings for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"mohEnabled\": \"<boolean>\",\n  \"greeting\": \"CUSTOM\",\n  \"audioAnnouncementFile\": {\n    \"id\": \"<string>\",\n    \"fileName\": \"<string>\",\n    \"mediaFileType\": \"WAV\",\n    \"level\": \"LOCATION\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdMusicOnHold is "Get Music On Hold": GET /telephony/config/locations/{locationId}/musicOnHold.
@@ -2997,7 +2997,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdReceptionistContactsDirectori
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Add a Receptionist Contact Directory to this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Add a Receptionist Contact Directory to this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"contacts\": [\n    {\n      \"personId\": \"<string>\",\n      \"featureId\": \"<string>\",\n      \"type\": \"<string>\"\n    },\n    {\n      \"personId\": \"<string>\",\n      \"featureId\": \"<string>\",\n      \"type\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdReceptionistContactsDirectories is "Read list of Receptionist Contact Directories": GET /telephony/config/locations/{locationId}/receptionistContacts/directories.
@@ -3367,7 +3367,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSelectedCallerId = &Operation{
 	Summary:     "Configure My Selected Caller ID Settings",
 	Description: "Update selected caller ID settings associated with the authenticated user.\n\nCaller ID settings control how a person's information is displayed when making outgoing calls.\nSelected Caller ID settings allow users to choose which configuration among available caller IDs is selected currently.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/selectedCallerId",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"selected\": {\n    \"type\": \"CALL_QUEUE\",\n    \"id\": \"<string>\",\n    \"directNumber\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdSelectedCallerId is "Get My Secondary Line Owner's Selected Caller ID Settings": GET /telephony/config/people/me/settings/secondaryLines/{lineownerId}/selectedCallerId.
@@ -3390,7 +3390,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdSelected
 	Params: []Param{
 		{Name: "lineownerId", In: InPath, Flag: "lineowner-id", Required: true, Usage: "Unique identifier for the secondary line owner (applicable only for Virtual Lines)."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"selected\": {\n    \"type\": \"CALL_QUEUE\",\n    \"id\": \"<string>\",\n    \"directNumber\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsAvailableCallerIds is "Get My Available Caller ID List": GET /telephony/config/people/me/settings/availableCallerIds.
@@ -3441,7 +3441,7 @@ var CallingPutTelephonyConfigPeopleMeEndpointsByEndpointId = &Operation{
 	Params: []Param{
 		{Name: "endpointId", In: InPath, Flag: "endpoint-id", Required: true, Usage: "Unique identifier of the endpoint."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"mobilitySettings\": {\n    \"alertingEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsCallRecording is "Get My Call Recording Settings": GET /telephony/config/people/me/settings/callRecording.
@@ -3532,7 +3532,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsExecutiveAssistant = &Operation{
 	Summary:     "Modify My Executive Assistant Settings",
 	Description: "Update Settings for an executive assistant.\n\nExecutive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.\nAssistants can also set the call forwarding destination, and join or leave an executive’s pool.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/executive/assistant",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"forwardFilteredCallsEnabled\": \"<boolean>\",\n  \"forwardToPhoneNumber\": \"<string>\",\n  \"executives\": [\n    {\n      \"personId\": \"<string>\",\n      \"optInEnabled\": \"<boolean>\"\n    },\n    {\n      \"personId\": \"<string>\",\n      \"optInEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsServices is "Get My Calling Services List": GET /telephony/config/people/me/settings/services.
@@ -3631,7 +3631,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsCallForwarding = &Operation{
 	Summary:     "Configure My Call Forwarding Settings",
 	Description: "Update call forwarding settings associated with the authenticated user.\n\nThree types of call forwarding are supported:\n\n+ Always - forwards all incoming calls to the destination you choose.\n\n+ When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person is busy.\n\n+ When no answer - forwarding only occurs when you are away or not answering your phone.\n\nIn addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/callForwarding",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"busy\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"noAnswer\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"businessContinuity\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdCallForwarding is "Get My Secondary Line Owner's Call Forwarding Settings": GET /telephony/config/people/me/settings/secondaryLines/{lineownerId}/callForwarding.
@@ -3654,7 +3654,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdCallForw
 	Params: []Param{
 		{Name: "lineownerId", In: InPath, Flag: "lineowner-id", Required: true, Usage: "Unique identifier for the secondary line owner (applicable only for Virtual Lines)."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"busy\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"noAnswer\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"businessContinuity\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsCallPickupGroup is "Get My Call Pickup Group Settings": GET /telephony/config/people/me/settings/callPickupGroup.
@@ -3701,7 +3701,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsVoicemail = &Operation{
 	Summary:     "Configure Voicemail Settings for a Person",
 	Description: "Configure a person's voicemail settings.\n\nThe voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via voicemail.\n\nOptionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.\n\nThis API requires a user auth token with a scope of `spark-admin:people_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/voicemail",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"sendAllCalls\": {\n    \"enabled\": \"<boolean>\"\n  },\n  \"sendBusyCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"DEFAULT\"\n  },\n  \"sendUnansweredCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"CUSTOM\",\n    \"numberOfRings\": \"<number>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"messageStorage\": {\n    \"mwiEnabled\": \"<boolean>\",\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsVoicemail is "Read Voicemail Settings for a Person": GET /telephony/config/people/me/settings/voicemail.
@@ -3721,7 +3721,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdVoicemai
 	Params: []Param{
 		{Name: "lineownerId", In: InPath, Flag: "lineowner-id", Required: true, Usage: "Unique identifier for the secondary line owner (applicable only for Virtual Lines)."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"sendAllCalls\": {\n    \"enabled\": \"<boolean>\"\n  },\n  \"sendBusyCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"DEFAULT\"\n  },\n  \"sendUnansweredCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"CUSTOM\",\n    \"numberOfRings\": \"<number>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"messageStorage\": {\n    \"mwiEnabled\": \"<boolean>\",\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdVoicemail is "Get My Secondary Line Owner's Voicemail Settings": GET /telephony/config/people/me/settings/secondaryLines/{lineownerId}/voicemail.
@@ -3798,7 +3798,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsQueues = &Operation{
 	Summary:     "Modify My Call Center Settings",
 	Description: "Modify the call center settings and availability for an agent in one or more call centers to which the logged in user belongs.\n\nCalls from the Call Centers are routed to agents based on configuration. An agent can be assigned to one or more call queues and can be managed by supervisors.\nContains a list specifying the desired availability status of one or more call centers.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/queues",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"agentACDState\": \"UNAVAILABLE\",\n  \"queues\": [\n    {\n      \"id\": \"<string>\",\n      \"available\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"available\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdQueues is "Get My Secondary Line Owner's Call Center Settings": GET /telephony/config/people/me/settings/secondaryLines/{lineownerId}/queues.
@@ -3821,7 +3821,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSecondaryLinesByLineownerIdQueues =
 	Params: []Param{
 		{Name: "lineownerId", In: InPath, Flag: "lineowner-id", Required: true, Usage: "Unique identifier for the secondary line owner (applicable only for Virtual Lines)."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"agentACDState\": \"UNAVAILABLE\",\n  \"queues\": [\n    {\n      \"id\": \"<string>\",\n      \"available\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"available\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsCallCaptions is "Get my call captions settings": GET /telephony/config/people/me/settings/callCaptions.
@@ -3888,7 +3888,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsExecutiveCallFiltering = &Operation
 	Summary:     "Modify User Executive Call Filtering Settings",
 	Description: "Update executive call filtering settings for the authenticated user.\n\nExecutive Call Filtering in Webex allows you to control which calls are allowed to reach the executive assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable call filtering and configure filter rules to manage incoming calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/executive/callFiltering",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"filterType\": \"ALL_EXTERNAL_CALLS\",\n  \"criteriaActivation\": [\n    {\n      \"id\": \"<string>\",\n      \"activationEnabled\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"activationEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsExecutiveCallFilteringCriteriaById is "Get User Executive Call Filtering Criteria Settings": GET /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
@@ -3911,7 +3911,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsExecutiveCallFilteringCriteriaById 
 	Params: []Param{
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The `id` parameter specifies the unique identifier for the executive call filtering criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"scheduleName\": \"<string>\",\n  \"scheduleType\": \"businessHours\",\n  \"scheduleLevel\": \"PEOPLE\",\n  \"callsFrom\": \"ANY_PHONE_NUMBER\",\n  \"anonymousCallersEnabled\": \"<boolean>\",\n  \"unavailableCallersEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"filterEnabled\": \"<boolean>\",\n  \"callsToNumbers\": [\n    {\n      \"type\": \"ALTERNATE\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"type\": \"PRIMARY\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigPeopleMeSettingsExecutiveCallFilteringCriteriaById is "Delete User Executive Call Filtering Criteria": DELETE /telephony/config/people/me/settings/executive/callFiltering/criteria/{id}.
@@ -3952,7 +3952,7 @@ var CallingPostTelephonyConfigPeopleMeSettingsExecutiveCallFilteringCriteria = &
 	Summary:     "Add User Executive Call Filtering Criteria",
 	Description: "Create a new executive call filtering criteria for the authenticated user.\n\nExecutive Call Filtering Criteria in Webex allows you to define detailed filter rules for incoming calls. This API creates a new filter rule with the specified configuration, including schedule, phone numbers, and call routing preferences.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/settings/executive/callFiltering/criteria",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"scheduleName\": \"<string>\",\n  \"scheduleType\": \"businessHours\",\n  \"scheduleLevel\": \"PEOPLE\",\n  \"callsFrom\": \"ANY_PHONE_NUMBER\",\n  \"anonymousCallersEnabled\": \"<boolean>\",\n  \"unavailableCallersEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"filterEnabled\": \"<boolean>\",\n  \"callsToNumbers\": [\n    {\n      \"type\": \"ALTERNATE\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"type\": \"PRIMARY\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsExecutiveAlert is "Get User Executive Alert Settings": GET /telephony/config/people/me/settings/executive/alert.
@@ -4117,7 +4117,7 @@ var CallingPostTelephonyConfigPeopleMeSchedules = &Operation{
 	Summary:     "Add a User level Schedule for Call Settings",
 	Description: "Create a new Schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/schedules",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"type\": \"businessHours\",\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"FEBRUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"MONDAY\",\n          \"week\": \"THIRD\",\n          \"month\": \"DECEMBER\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"FEBRUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"FRIDAY\",\n          \"week\": \"FIRST\",\n          \"month\": \"JUNE\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId is "Get User Schedule": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
@@ -4142,7 +4142,7 @@ var CallingPutTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId = &Oper
 		{Name: "scheduleType", In: InPath, Flag: "schedule-type", Required: true, Usage: "Type of the schedule.\n * `businessHours` - Business hours schedule type.\n * `holidays` - Holidays schedule type.\n"},
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Update the schedule with the matching ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"newName\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<integer>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"newName\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<integer>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId is "Delete a User Schedule": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
@@ -4167,7 +4167,7 @@ var CallingPostTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEvents 
 		{Name: "scheduleType", In: InPath, Flag: "schedule-type", Required: true, Usage: "Type of the schedule.\n * `businessHours` - Business hours schedule type.\n * `holidays` - Holidays schedule type.\n"},
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "add an event for the specified schedule ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<integer>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsByEventId is "Get User Schedule Event": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
@@ -4194,7 +4194,7 @@ var CallingPutTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsBy
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Update an event for the specified schedule ID."},
 		{Name: "eventId", In: InPath, Flag: "event-id", Required: true, Usage: "Update the event with the matching ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"newName\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<integer>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsByEventId is "Delete User a Schedule Event": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
@@ -4619,7 +4619,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSequentialRing = &Operation{
 	Summary:     "Modify Sequential Ring Settings for User",
 	Description: "Update Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"ringBaseLocationFirstEnabled\": \"<boolean>\",\n  \"baseLocationNumberOfRings\": \"<integer>\",\n  \"continueIfBaseLocationIsBusyEnabled\": \"<boolean>\",\n  \"callsToVoicemailEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    {\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingPostTelephonyConfigPeopleMeSettingsSequentialRingCriteria is "Add User Sequential Ring Criteria": POST /telephony/config/people/me/settings/sequentialRing/criteria.
@@ -4777,7 +4777,7 @@ var callingPostTelephonyConfigPeopleMeSchedules_2 = &Operation{
 	Summary:     "Add a User level Schedule for Call Settings",
 	Description: "Create a new Schedule for the authenticated user.\n\nSchedules are used to define specific time periods which can be applied to various Call Settings, such as Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in the schedule, making it more convenient for users to manage their calls.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/people/me/schedules",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"type\": \"businessHours\",\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"MARCH\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"SATURDAY\",\n          \"week\": \"FOURTH\",\n          \"month\": \"JULY\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"JANUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"MONDAY\",\n          \"week\": \"THIRD\",\n          \"month\": \"MARCH\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // callingGetTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId_2 is "Get User Schedule": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
@@ -4802,7 +4802,7 @@ var callingPutTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId_2 = &Op
 		{Name: "scheduleType", In: InPath, Flag: "schedule-type", Required: true, Usage: "Type of the schedule.\n * `businessHours` - Business hours schedule type.\n * `holidays` - Holidays schedule type.\n"},
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Update the schedule with the matching ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"newName\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<integer>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"newName\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<integer>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // callingDeleteTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleId_2 is "Delete a User Schedule": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}.
@@ -4827,7 +4827,7 @@ var callingPostTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEvents_
 		{Name: "scheduleType", In: InPath, Flag: "schedule-type", Required: true, Usage: "Type of the schedule.\n * `businessHours` - Business hours schedule type.\n * `holidays` - Holidays schedule type.\n"},
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "add an event for the specified schedule ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<integer>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // callingGetTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsByEventId_2 is "Get User Schedule Event": GET /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
@@ -4854,7 +4854,7 @@ var callingPutTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsBy
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Update an event for the specified schedule ID."},
 		{Name: "eventId", In: InPath, Flag: "event-id", Required: true, Usage: "Update the event with the matching ID."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"newName\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<integer>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // callingDeleteTelephonyConfigPeopleMeSchedulesByScheduleTypeByScheduleIdEventsByEventId_2 is "Delete User a Schedule Event": DELETE /telephony/config/people/me/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
@@ -5279,7 +5279,7 @@ var callingPutTelephonyConfigPeopleMeSettingsSequentialRing_2 = &Operation{
 	Summary:     "Modify Sequential Ring Settings for User",
 	Description: "Update Sequential Ring Settings for the authenticated user.\n\nSequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered. This can be configured to ring up to five phone numbers with customizable ring patterns.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/sequentialRing",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"ringBaseLocationFirstEnabled\": \"<boolean>\",\n  \"baseLocationNumberOfRings\": \"<integer>\",\n  \"continueIfBaseLocationIsBusyEnabled\": \"<boolean>\",\n  \"callsToVoicemailEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    {\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // callingPostTelephonyConfigPeopleMeSettingsSequentialRingCriteria_2 is "Add User Sequential Ring Criteria": POST /telephony/config/people/me/settings/sequentialRing/criteria.
@@ -5357,7 +5357,7 @@ var CallingPutTelephonyConfigPeopleMeSettingsSimultaneousRing = &Operation{
 	Summary:     "Modify My Simultaneous Ring Settings",
 	Description: "Modify simultaneous ring settings for the authenticated user.\n\nThe Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring simultaneously. Schedules can also be set up to ring these phones during certain times of the day or days of the week.\n\nModifying settings requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/settings/simultaneousRing",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"doNotRingIfOnCallEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationEnabled\": \"<boolean>\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationEnabled\": \"<boolean>\"\n    }\n  ],\n  \"criteriasEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsSimultaneousRingCriteriaById is "Retrieve My Simultaneous Ring Criteria": GET /telephony/config/people/me/settings/simultaneousRing/criteria/{id}.
@@ -5570,7 +5570,7 @@ var CallingPutTelephonyConfigVoicemailRules = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update voicemail rules for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"defaultVoicemailPinEnabled\": \"<boolean>\",\n  \"defaultVoicemailPin\": \"<string>\",\n  \"expirePasscode\": {\n    \"enabled\": \"<boolean>\",\n    \"numberOfDays\": \"<number>\"\n  },\n  \"changePasscode\": {\n    \"enabled\": \"<boolean>\",\n    \"numberOfDays\": \"<number>\"\n  },\n  \"blockPreviousPasscodes\": {\n    \"enabled\": \"<boolean>\",\n    \"numberOfPasscodes\": \"<number>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigMohSettings is "Get the organization Music on Hold configuration": GET /telephony/config/moh/settings.
@@ -5935,7 +5935,7 @@ var CallingPutTelephonyConfigDevicesByDeviceIdMembers = &Operation{
 		{Name: "deviceId", In: InPath, Flag: "device-id", Required: true, Usage: "Unique identifier for the device."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify members on the device in this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"members\": [\n    {\n      \"port\": \"<number>\",\n      \"id\": \"<string>\",\n      \"primaryOwner\": \"<boolean>\",\n      \"lineType\": \"PRIMARY\",\n      \"lineWeight\": \"<number>\",\n      \"hotlineEnabled\": \"<boolean>\",\n      \"hotlineDestination\": \"<string>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"t38FaxCompressionEnabled\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    },\n    {\n      \"port\": \"<number>\",\n      \"id\": \"<string>\",\n      \"primaryOwner\": \"<boolean>\",\n      \"lineType\": \"PRIMARY\",\n      \"lineWeight\": \"<number>\",\n      \"hotlineEnabled\": \"<boolean>\",\n      \"hotlineDestination\": \"<string>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"t38FaxCompressionEnabled\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigDevicesByDeviceIdAvailableMembers is "Search Members": GET /telephony/config/devices/{deviceId}/availableMembers.
@@ -5995,7 +5995,7 @@ var CallingPutTelephonyConfigDevicesByDeviceIdSettings = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization in which the device resides.."},
 		{Name: "deviceModel", In: InQuery, Flag: "device-model", Usage: "The model type of the device. The corresponding device model display name sometimes called the product name, can also be used to specify the model."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"customizations\": {\n    \"ata\": {\n      \"audioCodecPriority\": {\n        \"selection\": \"REGIONAL\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"ataDtmfMode\": \"NORMAL\",\n      \"ataDtmfMethod\": \"INBAND\",\n      \"cdpEnabled\": \"<boolean>\",\n      \"lldpEnabled\": \"<boolean>\",\n      \"qosEnabled\": \"<boolean>\",\n      \"vlan\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\"\n      },\n      \"webAccessEnabled\": \"<boolean>\",\n      \"nightlyResyncEnabled\": \"<boolean>\",\n      \"snmp\": {\n        \"enabled\": \"<boolean>\",\n        \"trustedIP\": \"<string>\",\n        \"getCommunity\": \"<string>\",\n        \"setCommunity\": \"<string>\",\n        \"snmpV3Enabled\": \"<boolean>\"\n      }\n    },\n    \"mpp\": {\n      \"pnacEnabled\": \"<boolean>\",\n      \"audioCodecPriority\": {\n        \"selection\": \"CUSTOM\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"backlightTimer\": \"THIRTY_MIN\",\n      \"background\": {\n        \"image\": \"CISCO_DARK_BLUE\",\n        \"customUrl\": \"<string>\"\n      },\n      \"cdpEnabled\": \"<boolean>\",\n      \"defaultLoggingLevel\": \"DEBUGGING\",\n      \"dndServicesEnabled\": \"<boolean>\",\n      \"acd\": {\n        \"enabled\": \"<boolean>\",\n        \"displayCallqueueAgentSoftkeys\": \"LAST_PAGE\"\n      },\n      \"shortInterdigitTimer\": \"<number>\",\n      \"longInterdigitTimer\": \"<number>\",\n      \"lineKeyLabelFormat\": \"PERSON_LAST_THEN_FIRST_NAME\",\n      \"lineKeyLEDPattern\": \"PRESET_1\",\n      \"lldpEnabled\": \"<boolean>\",\n      \"mppUserWebAccessEnabled\": \"<boolean>\",\n      \"multicast\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"enhancedMulticast\": {\n        \"multicastList\": [\n          {\n            \"hostAndPort\": \"<string>\",\n            \"hasXmlAppUrl\": \"<boolean>\",\n            \"xmlAppTimeout\": \"<number>\"\n          },\n          {\n            \"hostAndPort\": \"<string>\",\n            \"hasXmlAppUrl\": \"<boolean>\",\n            \"xmlAppTimeout\": \"<number>\"\n          }\n        ],\n        \"xmlAppUrl\": \"<string>\"\n      },\n      \"offHookTimer\": \"<number>\",\n      \"phoneLanguage\": \"CROATIAN\",\n      \"poeMode\": \"NORMAL\",\n      \"qosEnabled\": \"<boolean>\",\n      \"screenTimeout\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\"\n      },\n      \"usbPortsEnabled\": \"<boolean>\",\n      \"usbPorts\": {\n        \"enabled\": \"<boolean>\",\n        \"sideUsbEnabled\": \"<boolean>\",\n        \"rearUsbEnabled\": \"<boolean>\"\n      },\n      \"vlan\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\",\n        \"pcPort\": \"<number>\"\n      },\n      \"wifiNetwork\": {\n        \"enabled\": \"<boolean>\",\n        \"authenticationMethod\": \"EAP_FAST\",\n        \"ssidName\": \"<string>\",\n        \"userId\": \"<string>\"\n      },\n      \"callHistory\": \"WEBEX_UNIFIED_CALL_HISTORY\",\n      \"contacts\": \"WEBEX_DIRECTORY\",\n      \"webexMeetingsEnabled\": \"<boolean>\",\n      \"volumeSettings\": {\n        \"ringerVolume\": \"<number>\",\n        \"speakerVolume\": \"<number>\",\n        \"handsetVolume\": \"<number>\",\n        \"headsetVolume\": \"<number>\",\n        \"eHookEnabled\": \"<boolean>\",\n        \"allowEndUserOverrideEnabled\": \"<boolean>\"\n      },\n      \"cfExpandedSoftKey\": \"ALL_CALL_FORWARDS\",\n      \"httpProxy\": {\n        \"mode\": \"MANUAL\",\n        \"autoDiscoveryEnabled\": \"<boolean>\",\n        \"host\": \"<string>\",\n        \"port\": \"<string>\",\n        \"packUrl\": \"<string>\",\n        \"authSettingsEnabled\": \"<boolean>\",\n        \"username\": \"<string>\",\n        \"password\": \"<string>\"\n      },\n      \"bluetooth\": {\n        \"enabled\": \"<boolean>\",\n        \"mode\": \"BOTH\"\n      },\n      \"passThroughPortEnabled\": \"<boolean>\",\n      \"userPasswordOverrideEnabled\": \"<boolean>\",\n      \"activeCallFocusEnabled\": \"<boolean>\",\n      \"peerFirmwareEnabled\": \"<boolean>\",\n      \"noiseCancellation\": {\n        \"enabled\": \"<boolean>\",\n        \"allowEndUserOverrideEnabled\": \"<boolean>\"\n      },\n      \"voiceFeedbackAccessibilityEnabled\": \"<boolean>\",\n      \"dialAssistEnabled\": \"<boolean>\",\n      \"callsPerLine\": \"<number>\",\n      \"nightlyResyncEnabled\": \"<boolean>\",\n      \"missedCallNotificationEnabled\": \"<boolean>\",\n      \"softKeyLayout\": {\n        \"softKeyMenu\": {\n          \"idleKeyList\": \"<string>\",\n          \"offHookKeyList\": \"<string>\",\n          \"dialingInputKeyList\": \"<string>\",\n          \"progressingKeyList\": \"<string>\",\n          \"connectedKeyList\": \"<string>\",\n          \"connectedVideoKeyList\": \"<string>\",\n          \"startTransferKeyList\": \"<string>\",\n          \"startConferenceKeyList\": \"<string>\",\n          \"conferencingKeyList\": \"<string>\",\n          \"releasingKeyList\": \"<string>\",\n          \"holdKeyList\": \"<string>\",\n          \"ringingKeyList\": \"<string>\",\n          \"sharedActiveKeyList\": \"<string>\",\n          \"sharedHeldKeyList\": \"<string>\"\n        },\n        \"psk\": {\n          \"psk1\": \"<string>\",\n          \"psk4\": \"<string>\",\n          \"psk2\": \"<string>\",\n          \"psk3\": \"<string>\",\n          \"psk5\": \"<string>\",\n          \"psk6\": \"<string>\",\n          \"psk7\": \"<string>\",\n          \"psk8\": \"<string>\",\n          \"psk9\": \"<string>\",\n          \"psk10\": \"<string>\",\n          \"psk11\": \"<string>\",\n          \"psk12\": \"<string>\",\n          \"psk13\": \"<string>\",\n          \"psk14\": \"<string>\",\n          \"psk15\": \"<string>\",\n          \"psk16\": \"<string>\"\n        },\n        \"softKeyMenuDefaults\": {\n          \"idleKeyList\": \"<string>\",\n          \"offHookKeyList\": \"<string>\",\n          \"dialingInputKeyList\": \"<string>\",\n          \"progressingKeyList\": \"<string>\",\n          \"connectedKeyList\": \"<string>\",\n          \"connectedVideoKeyList\": \"<string>\",\n          \"startTransferKeyList\": \"<string>\",\n          \"startConferenceKeyList\": \"<string>\",\n          \"conferencingKeyList\": \"<string>\",\n          \"releasingKeyList\": \"<string>\",\n          \"holdKeyList\": \"<string>\",\n          \"ringingKeyList\": \"<string>\",\n          \"sharedActiveKeyList\": \"<string>\",\n          \"sharedHeldKeyList\": \"<string>\"\n        },\n        \"pskDefaults\": {\n          \"psk1\": \"<string>\",\n          \"psk4\": \"<string>\",\n          \"psk2\": \"<string>\",\n          \"psk3\": \"<string>\",\n          \"psk5\": \"<string>\",\n          \"psk6\": \"<string>\",\n          \"psk7\": \"<string>\",\n          \"psk8\": \"<string>\",\n          \"psk9\": \"<string>\",\n          \"psk10\": \"<string>\",\n          \"psk11\": \"<string>\",\n          \"psk12\": \"<string>\",\n          \"psk13\": \"<string>\",\n          \"psk14\": \"<string>\",\n          \"psk15\": \"<string>\",\n          \"psk16\": \"<string>\"\n        }\n      },\n      \"backgroundImage8875\": \"BLUE_DARK\",\n      \"backlightTimer68XX78XX\": \"TWENTY_SEC\",\n      \"allowMonitorLinesEnabled\": \"<boolean>\",\n      \"displayNameFormat\": \"PERSON_FIRST_THEN_LAST_NAME\",\n      \"iceEnabled\": \"<boolean>\"\n    },\n    \"wifi\": {\n      \"audioCodecPriority\": {\n        \"selection\": \"<string>\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"ldap\": {\n        \"enabled\": \"<boolean>\",\n        \"serverAddress\": \"<string>\",\n        \"serverPort\": \"<number>\",\n        \"commSecurityType\": \"NONE\",\n        \"bindDn\": \"<string>\",\n        \"bindPw\": \"<string>\",\n        \"baseDn\": \"<string>\",\n        \"primaryEmailAttribute\": \"<string>\",\n        \"alternateEmailAttribute\": \"<string>\"\n      },\n      \"webAccess\": {\n        \"enabled\": \"<boolean>\",\n        \"password\": \"<string>\"\n      },\n      \"phoneSecurityPwd\": \"<string>\"\n    }\n  },\n  \"customEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdDevicesSettings is "Get Location Device Settings": GET /telephony/config/locations/{locationId}/devices/settings.
@@ -6059,7 +6059,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdDevicesSettingsHoteling = &Operatio
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "ID of the person associated with the device."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the person belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"hoteling\": {\n    \"enabled\": \"<boolean>\",\n    \"limitGuestUse\": \"<boolean>\",\n    \"guestHoursLimit\": \"<number>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigWorkspacesByWorkspaceIdDevices is "Get Workspace Devices": GET /telephony/config/workspaces/{workspaceId}/devices.
@@ -6125,7 +6125,7 @@ var CallingPostTelephonyConfigDevicesLineKeyTemplates = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the line key template belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"templateName\": \"<string>\",\n  \"deviceModel\": \"<string>\",\n  \"lineKeys\": [\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"CALL_PARK_EXTENSION\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    },\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"OPEN\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    }\n  ],\n  \"userReorderEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigDevicesLineKeyTemplates is "Read the list of Line Key Templates": GET /telephony/config/devices/lineKeyTemplates.
@@ -6162,7 +6162,7 @@ var CallingPutTelephonyConfigDevicesLineKeyTemplatesByTemplateId = &Operation{
 		{Name: "templateId", In: InPath, Flag: "template-id", Required: true, Usage: "Modify line key template with this template ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify a line key template for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"lineKeys\": [\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"MONITOR\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    },\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"PRIMARY_LINE\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    }\n  ],\n  \"userReorderEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigDevicesLineKeyTemplatesByTemplateId is "Delete a Line Key Template": DELETE /telephony/config/devices/lineKeyTemplates/{templateId}.
@@ -6186,7 +6186,7 @@ var CallingPostTelephonyConfigDevicesActionsPreviewApplyLineKeyTemplateInvoke = 
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Preview Line Key Template for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"action\": \"APPLY_TEMPLATE\",\n  \"templateId\": \"<string>\",\n  \"locationIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"excludeDevicesWithCustomLayout\": \"<boolean>\",\n  \"includeDeviceTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"excludeDeviceTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"advisoryTypes\": {\n    \"moreSharedAppearancesEnabled\": \"<boolean>\",\n    \"fewSharedAppearancesEnabled\": \"<boolean>\",\n    \"moreMonitorAppearancesEnabled\": \"<boolean>\",\n    \"moreCPEAppearancesEnabled\": \"<boolean>\",\n    \"moreModeManagementAppearancesEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingPostTelephonyConfigJobsDevicesApplyLineKeyTemplate is "Apply a Line Key Template": POST /telephony/config/jobs/devices/applyLineKeyTemplate.
@@ -6198,7 +6198,7 @@ var CallingPostTelephonyConfigJobsDevicesApplyLineKeyTemplate = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Apply Line Key Template for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"action\": \"APPLY_TEMPLATE\",\n  \"templateId\": \"<string>\",\n  \"locationIds\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"excludeDevicesWithCustomLayout\": \"<boolean>\",\n  \"includeDeviceTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"excludeDeviceTags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"advisoryTypes\": {\n    \"moreSharedAppearancesEnabled\": \"<boolean>\",\n    \"fewSharedAppearancesEnabled\": \"<boolean>\",\n    \"moreMonitorAppearancesEnabled\": \"<boolean>\",\n    \"moreCPEAppearancesEnabled\": \"<boolean>\",\n    \"moreModeManagementAppearancesEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigJobsDevicesApplyLineKeyTemplate is "Get List of Apply Line Key Template jobs": GET /telephony/config/jobs/devices/applyLineKeyTemplate.
@@ -6282,7 +6282,7 @@ var CallingPostTelephonyConfigJobsDevicesCallDeviceSettings = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Apply change device settings for all the devices under this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"locationId\": \"<string>\",\n  \"locationCustomizationsEnabled\": \"<boolean>\",\n  \"customizations\": {\n    \"ata\": {\n      \"audioCodecPriority\": {\n        \"selection\": \"CUSTOM\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"ataDtmfMode\": \"NORMAL\",\n      \"ataDtmfMethod\": \"AVT\",\n      \"cdpEnabled\": \"<boolean>\",\n      \"lldpEnabled\": \"<boolean>\",\n      \"qosEnabled\": \"<boolean>\",\n      \"vlan\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\"\n      },\n      \"webAccessEnabled\": \"<boolean>\",\n      \"nightlyResyncEnabled\": \"<boolean>\",\n      \"snmp\": {\n        \"enabled\": \"<boolean>\",\n        \"trustedIP\": \"<string>\",\n        \"getCommunity\": \"<string>\",\n        \"setCommunity\": \"<string>\",\n        \"snmpV3Enabled\": \"<boolean>\"\n      }\n    },\n    \"dect\": {\n      \"audioCodecPriority\": {\n        \"selection\": \"REGIONAL\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"cdpEnabled\": \"<boolean>\",\n      \"dect6825HandsetEmergencyNumber\": \"<string>\",\n      \"lldpEnabled\": \"<boolean>\",\n      \"multicast\": \"<string>\",\n      \"qosEnabled\": \"<boolean>\",\n      \"vlan\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\"\n      },\n      \"webAccessEnabled\": \"<boolean>\",\n      \"nightlyResyncEnabled\": \"<boolean>\"\n    },\n    \"mpp\": {\n      \"pnacEnabled\": \"<boolean>\",\n      \"audioCodecPriority\": {\n        \"selection\": \"<string>\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"backlightTimer\": \"THIRTY_MIN\",\n      \"background\": {\n        \"image\": \"NONE\",\n        \"customUrl\": \"<string>\"\n      },\n      \"cdpEnabled\": \"<boolean>\",\n      \"defaultLoggingLevel\": \"STANDARD\",\n      \"dndServicesEnabled\": \"<boolean>\",\n      \"acd\": {\n        \"enabled\": \"<boolean>\",\n        \"displayCallqueueAgentSoftkeys\": \"FRONT_PAGE\"\n      },\n      \"shortInterdigitTimer\": \"<number>\",\n      \"longInterdigitTimer\": \"<number>\",\n      \"lineKeyLabelFormat\": \"PERSON_LAST_THEN_FIRST_NAME\",\n      \"lineKeyLEDPattern\": \"DEFAULT\",\n      \"lldpEnabled\": \"<boolean>\",\n      \"mppUserWebAccessEnabled\": \"<boolean>\",\n      \"multicast\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"enhancedMulticast\": {\n        \"multicastList\": [\n          {\n            \"hostAndPort\": \"<string>\",\n            \"hasXmlAppUrl\": \"<boolean>\",\n            \"xmlAppTimeout\": \"<number>\"\n          },\n          {\n            \"hostAndPort\": \"<string>\",\n            \"hasXmlAppUrl\": \"<boolean>\",\n            \"xmlAppTimeout\": \"<number>\"\n          }\n        ],\n        \"xmlAppUrl\": \"<string>\"\n      },\n      \"offHookTimer\": \"<number>\",\n      \"phoneLanguage\": \"HUNGARIAN\",\n      \"poeMode\": \"MAXIMUM\",\n      \"qosEnabled\": \"<boolean>\",\n      \"screenTimeout\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\"\n      },\n      \"usbPortsEnabled\": \"<boolean>\",\n      \"vlan\": {\n        \"enabled\": \"<boolean>\",\n        \"value\": \"<number>\",\n        \"pcPort\": \"<number>\"\n      },\n      \"wifiNetwork\": {\n        \"enabled\": \"<boolean>\",\n        \"authenticationMethod\": \"PSK\",\n        \"ssidName\": \"<string>\",\n        \"userId\": \"<string>\"\n      },\n      \"callHistory\": \"WEBEX_UNIFIED_CALL_HISTORY\",\n      \"contacts\": \"WEBEX_DIRECTORY\",\n      \"webexMeetingsEnabled\": \"<boolean>\",\n      \"volumeSettings\": {\n        \"ringerVolume\": \"<number>\",\n        \"speakerVolume\": \"<number>\",\n        \"handsetVolume\": \"<number>\",\n        \"headsetVolume\": \"<number>\",\n        \"eHookEnabled\": \"<boolean>\",\n        \"allowEndUserOverrideEnabled\": \"<boolean>\"\n      },\n      \"cfExpandedSoftKey\": \"ALL_CALL_FORWARDS\",\n      \"httpProxy\": {\n        \"mode\": \"MANUAL\",\n        \"autoDiscoveryEnabled\": \"<boolean>\",\n        \"host\": \"<string>\",\n        \"port\": \"<string>\",\n        \"packUrl\": \"<string>\",\n        \"authSettingsEnabled\": \"<boolean>\",\n        \"username\": \"<string>\",\n        \"password\": \"<string>\"\n      },\n      \"bluetooth\": {\n        \"enabled\": \"<boolean>\",\n        \"mode\": \"PHONE\",\n        \"PHONE\": \"<string>\",\n        \"HANDS_FREE\": \"<string>\",\n        \"BOTH\": \"<string>\"\n      },\n      \"passThroughPortEnabled\": \"<boolean>\",\n      \"userPasswordOverrideEnabled\": \"<boolean>\",\n      \"activeCallFocusEnabled\": \"<boolean>\",\n      \"peerFirmwareEnabled\": \"<boolean>\",\n      \"noiseCancellation\": {\n        \"enabled\": \"<boolean>\",\n        \"allowEndUserOverrideEnabled\": \"<boolean>\"\n      },\n      \"voiceFeedbackAccessibilityEnabled\": \"<boolean>\",\n      \"dialAssistEnabled\": \"<boolean>\",\n      \"callsPerLine\": \"<number>\",\n      \"nightlyResyncEnabled\": \"<boolean>\",\n      \"missedCallNotificationEnabled\": \"<boolean>\",\n      \"softKeyLayout\": {\n        \"softKeyMenu\": {\n          \"idleKeyList\": \"<string>\",\n          \"offHookKeyList\": \"<string>\",\n          \"dialingInputKeyList\": \"<string>\",\n          \"progressingKeyList\": \"<string>\",\n          \"connectedKeyList\": \"<string>\",\n          \"connectedVideoKeyList\": \"<string>\",\n          \"startTransferKeyList\": \"<string>\",\n          \"startConferenceKeyList\": \"<string>\",\n          \"conferencingKeyList\": \"<string>\",\n          \"releasingKeyList\": \"<string>\",\n          \"holdKeyList\": \"<string>\",\n          \"ringingKeyList\": \"<string>\",\n          \"sharedActiveKeyList\": \"<string>\",\n          \"sharedHeldKeyList\": \"<string>\"\n        },\n        \"psk\": {\n          \"psk1\": \"<string>\",\n          \"psk4\": \"<string>\",\n          \"psk2\": \"<string>\",\n          \"psk3\": \"<string>\",\n          \"psk5\": \"<string>\",\n          \"psk6\": \"<string>\",\n          \"psk7\": \"<string>\",\n          \"psk8\": \"<string>\",\n          \"psk9\": \"<string>\",\n          \"psk10\": \"<string>\",\n          \"psk11\": \"<string>\",\n          \"psk12\": \"<string>\",\n          \"psk13\": \"<string>\",\n          \"psk14\": \"<string>\",\n          \"psk15\": \"<string>\",\n          \"psk16\": \"<string>\"\n        },\n        \"softKeyMenuDefaults\": {\n          \"idleKeyList\": \"<string>\",\n          \"offHookKeyList\": \"<string>\",\n          \"dialingInputKeyList\": \"<string>\",\n          \"progressingKeyList\": \"<string>\",\n          \"connectedKeyList\": \"<string>\",\n          \"connectedVideoKeyList\": \"<string>\",\n          \"startTransferKeyList\": \"<string>\",\n          \"startConferenceKeyList\": \"<string>\",\n          \"conferencingKeyList\": \"<string>\",\n          \"releasingKeyList\": \"<string>\",\n          \"holdKeyList\": \"<string>\",\n          \"ringingKeyList\": \"<string>\",\n          \"sharedActiveKeyList\": \"<string>\",\n          \"sharedHeldKeyList\": \"<string>\"\n        },\n        \"pskDefaults\": {\n          \"psk1\": \"<string>\",\n          \"psk4\": \"<string>\",\n          \"psk2\": \"<string>\",\n          \"psk3\": \"<string>\",\n          \"psk5\": \"<string>\",\n          \"psk6\": \"<string>\",\n          \"psk7\": \"<string>\",\n          \"psk8\": \"<string>\",\n          \"psk9\": \"<string>\",\n          \"psk10\": \"<string>\",\n          \"psk11\": \"<string>\",\n          \"psk12\": \"<string>\",\n          \"psk13\": \"<string>\",\n          \"psk14\": \"<string>\",\n          \"psk15\": \"<string>\",\n          \"psk16\": \"<string>\"\n        }\n      },\n      \"backgroundImage8875\": \"CYAN_DARK\",\n      \"backlightTimer68XX78XX\": \"THIRTY_SEC\",\n      \"allowMonitorLinesEnabled\": \"<boolean>\",\n      \"displayNameFormat\": \"PERSON_LAST_THEN_FIRST_NAME\",\n      \"iceEnabled\": \"<boolean>\"\n    },\n    \"wifi\": {\n      \"audioCodecPriority\": {\n        \"selection\": \"REGIONAL\",\n        \"primary\": \"<string>\",\n        \"secondary\": \"<string>\",\n        \"tertiary\": \"<string>\"\n      },\n      \"ldap\": {\n        \"enabled\": \"<boolean>\",\n        \"serverAddress\": \"<string>\",\n        \"serverPort\": \"<number>\",\n        \"commSecurityType\": \"SSL\",\n        \"bindDn\": \"<string>\",\n        \"bindPw\": \"<string>\",\n        \"baseDn\": \"<string>\",\n        \"primaryEmailAttribute\": \"<string>\",\n        \"alternateEmailAttribute\": \"<string>\"\n      },\n      \"webAccess\": {\n        \"enabled\": \"<boolean>\",\n        \"password\": \"<string>\"\n      },\n      \"phoneSecurityPwd\": \"<string>\"\n    }\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigJobsDevicesCallDeviceSettings is "List Change Device Settings Jobs": GET /telephony/config/jobs/devices/callDeviceSettings.
@@ -6347,7 +6347,7 @@ var CallingPutTelephonyConfigDevicesByDeviceIdLayout = &Operation{
 		{Name: "deviceId", In: InPath, Flag: "device-id", Required: true, Usage: "Modify device layout for this device ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify a device layout for the device in this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"layoutMode\": \"DEFAULT\",\n  \"lineKeys\": [\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"MODE_MANAGEMENT\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    },\n    {\n      \"lineKeyIndex\": \"<number>\",\n      \"lineKeyType\": \"SPEED_DIAL\",\n      \"sharedLineIndex\": \"<number>\",\n      \"lineKeyLabel\": \"<string>\",\n      \"lineKeyValue\": \"<string>\"\n    }\n  ],\n  \"userReorderEnabled\": \"<boolean>\",\n  \"kemModuleType\": \"KEM_18_KEYS\",\n  \"kemKeys\": [\n    {\n      \"kemModuleIndex\": \"<number>\",\n      \"kemKeyIndex\": \"<number>\",\n      \"kemKeyType\": \"MODE_MANAGEMENT\",\n      \"sharedLineIndex\": \"<number>\",\n      \"kemKeyLabel\": \"<string>\",\n      \"kemKeyValue\": \"<string>\"\n    },\n    {\n      \"kemModuleIndex\": \"<number>\",\n      \"kemKeyIndex\": \"<number>\",\n      \"kemKeyType\": \"OPEN\",\n      \"sharedLineIndex\": \"<number>\",\n      \"kemKeyLabel\": \"<string>\",\n      \"kemKeyValue\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingPostTelephonyConfigJobsDevicesRebuildPhones is "Rebuild Phones Configuration": POST /telephony/config/jobs/devices/rebuildPhones.
@@ -6475,7 +6475,7 @@ var CallingDeleteTelephonyConfigDevicesBackgroundImages = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Deletes the list of images in this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"backgroundImages\": [\n    {\n      \"fileName\": \"<string>\",\n      \"forceDelete\": \"<boolean>\"\n    },\n    {\n      \"fileName\": \"<string>\",\n      \"forceDelete\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingPostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke is "Upload a Device Background Image": POST /telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke.
@@ -6632,7 +6632,7 @@ var CallingPutTelephonyConfigDevicesByDeviceIdDynamicSettings = &Operation{
 		{Name: "deviceId", In: InPath, Flag: "device-id", Required: true, Usage: "(Required) Device for which to update settings."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the device belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"tag\": \"<string>\",\n      \"action\": \"ADD\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"tag\": \"<string>\",\n      \"action\": \"ADD\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingPostTelephonyConfigJobsDevicesDynamicDeviceSettings is "Updates dynamic Device Settings Across Organization Or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
@@ -6644,7 +6644,7 @@ var CallingPostTelephonyConfigJobsDevicesDynamicDeviceSettings = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Apply update dynamic device settings for all the devices under this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"familyOrModelDisplayName\": \"<string>\",\n      \"tag\": \"<string>\",\n      \"action\": \"ADD\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"locationId\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigJobsDevicesDynamicDeviceSettings is "List dynamic device Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
@@ -6770,7 +6770,7 @@ var callingPutTelephonyConfigDevicesByDeviceIdDynamicSettings_2 = &Operation{
 		{Name: "deviceId", In: InPath, Flag: "device-id", Required: true, Usage: "Device for which to update settings."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization to which the device belongs."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"tag\": \"<string>\",\n      \"action\": \"DELETE\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"tag\": \"<string>\",\n      \"action\": \"ADD\",\n      \"value\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // callingPostTelephonyConfigJobsDevicesDynamicDeviceSettings_2 is "Update Device Dynamic Settings Across Organization or Location": POST /telephony/config/jobs/devices/dynamicDeviceSettings.
@@ -6782,7 +6782,7 @@ var callingPostTelephonyConfigJobsDevicesDynamicDeviceSettings_2 = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Apply update device dynamic settings for all the devices under this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"tags\": [\n    {\n      \"familyOrModelDisplayName\": \"<string>\",\n      \"tag\": \"<string>\",\n      \"action\": \"ADD\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"locationId\": \"<string>\"\n}"},
 }
 
 // callingGetTelephonyConfigJobsDevicesDynamicDeviceSettings_2 is "List Device Dynamic Settings Jobs": GET /telephony/config/jobs/devices/dynamicDeviceSettings.
@@ -7082,7 +7082,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdRedSkyBuilding = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the building address and alert email for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization in which the location exists."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"alertingEmail\": \"<string>\",\n  \"address\": {\n    \"addressLine1\": \"<string>\",\n    \"addressLine2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"stateOrProvince\": \"<string>\",\n    \"zipOrPostalCode\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPutTelephonyConfigLocationsByLocationIdRedSkyBuilding is "Update a RedSky Building Address for a Location": PUT /telephony/config/locations/{locationId}/redSky/building.
@@ -7095,7 +7095,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdRedSkyBuilding = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Update the building address for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization in which the location exists."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"address\": {\n    \"addressLine1\": \"<string>\",\n    \"addressLine2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"stateOrProvince\": \"<string>\",\n    \"zipOrPostalCode\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigEmergencyCallNotification is "Get an Organization Emergency Call Notification": GET /telephony/config/emergencyCallNotification.
@@ -7568,7 +7568,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantI
 		{Name: "autoAttendantId", In: InPath, Flag: "auto-attendant-id", Required: true, Usage: "Update an auto attendant with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update an auto attendant from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"alternateNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"SHORT_LONG_SHORT\",\n      \"tollFreeNumber\": \"<boolean>\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"SHORT_SHORT_LONG\",\n      \"tollFreeNumber\": \"<boolean>\"\n    }\n  ],\n  \"languageCode\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"holidaySchedule\": \"<string>\",\n  \"extensionDialing\": \"ENTERPRISE\",\n  \"nameDialing\": \"ENTERPRISE\",\n  \"timeZone\": \"<string>\",\n  \"businessHoursMenu\": {\n    \"greeting\": \"CUSTOM\",\n    \"extensionEnabled\": \"<boolean>\",\n    \"keyConfigurations\": {\n      \"key\": \"1\",\n      \"action\": \"NAME_DIALING\",\n      \"description\": \"<string>\",\n      \"value\": \"<string>\",\n      \"audioAnnouncementFile\": {\n        \"id\": \"<string>\",\n        \"fileName\": \"<string>\",\n        \"mediaFileType\": \"WAV\",\n        \"level\": \"ORGANIZATION\"\n      }\n    },\n    \"audioAnnouncementFile\": {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"ORGANIZATION\"\n    },\n    \"callTreatment\": {\n      \"retryAttemptForNoInput\": \"NO_REPEAT\",\n      \"noInputTimer\": \"<string>\",\n      \"actionToBePerformed\": {\n        \"action\": \"TRANSFER_TO_MAILBOX\",\n        \"greeting\": \"DEFAULT\",\n        \"audioAnnouncementFile\": {\n          \"id\": \"<string>\",\n          \"fileName\": \"<string>\",\n          \"mediaFileType\": \"WAV\",\n          \"level\": \"LOCATION\"\n        },\n        \"transferCallTo\": \"<string>\"\n      }\n    }\n  },\n  \"afterHoursMenu\": {\n    \"greeting\": \"CUSTOM\",\n    \"extensionEnabled\": \"<boolean>\",\n    \"keyConfigurations\": {\n      \"key\": \"3\",\n      \"action\": \"TRANSFER_TO_OPERATOR\",\n      \"description\": \"<string>\",\n      \"value\": \"<string>\",\n      \"audioAnnouncementFile\": {\n        \"id\": \"<string>\",\n        \"fileName\": \"<string>\",\n        \"mediaFileType\": \"WAV\",\n        \"level\": \"LOCATION\"\n      }\n    },\n    \"audioAnnouncementFile\": {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"LOCATION\"\n    },\n    \"callTreatment\": {\n      \"retryAttemptForNoInput\": \"TWO_TIMES\",\n      \"noInputTimer\": \"<string>\",\n      \"actionToBePerformed\": {\n        \"action\": \"TRANSFER_WITHOUT_PROMPT\",\n        \"greeting\": \"CUSTOM\",\n        \"audioAnnouncementFile\": {\n          \"id\": \"<string>\",\n          \"fileName\": \"<string>\",\n          \"mediaFileType\": \"WAV\",\n          \"level\": \"ORGANIZATION\"\n        },\n        \"transferCallTo\": \"<string>\"\n      }\n    }\n  },\n  \"directLineCallerIdName\": {\n    \"selection\": \"DISPLAY_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantId is "Delete an Auto Attendant": DELETE /telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}.
@@ -7594,7 +7594,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdAutoAttendants = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the auto attendant for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the auto attendant for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"businessHoursMenu\": {\n    \"greeting\": \"DEFAULT\",\n    \"extensionEnabled\": \"<boolean>\",\n    \"keyConfigurations\": {\n      \"key\": \"4\",\n      \"action\": \"EXIT\",\n      \"description\": \"<string>\",\n      \"value\": \"<string>\",\n      \"audioAnnouncementFile\": {\n        \"id\": \"<string>\",\n        \"fileName\": \"<string>\",\n        \"mediaFileType\": \"WAV\",\n        \"level\": \"LOCATION\"\n      }\n    },\n    \"audioAnnouncementFile\": {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"LOCATION\"\n    },\n    \"callTreatment\": {\n      \"retryAttemptForNoInput\": \"NO_REPEAT\",\n      \"noInputTimer\": \"<string>\",\n      \"actionToBePerformed\": {\n        \"action\": \"TRANSFER_TO_MAILBOX\",\n        \"greeting\": \"CUSTOM\",\n        \"audioAnnouncementFile\": {\n          \"id\": \"<string>\",\n          \"fileName\": \"<string>\",\n          \"mediaFileType\": \"WAV\",\n          \"level\": \"ORGANIZATION\"\n        },\n        \"transferCallTo\": \"<string>\"\n      }\n    }\n  },\n  \"afterHoursMenu\": {\n    \"greeting\": \"CUSTOM\",\n    \"extensionEnabled\": \"<boolean>\",\n    \"keyConfigurations\": {\n      \"key\": \"7\",\n      \"action\": \"EXIT\",\n      \"description\": \"<string>\",\n      \"value\": \"<string>\",\n      \"audioAnnouncementFile\": {\n        \"id\": \"<string>\",\n        \"fileName\": \"<string>\",\n        \"mediaFileType\": \"WAV\",\n        \"level\": \"ORGANIZATION\"\n      }\n    },\n    \"audioAnnouncementFile\": {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"LOCATION\"\n    },\n    \"callTreatment\": {\n      \"retryAttemptForNoInput\": \"THREE_TIMES\",\n      \"noInputTimer\": \"<string>\",\n      \"actionToBePerformed\": {\n        \"action\": \"DISCONNECT\",\n        \"greeting\": \"DEFAULT\",\n        \"audioAnnouncementFile\": {\n          \"id\": \"<string>\",\n          \"fileName\": \"<string>\",\n          \"mediaFileType\": \"WAV\",\n          \"level\": \"ORGANIZATION\"\n        },\n        \"transferCallTo\": \"<string>\"\n      }\n    }\n  },\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"alternateNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"SHORT_SHORT_LONG\",\n      \"tollFreeNumber\": \"<boolean>\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"SHORT_LONG_SHORT\",\n      \"tollFreeNumber\": \"<boolean>\"\n    }\n  ],\n  \"languageCode\": \"<string>\",\n  \"holidaySchedule\": \"<string>\",\n  \"extensionDialing\": \"GROUP\",\n  \"nameDialing\": \"GROUP\",\n  \"timeZone\": \"<string>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantIdCallForwarding is "Get Call Forwarding Settings for an Auto Attendant": GET /telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding.
@@ -7621,7 +7621,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantI
 		{Name: "autoAttendantId", In: InPath, Flag: "auto-attendant-id", Required: true, Usage: "Update call forwarding settings for this auto attendant."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update auto attendant forwarding settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"sendToVoicemailEnabled\": \"<boolean>\"\n    },\n    \"selective\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"sendToVoicemailEnabled\": \"<boolean>\"\n    },\n    \"rules\": [\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      }\n    ],\n    \"operatingModes\": {\n      \"enabled\": \"<boolean>\",\n      \"modes\": [\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"DO_NOT_FORWARD\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        },\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"DO_NOT_FORWARD\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        }\n      ]\n    }\n  }\n}"},
 }
 
 // CallingPostTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantIdCallForwardingSelectiveRules is "Create a Selective Call Forwarding Rule for an Auto Attendant": POST /telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules.
@@ -7635,7 +7635,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendant
 		{Name: "autoAttendantId", In: InPath, Flag: "auto-attendant-id", Required: true, Usage: "Create the rule for this auto attendant."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the auto attendant rule for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"FORWARD_TO_SPECIFIED_NUMBER\",\n    \"phoneNumber\": \"<string>\"\n  },\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"enabled\": \"<boolean>\",\n  \"businessSchedule\": \"<string>\",\n  \"holidaySchedule\": \"<string>\",\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"ALTERNATE\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantIdCallForwardingSelectiveRulesByRuleId is "Get Selective Call Forwarding Rule for an Auto Attendant": GET /telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules/{ruleId}.
@@ -7664,7 +7664,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantI
 		{Name: "ruleId", In: InPath, Flag: "rule-id", Required: true, Usage: "Auto attendant rule you are updating settings for."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update auto attendant rule settings for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"businessSchedule\": \"<string>\",\n  \"holidaySchedule\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"FORWARD_TO_SPECIFIED_NUMBER\",\n    \"phoneNumber\": \"<string>\"\n  },\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"ALTERNATE\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdAutoAttendantsByAutoAttendantIdCallForwardingSelectiveRulesByRuleId is "Delete a Selective Call Forwarding Rule for an Auto Attendant": DELETE /telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules/{ruleId}.
@@ -7803,7 +7803,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdCallParks = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the call park for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the call park for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"recall\": {\n    \"option\": \"ALERT_HUNT_GROUP_ONLY\",\n    \"huntGroupId\": \"<string>\"\n  },\n  \"agents\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"parkOnAgentsEnabled\": \"<boolean>\",\n  \"callParkExtensions\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdCallParksByCallParkId is "Delete a Call Park": DELETE /telephony/config/locations/{locationId}/callParks/{callParkId}.
@@ -7843,7 +7843,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdCallParksByCallParkId = &Opera
 		{Name: "callParkId", In: InPath, Flag: "call-park-id", Required: true, Usage: "Update settings for a call park with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call park settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"recall\": {\n    \"option\": \"ALERT_PARKING_USER_ONLY\",\n    \"huntGroupId\": \"<string>\"\n  },\n  \"agents\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"parkOnAgentsEnabled\": \"<boolean>\",\n  \"callParkExtensions\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdCallParksAvailableUsers is "Get available agents from Call Parks": GET /telephony/config/locations/{locationId}/callParks/availableUsers.
@@ -7904,7 +7904,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdCallParksSettings = &Operation
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Location for which call park settings will be updated."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call park settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callParkRecall\": {\n    \"option\": \"ALERT_HUNT_GROUP_ONLY\",\n    \"huntGroupId\": \"<string>\"\n  },\n  \"callParkSettings\": {\n    \"ringPattern\": \"LONG_LONG\",\n    \"recallTime\": \"<number>\",\n    \"huntWaitTime\": \"<number>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigCallParkExtensions is "Read the List of Call Park Extensions": GET /telephony/config/callParkExtensions.
@@ -8115,7 +8115,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdQueues = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization ID where the call queue needs to be created."},
 		{Name: "hasCxEssentials", In: InQuery, Flag: "has-cx-essentials", Usage: "Creates a Customer Assist call queue, when `true`. This requires Customer Assist licensed agents."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"callPolicies\": {\n    \"routingType\": \"SKILL_BASED\",\n    \"policy\": \"WEIGHTED\",\n    \"callBounce\": {\n      \"callBounceEnabled\": \"<boolean>\",\n      \"callBounceMaxRings\": \"<number>\",\n      \"agentUnavailableEnabled\": \"<boolean>\",\n      \"alertAgentEnabled\": \"<boolean>\",\n      \"alertAgentMaxSeconds\": \"<number>\",\n      \"callBounceOnHoldEnabled\": \"<boolean>\",\n      \"callBounceOnHoldMaxSeconds\": \"<number>\"\n    },\n    \"distinctiveRing\": {\n      \"enabled\": \"<boolean>\",\n      \"ringPattern\": \"SHORT_LONG_SHORT\"\n    }\n  },\n  \"queueSettings\": {\n    \"queueSize\": \"<number>\",\n    \"overflow\": {\n      \"action\": \"PERFORM_BUSY_TREATMENT\",\n      \"greeting\": \"CUSTOM\",\n      \"sendToVoicemail\": \"<boolean>\",\n      \"transferNumber\": \"<string>\",\n      \"overflowAfterWaitEnabled\": \"<boolean>\",\n      \"overflowAfterWaitTime\": \"<number>\",\n      \"playOverflowGreetingEnabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ENTITY\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"callOfferToneEnabled\": \"<boolean>\",\n    \"resetCallStatisticsEnabled\": \"<boolean>\",\n    \"welcomeMessage\": {\n      \"greeting\": \"DEFAULT\",\n      \"enabled\": \"<boolean>\",\n      \"alwaysEnabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        }\n      ]\n    },\n    \"waitMessage\": {\n      \"waitMode\": \"POSITION\",\n      \"enabled\": \"<boolean>\",\n      \"handlingTime\": \"<number>\",\n      \"defaultHandlingTime\": \"<number>\",\n      \"queuePosition\": \"<number>\",\n      \"highVolumeMessageEnabled\": \"<boolean>\",\n      \"estimatedWaitingTime\": \"<number>\",\n      \"callbackOptionEnabled\": \"<boolean>\",\n      \"minimumEstimatedCallbackTime\": \"<number>\",\n      \"internationalCallbackEnabled\": \"<boolean>\",\n      \"playUpdatedEstimatedWaitMessage\": \"<boolean>\"\n    },\n    \"comfortMessage\": {\n      \"greeting\": \"CUSTOM\",\n      \"enabled\": \"<boolean>\",\n      \"timeBetweenMessages\": \"<number>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ENTITY\"\n        }\n      ]\n    },\n    \"comfortMessageBypass\": {\n      \"greeting\": \"DEFAULT\",\n      \"enabled\": \"<boolean>\",\n      \"callWaitingAgeThreshold\": \"<number>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"mohMessage\": {\n      \"normalSource\": {\n        \"greeting\": \"CUSTOM\",\n        \"enabled\": \"<boolean>\",\n        \"audioAnnouncementFiles\": [\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ENTITY\"\n          },\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ENTITY\"\n          }\n        ],\n        \"audioPlaylistId\": \"<string>\"\n      },\n      \"alternateSource\": {\n        \"greeting\": \"DEFAULT\",\n        \"enabled\": \"<boolean>\",\n        \"audioAnnouncementFiles\": [\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ORGANIZATION\"\n          },\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ORGANIZATION\"\n          }\n        ],\n        \"audioPlaylistId\": \"<string>\"\n      }\n    },\n    \"whisperMessage\": {\n      \"greeting\": \"DEFAULT\",\n      \"enabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        }\n      ]\n    }\n  },\n  \"agents\": [\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\",\n      \"skillLevel\": \"<number>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\",\n      \"skillLevel\": \"<number>\"\n    }\n  ],\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"callingLineIdPolicy\": \"CUSTOM\",\n  \"callingLineIdPhoneNumber\": \"<string>\",\n  \"allowAgentJoinEnabled\": \"<boolean>\",\n  \"phoneNumberForOutgoingCallsEnabled\": \"<boolean>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdQueuesByQueueId is "Delete a Call Queue": DELETE /telephony/config/locations/{locationId}/queues/{queueId}.
@@ -8156,7 +8156,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueId = &Operation{
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update setting for the call queue with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"queueSettings\": {\n    \"queueSize\": \"<number>\",\n    \"overflow\": {\n      \"action\": \"TRANSFER_TO_PHONE_NUMBER\",\n      \"greeting\": \"DEFAULT\",\n      \"sendToVoicemail\": \"<boolean>\",\n      \"transferNumber\": \"<string>\",\n      \"overflowAfterWaitEnabled\": \"<boolean>\",\n      \"overflowAfterWaitTime\": \"<number>\",\n      \"playOverflowGreetingEnabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ENTITY\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"callOfferToneEnabled\": \"<boolean>\",\n    \"resetCallStatisticsEnabled\": \"<boolean>\",\n    \"welcomeMessage\": {\n      \"greeting\": \"DEFAULT\",\n      \"enabled\": \"<boolean>\",\n      \"alwaysEnabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"waitMessage\": {\n      \"waitMode\": \"POSITION\",\n      \"enabled\": \"<boolean>\",\n      \"handlingTime\": \"<number>\",\n      \"defaultHandlingTime\": \"<number>\",\n      \"queuePosition\": \"<number>\",\n      \"highVolumeMessageEnabled\": \"<boolean>\",\n      \"estimatedWaitingTime\": \"<number>\",\n      \"callbackOptionEnabled\": \"<boolean>\",\n      \"minimumEstimatedCallbackTime\": \"<number>\",\n      \"internationalCallbackEnabled\": \"<boolean>\",\n      \"playUpdatedEstimatedWaitMessage\": \"<boolean>\"\n    },\n    \"comfortMessage\": {\n      \"greeting\": \"CUSTOM\",\n      \"enabled\": \"<boolean>\",\n      \"timeBetweenMessages\": \"<number>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"comfortMessageBypass\": {\n      \"greeting\": \"CUSTOM\",\n      \"enabled\": \"<boolean>\",\n      \"callWaitingAgeThreshold\": \"<number>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"LOCATION\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ORGANIZATION\"\n        }\n      ]\n    },\n    \"mohMessage\": {\n      \"normalSource\": {\n        \"greeting\": \"DEFAULT\",\n        \"enabled\": \"<boolean>\",\n        \"audioAnnouncementFiles\": [\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ENTITY\"\n          },\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"LOCATION\"\n          }\n        ],\n        \"audioPlaylistId\": \"<string>\"\n      },\n      \"alternateSource\": {\n        \"greeting\": \"CUSTOM\",\n        \"enabled\": \"<boolean>\",\n        \"audioAnnouncementFiles\": [\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ORGANIZATION\"\n          },\n          {\n            \"id\": \"<string>\",\n            \"name\": \"<string>\",\n            \"mediaFileType\": \"<string>\",\n            \"level\": \"ORGANIZATION\"\n          }\n        ],\n        \"audioPlaylistId\": \"<string>\"\n      }\n    },\n    \"whisperMessage\": {\n      \"greeting\": \"CUSTOM\",\n      \"enabled\": \"<boolean>\",\n      \"audioAnnouncementFiles\": [\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ENTITY\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"name\": \"<string>\",\n          \"mediaFileType\": \"<string>\",\n          \"level\": \"ENTITY\"\n        }\n      ]\n    }\n  },\n  \"enabled\": \"<boolean>\",\n  \"name\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"alternateNumberSettings\": {\n    \"distinctiveRingEnabled\": \"<boolean>\",\n    \"alternateNumbers\": [\n      {\n        \"phoneNumber\": \"<string>\",\n        \"ringPattern\": \"SHORT_SHORT_LONG\"\n      },\n      {\n        \"phoneNumber\": \"<string>\",\n        \"ringPattern\": \"SHORT_LONG_SHORT\"\n      }\n    ]\n  },\n  \"callPolicies\": {\n    \"routingType\": \"SKILL_BASED\",\n    \"policy\": \"WEIGHTED\",\n    \"callBounce\": {\n      \"callBounceEnabled\": \"<boolean>\",\n      \"callBounceMaxRings\": \"<number>\",\n      \"agentUnavailableEnabled\": \"<boolean>\",\n      \"alertAgentEnabled\": \"<boolean>\",\n      \"alertAgentMaxSeconds\": \"<number>\",\n      \"callBounceOnHoldEnabled\": \"<boolean>\",\n      \"callBounceOnHoldMaxSeconds\": \"<number>\"\n    },\n    \"distinctiveRing\": {\n      \"enabled\": \"<boolean>\",\n      \"ringPattern\": \"NORMAL\"\n    }\n  },\n  \"callingLineIdPolicy\": \"CUSTOM\",\n  \"callingLineIdPhoneNumber\": \"<string>\",\n  \"allowCallWaitingForAgentsEnabled\": \"<boolean>\",\n  \"agents\": [\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\",\n      \"skillLevel\": \"<number>\",\n      \"joinEnabled\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\",\n      \"skillLevel\": \"<number>\",\n      \"joinEnabled\": \"<boolean>\"\n    }\n  ],\n  \"allowAgentJoinEnabled\": \"<boolean>\",\n  \"phoneNumberForOutgoingCallsEnabled\": \"<boolean>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesByQueueIdAnnouncements is "Read the List of Call Queue Announcement Files": GET /telephony/config/locations/{locationId}/queues/{queueId}/announcements.
@@ -8211,7 +8211,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwarding 
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update call forwarding settings for this call queue."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue forwarding settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"selective\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"rules\": [\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      }\n    ],\n    \"operatingModes\": {\n      \"enabled\": \"<boolean>\",\n      \"modes\": [\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"FORWARD_TO_DEFAULT_NUMBER\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        },\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"FORWARD_TO_SPECIFIED_NUMBER\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        }\n      ]\n    }\n  }\n}"},
 }
 
 // CallingPostTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwardingSelectiveRules is "Create a Selective Call Forwarding Rule for a Call Queue": POST /telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules.
@@ -8225,7 +8225,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwarding
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Create the rule for this call queue."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the call queue rule for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"ALTERNATE\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  },\n  \"enabled\": \"<boolean>\",\n  \"holidaySchedule\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"FORWARD_TO_DEFAULT_NUMBER\",\n    \"phoneNumber\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwardingSelectiveRulesByRuleId is "Get Selective Call Forwarding Rule for a Call Queue": GET /telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules/{ruleId}.
@@ -8254,7 +8254,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwardingS
 		{Name: "ruleId", In: InPath, Flag: "rule-id", Required: true, Usage: "Call queue rule you are updating settings for."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue rule settings for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"holidaySchedule\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"DO_NOT_FORWARD\",\n    \"phoneNumber\": \"<string>\"\n  },\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwardingSelectiveRulesByRuleId is "Delete a Selective Call Forwarding Rule for a Call Queue": DELETE /telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules/{ruleId}.
@@ -8295,7 +8295,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdHolidayService 
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update setting for the call queue with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"holidayServiceEnabled\": \"<boolean>\",\n  \"action\": \"BUSY\",\n  \"holidayScheduleLevel\": \"ORGANIZATION\",\n  \"playAnnouncementBeforeEnabled\": \"<boolean>\",\n  \"audioMessageSelection\": \"DEFAULT\",\n  \"holidayScheduleName\": \"<string>\",\n  \"transferPhoneNumber\": \"<string>\",\n  \"audioFiles\": [\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"3GP\",\n      \"level\": \"ENTITY\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"ENTITY\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesByQueueIdNightService is "Get Details for a Call Queue Night Service": GET /telephony/config/locations/{locationId}/queues/{queueId}/nightService.
@@ -8322,7 +8322,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdNightService = 
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update settings for the call queue night service with this identifier."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue night service settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"nightServiceEnabled\": \"<boolean>\",\n  \"playAnnouncementBeforeEnabled\": \"<boolean>\",\n  \"announcementMode\": \"MANUAL\",\n  \"audioMessageSelection\": \"DEFAULT\",\n  \"forceNightServiceEnabled\": \"<boolean>\",\n  \"manualAudioMessageSelection\": \"CUSTOM\",\n  \"action\": \"BUSY\",\n  \"transferPhoneNumber\": \"<string>\",\n  \"audioFiles\": [\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"ENTITY\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"ORGANIZATION\"\n    }\n  ],\n  \"businessHoursName\": \"<string>\",\n  \"businessHoursLevel\": \"LOCATION\",\n  \"manualAudioFiles\": [\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WAV\",\n      \"level\": \"ENTITY\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"3GP\",\n      \"level\": \"LOCATION\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesByQueueIdForcedForward is "Get Details for a Call Queue Forced Forward": GET /telephony/config/locations/{locationId}/queues/{queueId}/forcedForward.
@@ -8349,7 +8349,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdForcedForward =
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update setting for the call queue with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"forcedForwardEnabled\": \"<boolean>\",\n  \"playAnnouncementBeforeEnabled\": \"<boolean>\",\n  \"audioMessageSelection\": \"DEFAULT\",\n  \"transferPhoneNumber\": \"<string>\",\n  \"audioFiles\": [\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"ORGANIZATION\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"ORGANIZATION\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesByQueueIdStrandedCalls is "Get Details for a Call Queue Stranded Calls": GET /telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls.
@@ -8376,7 +8376,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdStrandedCalls =
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "Update setting for the call queue with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update call queue settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"action\": \"RINGING\",\n  \"audioMessageSelection\": \"CUSTOM\",\n  \"transferPhoneNumber\": \"<string>\",\n  \"audioFiles\": [\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"ORGANIZATION\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"fileName\": \"<string>\",\n      \"mediaFileType\": \"WMA\",\n      \"level\": \"LOCATION\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdQueuesAvailableNumbers is "Get Call Queue Primary Available Phone Numbers": GET /telephony/config/locations/{locationId}/queues/availableNumbers.
@@ -8478,7 +8478,7 @@ var CallingPostTelephonyConfigSupervisors = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization ID where the supervisor needs to be created."},
 		{Name: "hasCxEssentials", In: InQuery, Flag: "has-cx-essentials", Usage: "Creates a Customer Assist queue supervisor, when `true`. Customer Assist queue supervisors must have a Customer Assist license."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"id\": \"<string>\",\n  \"agents\": [\n    {\n      \"id\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigSupervisors is "Delete Bulk Supervisors": DELETE /telephony/config/supervisors.
@@ -8538,7 +8538,7 @@ var CallingPutTelephonyConfigSupervisorsBySupervisorId = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Assign or unassign agents to a supervisor in this organization."},
 		{Name: "hasCxEssentials", In: InQuery, Flag: "has-cx-essentials", Usage: "Must be set to `true` to modify a supervisor with Customer Assist license. This can otherwise be ommited or set to `false`."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"agents\": [\n    {\n      \"id\": \"<string>\",\n      \"action\": \"DELETE\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"action\": \"DELETE\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigSupervisorsAvailableSupervisors is "List Available Supervisors with Customer Assist": GET /telephony/config/supervisors/availableSupervisors.
@@ -8625,7 +8625,7 @@ var CallingPutTelephonyConfigQueuesAgentsByIdSettings = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update the settings of an agent in this organization."},
 		{Name: "hasCxEssentials", In: InQuery, Flag: "has-cx-essentials", Usage: "Must be set to `true` to modify an agent that has Customer Assist license. This can otherwise be ommited or set to `false`."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"settings\": [\n    {\n      \"queueId\": \"<string>\",\n      \"joinEnabled\": \"<boolean>\"\n    },\n    {\n      \"queueId\": \"<string>\",\n      \"joinEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingPostTelephonyConfigLocationsByLocationIdQueuesByQueueIdCallForwardingActionsSwitchModeInvoke is "Switch Mode for Call Forwarding Settings for a Call Queue": POST /telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/actions/switchMode/invoke.
@@ -9045,7 +9045,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdCxEssentialsScr
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "The call queue ID for which screen pop configuration is modified."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization ID of the customer or partner's organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"screenPopUrl\": \"<string>\",\n  \"desktopLabel\": \"<string>\",\n  \"queryParams\": {\n    \"example_param_1\": \"<string>\",\n    \"example_param_2\": \"<string>\",\n    \"example_param_3\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdCxEssentialsAgentsAvailableAgents is "List Available Agents": GET /telephony/config/locations/{locationId}/cxEssentials/agents/availableAgents.
@@ -9143,7 +9143,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdHuntGroups = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the hunt group for the given location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the hunt group for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"callPolicies\": {\n    \"policy\": \"CIRCULAR\",\n    \"noAnswer\": {\n      \"nextAgentEnabled\": \"<boolean>\",\n      \"nextAgentRings\": \"<number>\",\n      \"forwardEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\",\n      \"destination\": \"<string>\"\n    },\n    \"waitingEnabled\": \"<boolean>\",\n    \"groupBusyEnabled\": \"<boolean>\",\n    \"allowMembersToControlGroupBusyEnabled\": \"<boolean>\",\n    \"busyRedirect\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"businessContinuityRedirect\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"agents\": [\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\"\n    }\n  ],\n  \"enabled\": \"<boolean>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"huntGroupCallerIdForOutgoingCallsEnabled\": \"<boolean>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"DISPLAY_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupId is "Delete a Hunt Group": DELETE /telephony/config/locations/{locationId}/huntGroups/{huntGroupId}.
@@ -9183,7 +9183,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupId = &Ope
 		{Name: "huntGroupId", In: InPath, Flag: "hunt-group-id", Required: true, Usage: "Update settings for the hunt group with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update hunt group settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"name\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"distinctiveRing\": \"<boolean>\",\n  \"alternateNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"SHORT_SHORT_LONG\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"ringPattern\": \"LONG_LONG\"\n    }\n  ],\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"callPolicies\": {\n    \"policy\": \"SIMULTANEOUS\",\n    \"noAnswer\": {\n      \"nextAgentEnabled\": \"<boolean>\",\n      \"nextAgentRings\": \"<number>\",\n      \"forwardEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\",\n      \"destination\": \"<string>\"\n    },\n    \"waitingEnabled\": \"<boolean>\",\n    \"groupBusyEnabled\": \"<boolean>\",\n    \"allowMembersToControlGroupBusyEnabled\": \"<boolean>\",\n    \"busyRedirect\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"businessContinuityRedirect\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"agents\": [\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"weight\": \"<string>\"\n    }\n  ],\n  \"huntGroupCallerIdForOutgoingCallsEnabled\": \"<boolean>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallForwarding is "Get Call Forwarding Settings for a Hunt Group": GET /telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding.
@@ -9210,7 +9210,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallFor
 		{Name: "huntGroupId", In: InPath, Flag: "hunt-group-id", Required: true, Usage: "Update call forwarding settings for this hunt group."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update hunt group forwarding settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"selective\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"rules\": [\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"enabled\": \"<boolean>\"\n      }\n    ],\n    \"operatingModes\": {\n      \"enabled\": \"<boolean>\",\n      \"modes\": [\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"FORWARD_TO_DEFAULT_NUMBER\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        },\n        {\n          \"normalOperationEnabled\": \"<boolean>\",\n          \"id\": \"<string>\",\n          \"forwardTo\": {\n            \"selection\": \"FORWARD_TO_SPECIFIED_NUMBER\",\n            \"destination\": \"<string>\",\n            \"destinationVoicemailEnabled\": \"<boolean>\"\n          }\n        }\n      ]\n    }\n  }\n}"},
 }
 
 // CallingPostTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallForwardingSelectiveRules is "Create a Selective Call Forwarding Rule for a Hunt Group": POST /telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules.
@@ -9224,7 +9224,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallFo
 		{Name: "huntGroupId", In: InPath, Flag: "hunt-group-id", Required: true, Usage: "Create the rule for this hunt group."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the hunt group rule for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"ALTERNATE\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  },\n  \"enabled\": \"<boolean>\",\n  \"holidaySchedule\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"FORWARD_TO_DEFAULT_NUMBER\",\n    \"phoneNumber\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallForwardingSelectiveRulesByRuleId is "Get Selective Call Forwarding Rule for a Hunt Group": GET /telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId}.
@@ -9253,7 +9253,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallFor
 		{Name: "ruleId", In: InPath, Flag: "rule-id", Required: true, Usage: "Hunt group rule you are updating settings for."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update hunt group rule settings for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"holidaySchedule\": \"<string>\",\n  \"businessSchedule\": \"<string>\",\n  \"forwardTo\": {\n    \"selection\": \"DO_NOT_FORWARD\",\n    \"phoneNumber\": \"<string>\"\n  },\n  \"callsFrom\": {\n    \"selection\": \"CUSTOM\",\n    \"customNumbers\": {\n      \"privateNumberEnabled\": \"<boolean>\",\n      \"unavailableNumberEnabled\": \"<boolean>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"callsTo\": {\n    \"numbers\": [\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      },\n      {\n        \"type\": \"PRIMARY\",\n        \"phoneNumber\": \"<string>\",\n        \"extension\": \"<string>\"\n      }\n    ]\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdHuntGroupsByHuntGroupIdCallForwardingSelectiveRulesByRuleId is "Delete a Selective Call Forwarding Rule for a Hunt Group": DELETE /telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId}.
@@ -9377,7 +9377,7 @@ var CallingPutTelephonyConfigOperatingModesByModeId = &Operation{
 		{Name: "modeId", In: InPath, Flag: "mode-id", Required: true, Usage: "Modify the `operating mode` with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify the `operating mode` from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"sameHoursDaily\": {\n    \"mondayToFriday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"saturdayToSunday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    }\n  },\n  \"differentHoursDaily\": {\n    \"sunday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"monday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"tuesday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"wednesday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"thursday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"friday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"saturday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    }\n  },\n  \"holidays\": [\n    {\n      \"name\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"SEPTEMBER\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"FRIDAY\",\n          \"week\": \"LAST\",\n          \"month\": \"OCTOBER\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"FEBRUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"MONDAY\",\n          \"week\": \"THIRD\",\n          \"month\": \"FEBRUARY\"\n        }\n      }\n    }\n  ],\n  \"callForwarding\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigOperatingModesByModeId is "Delete an Operating Mode": DELETE /telephony/config/operatingModes/{modeId}.
@@ -9401,7 +9401,7 @@ var CallingPostTelephonyConfigOperatingModes = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the `operating mode` for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"type\": \"HOLIDAY\",\n  \"level\": \"ORGANIZATION\",\n  \"callForwarding\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  },\n  \"locationId\": \"<string>\",\n  \"sameHoursDaily\": {\n    \"mondayToFriday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"saturdayToSunday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    }\n  },\n  \"differentHoursDaily\": {\n    \"sunday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"monday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"tuesday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"wednesday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"thursday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"friday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    },\n    \"saturday\": {\n      \"enabled\": \"<boolean>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\"\n    }\n  },\n  \"holidays\": [\n    {\n      \"name\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"JULY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"SATURDAY\",\n          \"week\": \"FIRST\",\n          \"month\": \"SEPTEMBER\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"recurrence\": {\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"FEBRUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"SATURDAY\",\n          \"week\": \"LAST\",\n          \"month\": \"NOVEMBER\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigOperatingModesByModeIdHolidaysByHolidayId is "Get details for an Operating Mode Holiday": GET /telephony/config/operatingModes/{modeId}/holidays/{holidayId}.
@@ -9428,7 +9428,7 @@ var CallingPutTelephonyConfigOperatingModesByModeIdHolidaysByHolidayId = &Operat
 		{Name: "holidayId", In: InPath, Flag: "holiday-id", Required: true, Usage: "Modify the `Holiday` with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify the `operating mode` from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurYearlyByDate\": {\n      \"dayOfMonth\": \"<number>\",\n      \"month\": \"MARCH\"\n    },\n    \"recurYearlyByDay\": {\n      \"day\": \"TUESDAY\",\n      \"week\": \"FIRST\",\n      \"month\": \"DECEMBER\"\n    }\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigOperatingModesByModeIdHolidaysByHolidayId is "Delete an Operating Mode Holiday": DELETE /telephony/config/operatingModes/{modeId}/holidays/{holidayId}.
@@ -9454,7 +9454,7 @@ var CallingPostTelephonyConfigOperatingModesByModeIdHolidays = &Operation{
 		{Name: "modeId", In: InPath, Flag: "mode-id", Required: true, Usage: "Create the holiday for this `operating mode`."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the `operating mode holiday` for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"recurrence\": {\n    \"recurYearlyByDate\": {\n      \"dayOfMonth\": \"<number>\",\n      \"month\": \"MAY\"\n    },\n    \"recurYearlyByDay\": {\n      \"day\": \"FRIDAY\",\n      \"week\": \"SECOND\",\n      \"month\": \"JANUARY\"\n    }\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdOperatingModesAvailableOperatingModes is "Retrieve the List of Available Operating Modes in a Location": GET /telephony/config/locations/{locationId}/operatingModes/availableOperatingModes.
@@ -9516,7 +9516,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdPaging = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the paging group for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the paging group for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"originatorCallerIdEnabled\": \"<boolean>\",\n  \"originators\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"directLineCallerIdName\": {\n    \"selection\": \"DISPLAY_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdPagingByPagingId is "Delete a Paging Group": DELETE /telephony/config/locations/{locationId}/paging/{pagingId}.
@@ -9556,7 +9556,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdPagingByPagingId = &Operation{
 		{Name: "pagingId", In: InPath, Flag: "paging-id", Required: true, Usage: "Update settings for the paging group with this identifier."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update paging group settings from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"name\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"originatorCallerIdEnabled\": \"<boolean>\",\n  \"originators\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targets\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdPagingAvailableNumbers is "Get Paging Group Primary Available Phone Numbers": GET /telephony/config/locations/{locationId}/paging/availableNumbers.
@@ -9948,7 +9948,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdInternalDialing = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "location for which internal calling configuration is being requested"},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "List route identities for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enableUnknownExtensionRoutePolicy\": \"<boolean>\",\n  \"unknownExtensionRouteIdentity\": {\n    \"id\": \"<string>\",\n    \"type\": \"ROUTE_GROUP\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdIntercept is "Get Location Intercept": GET /telephony/config/locations/{locationId}/intercept.
@@ -9973,7 +9973,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdIntercept = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Modifies the intercept details for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modifies the intercept location details for a customer location."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"incoming\": {\n    \"type\": \"INTERCEPT_ALL\",\n    \"voicemailEnabled\": \"<boolean>\",\n    \"announcements\": {\n      \"greeting\": \"DEFAULT\",\n      \"fileName\": \"<string>\",\n      \"newNumber\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      },\n      \"zeroTransfer\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      }\n    }\n  },\n  \"outgoing\": {\n    \"type\": \"ALLOW_LOCAL_ONLY\",\n    \"transferEnabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdOutgoingPermission is "Get Location Outgoing Permission": GET /telephony/config/locations/{locationId}/outgoingPermission.
@@ -9998,7 +9998,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdOutgoingPermission = &Operatio
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Update outgoing call settings for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update outgoing call settings for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callingPermissions\": [\n    {\n      \"callType\": \"INTERNAL_CALL\",\n      \"action\": \"TRANSFER_NUMBER_3\",\n      \"transferEnabled\": \"<boolean>\",\n      \"isCallTypeRestrictionEnabled\": \"<boolean>\"\n    },\n    {\n      \"callType\": \"NATIONAL\",\n      \"action\": \"TRANSFER_NUMBER_1\",\n      \"transferEnabled\": \"<boolean>\",\n      \"isCallTypeRestrictionEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdOutgoingPermissionAutoTransferNumbers is "Get Outgoing Permission Auto Transfer Number": GET /telephony/config/locations/{locationId}/outgoingPermission/autoTransferNumbers.
@@ -10052,7 +10052,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdOutgoingPermissionAccessCodes
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Add new access code for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Add new access code for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"accessCodes\": {\n    \"code\": \"<string>\",\n    \"description\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPutTelephonyConfigLocationsByLocationIdOutgoingPermissionAccessCodes is "Delete Outgoing Permission Access Code Location": PUT /telephony/config/locations/{locationId}/outgoingPermission/accessCodes.
@@ -10196,7 +10196,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdSchedules = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create the schedule for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the schedule for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"type\": \"businessHours\",\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"FEBRUARY\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"MONDAY\",\n          \"week\": \"LAST\",\n          \"month\": \"DECEMBER\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"NOVEMBER\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"SUNDAY\",\n          \"week\": \"THIRD\",\n          \"month\": \"OCTOBER\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleId is "Get Details for a Schedule": GET /telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}.
@@ -10225,7 +10225,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleId = 
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Update schedule with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update schedule from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"newName\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"APRIL\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"THURSDAY\",\n          \"week\": \"SECOND\",\n          \"month\": \"JUNE\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"newName\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurWeekly\": {\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        },\n        \"recurYearlyByDate\": {\n          \"dayOfMonth\": \"<number>\",\n          \"month\": \"DECEMBER\"\n        },\n        \"recurYearlyByDay\": {\n          \"day\": \"TUESDAY\",\n          \"week\": \"SECOND\",\n          \"month\": \"JUNE\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleId is "Delete a Schedule": DELETE /telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}.
@@ -10270,7 +10270,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleIdEve
 		{Name: "eventId", In: InPath, Flag: "event-id", Required: true, Usage: "Update the schedule event with the matching schedule event ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update schedule from this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    },\n    \"recurYearlyByDate\": {\n      \"dayOfMonth\": \"<number>\",\n      \"month\": \"MAY\"\n    },\n    \"recurYearlyByDay\": {\n      \"day\": \"SATURDAY\",\n      \"week\": \"THIRD\",\n      \"month\": \"JANUARY\"\n    }\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleIdEventsByEventId is "Delete a Schedule Event": DELETE /telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events/{eventId}.
@@ -10300,7 +10300,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdSchedulesByTypeByScheduleIdEv
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Create event for a given schedule ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create the schedule for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurWeekly\": {\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    },\n    \"recurYearlyByDate\": {\n      \"dayOfMonth\": \"<number>\",\n      \"month\": \"OCTOBER\"\n    },\n    \"recurYearlyByDay\": {\n      \"day\": \"TUESDAY\",\n      \"week\": \"FIRST\",\n      \"month\": \"OCTOBER\"\n    }\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdVoicemail is "Get Location Voicemail": GET /telephony/config/locations/{locationId}/voicemail.
@@ -10352,7 +10352,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdVoicePortal = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Location to which the voice portal belongs."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update voicemail rules for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"passcode\": {\n    \"newPasscode\": \"<string>\",\n    \"confirmPasscode\": \"<string>\"\n  },\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdVoicePortalPasscodeRules is "Get VoicePortal Passcode Rule": GET /telephony/config/locations/{locationId}/voicePortal/passcodeRules.
@@ -10408,7 +10408,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdVoicemailGroupsByVoicemailGrou
 		{Name: "voicemailGroupId", In: InPath, Flag: "voicemail-group-id", Required: true, Usage: "Modifies the voicemail group details for this voicemail group ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modifies the voicemail group details for a customer location."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"extension\": \"<number>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"passcode\": \"<number>\",\n  \"languageCode\": \"<string>\",\n  \"greeting\": \"CUSTOM\",\n  \"greetingDescription\": \"<string>\",\n  \"messageStorage\": {\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<number>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdVoicemailGroupsByVoicemailGroupId is "Delete a Voicemail Group for a Location": DELETE /telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}.
@@ -10434,7 +10434,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdVoicemailGroups = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create a new voice mail group for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create a new voice mail group for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"extension\": \"<number>\",\n  \"passcode\": \"<number>\",\n  \"languageCode\": \"<string>\",\n  \"messageStorage\": {\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<number>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"phoneNumber\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdVoicemailGroupsFaxMessageAvailableNumbers is "Get Voicemail Group Fax Message Available Phone Numbers": GET /telephony/config/locations/{locationId}/voicemailGroups/faxMessage/availableNumbers.
@@ -10512,7 +10512,7 @@ var CallingPostLocations = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create a location common attribute for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"preferredLanguage\": \"<string>\",\n  \"announcementLanguage\": \"<string>\",\n  \"address\": {\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"postalCode\": \"<string>\",\n    \"country\": \"<string>\",\n    \"address2\": \"<string>\"\n  },\n  \"latitude\": \"<string>\",\n  \"longitude\": \"<string>\",\n  \"notes\": \"<string>\"\n}"},
 }
 
 // CallingGetLocationsByLocationId is "Get Location Details": GET /locations/{locationId}.
@@ -10537,7 +10537,7 @@ var CallingPutLocationsByLocationId = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Update location common attributes for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update location common attributes for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"preferredLanguage\": \"<string>\",\n  \"address\": {\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"postalCode\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetLocationsByLocationIdFloors is "List Location Floors": GET /locations/{locationId}/floors.
@@ -10734,7 +10734,7 @@ var CallingPostTelephonyConfigJobsNumbersManageNumbers = &Operation{
 	Summary:     "Initiate Number Jobs",
 	Description: "Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`, `NUMBER_USAGE_CHANGE`.\n\nUp to 1000 numbers can be given in `MOVE` operation type and `NUMBER_USAGE_CHANGE` operation type per request.\nIf another move number job request is initiated while a move job is in progress, the API call will receive a `409` HTTP status code.\n\nIn order to move a number the following is required:\n\n* The number must be unassigned.\n\n* Both locations must have the same PSTN Connection Type.\n\n* Both locations must have the same PSTN Provider.\n\n* Both locations have to be in the same country.\n\nFor example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling Plan to a location with Cloud Connected PSTN.\n\nIn order to change the number usage the following is required:\n\n* The number must be unassigned.\n\n* Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.\n\n* Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.\n\nFor example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to Service number, or the other way around.\n\nThis API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.",
 	Method:      "POST", Host: HostWebex, Path: "/telephony/config/jobs/numbers/manageNumbers",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"operation\": \"<string>\",\n  \"numberList\": [\n    {\n      \"locationId\": \"<string>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"locationId\": \"<string>\",\n      \"numbers\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"targetLocationId\": \"<string>\",\n  \"numberUsageType\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigJobsNumbersManageNumbersByJobId is "Get Manage Numbers Job Status": GET /telephony/config/jobs/numbers/manageNumbers/{jobId}.
@@ -10888,7 +10888,7 @@ var CallingPostPeople = &Operation{
 		{Name: "callingData", In: InQuery, Flag: "calling-data", Usage: "Include Webex Calling user details in the response."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details and returning only the ID in the response when successful. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // CallingGetPeopleByPersonId is "Get Person Details": GET /people/{personId}.
@@ -10915,7 +10915,7 @@ var CallingPutPeopleByPersonId = &Operation{
 		{Name: "showAllTypes", In: InQuery, Flag: "show-all-types", Usage: "Include additional user data like `#attendee` role."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details in the response. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"displayName\": \"<string>\",\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"loginEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingDeletePeopleByPersonId is "Delete a Person": DELETE /people/{personId}.
@@ -10993,7 +10993,7 @@ var CallingPutTelephonyPstnNumbersByPhoneNumberEmergencyAddress = &Operation{
 		{Name: "phoneNumber", In: InPath, Flag: "phone-number", Required: true, Usage: "Update the emergency address for this phone number."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update the emergency address of phone number in this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"emergencyAddress\": {\n    \"address1\": \"<string>\",\n    \"address2\": \"<string>\",\n    \"city\": \"<string>\",\n    \"state\": \"<string>\",\n    \"postalCode\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPostTelephonyPstnLocationsByLocationIdEmergencyAddressLookup is "Emergency Address Lookup to Verify if Address is Valid": POST /telephony/pstn/locations/{locationId}/emergencyAddress/lookup.
@@ -11322,7 +11322,7 @@ var CallingPutPeopleByPersonIdFeaturesCallForwarding = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"busy\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"noAnswer\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"businessContinuity\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesIntercept is "Read Call Intercept Settings for a Person": GET /people/{personId}/features/intercept.
@@ -11347,7 +11347,7 @@ var CallingPutPeopleByPersonIdFeaturesIntercept = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"incoming\": {\n    \"type\": \"ALLOW_ALL\",\n    \"voicemailEnabled\": \"<boolean>\",\n    \"announcements\": {\n      \"greeting\": \"CUSTOM\",\n      \"newNumber\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      },\n      \"zeroTransfer\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      }\n    }\n  },\n  \"outgoing\": {\n    \"type\": \"INTERCEPT_ALL\",\n    \"transferEnabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesCallRecording is "Read Call Recording Settings for a Person": GET /people/{personId}/features/callRecording.
@@ -11372,7 +11372,7 @@ var CallingPutPeopleByPersonIdFeaturesCallRecording = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"record\": \"Always with Pause/Resume\",\n  \"recordVoicemailEnabled\": \"<boolean>\",\n  \"notification\": {\n    \"type\": \"Beep\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"repeat\": {\n    \"interval\": \"<number>\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"startStopAnnouncement\": {\n    \"internalCallsEnabled\": \"<boolean>\",\n    \"pstnCallsEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesCallWaiting is "Read Call Waiting Settings for a Person": GET /people/{personId}/features/callWaiting.
@@ -11424,7 +11424,7 @@ var CallingPutPeopleByPersonIdFeaturesCallerId = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"selected\": \"CUSTOM\",\n  \"customNumber\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"blockInForwardCallsEnabled\": \"<boolean>\",\n  \"externalCallerIdNamePolicy\": \"LOCATION\",\n  \"customExternalCallerIdName\": \"<string>\",\n  \"additionalExternalCallerIdDirectLineEnabled\": \"<boolean>\",\n  \"additionalExternalCallerIdLocationNumberEnabled\": \"<boolean>\",\n  \"additionalExternalCallerIdCustomNumber\": \"<string>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByFirstName\": \"<string>\",\n  \"dialByLastName\": \"<string>\"\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesCallingBehavior is "Read Person's Calling Behavior": GET /people/{personId}/features/callingBehavior.
@@ -11618,7 +11618,7 @@ var CallingPutPeopleByPersonIdFeaturesOutgoingPermission = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callingPermissions\": [\n    {\n      \"transferEnabled\": \"<boolean>\",\n      \"callType\": \"INTERNATIONAL\",\n      \"action\": \"TRANSFER_NUMBER_1\"\n    },\n    {\n      \"transferEnabled\": \"<boolean>\",\n      \"callType\": \"TOLL_FREE\",\n      \"action\": \"ALLOW\"\n    }\n  ],\n  \"useCustomEnabled\": \"<boolean>\",\n  \"useCustomPermissions\": \"<boolean>\"\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesNumbers is "Get a List of Phone Numbers for a Person": GET /people/{personId}/features/numbers.
@@ -11751,7 +11751,7 @@ var CallingPostPeopleByPersonIdFeaturesSchedules = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"type\": \"holidays\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<number>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"recurInterval\": \"<number>\",\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<number>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"recurInterval\": \"<number>\",\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleId is "Get a Schedule Details": GET /people/{personId}/features/schedules/{scheduleType}/{scheduleId}.
@@ -11780,7 +11780,7 @@ var CallingPutPeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleId = &Ope
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Unique identifier for the schedule."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"newName\": \"<string>\",\n  \"name\": \"<string>\",\n  \"type\": \"businessHours\",\n  \"events\": [\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<number>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"recurInterval\": \"<number>\",\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"startTime\": \"<string>\",\n      \"endTime\": \"<string>\",\n      \"allDayEnabled\": \"<boolean>\",\n      \"recurrence\": {\n        \"recurForEver\": \"<boolean>\",\n        \"recurEndDate\": \"<string>\",\n        \"recurEndOccurrence\": \"<number>\",\n        \"recurDaily\": {\n          \"recurInterval\": \"<number>\"\n        },\n        \"recurWeekly\": {\n          \"recurInterval\": \"<number>\",\n          \"sunday\": \"<boolean>\",\n          \"monday\": \"<boolean>\",\n          \"tuesday\": \"<boolean>\",\n          \"wednesday\": \"<boolean>\",\n          \"thursday\": \"<boolean>\",\n          \"friday\": \"<boolean>\",\n          \"saturday\": \"<boolean>\"\n        }\n      }\n    }\n  ]\n}"},
 }
 
 // CallingDeletePeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleId is "Delete a Schedule": DELETE /people/{personId}/features/schedules/{scheduleType}/{scheduleId}.
@@ -11825,7 +11825,7 @@ var CallingPutPeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleIdEventsB
 		{Name: "eventId", In: InPath, Flag: "event-id", Required: true, Usage: "Unique identifier for the event."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"newName\": \"<string>\",\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<number>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"recurInterval\": \"<number>\",\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // CallingDeletePeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleIdEventsByEventId is "Delete an Event for a person's Schedule": DELETE /people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events/{eventId}.
@@ -11855,7 +11855,7 @@ var CallingPostPeopleByPersonIdFeaturesSchedulesByScheduleTypeByScheduleIdEvents
 		{Name: "scheduleId", In: InPath, Flag: "schedule-id", Required: true, Usage: "Unique identifier for the schedule."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"name\": \"<string>\",\n  \"startDate\": \"<string>\",\n  \"endDate\": \"<string>\",\n  \"startTime\": \"<string>\",\n  \"endTime\": \"<string>\",\n  \"allDayEnabled\": \"<boolean>\",\n  \"recurrence\": {\n    \"recurForEver\": \"<boolean>\",\n    \"recurEndDate\": \"<string>\",\n    \"recurEndOccurrence\": \"<number>\",\n    \"recurDaily\": {\n      \"recurInterval\": \"<number>\"\n    },\n    \"recurWeekly\": {\n      \"recurInterval\": \"<number>\",\n      \"sunday\": \"<boolean>\",\n      \"monday\": \"<boolean>\",\n      \"tuesday\": \"<boolean>\",\n      \"wednesday\": \"<boolean>\",\n      \"thursday\": \"<boolean>\",\n      \"friday\": \"<boolean>\",\n      \"saturday\": \"<boolean>\"\n    }\n  }\n}"},
 }
 
 // CallingGetPeopleByPersonIdFeaturesVoicemail is "Read Voicemail Settings for a Person": GET /people/{personId}/features/voicemail.
@@ -11880,7 +11880,7 @@ var CallingPutPeopleByPersonIdFeaturesVoicemail = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"sendAllCalls\": {\n    \"enabled\": \"<boolean>\"\n  },\n  \"sendBusyCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"DEFAULT\"\n  },\n  \"sendUnansweredCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"CUSTOM\",\n    \"numberOfRings\": \"<number>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"messageStorage\": {\n    \"mwiEnabled\": \"<boolean>\",\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPostPeopleByPersonIdFeaturesVoicemailActionsResetPinInvoke is "Reset Voicemail PIN": POST /people/{personId}/features/voicemail/actions/resetPin/invoke.
@@ -11905,7 +11905,7 @@ var CallingPostTelephonyConfigJobsPersonMoveLocation = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create Move Users job for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"usersList\": [\n    {\n      \"locationId\": \"<string>\",\n      \"validate\": \"<boolean>\",\n      \"users\": [\n        {\n          \"userId\": \"<string>\",\n          \"extension\": \"<string>\",\n          \"phoneNumber\": \"<string>\"\n        },\n        {\n          \"userId\": \"<string>\",\n          \"extension\": \"<string>\",\n          \"phoneNumber\": \"<string>\"\n        }\n      ]\n    },\n    {\n      \"locationId\": \"<string>\",\n      \"validate\": \"<boolean>\",\n      \"users\": [\n        {\n          \"userId\": \"<string>\",\n          \"extension\": \"<string>\",\n          \"phoneNumber\": \"<string>\"\n        },\n        {\n          \"userId\": \"<string>\",\n          \"extension\": \"<string>\",\n          \"phoneNumber\": \"<string>\"\n        }\n      ]\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigJobsPersonMoveLocation is "List Move Users Jobs": GET /telephony/config/jobs/person/moveLocation.
@@ -11995,7 +11995,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdMusicOnHold = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"mohEnabled\": \"<boolean>\",\n  \"greeting\": \"CUSTOM\",\n  \"audioAnnouncementFile\": {\n    \"id\": \"<string>\",\n    \"fileName\": \"<string>\",\n    \"mediaFileType\": \"WAV\",\n    \"level\": \"LOCATION\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdOutgoingPermissionAccessCodes is "Retrieve Access Codes for a Person": GET /telephony/config/people/{personId}/outgoingPermission/accessCodes.
@@ -12195,7 +12195,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdNumbers = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "Unique identitfier of the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization of the Route Group."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"phoneNumbers\": [\n    {\n      \"primary\": \"<boolean>\",\n      \"action\": \"DELETE\",\n      \"directNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"ringPattern\": \"LONG_LONG\"\n    },\n    {\n      \"primary\": \"<boolean>\",\n      \"action\": \"DELETE\",\n      \"directNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"ringPattern\": \"NORMAL\"\n    }\n  ],\n  \"distinctiveRingEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdPreferredAnswerEndpoint is "Get Preferred Answer Endpoint": GET /telephony/config/people/{personId}/preferredAnswerEndpoint.
@@ -12267,7 +12267,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdApplicationsByApplicationIdMembers 
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "A unique identifier for the person."},
 		{Name: "applicationId", In: InPath, Flag: "application-id", Required: true, Usage: "A unique identifier for the application."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"members\": [\n    {\n      \"id\": \"<string>\",\n      \"port\": \"<number>\",\n      \"primaryOwner\": \"<string>\",\n      \"lineType\": \"SHARED_CALL_APPEARANCE\",\n      \"lineWeight\": \"<number>\",\n      \"hotlineEnabled\": \"<boolean>\",\n      \"hotlineDestination\": \"<string>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"t38FaxCompressionEnabled `true`\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"port\": \"<number>\",\n      \"primaryOwner\": \"<string>\",\n      \"lineType\": \"PRIMARY\",\n      \"lineWeight\": \"<number>\",\n      \"hotlineEnabled\": \"<boolean>\",\n      \"hotlineDestination\": \"<string>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"t38FaxCompressionEnabled `true`\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingPutTelephonyConfigPeopleByPersonIdVoicemailPasscode is "Modify a person's voicemail passcode": PUT /telephony/config/people/{personId}/voicemail/passcode.
@@ -12972,7 +12972,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdApplicationsMembers = &Operation{
 	Params: []Param{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "A unique identifier for the person."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"members\": [\n    {\n      \"id\": \"<string>\",\n      \"port\": \"<number>\",\n      \"primaryOwner\": \"<string>\",\n      \"lineType\": \"SHARED_CALL_APPEARANCE\",\n      \"lineWeight\": \"<number>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"port\": \"<number>\",\n      \"primaryOwner\": \"<string>\",\n      \"lineType\": \"PRIMARY\",\n      \"lineWeight\": \"<number>\",\n      \"allowCallDeclineEnabled\": \"<boolean>\",\n      \"lineLabel\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdCallCaptions is "Get the user call captions settings": GET /telephony/config/people/{personId}/callCaptions.
@@ -13026,7 +13026,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdExecutiveCallFiltering = &Operation
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "A unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization ID for the user."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"filterType\": \"ALL_INTERNAL_CALLS\",\n  \"criteriaActivation\": [\n    {\n      \"id\": \"<string>\",\n      \"activationEnabled\": \"<boolean>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"activationEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdExecutiveCallFilteringCriteriaById is "Get Person Executive Call Filtering Criteria Settings": GET /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
@@ -13053,7 +13053,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdExecutiveCallFilteringCriteriaById 
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "The `id` parameter specifies the unique identifier for the executive call filtering criteria. Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization ID for the user."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"scheduleName\": \"<string>\",\n  \"scheduleType\": \"holidays\",\n  \"scheduleLevel\": \"PEOPLE\",\n  \"callsFrom\": \"ANY_INTERNAL\",\n  \"anonymousCallersEnabled\": \"<boolean>\",\n  \"unavailableCallersEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"filterEnabled\": \"<boolean>\",\n  \"callsToNumbers\": [\n    {\n      \"type\": \"PRIMARY\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"type\": \"PRIMARY\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingDeleteTelephonyConfigPeopleByPersonIdExecutiveCallFilteringCriteriaById is "Delete Person Executive Call Filtering Criteria": DELETE /telephony/config/people/{personId}/executive/callFiltering/criteria/{id}.
@@ -13079,7 +13079,7 @@ var CallingPostTelephonyConfigPeopleByPersonIdExecutiveCallFilteringCriteria = &
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "A unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization ID for the user."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"filterName\": \"<string>\",\n  \"callsFrom\": \"ANY_INTERNAL\",\n  \"filterEnabled\": \"<boolean>\",\n  \"scheduleName\": \"<string>\",\n  \"scheduleType\": \"businessHours\",\n  \"scheduleLevel\": \"GROUP\",\n  \"anonymousCallersEnabled\": \"<boolean>\",\n  \"unavailableCallersEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"callsToNumbers\": [\n    {\n      \"type\": \"ALTERNATE\",\n      \"phoneNumber\": \"<string>\"\n    },\n    {\n      \"type\": \"ALTERNATE\",\n      \"phoneNumber\": \"<string>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdExecutiveAlert is "Get Person Executive Alert Settings": GET /telephony/config/people/{personId}/executive/alert.
@@ -13185,7 +13185,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdExecutiveAssistant = &Operation{
 		{Name: "personId", In: InPath, Flag: "person-id", Required: true, Usage: "A unique identifier for the person."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Organization ID for the person."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"forwardFilteredCallsEnabled\": \"<boolean>\",\n  \"forwardToPhoneNumber\": \"<string>\",\n  \"executives\": [\n    {\n      \"personId\": \"<string>\",\n      \"optInEnabled\": \"<boolean>\"\n    },\n    {\n      \"personId\": \"<string>\",\n      \"optInEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdExecutiveScreening is "Get Person Executive Screening Settings": GET /telephony/config/people/{personId}/executive/screening.
@@ -13348,7 +13348,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdCallRecording = &Operati
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Unique identifier for the virtual line."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the virtual profile resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"record\": \"Always with Pause/Resume\",\n  \"recordVoicemailEnabled\": \"<boolean>\",\n  \"notification\": {\n    \"type\": \"Beep\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"repeat\": {\n    \"interval\": \"<number>\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"startStopAnnouncement\": {\n    \"internalCallsEnabled\": \"<boolean>\",\n    \"pstnCallsEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigVirtualLinesByVirtualLineId is "Delete a Virtual Line": DELETE /telephony/config/virtualLines/{virtualLineId}.
@@ -13474,7 +13474,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdCallerId = &Operation{
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Update settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter, as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"selected\": \"CUSTOM\",\n  \"customNumber\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"blockInForwardCallsEnabled\": \"<boolean>\",\n  \"externalCallerIdNamePolicy\": \"LOCATION\",\n  \"customExternalCallerIdName\": \"<string>\",\n  \"additionalExternalCallerIdDirectLineEnabled\": \"<boolean>\",\n  \"additionalExternalCallerIdLocationNumberEnabled\": \"<boolean>\",\n  \"additionalExternalCallerIdCustomNumber\": \"<string>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByFirstName\": \"<string>\",\n  \"dialByLastName\": \"<string>\"\n}"},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdCallWaiting is "Read Call Waiting Settings for a Virtual Line": GET /telephony/config/virtualLines/{virtualLineId}/callWaiting.
@@ -13526,7 +13526,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdCallForwarding = &Operat
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Update settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"busy\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    },\n    \"noAnswer\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"numberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"businessContinuity\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdIncomingPermission is "Read Incoming Permission Settings for a Virtual Line": GET /telephony/config/virtualLines/{virtualLineId}/incomingPermission.
@@ -13581,7 +13581,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdOutgoingPermission = &Op
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Update settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callingPermissions\": [\n    {\n      \"transferEnabled\": \"<boolean>\",\n      \"callType\": \"INTERNATIONAL\",\n      \"action\": \"TRANSFER_NUMBER_1\"\n    },\n    {\n      \"transferEnabled\": \"<boolean>\",\n      \"callType\": \"TOLL_FREE\",\n      \"action\": \"ALLOW\"\n    }\n  ],\n  \"useCustomEnabled\": \"<boolean>\",\n  \"useCustomPermissions\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdOutgoingPermissionAccessCodes is "Retrieve Access Codes for a Virtual Line": GET /telephony/config/virtualLines/{virtualLineId}/outgoingPermission/accessCodes.
@@ -13793,7 +13793,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdIntercept = &Operation{
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Update settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"incoming\": {\n    \"type\": \"ALLOW_ALL\",\n    \"voicemailEnabled\": \"<boolean>\",\n    \"announcements\": {\n      \"greeting\": \"CUSTOM\",\n      \"newNumber\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      },\n      \"zeroTransfer\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      }\n    }\n  },\n  \"outgoing\": {\n    \"type\": \"INTERCEPT_ALL\",\n    \"transferEnabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdAgentAvailableCallerIds is "Retrieve Agent's List of Available Caller IDs": GET /telephony/config/virtualLines/{virtualLineId}/agent/availableCallerIds.
@@ -13855,7 +13855,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdVoicemail = &Operation{
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Retrieve settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"sendAllCalls\": {\n    \"enabled\": \"<boolean>\"\n  },\n  \"sendBusyCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"DEFAULT\"\n  },\n  \"sendUnansweredCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"CUSTOM\",\n    \"numberOfRings\": \"<number>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"messageStorage\": {\n    \"mwiEnabled\": \"<boolean>\",\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPostTelephonyConfigVirtualLinesByVirtualLineIdVoicemailActionsResetPinInvoke is "Reset Voicemail PIN for a Virtual Line": POST /telephony/config/virtualLines/{virtualLineId}/voicemail/actions/resetPin/invoke.
@@ -13908,7 +13908,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdMusicOnHold = &Operation
 		{Name: "virtualLineId", In: InPath, Flag: "virtual-line-id", Required: true, Usage: "Retrieve settings for a virtual line with the matching ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the virtual line resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"mohEnabled\": \"<boolean>\",\n  \"greeting\": \"CUSTOM\",\n  \"audioAnnouncementFile\": {\n    \"id\": \"<string>\",\n    \"fileName\": \"<string>\",\n    \"mediaFileType\": \"WAV\",\n    \"level\": \"LOCATION\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdPushToTalk is "Read Push-to-Talk Settings for a Virtual Line": GET /telephony/config/virtualLines/{virtualLineId}/pushToTalk.
@@ -14167,7 +14167,7 @@ var CallingPutWorkspacesByWorkspaceIdFeaturesCallForwarding = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"callForwarding\": {\n    \"always\": {\n      \"enabled\": \"<boolean>\",\n      \"ringReminderEnabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\",\n      \"destination\": \"<string>\"\n    },\n    \"busy\": {\n      \"enabled\": \"<boolean>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\",\n      \"destination\": \"<string>\"\n    },\n    \"noAnswer\": {\n      \"enabled\": \"<boolean>\",\n      \"destination\": \"<string>\",\n      \"numberOfRings\": \"<number>\",\n      \"systemMaxNumberOfRings\": \"<number>\",\n      \"destinationVoicemailEnabled\": \"<boolean>\"\n    }\n  },\n  \"businessContinuity\": {\n    \"enabled\": \"<boolean>\",\n    \"destinationVoicemailEnabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetWorkspacesByWorkspaceIdFeaturesCallWaiting is "Retrieve Call Waiting Settings for a Workspace": GET /workspaces/{workspaceId}/features/callWaiting.
@@ -14219,7 +14219,7 @@ var CallingPutWorkspacesByWorkspaceIdFeaturesCallerId = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"selected\": \"DIRECT_LINE\",\n  \"customNumber\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"displayDetail\": \"<string>\",\n  \"blockInForwardCallsEnabled\": \"<boolean>\",\n  \"externalCallerIdNamePolicy\": \"OTHER\",\n  \"customExternalCallerIdName\": \"<string>\",\n  \"locationExternalCallerIdName\": \"<string>\",\n  \"directLineCallerIdName\": {\n    \"selection\": \"CUSTOM_NAME\",\n    \"customName\": \"<string>\"\n  },\n  \"dialByName\": \"<string>\"\n}"},
 }
 
 // CallingGetWorkspacesByWorkspaceIdFeaturesMonitoring is "Retrieve Monitoring Settings for a Workspace": GET /workspaces/{workspaceId}/features/monitoring.
@@ -14315,7 +14315,7 @@ var CallingPutWorkspacesByWorkspaceIdFeaturesOutgoingPermission = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"useCustomEnabled\": \"<boolean>\",\n  \"useCustomPermissions\": \"<boolean>\",\n  \"callingPermissions\": [\n    {\n      \"callType\": \"PREMIUM_SERVICES_I\",\n      \"action\": \"TRANSFER_NUMBER_1\",\n      \"transferEnabled\": \"<boolean>\"\n    },\n    {\n      \"callType\": \"PREMIUM_SERVICES_II\",\n      \"action\": \"TRANSFER_NUMBER_2\",\n      \"transferEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetWorkspacesByWorkspaceIdFeaturesOutgoingPermissionAccessCodes is "Retrieve Access Codes for a Workspace": GET /workspaces/{workspaceId}/features/outgoingPermission/accessCodes.
@@ -14395,7 +14395,7 @@ var CallingPutWorkspacesByWorkspaceIdFeaturesIntercept = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"incoming\": {\n    \"type\": \"INTERCEPT_ALL\",\n    \"voicemailEnabled\": \"<boolean>\",\n    \"announcements\": {\n      \"greeting\": \"CUSTOM\",\n      \"newNumber\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      },\n      \"zeroTransfer\": {\n        \"enabled\": \"<boolean>\",\n        \"destination\": \"<string>\"\n      }\n    }\n  },\n  \"outgoing\": {\n    \"type\": \"ALLOW_LOCAL_ONLY\",\n    \"transferEnabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  }\n}"},
 }
 
 // CallingGetWorkspacesByWorkspaceIdFeaturesOutgoingPermissionAutoTransferNumbers is "Retrieve Transfer Numbers Settings for a Workspace": GET /workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers.
@@ -14450,7 +14450,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdMusicOnHold = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"mohEnabled\": \"<boolean>\",\n  \"greeting\": \"CUSTOM\",\n  \"audioAnnouncementFile\": {\n    \"id\": \"<string>\",\n    \"fileName\": \"<string>\",\n    \"mediaFileType\": \"WAV\",\n    \"level\": \"LOCATION\"\n  }\n}"},
 }
 
 // CallingDeleteTelephonyConfigWorkspacesByWorkspaceIdFeaturesAccessCodesByAccessCode is "Delete a Specific Access Code for a Workspace": DELETE /telephony/config/workspaces/{workspaceId}/features/accessCodes/{accessCode}.
@@ -14590,7 +14590,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdFeaturesCallRecordings = &Op
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"record\": \"Always with Pause/Resume\",\n  \"recordVoicemailEnabled\": \"<boolean>\",\n  \"notification\": {\n    \"type\": \"Beep\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"repeat\": {\n    \"interval\": \"<number>\",\n    \"enabled\": \"<boolean>\"\n  },\n  \"startStopAnnouncement\": {\n    \"internalCallsEnabled\": \"<boolean>\",\n    \"pstnCallsEnabled\": \"<boolean>\"\n  }\n}"},
 }
 
 // CallingGetTelephonyConfigWorkspacesAvailableNumbers is "Get Workspace Available Phone Numbers": GET /telephony/config/workspaces/availableNumbers.
@@ -14859,7 +14859,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdVoicemail = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"notifications\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"transferToNumber\": {\n    \"enabled\": \"<boolean>\",\n    \"destination\": \"<string>\"\n  },\n  \"enabled\": \"<boolean>\",\n  \"sendAllCalls\": {\n    \"enabled\": \"<boolean>\"\n  },\n  \"sendBusyCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"DEFAULT\"\n  },\n  \"sendUnansweredCalls\": {\n    \"enabled\": \"<boolean>\",\n    \"greeting\": \"CUSTOM\",\n    \"numberOfRings\": \"<number>\"\n  },\n  \"emailCopyOfMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"emailId\": \"<string>\"\n  },\n  \"messageStorage\": {\n    \"mwiEnabled\": \"<boolean>\",\n    \"storageType\": \"INTERNAL\",\n    \"externalEmail\": \"<string>\"\n  },\n  \"faxMessage\": {\n    \"enabled\": \"<boolean>\",\n    \"phoneNumber\": \"<string>\",\n    \"extension\": \"<string>\"\n  }\n}"},
 }
 
 // CallingPutTelephonyConfigWorkspacesByPlaceIdVoicemailPasscode is "Modify Voicemail Passcode for a Workspace": PUT /telephony/config/workspaces/{placeId}/voicemail/passcode.
@@ -14997,7 +14997,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdSequentialRing = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"ringBaseLocationFirstEnabled\": \"<boolean>\",\n  \"baseLocationNumberOfRings\": \"<number>\",\n  \"continueIfBaseLocationIsBusyEnabled\": \"<boolean>\",\n  \"callsToVoicemailEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\",\n      \"numberOfRings\": \"<number>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigWorkspacesByWorkspaceIdSimultaneousRing is "Retrieve Simultaneous Ring Settings for a Workspace": GET /telephony/config/workspaces/{workspaceId}/simultaneousRing.
@@ -15022,7 +15022,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdSimultaneousRing = &Operatio
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"criteriasEnabled\": \"<boolean>\",\n  \"enabled\": \"<boolean>\",\n  \"doNotRingIfOnCallEnabled\": \"<boolean>\",\n  \"phoneNumbers\": [\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\"\n    },\n    {\n      \"phoneNumber\": \"<string>\",\n      \"answerConfirmationRequiredEnabled\": \"<boolean>\"\n    }\n  ]\n}"},
 }
 
 // CallingGetTelephonyConfigWorkspacesByWorkspaceIdSimultaneousRingCriteriaById is "Retrieve Simultaneous Ring Criteria for a Workspace": GET /telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria/{id}.
@@ -15204,7 +15204,7 @@ var CallingPutTelephonyConfigWorkspacesByWorkspaceIdNumbers = &Operation{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"phoneNumbers\": [\n    {\n      \"primary\": \"<boolean>\",\n      \"action\": \"DELETE\",\n      \"directNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"ringPattern\": \"LONG_LONG\"\n    },\n    {\n      \"primary\": \"<boolean>\",\n      \"action\": \"DELETE\",\n      \"directNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"ringPattern\": \"NORMAL\"\n    }\n  ],\n  \"distinctiveRingEnabled\": \"<boolean>\"\n}"},
 }
 
 // CallingGetTelephonyConfigWorkspacesByWorkspaceIdSelectiveAccept is "Retrieve Selective Accept Settings for a Workspace": GET /telephony/config/workspaces/{workspaceId}/selectiveAccept.
@@ -15578,7 +15578,7 @@ var CallingPostWorkspaces = &Operation{
 	Summary:     "Create a Workspace",
 	Description: "Create a workspace.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).\n\n* Information for Webex Calling fields may be found here: [locations](/docs/api/v1/locations/list-locations), [available numbers](/docs/api/v1/numbers/get-phone-numbers-for-an-organization-with-given-criterias) and [licenses](/docs/api/v1/licenses).\n\n* The `locationId` and `supportedDevices` fields cannot be changed once configured.\n\n* When creating a `webexCalling` workspace that is not hot desk only, a `locationId` and either a `phoneNumber` or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be automaticaly applied.\n\n* When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable. Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields are provided the API will return an error. The `calling` type is `webexCalling`.",
 	Method:      "POST", Host: HostWebex, Path: "/workspaces",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"displayName\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"workspaceLocationId\": \"<string>\",\n  \"floorId\": \"<string>\",\n  \"capacity\": \"<number>\",\n  \"type\": \"notSet\",\n  \"sipAddress\": \"<string>\",\n  \"calling\": {\n    \"type\": \"hybridCalling\",\n    \"webexCalling\": {\n      \"phoneNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"locationId\": \"<string>\",\n      \"licenses\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"calendar\": {\n    \"type\": \"<string>\",\n    \"emailAddress\": \"<string>\",\n    \"resourceGroupId\": \"<string>\"\n  },\n  \"notes\": \"<string>\",\n  \"hotdeskingStatus\": \"off\",\n  \"deviceHostedMeetings\": {\n    \"enabled\": \"<boolean>\",\n    \"siteUrl\": \"<string>\"\n  },\n  \"supportedDevices\": \"collaborationDevices\",\n  \"indoorNavigation\": {\n    \"url\": \"<string>\"\n  }\n}"},
 }
 
 // callingGetWorkspacesByWorkspaceId_1 is "Get Workspace Details": GET /workspaces/{workspaceId}.
@@ -15602,7 +15602,7 @@ var CallingPutWorkspacesByWorkspaceId = &Operation{
 	Params: []Param{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "A unique identifier for the workspace."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"displayName\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"workspaceLocationId\": \"<string>\",\n  \"floorId\": \"<string>\",\n  \"capacity\": \"<number>\",\n  \"type\": \"notSet\",\n  \"calendar\": {\n    \"type\": \"<string>\",\n    \"emailAddress\": \"<string>\",\n    \"resourceGroupId\": \"<string>\"\n  },\n  \"sipAddress\": \"<string>\",\n  \"calling\": {\n    \"type\": \"webexEdgeForDevices\",\n    \"webexCalling\": {\n      \"phoneNumber\": \"<string>\",\n      \"extension\": \"<string>\",\n      \"locationId\": \"<string>\",\n      \"licenses\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  },\n  \"notes\": \"<string>\",\n  \"hotdeskingStatus\": \"on\",\n  \"deviceHostedMeetings\": {\n    \"enabled\": \"<boolean>\",\n    \"siteUrl\": \"<string>\"\n  },\n  \"indoorNavigation\": {\n    \"url\": \"<string>\"\n  }\n}"},
 }
 
 // CallingDeleteWorkspacesByWorkspaceId is "Delete a Workspace": DELETE /workspaces/{workspaceId}.
@@ -16273,7 +16273,7 @@ var callingPutTelephonyConfigLocationsByLocationIdQueuesByQueueIdCxEssentialsScr
 		{Name: "queueId", In: InPath, Flag: "queue-id", Required: true, Usage: "The call queue ID for which screen pop configuration is modified."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "The organization ID of the customer or partner's organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"enabled\": \"<boolean>\",\n  \"screenPopUrl\": \"<string>\",\n  \"desktopLabel\": \"<string>\",\n  \"queryParams\": {\n    \"example_param_1\": \"<string>\",\n    \"example_param_2\": \"<string>\",\n    \"example_param_3\": \"<string>\"\n  }\n}"},
 }
 
 // callingGetTelephonyConfigLocationsByLocationIdCxEssentialsAgentsAvailableAgents_2 is "List Available Agents": GET /telephony/config/locations/{locationId}/cxEssentials/agents/availableAgents.

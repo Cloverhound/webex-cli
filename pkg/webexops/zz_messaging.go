@@ -96,7 +96,7 @@ var MessagingPostAttachmentActions = &Operation{
 	Summary:     "Create an Attachment Action",
 	Description: "Create a new attachment action.",
 	Method:      "POST", Host: HostWebex, Path: "/attachment/actions",
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"type\": \"submit\",\n  \"messageId\": \"<string>\",\n  \"inputs\": {\n    \"Name\": \"<string>\",\n    \"Url\": \"<string>\",\n    \"Email\": \"<string>\",\n    \"Tel\": \"<string>\"\n  }\n}"},
 }
 
 // MessagingGetAttachmentActionsById is "Get Attachment Action Details": GET /attachment/actions/{id}.
@@ -375,7 +375,7 @@ var MessagingPostPeople = &Operation{
 		{Name: "callingData", In: InQuery, Flag: "calling-data", Usage: "Include Webex Calling user details in the response."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details and returning only the ID in the response when successful. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"displayName\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"},
 }
 
 // MessagingGetPeopleByPersonId is "Get Person Details": GET /people/{personId}.
@@ -402,7 +402,7 @@ var MessagingPutPeopleByPersonId = &Operation{
 		{Name: "showAllTypes", In: InQuery, Flag: "show-all-types", Usage: "Include additional user data like `#attendee` role."},
 		{Name: "minResponse", In: InQuery, Flag: "min-response", Usage: "Set to `true` to improve performance by omitting person details in the response. If unsuccessful the response will have optional error details."},
 	},
-	Body: &Body{},
+	Body: &Body{Example: "{\n  \"displayName\": \"<string>\",\n  \"emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phoneNumbers\": [\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"work\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"extension\": \"<string>\",\n  \"locationId\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"nickName\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"orgId\": \"<string>\",\n  \"roles\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"licenses\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"department\": \"<string>\",\n  \"manager\": \"<string>\",\n  \"managerId\": \"<string>\",\n  \"title\": \"<string>\",\n  \"addresses\": [\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"country\": \"<string>\",\n      \"locality\": \"<string>\",\n      \"region\": \"<string>\",\n      \"streetAddress\": \"<string>\",\n      \"postalCode\": \"<string>\"\n    }\n  ],\n  \"siteUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"loginEnabled\": \"<boolean>\"\n}"},
 }
 
 // MessagingDeletePeopleByPersonId is "Delete a Person": DELETE /people/{personId}.

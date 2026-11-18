@@ -244,34 +244,34 @@ webex device hot-desk delete-session --session-id <id>
 | `get-dynamic-settings-job-status-2` | `--job-id` *(required)* |
 | `list-dynamic-settings-job-errors-2` | `--job-id` *(required)*, `--org-id`, `--start`, `--max` |
 | `apply-changes` | `--device-id` *(required)*, `--org-id` |
-| `create-line-key-template` | `--org-id`, `--body`, `--body-file` |
-| `preview-apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
-| `apply-line-key-template` | `--org-id`, `--body`, `--body-file` |
+| `create-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `preview-apply-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `apply-line-key-template` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `validate-list-mac-address` | `--org-id`, `--macs`, `--body`, `--body-file` |
-| `update-settings-across-org-location-job` | `--org-id`, `--body`, `--body-file` |
+| `update-settings-across-org-location-job` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `rebuild-phones-configuration` | `--org-id`, `--location-id`, `--body`, `--body-file` |
 | `upload-background-image` | `--device-id` *(required)*, `--org-id` |
 | `get-customer-dynamic-settings` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
-| `updates-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
+| `updates-dynamic-settings-across-org-location` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `get-customer-dynamic-settings-2` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings-2` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings-2` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
-| `update-dynamic-settings-across-org-location` | `--org-id`, `--body`, `--body-file` |
-| `update-members` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-settings` | `--device-id` *(required)*, `--org-id`, `--device-model`, `--body`, `--body-file` |
+| `update-dynamic-settings-across-org-location` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-members` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-settings` | `--device-id` *(required)*, `--org-id`, `--device-model`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-third-party` | `--device-id` *(required)*, `--org-id`, `--sip-password`, `--body`, `--body-file` |
-| `update-hoteling-settings-person-primary` | `--person-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-hoteling-settings-person-primary` | `--person-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-workspace` | `--workspace-id` *(required)*, `--org-id`, `--enabled`, `--limit-guest-use`, `--guest-hours-limit`, `--body`, `--body-file` |
-| `update-line-key-template` | `--template-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-layout-id` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-line-key-template` | `--template-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-layout-id` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-settings-person` | `--person-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
 | `update-settings-workspace` | `--workspace-id` *(required)*, `--org-id`, `--compression`, `--body`, `--body-file` |
-| `update-specified-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
-| `update-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update-specified-settings` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-line-key-template` | `--template-id` *(required)*, `--org-id` |
-| `delete-background-images` | `--org-id`, `--body`, `--body-file` |
+| `delete-background-images` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 
 ### device-configurations
 
@@ -335,8 +335,8 @@ webex device hot-desk delete-session --session-id <id>
 | `get` | `--workspace-id` *(required)*, `--include-devices` |
 | `get-capabilities` | `--workspace-id` *(required)* |
 | `get-2` | `--workspace-id` *(required)*, `--include-devices`, `--include-capabilities` |
-| `create` | `--body`, `--body-file` |
-| `update` | `--workspace-id` *(required)*, `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--workspace-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--workspace-id` *(required)* |
 
 ### xapi
@@ -345,7 +345,7 @@ webex device hot-desk delete-session --session-id <id>
 |---|---|
 | `query-status` | `--device-id`, `--name` |
 | `query-schema` | `--device-id`, `--status`, `--command` |
-| `execute-command` | `--command-name` *(required)*, `--body`, `--body-file` |
+| `execute-command` | `--command-name` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 
 ### locations
 
@@ -355,9 +355,9 @@ webex device hot-desk delete-session --session-id <id>
 | `get` | `--location-id` *(required)*, `--org-id` |
 | `list-floors` | `--location-id` *(required)* |
 | `get-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |
-| `create` | `--org-id`, `--body`, `--body-file` |
+| `create` | `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-floor` | `--location-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
-| `update` | `--location-id` *(required)*, `--org-id`, `--body`, `--body-file` |
+| `update` | `--location-id` *(required)*, `--org-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-floor` | `--location-id` *(required)*, `--floor-id` *(required)*, `--floor-number`, `--display-name`, `--body`, `--body-file` |
 | `delete` | `--location-id` *(required)*, `--org-id` |
 | `delete-floor` | `--location-id` *(required)*, `--floor-id` *(required)* |

@@ -4,7 +4,7 @@ import os
 import tempfile
 import unittest
 
-from extract_api_spec import example_list, load_collections
+from extract_api_spec import example_list, extract_endpoint, load_collections
 
 
 def collection(name, folders):
@@ -55,6 +55,29 @@ class SupplementalCollectionTest(unittest.TestCase):
             'AI Agent': [('Export AI agent', 'GET', '/api/v1/llmagent/export/')]}))
         with self.assertRaises(ValueError):
             load_collections(self.downloaded, self.supplemental)
+
+
+class BodyExampleTest(unittest.TestCase):
+    """The example body kept for a body that flags cannot give."""
+
+    def endpoint(self, raw):
+        return extract_endpoint({'name': 'Create a thing', 'request': {
+            'method': 'POST', 'url': {'path': ['things']}, 'body': {'mode': 'raw', 'raw': raw}}})
+
+    def test_a_nested_body_keeps_its_example_indented(self):
+        ep = self.endpoint('{"name": "<string>", "settings": [{"name": "<string>", "value": "<string>"}]}')
+        self.assertTrue(ep['complex_body'])
+        self.assertEqual(ep['body_example'], json.dumps(
+            {'name': '<string>', 'settings': [{'name': '<string>', 'value': '<string>'}]}, indent=2))
+
+    def test_a_body_that_is_not_json_keeps_its_text(self):
+        ep = self.endpoint('  {"name": <string>}\n')
+        self.assertEqual(ep['body_example'], '{"name": <string>}')
+
+    def test_a_flat_body_keeps_no_example(self):
+        ep = self.endpoint('{"name": "<string>", "enabled": "<boolean>"}')
+        self.assertFalse(ep['complex_body'])
+        self.assertNotIn('body_example', ep)
 
 
 class ExampleListTest(unittest.TestCase):
