@@ -5,7 +5,13 @@ import re
 import tempfile
 import unittest
 
-from generate_cli import generate_area_file, load_names, operation, resolve_base_url
+from generate_cli import generate_area_file, go_string, load_names, operation, resolve_base_url
+
+
+class GoStringTest(unittest.TestCase):
+    def test_a_byte_order_mark_is_escaped(self):
+        # Go refuses a byte order mark anywhere in a source file but its start.
+        self.assertEqual(go_string('a﻿b é'), '"a\\ufeffb é"')
 
 
 class OperationNamesFileTest(unittest.TestCase):
@@ -150,6 +156,17 @@ class OperationIDTest(unittest.TestCase):
         operations = source.split('var callingOperations = []*Operation{')[1].split('}')[0]
         self.assertNotIn('CallingGetWorkspacesByWorkspaceId,', operations)
 
+    def test_a_combined_operation_keeps_a_body_example_only_when_its_listings_agree(self):
+        def listing(command, query, example):
+            return {'command': command, 'method': 'POST', 'path': '/workspaces', 'query_params': [{'name': query}],
+                    'has_body': True, 'complex_body': True, 'body_example': example}
+        for second, expected in (('{"a": []}', 'Body: &Body{Example: "{\\"a\\": []}"}'), ('{"b": []}', 'Body: &Body{}')):
+            with self.subTest(second=second):
+                source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'workspaces',
+                                   [listing('create', 'max', '{"a": []}'), listing('create-2', 'force', second)])
+                combined = source.split('var CallingPostWorkspaces = ')[1].split('\n}\n')[0]
+                self.assertIn(expected, combined)
+
     def test_a_route_that_puts_one_parameter_in_two_places_is_not_named(self):
         query = {'command': 'get', 'method': 'GET', 'path': '/workspaces', 'query_params': [{'name': 'max'}]}
         header = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces', 'extra_headers': [{'name': 'max'}]}
@@ -195,6 +212,16 @@ class FlagTest(unittest.TestCase):
                                         {'name': 'count', 'type': 'int64'}]}, 'Webex Test', 'webex', True)
         self.assertEqual(op['body'], [{'name': 'id', 'flag': 'id', 'type': 'string'},
                                       {'name': 'count', 'flag': 'count', 'type': 'int64'}])
+
+    def test_a_nested_body_has_its_example_and_no_flags(self):
+        example = '{\n  "settings": [\n    "<string>"\n  ]\n}'
+        endpoint = {'command': 'create', 'method': 'POST', 'path': '/things', 'has_body': True,
+                    'complex_body': True, 'body_fields': [{'name': 'name', 'type': 'string'}],
+                    'body_example': example}
+        op = operation(endpoint, 'Webex Test', 'webex', True)
+        self.assertEqual((op['body'], op['bodyExample']), ([], example))
+        code = area_file('admin', 'Webex Test', 'webex', True, 'things', [endpoint])
+        self.assertIn('\tBody: &Body{Example: ' + json.dumps(example) + '},', code)
 
     def test_a_fixed_path_parameter_has_no_flag(self):
         op = operation({'command': 'get', 'method': 'GET', 'path': '/projects/{projectId}',

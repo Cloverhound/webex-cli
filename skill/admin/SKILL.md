@@ -308,7 +308,7 @@ webex admin service-apps get --service-app-id <id>
 |---|---|
 | `get-verification-token` | `--domain`, `--body`, `--body-file` |
 | `verify` | `--domain`, `--claim-domain`, `--reserve-domain`, `--body`, `--body-file` |
-| `claim` | `--body`, `--body-file` |
+| `claim` | `--body` *(example in `--help`)*, `--body-file` |
 | `unverify` | `--domain`, `--remove-pending`, `--body`, `--body-file` |
 | `unclaim` | `--domain`, `--body`, `--body-file` |
 
@@ -336,8 +336,8 @@ webex admin service-apps get --service-app-id <id>
 | `list-search` | `--org-id`, `--filter`, `--attributes`, `--sort-by`, `--sort-order`, `--include-members`, `--start-index`, `--count` |
 | `get` | `--group-id` *(required)*, `--include-members` |
 | `get-members` | `--group-id` *(required)*, `--start-index`, `--count` |
-| `create` | `--body`, `--body-file` |
-| `update` | `--group-id` *(required)*, `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--group-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--group-id` *(required)* |
 
 ### guest-management
@@ -375,7 +375,7 @@ webex admin service-apps get --service-app-id <id>
 |---|---|
 | `list` | `--org-id` |
 | `get-license` | `--license-id` *(required)*, `--include-assigned-to`, `--next`, `--limit` |
-| `assign-users` | `--body`, `--body-file` |
+| `assign-users` | `--body` *(example in `--help`)*, `--body-file` |
 
 ### meeting-qualities
 
@@ -389,10 +389,10 @@ webex admin service-apps get --service-app-id <id>
 |---|---|
 | `get` | `--contact-id` *(required)* |
 | `list` | `--keyword`, `--source`, `--limit`, `--group-ids` |
-| `create` | `--body`, `--body-file` |
-| `bulk-create-update` | `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `bulk-create-update` | `--body` *(example in `--help`)*, `--body-file` |
 | `bulk-delete` | `--schemas`, `--object-ids`, `--body`, `--body-file` |
-| `update` | `--contact-id` *(required)*, `--body`, `--body-file` |
+| `update` | `--contact-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--contact-id` *(required)* |
 
 ### organizations
@@ -430,8 +430,8 @@ webex admin service-apps get --service-app-id <id>
 | `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
 | `get-person` | `--person-id` *(required)*, `--calling-data` |
 | `get-my-own` | `--calling-data` |
-| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
-| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `create-person` | `--calling-data`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-person` | `--person-id` *(required)* |
 
 ### recording-report
@@ -504,7 +504,7 @@ webex admin service-apps get --service-app-id <id>
 
 | Command | Flags |
 |---|---|
-| `user-api` | `--body`, `--body-file` |
+| `user-api` | `--body` *(example in `--help`)*, `--body-file` |
 
 ### scim-2-groups
 
@@ -513,9 +513,9 @@ webex admin service-apps get --service-app-id <id>
 | `search` | `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--include-members`, `--member-type` |
 | `get` | `--group-id` *(required)*, `--excluded-attributes` |
 | `get-members` | `--group-id` *(required)*, `--start-index`, `--count`, `--member-type` |
-| `create` | `--body`, `--body-file` |
-| `update-put` | `--group-id` *(required)*, `--body`, `--body-file` |
-| `update-patch` | `--group-id` *(required)*, `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-put` | `--group-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-patch` | `--group-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--group-id` *(required)* |
 
 ### scim-2-users
@@ -525,9 +525,9 @@ webex admin service-apps get --service-app-id <id>
 | `search` | `--filter`, `--attributes`, `--excluded-attributes`, `--sort-by`, `--sort-order`, `--start-index`, `--count`, `--return-groups`, `--include-group-details`, `--group-usage-types` |
 | `get` | `--user-id` *(required)* |
 | `get-me` | — |
-| `create` | `--body`, `--body-file` |
-| `update-put` | `--user-id` *(required)*, `--body`, `--body-file` |
-| `update-patch` | `--user-id` *(required)*, `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-put` | `--user-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-patch` | `--user-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--user-id` *(required)* |
 
 ### security-audit
@@ -552,8 +552,8 @@ webex admin service-apps get --service-app-id <id>
 | `get-all-customers-set` | `--tags`, `--max` |
 | `subscription-list-name-set` | `--tags`, `--max` |
 | `get-subscription` | `--subscription-id` *(required)* |
-| `create-replace-customer-provided-ones` | `--body`, `--body-file` |
-| `create-replace-subscription-provided-ones` | `--subscription-id` *(required)*, `--body`, `--body-file` |
+| `create-replace-customer-provided-ones` | `--body` *(example in `--help`)*, `--body-file` |
+| `create-replace-subscription-provided-ones` | `--subscription-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 
 ### workspace-locations
 

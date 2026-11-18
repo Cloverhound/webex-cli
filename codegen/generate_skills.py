@@ -113,7 +113,7 @@ def format_flags(ep):
                 if flag not in seen:
                     seen.add(flag)
                     parts.append(f"`--{flag}`")
-        parts.append("`--body`")
+        parts.append("`--body` *(example in `--help`)*" if ep.get('body_example') else "`--body`")
         parts.append("`--body-file`")
 
     return ", ".join(parts) if parts else "—"

@@ -100,6 +100,11 @@ type Body struct {
 	// Fields are top-level body fields the CLI offers as flags. Bodies that are
 	// not flat have none.
 	Fields []BodyField
+
+	// Example is the collection's example of a body that is not flat, as
+	// indented JSON. Its values are Postman placeholders such as "<string>",
+	// which give a field's type, or one sample value.
+	Example string
 }
 
 // BodyField is one top-level body field.

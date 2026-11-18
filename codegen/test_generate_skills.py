@@ -14,5 +14,15 @@ class AgentTokenFlagTest(unittest.TestCase):
         self.assertEqual(format_flags(ep), '`--agent-id` *(required)*')
 
 
+class BodyFlagTest(unittest.TestCase):
+    def test_a_nested_body_points_to_the_example_in_help(self):
+        ep = {'has_body': True, 'complex_body': True, 'body_example': '{"a": []}'}
+        self.assertEqual(format_flags(ep), '`--body` *(example in `--help`)*, `--body-file`')
+
+    def test_a_flat_body_lists_its_field_flags(self):
+        ep = {'has_body': True, 'body_fields': [{'name': 'displayName', 'type': 'string'}]}
+        self.assertEqual(format_flags(ep), '`--display-name`, `--body`, `--body-file`')
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -25,6 +25,11 @@ const privateAPINote = "Caution: this command uses Webex AI Agent Studio's priva
 	"documented or supported by Cisco and can change or stop working without notice. " +
 	"Do not build production automation on it."
 
+// bodyExampleHeading introduces the example body in the help of commands that
+// take their body only from --body or --body-file.
+const bodyExampleHeading = "Example request body, sent with --body or --body-file " +
+	"(a value in angle brackets, such as <string>, gives a field's type; other values are samples):"
+
 // Register adds an area's groups and commands under parent and returns the group
 // commands by name, for handwritten commands to join.
 func Register(parent *cobra.Command, area string) map[string]*cobra.Command {
@@ -64,14 +69,21 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 	}
 	var last, bodyRaw, bodyFile string
 
-	description := op.Description
-	if op.Private {
-		if description != "" {
-			description += "\n\n" + privateAPINote
-		} else {
-			description = privateAPINote
-		}
+	var sections []string
+	if op.Description != "" {
+		sections = append(sections, op.Description)
 	}
+	if op.Body != nil && op.Body.Example != "" {
+		sections = append(sections, bodyExampleHeading, "  "+strings.ReplaceAll(op.Body.Example, "\n", "\n  "))
+	}
+	if op.Private {
+		sections = append(sections, privateAPINote)
+	}
+	// Help shows Long in place of Short, so Long carries the summary when there is no description.
+	if op.Description == "" && op.Body != nil && op.Body.Example != "" && op.Summary != "" {
+		sections = append([]string{op.Summary}, sections...)
+	}
+	description := strings.Join(sections, "\n\n")
 
 	c := &cobra.Command{
 		Use:     op.Command,

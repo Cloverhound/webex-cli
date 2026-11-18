@@ -222,7 +222,8 @@ def kebab_to_pascal(name):
 
 def go_string(s):
     """A Go double-quoted string literal."""
-    return json.dumps(s, ensure_ascii=False)
+    # Go refuses a byte order mark anywhere in a source file but its start.
+    return json.dumps(s, ensure_ascii=False).replace('﻿', '\\ufeff')
 
 
 def go_identifier(*names):
@@ -359,6 +360,7 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
         'command': ep['command'], 'aliases': ep.get('aliases') or [],
         'summary': ep.get('original_name', ep['command']), 'description': ep.get('description', ''),
         'method': method, 'host': host, 'path': path, 'params': params, 'body': body,
+        'bodyExample': ep.get('body_example', '') if body is not None else '',
         'paging': paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
         # This endpoint returns a non-JSON deletion acknowledgement. Restricting
         # Accept to application/json causes the service to reject it with HTTP 406.
@@ -466,7 +468,9 @@ def combine_operations(ops):
     ranges = {op['timeRange'] for op in ops if op['timeRange']}
     if len(pagings) > 1 or len(ranges) > 1:
         return None
+    examples = {op['bodyExample'] for op in ops if op['bodyExample']}
     return dict(first, command='', aliases=[], params=params, body=body,
+                bodyExample=examples.pop() if len(examples) == 1 else '',
                 paging=next(iter(pagings), None), timeRange=next(iter(ranges), None),
                 redact=any(op['redact'] for op in ops), private=any(op['private'] for op in ops))
 
@@ -504,6 +508,8 @@ def operation_literal(op_id, area, group, op):
             for f in op['body']:
                 lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}}},')
             lines.append('\t}},')
+        elif op['bodyExample']:
+            lines.append(f'\tBody: &Body{{Example: {go_string(op["bodyExample"])}}},')
         else:
             lines.append('\tBody: &Body{},')
     if op['paging']:

@@ -264,7 +264,7 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `list-meeting` | `--meeting-id`, `--max`, `--host-email`, `--panelist` |
 | `get-meeting` | `--meeting-invitee-id` *(required)*, `--host-email` |
 | `create-meeting` | `--meeting-id`, `--email`, `--display-name`, `--co-host`, `--host-email`, `--send-email`, `--panelist`, `--body`, `--body-file` |
-| `create-meeting-2` | `--body`, `--body-file` |
+| `create-meeting-2` | `--body` *(example in `--help`)*, `--body-file` |
 | `update-meeting` | `--meeting-invitee-id` *(required)*, `--email`, `--display-name`, `--co-host`, `--host-email`, `--send-email`, `--panelist`, `--body`, `--body-file` |
 | `delete-meeting` | `--meeting-invitee-id` *(required)*, `--host-email`, `--send-email` |
 
@@ -281,7 +281,7 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `list-meeting` | `--max`, `--meeting-id`, `--breakout-session-id`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--host-email`, `--join-time-from`, `--join-time-to` |
 | `get-meeting` | `--participant-id` *(required)*, `--host-email` |
 | `query-meeting-email` | `--meeting-id`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--host-email`, `--emails`, `--join-time-from`, `--join-time-to`, `--body`, `--body-file` |
-| `admit` | `--body`, `--body-file` |
+| `admit` | `--body` *(example in `--help`)*, `--body-file` |
 | `call-out-sip` | `--address`, `--display-name`, `--meeting-id`, `--meeting-number`, `--address-type`, `--invitation-correlation-id`, `--body`, `--body-file` |
 | `cancel-calling-out-sip` | `--participant-id`, `--body`, `--body-file` |
 | `update` | `--participant-id` *(required)*, `--muted`, `--admit`, `--expel`, `--body`, `--body-file` |
@@ -306,10 +306,10 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `get-site-list` | `--user-email`, `--site-url` |
 | `insert-delegate-emails` | `--user-email`, `--site-url`, `--emails`, `--body`, `--body-file` |
 | `delete-delegate-emails` | `--user-email`, `--site-url`, `--emails`, `--body`, `--body-file` |
-| `batch-refresh-personal-meeting-room-id` | `--body`, `--body-file` |
-| `update-personal-meeting-room-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
-| `update-audio-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
-| `update-video-options` | `--user-email`, `--site-url`, `--body`, `--body-file` |
+| `batch-refresh-personal-meeting-room-id` | `--body` *(example in `--help`)*, `--body-file` |
+| `update-personal-meeting-room-options` | `--user-email`, `--site-url`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-audio-options` | `--user-email`, `--site-url`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-video-options` | `--user-email`, `--site-url`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-scheduling-options` | `--user-email`, `--site-url`, `--enabled-join-before-host`, `--join-before-host-minutes`, `--enabled-auto-share-recording`, `--enabled-webex-assistant-by-default`, `--delegate-emails`, `--body`, `--body-file` |
 | `update-default-site` | `--default-site`, `--user-email`, `--site-url`, `--body`, `--body-file` |
 
@@ -377,30 +377,30 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `list-invitation-sources` | `--meeting-id` *(required)* |
 | `list-tracking-codes` | `--site-url`, `--service`, `--host-email` |
 | `list-group` | `--person-id`, `--meeting-number`, `--web-link`, `--current` |
-| `create` | `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
 | `join` | `--meeting-id`, `--meeting-number`, `--web-link`, `--join-directly`, `--email`, `--display-name`, `--password`, `--expiration-minutes`, `--registration-id`, `--host-email`, `--create-join-link-as-web-link`, `--create-start-link-as-web-link`, `--body`, `--body-file` |
-| `register-registrant` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
-| `batch-register-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `register-registrant` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
+| `batch-register-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
 | `query-registrants` | `--meeting-id` *(required)*, `--max`, `--current`, `--host-email`, `--emails`, `--status`, `--order-type`, `--order-by`, `--body`, `--body-file` |
-| `batch-update-registrants-status` | `--meeting-id` *(required)*, `--status-op-type` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-update-registrants-status` | `--meeting-id` *(required)*, `--status-op-type` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
 | `create-interpreter` | `--meeting-id` *(required)*, `--language-code1`, `--language-code2`, `--email`, `--display-name`, `--host-email`, `--send-email`, `--body`, `--body-file` |
 | `get-survey-links` | `--meeting-id` *(required)*, `--host-email`, `--meeting-start-time-from`, `--meeting-start-time-to`, `--emails`, `--body`, `--body-file` |
-| `create-invitation-sources` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `create-invitation-sources` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `reassign-host` | `--host-email`, `--meeting-ids`, `--body`, `--body-file` |
 | `end` | `--meeting-id` *(required)*, `--reason`, `--body`, `--body-file` |
-| `batch-approve-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
-| `batch-reject-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
-| `batch-cancel-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
-| `batch-delete-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body`, `--body-file` |
+| `batch-approve-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
+| `batch-reject-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
+| `batch-cancel-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
+| `batch-delete-registrants` | `--meeting-id` *(required)*, `--current`, `--host-email`, `--body` *(example in `--help`)*, `--body-file` |
 | `update-group-control-status` | `--person-id`, `--meeting-id`, `--action`, `--body`, `--body-file` |
-| `update` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `update` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-control-status` | `--meeting-id`, `--recording-started`, `--recording-paused`, `--locked`, `--body`, `--body-file` |
-| `update-registration-form` | `--meeting-id` *(required)*, `--body`, `--body-file` |
-| `update-simultaneous-interpretation` | `--meeting-id` *(required)*, `--body`, `--body-file` |
+| `update-registration-form` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-simultaneous-interpretation` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
 | `update-interpreter` | `--meeting-id` *(required)*, `--interpreter-id` *(required)*, `--language-code1`, `--language-code2`, `--email`, `--display-name`, `--host-email`, `--send-email`, `--body`, `--body-file` |
-| `update-breakout-sessions` | `--meeting-id` *(required)*, `--body`, `--body-file` |
-| `patch` | `--meeting-id` *(required)*, `--body`, `--body-file` |
-| `patch-group` | `--meeting-id` *(required)*, `--person-id`, `--body`, `--body-file` |
+| `update-breakout-sessions` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `patch` | `--meeting-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `patch-group` | `--meeting-id` *(required)*, `--person-id`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--meeting-id` *(required)*, `--host-email`, `--send-email` |
 | `delete-registration-form` | `--meeting-id` *(required)* |
 | `delete-registrant` | `--meeting-id` *(required)*, `--registrant-id` *(required)*, `--current`, `--host-email` |
@@ -414,9 +414,9 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `list` | `--site-url` |
 | `get` | `--tracking-code-id` *(required)*, `--site-url` |
 | `get-user` | `--site-url`, `--person-id` |
-| `create` | `--body`, `--body-file` |
-| `update` | `--tracking-code-id` *(required)*, `--body`, `--body-file` |
-| `update-user` | `--body`, `--body-file` |
+| `create` | `--body` *(example in `--help`)*, `--body-file` |
+| `update` | `--tracking-code-id` *(required)*, `--body` *(example in `--help`)*, `--body-file` |
+| `update-user` | `--body` *(example in `--help`)*, `--body-file` |
 | `delete` | `--tracking-code-id` *(required)*, `--site-url` |
 
 ### people
@@ -426,8 +426,8 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `list` | `--email`, `--display-name`, `--id`, `--org-id`, `--roles`, `--calling-data`, `--location-id`, `--max`, `--exclude-status` |
 | `get-person` | `--person-id` *(required)*, `--calling-data` |
 | `get-my-own` | `--calling-data` |
-| `create-person` | `--calling-data`, `--min-response`, `--body`, `--body-file` |
-| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body`, `--body-file` |
+| `create-person` | `--calling-data`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
+| `update-person` | `--person-id` *(required)*, `--calling-data`, `--show-all-types`, `--min-response`, `--body` *(example in `--help`)*, `--body-file` |
 | `delete-person` | `--person-id` *(required)* |
 
 ### recording-report
@@ -463,7 +463,7 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | Command | Flags |
 |---|---|
 | `get-meeting-common-settings-configuration` | `--site-url` |
-| `update-meeting-common-settings-configuration` | `--body`, `--body-file` |
+| `update-meeting-common-settings-configuration` | `--body` *(example in `--help`)*, `--body-file` |
 
 ### slido
 
@@ -504,7 +504,7 @@ Service apps with group meeting access can use `meetings list-group`, `meetings 
 | `trigger-on-demand-test-cluster` | `--cluster-id` *(required)*, `--type`, `--nodes`, `--body`, `--body-file` |
 | `trigger-on-demand-test-node` | `--node-id` *(required)*, `--type`, `--body`, `--body-file` |
 | `reset-event-threshold-configuration` | `--event-threshold-ids`, `--body`, `--body-file` |
-| `update-event-threshold-configuration` | `--body`, `--body-file` |
+| `update-event-threshold-configuration` | `--body` *(example in `--help`)*, `--body-file` |
 
 ### webhooks
 
