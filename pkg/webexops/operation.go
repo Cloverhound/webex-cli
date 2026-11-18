@@ -141,7 +141,9 @@ type Operation struct {
 
 	Params []Param
 
-	// Body is nil when the operation sends none.
+	// Body is the JSON body the collection gives the operation, nil when it gives
+	// none. A body in Args is sent either way, such as a multipart upload the
+	// collection describes only in words.
 	Body *Body
 
 	// Paging is how the operation's list is read to its end; nil when it is not
@@ -172,7 +174,7 @@ type Args struct {
 	// place of its value in Params.
 	Query url.Values
 
-	// Body is sent when the operation has a Body; ContentType defaults to
+	// Body is sent when it is not empty; ContentType defaults to
 	// application/json.
 	Body        []byte
 	ContentType string
@@ -234,9 +236,7 @@ func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 		Header: header,
 		Name:   op.Path,
 	}
-	if op.Body != nil {
-		l.Body, l.ContentType = args.Body, args.ContentType
-	}
+	l.Body, l.ContentType = args.Body, args.ContentType
 	if op.Redact {
 		l.Redact = aiagent.RedactSecrets
 	}

@@ -106,6 +106,7 @@ def resolve_base_url(collection_name, path, default):
 # Other parameters whose collection describes them as taking the org UUID.
 # Collection name → parameter names.
 UUID_ORG_PARAMS = {
+    "Webex Contact Center": {"organizationId", "X-ORGANIZATION-ID"},
     "Webex Meetings": {"sessionOrgId"},
 }
 
@@ -305,7 +306,8 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
                            'usage': h.get('description', ''), 'required': True})
             continue
         params.append({'name': h['name'], 'in': 'InHeader', 'flag': flag_for(h['name'], camel_to_kebab(h['name'])),
-                       'usage': h.get('description', '')})
+                       'usage': h.get('description', ''),
+                       'orgUUID': h['name'] in UUID_ORG_PARAMS.get(collection_name, ())})
 
     body = None
     if ep.get('has_body', False):
@@ -398,25 +400,25 @@ def operation_ids(area, group, endpoints, names):
     """The Go names of a group's operations, in order.
 
     names records every name published for the area, with the operation it names,
-    and is updated in place. An operation keeps the name recorded for it. When a
-    route's only listing has new parameters, it keeps the one name recorded for that
-    route. Any other operation takes a name that was never published, so a name
+    and is updated in place. An operation keeps the name recorded for it. When, after
+    that, one listing of a route is left unmatched and one name recorded for the
+    route is left unclaimed, the listing's parameters changed and it keeps that
+    name. Any other operation takes a name that was never published, so a name
     never moves to another operation, even after its own operation is removed."""
     identities = operation_identities(group, endpoints)
     named = {identity: name for name, identity in names.items()}
     ids = [named.get(identity) for identity in identities]
     claimed = set(filter(None, ids))
 
-    listings = {}
-    for ep in endpoints:
-        listings[route_of(group, ep)] = listings.get(route_of(group, ep), 0) + 1
+    unmatched = {}
     for i, ep in enumerate(endpoints):
-        route = route_of(group, ep)
-        if ids[i] or listings[route] > 1:
-            continue
+        if not ids[i]:
+            unmatched.setdefault(route_of(group, ep), []).append(i)
+    for route, listings in unmatched.items():
         recorded = [name for name, identity in names.items()
                     if identity.startswith(route + ' [') and name not in claimed]
-        if len(recorded) == 1:
+        if len(listings) == 1 and len(recorded) == 1:
+            i = listings[0]
             ids[i] = recorded[0]
             names[ids[i]] = identities[i]
             claimed.add(ids[i])

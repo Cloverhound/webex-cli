@@ -6,8 +6,10 @@ description: Call the Webex APIs from Go the way the CLI does.
 The CLI is built on a Go SDK that other Go programs can import. It sends requests the way the CLI does: the same hosts, retries, paging and errors. It holds no process-wide state, and every call takes a context.
 
 ```bash
-go get github.com/Cloverhound/webex-cli
+go get github.com/Cloverhound/webex-cli/pkg/webexops
 ```
+
+That brings in `pkg/webexapi` too. Get the SDK packages rather than the module root, whose CLI needs Cobra and the OS keyring.
 
 | Package | What it does |
 |---|---|

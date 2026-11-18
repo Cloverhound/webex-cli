@@ -10,6 +10,7 @@ package webexapi
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -177,11 +178,7 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		}
 	}
 
-	client := c.HTTP
-	if client == nil {
-		client = http.DefaultClient
-	}
-	httpResp, err := client.Do(httpReq)
+	httpResp, err := c.httpClient().Do(httpReq)
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
@@ -204,6 +201,36 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		return resp, apiErr
 	}
 	return resp, nil
+}
+
+// httpClient is the HTTP client with redirects passed through BeforeSend, so the
+// hook sees every request sent. On a redirect to another host it drops AI Agent
+// Studio's Bot-Access-Token, which net/http forwards although it drops
+// Authorization.
+func (c *Client) httpClient() *http.Client {
+	base := c.HTTP
+	if base == nil {
+		base = http.DefaultClient
+	}
+	client := *base
+	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		if req.URL.Host != via[0].URL.Host {
+			req.Header.Del("Bot-Access-Token")
+		}
+		if c.BeforeSend != nil {
+			if err := c.BeforeSend(req); err != nil {
+				return err
+			}
+		}
+		if base.CheckRedirect != nil {
+			return base.CheckRedirect(req, via)
+		}
+		if len(via) >= 10 {
+			return errors.New("stopped after 10 redirects")
+		}
+		return nil
+	}
+	return &client
 }
 
 func (c *Client) sleep(ctx context.Context, d time.Duration) error {

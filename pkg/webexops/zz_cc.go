@@ -619,7 +619,7 @@ var CcAgentWellbeingSubscribeRealtimeBurnoutEvents = &Operation{
 	Description: "This endpoint provides real-time burnout events that are generated for agents belonging to the organization. It gives us a WebSocket URL to which we can connect to receive the real-time burnout events.",
 	Method:      "POST", Host: HostCC, Path: "/v1/agentburnout/subscribe",
 	Params: []Param{
-		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "destinationUrl", Flag: "destination-url", Type: "string"},
@@ -638,7 +638,7 @@ var CcAgentWellbeingRecordRealtimeBurnoutEvents = &Operation{
 	Description: "The endpoint need to be invoked by Partners and Third-Party that will subscribe to the Agent Burnout system, in order to take certain action based on the agent burnout index calculated.",
 	Method:      "POST", Host: HostCC, Path: "/v1/agentburnout/action",
 	Params: []Param{
-		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
+		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
 	Body: &Body{},
 }
@@ -2355,7 +2355,7 @@ var CcDesktopProfileCreate = &Operation{
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Agent profile configuration data"},
 		{Name: "parentType", In: InQuery, Flag: "parent-type", Usage: "Agent profile configuration data"},
 		{Name: "viewableStatistics", In: InQuery, Flag: "viewable-statistics", Usage: "Agent profile configuration data"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Agent profile configuration data"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Agent profile configuration data"},
 		{Name: "id", In: InQuery, Flag: "id", Usage: "Agent profile configuration data"},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Agent profile configuration data"},
 		{Name: "description", In: InQuery, Flag: "description", Usage: "Agent profile configuration data"},
@@ -2471,7 +2471,7 @@ var CcDesktopProfileUpdate = &Operation{
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Agent profile configuration data for update"},
 		{Name: "parentType", In: InQuery, Flag: "parent-type", Usage: "Agent profile configuration data for update"},
 		{Name: "viewableStatistics", In: InQuery, Flag: "viewable-statistics", Usage: "Agent profile configuration data for update"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Agent profile configuration data for update"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Agent profile configuration data for update"},
 		{Name: "id", In: InQuery, Flag: "id", Usage: "Agent profile configuration data for update"},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Agent profile configuration data for update"},
 		{Name: "description", In: InQuery, Flag: "description", Usage: "Agent profile configuration data for update"},
@@ -3803,7 +3803,7 @@ var CcSkillProfileCreate = &Operation{
 		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "activeSkills", In: InQuery, Flag: "active-skills", Usage: "Skill profile configuration data"},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Skill profile configuration data"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Skill profile configuration data"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Skill profile configuration data"},
 		{Name: "id", In: InQuery, Flag: "id", Usage: "Skill profile configuration data"},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Skill profile configuration data"},
 		{Name: "description", In: InQuery, Flag: "description", Usage: "Skill profile configuration data"},
@@ -3866,7 +3866,7 @@ var CcSkillProfileUpdate = &Operation{
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Skill Profile."},
 		{Name: "activeSkills", In: InQuery, Flag: "active-skills", Usage: "Skill profile configuration data for update"},
 		{Name: "name", In: InQuery, Flag: "name", Usage: "Skill profile configuration data for update"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Skill profile configuration data for update"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Skill profile configuration data for update"},
 		{Name: "id", In: InQuery, Flag: "id", Usage: "Skill profile configuration data for update"},
 		{Name: "version", In: InQuery, Flag: "version", Usage: "Skill profile configuration data for update"},
 		{Name: "description", In: InQuery, Flag: "description", Usage: "Skill profile configuration data for update"},
@@ -3940,7 +3940,7 @@ var CcTeamCreate = &Operation{
 		{Name: "siteId", In: InQuery, Flag: "site-id"},
 		{Name: "teamStatus", In: InQuery, Flag: "team-status"},
 		{Name: "teamType", In: InQuery, Flag: "team-type"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true},
 		{Name: "id", In: InQuery, Flag: "id"},
 		{Name: "version", In: InQuery, Flag: "version"},
 		{Name: "dialedNumber", In: InQuery, Flag: "dialed-number"},
@@ -4025,7 +4025,7 @@ var CcTeamUpdate = &Operation{
 		{Name: "siteId", In: InQuery, Flag: "site-id"},
 		{Name: "teamStatus", In: InQuery, Flag: "team-status"},
 		{Name: "teamType", In: InQuery, Flag: "team-type"},
-		{Name: "organizationId", In: InQuery, Flag: "organization-id"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true},
 		{Name: "id", In: InQuery, Flag: "id"},
 		{Name: "version", In: InQuery, Flag: "version"},
 		{Name: "dialedNumber", In: InQuery, Flag: "dialed-number"},
@@ -5700,7 +5700,7 @@ var CcJourneyCreateWorkspace = &Operation{
 	Description: "Create Workspace in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
 	Method:      "POST", Host: HostCC, Path: "/admin/v1/api/workspace",
 	Params: []Param{
-		{Name: "organizationId", In: InQuery, Flag: "organization-id", Usage: "Organization ID"},
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Organization ID"},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "description", Flag: "description", Type: "string"},
@@ -7751,7 +7751,7 @@ var CcSearchMetadataGet = &Operation{
 	Description: "Returns schema metadata for the Webex Contact Center Search GraphQL API, describing supported queries, fields, nested structures, data types, filters, sorting options, grouping capabilities, and aggregation operations.\n\n**Authentication & Authorization:**\n- **Required Scopes:** `cjp:config` or `cjp:config_read`\n\nAn asterisk (*) in the rendered response schema indicates a required property.",
 	Method:      "GET", Host: HostCC, Path: "/search/v2/meta",
 	Params: []Param{
-		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
+		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", OrgUUID: true, Usage: "Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Tracking ID to use for this operation, for traceability, debugging, and error reporting purposes. "},
 	},
 }
@@ -8071,7 +8071,7 @@ var CcExternalDataUpdatesUpdateTaskGlobalVariables = &Operation{
 	Description: "Updates numeric global variable values associated with a completed Webex Contact Center task. The request must identify the organization and task along with its start and end timestamps. The task should have ended within two days prior to the time of making the request.",
 	Method:      "PUT", Host: HostCC, Path: "/v1/data/updateExternal",
 	Params: []Param{
-		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", Usage: "Organization identifier used for partner or delegated access."},
+		{Name: "X-ORGANIZATION-ID", In: InHeader, Flag: "x-organization-id", OrgUUID: true, Usage: "Organization identifier used for partner or delegated access."},
 		{Name: "TrackingId", In: InHeader, Flag: "tracking-id", Usage: "Optional identifier used for request traceability, debugging, and error reporting."},
 	},
 	Body: &Body{},

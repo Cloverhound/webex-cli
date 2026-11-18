@@ -145,8 +145,12 @@ func TestRequestFillsTheOperation(t *testing.T) {
 	if r.Method != "PUT" || string(r.Body) != `{"a":1}` || r.Header.Get("Accept") != "*/*" || r.Header.Get("TrackingID") != "t" {
 		t.Fatalf("%+v", r)
 	}
-	if noBody := (&Operation{Method: "GET", Path: "/x"}).Request(testHosts, Args{Body: []byte("{}")}); noBody.Body != nil {
-		t.Fatal("an operation without a body sent one")
+	// An upload the collection gives no JSON body for still sends the body given.
+	upload := DeviceDeviceCallUploadBackgroundImage.Request(testHosts, Args{
+		Params: map[string]string{"locationId": "l"}, Body: []byte("--b\r\n"), ContentType: "multipart/form-data; boundary=b",
+	})
+	if DeviceDeviceCallUploadBackgroundImage.Body != nil || string(upload.Body) != "--b\r\n" || upload.ContentType != "multipart/form-data; boundary=b" {
+		t.Fatalf("upload %+v", upload)
 	}
 }
 

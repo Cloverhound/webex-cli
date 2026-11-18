@@ -131,6 +131,15 @@ class OperationIDTest(unittest.TestCase):
                 name, = after
                 self.assertIn(before.get(name), (None, after[name]), 'the remaining listing took another listing\'s name')
 
+    def test_one_of_two_listings_gaining_a_parameter_keeps_its_name(self):
+        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
+        detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
+                    'query_params': [{'name': 'includeCapabilities'}]}
+        names = {}
+        before = self.ids([plain, detailed], names)
+        after = self.ids([plain, dict(detailed, query_params=[{'name': 'includeCapabilities'}, {'name': 'max'}])], names)
+        self.assertEqual(sorted(before), sorted(after))
+
     def test_a_new_parameter_keeps_the_name(self):
         names = {}
         before = self.ids([{'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}], names)
@@ -193,6 +202,13 @@ class FlagTest(unittest.TestCase):
         self.assertEqual(op['path'], '/organization/{orgId}/team')
         self.assertEqual([(p['name'], p['flag'], p.get('orgUUID')) for p in op['params']],
                          [('orgId', 'orgid', True), ('orgId', 'orgid', True)])
+
+    def test_contact_center_organization_id_and_header_take_the_uuid(self):
+        op = operation({'command': 'create', 'method': 'POST', 'path': '/organization/{orgId}/team',
+                        'path_params': [{'name': 'orgId'}], 'query_params': [{'name': 'organizationId'}],
+                        'extra_headers': [{'name': 'X-ORGANIZATION-ID'}]}, 'Webex Contact Center', 'cc', False)
+        self.assertEqual([(p['name'], p.get('orgUUID')) for p in op['params']],
+                         [('orgId', True), ('organizationId', True), ('X-ORGANIZATION-ID', True)])
 
     def test_slidos_session_org_takes_the_uuid(self):
         op = operation({'command': 'list-compliance-events', 'method': 'GET', 'path': '/slido/compliance/events',

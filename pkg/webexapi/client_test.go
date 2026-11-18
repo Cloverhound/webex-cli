@@ -135,6 +135,40 @@ func TestBeforeSendCanStopARequest(t *testing.T) {
 	}
 }
 
+func TestRedirectsPassBeforeSendAndLoseTheAgentTokenOnAnotherHost(t *testing.T) {
+	var other []*http.Request
+	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		other = append(other, r.Clone(context.Background()))
+	}))
+	t.Cleanup(target.Close)
+	origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, target.URL+"/elsewhere", http.StatusFound)
+	}))
+	t.Cleanup(origin.Close)
+	header := http.Header{"Bot-Access-Token": {"agent-token"}}
+
+	var seen []string
+	refuse := errors.New("not approved")
+	c := &Client{BeforeSend: func(r *http.Request) error {
+		seen = append(seen, r.URL.Host)
+		if r.URL.Host != strings.TrimPrefix(origin.URL, "http://") {
+			return refuse
+		}
+		return nil
+	}}
+	_, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header})
+	if !errors.Is(err, refuse) || len(seen) != 2 || len(other) != 0 {
+		t.Fatalf("err %v, BeforeSend saw %v, other host got %d requests", err, seen, len(other))
+	}
+
+	if _, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header}); err != nil {
+		t.Fatal(err)
+	}
+	if len(other) != 1 || other[0].Header.Get("Bot-Access-Token") != "" {
+		t.Fatalf("the agent token reached another host: %v", other)
+	}
+}
+
 func TestRequestHeaders(t *testing.T) {
 	srv, seen := statusServer(t, []int{200}, `{}`, nil)
 	c := &Client{Token: func(context.Context) (string, error) { return "t", nil }}
