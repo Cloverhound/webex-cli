@@ -41,11 +41,13 @@ make golden
 
 Other Go programs, such as Webex Admin Studio, import these to call Webex the way the CLI does. They hold no process-wide state and take a context on every call.
 
-- `pkg/webexapi/` — HTTP transport (bearer token, one refresh after a 401, 429 Retry-After within limits, `APIError` and `WrongRegionError`), fail-closed list paging, `Hosts` for each data region and Contact Center data center, org ID conversion, multipart bodies
-- `pkg/webexops/` — the generated operation table: one exported `*Operation` per API call (route, host, parameters, body fields, paging, CLI names), with `Call` and `All`
+- `pkg/webexapi/` — HTTP transport (bearer token sent only to Webex origins, never following a redirect, one refresh after a 401, 429 Retry-After within limits, `APIError`, `RedirectError` and `WrongRegionError`), fail-closed list paging, `Hosts` for each data region and Contact Center data center, org ID conversion, multipart bodies
+- `pkg/webexops/` — the generated operation table: one exported `*Operation` per API call (route, host, parameters, body fields, paging, CLI names), with `Call` and `All`; `Request` and `List` refuse arguments the operation cannot send
 - `pkg/aiagent/` — AI Agent Studio: agent runtime token lookup and credential redaction
 
-Each operation's Go name is built from its area, method and path (`CcGetOrganizationByOrgidV2Team`), never from its CLI command name, which the collection's order can change. Programs compile against these names, so a name always means the same request; a removed route's name disappears and the program fails to build. A route the collection lists more than once is exported once when every listing sends the same request, and not at all when they differ.
+Each operation's Go name is built from its area, method and path (`CcGetOrganizationByOrgidV2Team`), never from its CLI command name, which the collection's order can change. Programs compile against these names, so a name always means the same request; a removed route's name disappears and the program fails to build. A route the collection lists more than once is exported once when every listing sends the same request; when they differ, it is exported as one operation with every listing's parameters, which is not a CLI command. Codegen warns and exports nothing for a route whose listings put a parameter in two places, or whose name is spelled like another route's.
+
+Codegen classifies every parameter whose name looks like an org ID (`ORG_ID_FORMS` in `codegen/generate_cli.py`): the org UUID or the base64 Webex org ID. It stops on one it cannot classify. Parameters and string body fields whose names end in password, passcode, secret, token, pin or access code are marked `Secret`.
 
 Packages in `pkg/` import only the standard library and each other — never `internal/`, `cmd/`, cobra or the keyring; `pkg/imports_test.go` enforces it. CLI concerns stay in `internal/`: flags, output, the config file, login, `--debug`, `--dry-run` and read-only mode, which `internal/client.API` attaches to a `webexapi.Client` as hooks.
 

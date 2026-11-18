@@ -144,6 +144,20 @@ func TestRequestRefusesArgumentsItCannotSend(t *testing.T) {
 	}
 }
 
+func TestARouteListedWithDifferentRequestsTakesEveryListingsParameters(t *testing.T) {
+	r := request(t, CallingGetWorkspacesByWorkspaceId, Args{Params: map[string]string{
+		"workspaceId": "w", "includeDevices": "true", "includeCapabilities": "true",
+	}})
+	if r.URL != "https://w/v1/workspaces/w?includeCapabilities=true&includeDevices=true" {
+		t.Fatalf("URL %s", r.URL)
+	}
+	for _, op := range Operations("calling") {
+		if op == CallingGetWorkspacesByWorkspaceId {
+			t.Fatal("the combined operation is listed as a CLI command")
+		}
+	}
+}
+
 func TestCredentialsAreMarkedSecret(t *testing.T) {
 	secret := map[string]bool{}
 	for _, area := range Areas() {

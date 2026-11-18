@@ -117,18 +117,33 @@ class OperationIDTest(unittest.TestCase):
         ids = self.ids([dict(listing, command='get'), dict(listing, command='get-2')])
         self.assertEqual(sorted(ids), ['CallingGetWorkspacesByWorkspaceId', 'callingGetWorkspacesByWorkspaceId_2'])
 
-    def test_a_route_whose_listings_send_different_requests_is_not_named(self):
-        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}'}
+    def test_a_route_whose_listings_send_different_requests_is_named_once_with_every_parameter(self):
+        plain = {'command': 'get', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
+                 'path_params': [{'name': 'workspaceId'}], 'query_params': [{'name': 'max'}]}
         detailed = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces/{workspaceId}',
-                    'query_params': [{'name': 'includeCapabilities'}]}
-        ids = self.ids([plain, detailed])
-        self.assertEqual(len(ids), 2)
-        self.assertEqual(self.exported([plain, detailed]), {})
+                    'path_params': [{'name': 'workspaceId'}], 'query_params': [{'name': 'includeCapabilities'}]}
+        source = area_file('calling', 'Webex Cloud Calling', 'webex', True, 'workspaces', [plain, detailed])
+        self.assertEqual(sorted(self.ids([plain, detailed])),
+                         ['CallingGetWorkspacesByWorkspaceId', 'callingGetWorkspacesByWorkspaceId_1',
+                          'callingGetWorkspacesByWorkspaceId_2'])
+        combined = source.split('var CallingGetWorkspacesByWorkspaceId = ')[1].split('\n}\n')[0]
+        self.assertEqual(re.findall(r'\{Name: "(\w+)", In: (\w+)', combined),
+                         [('workspaceId', 'InPath'), ('max', 'InQuery'), ('includeCapabilities', 'InQuery')])
+        self.assertIn('Command: ""', combined)
+        operations = source.split('var callingOperations = []*Operation{')[1].split('}')[0]
+        self.assertNotIn('CallingGetWorkspacesByWorkspaceId,', operations)
 
-    def test_two_routes_with_one_name_stop_generation(self):
-        with self.assertRaises(SystemExit):
-            self.ids([{'command': 'get', 'method': 'GET', 'path': '/a-b'},
-                      {'command': 'get-2', 'method': 'GET', 'path': '/a/b'}])
+    def test_a_route_that_puts_one_parameter_in_two_places_is_not_named(self):
+        query = {'command': 'get', 'method': 'GET', 'path': '/workspaces', 'query_params': [{'name': 'max'}]}
+        header = {'command': 'get-2', 'method': 'GET', 'path': '/workspaces', 'extra_headers': [{'name': 'max'}]}
+        self.assertEqual(self.exported([query, header]), {})
+        self.assertEqual(len(self.ids([query, header])), 2)
+
+    def test_two_routes_with_one_name_are_not_named(self):
+        ids = self.ids([{'command': 'get', 'method': 'GET', 'path': '/a-b'},
+                        {'command': 'get-2', 'method': 'GET', 'path': '/a/b'}])
+        self.assertEqual(len(ids), 2)
+        self.assertFalse(any(name[0].isupper() for name in ids))
 
 
 class FlagTest(unittest.TestCase):

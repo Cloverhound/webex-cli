@@ -134,11 +134,13 @@ type Group struct {
 type Operation struct {
 	// ID is the operation's Go variable name: its area, method and path, such as
 	// CcGetOrganizationByOrgidV2Team. A route the collection lists more than once
-	// with different requests is not exported, and its listings are found with
-	// Operations.
+	// with different requests is exported as one operation with every listing's
+	// parameters; that operation is not a CLI command, and its listings are found
+	// with Operations.
 	ID string
 
 	// Area, Group and Command are the CLI names: webex <area> <group> <command>.
+	// Command is empty for an operation that is not a CLI command.
 	Area, Group, Command string
 	Aliases              []string
 
@@ -416,6 +418,7 @@ func Groups(areaName string) []Group {
 	return groups
 }
 
-// Operations lists an area's operations, in collection order. The list is a copy;
-// the operations it points to are shared and must not be changed.
+// Operations lists an area's operations as the CLI's commands, in collection
+// order; operations that combine a route's listings are not in it. The list is a
+// copy; the operations it points to are shared and must not be changed.
 func Operations(areaName string) []*Operation { return slices.Clone(areas[areaName].operations) }

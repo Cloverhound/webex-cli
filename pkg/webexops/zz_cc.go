@@ -8591,3 +8591,41 @@ var CcGetApiV1Message = &Operation{
 	Redact:  true,
 	Private: true,
 }
+
+// CcPostAdminV1ApiWorkspace is "Create Workspace": POST /admin/v1/api/workspace.
+// It has the parameters of every listing of the route, and is not a CLI command.
+var CcPostAdminV1ApiWorkspace = &Operation{
+	ID: "CcPostAdminV1ApiWorkspace", Area: "cc", Group: "journey", Command: "",
+	Summary:     "Create Workspace",
+	Description: "Create Workspace in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjds:admin_org_write or cjp:config_write scopes",
+	Method:      "POST", Host: HostCC, Path: "/admin/v1/api/workspace",
+	Params: []Param{
+		{Name: "organizationId", In: InQuery, Flag: "organization-id", OrgUUID: true, Usage: "Organization ID"},
+	},
+	Body: &Body{Fields: []BodyField{
+		{Name: "description", Flag: "description", Type: "string"},
+		{Name: "name", Flag: "name", Type: "string"},
+	}},
+}
+
+// CcPostAdminV1ApiPersonMergeIdentitiesWorkspaceIdByWorkspaceId is "Creates or merges aliases to an Individual in JDS.": POST /admin/v1/api/person/merge-identities/workspace-id/{workspaceId}.
+// It has the parameters of every listing of the route, and is not a CLI command.
+var CcPostAdminV1ApiPersonMergeIdentitiesWorkspaceIdByWorkspaceId = &Operation{
+	ID: "CcPostAdminV1ApiPersonMergeIdentitiesWorkspaceIdByWorkspaceId", Area: "cc", Group: "journey", Command: "",
+	Summary:     "Creates or merges aliases to an Individual in JDS.",
+	Description: "Merges one/more aliases in JDS. Use the cjp scope if you have a contact center license; otherwise, use the cjds scope. It requires the appropriate cjp:config_write scope",
+	Method:      "POST", Host: HostCC, Path: "/admin/v1/api/person/merge-identities/workspace-id/{workspaceId}",
+	Params: []Param{
+		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "(Required) Workspace ID"},
+	},
+	Body: &Body{Fields: []BodyField{
+		{Name: "firstName", Flag: "first-name", Type: "string"},
+		{Name: "lastName", Flag: "last-name", Type: "string"},
+		{Name: "phone", Flag: "phone", Type: "[]string"},
+		{Name: "email", Flag: "email", Type: "[]string"},
+		{Name: "temporaryId", Flag: "temporary-id", Type: "[]string"},
+		{Name: "customerId", Flag: "customer-id", Type: "[]string"},
+		{Name: "override", Flag: "override", Type: "bool"},
+		{Name: "socialId", Flag: "social-id", Type: "[]string"},
+	}},
+}

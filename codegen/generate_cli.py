@@ -403,29 +403,74 @@ def request_shape(ep):
 
 
 def operation_ids(area, endpoints):
-    """The Go names of an area's operations, in order.
+    """The Go names of an area's listings, in order, and the routes to export as
+    one operation combining their listings: exported name → listing indexes.
 
     A name is made from the operation's route alone, so it means the same request
     whatever the CLI commands are called and in whatever order the collection lists
     them. A route the collection lists more than once is exported once, on its first
-    listing, when every listing sends the same request. When they send different
-    requests, no listing is exported, since none could be told apart by route. The
-    other listings are unexported, for the CLI's commands."""
+    listing, when every listing sends the same request; otherwise it is exported as
+    an operation combining them, which is not a CLI command. The other listings are
+    unexported, for the CLI's commands. Routes whose names are spelled alike are
+    not exported, since neither name would say which route it is."""
     routes = {}
     for i, ep in enumerate(endpoints):
         routes.setdefault((ep['method'], ep['path']), []).append(i)
-    exported = {}
+    spellings = {}
+    for method, path in routes:
+        spellings.setdefault(route_name(area, method, path), []).append((method, path))
     ids = [None] * len(endpoints)
+    combined = {}
     for (method, path), listings in routes.items():
         name = route_name(area, method, path)
-        if exported.setdefault(name, (method, path)) != (method, path):
-            other = exported[name]
-            raise SystemExit(f"{method} {path} and {other[0]} {other[1]} would both be named {name} in "
-                             "pkg/webexops; change route_name in codegen/generate_cli.py.")
+        unexported = f'{name[0].lower()}{name[1:]}'
+        if len(spellings[name]) > 1:
+            print(f"  WARNING: {' and '.join(f'{m} {p}' for m, p in spellings[name])} are all spelled {name}; "
+                  "none is exported")
+            route = spellings[name].index((method, path)) + 1
+            for n, i in enumerate(listings, 1):
+                ids[i] = f'{unexported}_route{route}_{n}'
+            continue
         one_request = len({request_shape(endpoints[i]) for i in listings}) == 1
         for n, i in enumerate(listings, 1):
-            ids[i] = name if one_request and n == 1 else f'{name[0].lower()}{name[1:]}_{n}'
-    return ids
+            ids[i] = name if one_request and n == 1 else f'{unexported}_{n}'
+        if not one_request:
+            combined[name] = listings
+    return ids, combined
+
+
+def combine_operations(ops):
+    """One operation with every listing's parameters and body fields, or None
+    when two listings put a parameter in different places or give a body field
+    different types."""
+    first = ops[0]
+    params, places = [], {}
+    for op in ops:
+        for p in op['params']:
+            if p['name'] in places:
+                if places[p['name']] != p['in']:
+                    return None
+                continue
+            places[p['name']] = p['in']
+            params.append(dict(p, required=p.get('required', False) and all(
+                any(q['name'] == p['name'] and q.get('required') for q in other['params']) for other in ops)))
+    body, types = None, {}
+    for op in ops:
+        if op['body'] is None:
+            continue
+        body = body if body is not None else []
+        for f in op['body']:
+            if types.setdefault(f['name'], f['type']) != f['type']:
+                return None
+            if not any(b['name'] == f['name'] for b in body):
+                body.append(f)
+    pagings = {op['paging'] for op in ops if op['paging']}
+    ranges = {op['timeRange'] for op in ops if op['timeRange']}
+    if len(pagings) > 1 or len(ranges) > 1:
+        return None
+    return dict(first, command='', aliases=[], params=params, body=body,
+                paging=next(iter(pagings), None), timeRange=next(iter(ranges), None),
+                redact=any(op['redact'] for op in ops), private=any(op['private'] for op in ops))
 
 
 def operation_literal(op_id, area, group, op):
@@ -507,13 +552,24 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
             else:
                 kept.append((group, ep))
 
-    op_ids = operation_ids(area, [ep for _, ep in kept])
-    decls = []
+    op_ids, combined = operation_ids(area, [ep for _, ep in kept])
+    decls, ops = [], []
     for (group, ep), op_id in zip(kept, op_ids):
         host_of = resolve_base_url(collection_name, ep['path'], host)
         op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
+        ops.append(op)
         decls.append('')
         decls.extend(operation_literal(op_id, area, group, op))
+    for name, listings in combined.items():
+        op = combine_operations([ops[i] for i in listings])
+        if op is None:
+            print(f"  WARNING: the listings of {ops[listings[0]]['method']} {ops[listings[0]]['path']} "
+                  "disagree on a parameter's place or a field's type; it is not exported")
+            continue
+        literal = operation_literal(name, area, kept[listings[0]][0], op)
+        literal.insert(1, '// It has the parameters of every listing of the route, and is not a CLI command.')
+        decls.append('')
+        decls.extend(literal)
 
     lines = ['// Code generated by codegen/generate_cli.py; DO NOT EDIT.', '',
              'package webexops', '', 'import "github.com/Cloverhound/webex-cli/pkg/webexapi"', '',

@@ -16303,3 +16303,17 @@ var CallingGetV1AnalyticsCallQualityStats = &Operation{
 	},
 	TimeRange: TimeISO,
 }
+
+// CallingGetWorkspacesByWorkspaceId is "Get Workspace Details": GET /workspaces/{workspaceId}.
+// It has the parameters of every listing of the route, and is not a CLI command.
+var CallingGetWorkspacesByWorkspaceId = &Operation{
+	ID: "CallingGetWorkspacesByWorkspaceId", Area: "calling", Group: "workspaces", Command: "",
+	Summary:     "Get Workspace Details",
+	Description: "Shows details for a workspace, by ID.\n\nThe `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.",
+	Method:      "GET", Host: HostWebex, Path: "/workspaces/{workspaceId}",
+	Params: []Param{
+		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "(Required) A unique identifier for the workspace."},
+		{Name: "includeDevices", In: InQuery, Flag: "include-devices", Usage: "Flag identifying whether to include the devices associated with the workspace in the response."},
+		{Name: "includeCapabilities", In: InQuery, Flag: "include-capabilities", Usage: "Flag identifying whether to include the workspace capabilities in the response."},
+	},
+}
