@@ -20,6 +20,17 @@ func TestHelpShowsTheExampleOfABodyFlagsCannotGive(t *testing.T) {
 	}
 }
 
+func TestHelpWithoutADescriptionStartsWithTheSummary(t *testing.T) {
+	op := &webexops.Operation{
+		Command: "create", Summary: "Create a thing", Method: "POST", Path: "/things",
+		Body: &webexops.Body{Example: "{}"},
+	}
+	want := "Create a thing\n\n" + bodyExampleHeading + "\n\n  {}"
+	if got := NewCommand(op).Long; got != want {
+		t.Fatalf("help:\n%s\nwant:\n%s", got, want)
+	}
+}
+
 func TestHelpOfAPrivateOperationEndsWithItsNotice(t *testing.T) {
 	op := &webexops.Operation{
 		Command: "create", Method: "POST", Path: "/api/v1/things/", Private: true,

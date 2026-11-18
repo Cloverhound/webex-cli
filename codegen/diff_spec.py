@@ -69,6 +69,9 @@ def endpoint_changes(old, new):
             changes.append(label + ' changed')
     if old.get('description') != new.get('description'):
         changes.append('help/description updated')
+    # Fields of a nested body are not in body_fields; its example is all that shows them.
+    if old.get('body_example') != new.get('body_example'):
+        changes.append('request body example updated')
     return changes
 
 

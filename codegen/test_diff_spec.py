@@ -31,3 +31,8 @@ class SpecDiffTest(unittest.TestCase):
         report = '; '.join(endpoint_changes(old, new))
         for expected in ['added `new`', 'removed `old`', 'updated `shared`']:
             self.assertIn(expected, report)
+
+    def test_a_nested_body_change_is_reported(self):
+        old = {'complex_body': True, 'body_example': '{"items": [{"a": "<string>"}]}'}
+        new = {'complex_body': True, 'body_example': '{"items": [{"a": "<string>", "b": "<string>"}]}'}
+        self.assertEqual(endpoint_changes(old, new), ['request body example updated'])

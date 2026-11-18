@@ -27,8 +27,8 @@ const privateAPINote = "Caution: this command uses Webex AI Agent Studio's priva
 
 // bodyExampleHeading introduces the example body in the help of commands that
 // take their body only from --body or --body-file.
-const bodyExampleHeading = "Request body, sent with --body or --body-file. Example from Cisco's " +
-	"Postman collection (a value in angle brackets, such as <string>, gives a field's type; other values are samples):"
+const bodyExampleHeading = "Example request body, sent with --body or --body-file " +
+	"(a value in angle brackets, such as <string>, gives a field's type; other values are samples):"
 
 // Register adds an area's groups and commands under parent and returns the group
 // commands by name, for handwritten commands to join.
@@ -78,6 +78,10 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 	}
 	if op.Private {
 		sections = append(sections, privateAPINote)
+	}
+	// Help shows Long in place of Short, so Long carries the summary when there is no description.
+	if op.Description == "" && op.Body != nil && op.Body.Example != "" && op.Summary != "" {
+		sections = append([]string{op.Summary}, sections...)
 	}
 	description := strings.Join(sections, "\n\n")
 
