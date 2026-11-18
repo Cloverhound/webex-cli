@@ -592,18 +592,23 @@ def generate_areas_file(areas):
     return '\n'.join(lines) + '\n'
 
 
+def load_names(path):
+    """The record of exported names. It cannot be rebuilt from the collections,
+    so a missing file stops codegen rather than starting a new record."""
+    if not os.path.exists(path):
+        raise SystemExit(f"{path} is missing; restore it from git before running codegen.")
+    with open(path) as f:
+        return json.load(f)
+
+
 def main():
     with open(SPEC_PATH) as f:
         spec = json.load(f)
+    names = load_names(NAMES_PATH)
 
     for f in os.listdir(OPS_DIR):
         if f.startswith('zz_') and f.endswith('.go'):
             os.remove(os.path.join(OPS_DIR, f))
-
-    names = {}
-    if os.path.exists(NAMES_PATH):
-        with open(NAMES_PATH) as f:
-            names = json.load(f)
 
     areas = []
     for collection_name, groups in spec.items():

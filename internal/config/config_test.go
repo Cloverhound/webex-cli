@@ -1,6 +1,22 @@
 package config
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
+
+func TestEachTrustOriginWithdrawsOnlyItsOwnOrigin(t *testing.T) {
+	a := TrustOrigin("http://127.0.0.1:1001")
+	b := TrustOrigin("http://127.0.0.1:1002")
+	a()
+	if got := Origins(); slices.Contains(got, "http://127.0.0.1:1001") || !slices.Contains(got, "http://127.0.0.1:1002") {
+		t.Fatalf("after withdrawing the first: %v", got)
+	}
+	b()
+	if got := Origins(); slices.Contains(got, "http://127.0.0.1:1001") || slices.Contains(got, "http://127.0.0.1:1002") {
+		t.Fatalf("after withdrawing both: %v", got)
+	}
+}
 
 const (
 	testOrgUUID = "67b6b831-2fb5-448a-b5f5-b06e5e6253c2"

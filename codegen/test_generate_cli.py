@@ -1,8 +1,25 @@
 """Regression checks for service-specific operations in the table."""
+import json
+import os
 import re
+import tempfile
 import unittest
 
-from generate_cli import generate_area_file, operation, resolve_base_url
+from generate_cli import generate_area_file, load_names, operation, resolve_base_url
+
+
+class OperationNamesFileTest(unittest.TestCase):
+    def test_a_missing_names_file_stops_codegen(self):
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(SystemExit):
+                load_names(os.path.join(d, 'operation_names.json'))
+
+    def test_the_names_file_is_read(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'operation_names.json')
+            with open(path, 'w') as f:
+                json.dump({'CallingGetAB': 'GET /a-b'}, f)
+            self.assertEqual(load_names(path), {'CallingGetAB': 'GET /a-b'})
 
 
 def area_file(area, collection, host, is_calling, group, endpoints):

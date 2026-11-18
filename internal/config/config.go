@@ -137,11 +137,17 @@ func Origins() []string { return append(webexapi.WebexOrigins(), trusted...) }
 // TrustOrigin lets a test send the token to the server at rawURL. It returns a
 // function that withdraws it.
 func TrustOrigin(rawURL string) (withdraw func()) {
-	saved := trusted
-	if u, err := url.Parse(rawURL); err == nil {
-		trusted = append(slices.Clone(trusted), u.Scheme+"://"+u.Host)
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return func() {}
 	}
-	return func() { trusted = saved }
+	origin := u.Scheme + "://" + u.Host
+	trusted = append(trusted, origin)
+	return func() {
+		if i := slices.Index(trusted, origin); i >= 0 {
+			trusted = slices.Delete(trusted, i, i+1)
+		}
+	}
 }
 
 // DecodeOrgID converts a base64 Webex org ID to its UUID; see webexapi.DecodeOrgID.

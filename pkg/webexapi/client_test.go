@@ -223,6 +223,24 @@ func TestTheTokenGoesOnlyToWebexOrigins(t *testing.T) {
 	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://evil.example.com/v1/people"}); err != nil {
 		t.Errorf("an origin the caller allowed was refused: %v", err)
 	}
+
+	// The Kelvin sign lowercases to "k", but the transport dials its IDNA form.
+	sent := len(transport.sent)
+	c.Origins = []string{"https://k.example.com"}
+	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://K.example.com/x"}); err == nil || len(transport.sent) != sent {
+		t.Errorf("a non-ASCII host matched an allowed origin: %v", err)
+	}
+}
+
+func TestBeforeSendCannotMoveTheRequestToAnotherOrigin(t *testing.T) {
+	transport := &recordingTransport{}
+	c := &Client{HTTP: &http.Client{Transport: transport}, BeforeSend: func(r *http.Request) error {
+		r.URL.Host = "evil.example.com"
+		return nil
+	}}
+	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://webexapis.com/v1/people"}); err == nil || len(transport.sent) != 0 {
+		t.Fatalf("err %v, %d requests sent", err, len(transport.sent))
+	}
 }
 
 func TestEveryErrorWithAResponseUnwrapsToAPIError(t *testing.T) {

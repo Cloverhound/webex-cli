@@ -18,6 +18,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // Client sends requests. The zero value sends with http.DefaultClient, makes no
@@ -147,9 +148,6 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 }
 
 func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
-	if err := c.checkOrigin(r.URL); err != nil {
-		return nil, err
-	}
 	var body io.Reader
 	if len(r.Body) > 0 {
 		body = bytes.NewReader(r.Body)
@@ -188,6 +186,10 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		if err := c.BeforeSend(httpReq); err != nil {
 			return nil, err
 		}
+	}
+	// Checked last, on the request as it will be sent, since BeforeSend may change it.
+	if err := c.checkOrigin(httpReq.URL); err != nil {
+		return nil, err
 	}
 
 	httpResp, err := c.httpClient().Do(httpReq)
@@ -230,10 +232,13 @@ func (c *Client) httpClient() *http.Client {
 }
 
 // checkOrigin refuses a URL outside the origins requests may go to.
-func (c *Client) checkOrigin(rawURL string) error {
-	u, err := url.Parse(rawURL)
-	if err != nil {
-		return fmt.Errorf("building request: %w", err)
+func (c *Client) checkOrigin(u *url.URL) error {
+	// net/http dials a non-ASCII host by its IDNA form, which lowercasing does
+	// not give: the Kelvin sign lowercases to "k".
+	for _, r := range u.Hostname() {
+		if r > unicode.MaxASCII {
+			return fmt.Errorf("refusing to send the token to the non-ASCII host %q", u.Hostname())
+		}
 	}
 	if c.Origins == nil {
 		if slices.Contains(webexOrigins, origin(u)) {
