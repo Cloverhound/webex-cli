@@ -91,7 +91,11 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				if err != nil {
 					return err
 				}
-				*values.strings["from"], *values.strings["to"] = from, to
+				for flag, v := range map[string]string{"from": from, "to": to} {
+					if p := values.strings[flag]; p != nil {
+						*p = v
+					}
+				}
 			}
 
 			call := webexops.Args{Params: map[string]string{}}

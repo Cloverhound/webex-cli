@@ -323,7 +323,8 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
         body = fields
 
     time_range = None
-    if any(p['name'] == 'from' for p in query_params):
+    # --last sets both ends of a range, so it needs both parameters.
+    if {'from', 'to'} <= {p['name'] for p in query_params}:
         time_range = 'TimeEpochMs' if path in EPOCH_MS_PATHS else 'TimeISO'
 
     return {

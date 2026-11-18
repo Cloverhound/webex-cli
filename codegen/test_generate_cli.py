@@ -172,6 +172,11 @@ class FlagTest(unittest.TestCase):
                         'query_params': [{'name': 'sessionOrgId'}, {'name': 'max'}]}, 'Webex Meetings', 'webex', True)
         self.assertEqual([(p['name'], p['orgUUID']) for p in op['params']], [('sessionOrgId', True), ('max', False)])
 
+    def test_from_without_to_gets_no_time_range(self):
+        op = operation({'command': 'list', 'method': 'GET', 'path': '/v1/events', 'query_params': [{'name': 'from'}]},
+                       'Webex Test', 'cc', False)
+        self.assertIsNone(op['timeRange'])
+
     def test_from_gets_a_time_range(self):
         for path, expected in [('/v1/tasks', 'TimeEpochMs'), ('/v1/events', 'TimeISO')]:
             with self.subTest(path=path):

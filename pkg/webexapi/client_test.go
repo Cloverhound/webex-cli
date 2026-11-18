@@ -169,6 +169,24 @@ func TestRedirectsPassBeforeSendAndLoseTheAgentTokenOnAnotherHost(t *testing.T) 
 	}
 }
 
+func TestARedirectToAnotherPortSendsNoCredentials(t *testing.T) {
+	var got http.Header
+	// Same hostname, another port: net/http itself would forward Authorization.
+	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { got = r.Header.Clone() }))
+	t.Cleanup(target.Close)
+	origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, target.URL, http.StatusFound)
+	}))
+	t.Cleanup(origin.Close)
+	c := &Client{Token: func(context.Context) (string, error) { return "secret", nil }}
+	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: http.Header{"Bot-Access-Token": {"agent"}}}); err != nil {
+		t.Fatal(err)
+	}
+	if got.Get("Authorization") != "" || got.Get("Bot-Access-Token") != "" {
+		t.Fatalf("credentials reached another origin: %v", got)
+	}
+}
+
 func TestRequestHeaders(t *testing.T) {
 	srv, seen := statusServer(t, []int{200}, `{}`, nil)
 	c := &Client{Token: func(context.Context) (string, error) { return "t", nil }}

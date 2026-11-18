@@ -204,9 +204,9 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 }
 
 // httpClient is the HTTP client with redirects passed through BeforeSend, so the
-// hook sees every request sent. On a redirect to another host it drops AI Agent
-// Studio's Bot-Access-Token, which net/http forwards although it drops
-// Authorization.
+// hook sees every request sent. A redirect to another origin (scheme, host or
+// port) carries no credentials: net/http forwards Authorization to subdomains and
+// other ports, and AI Agent Studio's Bot-Access-Token everywhere.
 func (c *Client) httpClient() *http.Client {
 	base := c.HTTP
 	if base == nil {
@@ -214,7 +214,8 @@ func (c *Client) httpClient() *http.Client {
 	}
 	client := *base
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		if req.URL.Host != via[0].URL.Host {
+		if !sameHost(req.URL, via[0].URL) {
+			req.Header.Del("Authorization")
 			req.Header.Del("Bot-Access-Token")
 		}
 		if c.BeforeSend != nil {
