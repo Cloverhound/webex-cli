@@ -60,8 +60,9 @@ var (
 	secretField = regexp.MustCompile(`("[^"\\]*(?i:token|secret|password)[^"\\]*"\s*:\s*)"(?:[^"\\]|\\.)*"`)
 
 	// escapedSecretField is secretField in JSON held inside a JSON string, as a
-	// tool's configuration is: each quote is \" and each backslash \\.
-	escapedSecretField = regexp.MustCompile(`(\\"[^"\\]*(?i:token|secret|password)[^"\\]*\\"\s*:\s*)\\"(?:[^"\\]|\\\\\\.|\\[^"\\])*\\"`)
+	// tool's configuration is: each quote is \" and each backslash \\, so an
+	// escape in the inner value is \\ and then a character or an escaped pair.
+	escapedSecretField = regexp.MustCompile(`(\\"[^"\\]*(?i:token|secret|password)[^"\\]*\\"\s*:\s*)\\"(?:[^"\\]|\\\\(?:\\.|[^"\\])|\\[^"\\])*\\"`)
 )
 
 // RedactSecrets replaces the string value of every key naming a token, secret

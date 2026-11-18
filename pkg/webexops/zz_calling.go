@@ -1173,9 +1173,9 @@ var CallingPostTelephonyConfigLocationsByLocationIdDectNetworks = &Operation{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "model", Flag: "model", Type: "string"},
 		{Name: "defaultAccessCodeEnabled", Flag: "default-access-code-enabled", Type: "bool"},
-		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string", Secret: true},
+		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string"},
 		{Name: "displayName", Flag: "display-name", Type: "string"},
-	}},
+	}, Secret: []string{"defaultAccessCode"}},
 }
 
 // CallingGetTelephonyConfigDectNetworks is "Get the List of DECT Networks for an organization": GET /telephony/config/dectNetworks.
@@ -1219,9 +1219,9 @@ var CallingPutTelephonyConfigLocationsByLocationIdDectNetworksByDectNetworkId = 
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "defaultAccessCodeEnabled", Flag: "default-access-code-enabled", Type: "bool"},
-		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string", Secret: true},
+		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string"},
 		{Name: "displayName", Flag: "display-name", Type: "string"},
-	}},
+	}, Secret: []string{"defaultAccessCode"}},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdDectNetworksByDectNetworkId is "Delete DECT Network": DELETE /telephony/config/locations/{locationId}/dectNetworks/{dectNetworkId}.
@@ -2174,7 +2174,7 @@ var CallingPostTelephonyConfigPremisePstnTrunks = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "locationId", Flag: "location-id", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string", Secret: true},
+		{Name: "password", Flag: "password", Type: "string"},
 		{Name: "trunkType", Flag: "trunk-type", Type: "string"},
 		{Name: "dualIdentitySupportEnabled", Flag: "dual-identity-support-enabled", Type: "bool"},
 		{Name: "deviceType", Flag: "device-type", Type: "string"},
@@ -2183,7 +2183,7 @@ var CallingPostTelephonyConfigPremisePstnTrunks = &Operation{
 		{Name: "port", Flag: "port", Type: "int64"},
 		{Name: "maxConcurrentCalls", Flag: "max-concurrent-calls", Type: "int64"},
 		{Name: "pChargeInfoSupportPolicy", Flag: "p-charge-info-support-policy", Type: "string"},
-	}},
+	}, Secret: []string{"password"}},
 }
 
 // CallingGetTelephonyConfigPremisePstnTrunksByTrunkId is "Get a Trunk": GET /telephony/config/premisePstn/trunks/{trunkId}.
@@ -2210,11 +2210,11 @@ var CallingPutTelephonyConfigPremisePstnTrunksByTrunkId = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string", Secret: true},
+		{Name: "password", Flag: "password", Type: "string"},
 		{Name: "dualIdentitySupportEnabled", Flag: "dual-identity-support-enabled", Type: "bool"},
 		{Name: "maxConcurrentCalls", Flag: "max-concurrent-calls", Type: "int64"},
 		{Name: "pChargeInfoSupportPolicy", Flag: "p-charge-info-support-policy", Type: "string"},
-	}},
+	}, Secret: []string{"password"}},
 }
 
 // CallingDeleteTelephonyConfigPremisePstnTrunksByTrunkId is "Delete a Trunk": DELETE /telephony/config/premisePstn/trunks/{trunkId}.
@@ -5469,8 +5469,8 @@ var CallingPutTelephonyConfigPeopleMeVoicemailPin = &Operation{
 	Description: "Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with the passcode rules defined for the organization.\n\nThe voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The PIN is required to retrieve voice messages via phone.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/voicemail/pin",
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
-	}},
+		{Name: "passcode", Flag: "passcode", Type: "string"},
+	}, Secret: []string{"passcode"}},
 }
 
 // CallingGetTelephonyConfigPeopleMeSettingsHotelingGuest is "Get Hoteling Guest Settings": GET /telephony/config/people/me/settings/hoteling/guest.
@@ -5570,7 +5570,7 @@ var CallingPutTelephonyConfigVoicemailRules = &Operation{
 	Params: []Param{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Update voicemail rules for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Secret: []string{"defaultVoicemailPin"}},
 }
 
 // CallingGetTelephonyConfigMohSettings is "Get the organization Music on Hold configuration": GET /telephony/config/moh/settings.
@@ -6033,8 +6033,8 @@ var CallingPutTelephonyConfigDevicesByDeviceId = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the device resides."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "sipPassword", Flag: "sip-password", Type: "string", Secret: true},
-	}},
+		{Name: "sipPassword", Flag: "sip-password", Type: "string"},
+	}, Secret: []string{"sipPassword"}},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdDevices is "Get Person Devices": GET /telephony/config/people/{personId}/devices.
@@ -6871,8 +6871,8 @@ var CallingPostDevices = &Operation{
 		{Name: "model", Flag: "model", Type: "string"},
 		{Name: "workspaceId", Flag: "workspace-id", Type: "string"},
 		{Name: "personId", Flag: "person-id", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string", Secret: true},
-	}},
+		{Name: "password", Flag: "password", Type: "string"},
+	}, Secret: []string{"password"}},
 }
 
 // CallingGetDevicesByDeviceId is "Get Device Details": GET /devices/{deviceId}.
@@ -6944,11 +6944,11 @@ var CallingPutTelephonyConfigRedSkyServiceSettings = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "enabled", Flag: "enabled", Type: "bool"},
 		{Name: "companyId", Flag: "company-id", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "externalTenantEnabled", Flag: "external-tenant-enabled", Type: "bool"},
 		{Name: "email", Flag: "email", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string", Secret: true},
-	}},
+		{Name: "password", Flag: "password", Type: "string"},
+	}, Secret: []string{"secret", "password"}},
 }
 
 // CallingPostTelephonyConfigRedSky is "Create an Account and Admin in RedSky": POST /telephony/config/redSky.
@@ -7028,9 +7028,9 @@ var CallingPostTelephonyConfigRedSkyActionsLoginInvoke = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "email", Flag: "email", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string", Secret: true},
+		{Name: "password", Flag: "password", Type: "string"},
 		{Name: "redSkyOrgId", Flag: "red-sky-org-id", Type: "string"},
-	}},
+	}, Secret: []string{"password"}},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdRedSky is "Get a Location's RedSky Emergency Calling Parameters": GET /telephony/config/locations/{locationId}/redSky.
@@ -10408,7 +10408,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdVoicemailGroupsByVoicemailGrou
 		{Name: "voicemailGroupId", In: InPath, Flag: "voicemail-group-id", Required: true, Usage: "Modifies the voicemail group details for this voicemail group ID."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modifies the voicemail group details for a customer location."},
 	},
-	Body: &Body{},
+	Body: &Body{Secret: []string{"passcode"}},
 }
 
 // CallingDeleteTelephonyConfigLocationsByLocationIdVoicemailGroupsByVoicemailGroupId is "Delete a Voicemail Group for a Location": DELETE /telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId}.
@@ -10434,7 +10434,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdVoicemailGroups = &Operation{
 		{Name: "locationId", In: InPath, Flag: "location-id", Required: true, Usage: "Create a new voice mail group for this location."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Create a new voice mail group for this organization."},
 	},
-	Body: &Body{},
+	Body: &Body{Secret: []string{"passcode"}},
 }
 
 // CallingGetTelephonyConfigLocationsByLocationIdVoicemailGroupsFaxMessageAvailableNumbers is "Get Voicemail Group Fax Message Available Phone Numbers": GET /telephony/config/locations/{locationId}/voicemailGroups/faxMessage/availableNumbers.
@@ -12281,8 +12281,8 @@ var CallingPutTelephonyConfigPeopleByPersonIdVoicemailPasscode = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a person in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
-	}},
+		{Name: "passcode", Flag: "passcode", Type: "string"},
+	}, Secret: []string{"passcode"}},
 }
 
 // CallingGetTelephonyVoiceMessagesSummary is "Get Message Summary": GET /telephony/voiceMessages/summary.
@@ -13882,8 +13882,8 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdVoicemailPasscode = &Ope
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a virtual line in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
-	}},
+		{Name: "passcode", Flag: "passcode", Type: "string"},
+	}, Secret: []string{"passcode"}},
 }
 
 // CallingGetTelephonyConfigVirtualLinesByVirtualLineIdMusicOnHold is "Retrieve Music On Hold Settings for a Virtual Line": GET /telephony/config/virtualLines/{virtualLineId}/musicOnHold.
@@ -14873,8 +14873,8 @@ var CallingPutTelephonyConfigWorkspacesByPlaceIdVoicemailPasscode = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a workspace in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
-	}},
+		{Name: "passcode", Flag: "passcode", Type: "string"},
+	}, Secret: []string{"passcode"}},
 }
 
 // CallingGetTelephonyConfigWorkspacesByWorkspaceIdSequentialRingCriteriaById is "Retrieve Sequential Ring Criteria for a Workspace": GET /telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}.
@@ -15985,10 +15985,10 @@ var CallingPutTelephonyConfigServiceSettingsCallerReputationProvider = &Operatio
 		{Name: "id", Flag: "id", Type: "string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "clientId", Flag: "client-id", Type: "string"},
-		{Name: "clientSecret", Flag: "client-secret", Type: "string", Secret: true},
+		{Name: "clientSecret", Flag: "client-secret", Type: "string"},
 		{Name: "callBlockScoreThreshold", Flag: "call-block-score-threshold", Type: "string"},
 		{Name: "callAllowScoreThreshold", Flag: "call-allow-score-threshold", Type: "string"},
-	}},
+	}, Secret: []string{"clientSecret"}},
 }
 
 // CallingGetTelephonyConfigServiceSettingsCallerReputationProviderStatus is "Get Caller Reputation Provider Status": GET /telephony/config/serviceSettings/callerReputationProvider/status.

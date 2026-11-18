@@ -102,6 +102,7 @@ func TestMultipartAttachmentAuthenticationRetryReplaysBody(t *testing.T) {
 		w.Write([]byte(`{}`))
 	}))
 	defer srv.Close()
+	defer config.TrustOrigin(srv.URL)()
 	token, refresher := config.Token(), config.TokenRefresher
 	config.SetToken("old-token")
 	config.TokenRefresher = func() (string, error) { return "new-token", nil }

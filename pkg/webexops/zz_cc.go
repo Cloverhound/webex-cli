@@ -626,9 +626,9 @@ var CcPostV1AgentburnoutSubscribe = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // CcPostV1AgentburnoutAction is "Record the realtime burnout events": POST /v1/agentburnout/action.
@@ -4786,9 +4786,9 @@ var CcPostV1Subscriptions = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // CcPostV2Subscriptions is "Register Subscription": POST /v2/subscriptions.
@@ -4806,9 +4806,9 @@ var CcPostV2Subscriptions = &Operation{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "resourceVersion", Flag: "resource-version", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // CcGetV1SubscriptionsById is "Get Subscription": GET /v1/subscriptions/{id}.
@@ -4878,9 +4878,9 @@ var CcPatchV1SubscriptionsById = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "destinationUrl", Flag: "destination-url", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // CcPatchV2SubscriptionsById is "Update Subscription": PATCH /v2/subscriptions/{id}.
@@ -4899,9 +4899,9 @@ var CcPatchV2SubscriptionsById = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "destinationUrl", Flag: "destination-url", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // CcGetV1EventTypes is "List Event Types": GET /v1/event-types.
@@ -6073,7 +6073,7 @@ var CcPostV1DialerCampaign = &Operation{
 	Summary:     "Start Campaign Request",
 	Description: "A start campaign API allows businesses to programmatically start outbound campaigns using their own software applications. This type of API typically allows businesses to set up the parameters for a campaign, such as the list of phone numbers to call, the message or script to deliver, and the time of day or day of the week to call. Requires 'cjp.config_write' scope and one of the following roles: 'cjp.admin','id_full_admin','atlas-portal.partner.salesadmin','atlas-portal.partner.provision_admin' for authorization.",
 	Method:      "POST", Host: HostCC, Path: "/v1/dialer/campaign",
-	Body: &Body{},
+	Body: &Body{Secret: []string{"authToken"}},
 }
 
 // CcPutV1DialerCampaignByCampaignId is "Update Campaign Request": PUT /v1/dialer/campaign/{campaignId}.
@@ -6085,7 +6085,7 @@ var CcPutV1DialerCampaignByCampaignId = &Operation{
 	Params: []Param{
 		{Name: "campaignId", In: InPath, Flag: "campaign-id", Required: true, Usage: "The unique request id of the campaign that needs to be updated"},
 	},
-	Body: &Body{},
+	Body: &Body{Secret: []string{"authToken"}},
 }
 
 // CcDeleteV1DialerCampaignByCampaignId is "Stop Campaign Request": DELETE /v1/dialer/campaign/{campaignId}.
@@ -8283,7 +8283,7 @@ var CcPutOrganizationByOrgidTenantConfigurationById = &Operation{
 		{Name: "callVariablesSuppressed", Flag: "call-variables-suppressed", Type: "string"},
 		{Name: "endCallEnabled", Flag: "end-call-enabled", Type: "bool"},
 		{Name: "incidentReportingEnabled", Flag: "incident-reporting-enabled", Type: "bool"},
-		{Name: "watsonAnalyticsPassword", Flag: "watson-analytics-password", Type: "string", Secret: true},
+		{Name: "watsonAnalyticsPassword", Flag: "watson-analytics-password", Type: "string"},
 		{Name: "systemRecoveryMsg", Flag: "system-recovery-msg", Type: "string"},
 		{Name: "watsonAnalyticsBaseUrl", Flag: "watson-analytics-base-url", Type: "string"},
 		{Name: "dnTargetStripChars", Flag: "dn-target-strip-chars", Type: "string"},
@@ -8316,7 +8316,7 @@ var CcPutOrganizationByOrgidTenantConfigurationById = &Operation{
 		{Name: "systemDefault", Flag: "system-default", Type: "bool"},
 		{Name: "createdTime", Flag: "created-time", Type: "int64"},
 		{Name: "lastUpdatedTime", Flag: "last-updated-time", Type: "int64"},
-	}},
+	}, Secret: []string{"watsonAnalyticsPassword"}},
 }
 
 // CcGetApiV2OrganizationsByOrgIdAgents is "List AI agents": GET /api/v2/organizations/{orgId}/agents/.

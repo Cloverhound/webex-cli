@@ -2183,9 +2183,9 @@ var AdminPostApplicationsByApplicationIdToken = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "clientId", Flag: "client-id", Type: "string"},
-		{Name: "clientSecret", Flag: "client-secret", Type: "string", Secret: true},
+		{Name: "clientSecret", Flag: "client-secret", Type: "string"},
 		{Name: "targetOrgId", Flag: "target-org-id", Type: "string"},
-	}},
+	}, Secret: []string{"clientSecret"}},
 }
 
 // AdminPostLivemonitoringLiveMeetingsByCountry is "Get Live Meeting metrics categorized by Country": POST /livemonitoring/liveMeetingsByCountry.

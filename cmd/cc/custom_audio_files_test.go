@@ -41,6 +41,7 @@ func TestAudioFileUploadRefreshesTokenAndReplaysBody(t *testing.T) {
 		w.Write([]byte(`{}`))
 	}))
 	defer srv.Close()
+	defer config.TrustOrigin(srv.URL)()
 
 	token, refresher := config.Token(), config.TokenRefresher
 	config.SetToken("old-token")

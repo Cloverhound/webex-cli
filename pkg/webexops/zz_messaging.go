@@ -730,9 +730,9 @@ var MessagingPostWebhooks = &Operation{
 		{Name: "resource", Flag: "resource", Type: "string"},
 		{Name: "event", Flag: "event", Type: "string"},
 		{Name: "filter", Flag: "filter", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // MessagingGetWebhooksByWebhookId is "Get Webhook Details": GET /webhooks/{webhookId}.
@@ -758,10 +758,10 @@ var MessagingPutWebhooksByWebhookId = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "targetUrl", Flag: "target-url", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
+		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-	}},
+	}, Secret: []string{"secret"}},
 }
 
 // MessagingDeleteWebhooksByWebhookId is "Delete a Webhook": DELETE /webhooks/{webhookId}.

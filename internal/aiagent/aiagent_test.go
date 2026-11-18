@@ -26,6 +26,7 @@ func studio(t *testing.T) *httptest.Server {
 		})
 	}))
 	t.Cleanup(srv.Close)
+	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })
@@ -81,6 +82,7 @@ func TestBotTokenGivesTheCLIsAdviceForTheWrongRegion(t *testing.T) {
 		w.WriteHeader(http.StatusUnavailableForLegalReasons)
 	}))
 	t.Cleanup(srv.Close)
+	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })
@@ -100,6 +102,7 @@ func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
 		w.Write([]byte(`{"objects":[{"id":"a1","bot_access_token":"token-1"}]}`))
 	}))
 	t.Cleanup(srv.Close)
+	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })
@@ -107,7 +110,7 @@ func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
 	t.Cleanup(func() { config.SetOrgID("") })
 
 	_, err := BotToken("a1")
-	if err == nil || strings.Contains(err.Error(), "token-1") {
-		t.Fatalf("err = %v, want an error without the token", err)
+	if err == nil || strings.Contains(err.Error(), "token-1") || !strings.Contains(err.Error(), "500") {
+		t.Fatalf("err = %v, want the 500 without the token", err)
 	}
 }

@@ -34,8 +34,10 @@ func messageServer(t *testing.T, handle func(http.ResponseWriter, *http.Request,
 	}))
 	oldToken := config.Token()
 	config.SetToken("test-token")
+	withdraw := config.TrustOrigin(srv.URL)
 	t.Cleanup(func() {
 		srv.Close()
+		withdraw()
 		config.SetToken(oldToken)
 		config.SetDryRun(false)
 		config.SetReadOnly(false)

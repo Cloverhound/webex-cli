@@ -16,6 +16,9 @@ from naming_overrides import GROUP_ALIASES, GROUP_DESCRIPTIONS
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)  # repo root (parent of codegen/)
 SPEC_PATH = os.path.join(SCRIPT_DIR, "api_spec.json")
+# Every exported operation name and the route it was given to; see operation_ids.
+# Entries are only ever added.
+NAMES_PATH = os.path.join(SCRIPT_DIR, "operation_names.json")
 OPS_DIR = os.path.join(CLI_DIR, "pkg", "webexops")
 
 # Collection name → (CLI area, default host, is_calling)
@@ -358,9 +361,10 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     for p in params:
         if is_secret(p['name']):
             p['secret'] = True
-    for f in body or []:
-        if f['type'] == 'string' and is_secret(f['name']):
-            f['secret'] = True
+    # Every body the collection shows, flat or not; a bool such as excludePassword
+    # only names a credential.
+    body_secret = [f['name'] for f in body_fields
+                   if ep.get('has_body', False) and f['type'] != 'bool' and is_secret(f['name'])]
 
     time_range = None
     # --last sets both ends of a range, so it needs both parameters.
@@ -370,7 +374,7 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     return {
         'command': ep['command'], 'aliases': ep.get('aliases') or [],
         'summary': ep.get('original_name', ep['command']), 'description': ep.get('description', ''),
-        'method': method, 'host': host, 'path': path, 'params': params, 'body': body,
+        'method': method, 'host': host, 'path': path, 'params': params, 'body': body, 'bodySecret': body_secret,
         'paging': paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
         # This endpoint returns a non-JSON deletion acknowledgement. Restricting
         # Accept to application/json causes the service to reject it with HTTP 406.
@@ -402,7 +406,7 @@ def request_shape(ep):
             bool(ep.get('has_body')), bool(ep.get('complex_body')))
 
 
-def operation_ids(area, endpoints):
+def operation_ids(area, endpoints, names=None):
     """The Go names of an area's listings, in order, and the routes to export as
     one operation combining their listings: exported name → listing indexes.
 
@@ -411,8 +415,13 @@ def operation_ids(area, endpoints):
     them. A route the collection lists more than once is exported once, on its first
     listing, when every listing sends the same request; otherwise it is exported as
     an operation combining them, which is not a CLI command. The other listings are
-    unexported, for the CLI's commands. Routes whose names are spelled alike are
-    not exported, since neither name would say which route it is."""
+    unexported, for the CLI's commands.
+
+    names maps each name ever exported to its route ("GET /path"). A name given to
+    one route is never exported for another, since programs built against it would
+    call the new route. Routes spelled alike that no name was given to are not
+    exported, since neither name would say which route it is."""
+    names = names if names is not None else {}
     routes = {}
     for i, ep in enumerate(endpoints):
         routes.setdefault((ep['method'], ep['path']), []).append(i)
@@ -424,9 +433,14 @@ def operation_ids(area, endpoints):
     for (method, path), listings in routes.items():
         name = route_name(area, method, path)
         unexported = f'{name[0].lower()}{name[1:]}'
-        if len(spellings[name]) > 1:
-            print(f"  WARNING: {' and '.join(f'{m} {p}' for m, p in spellings[name])} are all spelled {name}; "
-                  "none is exported")
+        owner = names.get(name)
+        blocked = None
+        if owner is None and len(spellings[name]) > 1:
+            blocked = f"{' and '.join(f'{m} {p}' for m, p in spellings[name])} are all spelled {name}; none is exported"
+        elif owner is not None and owner != f'{method} {path}':
+            blocked = f'{method} {path} is spelled {name}, which {owner} was given; it is not exported'
+        if blocked:
+            print(f'  WARNING: {blocked}')
             route = spellings[name].index((method, path)) + 1
             for n, i in enumerate(listings, 1):
                 ids[i] = f'{unexported}_route{route}_{n}'
@@ -468,7 +482,10 @@ def combine_operations(ops):
     ranges = {op['timeRange'] for op in ops if op['timeRange']}
     if len(pagings) > 1 or len(ranges) > 1:
         return None
-    return dict(first, command='', aliases=[], params=params, body=body,
+    body_secret = []
+    for op in ops:
+        body_secret += [n for n in op['bodySecret'] if n not in body_secret]
+    return dict(first, command='', aliases=[], params=params, body=body, bodySecret=body_secret,
                 paging=next(iter(pagings), None), timeRange=next(iter(ranges), None),
                 redact=any(op['redact'] for op in ops), private=any(op['private'] for op in ops))
 
@@ -503,14 +520,16 @@ def operation_literal(op_id, area, group, op):
             lines.append('\t\t{' + ', '.join(fields) + '},')
         lines.append('\t},')
     if op['body'] is not None:
+        secret = ''
+        if op['bodySecret']:
+            secret = 'Secret: []string{' + ', '.join(go_string(n) for n in op['bodySecret']) + '}'
         if op['body']:
             lines.append('\tBody: &Body{Fields: []BodyField{')
             for f in op['body']:
-                secret = ', Secret: true' if f.get('secret') else ''
-                lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}{secret}}},')
-            lines.append('\t}},')
+                lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}}},')
+            lines.append(f'\t}}, {secret}}},' if secret else '\t}},')
         else:
-            lines.append('\tBody: &Body{},')
+            lines.append(f'\tBody: &Body{{{secret}}},')
     if op['paging']:
         lines.append(f'\tPaging: {op["paging"]},')
     if op['timeRange']:
@@ -525,8 +544,10 @@ def operation_literal(op_id, area, group, op):
     return lines
 
 
-def generate_area_file(area, collection_name, host, is_calling, groups, paging_overrides=None):
-    """Go source for one area's groups and operations, and its counts."""
+def generate_area_file(area, collection_name, host, is_calling, groups, paging_overrides=None, names=None):
+    """Go source for one area's groups and operations, and its counts. names is
+    operation_ids' record of exported names, and gains this area's."""
+    names = names if names is not None else {}
     group_lines, kept = [], []
     skip_groups = SKIP_GROUPS.get(collection_name, set())
     for group_data in groups:
@@ -552,12 +573,14 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
             else:
                 kept.append((group, ep))
 
-    op_ids, combined = operation_ids(area, [ep for _, ep in kept])
+    op_ids, combined = operation_ids(area, [ep for _, ep in kept], names)
     decls, ops = [], []
     for (group, ep), op_id in zip(kept, op_ids):
         host_of = resolve_base_url(collection_name, ep['path'], host)
         op = operation(ep, collection_name, host_of, is_calling, paging_overrides)
         ops.append(op)
+        if op_id[0].isupper():
+            names[op_id] = f"{op['method']} {op['path']}"
         decls.append('')
         decls.extend(operation_literal(op_id, area, group, op))
     for name, listings in combined.items():
@@ -566,6 +589,7 @@ def generate_area_file(area, collection_name, host, is_calling, groups, paging_o
             print(f"  WARNING: the listings of {ops[listings[0]]['method']} {ops[listings[0]]['path']} "
                   "disagree on a parameter's place or a field's type; it is not exported")
             continue
+        names[name] = f"{op['method']} {op['path']}"
         literal = operation_literal(name, area, kept[listings[0]][0], op)
         literal.insert(1, '// It has the parameters of every listing of the route, and is not a CLI command.')
         decls.append('')
@@ -600,13 +624,19 @@ def main():
         if f.startswith('zz_') and f.endswith('.go'):
             os.remove(os.path.join(OPS_DIR, f))
 
+    names = {}
+    if os.path.exists(NAMES_PATH):
+        with open(NAMES_PATH) as f:
+            names = json.load(f)
+
     areas = []
     for collection_name, groups in spec.items():
         if collection_name not in COLLECTIONS:
             print(f"Skipping unknown collection: {collection_name}")
             continue
         area, host, is_calling = COLLECTIONS[collection_name]
-        source, group_count, op_count = generate_area_file(area, collection_name, host, is_calling, groups)
+        source, group_count, op_count = generate_area_file(area, collection_name, host, is_calling, groups,
+                                                           names=names)
         with open(os.path.join(OPS_DIR, f'zz_{area}.go'), 'w') as f:
             f.write(source)
         areas.append(area)
@@ -614,6 +644,9 @@ def main():
 
     with open(os.path.join(OPS_DIR, 'zz_areas.go'), 'w') as f:
         f.write(generate_areas_file(sorted(areas)))
+    with open(NAMES_PATH, 'w') as f:
+        json.dump(dict(sorted(names.items())), f, indent=1)
+        f.write('\n')
 
     print("\nRunning gofmt...")
     result = subprocess.run(['gofmt', '-w', OPS_DIR], capture_output=True, text=True)

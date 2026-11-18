@@ -105,6 +105,10 @@ type Body struct {
 	// Fields are top-level body fields the CLI offers as flags. Bodies that are
 	// not flat have none.
 	Fields []BodyField
+
+	// Secret names the top-level fields that carry a credential, flat body or
+	// not; see RedactBody.
+	Secret []string
 }
 
 // BodyField is one top-level body field.
@@ -118,9 +122,6 @@ type BodyField struct {
 
 	// Type is string, bool, int64, float64 or []string.
 	Type string
-
-	// Secret means the value is a credential; see RedactBody.
-	Secret bool
 }
 
 // Group is a set of operations published under one CLI command.
@@ -236,8 +237,12 @@ func (op *Operation) check(args Args) error {
 		}
 	}
 	for name := range args.Query {
-		if p, ok := params[name]; !ok || p.In != InQuery {
+		p, ok := params[name]
+		switch {
+		case !ok || p.In != InQuery:
 			return fmt.Errorf("%s has no query parameter %q", op.ID, name)
+		case p.Value != "":
+			return fmt.Errorf("%s's parameter %q is fixed", op.ID, name)
 		}
 	}
 	var missing []string
@@ -331,9 +336,9 @@ func (op *Operation) RedactBody(body []byte) []byte {
 		return body
 	}
 	redacted := false
-	for _, f := range op.Body.Fields {
-		if _, ok := object[f.Name]; ok && f.Secret {
-			object[f.Name] = json.RawMessage(`"<redacted>"`)
+	for _, name := range op.Body.Secret {
+		if _, ok := object[name]; ok {
+			object[name] = json.RawMessage(`"<redacted>"`)
 			redacted = true
 		}
 	}

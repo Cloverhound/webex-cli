@@ -2,7 +2,7 @@
 import re
 import unittest
 
-from generate_cli import generate_area_file, operation, resolve_base_url
+from generate_cli import generate_area_file, operation, operation_literal, resolve_base_url
 
 
 def area_file(area, collection, host, is_calling, group, endpoints):
@@ -139,6 +139,23 @@ class OperationIDTest(unittest.TestCase):
         self.assertEqual(self.exported([query, header]), {})
         self.assertEqual(len(self.ids([query, header])), 2)
 
+    def test_a_name_never_moves_to_another_route_in_a_later_snapshot(self):
+        names = {}
+        first = generate_area_file('calling', 'Webex Cloud Calling', 'webex', True,
+                                   [{'group': 'g', 'endpoints': [{'command': 'get', 'method': 'GET', 'path': '/a-b'}]}],
+                                   paging_overrides={}, names=names)[0]
+        self.assertIn('var CallingGetAB = ', first)
+        self.assertEqual(names, {'CallingGetAB': 'GET /a-b'})
+        later = generate_area_file('calling', 'Webex Cloud Calling', 'webex', True,
+                                   [{'group': 'g', 'endpoints': [{'command': 'get', 'method': 'GET', 'path': '/a/b'}]}],
+                                   paging_overrides={}, names=names)[0]
+        self.assertNotIn('var CallingGetAB = ', later)
+        both = generate_area_file('calling', 'Webex Cloud Calling', 'webex', True,
+                                  [{'group': 'g', 'endpoints': [{'command': 'get', 'method': 'GET', 'path': '/a/b'},
+                                                                {'command': 'get-2', 'method': 'GET', 'path': '/a-b'}]}],
+                                  paging_overrides={}, names=names)[0]
+        self.assertRegex(both, r'var CallingGetAB = &Operation\{\n\tID: "CallingGetAB", Area: "calling", Group: "g", Command: "get-2"')
+
     def test_two_routes_with_one_name_are_not_named(self):
         ids = self.ids([{'command': 'get', 'method': 'GET', 'path': '/a-b'},
                         {'command': 'get-2', 'method': 'GET', 'path': '/a/b'}])
@@ -215,7 +232,17 @@ class FlagTest(unittest.TestCase):
                        'Webex Meetings', 'webex', True)
         self.assertEqual([(p['name'], bool(p.get('secret'))) for p in op['params']],
                          [('meetingId', False), ('password', True)])
-        self.assertEqual([f['name'] for f in op['body'] if f.get('secret')], ['hostPin', 'sipPassword'])
+        self.assertEqual(op['bodySecret'], ['hostPin', 'sipPassword'])
+
+    def test_a_body_without_flags_keeps_its_secret_fields(self):
+        op = operation({'command': 'create', 'method': 'POST', 'path': '/meetings', 'has_body': True, 'complex_body': True,
+                        'body_fields': [{'name': 'password', 'type': 'string'}, {'name': 'passcode', 'type': 'int64'},
+                                        {'name': 'excludePassword', 'type': 'bool'}, {'name': 'title', 'type': 'string'}]},
+                       'Webex Meetings', 'webex', True)
+        self.assertEqual(op['body'], [])
+        self.assertEqual(op['bodySecret'], ['password', 'passcode'])
+        literal = '\n'.join(operation_literal('MeetingsPostMeetings', 'meetings', 'meetings', op))
+        self.assertIn('Body: &Body{Secret: []string{"password", "passcode"}},', literal)
 
     def test_from_without_to_gets_no_time_range(self):
         op = operation({'command': 'list', 'method': 'GET', 'path': '/v1/events', 'query_params': [{'name': 'from'}]},

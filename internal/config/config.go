@@ -1,6 +1,8 @@
 package config
 
 import (
+	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/Cloverhound/webex-cli/pkg/webexapi"
@@ -123,6 +125,23 @@ func AnalyticsCallingBaseURL() string { return webexapi.AnalyticsCallingHost(reg
 func Hosts() webexapi.Hosts {
 	hosts, _ := webexapi.HostsFor(region, ccRegion) // ccRegion is always one of CCRegions
 	return hosts
+}
+
+// trusted are the origins added by TrustOrigin.
+var trusted []string
+
+// Origins are the origins the CLI sends its token to: the Webex origins, and any
+// a test added with TrustOrigin.
+func Origins() []string { return append(webexapi.WebexOrigins(), trusted...) }
+
+// TrustOrigin lets a test send the token to the server at rawURL. It returns a
+// function that withdraws it.
+func TrustOrigin(rawURL string) (withdraw func()) {
+	saved := trusted
+	if u, err := url.Parse(rawURL); err == nil {
+		trusted = append(slices.Clone(trusted), u.Scheme+"://"+u.Host)
+	}
+	return func() { trusted = saved }
 }
 
 // DecodeOrgID converts a base64 Webex org ID to its UUID; see webexapi.DecodeOrgID.

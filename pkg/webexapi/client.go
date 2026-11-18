@@ -12,7 +12,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"net/url"
 	"slices"
@@ -32,8 +31,7 @@ type Client struct {
 	HTTP *http.Client
 
 	// Origins are the scheme://host[:port] origins requests may go to, since each
-	// carries the token. Nil means the Webex origins of every HostsFor result, and
-	// loopback addresses.
+	// carries the token. Nil means WebexOrigins.
 	Origins []string
 
 	// Token returns the bearer token. It is called before every attempt, so a
@@ -238,7 +236,7 @@ func (c *Client) checkOrigin(rawURL string) error {
 		return fmt.Errorf("building request: %w", err)
 	}
 	if c.Origins == nil {
-		if isLoopback(u.Hostname()) || slices.Contains(webexOrigins, origin(u)) {
+		if slices.Contains(webexOrigins, origin(u)) {
 			return nil
 		}
 	} else {
@@ -256,15 +254,10 @@ func origin(u *url.URL) string {
 	return strings.ToLower(u.Scheme) + "://" + strings.ToLower(u.Hostname()) + ":" + port(u)
 }
 
-func isLoopback(host string) bool {
-	if strings.EqualFold(host, "localhost") {
-		return true
-	}
-	ip := net.ParseIP(host)
-	return ip != nil && ip.IsLoopback()
-}
+// WebexOrigins are the origins of every HostsFor result, the default
+// Client.Origins. The list is a copy.
+func WebexOrigins() []string { return slices.Clone(webexOrigins) }
 
-// webexOrigins are the origins of every HostsFor result.
 var webexOrigins = func() []string {
 	var origins []string
 	for _, region := range Regions {

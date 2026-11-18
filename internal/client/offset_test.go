@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/Cloverhound/webex-cli/internal/config"
 )
 
 // TestOffsetPagingAppliesOutsideCalling covers AI Agent Studio lists, which are
@@ -28,6 +30,7 @@ func TestOffsetPagingAppliesOutsideCalling(t *testing.T) {
 		})
 	}))
 	defer srv.Close()
+	defer config.TrustOrigin(srv.URL)()
 
 	req := NewRequest(srv.URL, "GET", "/api/v2/organizations/o/agents/")
 	body, _, err := req.DoPaginated(Paging{Mode: Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"})
