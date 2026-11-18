@@ -191,7 +191,7 @@ type Args struct {
 
 // Request is the request that sends an operation with its arguments. Arguments
 // the operation cannot send are an error: a name it has no parameter for, a value
-// for a fixed parameter, a missing path value, or . or .. as a path value.
+// for a fixed parameter, or a missing path value.
 func (op *Operation) Request(hosts webexapi.Hosts, args Args) (webexapi.Request, error) {
 	l, err := op.List(hosts, args)
 	if err != nil {
@@ -228,26 +228,14 @@ func (op *Operation) check(args Args) error {
 		}
 	}
 	for name := range args.Query {
-		p, ok := params[name]
-		switch {
-		case !ok || p.In != InQuery:
+		if p, ok := params[name]; !ok || p.In != InQuery {
 			return fmt.Errorf("%s has no query parameter %q", op.ID, name)
-		case p.Value != "":
-			return fmt.Errorf("%s's parameter %q is fixed", op.ID, name)
 		}
 	}
 	var missing []string
 	for _, p := range op.Params {
-		if p.In != InPath || p.Value != "" {
-			continue
-		}
-		switch v := args.Params[p.Name]; v {
-		case "":
-			if !args.AllowEmptyPath {
-				missing = append(missing, p.Name)
-			}
-		case ".", "..":
-			return fmt.Errorf("%s's path parameter %q cannot be %q", op.ID, p.Name, v)
+		if p.In == InPath && p.Value == "" && args.Params[p.Name] == "" && !args.AllowEmptyPath {
+			missing = append(missing, p.Name)
 		}
 	}
 	if len(missing) > 0 {

@@ -41,7 +41,7 @@ make golden
 
 Other Go programs, such as Webex Admin Studio, import these to call Webex the way the CLI does. They hold no process-wide state and take a context on every call.
 
-- `pkg/webexapi/` — HTTP transport (bearer token sent only to Webex origins, never following a redirect, one refresh after a 401, 429 Retry-After within limits, `APIError`, `RedirectError` and `WrongRegionError`), fail-closed list paging, `Hosts` for each data region and Contact Center data center, org ID conversion, multipart bodies
+- `pkg/webexapi/` — HTTP transport (bearer token, never following a redirect, one refresh after a 401, 429 Retry-After within limits, `APIError`, `RedirectError` and `WrongRegionError`), fail-closed list paging, `Hosts` for each data region and Contact Center data center, org ID conversion, multipart bodies
 - `pkg/webexops/` — the generated operation table: one exported `*Operation` per API call (route, host, parameters, body fields, paging, CLI names), with `Call` and `All`; `Request` and `List` refuse arguments the operation cannot send
 - `pkg/aiagent/` — AI Agent Studio: agent runtime token lookup and credential redaction
 

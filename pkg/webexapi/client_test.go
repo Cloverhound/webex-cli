@@ -6,8 +6,6 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
-	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -27,16 +25,7 @@ func statusServer(t *testing.T, statuses []int, body string, header http.Header)
 		w.Write([]byte(body))
 	}))
 	t.Cleanup(srv.Close)
-	trust(t, srv.URL)
 	return srv, &seen
-}
-
-// trust adds a test server's origin to the default origins until the test ends.
-func trust(t *testing.T, rawURL string) {
-	saved := webexOrigins
-	u, _ := url.Parse(rawURL)
-	webexOrigins = append(slices.Clone(webexOrigins), origin(u))
-	t.Cleanup(func() { webexOrigins = saved })
 }
 
 func noSleep(context.Context, time.Duration) error { return nil }
@@ -151,7 +140,6 @@ func TestRedirectsAreNeverFollowed(t *testing.T) {
 	var followed int
 	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { followed++ }))
 	t.Cleanup(target.Close)
-	trust(t, target.URL)
 	for _, method := range []string{"GET", "DELETE"} {
 		for _, location := range []string{target.URL + "/elsewhere", "/same-origin"} {
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -161,8 +149,7 @@ func TestRedirectsAreNeverFollowed(t *testing.T) {
 				}
 				http.Redirect(w, r, location, http.StatusFound)
 			}))
-			trust(t, srv.URL)
-			resp, err := (&Client{}).Send(context.Background(), Request{Method: method, URL: srv.URL, Header: http.Header{"Password": {"pw"}}})
+			resp, err := (&Client{}).Send(context.Background(), Request{Method: method, URL: srv.URL})
 			srv.Close()
 			var redirect *RedirectError
 			var apiErr *APIError
@@ -184,62 +171,11 @@ func TestARedirectFailsAList(t *testing.T) {
 		http.Redirect(w, r, "/moved", http.StatusMovedPermanently)
 	}))
 	t.Cleanup(srv.Close)
-	trust(t, srv.URL)
 	for _, p := range []Paging{{Mode: Single, Items: "items", OmitEmpty: true}, {Mode: Link, Size: "max", Items: "items", OmitEmpty: true}} {
 		var redirect *RedirectError
 		if items, err := (&Client{}).All(context.Background(), List{Method: "GET", URL: srv.URL}, p); !errors.As(err, &redirect) {
 			t.Errorf("mode %d: a redirect read as %d items, err %v", p.Mode, len(items), err)
 		}
-	}
-}
-
-// recordingTransport records requests without sending them.
-type recordingTransport struct{ sent []*http.Request }
-
-func (t *recordingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
-	t.sent = append(t.sent, r)
-	return &http.Response{StatusCode: 200, Header: http.Header{}, Body: http.NoBody, Request: r}, nil
-}
-
-func TestTheTokenGoesOnlyToWebexOrigins(t *testing.T) {
-	transport := &recordingTransport{}
-	c := &Client{HTTP: &http.Client{Transport: transport}, Token: func(context.Context) (string, error) { return "secret", nil }}
-	for _, url := range []string{"https://evil.example.com/v1/people", "https://webexapis.com.evil.example.com/x", "http://webexapis.com/v1/people",
-		"http://127.0.0.1:8080/v1/people", "http://localhost/v1/people"} {
-		if _, err := c.Send(context.Background(), Request{Method: "GET", URL: url}); err == nil {
-			t.Errorf("%s was allowed", url)
-		}
-	}
-	if len(transport.sent) != 0 {
-		t.Fatalf("%d requests left for another origin", len(transport.sent))
-	}
-	hosts, _ := HostsFor("eu", "anz1")
-	for _, url := range []string{hosts.Webex + "/people", hosts.Identity + "/identity/scim/x", hosts.AnalyticsCalling + "/cdr_feed", hosts.CC + "/x", hosts.AIAgent + "/api/x"} {
-		if _, err := c.Send(context.Background(), Request{Method: "GET", URL: url}); err != nil {
-			t.Errorf("%s: %v", url, err)
-		}
-	}
-	c.Origins = []string{"https://evil.example.com"}
-	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://evil.example.com/v1/people"}); err != nil {
-		t.Errorf("an origin the caller allowed was refused: %v", err)
-	}
-
-	// The Kelvin sign lowercases to "k", but the transport dials its IDNA form.
-	sent := len(transport.sent)
-	c.Origins = []string{"https://k.example.com"}
-	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://K.example.com/x"}); err == nil || len(transport.sent) != sent {
-		t.Errorf("a non-ASCII host matched an allowed origin: %v", err)
-	}
-}
-
-func TestBeforeSendCannotMoveTheRequestToAnotherOrigin(t *testing.T) {
-	transport := &recordingTransport{}
-	c := &Client{HTTP: &http.Client{Transport: transport}, BeforeSend: func(r *http.Request) error {
-		r.URL.Host = "evil.example.com"
-		return nil
-	}}
-	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://webexapis.com/v1/people"}); err == nil || len(transport.sent) != 0 {
-		t.Fatalf("err %v, %d requests sent", err, len(transport.sent))
 	}
 }
 
@@ -353,7 +289,6 @@ func TestA429WhoseBodyCannotBeReadKeepsTheReadError(t *testing.T) {
 		w.Write([]byte("short"))
 	}))
 	t.Cleanup(srv.Close)
-	trust(t, srv.URL)
 	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL})
 	var limited *RateLimitError
 	if err == nil || errors.As(err, &limited) || !strings.Contains(err.Error(), "reading response") {

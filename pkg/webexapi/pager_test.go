@@ -49,7 +49,6 @@ func server(t *testing.T, handle func(w http.ResponseWriter, r *http.Request)) (
 		handle(w, r)
 	}))
 	t.Cleanup(srv.Close)
-	trust(t, srv.URL)
 	return srv, &queries
 }
 

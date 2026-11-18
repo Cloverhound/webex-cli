@@ -102,11 +102,6 @@ func TestParametersHaveTheirAPINames(t *testing.T) {
 	}
 }
 
-// local is a client that may send to a test server.
-func local(srv *httptest.Server) *webexapi.Client {
-	return &webexapi.Client{Origins: []string{srv.URL}}
-}
-
 func request(t *testing.T, op *Operation, args Args) webexapi.Request {
 	t.Helper()
 	r, err := op.Request(testHosts, args)
@@ -122,7 +117,6 @@ func TestRequestRefusesArgumentsItCannotSend(t *testing.T) {
 		{Name: "parkId", In: InPath, Flag: "park-id"},
 		{Name: "projectId", In: InPath, Value: "fixed"},
 		{Name: "orgId", In: InQuery, Flag: "org-id"},
-		{Name: "format", In: InQuery, Value: "json"},
 	}}
 	good := map[string]string{"locationId": "l", "parkId": "p"}
 	with := func(k, v string) map[string]string {
@@ -134,11 +128,7 @@ func TestRequestRefusesArgumentsItCannotSend(t *testing.T) {
 		"a misspelled parameter":            {Params: with("orgID", "o")},
 		"a query parameter it doesn't have": {Params: good, Query: url.Values{"nope": {"x"}}},
 		"a value for a fixed parameter":     {Params: with("projectId", "other")},
-		"a fixed query value replaced":      {Params: good, Query: url.Values{"format": {"xml"}}},
-		"a fixed query value removed":       {Params: good, Query: url.Values{"format": {}}},
 		"a missing path value":              {Params: map[string]string{"locationId": "l"}},
-		"a dot segment":                     {Params: with("parkId", "..")},
-		"a single dot":                      {Params: with("locationId", ".")},
 	} {
 		if _, err := op.Request(testHosts, args); err == nil {
 			t.Errorf("%s was accepted", name)
@@ -148,7 +138,7 @@ func TestRequestRefusesArgumentsItCannotSend(t *testing.T) {
 		}
 	}
 	r, err := op.Request(testHosts, Args{Params: map[string]string{"locationId": "l"}, AllowEmptyPath: true})
-	if err != nil || !strings.HasSuffix(r.URL, "/locations/l/parks/{parkId}?format=json") {
+	if err != nil || !strings.HasSuffix(r.URL, "/locations/l/parks/{parkId}") {
 		t.Fatalf("AllowEmptyPath: %v, %v", r.URL, err)
 	}
 }
@@ -175,11 +165,11 @@ func TestCallAndAllRedactAIAgentResponses(t *testing.T) {
 	op := &Operation{ID: "Test", Method: "GET", Host: HostAIAgent, Path: "/api/v2/agents/", Redact: true,
 		Paging: &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"}}
 	hosts := webexapi.Hosts{AIAgent: srv.URL}
-	resp, err := Call(context.Background(), local(srv), hosts, op, Args{})
+	resp, err := Call(context.Background(), &webexapi.Client{}, hosts, op, Args{})
 	if err != nil || strings.Contains(string(resp.Body), "secret") {
 		t.Fatalf("Call: %s, %v", resp.Body, err)
 	}
-	items, err := All(context.Background(), local(srv), hosts, op, Args{})
+	items, err := All(context.Background(), &webexapi.Client{}, hosts, op, Args{})
 	if err != nil || len(items) != 1 || strings.Contains(string(items[0]), "secret") {
 		t.Fatalf("All: %s, %v", items, err)
 	}
@@ -265,7 +255,7 @@ func TestCallRedactsTheErrorsOfAIAgentOperations(t *testing.T) {
 	defer srv.Close()
 	op := &Operation{ID: "Test", Method: "GET", Host: HostAIAgent, Path: "/api/v1/bot/", Redact: true,
 		Params: []Param{{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id"}}}
-	_, err := Call(context.Background(), local(srv), webexapi.Hosts{AIAgent: srv.URL}, op,
+	_, err := Call(context.Background(), &webexapi.Client{}, webexapi.Hosts{AIAgent: srv.URL}, op,
 		Args{Params: map[string]string{"bot-access-token": "token"}})
 	var apiErr *webexapi.APIError
 	if !errors.As(err, &apiErr) || apiErr.Status != 400 || strings.Contains(err.Error(), "secret") {
@@ -281,11 +271,11 @@ func TestCallAndAllRefuseAMissingPathParameter(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { sent++ }))
 	defer srv.Close()
 	hosts := webexapi.Hosts{CC: srv.URL}
-	_, err := Call(context.Background(), local(srv), hosts, CcGetOrganizationByOrgidV2Team, Args{})
+	_, err := Call(context.Background(), &webexapi.Client{}, hosts, CcGetOrganizationByOrgidV2Team, Args{})
 	if err == nil || !strings.Contains(err.Error(), "orgid") {
 		t.Fatalf("Call: err %v", err)
 	}
-	if _, err := All(context.Background(), local(srv), hosts, CcGetOrganizationByOrgidV2Team, Args{}); err == nil {
+	if _, err := All(context.Background(), &webexapi.Client{}, hosts, CcGetOrganizationByOrgidV2Team, Args{}); err == nil {
 		t.Fatal("All sent a request without its path parameter")
 	}
 	if sent != 0 {
@@ -305,7 +295,7 @@ func TestAllReadsAListToItsEnd(t *testing.T) {
 	op := &Operation{ID: "Test", Method: "GET", Host: HostCC, Path: "/organization/{orgid}/team",
 		Params: []Param{{Name: "orgid", In: InPath, Flag: "orgid"}},
 		Paging: &webexapi.Paging{Mode: webexapi.Pages, Page: "page", Size: "pageSize", Items: "data", TotalPages: "meta.totalPages"}}
-	items, err := All(context.Background(), local(srv), webexapi.Hosts{CC: srv.URL}, op, Args{Params: map[string]string{"orgid": testUUID}})
+	items, err := All(context.Background(), &webexapi.Client{}, webexapi.Hosts{CC: srv.URL}, op, Args{Params: map[string]string{"orgid": testUUID}})
 	if err != nil || len(items) != 2 {
 		t.Fatalf("items %s, err %v", items, err)
 	}

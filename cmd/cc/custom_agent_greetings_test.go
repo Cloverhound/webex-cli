@@ -51,11 +51,9 @@ func agentGreetingServer(t *testing.T, pages ...string) (string, *[]map[string]a
 	}))
 	token := config.Token()
 	config.SetToken("test-token")
-	withdraw := config.TrustOrigin(srv.URL)
 	t.Cleanup(func() {
 		srv.Close()
 		config.SetToken(token)
-		withdraw()
 	})
 	return srv.URL, &infos
 }

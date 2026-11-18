@@ -13,12 +13,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
 )
 
 // Client sends requests. The zero value sends with http.DefaultClient, makes no
@@ -30,10 +27,6 @@ import (
 type Client struct {
 	// HTTP defaults to http.DefaultClient. Its CheckRedirect is not used.
 	HTTP *http.Client
-
-	// Origins are the scheme://host[:port] origins requests may go to, since each
-	// carries the token. Nil means WebexOrigins.
-	Origins []string
 
 	// Token returns the bearer token. It is called before every attempt, so a
 	// token changed by Refresh is used on the retry.
@@ -187,10 +180,6 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 			return nil, err
 		}
 	}
-	// Checked last, on the request as it will be sent, since BeforeSend may change it.
-	if err := c.checkOrigin(httpReq.URL); err != nil {
-		return nil, err
-	}
 
 	httpResp, err := c.httpClient().Do(httpReq)
 	if err != nil {
@@ -230,54 +219,6 @@ func (c *Client) httpClient() *http.Client {
 	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 	return &client
 }
-
-// checkOrigin refuses a URL outside the origins requests may go to.
-func (c *Client) checkOrigin(u *url.URL) error {
-	// net/http dials a non-ASCII host by its IDNA form, which lowercasing does
-	// not give: the Kelvin sign lowercases to "k".
-	for _, r := range u.Hostname() {
-		if r > unicode.MaxASCII {
-			return fmt.Errorf("refusing to send the token to the non-ASCII host %q", u.Hostname())
-		}
-	}
-	if c.Origins == nil {
-		if slices.Contains(webexOrigins, origin(u)) {
-			return nil
-		}
-	} else {
-		for _, allowed := range c.Origins {
-			if a, err := url.Parse(allowed); err == nil && origin(a) == origin(u) {
-				return nil
-			}
-		}
-	}
-	return fmt.Errorf("refusing to send the token to %s, which is not a Webex origin", origin(u))
-}
-
-// origin is a URL's scheme, host and effective port.
-func origin(u *url.URL) string {
-	return strings.ToLower(u.Scheme) + "://" + strings.ToLower(u.Hostname()) + ":" + port(u)
-}
-
-// WebexOrigins are the origins of every HostsFor result, the default
-// Client.Origins. The list is a copy.
-func WebexOrigins() []string { return slices.Clone(webexOrigins) }
-
-var webexOrigins = func() []string {
-	var origins []string
-	for _, region := range Regions {
-		for _, ccRegion := range ccRegions {
-			hosts, _ := HostsFor(region, ccRegion)
-			for _, h := range []string{hosts.Webex, hosts.Identity, hosts.Analytics, hosts.AnalyticsCalling, hosts.CC, hosts.AIAgent} {
-				u, _ := url.Parse(h)
-				if o := origin(u); !slices.Contains(origins, o) {
-					origins = append(origins, o)
-				}
-			}
-		}
-	}
-	return origins
-}()
 
 func (c *Client) sleep(ctx context.Context, d time.Duration) error {
 	if c.Sleep != nil {

@@ -26,7 +26,6 @@ func studio(t *testing.T) *httptest.Server {
 		})
 	}))
 	t.Cleanup(srv.Close)
-	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })
@@ -82,7 +81,6 @@ func TestBotTokenGivesTheCLIsAdviceForTheWrongRegion(t *testing.T) {
 		w.WriteHeader(http.StatusUnavailableForLegalReasons)
 	}))
 	t.Cleanup(srv.Close)
-	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })
@@ -102,7 +100,6 @@ func TestBotTokenErrorHidesTokensInTheResponse(t *testing.T) {
 		w.Write([]byte(`{"objects":[{"id":"a1","bot_access_token":"token-1"}]}`))
 	}))
 	t.Cleanup(srv.Close)
-	t.Cleanup(config.TrustOrigin(srv.URL))
 	old := studioURL
 	studioURL = func() string { return srv.URL }
 	t.Cleanup(func() { studioURL = old })

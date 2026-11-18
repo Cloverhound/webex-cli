@@ -42,7 +42,6 @@ func Do(req *Request) ([]byte, int, error) {
 // stands in for the body in diagnostics.
 func API(template, logBody string) *webexapi.Client {
 	c := &webexapi.Client{
-		Origins:      config.Origins(),
 		Token:        func(context.Context) (string, error) { return config.Token(), nil },
 		MaxRetries:   config.MaxRetry(),
 		MaxRetryWait: time.Duration(config.MaxRetryTimer()) * time.Second,

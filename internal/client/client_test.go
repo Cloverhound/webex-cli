@@ -18,7 +18,6 @@ func TestReadOnlyBlocksWritesBeforeSending(t *testing.T) {
 		w.Write([]byte(`{}`))
 	}))
 	defer srv.Close()
-	defer config.TrustOrigin(srv.URL)()
 	defer config.SetReadOnly(false)
 
 	config.SetReadOnly(true)
@@ -68,7 +67,6 @@ func TestRedactErrorsRemovesSecretsBeforeTheErrorRepeatsTheBody(t *testing.T) {
 		w.Write([]byte(body))
 	}))
 	defer srv.Close()
-	defer config.TrustOrigin(srv.URL)()
 
 	req := NewRequest(srv.URL, "GET", "/things")
 	req.RedactErrors(func(b []byte) []byte { return bytes.ReplaceAll(b, []byte(secret), []byte("<redacted>")) })

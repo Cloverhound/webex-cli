@@ -31,7 +31,7 @@ func studio(t *testing.T) string {
 
 func TestBotToken(t *testing.T) {
 	url := studio(t)
-	c := &webexapi.Client{Origins: []string{url}}
+	c := &webexapi.Client{}
 	if token, err := BotToken(context.Background(), c, url, "org-1", "a1"); err != nil || token != "t1" {
 		t.Fatalf("token %q, err %v", token, err)
 	}
