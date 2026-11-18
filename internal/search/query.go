@@ -24,8 +24,14 @@ var ResultsKey = map[QueryType]string{
 	QueryTaskDetails:      "tasks",
 	QueryTaskLegDetails:   "tasks",
 	QueryAgentSession:     "agentSessions",
-	QueryFlowInteractions: "flowInteractions",
-	QueryFlowTraceEvents:  "flowTraceEvents",
+	QueryFlowInteractions: "interactions",
+	QueryFlowTraceEvents:  "traces",
+}
+
+// isFlowQuery reports whether a query type is a flow query. Flow queries take a
+// required filter and numbered pages, starting at 0, where the others take a cursor.
+func isFlowQuery(queryType QueryType) bool {
+	return queryType == QueryFlowInteractions || queryType == QueryFlowTraceEvents
 }
 
 // Aggregation defines a single aggregation request.
@@ -70,16 +76,14 @@ func BuildQuery(queryType QueryType, params Params) (string, error) {
 	if params.Filter != "" {
 		qb.WriteString(", ")
 		qb.WriteString(params.Filter)
+	} else if isFlowQuery(queryType) {
+		qb.WriteString(", filter: {}")
 	}
 
 	// Optional: pagination
-	if queryType == QueryFlowInteractions || queryType == QueryFlowTraceEvents {
+	if isFlowQuery(queryType) {
 		if params.PageSize > 0 {
-			page := params.CurrentPage
-			if page < 1 {
-				page = 1
-			}
-			qb.WriteString(fmt.Sprintf(", pagination: { pageSize: %d, currentPage: %d }", params.PageSize, page))
+			qb.WriteString(fmt.Sprintf(", pagination: { pageSize: %d, currentPage: %d }", params.PageSize, params.CurrentPage))
 		}
 	} else if params.Cursor != "" {
 		qb.WriteString(fmt.Sprintf(`, pagination: { cursor: "%s" }`, params.Cursor))

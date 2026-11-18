@@ -376,12 +376,16 @@ func registerSearchFlowInteractions(parent *cobra.Command) {
 		Short: "Query flow execution metadata",
 		Long: `Query flow execution summaries showing which flows ran and their outcomes.
 
-Key fields: interactionId, flowId, flowVersionId, entryPointName,
-  lastExecutedActivity, mainFlowActivities, eventFlowActivities,
-  flowStartTime, flowEndTime, status
+Fields, under interactions { }: interactionId, flowId, flowVersionId,
+  entryPointName, lastExecutedActivity, mainFlowActivities, mainFlowLinks,
+  eventFlowActivities, eventFlowLinks, flowStartTime, flowEndTime, status, tagId
+Paging, under pageInfo { }: pageSize, currentPage, totalPages, totalRecords
 
-Note: Flow queries typically require a filter (e.g. by interactionId or flowId)
-and use page-based pagination (--page-size) instead of cursor-based.
+--filter can match interactionId, flowId, flowVersionId, flowStartTime and
+tagId, combined with and, or and not. --channel, --direction, --status,
+--agent-id and --queue-id do not apply to flow queries.
+
+Without --paginate, this returns the first page: --page-size items, or 20.
 
 Examples:
   webex cc search flow-interactions --last 24h --filter '{"interactionId":{"equals":"task-uuid"}}'
@@ -402,15 +406,20 @@ func registerSearchFlowTrace(parent *cobra.Command) {
 		Long: `Query per-activity flow trace records showing individual activity inputs,
 outputs, outcomes, and variable changes.
 
-Key fields: interactionId, flowId, activityName, activityProcessId, outcome,
+Fields, under traces { }: interactionId, flowId, flowVersionId, activityName,
+  activityProcessId, nextActivityProcessId, nextLinkProcessId, outcome,
   activityInputs {name value}, activityOutput {name type value},
   modifiedFlowVariables {name type value}, flowStartTime, flowEndTime
+Paging, under pageInfo { }: pageSize, currentPage, totalPages, totalRecords
 
-Note: Flow queries typically require a filter (e.g. by interactionId) and
-use page-based pagination (--page-size).
+--filter can match interactionId, flowId and flowVersionId, combined with and,
+or and not. --channel, --direction, --status, --agent-id and --queue-id do not
+apply to flow queries.
+
+Without --paginate, this returns the first page: --page-size items, or 10.
 
 Examples:
-  webex cc search flow-trace --last 24h --filter '{"interactionId":{"equals":"task-uuid"}}'
+  webex cc search flow-trace --last 24h --filter '{"interactionId":{"equals":"task-uuid"}}' --paginate
   webex cc search flow-trace --last 7d --page-size 500`,
 		RunE: func(c *cobra.Command, args []string) error {
 			return buildAndExecute(f, search.QueryFlowTraceEvents)

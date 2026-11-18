@@ -193,12 +193,14 @@ func listResponse(items, total int, bareArray bool) string {
 }
 
 // searchResponse is a Contact Center search result page for every query type.
+// Each page holds one item, and a list has two: flow queries count records, and
+// the others follow a cursor.
 func searchResponse(hasNextPage bool) string {
 	data := map[string]any{}
 	for queryType, resultsKey := range search.ResultsKey {
 		data[string(queryType)] = map[string]any{
 			resultsKey: []any{map[string]any{"id": "golden-1"}},
-			"pageInfo": map[string]any{"hasNextPage": hasNextPage, "endCursor": "golden-cursor"},
+			"pageInfo": map[string]any{"hasNextPage": hasNextPage, "endCursor": "golden-cursor", "totalRecords": 2},
 		}
 	}
 	body, err := json.Marshal(map[string]any{"data": data})
