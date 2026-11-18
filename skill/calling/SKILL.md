@@ -16,7 +16,7 @@ No `--orgid` needed — org is inferred from the login token.
 | `locations` | list, get, create, update, delete, list-floors, create-floor |
 | `people` | list, get-person, get-my-own, create-person, update-person, delete-person |
 | `devices` | list, get, create-mac-address, create-activation-code, delete |
-| `call-queue` | list-cxe, get-cxe, create-cxe, delete |
+| `call-queue` | list-customer-assist, get-customer-assist, create-customer-assist, update, delete |
 | `hunt-group` | list, get, create, update, delete |
 | `auto-attendant` | list, get, create, update, delete |
 | `numbers` | get-phone-org, create-phone-location, validate-phone, manage-state-location |
@@ -92,21 +92,22 @@ webex calling devices delete --device-id <id>
 ## Call Queues (Customer Experience)
 
 ```bash
-# List (use list-cxe for CxE queues)
-webex calling call-queue list-cxe [flags]
+# List call queues
+webex calling call-queue list-customer-assist [flags]
   --location-id <id>
   --name <name>
   --phone-number <num>
   --max <n>
-  --has-cx-essentials true   # only CxE queues
+  --has-cx-essentials true   # only Customer Assist queues
 
-webex calling call-queue get-cxe --location-id <id> --queue-id <id>
-webex calling call-queue create-cxe --body '{...}'
+webex calling call-queue get-customer-assist --location-id <id> --queue-id <id>
+webex calling call-queue create-customer-assist --location-id <id> --body '{...}'
+webex calling call-queue update --location-id <id> --queue-id <id> --body '{...}'
 webex calling call-queue delete --location-id <id> --queue-id <id>
 
 # Supervisor management
-webex calling call-queue create-supervisor-cxe --body '{...}'
-webex calling call-queue assign-unassign-agents-supervisor-cxe --body '{...}'
+webex calling call-queue create-supervisor-customer-assist --body '{...}'
+webex calling call-queue assign-unassign-agents-supervisor-customer-assist --supervisor-id <id> --body '{...}'
 ```
 
 ## Hunt Groups
@@ -203,22 +204,22 @@ webex calling announcement-repository get-usage-location --location-id <id>
 
 ```bash
 # For a specific person (admin)
-webex calling user-call get-call-forwarding-person --person-id <id>
-webex calling user-call update-call-forwarding-person --person-id <id> --body '{...}'
+webex calling user-call get-forwarding-settings-person --person-id <id>
+webex calling user-call update-forward-person --person-id <id> --body '{...}'
 webex calling user-call get-voicemail-person --person-id <id>
 webex calling user-call update-voicemail-person --person-id <id> --body '{...}'
 webex calling user-call update-busy-voicemail-greeting-person --person-id <id> --file greeting.wav
 
 # For yourself (user token)
-webex calling call-settings-for-me get-call-forwarding-settings
-webex calling call-settings-for-me update-call-forwarding-settings --body '{...}'
+webex calling call-settings-for-me get-my-forward
+webex calling call-settings-for-me update-my-forward --body '{...}'
 webex calling call-settings-for-me upload-voicemail-busy-greeting --file greeting.wav
 webex calling call-settings-for-me upload-voicemail-no-answer-greeting --file greeting.wav
 ```
 
 ## Key Gotchas
 
-1. **Call queue naming** — use `call-queue list-cxe` and `call-queue get-cxe` for Customer Experience queues. The plain `list` and `get` subcommands target the legacy call queue API.
+1. **Call queue naming** — Cisco's collection lists and reads call queues only through the Customer Assist routes, so `call-queue list-customer-assist` and `call-queue get-customer-assist` serve every queue. Add `--has-cx-essentials true` to list only Customer Assist queues, and to read one with `get-customer-assist`.
 
 2. **Converged recordings: user vs admin** — `list` returns only the calling user's recordings. `list-admin-compliance-officer` returns org-wide recordings but requires admin scope and enforces a **30-day** max time window per request.
 

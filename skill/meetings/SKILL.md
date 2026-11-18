@@ -109,7 +109,7 @@ webex meetings transcripts list-meeting [flags]
   --max <n>                  # max 100 per page
 
 # Admin / compliance officer
-webex meetings transcripts list-meeting-compliance-officer [same flags + --host-email]
+webex meetings transcripts list-meeting-compliance-officer --site-url <url> [--from, --to, --last, --max]
 
 # Download full transcript file
 webex meetings transcripts download-meeting --transcript-id <id>
@@ -136,11 +136,11 @@ webex meetings participants list-meeting [flags]
   --host-email <email>       # admin only
   --max <n>                  # max 100 per page
 
-webex meetings participants get-meeting --meeting-id <id> --participant-id <id>
+webex meetings participants get-meeting --participant-id <id>   # the ID names the meeting too
 
 # Live meeting controls
 webex meetings participants admit --body '{"items":[{"id":"<participantId>"}]}'
-webex meetings participants update --meeting-id <id> --participant-id <id> --body '{"muted":true}'
+webex meetings participants update --participant-id <id> --muted
 ```
 
 ## Invitees
@@ -150,11 +150,11 @@ webex meetings participants update --meeting-id <id> --participant-id <id> --bod
 webex meetings invitees list-meeting --meeting-id <id>
 
 # Get / create / update / delete
-webex meetings invitees get-meeting --meeting-id <id> --invitee-id <id>
+webex meetings invitees get-meeting --meeting-invitee-id <id>
 webex meetings invitees create-meeting --body '{"meetingId":"<id>","email":"user@example.com","displayName":"User","coHost":false}'
 webex meetings invitees create-meeting-2 --body '{"meetingId":"<id>","items":[{"email":"u1@example.com"},{"email":"u2@example.com"}]}'
-webex meetings invitees update-meeting --meeting-id <id> --invitee-id <id> --body '{"coHost":true}'
-webex meetings invitees delete-meeting --meeting-id <id> --invitee-id <id>
+webex meetings invitees update-meeting --meeting-invitee-id <id> --body '{"email":"user@example.com","displayName":"User","coHost":true}'
+webex meetings invitees delete-meeting --meeting-invitee-id <id>
 ```
 
 ## Preferences
@@ -205,10 +205,11 @@ webex meetings tracking-codes update-user --body '{...}'
 # AI-generated meeting summaries
 webex meetings summaries get-meeting-id --meeting-id <id>
 webex meetings summaries get-compliance-officer --meeting-id <id>   # admin
-webex meetings summaries delete --meeting-id <id>
+webex meetings summaries delete --summary-id <id>
 
 # Meeting Q&A
-webex meetings meeting-qa list --meeting-id <id>
+webex meetings meeting-qa list-q --meeting-id <id>
+webex meetings meeting-qa list-answers-question --meeting-id <id> --question-id <id>
 
 # Polls
 webex meetings meeting-polls list --meeting-id <id>

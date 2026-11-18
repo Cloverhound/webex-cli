@@ -62,13 +62,13 @@ webex meetings meetings list
 webex meetings recordings list --paginate
 
 # List transcripts
-webex meetings transcripts list
+webex meetings transcripts list-meeting
 
 # Get meeting participants
-webex meetings participants list --meeting-id "MEETING_ID"
+webex meetings participants list-meeting --meeting-id "MEETING_ID"
 
-# List meeting summaries
-webex meetings summaries list
+# Get a meeting's summary
+webex meetings summaries get-meeting-id --meeting-id "MEETING_ID"
 
 # Manage webhooks
 webex meetings webhooks list

@@ -90,14 +90,14 @@ webex calling people get-my-own
 # List locations
 webex calling locations list
 
-# Get call settings for a person
-webex calling user-call get-voicemail --person-id "PERSON_ID"
+# Get a person's voicemail settings
+webex calling user-call get-voicemail-person --person-id "PERSON_ID"
 
 # List call queues at a location
-webex calling call-queue list --location-id "LOCATION_ID"
+webex calling call-queue list-customer-assist --location-id "LOCATION_ID"
 
 # Get detailed call history
-webex calling reports-detailed-call-history list --start-time "2024-01-01T00:00:00Z"
+webex calling reports-detailed-call-history get --start-time "2024-01-01T00:00:00Z" --end-time "2024-01-01T12:00:00Z"
 
 # List devices
 webex calling devices list --paginate
