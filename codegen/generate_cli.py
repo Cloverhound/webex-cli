@@ -100,12 +100,39 @@ def resolve_base_url(collection_name, path, default):
     return overrides[match] if match else default
 
 
-# Other parameters whose collection describes them as taking the org UUID.
-# Collection name → parameter names.
-UUID_ORG_PARAMS = {
-    "Webex Contact Center": {"organizationId", "X-ORGANIZATION-ID"},
-    "Webex Meetings": {"sessionOrgId"},
+# How each org ID parameter is sent: 'uuid' is converted to the org UUID, and
+# 'webex' is sent as given, which is the base64 Webex org ID. Collection name →
+# parameter name → form. A parameter whose name looks like an org ID and that is
+# not listed stops codegen, because sending the wrong form fails only at run time.
+ORG_ID_FORMS = {
+    "Webex Contact Center": {"orgId": "uuid", "orgid": "uuid", "organizationId": "uuid", "X-ORGANIZATION-ID": "uuid"},
+    "Webex Meetings": {"orgId": "webex", "sessionOrgId": "uuid"},
+    "Webex Admin": {"orgId": "webex", "personOrgId": "webex", "onBehalfOfSubPartnerOrgId": "webex"},
+    "Webex Cloud Calling": {"orgId": "webex", "organizationId": "webex", "onBehalfOfSubPartnerOrgId": "webex"},
+    "Webex Device": {"orgId": "webex"},
+    "Webex Messaging": {"orgId": "webex", "organizationId": "webex"},
 }
+
+ORG_ID_NAME = re.compile(r'(?i)org(anization)?[-_]?id')
+
+# Routes that take the org UUID as orgId in any collection. The contacts note in
+# the Postman collection reads "orgId used in path are the org UUIDs".
+UUID_ORG_ROUTE_PREFIXES = ('/identity/scim/', '/identity/organizations/')
+UUID_ORG_ROUTE_PART = '/contacts/organizations/'
+
+
+def takes_org_uuid(collection_name, path, name):
+    """Whether a parameter takes the org UUID. Raises ValueError for an org ID
+    parameter that ORG_ID_FORMS does not list."""
+    if not ORG_ID_NAME.search(name):
+        return False
+    if name == 'orgId' and (path.startswith(UUID_ORG_ROUTE_PREFIXES) or UUID_ORG_ROUTE_PART in path):
+        return True
+    form = ORG_ID_FORMS.get(collection_name, {}).get(name)
+    if form is None:
+        raise ValueError(f'{collection_name} {path}: org ID parameter {name} has no form; '
+                         'add it to ORG_ID_FORMS in codegen/generate_cli.py')
+    return form == 'uuid'
 
 # A parameter or string body field whose name ends in one of these carries a
 # credential. Names that only mention one, such as maxPasswordAge, do not end in it.
@@ -268,11 +295,10 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     complex_body = ep.get('complex_body', False)
     method = ep['method']
 
-    # Contact Center paths, and /contacts/organizations/ in other collections
-    # (Postman note: "orgId used in path are the org UUIDs"), take the org UUID.
-    # Their org parameter's flag is --orgid, which the CLI fills with the UUID;
-    # the parameter keeps its API name.
-    needs_uuid_orgid = not is_calling or '/contacts/organizations/' in path
+    # The org parameter of Contact Center and contacts routes has the flag --orgid,
+    # which the CLI fills with the UUID; the parameter keeps its API name. Identity
+    # routes keep --org-id, filled with the base64 ID, and convert it.
+    needs_uuid_orgid = not is_calling or UUID_ORG_ROUTE_PART in path
     if needs_uuid_orgid:
         for p in path_params + query_params:
             if p['name'] == 'orgId':
@@ -286,6 +312,9 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
         key = kebab_to_go_var(camel_to_kebab(name))
         return flags.setdefault(key, flag)
 
+    def org_uuid(p):
+        return takes_org_uuid(collection_name, path, p.get('_api_name', p['name']))
+
     params = []
     for p in path_params:
         if p['name'] in HARDCODED_PATH_PARAMS:
@@ -293,17 +322,13 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
             continue
         params.append({
             'name': p.get('_api_name', p['name']), 'in': 'InPath', 'flag': flag_for(p['name'], camel_to_kebab(p['name'])),
-            'usage': p.get('description', ''), 'required': True,
-            # Identity routes take the org UUID, but --org-id is filled with the base64 org ID.
-            'orgUUID': (needs_uuid_orgid and p['name'] == 'orgid') or
-                       (p['name'] == 'orgId' and path.startswith(('/identity/scim/', '/identity/organizations/'))),
+            'usage': p.get('description', ''), 'required': True, 'orgUUID': org_uuid(p),
         })
     for p in query_params:
         params.append({
             'name': p.get('_api_name', p['name']), 'in': 'InQuery',
             'flag': flag_for(p['name'], camel_to_kebab(p['name'])), 'usage': p.get('description', ''),
-            'orgUUID': (needs_uuid_orgid and p['name'] == 'orgid') or
-                       p['name'] in UUID_ORG_PARAMS.get(collection_name, ()),
+            'orgUUID': org_uuid(p),
         })
     for h in ep.get('extra_headers', []):
         if h['name'] == AGENT_TOKEN_HEADER:
@@ -312,8 +337,7 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
                            'usage': h.get('description', ''), 'required': True})
             continue
         params.append({'name': h['name'], 'in': 'InHeader', 'flag': flag_for(h['name'], camel_to_kebab(h['name'])),
-                       'usage': h.get('description', ''),
-                       'orgUUID': h['name'] in UUID_ORG_PARAMS.get(collection_name, ())})
+                       'usage': h.get('description', ''), 'orgUUID': org_uuid(h)})
 
     body = None
     if ep.get('has_body', False):

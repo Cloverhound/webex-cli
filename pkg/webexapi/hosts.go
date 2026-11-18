@@ -85,8 +85,8 @@ func AnalyticsCallingHost(region string) string {
 }
 
 // DecodeOrgID converts a base64 Webex organization ID
-// (ciscospark://us/ORGANIZATION/<uuid>) to its UUID. A UUID or an unrecognized
-// value is returned as it is.
+// (ciscospark://<cluster>/ORGANIZATION/<uuid>) to its UUID. Any other value,
+// such as a UUID or the ID of a person, is returned as it is.
 func DecodeOrgID(id string) string {
 	if id == "" || isUUID(id) {
 		return id
@@ -97,12 +97,10 @@ func DecodeOrgID(id string) string {
 		if err != nil {
 			continue
 		}
-		s := string(decoded)
-		if strings.HasPrefix(s, "ciscospark://") {
-			parts := strings.Split(s, "/")
-			if uuid := parts[len(parts)-1]; uuid != "" {
-				return uuid
-			}
+		parts := strings.Split(string(decoded), "/")
+		// "ciscospark:", "", cluster, "ORGANIZATION", uuid
+		if len(parts) == 5 && parts[0] == "ciscospark:" && parts[1] == "" && parts[3] == "ORGANIZATION" && isUUID(parts[4]) {
+			return parts[4]
 		}
 	}
 	return id

@@ -167,6 +167,22 @@ class FlagTest(unittest.TestCase):
         self.assertEqual([(p['name'], p.get('orgUUID')) for p in op['params']],
                          [('orgId', True), ('organizationId', True), ('X-ORGANIZATION-ID', True)])
 
+    def test_an_org_parameter_no_rule_covers_stops_codegen(self):
+        for collection, host, is_calling, name in (('Webex Admin', 'webex', True, 'partnerOrgId'),
+                                                   ('Webex Contact Center', 'cc', False, 'tenantOrganizationId'),
+                                                   ('Webex Meetings', 'webex', True, 'org_id')):
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, name):
+                operation({'command': 'list', 'method': 'GET', 'path': '/things',
+                           'query_params': [{'name': name}]}, collection, host, is_calling)
+
+    def test_webexapis_org_parameters_take_the_webex_org_id(self):
+        op = operation({'command': 'list', 'method': 'GET', 'path': '/telephony/config/people',
+                        'query_params': [{'name': 'orgId'}, {'name': 'organizationId'},
+                                         {'name': 'onBehalfOfSubPartnerOrgId'}]},
+                       'Webex Cloud Calling', 'webex', True)
+        self.assertEqual([(p['flag'], p['orgUUID']) for p in op['params']],
+                         [('org-id', False), ('organization-id', False), ('on-behalf-of-sub-partner-org-id', False)])
+
     def test_slidos_session_org_takes_the_uuid(self):
         op = operation({'command': 'list-compliance-events', 'method': 'GET', 'path': '/slido/compliance/events',
                         'query_params': [{'name': 'sessionOrgId'}, {'name': 'max'}]}, 'Webex Meetings', 'webex', True)

@@ -2,6 +2,7 @@ package webexapi
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -357,5 +358,11 @@ func TestOrgIDConversion(t *testing.T) {
 	}
 	if EncodeOrgID(b64) != b64 || DecodeOrgID(uuid) != uuid || DecodeOrgID("other") != "other" {
 		t.Fatal("non-matching values are returned as they are")
+	}
+	for _, other := range []string{"ciscospark://us/PEOPLE/" + uuid, "ciscospark://us/ORGANIZATION/not-a-uuid", "ciscospark://us/ORGANIZATION/" + uuid + "/x"} {
+		id := base64.RawStdEncoding.EncodeToString([]byte(other))
+		if got := DecodeOrgID(id); got != id {
+			t.Errorf("%s decoded to %s", other, got)
+		}
 	}
 }
