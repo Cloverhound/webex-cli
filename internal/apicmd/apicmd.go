@@ -98,7 +98,8 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 			}
 
-			call := webexops.Args{Params: map[string]string{}}
+			// An empty path flag is sent as its {name}, as the CLI always has.
+			call := webexops.Args{Params: map[string]string{}, AllowEmptyPath: true}
 			for _, p := range op.Params {
 				switch {
 				case p.Value != "":
@@ -131,12 +132,10 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 			}
 
-			// The CLI sends an empty path flag as it always has, so it goes to the
-			// client directly rather than through webexops.Call and All.
 			api := client.API(op.Path, string(call.Body))
 			ctx := context.Background()
 			if op.Paging != nil && config.Paginate() {
-				items, err := api.All(ctx, op.List(config.Hosts(), call), *op.Paging)
+				items, err := webexops.All(ctx, api, config.Hosts(), op, call)
 				if err != nil {
 					return client.CLIError(err)
 				}
@@ -144,13 +143,13 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				if err != nil {
 					return err
 				}
-				return show(op, resp, http.StatusOK)
+				return output.Print(resp, http.StatusOK)
 			}
-			resp, err := api.Send(ctx, op.Request(config.Hosts(), call))
+			resp, err := webexops.Call(ctx, api, config.Hosts(), op, call)
 			if err != nil {
 				return client.CLIError(err)
 			}
-			return show(op, resp.Body, resp.Status)
+			return output.Print(resp.Body, resp.Status)
 		},
 	}
 
@@ -231,12 +230,4 @@ func bodyFromFlags(cmd *cobra.Command, fields []webexops.BodyField, values *flag
 		return nil, nil
 	}
 	return json.Marshal(body)
-}
-
-// show prints a response, without the AI agent credentials some carry.
-func show(op *webexops.Operation, body []byte, status int) error {
-	if op.Redact {
-		body = aiagent.RedactSecrets(body)
-	}
-	return output.Print(body, status)
 }

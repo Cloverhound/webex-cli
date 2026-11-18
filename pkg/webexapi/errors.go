@@ -34,11 +34,31 @@ func (e *RateLimitError) Unwrap() error {
 
 // WrongRegionError is a 451: the organization's data is held in another data
 // region. Endpoint is the regional endpoint Webex names, when it names one, and
-// Body is the response body after the request's Redact.
+// Body is the response body after the request's Redact. It unwraps to the
+// *APIError.
 type WrongRegionError struct {
 	Endpoint string
 	Body     []byte
+
+	err *APIError
 }
+
+func (e *WrongRegionError) Unwrap() error { return e.err }
+
+// RedirectError is a 3xx. Redirects are never followed, so the request did not
+// reach what it asked for. It unwraps to the *APIError.
+type RedirectError struct {
+	// Location is where the response points, as Webex gave it.
+	Location string
+
+	err *APIError
+}
+
+func (e *RedirectError) Error() string {
+	return fmt.Sprintf("redirect (%d) to %s not followed", e.err.Status, e.Location)
+}
+
+func (e *RedirectError) Unwrap() error { return e.err }
 
 func (e *WrongRegionError) Error() string {
 	msg := "wrong data region (451): this organization's data is held in another region"
@@ -51,9 +71,10 @@ func (e *WrongRegionError) Error() string {
 // endpointURL finds the regional endpoint Webex returns in a 451 body.
 var endpointURL = regexp.MustCompile(`https?://[a-zA-Z0-9.\-]+`)
 
-// newWrongRegionError finds the endpoint in the body, which is already redacted.
-func newWrongRegionError(body []byte) *WrongRegionError {
-	return &WrongRegionError{Endpoint: string(endpointURL.Find(body)), Body: body}
+// newWrongRegionError finds the endpoint in the error's body, which is already
+// redacted.
+func newWrongRegionError(err *APIError) *WrongRegionError {
+	return &WrongRegionError{Endpoint: string(endpointURL.Find(err.Body)), Body: err.Body, err: err}
 }
 
 func truncate(s string, n int) string {

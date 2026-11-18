@@ -172,6 +172,20 @@ class FlagTest(unittest.TestCase):
                         'query_params': [{'name': 'sessionOrgId'}, {'name': 'max'}]}, 'Webex Meetings', 'webex', True)
         self.assertEqual([(p['name'], p['orgUUID']) for p in op['params']], [('sessionOrgId', True), ('max', False)])
 
+    def test_credentials_are_marked_secret(self):
+        op = operation({'command': 'get', 'method': 'PUT', 'path': '/meetings/{meetingId}', 'has_body': True,
+                        'path_params': [{'name': 'meetingId'}],
+                        'extra_headers': [{'name': 'password'}],
+                        'body_fields': [{'name': 'hostPin', 'type': 'string'}, {'name': 'sipPassword', 'type': 'string'},
+                                        {'name': 'maxPasswordAge', 'type': 'int64'},
+                                        {'name': 'excludePassword', 'type': 'bool'},
+                                        {'name': 'tokenLifetimeMinutes', 'type': 'int64'},
+                                        {'name': 'title', 'type': 'string'}]},
+                       'Webex Meetings', 'webex', True)
+        self.assertEqual([(p['name'], bool(p.get('secret'))) for p in op['params']],
+                         [('meetingId', False), ('password', True)])
+        self.assertEqual([f['name'] for f in op['body'] if f.get('secret')], ['hostPin', 'sipPassword'])
+
     def test_from_without_to_gets_no_time_range(self):
         op = operation({'command': 'list', 'method': 'GET', 'path': '/v1/events', 'query_params': [{'name': 'from'}]},
                        'Webex Test', 'cc', False)
@@ -248,7 +262,7 @@ class AiAgentStudioTest(unittest.TestCase):
         op = self.op({'command': 'export', 'path': '/api/v1/llmagent/export/',
                       'extra_headers': [{'name': 'bot-access-token', 'description': 'AI agent ID.'}]})
         self.assertEqual(op['params'], [{'name': 'bot-access-token', 'in': 'InAgentToken', 'flag': 'agent-id',
-                                         'usage': 'AI agent ID.', 'required': True}])
+                                         'usage': 'AI agent ID.', 'required': True, 'secret': True}])
 
     def test_agent_token_header_shares_the_agent_id_path_flag(self):
         op = self.op({'command': 'get', 'path': '/api/v1/bot/{agentId}/',

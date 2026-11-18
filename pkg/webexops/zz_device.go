@@ -257,7 +257,7 @@ var DevicePutTelephonyConfigDevicesByDeviceId = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the device resides."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "sipPassword", Flag: "sip-password", Type: "string"},
+		{Name: "sipPassword", Flag: "sip-password", Type: "string", Secret: true},
 	}},
 }
 
@@ -1122,7 +1122,7 @@ var DevicePostDevices = &Operation{
 		{Name: "model", Flag: "model", Type: "string"},
 		{Name: "workspaceId", Flag: "workspace-id", Type: "string"},
 		{Name: "personId", Flag: "person-id", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 	}},
 }
 

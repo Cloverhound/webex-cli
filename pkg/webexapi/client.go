@@ -10,10 +10,11 @@ package webexapi
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
+	"net/url"
 	"slices"
 	"strconv"
 	"strings"
@@ -22,9 +23,18 @@ import (
 
 // Client sends requests. The zero value sends with http.DefaultClient, makes no
 // 429 retries, and sends an empty bearer token.
+//
+// Redirects are never followed: a 3xx returns a *RedirectError. Following one
+// would let net/http carry the token and other credentials to another host, and
+// turn a write into a GET.
 type Client struct {
-	// HTTP defaults to http.DefaultClient.
+	// HTTP defaults to http.DefaultClient. Its CheckRedirect is not used.
 	HTTP *http.Client
+
+	// Origins are the scheme://host[:port] origins requests may go to, since each
+	// carries the token. Nil means the Webex origins of every HostsFor result, and
+	// loopback addresses.
+	Origins []string
 
 	// Token returns the bearer token. It is called before every attempt, so a
 	// token changed by Refresh is used on the retry.
@@ -133,12 +143,15 @@ func (c *Client) Send(ctx context.Context, r Request) (*Response, error) {
 		if !ok {
 			return resp, err
 		}
-		return resp, newWrongRegionError(apiErr.Body)
+		return resp, newWrongRegionError(apiErr)
 	}
 	return resp, err
 }
 
 func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
+	if err := c.checkOrigin(r.URL); err != nil {
+		return nil, err
+	}
 	var body io.Reader
 	if len(r.Body) > 0 {
 		body = bytes.NewReader(r.Body)
@@ -181,11 +194,6 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 
 	httpResp, err := c.httpClient().Do(httpReq)
 	if err != nil {
-		// A refused redirect comes back with the redirect response, its body
-		// already closed: the server did answer.
-		if httpResp != nil {
-			return &Response{Status: httpResp.StatusCode, Header: httpResp.Header}, fmt.Errorf("executing request: %w", err)
-		}
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
 	defer httpResp.Body.Close()
@@ -198,55 +206,80 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		c.AfterResponse(httpResp.StatusCode, len(data))
 	}
 	resp := &Response{Status: httpResp.StatusCode, Header: httpResp.Header, Body: data}
-	if resp.Status >= 400 {
+	if resp.Status >= 300 {
 		apiErr := &APIError{Status: resp.Status, Body: data}
 		if r.Redact != nil {
 			// A copy, so a redactor that edits its argument leaves the response as received.
 			apiErr.Body = r.Redact(bytes.Clone(data))
+		}
+		if resp.Status < 400 {
+			return resp, &RedirectError{Location: resp.Header.Get("Location"), err: apiErr}
 		}
 		return resp, apiErr
 	}
 	return resp, nil
 }
 
-// crossOriginHeaders are the only headers a redirect to another origin keeps.
-// Any other header may carry a credential: a token, an AI agent's runtime token,
-// a meeting password.
-var crossOriginHeaders = []string{"Accept", "Accept-Encoding", "Content-Type", "User-Agent", "Referer"}
-
-// httpClient is the HTTP client with redirects passed through BeforeSend, so the
-// hook sees every request sent. A redirect to another origin (scheme, host or
-// port) keeps only crossOriginHeaders; net/http itself forwards Authorization to
-// subdomains and other ports, and custom headers everywhere.
+// httpClient is the HTTP client set never to follow a redirect.
 func (c *Client) httpClient() *http.Client {
 	base := c.HTTP
 	if base == nil {
 		base = http.DefaultClient
 	}
 	client := *base
-	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		if !sameHost(req.URL, via[0].URL) {
-			for name := range req.Header {
-				if !slices.Contains(crossOriginHeaders, http.CanonicalHeaderKey(name)) {
-					req.Header.Del(name)
+	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	return &client
+}
+
+// checkOrigin refuses a URL outside the origins requests may go to.
+func (c *Client) checkOrigin(rawURL string) error {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return fmt.Errorf("building request: %w", err)
+	}
+	if c.Origins == nil {
+		if isLoopback(u.Hostname()) || slices.Contains(webexOrigins, origin(u)) {
+			return nil
+		}
+	} else {
+		for _, allowed := range c.Origins {
+			if a, err := url.Parse(allowed); err == nil && origin(a) == origin(u) {
+				return nil
+			}
+		}
+	}
+	return fmt.Errorf("refusing to send the token to %s, which is not a Webex origin", origin(u))
+}
+
+// origin is a URL's scheme, host and effective port.
+func origin(u *url.URL) string {
+	return strings.ToLower(u.Scheme) + "://" + strings.ToLower(u.Hostname()) + ":" + port(u)
+}
+
+func isLoopback(host string) bool {
+	if strings.EqualFold(host, "localhost") {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
+}
+
+// webexOrigins are the origins of every HostsFor result.
+var webexOrigins = func() []string {
+	var origins []string
+	for _, region := range Regions {
+		for _, ccRegion := range ccRegions {
+			hosts, _ := HostsFor(region, ccRegion)
+			for _, h := range []string{hosts.Webex, hosts.Identity, hosts.Analytics, hosts.AnalyticsCalling, hosts.CC, hosts.AIAgent} {
+				u, _ := url.Parse(h)
+				if o := origin(u); !slices.Contains(origins, o) {
+					origins = append(origins, o)
 				}
 			}
 		}
-		if c.BeforeSend != nil {
-			if err := c.BeforeSend(req); err != nil {
-				return err
-			}
-		}
-		if base.CheckRedirect != nil {
-			return base.CheckRedirect(req, via)
-		}
-		if len(via) >= 10 {
-			return errors.New("stopped after 10 redirects")
-		}
-		return nil
 	}
-	return &client
-}
+	return origins
+}()
 
 func (c *Client) sleep(ctx context.Context, d time.Duration) error {
 	if c.Sleep != nil {

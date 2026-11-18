@@ -135,80 +135,85 @@ func TestBeforeSendCanStopARequest(t *testing.T) {
 	}
 }
 
-func TestRedirectsPassBeforeSendAndLoseTheAgentTokenOnAnotherHost(t *testing.T) {
-	var other []*http.Request
-	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		other = append(other, r.Clone(context.Background()))
-	}))
+func TestRedirectsAreNeverFollowed(t *testing.T) {
+	var followed int
+	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { followed++ }))
 	t.Cleanup(target.Close)
-	origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, target.URL+"/elsewhere", http.StatusFound)
-	}))
-	t.Cleanup(origin.Close)
-	header := http.Header{"Bot-Access-Token": {"agent-token"}}
-
-	var seen []string
-	refuse := errors.New("not approved")
-	c := &Client{BeforeSend: func(r *http.Request) error {
-		seen = append(seen, r.URL.Host)
-		if r.URL.Host != strings.TrimPrefix(origin.URL, "http://") {
-			return refuse
+	for _, method := range []string{"GET", "DELETE"} {
+		for _, location := range []string{target.URL + "/elsewhere", "/same-origin"} {
+			origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path == "/same-origin" {
+					followed++
+					return
+				}
+				http.Redirect(w, r, location, http.StatusFound)
+			}))
+			resp, err := (&Client{}).Send(context.Background(), Request{Method: method, URL: origin.URL, Header: http.Header{"Password": {"pw"}}})
+			origin.Close()
+			var redirect *RedirectError
+			var apiErr *APIError
+			if !errors.As(err, &redirect) || redirect.Location != location || !errors.As(err, &apiErr) || apiErr.Status != 302 {
+				t.Errorf("%s to %s: err %v", method, location, err)
+			}
+			if resp == nil || resp.Status != http.StatusFound {
+				t.Errorf("%s to %s: resp %+v", method, location, resp)
+			}
 		}
-		return nil
-	}}
-	_, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header})
-	if !errors.Is(err, refuse) || len(seen) != 2 || len(other) != 0 {
-		t.Fatalf("err %v, BeforeSend saw %v, other host got %d requests", err, seen, len(other))
 	}
-
-	if _, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header}); err != nil {
-		t.Fatal(err)
-	}
-	if len(other) != 1 || other[0].Header.Get("Bot-Access-Token") != "" {
-		t.Fatalf("the agent token reached another host: %v", other)
+	if followed != 0 {
+		t.Fatalf("%d redirects were followed", followed)
 	}
 }
 
-func TestARedirectToAnotherPortSendsNoCredentials(t *testing.T) {
-	var got http.Header
-	// Same hostname, another port: net/http itself would forward Authorization.
-	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { got = r.Header.Clone() }))
-	t.Cleanup(target.Close)
-	origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, target.URL, http.StatusFound)
-	}))
-	t.Cleanup(origin.Close)
-	c := &Client{Token: func(context.Context) (string, error) { return "secret", nil }}
-	header := http.Header{"Bot-Access-Token": {"agent"}, "Password": {"meeting-password"}}
-	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: origin.URL, Header: header}); err != nil {
-		t.Fatal(err)
-	}
-	for _, name := range []string{"Authorization", "Bot-Access-Token", "Password"} {
-		if got.Get(name) != "" {
-			t.Errorf("%s reached another origin", name)
-		}
-	}
-	if got.Get("Accept") != "application/json" {
-		t.Errorf("Accept was dropped: %v", got)
-	}
-}
-
-func TestARefusedRedirectReturnsItsResponse(t *testing.T) {
+func TestARedirectFailsAList(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/moved", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/moved", http.StatusMovedPermanently)
 	}))
 	t.Cleanup(srv.Close)
-	refuse := errors.New("refused")
-	calls := 0
-	c := &Client{BeforeSend: func(*http.Request) error {
-		if calls++; calls > 1 {
-			return refuse
+	for _, p := range []Paging{{Mode: Single, Items: "items", OmitEmpty: true}, {Mode: Link, Size: "max", Items: "items", OmitEmpty: true}} {
+		if items, err := (&Client{}).All(context.Background(), List{Method: "GET", URL: srv.URL}, p); err == nil {
+			t.Errorf("mode %d: a redirect read as %d items", p.Mode, len(items))
 		}
-		return nil
-	}}
-	resp, err := c.Send(context.Background(), Request{Method: "POST", URL: srv.URL, Body: []byte("{}")})
-	if !errors.Is(err, refuse) || resp == nil || resp.Status != http.StatusTemporaryRedirect || resp.Header.Get("Location") != "/moved" {
-		t.Fatalf("resp %+v, err %v", resp, err)
+	}
+}
+
+// recordingTransport records requests without sending them.
+type recordingTransport struct{ sent []*http.Request }
+
+func (t *recordingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	t.sent = append(t.sent, r)
+	return &http.Response{StatusCode: 200, Header: http.Header{}, Body: http.NoBody, Request: r}, nil
+}
+
+func TestTheTokenGoesOnlyToWebexOrigins(t *testing.T) {
+	transport := &recordingTransport{}
+	c := &Client{HTTP: &http.Client{Transport: transport}, Token: func(context.Context) (string, error) { return "secret", nil }}
+	for _, url := range []string{"https://evil.example.com/v1/people", "https://webexapis.com.evil.example.com/x", "http://webexapis.com/v1/people"} {
+		if _, err := c.Send(context.Background(), Request{Method: "GET", URL: url}); err == nil {
+			t.Errorf("%s was allowed", url)
+		}
+	}
+	if len(transport.sent) != 0 {
+		t.Fatalf("%d requests left for another origin", len(transport.sent))
+	}
+	hosts, _ := HostsFor("eu", "anz1")
+	for _, url := range []string{hosts.Webex + "/people", hosts.Identity + "/identity/scim/x", hosts.AnalyticsCalling + "/cdr_feed", hosts.CC + "/x", hosts.AIAgent + "/api/x"} {
+		if _, err := c.Send(context.Background(), Request{Method: "GET", URL: url}); err != nil {
+			t.Errorf("%s: %v", url, err)
+		}
+	}
+	c.Origins = []string{"https://evil.example.com"}
+	if _, err := c.Send(context.Background(), Request{Method: "GET", URL: "https://evil.example.com/v1/people"}); err != nil {
+		t.Errorf("an origin the caller allowed was refused: %v", err)
+	}
+}
+
+func TestEveryErrorWithAResponseUnwrapsToAPIError(t *testing.T) {
+	srv, _ := statusServer(t, []int{451}, `{}`, nil)
+	_, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL})
+	var apiErr *APIError
+	if !errors.As(err, &apiErr) || apiErr.Status != 451 {
+		t.Fatalf("err %v", err)
 	}
 }
 

@@ -626,7 +626,7 @@ var CcPostV1AgentburnoutSubscribe = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
 	}},
 }
@@ -4786,7 +4786,7 @@ var CcPostV1Subscriptions = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
 	}},
 }
@@ -4806,7 +4806,7 @@ var CcPostV2Subscriptions = &Operation{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "resourceVersion", Flag: "resource-version", Type: "string"},
 		{Name: "description", Flag: "description", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
 	}},
 }
@@ -4878,7 +4878,7 @@ var CcPatchV1SubscriptionsById = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "destinationUrl", Flag: "destination-url", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
 	}},
 }
@@ -4899,7 +4899,7 @@ var CcPatchV2SubscriptionsById = &Operation{
 		{Name: "eventTypes", Flag: "event-types", Type: "[]string"},
 		{Name: "destinationUrl", Flag: "destination-url", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "orgId", Flag: "org-id", Type: "string"},
 	}},
 }
@@ -6148,7 +6148,6 @@ var CcPostFlowStoreByOrgIdProjectByProjectIdFlowsImport = &Operation{
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "Determines whether to overwrite the existing flow or not. Possible values: yes/no."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
-		{Name: "Content-Length", In: InHeader, Flag: "content-length", Usage: "Content length value in number of bytes."},
 	},
 }
 
@@ -8284,7 +8283,7 @@ var CcPutOrganizationByOrgidTenantConfigurationById = &Operation{
 		{Name: "callVariablesSuppressed", Flag: "call-variables-suppressed", Type: "string"},
 		{Name: "endCallEnabled", Flag: "end-call-enabled", Type: "bool"},
 		{Name: "incidentReportingEnabled", Flag: "incident-reporting-enabled", Type: "bool"},
-		{Name: "watsonAnalyticsPassword", Flag: "watson-analytics-password", Type: "string"},
+		{Name: "watsonAnalyticsPassword", Flag: "watson-analytics-password", Type: "string", Secret: true},
 		{Name: "systemRecoveryMsg", Flag: "system-recovery-msg", Type: "string"},
 		{Name: "watsonAnalyticsBaseUrl", Flag: "watson-analytics-base-url", Type: "string"},
 		{Name: "dnTargetStripChars", Flag: "dn-target-strip-chars", Type: "string"},
@@ -8344,7 +8343,7 @@ var CcGetApiV1BotByAgentId = &Operation{
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/bot/{agentId}/",
 	Params: []Param{
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Redact:  true,
 	Private: true,
@@ -8369,7 +8368,7 @@ var CcPutApiV1BotByAgentId = &Operation{
 	Method:      "PUT", Host: HostAIAgent, Path: "/api/v1/bot/{agentId}/",
 	Params: []Param{
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body:    &Body{},
 	Redact:  true,
@@ -8384,7 +8383,7 @@ var CcDeleteApiV1BotByAgentId = &Operation{
 	Method:      "DELETE", Host: HostAIAgent, Path: "/api/v1/bot/{agentId}/",
 	Params: []Param{
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Redact:  true,
 	Private: true,
@@ -8397,7 +8396,7 @@ var CcGetApiV1LlmagentGetdefault = &Operation{
 	Description: "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/llmagent/getdefault/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Redact:  true,
 	Private: true,
@@ -8413,7 +8412,7 @@ var CcGetApiV1Llmagent = &Operation{
 		{Name: "order_by", In: InQuery, Flag: "order_by", Usage: "Sort field; prefix with - for descending, for example -updated_at."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of versions to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of versions to skip."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
 	Redact:  true,
@@ -8427,7 +8426,7 @@ var CcGetApiV1LlmagentExport = &Operation{
 	Description: "Exports the agent's draft configuration and tools as one JSON document (`bot_type`, `configuration`, `tools`).",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/llmagent/export/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Redact:  true,
 	Private: true,
@@ -8440,7 +8439,7 @@ var CcPostApiV1LlmagentMakelive = &Operation{
 	Description: "Publishes the agent's draft, so live calls use it. The description labels the version in the history.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/llmagent/makelive/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "description", Flag: "description", Type: "string"},
@@ -8456,7 +8455,7 @@ var CcPostApiV1LlmagentToolCreate = &Operation{
 	Description: "Adds a tool (action) to the agent's draft. `input_entities` is required, in JSON Schema form, even when the tool takes no input. Copy a working tool from `get-configuration` for the fulfillment of flow and MCP tools.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/llmagent/tool/create/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body:    &Body{},
 	Redact:  true,
@@ -8470,7 +8469,7 @@ var CcPostApiV1LlmagentToolUpdate = &Operation{
 	Description: "Updates a tool in the agent's draft. Send the whole tool as `get-configuration` returns it, with `tool_id` set to its `id`.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/llmagent/tool/update/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body:    &Body{},
 	Redact:  true,
@@ -8484,7 +8483,7 @@ var CcPostApiV1LlmagentToolDelete = &Operation{
 	Description: "Deletes a tool from the agent's draft.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/llmagent/tool/delete/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "tool_id", Flag: "tool_id", Type: "string"},
@@ -8550,7 +8549,7 @@ var CcPostApiV1DecryptAudit = &Operation{
 	Description: "Records a compliance audit entry for reading a session's transcript, as Studio does before it shows one. `room_id` is the session ID and `message` the reason. The entry is permanent and names the caller, so create one only with a real reason. With a regular Webex login, the messages of an encrypted session stay encrypted after the audit.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/decrypt_audit/",
 	Params: []Param{
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "room_id", Flag: "room_id", Type: "string"},
@@ -8569,7 +8568,7 @@ var CcGetApiV1Room = &Operation{
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/room/",
 	Params: []Param{
 		{Name: "id", In: InQuery, Flag: "id", Usage: "Session ID."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Redact:  true,
 	Private: true,
@@ -8586,7 +8585,7 @@ var CcGetApiV1Message = &Operation{
 		{Name: "order_by", In: InQuery, Flag: "order_by", Usage: "Sort field; prefix with - for descending."},
 		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of messages to return."},
 		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of messages to skip."},
-		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
+		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Secret: true, Usage: "AI agent ID."},
 	},
 	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
 	Redact:  true,

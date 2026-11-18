@@ -57487,11 +57487,6 @@
   "long": "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
   "flags": [
    {
-    "name": "content-length",
-    "type": "string",
-    "usage": "Content length value in number of bytes."
-   },
-   {
     "name": "flow-type",
     "type": "string",
     "usage": "Either of 'FLOW' or 'SUBFLOW'."

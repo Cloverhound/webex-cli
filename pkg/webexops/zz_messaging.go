@@ -730,7 +730,7 @@ var MessagingPostWebhooks = &Operation{
 		{Name: "resource", Flag: "resource", Type: "string"},
 		{Name: "event", Flag: "event", Type: "string"},
 		{Name: "filter", Flag: "filter", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
 	}},
 }
@@ -758,7 +758,7 @@ var MessagingPutWebhooksByWebhookId = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "targetUrl", Flag: "target-url", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
 	}},

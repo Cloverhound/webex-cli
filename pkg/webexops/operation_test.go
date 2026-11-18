@@ -101,12 +101,96 @@ func TestParametersHaveTheirAPINames(t *testing.T) {
 	}
 }
 
+func request(t *testing.T, op *Operation, args Args) webexapi.Request {
+	t.Helper()
+	r, err := op.Request(testHosts, args)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return r
+}
+
+func TestRequestRefusesArgumentsItCannotSend(t *testing.T) {
+	op := &Operation{ID: "Test", Method: "PUT", Path: "/locations/{locationId}/parks/{parkId}", Params: []Param{
+		{Name: "locationId", In: InPath, Flag: "location-id"},
+		{Name: "parkId", In: InPath, Flag: "park-id"},
+		{Name: "projectId", In: InPath, Value: "fixed"},
+		{Name: "orgId", In: InQuery, Flag: "org-id"},
+	}}
+	good := map[string]string{"locationId": "l", "parkId": "p"}
+	with := func(k, v string) map[string]string {
+		m := map[string]string{"locationId": "l", "parkId": "p"}
+		m[k] = v
+		return m
+	}
+	for name, args := range map[string]Args{
+		"a misspelled parameter":            {Params: with("orgID", "o")},
+		"a query parameter it doesn't have": {Params: good, Query: url.Values{"nope": {"x"}}},
+		"a value for a fixed parameter":     {Params: with("projectId", "other")},
+		"a missing path value":              {Params: map[string]string{"locationId": "l"}},
+		"a dot segment":                     {Params: with("parkId", "..")},
+		"a single dot":                      {Params: with("locationId", ".")},
+	} {
+		if _, err := op.Request(testHosts, args); err == nil {
+			t.Errorf("%s was accepted", name)
+		}
+		if _, err := op.List(testHosts, args); err == nil {
+			t.Errorf("List: %s was accepted", name)
+		}
+	}
+	r, err := op.Request(testHosts, Args{Params: map[string]string{"locationId": "l"}, AllowEmptyPath: true})
+	if err != nil || !strings.HasSuffix(r.URL, "/locations/l/parks/{parkId}") {
+		t.Fatalf("AllowEmptyPath: %v, %v", r.URL, err)
+	}
+}
+
+func TestCredentialsAreMarkedSecret(t *testing.T) {
+	secret := map[string]bool{}
+	for _, area := range Areas() {
+		for _, op := range Operations(area) {
+			for _, p := range op.Params {
+				if p.Secret {
+					secret[p.Name] = true
+				}
+			}
+		}
+	}
+	if !secret["password"] || !secret["bot-access-token"] || secret["meetingId"] {
+		t.Fatalf("secret parameters: %v", secret)
+	}
+	op := &Operation{Body: &Body{Fields: []BodyField{{Name: "password", Type: "string", Secret: true}, {Name: "title", Type: "string"}}}}
+	if got := string(op.RedactBody([]byte(`{"password":"pw","title":"t"}`))); got != `{"password":"<redacted>","title":"t"}` {
+		t.Fatalf("RedactBody: %s", got)
+	}
+	if got := string(op.RedactBody([]byte(`not json`))); got != "not json" {
+		t.Fatalf("RedactBody changed a body that isn't an object: %s", got)
+	}
+}
+
+func TestCallAndAllRedactAIAgentResponses(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, `{"objects":[{"id":"a","bot_access_token":"secret"}],"meta":{"total_count":1}}`)
+	}))
+	defer srv.Close()
+	op := &Operation{ID: "Test", Method: "GET", Host: HostAIAgent, Path: "/api/v2/agents/", Redact: true,
+		Paging: &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"}}
+	hosts := webexapi.Hosts{AIAgent: srv.URL}
+	resp, err := Call(context.Background(), &webexapi.Client{}, hosts, op, Args{})
+	if err != nil || strings.Contains(string(resp.Body), "secret") {
+		t.Fatalf("Call: %s, %v", resp.Body, err)
+	}
+	items, err := All(context.Background(), &webexapi.Client{}, hosts, op, Args{})
+	if err != nil || len(items) != 1 || strings.Contains(string(items[0]), "secret") {
+		t.Fatalf("All: %s, %v", items, err)
+	}
+}
+
 func TestAQueryParameterCanBeSentMoreThanOnce(t *testing.T) {
 	op := &Operation{Method: "GET", Path: "/adminAudit/events", Params: []Param{
 		{Name: "eventCategories", In: InQuery, Flag: "event-categories"},
 		{Name: "max", In: InQuery, Flag: "max"},
 	}}
-	got := op.Request(testHosts, Args{
+	got := request(t, op, Args{
 		Params: map[string]string{"eventCategories": "ignored", "max": "5"},
 		Query:  url.Values{"eventCategories": {"a", "b"}},
 	}).URL
@@ -127,12 +211,12 @@ func TestOrgParametersThatTakeTheUUIDAreMarked(t *testing.T) {
 		{Name: "orgid", In: InPath, Flag: "orgid", OrgUUID: true},
 		{Name: "orgId", In: InQuery, Flag: "orgid", OrgUUID: true},
 	}}
-	got := op.Request(testHosts, Args{Params: map[string]string{"orgid": testB64, "orgId": testB64}}).URL
+	got := request(t, op, Args{Params: map[string]string{"orgid": testB64, "orgId": testB64}}).URL
 	if got != "https://cc/organization/"+testUUID+"/team?orgId="+testUUID {
 		t.Fatalf("URL %s", got)
 	}
 	query := url.Values{"orgId": {testB64}}
-	got = op.Request(testHosts, Args{Params: map[string]string{"orgid": testUUID}, Query: query}).URL
+	got = request(t, op, Args{Params: map[string]string{"orgid": testUUID}, Query: query}).URL
 	if got != "https://cc/organization/"+testUUID+"/team?orgId="+testUUID || query["orgId"][0] != testB64 {
 		t.Fatalf("URL %s, caller's query %v", got, query)
 	}
@@ -151,7 +235,7 @@ func TestRequestFillsTheOperation(t *testing.T) {
 		},
 		Body: &Body{},
 	}
-	r := op.Request(testHosts, Args{
+	r := request(t, op, Args{
 		Params: map[string]string{"orgId": testB64, "userId": "a b", "max": "5", "TrackingID": "t"},
 		Body:   []byte(`{"a":1}`),
 	})
@@ -162,8 +246,8 @@ func TestRequestFillsTheOperation(t *testing.T) {
 		t.Fatalf("%+v", r)
 	}
 	// An upload the collection gives no JSON body for still sends the body given.
-	upload := DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke.Request(testHosts, Args{
-		Params: map[string]string{"locationId": "l"}, Body: []byte("--b\r\n"), ContentType: "multipart/form-data; boundary=b",
+	upload := request(t, DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke, Args{
+		Params: map[string]string{"deviceId": "d"}, Body: []byte("--b\r\n"), ContentType: "multipart/form-data; boundary=b",
 	})
 	if DevicePostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvoke.Body != nil || string(upload.Body) != "--b\r\n" || upload.ContentType != "multipart/form-data; boundary=b" {
 		t.Fatalf("upload %+v", upload)

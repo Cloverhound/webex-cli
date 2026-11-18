@@ -8,6 +8,7 @@
 package webexops
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -93,6 +94,10 @@ type Param struct {
 	// OrgUUID means the API takes the organization's UUID. Call converts a base64
 	// organization ID to it.
 	OrgUUID bool
+
+	// Secret means the value is a credential, such as a meeting password, which
+	// diagnostics must not show.
+	Secret bool
 }
 
 // Body says an operation sends a body.
@@ -113,6 +118,9 @@ type BodyField struct {
 
 	// Type is string, bool, int64, float64 or []string.
 	Type string
+
+	// Secret means the value is a credential; see RedactBody.
+	Secret bool
 }
 
 // Group is a set of operations published under one CLI command.
@@ -181,20 +189,74 @@ type Args struct {
 	// application/json.
 	Body        []byte
 	ContentType string
+
+	// AllowEmptyPath sends a path parameter with no value as its {name}, as the
+	// CLI does for an empty flag. Without it, a missing path value is an error.
+	AllowEmptyPath bool
 }
 
-// Request is the request that sends an operation with its arguments.
-func (op *Operation) Request(hosts webexapi.Hosts, args Args) webexapi.Request {
-	l := op.list(hosts, args)
+// Request is the request that sends an operation with its arguments. Arguments
+// the operation cannot send are an error: a name it has no parameter for, a value
+// for a fixed parameter, a missing path value, or . or .. as a path value.
+func (op *Operation) Request(hosts webexapi.Hosts, args Args) (webexapi.Request, error) {
+	l, err := op.List(hosts, args)
+	if err != nil {
+		return webexapi.Request{}, err
+	}
 	return webexapi.Request{
 		Method: l.Method, URL: webexapi.WithQuery(l.URL, l.Query), Body: l.Body,
 		ContentType: l.ContentType, Header: l.Header, Redact: l.Redact,
-	}
+	}, nil
 }
 
 // List is the request that reads an operation's list with its arguments, before
-// paging.
-func (op *Operation) List(hosts webexapi.Hosts, args Args) webexapi.List { return op.list(hosts, args) }
+// paging. Its arguments are checked as Request's are.
+func (op *Operation) List(hosts webexapi.Hosts, args Args) (webexapi.List, error) {
+	if err := op.check(args); err != nil {
+		return webexapi.List{}, err
+	}
+	return op.list(hosts, args), nil
+}
+
+// check refuses arguments the operation cannot send as given.
+func (op *Operation) check(args Args) error {
+	params := map[string]Param{}
+	for _, p := range op.Params {
+		params[p.Name] = p
+	}
+	for name, v := range args.Params {
+		p, ok := params[name]
+		switch {
+		case !ok:
+			return fmt.Errorf("%s has no parameter %q", op.ID, name)
+		case p.Value != "" && v != "":
+			return fmt.Errorf("%s's parameter %q is fixed", op.ID, name)
+		}
+	}
+	for name := range args.Query {
+		if p, ok := params[name]; !ok || p.In != InQuery {
+			return fmt.Errorf("%s has no query parameter %q", op.ID, name)
+		}
+	}
+	var missing []string
+	for _, p := range op.Params {
+		if p.In != InPath || p.Value != "" {
+			continue
+		}
+		switch v := args.Params[p.Name]; v {
+		case "":
+			if !args.AllowEmptyPath {
+				missing = append(missing, p.Name)
+			}
+		case ".", "..":
+			return fmt.Errorf("%s's path parameter %q cannot be %q", op.ID, p.Name, v)
+		}
+	}
+	if len(missing) > 0 {
+		return fmt.Errorf("%s needs the path parameter %s", op.ID, strings.Join(missing, ", "))
+	}
+	return nil
+}
 
 func (op *Operation) list(hosts webexapi.Hosts, args Args) webexapi.List {
 	path := map[string]string{}
@@ -256,39 +318,78 @@ func (op *Operation) takesOrgUUID(name string) bool {
 	return false
 }
 
-// missingPath reports the path parameters args gives no value for.
-func (op *Operation) missingPath(args Args) error {
-	var missing []string
-	for _, p := range op.Params {
-		if p.In == InPath && p.Value == "" && args.Params[p.Name] == "" {
-			missing = append(missing, p.Name)
+// RedactBody replaces the values of the secret top-level fields in a JSON object
+// body, for showing it. Any other body is returned as it is.
+func (op *Operation) RedactBody(body []byte) []byte {
+	if op.Body == nil {
+		return body
+	}
+	var object map[string]json.RawMessage
+	if json.Unmarshal(body, &object) != nil {
+		return body
+	}
+	redacted := false
+	for _, f := range op.Body.Fields {
+		if _, ok := object[f.Name]; ok && f.Secret {
+			object[f.Name] = json.RawMessage(`"<redacted>"`)
+			redacted = true
 		}
 	}
-	if len(missing) > 0 {
-		return fmt.Errorf("%s needs the path parameter %s", op.ID, strings.Join(missing, ", "))
+	if !redacted {
+		return body
 	}
-	return nil
+	var out bytes.Buffer
+	enc := json.NewEncoder(&out)
+	enc.SetEscapeHTML(false)
+	if enc.Encode(object) != nil {
+		return body
+	}
+	return bytes.TrimSuffix(out.Bytes(), []byte("\n"))
 }
 
-// Call sends an operation. A path parameter without a value is an error, and
-// nothing is sent.
+// SecretParams are the names of the operation's secret parameters.
+func (op *Operation) SecretParams() []string {
+	var names []string
+	for _, p := range op.Params {
+		if p.Secret {
+			names = append(names, p.Name)
+		}
+	}
+	return names
+}
+
+// Call sends an operation. Arguments it cannot send are an error, and nothing is
+// sent; see Request. An operation marked Redact returns its body with AI agent
+// credentials removed; send op.Request with the client for the raw body.
 func Call(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Operation, args Args) (*webexapi.Response, error) {
-	if err := op.missingPath(args); err != nil {
+	r, err := op.Request(hosts, args)
+	if err != nil {
 		return nil, err
 	}
-	return c.Send(ctx, op.Request(hosts, args))
+	resp, err := c.Send(ctx, r)
+	if resp != nil && op.Redact {
+		resp.Body = aiagent.RedactSecrets(resp.Body)
+	}
+	return resp, err
 }
 
-// All reads every page of an operation's list and returns its items. A path
-// parameter without a value is an error, and nothing is sent.
+// All reads every page of an operation's list and returns its items, checked
+// and redacted as Call's are.
 func All(ctx context.Context, c *webexapi.Client, hosts webexapi.Hosts, op *Operation, args Args) ([]json.RawMessage, error) {
 	if op.Paging == nil {
 		return nil, fmt.Errorf("%s is not a list that can be read to its end", op.ID)
 	}
-	if err := op.missingPath(args); err != nil {
+	l, err := op.List(hosts, args)
+	if err != nil {
 		return nil, err
 	}
-	return c.All(ctx, op.List(hosts, args), *op.Paging)
+	items, err := c.All(ctx, l, *op.Paging)
+	if op.Redact {
+		for i := range items {
+			items[i] = aiagent.RedactSecrets(items[i])
+		}
+	}
+	return items, err
 }
 
 type area struct {

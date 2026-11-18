@@ -1173,7 +1173,7 @@ var CallingPostTelephonyConfigLocationsByLocationIdDectNetworks = &Operation{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "model", Flag: "model", Type: "string"},
 		{Name: "defaultAccessCodeEnabled", Flag: "default-access-code-enabled", Type: "bool"},
-		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string"},
+		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string", Secret: true},
 		{Name: "displayName", Flag: "display-name", Type: "string"},
 	}},
 }
@@ -1219,7 +1219,7 @@ var CallingPutTelephonyConfigLocationsByLocationIdDectNetworksByDectNetworkId = 
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "defaultAccessCodeEnabled", Flag: "default-access-code-enabled", Type: "bool"},
-		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string"},
+		{Name: "defaultAccessCode", Flag: "default-access-code", Type: "string", Secret: true},
 		{Name: "displayName", Flag: "display-name", Type: "string"},
 	}},
 }
@@ -2174,7 +2174,7 @@ var CallingPostTelephonyConfigPremisePstnTrunks = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "locationId", Flag: "location-id", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 		{Name: "trunkType", Flag: "trunk-type", Type: "string"},
 		{Name: "dualIdentitySupportEnabled", Flag: "dual-identity-support-enabled", Type: "bool"},
 		{Name: "deviceType", Flag: "device-type", Type: "string"},
@@ -2210,7 +2210,7 @@ var CallingPutTelephonyConfigPremisePstnTrunksByTrunkId = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "name", Flag: "name", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 		{Name: "dualIdentitySupportEnabled", Flag: "dual-identity-support-enabled", Type: "bool"},
 		{Name: "maxConcurrentCalls", Flag: "max-concurrent-calls", Type: "int64"},
 		{Name: "pChargeInfoSupportPolicy", Flag: "p-charge-info-support-policy", Type: "string"},
@@ -5469,7 +5469,7 @@ var CallingPutTelephonyConfigPeopleMeVoicemailPin = &Operation{
 	Description: "Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with the passcode rules defined for the organization.\n\nThe voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The PIN is required to retrieve voice messages via phone.\n\nThis API requires a user auth token with a scope of `spark:telephony_config_write`.",
 	Method:      "PUT", Host: HostWebex, Path: "/telephony/config/people/me/voicemail/pin",
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string"},
+		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
 	}},
 }
 
@@ -6033,7 +6033,7 @@ var CallingPutTelephonyConfigDevicesByDeviceId = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization in which the device resides."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "sipPassword", Flag: "sip-password", Type: "string"},
+		{Name: "sipPassword", Flag: "sip-password", Type: "string", Secret: true},
 	}},
 }
 
@@ -6871,7 +6871,7 @@ var CallingPostDevices = &Operation{
 		{Name: "model", Flag: "model", Type: "string"},
 		{Name: "workspaceId", Flag: "workspace-id", Type: "string"},
 		{Name: "personId", Flag: "person-id", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 	}},
 }
 
@@ -6944,10 +6944,10 @@ var CallingPutTelephonyConfigRedSkyServiceSettings = &Operation{
 	Body: &Body{Fields: []BodyField{
 		{Name: "enabled", Flag: "enabled", Type: "bool"},
 		{Name: "companyId", Flag: "company-id", Type: "string"},
-		{Name: "secret", Flag: "secret", Type: "string"},
+		{Name: "secret", Flag: "secret", Type: "string", Secret: true},
 		{Name: "externalTenantEnabled", Flag: "external-tenant-enabled", Type: "bool"},
 		{Name: "email", Flag: "email", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 	}},
 }
 
@@ -7028,7 +7028,7 @@ var CallingPostTelephonyConfigRedSkyActionsLoginInvoke = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "email", Flag: "email", Type: "string"},
-		{Name: "password", Flag: "password", Type: "string"},
+		{Name: "password", Flag: "password", Type: "string", Secret: true},
 		{Name: "redSkyOrgId", Flag: "red-sky-org-id", Type: "string"},
 	}},
 }
@@ -12281,7 +12281,7 @@ var CallingPutTelephonyConfigPeopleByPersonIdVoicemailPasscode = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a person in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string"},
+		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
 	}},
 }
 
@@ -13882,7 +13882,7 @@ var CallingPutTelephonyConfigVirtualLinesByVirtualLineIdVoicemailPasscode = &Ope
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a virtual line in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string"},
+		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
 	}},
 }
 
@@ -14461,7 +14461,7 @@ var CallingDeleteTelephonyConfigWorkspacesByWorkspaceIdFeaturesAccessCodesByAcce
 	Method:      "DELETE", Host: HostWebex, Path: "/telephony/config/workspaces/{workspaceId}/features/accessCodes/{accessCode}",
 	Params: []Param{
 		{Name: "workspaceId", In: InPath, Flag: "workspace-id", Required: true, Usage: "Unique identifier for the workspace."},
-		{Name: "accessCode", In: InPath, Flag: "access-code", Required: true, Usage: "Access code for outgoing calls."},
+		{Name: "accessCode", In: InPath, Flag: "access-code", Required: true, Secret: true, Usage: "Access code for outgoing calls."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access the API."},
 	},
 }
@@ -14873,7 +14873,7 @@ var CallingPutTelephonyConfigWorkspacesByPlaceIdVoicemailPasscode = &Operation{
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Modify voicemail passcode for a workspace in this organization."},
 	},
 	Body: &Body{Fields: []BodyField{
-		{Name: "passcode", Flag: "passcode", Type: "string"},
+		{Name: "passcode", Flag: "passcode", Type: "string", Secret: true},
 	}},
 }
 
@@ -15985,7 +15985,7 @@ var CallingPutTelephonyConfigServiceSettingsCallerReputationProvider = &Operatio
 		{Name: "id", Flag: "id", Type: "string"},
 		{Name: "name", Flag: "name", Type: "string"},
 		{Name: "clientId", Flag: "client-id", Type: "string"},
-		{Name: "clientSecret", Flag: "client-secret", Type: "string"},
+		{Name: "clientSecret", Flag: "client-secret", Type: "string", Secret: true},
 		{Name: "callBlockScoreThreshold", Flag: "call-block-score-threshold", Type: "string"},
 		{Name: "callAllowScoreThreshold", Flag: "call-allow-score-threshold", Type: "string"},
 	}},

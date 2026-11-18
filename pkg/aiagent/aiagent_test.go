@@ -52,3 +52,16 @@ func TestRedactSecretsKeepsTheRestOfTheDocument(t *testing.T) {
 		t.Fatalf("got %s", got)
 	}
 }
+
+func TestRedactSecretsFindsEveryCredentialKey(t *testing.T) {
+	for in, want := range map[string]string{
+		`{"clientSecret":"s","SIPPassword":"p","refresh_token":"r","tokenLifetimeMinutes":30}`: `{"clientSecret":"<redacted>","SIPPassword":"<redacted>","refresh_token":"<redacted>","tokenLifetimeMinutes":30}`,
+		// A tool's configuration is JSON held in a string.
+		`{"config":"{\"api_token\":\"a\\\"b\",\"url\":\"u\"}"}`: `{"config":"{\"api_token\":\"<redacted>\",\"url\":\"u\"}"}`,
+		`{"description":"send the token","name":"n"}`:           `{"description":"send the token","name":"n"}`,
+	} {
+		if got := string(RedactSecrets([]byte(in))); got != want {
+			t.Errorf("%s\n got %s\nwant %s", in, got, want)
+		}
+	}
+}

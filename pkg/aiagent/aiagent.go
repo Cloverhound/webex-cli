@@ -55,11 +55,19 @@ func BotToken(ctx context.Context, c *webexapi.Client, studio, orgUUID, agentID 
 	return "", fmt.Errorf("AI agent %s not found in organization %s", agentID, orgUUID)
 }
 
-// secretField matches a JSON string value of a Studio credential field.
-var secretField = regexp.MustCompile(`("(?:bot_access_token|auth_token|user_access_token|ci_access_token)"\s*:\s*)"(?:[^"\\]|\\.)*"`)
+var (
+	// secretField matches the string value of a key that names a credential.
+	secretField = regexp.MustCompile(`("[^"\\]*(?i:token|secret|password)[^"\\]*"\s*:\s*)"(?:[^"\\]|\\.)*"`)
 
-// RedactSecrets replaces Studio credentials in a JSON response, keeping the
+	// escapedSecretField is secretField in JSON held inside a JSON string, as a
+	// tool's configuration is: each quote is \" and each backslash \\.
+	escapedSecretField = regexp.MustCompile(`(\\"[^"\\]*(?i:token|secret|password)[^"\\]*\\"\s*:\s*)\\"(?:[^"\\]|\\\\\\.|\\[^"\\])*\\"`)
+)
+
+// RedactSecrets replaces the string value of every key naming a token, secret
+// or password in a JSON response, including JSON held in a string, and keeps the
 // rest of the document byte for byte.
 func RedactSecrets(body []byte) []byte {
+	body = escapedSecretField.ReplaceAll(body, []byte(`$1\"<redacted>\"`))
 	return secretField.ReplaceAll(body, []byte(`$1"<redacted>"`))
 }

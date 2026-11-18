@@ -2183,7 +2183,7 @@ var AdminPostApplicationsByApplicationIdToken = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "clientId", Flag: "client-id", Type: "string"},
-		{Name: "clientSecret", Flag: "client-secret", Type: "string"},
+		{Name: "clientSecret", Flag: "client-secret", Type: "string", Secret: true},
 		{Name: "targetOrgId", Flag: "target-org-id", Type: "string"},
 	}},
 }

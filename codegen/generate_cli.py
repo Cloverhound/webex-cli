@@ -107,6 +107,15 @@ UUID_ORG_PARAMS = {
     "Webex Meetings": {"sessionOrgId"},
 }
 
+# A parameter or string body field whose name ends in one of these carries a
+# credential. Names that only mention one, such as maxPasswordAge, do not end in it.
+SECRET_NAME = re.compile(r'(?i)(password|passcode|secret|token|pin|accesscode)$')
+
+
+def is_secret(name):
+    return bool(SECRET_NAME.search(re.sub(r'[-_]', '', name)))
+
+
 # Path params that are always the same value — fixed instead of given by a flag.
 HARDCODED_PATH_PARAMS = {
     "projectId": "5e5c9ad6d61f870d6d778c1b",
@@ -322,6 +331,13 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
                 fields.append({'name': f['name'], 'flag': flags[key], 'type': f['type']})
         body = fields
 
+    for p in params:
+        if is_secret(p['name']):
+            p['secret'] = True
+    for f in body or []:
+        if f['type'] == 'string' and is_secret(f['name']):
+            f['secret'] = True
+
     time_range = None
     # --last sets both ends of a range, so it needs both parameters.
     if {'from', 'to'} <= {p['name'] for p in query_params}:
@@ -411,6 +427,8 @@ def operation_literal(op_id, area, group, op):
                 fields.append('Required: true')
             if p.get('orgUUID'):
                 fields.append('OrgUUID: true')
+            if p.get('secret'):
+                fields.append('Secret: true')
             if p.get('usage'):
                 fields.append(f'Usage: {go_string(p["usage"])}')
             lines.append('\t\t{' + ', '.join(fields) + '},')
@@ -419,7 +437,8 @@ def operation_literal(op_id, area, group, op):
         if op['body']:
             lines.append('\tBody: &Body{Fields: []BodyField{')
             for f in op['body']:
-                lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}}},')
+                secret = ', Secret: true' if f.get('secret') else ''
+                lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}{secret}}},')
             lines.append('\t}},')
         else:
             lines.append('\tBody: &Body{},')
