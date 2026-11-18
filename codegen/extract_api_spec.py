@@ -211,10 +211,6 @@ def example_list(responses):
 
 # ── Endpoint extraction ──────────────────────────────────────────────
 
-# Headers the client or net/http sets, compared in lower case; Proxy-* also.
-TRANSPORT_HEADERS = {'accept', 'authorization', 'content-type', 'content-length', 'cookie', 'host'}
-
-
 def extract_endpoint(item, keep_trailing_slash=False):
     """Extract full endpoint spec from a Postman item."""
     req = item.get('request', {})
@@ -269,13 +265,11 @@ def extract_endpoint(item, keep_trailing_slash=False):
     responses = item.get('response', [])
     response_code = responses[0].get('code') if responses else None
 
-    # Extra headers. The client sets the standard ones, and a header that carries
-    # the login or shapes the connection is never an operation's parameter.
+    # Extra headers (non-standard ones)
     extra_headers = []
     for h in req.get('header', []):
         key = h.get('key', '')
-        lower = key.lower()
-        if lower not in TRANSPORT_HEADERS and not lower.startswith('proxy-'):
+        if key not in ('Content-Type', 'Accept', 'Authorization'):
             extra_headers.append({
                 'name': key,
                 'description': h.get('description', ''),

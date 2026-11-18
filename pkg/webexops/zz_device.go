@@ -258,7 +258,7 @@ var DevicePutTelephonyConfigDevicesByDeviceId = &Operation{
 	},
 	Body: &Body{Fields: []BodyField{
 		{Name: "sipPassword", Flag: "sip-password", Type: "string"},
-	}, Secret: []string{"sipPassword"}},
+	}},
 }
 
 // DeviceGetTelephonyConfigPeopleByPersonIdDevices is "Get Person Devices": GET /telephony/config/people/{personId}/devices.
@@ -1123,7 +1123,7 @@ var DevicePostDevices = &Operation{
 		{Name: "workspaceId", Flag: "workspace-id", Type: "string"},
 		{Name: "personId", Flag: "person-id", Type: "string"},
 		{Name: "password", Flag: "password", Type: "string"},
-	}, Secret: []string{"password"}},
+	}},
 }
 
 // DeviceGetDevicesByDeviceId is "Get Device Details": GET /devices/{deviceId}.

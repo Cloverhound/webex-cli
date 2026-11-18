@@ -68,7 +68,7 @@ func main() {
 }
 ```
 
-`Args.Params` holds parameter values by the names the API uses. Each operation's `Params` lists them. A name the operation doesn't have, a missing path value, and `.` or `..` as a path value are errors, and nothing is sent. A parameter marked `OrgUUID` takes the organization's UUID; a base64 Webex organization ID is converted. A parameter marked `Secret`, or a field named in `Body.Secret`, is a credential, such as a meeting password; `Operation.RedactBody` hides secret body fields for logging. Bodies and responses are JSON documents, not Go types, because the collections' example bodies don't match what Webex returns.
+`Args.Params` holds parameter values by the names the API uses. Each operation's `Params` lists them. A name the operation doesn't have, a missing path value, and `.` or `..` as a path value are errors, and nothing is sent. A parameter marked `OrgUUID` takes the organization's UUID; a base64 Webex organization ID is converted. Bodies and responses are JSON documents, not Go types, because the collections' example bodies don't match what Webex returns.
 
 ## Behaviour
 

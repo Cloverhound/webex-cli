@@ -13935,6 +13935,7 @@
   "command": "cc flow import-legacy",
   "variant": "all-flags",
   "args": [
+   "--content-length=s-content-length",
    "--flow-type=s-flow-type",
    "--overwrite=s-overwrite"
   ],
@@ -13944,7 +13945,8 @@
     "url": "https://api.wxcc-us1.cisco.com/flow-store/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows:import?flowType=s-flow-type&overwrite=s-overwrite",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
+     "Authorization": "Bearer golden-token",
+     "Content-Length": "s-content-length"
     }
    }
   ]

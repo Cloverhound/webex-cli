@@ -167,34 +167,6 @@ func TestARouteListedWithDifferentRequestsTakesEveryListingsParameters(t *testin
 	}
 }
 
-func TestCredentialsAreMarkedSecret(t *testing.T) {
-	secret := map[string]bool{}
-	for _, area := range Areas() {
-		for _, op := range Operations(area) {
-			for _, p := range op.Params {
-				if p.Secret {
-					secret[p.Name] = true
-				}
-			}
-		}
-	}
-	if !secret["password"] || !secret["bot-access-token"] || secret["meetingId"] {
-		t.Fatalf("secret parameters: %v", secret)
-	}
-	op := &Operation{Body: &Body{Fields: []BodyField{{Name: "password", Type: "string"}, {Name: "title", Type: "string"}}, Secret: []string{"password"}}}
-	if got := string(op.RedactBody([]byte(`{"password":"pw","title":"t"}`))); got != `{"password":"<redacted>","title":"t"}` {
-		t.Fatalf("RedactBody: %s", got)
-	}
-	// Create a Meeting's body is not flat, so it has no fields, but it still has secrets.
-	meeting := MeetingsPostMeetings.RedactBody([]byte(`{"title":"t","password":"pw","panelistPassword":"pp"}`))
-	if strings.Contains(string(meeting), "pw") || strings.Contains(string(meeting), "pp") {
-		t.Fatalf("Create a Meeting: %s", meeting)
-	}
-	if got := string(op.RedactBody([]byte(`not json`))); got != "not json" {
-		t.Fatalf("RedactBody changed a body that isn't an object: %s", got)
-	}
-}
-
 func TestCallAndAllRedactAIAgentResponses(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, `{"objects":[{"id":"a","bot_access_token":"secret"}],"meta":{"total_count":1}}`)

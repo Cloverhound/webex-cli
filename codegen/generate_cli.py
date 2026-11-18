@@ -137,14 +137,6 @@ def takes_org_uuid(collection_name, path, name):
                          'add it to ORG_ID_FORMS in codegen/generate_cli.py')
     return form == 'uuid'
 
-# A parameter or string body field whose name ends in one of these carries a
-# credential. Names that only mention one, such as maxPasswordAge, do not end in it.
-SECRET_NAME = re.compile(r'(?i)(password|passcode|secret|token|pin|accesscode)$')
-
-
-def is_secret(name):
-    return bool(SECRET_NAME.search(re.sub(r'[-_]', '', name)))
-
 
 # Path params that are always the same value — fixed instead of given by a flag.
 HARDCODED_PATH_PARAMS = {
@@ -358,14 +350,6 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
                 fields.append({'name': f['name'], 'flag': flags[key], 'type': f['type']})
         body = fields
 
-    for p in params:
-        if is_secret(p['name']):
-            p['secret'] = True
-    # Every body the collection shows, flat or not; a bool such as excludePassword
-    # only names a credential.
-    body_secret = [f['name'] for f in body_fields
-                   if ep.get('has_body', False) and f['type'] != 'bool' and is_secret(f['name'])]
-
     time_range = None
     # --last sets both ends of a range, so it needs both parameters.
     if {'from', 'to'} <= {p['name'] for p in query_params}:
@@ -374,7 +358,7 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     return {
         'command': ep['command'], 'aliases': ep.get('aliases') or [],
         'summary': ep.get('original_name', ep['command']), 'description': ep.get('description', ''),
-        'method': method, 'host': host, 'path': path, 'params': params, 'body': body, 'bodySecret': body_secret,
+        'method': method, 'host': host, 'path': path, 'params': params, 'body': body,
         'paging': paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
         # This endpoint returns a non-JSON deletion acknowledgement. Restricting
         # Accept to application/json causes the service to reject it with HTTP 406.
@@ -482,10 +466,7 @@ def combine_operations(ops):
     ranges = {op['timeRange'] for op in ops if op['timeRange']}
     if len(pagings) > 1 or len(ranges) > 1:
         return None
-    body_secret = []
-    for op in ops:
-        body_secret += [n for n in op['bodySecret'] if n not in body_secret]
-    return dict(first, command='', aliases=[], params=params, body=body, bodySecret=body_secret,
+    return dict(first, command='', aliases=[], params=params, body=body,
                 paging=next(iter(pagings), None), timeRange=next(iter(ranges), None),
                 redact=any(op['redact'] for op in ops), private=any(op['private'] for op in ops))
 
@@ -513,23 +494,18 @@ def operation_literal(op_id, area, group, op):
                 fields.append('Required: true')
             if p.get('orgUUID'):
                 fields.append('OrgUUID: true')
-            if p.get('secret'):
-                fields.append('Secret: true')
             if p.get('usage'):
                 fields.append(f'Usage: {go_string(p["usage"])}')
             lines.append('\t\t{' + ', '.join(fields) + '},')
         lines.append('\t},')
     if op['body'] is not None:
-        secret = ''
-        if op['bodySecret']:
-            secret = 'Secret: []string{' + ', '.join(go_string(n) for n in op['bodySecret']) + '}'
         if op['body']:
             lines.append('\tBody: &Body{Fields: []BodyField{')
             for f in op['body']:
                 lines.append(f'\t\t{{Name: {go_string(f["name"])}, Flag: {go_string(f["flag"])}, Type: {go_string(f["type"])}}},')
-            lines.append(f'\t}}, {secret}}},' if secret else '\t}},')
+            lines.append('\t}},')
         else:
-            lines.append(f'\tBody: &Body{{{secret}}},')
+            lines.append('\tBody: &Body{},')
     if op['paging']:
         lines.append(f'\tPaging: {op["paging"]},')
     if op['timeRange']:

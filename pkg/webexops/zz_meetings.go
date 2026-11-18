@@ -548,7 +548,7 @@ var MeetingsPutMeetingPreferencesPersonalMeetingRoom = &Operation{
 		{Name: "userEmail", In: InQuery, Flag: "user-email", Usage: "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update Personal Meeting Room options for that user."},
 		{Name: "siteUrl", In: InQuery, Flag: "site-url", Usage: "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list)."},
 	},
-	Body: &Body{Secret: []string{"hostPin"}},
+	Body: &Body{},
 }
 
 // MeetingsGetMeetingPreferencesAudio is "Get Audio Options": GET /meetingPreferences/audio.
@@ -573,7 +573,7 @@ var MeetingsPutMeetingPreferencesAudio = &Operation{
 		{Name: "userEmail", In: InQuery, Flag: "user-email", Usage: "Email address for the user. This parameter is only used if the user or application calling the API has the [admin-level scopes](/docs/meetings#adminorganization-level-authentication-and-scopes). If set, the admin may specify the email of a user in a site they manage and the API will update audio options for that user."},
 		{Name: "siteUrl", In: InQuery, Flag: "site-url", Usage: "URL of the Webex site to query. For individual use, if `siteUrl` is not specified, the query will use the default site of the user. For admin use, if `siteUrl` is not specified, the query will use the default site for the admin's authorization token used to make the call. In the case where the user belongs to a site different than the admin’s default site, the admin can set the site to query using the `siteUrl` parameter. All available Webex sites and default site of a user can be retrieved from [/meetingPreferences/sites](/docs/api/v1/meeting-preferences/get-site-list)."},
 	},
-	Body: &Body{Secret: []string{"audioPin"}},
+	Body: &Body{},
 }
 
 // MeetingsGetMeetingPreferencesVideo is "Get Video Options": GET /meetingPreferences/video.
@@ -954,7 +954,7 @@ var MeetingsPostMeetings = &Operation{
 	Summary:     "Create a Meeting",
 	Description: "Creates a new meeting. Regular users can schedule up to 100 meetings in 24 hours and admin users up to 3000 overall or 800 for a single user. Please note that the failed requests are also counted toward the limits.\n\n* The `spark:all` scope is required when `roomId` is specified.\n\n* If the parameter `adhoc` is `true` and `roomId` is specified, an ad-hoc meeting is created for the target room. An ad-hoc meeting is a non-recurring instant meeting for the target room which is supposed to be started immediately after being created for a quick collaboration. There's only one ad-hoc meeting for a room at the same time. So, if there's already an ongoing ad-hoc meeting for the room, the API returns this ongoing meeting instead of creating a new one. If it's a [direct](/docs/api/v1/rooms/get-room-details) room, both members of the room can create an ad-hoc meeting for the room. If it's a [group](/docs/api/v1/rooms/get-room-details) room, only room members that are in the same [organization](/docs/api/v1/organizations/get-organization-details) as the room can create an ad-hoc meeting for the room. Please note that an ad-hoc meeting is for the purpose of an instant collaboration with people in a room, user should not persist the `id` and `meetingNumber` of the ad-hoc meeting when it's been created since this meeting may become an inactive ad-hoc meeting for the room if it's not been started after being created for a while or it has been started and ended. Each time a user needs an ad-hoc meeting for a room, they should create one instead of reusing the previous persisted one. Moreover, for the same reason, no email will be sent when an ad-hoc meeting is created. Ad-hoc meetings cannot be updated by [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) or deleted by [Delete a Meeting](/docs/api/v1/meetings/delete-a-meeting). Ad-hoc meetings cannot be listed by [List Meetings](/docs/api/v1/meetings/list-meetings) and the scheduled meetings of an ad-hoc meeting cannot be listed by [List Meetings of a Meeting Series](/docs/api/v1/meetings/list-meetings-of-a-meeting-series), but the ended and ongoing instances of ad-hoc meetings can be listed by [List Meetings](/docs/api/v1/meetings/list-meetings) and [List Meetings of a Meeting Series](/docs/api/v1/meetings/list-meetings-of-a-meeting-series).\n\n* If the parameter `adhoc` is `true`, `roomId` is required and the others are optional or ignored.\n\n* The default value of `title` for an ad-hoc meeting is the user's name if not specified. The following parameters for an ad-hoc meeting have default values and the user's input values will be ignored: `scheduledType` is always `meeting`; `start` and `end` are 5 minutes after the current time and 20 minutes after the current time respectively; `timezone` is `UTC`; `allowAnyUserToBeCoHost`, `allowAuthenticatedDevices`, `enabledJoinBeforeHost`, `enableConnectAudioBeforeHost` are always `true`; `allowFirstUserToBeCoHost`, `enableAutomaticLock`, `publicMeeting`, `sendEmail` are always `false`; `invitees` is the room members except \"me\"; `joinBeforeHostMinutes` is 5; `automaticLockMinutes` is null; `unlockedMeetingJoinSecurity` is `allowJoinWithLobby`. An ad-hoc meeting can be started immediately even if the `start` is 5 minutes after the current time.\n\n* The following parameters are not supported and will be ignored for an ad-hoc meeting: `templateId`, `recurrence`, `excludePassword`, `reminderTime`, `registration`, `integrationTags`, `enabledWebcastView`, and `panelistPassword`.\n\n* If the value of the parameter `recurrence` is null, a non-recurring meeting is created.\n\n* If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling. If you specify a `recurrence` like `FREQ=DAILY;INTERVAL=1` which never ends, the furthest date of the series is unlimited. You can also specify a `recurrence` with a very distant ending date in the future, e.g. `FREQ=DAILY;INTERVAL=1;UNTIL=21241001T000000Z`, but the actual furthest date accepted for the recurring meeting is five years from now. Specifically, if it has an ending date, there can be up to 5 occurrences for a yearly meeting, 60 occurrences for a monthly meeting, 261 occurrences for a weekly meeting, or 1826 occurrences for a daily meeting.\n\n* If the parameter `templateId` has a value, the meeting is created based on the meeting template specified by `templateId`. The list of meeting templates that is available for the authenticated user can be retrieved from [List Meeting Templates](/docs/api/v1/meetings/list-meeting-templates).\n\n* If the parameter `siteUrl` has a value, the meeting is created on the specified site. Otherwise, the meeting is created on the user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.\n\n* If the parameter `scheduledType` equals \"personalRoomMeeting\", the meeting is created in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).\n\n* If the parameter `roomId` has a value, the meeting is created for the Webex space specified by `roomId`. If `roomId` is specified but the user calling the API is not a member of the Webex space specified by `roomId`, the API will fail even if the user has the admin-level scopes or he is calling the API on behalf of another user which is specified by `hostEmail` and is a member of the Webex space.\n\n* If the parameter `enabledAudioWatermark` is `true`, `scheduledType` equals or defaults to `meeting`, and `audioConnectionOptions.audioConnectionType` equals `VoIP`, the audio for this meeting will have a watermark. In this case, a unique identifier is embedded into the audio that plays out of each Webex app and device. An administrator can use this watermark when analyzing an unauthorized recording to identify which Webex app or device was the source of the recording.\n\n* If the parameter `enabledVisualWatermark` is `true`, the video for this meeting will have a watermark. In this case, Webex superimposes a watermark image pattern on top of the meeting video and shared content to deter participants from leaking meeting information. Each participant viewing the meeting sees a watermark image pattern with their email address. If the participant is not signed in, the watermark image pattern includes their display name and email address.\n\n* The default value of `visualWatermarkOpacity` is 10 if not specified. The value must be between 5 and 80, inclusive. A smaller value means less distraction for meeting participants, while a larger value shows a clearer watermark. It's supported when `enabledVisualWatermark` is `true`.\n\n* When `enabledLiveStream` is `true`, `liveStream` must be specified. With these setting, the RTMP streaming specified by `liveStream.rtmpUrl` can be started and viewed during the meeting without any ad-hoc settings.\n\n* The `registration` can be specified when creating a meeting, but it can't be updated by [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) or [Patch a Meeting](/docs/api/v1/meetings/patch-a-meeting). Create a registration form for a meeting that doesn't have one or update the registration form for a meeting that already has one by using [Update Meeting Registration Form](/docs/api/v1/meetings/update-meeting-registration-form). Delete the registration form for a meeting by using [Delete Meeting Registration Form](/docs/api/v1/meetings/delete-meeting-registration-form).\n\n* You can't create a meeting that starts 10 years or more in the future.\n\n* If all meeting invitees of a meeting should not receive emails, the host can create a meeting with invitees, and the parameter `sendEmail` is set to `false`. If only some meeting invitees should not receive emails and others can, the host should not invite these invitees along with creating a meeting request. Instead, the host should add the invitees by [Create a Meeting Invitee](/docs/api/v1/meeting-invitees/create-a-meeting-invitee) or [Create Meeting Invitees](/docs/api/v1/meeting-invitees/create-meeting-invitees) with the parameter `sendEmail` is set to `false` after the meeting has been created.",
 	Method:      "POST", Host: HostWebex, Path: "/meetings",
-	Body: &Body{Secret: []string{"password", "panelistPassword"}},
+	Body: &Body{},
 }
 
 // MeetingsGetMeetings is "List Meetings": GET /meetings.
@@ -987,7 +987,7 @@ var MeetingsGetMeetings = &Operation{
 		{Name: "hostEmail", In: InQuery, Flag: "host-email", Usage: "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API returns meetings as if the user calling the API were the user of `hostEmail` themself, and the meetings returned by the API include the meetings where the user of `hostEmail` is the meeting host and those where they are an invitee."},
 		{Name: "siteUrl", In: InQuery, Flag: "site-url", Usage: "URL of the Webex site which the API lists meetings from. If not specified, the API lists meetings from user's all sites. All available Webex sites of the user can be retrieved by `Get Site List` API."},
 		{Name: "integrationTag", In: InQuery, Flag: "integration-tag", Usage: "External key created by an integration application. This parameter is used by the integration application to query meetings by a key in its own domain such as a Zendesk ticket ID, a Jira ID, a Salesforce Opportunity ID, etc. An integrationTag created by one client cannot be accessed or used as a filtering parameter by another client. For example, if a meeting has an `integrationTag` of \"Sales\" which is created by the client behind the developer portal, then this integrationTag can't be accessed on the meeting or its recordings by another client. Neither can it be used to filter meetings or recordings by a client other than the one that created the integrationTag of \"Sales\"."},
-		{Name: "password", In: InHeader, Flag: "password", Secret: true, Usage: "e.g. BgJep@4323"},
+		{Name: "password", In: InHeader, Flag: "password", Usage: "e.g. BgJep@4323"},
 		{Name: "timezone", In: InHeader, Flag: "timezone", Usage: "e.g. UTC"},
 	},
 	Paging:    &webexapi.Paging{Mode: webexapi.Link, Size: "max", Items: "items", OmitEmpty: true},
@@ -1004,7 +1004,7 @@ var MeetingsGetMeetingsByMeetingId = &Operation{
 		{Name: "meetingId", In: InPath, Flag: "meeting-id", Required: true, Usage: "Unique identifier for the meeting being requested."},
 		{Name: "current", In: InQuery, Flag: "current", Usage: "Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the meeting ready to join or start or the upcoming meeting of the meeting series. If it's `true`, return details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start or the upcoming scheduled meeting of the meeting series. If it's `false` or not specified, return details for the entire meeting series. This parameter only applies to meeting series."},
 		{Name: "hostEmail", In: InQuery, Flag: "host-email", Usage: "Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user."},
-		{Name: "password", In: InHeader, Flag: "password", Secret: true, Usage: "e.g. BgJep@4323"},
+		{Name: "password", In: InHeader, Flag: "password", Usage: "e.g. BgJep@4323"},
 		{Name: "timezone", In: InHeader, Flag: "timezone", Usage: "e.g. UTC"},
 	},
 }
@@ -1018,7 +1018,7 @@ var MeetingsPatchMeetingsByMeetingId = &Operation{
 	Params: []Param{
 		{Name: "meetingId", In: InPath, Flag: "meeting-id", Required: true, Usage: "Unique identifier for the meeting to be updated. This parameter applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API."},
 	},
-	Body: &Body{Secret: []string{"password", "panelistPassword"}},
+	Body: &Body{},
 }
 
 // MeetingsPutMeetingsByMeetingId is "Update a Meeting": PUT /meetings/{meetingId}.
@@ -1030,7 +1030,7 @@ var MeetingsPutMeetingsByMeetingId = &Operation{
 	Params: []Param{
 		{Name: "meetingId", In: InPath, Flag: "meeting-id", Required: true, Usage: "Unique identifier for the meeting to be updated. This parameter applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API."},
 	},
-	Body: &Body{Secret: []string{"password", "panelistPassword"}},
+	Body: &Body{},
 }
 
 // MeetingsDeleteMeetingsByMeetingId is "Delete a Meeting": DELETE /meetings/{meetingId}.
@@ -1065,7 +1065,7 @@ var MeetingsPostMeetingsJoin = &Operation{
 		{Name: "hostEmail", Flag: "host-email", Type: "string"},
 		{Name: "createJoinLinkAsWebLink", Flag: "create-join-link-as-web-link", Type: "bool"},
 		{Name: "createStartLinkAsWebLink", Flag: "create-start-link-as-web-link", Type: "bool"},
-	}, Secret: []string{"password"}},
+	}},
 }
 
 // MeetingsGetMeetingsTemplates is "List Meeting Templates": GET /meetings/templates.
@@ -1626,7 +1626,7 @@ var MeetingsPatchGroupMeetingsByMeetingId = &Operation{
 		{Name: "personId", In: InQuery, Flag: "person-id", Usage: "Person ID of the user whose meeting will be patched. The person ID can be retrieved from the [People APIs](/docs/api/v1/people), e.g. [Lit People](/docs/api/v1/people/list-people). Note that a person ID retrieved from the People APIs is a Base64-encoded string, e.g. `Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kNDdiMmU3ZC01ZTBmLTRmNjktYWVmNC1lNGZmOTBhZWE3Yzk`. The person ID in the raw UUID format which is the last part of the Base64-decoded string, e.g. `d47b2e7d-5e0f-4f69-aef4-e4ff90aea7c9`, is also supported. The `personId` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified."},
 		{Name: "hostEmail", In: InHeader, Flag: "host-email", Usage: "Email of the user whose meetings will be patched. The `hostEmail` parameter is optional, but one of the `personId` parameter and `hostEmail` header must be specified."},
 	},
-	Body: &Body{Secret: []string{"password", "panelistPassword"}},
+	Body: &Body{},
 }
 
 // MeetingsPostGroupMeetingsControls is "Update Group Meeting Control Status": POST /group/meetings/controls.
@@ -2599,7 +2599,7 @@ var MeetingsPostWebhooks = &Operation{
 		{Name: "filter", Flag: "filter", Type: "string"},
 		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
-	}, Secret: []string{"secret"}},
+	}},
 }
 
 // MeetingsGetWebhooksByWebhookId is "Get Webhook Details": GET /webhooks/{webhookId}.
@@ -2628,7 +2628,7 @@ var MeetingsPutWebhooksByWebhookId = &Operation{
 		{Name: "secret", Flag: "secret", Type: "string"},
 		{Name: "ownedBy", Flag: "owned-by", Type: "string"},
 		{Name: "status", Flag: "status", Type: "string"},
-	}, Secret: []string{"secret"}},
+	}},
 }
 
 // MeetingsDeleteWebhooksByWebhookId is "Delete a Webhook": DELETE /webhooks/{webhookId}.

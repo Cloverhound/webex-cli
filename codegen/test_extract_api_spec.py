@@ -4,16 +4,7 @@ import os
 import tempfile
 import unittest
 
-from extract_api_spec import example_list, extract_endpoint, load_collections
-
-
-class HeaderTest(unittest.TestCase):
-    def test_headers_the_transport_owns_are_never_parameters(self):
-        headers = [{'key': k} for k in ('authorization', 'Cookie', 'HOST', 'content-length', 'Proxy-Authorization',
-                                        'content-type', 'accept', 'TrackingID', 'password')]
-        ep = extract_endpoint({'name': 'Get', 'request': {'method': 'GET', 'header': headers,
-                                                          'url': {'path': ['meetings']}}})
-        self.assertEqual([h['name'] for h in ep['extra_headers']], ['TrackingID', 'password'])
+from extract_api_spec import example_list, load_collections
 
 
 def collection(name, folders):

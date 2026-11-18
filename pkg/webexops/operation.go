@@ -8,7 +8,6 @@
 package webexops
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -94,10 +93,6 @@ type Param struct {
 	// OrgUUID means the API takes the organization's UUID. Call converts a base64
 	// organization ID to it.
 	OrgUUID bool
-
-	// Secret means the value is a credential, such as a meeting password, which
-	// diagnostics must not show.
-	Secret bool
 }
 
 // Body says an operation sends a body.
@@ -105,10 +100,6 @@ type Body struct {
 	// Fields are top-level body fields the CLI offers as flags. Bodies that are
 	// not flat have none.
 	Fields []BodyField
-
-	// Secret names the top-level fields that carry a credential, flat body or
-	// not; see RedactBody.
-	Secret []string
 }
 
 // BodyField is one top-level body field.
@@ -323,46 +314,6 @@ func (op *Operation) takesOrgUUID(name string) bool {
 		}
 	}
 	return false
-}
-
-// RedactBody replaces the values of the secret top-level fields in a JSON object
-// body, for showing it. Any other body is returned as it is.
-func (op *Operation) RedactBody(body []byte) []byte {
-	if op.Body == nil {
-		return body
-	}
-	var object map[string]json.RawMessage
-	if json.Unmarshal(body, &object) != nil {
-		return body
-	}
-	redacted := false
-	for _, name := range op.Body.Secret {
-		if _, ok := object[name]; ok {
-			object[name] = json.RawMessage(`"<redacted>"`)
-			redacted = true
-		}
-	}
-	if !redacted {
-		return body
-	}
-	var out bytes.Buffer
-	enc := json.NewEncoder(&out)
-	enc.SetEscapeHTML(false)
-	if enc.Encode(object) != nil {
-		return body
-	}
-	return bytes.TrimSuffix(out.Bytes(), []byte("\n"))
-}
-
-// SecretParams are the names of the operation's secret parameters.
-func (op *Operation) SecretParams() []string {
-	var names []string
-	for _, p := range op.Params {
-		if p.Secret {
-			names = append(names, p.Name)
-		}
-	}
-	return names
 }
 
 // Call sends an operation. Arguments it cannot send are an error, and nothing is
