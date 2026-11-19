@@ -200,8 +200,12 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 // the first `word` in a usage as the flag's value name, and Cisco's descriptions
 // use backticks only to mark code, so they are dropped.
 func flagUsage(description string) string {
-	return strings.NewReplacer("\n", " ", "`", "").Replace(description)
+	return usageReplacer.Replace(description)
 }
+
+// usageReplacer is built once: its table is large, and every API command's
+// flags are registered at startup.
+var usageReplacer = strings.NewReplacer("\n", " ", "`", "")
 
 // bodyFromFlags is the JSON body of the fields given by flags, or none when no
 // field is given. A string or list field is sent when it is not empty, and any

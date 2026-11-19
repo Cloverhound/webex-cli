@@ -27,3 +27,11 @@ func TestAFlagWithCodeInItsUsageShowsItsType(t *testing.T) {
 		t.Errorf("usage = %q, want %q", usage, want)
 	}
 }
+
+// Every API command is built at startup, so flag help must stay cheap to make.
+func TestFlagUsageAllocatesOnlyItsResult(t *testing.T) {
+	allocs := testing.AllocsPerRun(100, func() { flagUsage("A `code` span\nover two lines.") })
+	if allocs > 1 {
+		t.Errorf("flagUsage made %v allocations, want at most 1", allocs)
+	}
+}
