@@ -24736,6 +24736,17 @@
     "required": true
    },
    {
+    "name": "file",
+    "type": "string",
+    "usage": "Path to the image: a .jpeg or .png file of at most 625 KB",
+    "required": true
+   },
+   {
+    "name": "file-name",
+    "type": "string",
+    "usage": "Name of the image in Webex (default: the file's name)"
+   },
+   {
     "name": "help",
     "shorthand": "h",
     "type": "bool",
@@ -52525,12 +52536,12 @@
    {
     "name": "body",
     "type": "string",
-    "usage": "Raw JSON body"
+    "usage": "The channel as JSON, sent as the form part logoFileInfo"
    },
    {
     "name": "body-file",
     "type": "string",
-    "usage": "Path to JSON body file"
+    "usage": "Path to a file that holds the value of --body"
    },
    {
     "name": "help",
@@ -52538,6 +52549,11 @@
     "type": "bool",
     "default": "false",
     "usage": "help for create"
+   },
+   {
+    "name": "logo-file",
+    "type": "string",
+    "usage": "Path to the logo, a 20x20 pixel image, for a channel whose logoType is LOGO_URL"
    },
    {
     "name": "orgid",
@@ -52782,6 +52798,16 @@
   "long": "Update an existing Channel by ID in a given organization.",
   "flags": [
    {
+    "name": "body",
+    "type": "string",
+    "usage": "The channel as JSON, sent as the form part logoFileInfo"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to a file that holds the value of --body"
+   },
+   {
     "name": "help",
     "shorthand": "h",
     "type": "bool",
@@ -52793,6 +52819,11 @@
     "type": "string",
     "usage": "Resource ID of the Channel",
     "required": true
+   },
+   {
+    "name": "logo-file",
+    "type": "string",
+    "usage": "Path to the logo, a 20x20 pixel image, for a channel whose logoType is LOGO_URL"
    },
    {
     "name": "orgid",
@@ -57487,9 +57518,10 @@
   "long": "Returns the imported flow/subflow in response.\n\nScope: `cjp:config_write`. Roles: [`Organizational Full Admin`, `Supervisor`, `Contact Center Service Admin`, `User Admin`]",
   "flags": [
    {
-    "name": "content-length",
+    "name": "file",
     "type": "string",
-    "usage": "Content length value in number of bytes."
+    "usage": "Path to the flow in the legacy format, as flow export-legacy writes it",
+    "required": true
    },
    {
     "name": "flow-type",
@@ -58061,6 +58093,12 @@
     "name": "associated-rcs",
     "type": "string",
     "usage": "Optional list of associated routing-context IDs."
+   },
+   {
+    "name": "file",
+    "type": "string",
+    "usage": "Path to the function, as functions export writes it",
+    "required": true
    },
    {
     "name": "help",
@@ -72263,6 +72301,17 @@
     "type": "string",
     "usage": "Unique identifier for the device.",
     "required": true
+   },
+   {
+    "name": "file",
+    "type": "string",
+    "usage": "Path to the image: a .jpeg or .png file of at most 625 KB",
+    "required": true
+   },
+   {
+    "name": "file-name",
+    "type": "string",
+    "usage": "Name of the image in Webex (default: the file's name)"
    },
    {
     "name": "help",

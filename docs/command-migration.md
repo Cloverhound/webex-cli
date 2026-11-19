@@ -123,7 +123,7 @@ Live monitoring sessions moved from `call-monitoring` to `call-monitor`, and the
 | `webex cc functions get-custom` | Generated collection | `webex cc functions get` | Retrieve a function draft, or a specific published version/tag. | No — use the new command |
 | `webex cc functions update-custom` | Generated collection | `webex cc functions update` | Update an existing custom function by ID. | No — use the new command |
 | `webex cc functions delete-custom` | Generated collection | `webex cc functions delete` | Delete a custom function by ID. | No — use the new command |
-| `webex cc functions import-custom` | Generated collection | `webex cc functions import` | Import a function-definition JSON file as a multipart upload. The current generated CLI command still lacks file-upload handling; naming it does not fix that limitation. | No — use the new command |
+| `webex cc functions import-custom` | Generated collection | `webex cc functions import` | Import a function-definition JSON file, given by `--file`, as a multipart upload. | No — use the new command |
 | `webex cc functions unlock-custom` | Generated collection | `webex cc functions unlock` | Release the edit lock on a custom function so that other users can edit it. | No — use the new command |
 | `webex cc functions lock-custom` | Generated collection | `webex cc functions lock` | Acquire an edit lock on a custom function to prevent concurrent writes by other users. | No — use the new command |
 | `webex cc functions test-custom` | Generated collection | `webex cc functions test` | Execute a function with a test payload. The API implicitly publishes the latest draft before running it. | No — use the new command |

@@ -163,7 +163,13 @@ Bodies must be supplied with `--body` or `--body-file`; these generated commands
 
 Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
-**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
+**Imports from a file:** `flow import-legacy` and `functions import` upload the file that `--file` names, as `flow export-legacy` and `functions export` write it. The name comes from the file, so change it there to import a copy.
+
+```bash
+webex cc flow import-legacy --file legacy-flow.json --flow-type FLOW --overwrite no
+webex cc functions export --id <id> > function.json
+webex cc functions import --file function.json --overwrite false
+```
 
 ## AI Agent Studio (unsupported private API)
 
@@ -207,6 +213,13 @@ webex cc external-data-updates update-task-global-variables --body-file task-upd
 ```
 
 Discover report types before creating a report; the collection does not enumerate the types or CSV columns. Download with `fileId`, not `reportId`. Reports can span available data up to 36 months, may split into monthly files, and expire seven days after completion. Only one report processes per organization at a time. Downloads may be gzip-compressed CSV; check the format before parsing and use `--output raw` to preserve file bytes.
+
+`channel create` and `channel update` send the channel as JSON from `--body` or `--body-file`. Only `WORK_ITEM` and `CUSTOM_MESSAGING` channels can be created, and an update's body must include the channel's `id`. `--logo-file` adds a logo, a 20x20 pixel image, for a channel whose `logoType` is `LOGO_URL`.
+
+```bash
+webex cc channel create --body '{"name":"Returns","channelType":"WORK_ITEM","logoType":"MOMENTUM","logoIconName":"chat"}'
+webex cc channel update --id <id> --body-file channel.json --logo-file logo.png
+```
 
 For task controls, `unhold` (alias `resume`) resumes a held voice call; `pause-digital` and `resume-digital` handle paused non-real-time digital tasks. `append-message` retains `update-2` as an alias. Queue lookups use `list-agent-based`, `list-skill-based`, `list-team-based`, `list-by-skill-profile`, `list-by-dynamic-skills`, and `list-by-user-skill-profile`; pass IDs as flags. Whisper coaching is beta. The refresh also adds conference-participant removal, campaign-time lookup, and contact closure across a campaign chain.
 
@@ -874,7 +887,7 @@ Group aliases: `flows`.
 | `validate-draft` | `--flow-id` *(required)*, `--version-id`, `--flow-type` |
 | `export` | `--flow-id` *(required)*, `--version`, `--flow-type` |
 | `search` | `--query`, `--flow-type`, `--page`, `--size`, `--key-value-filter` |
-| `import-legacy` | `--overwrite`, `--flow-type` |
+| `import-legacy` | `--overwrite`, `--flow-type`, `--file` *(required)* |
 | `publish` | `--flow-id` *(required)*, `--skip-validation`, `--flow-type`, `--comment`, `--tag-ids`, `--body`, `--body-file` |
 | `lock` | `--flow-id` *(required)*, `--flow-type` |
 | `unlock` | `--flow-id` *(required)*, `--flow-type` |
@@ -1055,7 +1068,7 @@ Group aliases: `flows`.
 | `get` | `--id` *(required)*, `--version-or-tag`, `--meta-data-only` |
 | `list-options` | `--language`, `--runtime` |
 | `create` | `--body`, `--body-file` |
-| `import` | `--overwrite`, `--associated-rcs` |
+| `import` | `--overwrite`, `--associated-rcs`, `--file` *(required)* |
 | `unlock` | `--id` *(required)* |
 | `lock` | `--id` *(required)* |
 | `test` | `--id` *(required)*, `--body`, `--body-file` |
@@ -1103,9 +1116,9 @@ Group aliases: `flows`.
 | `get` (aliases: `get-id`) | `--id` *(required)*, `--include-logo-url-versioned` |
 | `list-references` | `--id` *(required)*, `--type`, `--page`, `--page-size` |
 | `list` | `--filter`, `--attributes`, `--search`, `--page`, `--page-size`, `--sort`, `--include-count`, `--single-object-response`, `--include-logo-url-versioned` |
-| `create` | `--body`, `--body-file` |
+| `create` | `--body` or `--body-file` *(required)*, `--logo-file` |
 | `bulk-save` | `--body`, `--body-file` |
-| `update` (aliases: `update-id`) | `--id` *(required)* |
+| `update` (aliases: `update-id`) | `--id` *(required)*, `--body` or `--body-file` *(required)*, `--logo-file` |
 | `patch` (aliases: `patch-id`) | `--id` *(required)*, `--description`, `--logo-type`, `--logo-icon-name`, `--body`, `--body-file` |
 | `delete` (aliases: `delete-id`) | `--id` *(required)* |
 

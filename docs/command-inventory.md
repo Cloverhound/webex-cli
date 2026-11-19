@@ -477,4 +477,4 @@ Counts cover the normalized spec; handwritten commands and codegen exclusions ca
 
 ## Limitations
 
-`cc functions import` lacks multipart upload handling. `cc flow import-legacy` lacks legacy upload body handling. Use current-format `flow import --body-file` for typed flow documents; legacy imports require an upload implementation.
+`cc functions import` and `cc flow import-legacy` upload the file that `--file` names. Use current-format `flow import --body-file` for typed flow documents.
