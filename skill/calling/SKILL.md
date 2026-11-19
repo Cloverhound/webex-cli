@@ -91,23 +91,30 @@ webex calling devices delete --device-id <id>
 
 ## Call Queues (Customer Experience)
 
+The `-customer-assist` commands serve both tiers. Without `--has-cx-essentials true` they list, read and create Customer Experience Basic queues and supervisors; with it, Customer Assist ones. Reading or changing a Customer Assist queue or supervisor needs the flag.
+
 ```bash
-# List call queues
+# List Basic call queues; add --has-cx-essentials true for Customer Assist queues
 webex calling call-queue list-customer-assist [flags]
   --location-id <id>
   --name <name>
   --phone-number <num>
   --max <n>
-  --has-cx-essentials true   # only Customer Assist queues
 
+# Basic queue
 webex calling call-queue get-customer-assist --location-id <id> --queue-id <id>
 webex calling call-queue create-customer-assist --location-id <id> --body '{...}'
+
+# Customer Assist queue
+webex calling call-queue get-customer-assist --location-id <id> --queue-id <id> --has-cx-essentials true
+webex calling call-queue create-customer-assist --location-id <id> --has-cx-essentials true --body '{...}'
+
 webex calling call-queue update --location-id <id> --queue-id <id> --body '{...}'
 webex calling call-queue delete --location-id <id> --queue-id <id>
 
-# Supervisor management
-webex calling call-queue create-supervisor-customer-assist --body '{...}'
-webex calling call-queue assign-unassign-agents-supervisor-customer-assist --supervisor-id <id> --body '{...}'
+# Customer Assist supervisors
+webex calling call-queue create-supervisor-customer-assist --has-cx-essentials true --body '{...}'
+webex calling call-queue assign-unassign-agents-supervisor-customer-assist --supervisor-id <id> --has-cx-essentials true --body '{...}'
 ```
 
 ## Hunt Groups

@@ -89,8 +89,10 @@ webex cc site list-references --id <id>
 
 # Bulk operations
 webex cc site bulk-export
-webex cc site bulk-save --body '[{...},{...}]'
+webex cc site bulk-save --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
+
+Bulk save and bulk partial update take an object, not an array: each entry of `items` has an `itemIdentifier` you choose, a `requestAction`, and the object as `item`.
 
 **`update` replaces the whole object.** This applies to every configuration object, such as a site, team, queue or user. Fields left out of the body are cleared. Get the object first and send it back whole with the changes. `ai-agent update` is the exception: it keeps fields that are left out.
 
@@ -118,7 +120,7 @@ webex cc users update --id <id> --body '{...}'
 
 # Bulk
 webex cc users bulk-export
-webex cc users bulk-partial-update --body '[{...}]'
+webex cc users bulk-partial-update --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
 
 ## Agents (Live Session Control)
@@ -254,7 +256,7 @@ webex cc <resource> update --id <id> --body '{...}'
 webex cc <resource> delete --id <id>
 webex cc <resource> list-references --id <id>
 webex cc <resource> bulk-export
-webex cc <resource> bulk-save --body '[{...}]'
+webex cc <resource> bulk-save --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 webex cc <resource> purge-inactive     # removes soft-deleted records (most resources)
 ```
 
@@ -270,7 +272,7 @@ webex cc dial-number update-dialed-mapping-id --id <id> --body '{...}'
 webex cc dial-number delete-dialed-mapping-id --id <id>
 webex cc dial-number list-references-dialed-mapping --id <id>
 webex cc dial-number bulk-export-dialed-mapping
-webex cc dial-number bulk-save-dialed-mapping --body '[{...}]'
+webex cc dial-number bulk-save-dialed-mapping --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
 
 ### Outdial ANI (has entries sub-resource)
@@ -291,7 +293,7 @@ webex cc address-book list
 webex cc address-book get --id <id>
 webex cc address-book list-entry --address-book-id <id>         # list contacts
 webex cc address-book create-entry --address-book-id <id> --body '{...}'
-webex cc address-book bulk-save-entry --address-book-id <id> --body '[{...}]'
+webex cc address-book bulk-save-entry --address-book-id <id> --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 webex cc address-book update-entry-id --address-book-id <id> --id <entryId> --body '{...}'
 webex cc address-book delete-entry-id --address-book-id <id> --id <entryId>
 ```

@@ -16,7 +16,7 @@ import (
 )
 
 // Agents run the skill's examples as written, and a collection refresh can
-// rename a command or flag under them. Every `webex` line in a code block of a
+// rename a command or flag under them. Every `webex` command in a code block of a
 // skill file or a documentation page must name a real command and only flags
 // that command takes. The generated Command Reference is skipped: codegen
 // writes it from the commands.
@@ -25,9 +25,9 @@ func TestDocumentedExamplesUseRealCommandsAndFlags(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	docs := map[string][]byte{"skill/SETUP.md": []byte(skill.Setup)}
+	docs := map[string]string{"skill/SETUP.md": skill.Setup}
 	for name, content := range files {
-		docs["skill/"+name] = content
+		docs["skill/"+name] = string(content)
 	}
 	pages, err := filepath.Glob("site/src/content/docs/*.mdx")
 	if err != nil {
@@ -38,7 +38,7 @@ func TestDocumentedExamplesUseRealCommandsAndFlags(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		docs[name] = content
+		docs[name] = string(content)
 	}
 	names := make([]string, 0, len(docs))
 	for name := range docs {
@@ -48,23 +48,65 @@ func TestDocumentedExamplesUseRealCommandsAndFlags(t *testing.T) {
 
 	root := cmd.RootCommand()
 	for _, name := range names {
-		for _, ex := range skillExamples(string(docs[name])) {
-			for _, problem := range checkExample(root, ex.words, ex.flags) {
-				t.Errorf("%s:%d: %s\n\t%s", name, ex.line, problem, ex.text)
-			}
+		for _, problem := range documentProblems(root, name, docs[name]) {
+			t.Error(problem)
 		}
-		area, file, ok := strings.Cut(strings.TrimPrefix(name, "skill/"), "/")
-		if !ok || file != "SKILL.md" {
-			continue
+	}
+}
+
+// The checker must itself catch each kind of stale example.
+func TestDocumentCheckFindsStaleExamples(t *testing.T) {
+	root := cmd.RootCommand()
+	for _, tc := range []struct{ name, doc, want string }{
+		{"table row", "| `site` | list, nosuch |", `"webex cc site" has no command "nosuch"`},
+		{"leading global flag", "```bash\nwebex --token \"$T\" calling people list --nosuch\n```", "has no flag --nosuch"},
+		{"argument placeholder", "```bash\nwebex auth switch <email> --nosuch\n```", "has no flag --nosuch"},
+		{"after &&", "```bash\nmkdir -p x && webex post-install -y --nosuch\n```", "has no flag --nosuch"},
+		{"after nohup", "```bash\nnohup webex login --device --nosuch > log 2>&1 &\n```", "has no flag --nosuch"},
+		{"flag prefix", "```bash\nwebex calling people list --max_results 5\n```", "--max_results"},
+		{"unknown shorthand", "```bash\nwebex post-install -z\n```", "has no flag -z"},
+		{"continuation line", "```bash\nwebex calling people list\n  --nosuch <x>\n```", "has no flag --nosuch"},
+	} {
+		problems := documentProblems(root, "skill/cc/SKILL.md", tc.doc)
+		if !slices.ContainsFunc(problems, func(p string) bool { return strings.Contains(p, tc.want) }) {
+			t.Errorf("%s: problems %q, want one containing %q", tc.name, problems, tc.want)
 		}
-		for _, row := range commandTableRows(string(files[name])) {
-			for _, command := range row.commands {
-				for _, problem := range checkExample(root, []string{area, row.group, command}, nil) {
-					t.Errorf("%s:%d: %s\n\t%s", name, row.line, problem, row.text)
-				}
+	}
+	for _, ok := range []string{
+		"```bash\nwebex cc <resource> list --filter x\n```",
+		"```bash\nmkdir -p x && webex post-install -y\n```",
+		"```bash\nwebex --token \"$T\" calling people list --max 5\n```",
+		"```bash\nwebex auth switch user@example.com\n```",
+		"```bash\nwebex cc site list --help\n```",
+		"```bash\nwebex cc search tasks --from -24h\n```",
+	} {
+		if problems := documentProblems(root, "skill/cc/SKILL.md", ok); len(problems) > 0 {
+			t.Errorf("%q: unexpected problems %q", ok, problems)
+		}
+	}
+}
+
+// documentProblems checks a document's examples and, for an area skill, its
+// table of groups and their commands.
+func documentProblems(root *cobra.Command, name, content string) []string {
+	var problems []string
+	for _, ex := range skillExamples(root, content) {
+		for _, p := range checkExample(root, ex) {
+			problems = append(problems, fmt.Sprintf("%s:%d: %s\n\t%s", name, ex.line, p, ex.text))
+		}
+	}
+	area, file, ok := strings.Cut(strings.TrimPrefix(name, "skill/"), "/")
+	if !ok || file != "SKILL.md" {
+		return problems
+	}
+	for _, row := range commandTableRows(content) {
+		for _, command := range row.commands {
+			for _, p := range checkExample(root, skillExample{words: []string{area, row.group, command}}) {
+				problems = append(problems, fmt.Sprintf("%s:%d: %s\n\t%s", name, row.line, p, row.text))
 			}
 		}
 	}
+	return problems
 }
 
 // commandTableRow is a row of an area skill's table of groups and their
@@ -91,27 +133,36 @@ func commandTableRows(content string) []commandTableRow {
 	return rows
 }
 
-// skillExample is one `webex` command line in a skill file, with the flags on
-// its continuation lines.
+// skillExample is one `webex` command in a document, with the flags on its
+// continuation lines.
 type skillExample struct {
 	line  int
 	text  string
-	words []string // command words after "webex", up to the first argument or flag
-	flags []string // flag names, without "--"
+	words []string // command words after "webex" and any global flags
+	// generic is set when a placeholder follows the words, as in
+	// "webex cc <resource> list": it stands for many commands where the words
+	// name a group, and is an argument where they name a command.
+	generic bool
+	flags   []string // flags as written, "--name" or "-x", without values
 }
 
+var commandWord = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
+
 var (
-	commandWord = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
-	flagName    = regexp.MustCompile(`^--([a-z0-9][a-z0-9-]*)`)
+	// shellOperators end one command; the word after one is a command.
+	shellOperators = map[string]bool{"&&": true, "||": true, ";": true, "|": true, "&": true}
+	// commandPrefixes run the command that follows them.
+	commandPrefixes = map[string]bool{"nohup": true, "sudo": true, "exec": true}
+	redirection     = regexp.MustCompile(`^(\d?>|<$)`)
 )
 
-// skillExamples finds the `webex` lines in a file's fenced code blocks, outside
-// the generated block. A line in the same block that starts with a flag
+// skillExamples finds the `webex` commands in a document's fenced code blocks,
+// outside the generated block. A line in the same block that starts with a flag
 // continues the command above it.
-func skillExamples(content string) []skillExample {
+func skillExamples(root *cobra.Command, content string) []skillExample {
 	var out []skillExample
 	inCode, generated := false, false
-	var last *skillExample
+	last := -1
 	for i, raw := range strings.Split(content, "\n") {
 		line := strings.TrimSpace(raw)
 		switch {
@@ -120,42 +171,72 @@ func skillExamples(content string) []skillExample {
 		case strings.HasPrefix(line, "<!-- codegen:end"):
 			generated = false
 		case strings.HasPrefix(line, "```"):
-			inCode, last = !inCode, nil
+			inCode, last = !inCode, -1
 		}
 		if !inCode || generated {
 			continue
 		}
 		tokens := shellWords(line)
-		switch {
-		case len(tokens) > 0 && tokens[0] == "webex":
+		if len(tokens) > 0 && strings.HasPrefix(tokens[0], "-") && last >= 0 {
+			out[last].flags = append(out[last].flags, flagsIn(shellCommand(tokens))...)
+			continue
+		}
+		if line == "" {
+			last = -1
+		}
+		for start, tok := range tokens {
+			if tok != "webex" || start > 0 && !shellOperators[tokens[start-1]] && !commandPrefixes[tokens[start-1]] {
+				continue
+			}
 			ex := skillExample{line: i + 1, text: line}
-			args := tokens[1:]
+			args := shellCommand(tokens[start+1:])
+			for len(args) > 0 && strings.HasPrefix(args[0], "-") {
+				ex.flags = append(ex.flags, flagsIn(args[:1])...)
+				name, _, hasValue := strings.Cut(strings.TrimLeft(args[0], "-"), "=")
+				f := root.PersistentFlags().Lookup(name)
+				args = args[1:]
+				if f != nil && f.NoOptDefVal == "" && !hasValue && len(args) > 0 {
+					args = args[1:]
+				}
+			}
 			for len(args) > 0 && commandWord.MatchString(args[0]) {
 				ex.words, args = append(ex.words, args[0]), args[1:]
 			}
-			// "webex <area> <resource> --help" stands for many commands.
-			if len(ex.words) == 0 || len(args) > 0 && strings.HasPrefix(args[0], "<") {
-				last = nil
+			if len(ex.words) == 0 {
 				continue
 			}
-			ex.flags = flagsIn(args)
+			ex.generic = len(args) > 0 && strings.HasPrefix(args[0], "<")
+			ex.flags = append(ex.flags, flagsIn(args)...)
 			out = append(out, ex)
-			last = &out[len(out)-1]
-		case len(tokens) > 0 && strings.HasPrefix(tokens[0], "--") && last != nil:
-			last.flags = append(last.flags, flagsIn(tokens)...)
-		case line == "":
-			last = nil
+			last = len(out) - 1
 		}
 	}
 	return out
 }
 
+// shellCommand is the words of one command: those before a shell operator or
+// redirection.
+func shellCommand(tokens []string) []string {
+	for i, tok := range tokens {
+		if shellOperators[tok] || redirection.MatchString(tok) {
+			return tokens[:i]
+		}
+	}
+	return tokens
+}
+
+// flagsIn is the flags among a command's words, as written up to any "=value".
+// "[--flag <value>]" marks an optional flag, and "[--a, --b]" several.
 func flagsIn(tokens []string) []string {
 	var flags []string
 	for _, tok := range tokens {
-		// "[--flag <value>]" marks an optional flag.
-		if m := flagName.FindStringSubmatch(strings.TrimLeft(tok, "[")); m != nil {
-			flags = append(flags, m[1])
+		tok = strings.TrimRight(strings.TrimLeft(tok, "["), "],")
+		tok, _, _ = strings.Cut(tok, "=")
+		switch {
+		case strings.HasPrefix(tok, "--") && len(tok) > 2:
+			flags = append(flags, tok)
+		case len(tok) == 2 && tok[0] == '-' && tok[1] >= 'a' && tok[1] <= 'z':
+			flags = append(flags, tok)
 		}
 	}
 	return flags
@@ -196,11 +277,13 @@ func shellWords(line string) []string {
 	return words
 }
 
+var longFlag = regexp.MustCompile(`^--[a-z0-9][a-z0-9-]*$`)
+
 // checkExample reports a word that names no command, and a flag the command
 // does not take. Words after a command with no subcommands are its arguments.
-func checkExample(root *cobra.Command, words, flags []string) []string {
+func checkExample(root *cobra.Command, ex skillExample) []string {
 	c := root
-	for _, w := range words {
+	for _, w := range ex.words {
 		if !c.HasSubCommands() {
 			break
 		}
@@ -210,13 +293,25 @@ func checkExample(root *cobra.Command, words, flags []string) []string {
 		}
 		c = next
 	}
-	if c.HasSubCommands() && !c.Runnable() && !slices.Contains(flags, "help") {
+	if c.HasSubCommands() && ex.generic {
+		return nil
+	}
+	if c.HasSubCommands() && !c.Runnable() && !slices.Contains(ex.flags, "--help") {
 		return []string{fmt.Sprintf("%q needs a command after it", c.CommandPath())}
 	}
 	var problems []string
-	for _, f := range flags {
-		if f != "help" && c.Flags().Lookup(f) == nil && c.InheritedFlags().Lookup(f) == nil {
-			problems = append(problems, fmt.Sprintf("%q has no flag --%s", c.CommandPath(), f))
+	for _, f := range ex.flags {
+		switch {
+		case f == "--help" || f == "-h":
+		case strings.HasPrefix(f, "--"):
+			name := f[2:]
+			if !longFlag.MatchString(f) || c.Flags().Lookup(name) == nil && c.InheritedFlags().Lookup(name) == nil {
+				problems = append(problems, fmt.Sprintf("%q has no flag %s", c.CommandPath(), f))
+			}
+		default:
+			if c.Flags().ShorthandLookup(f[1:]) == nil && c.InheritedFlags().ShorthandLookup(f[1:]) == nil {
+				problems = append(problems, fmt.Sprintf("%q has no flag %s", c.CommandPath(), f))
+			}
 		}
 	}
 	return problems
