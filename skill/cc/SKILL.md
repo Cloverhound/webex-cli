@@ -180,6 +180,16 @@ webex cc functions update --id <id> --body-file function.json
 webex cc functions test --id <id> --body '{"inputs":{"lookup_number":"+15550100"}}'
 ```
 
+## Dynamic skills
+
+`users bulk-update-dynamic-skills` assigns a dynamic skill to several users at once. Its example body lists every field of a user's skill record, but the server sets most of them. This body assigns a proficiency skill:
+
+```bash
+webex cc users bulk-update-dynamic-skills --skill-id <skill-id> --body '{"items":[{"itemIdentifier":0,"item":{"userId":"<user-id>","proficiencyValue":10},"requestAction":"SAVE"}]}'
+```
+
+`itemIdentifier` is a number you choose for each item; the response reports each item's result under it. The value goes in the field for the skill's type, such as `proficiencyValue`. If `itemIdentifier` is missing or the value field has the wrong name, Webex returns a 500 with no explanation.
+
 ## AI Agent Studio (unsupported private API)
 
 > **Caution:** `ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.

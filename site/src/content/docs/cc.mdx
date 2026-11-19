@@ -213,6 +213,16 @@ webex cc functions update --id <id> --body-file function.json
 webex cc functions test --id <id> --body '{"inputs":{"lookup_number":"+15550100"}}'
 ```
 
+## Dynamic skills
+
+`users bulk-update-dynamic-skills` assigns a dynamic skill to several users at once. Its example body lists every field of a user's skill record, but the server sets most of them. This body assigns a proficiency skill:
+
+```bash
+webex cc users bulk-update-dynamic-skills --skill-id <skill-id> --body '{"items":[{"itemIdentifier":0,"item":{"userId":"<user-id>","proficiencyValue":10},"requestAction":"SAVE"}]}'
+```
+
+`itemIdentifier` is a number you choose for each item; the response reports each item's result under it. The value goes in the field for the skill's type, such as `proficiencyValue`. If `itemIdentifier` is missing or the value field has the wrong name, Webex returns a 500 with no explanation.
+
 ## AI Agent Studio
 
 :::caution[Unsupported private API]
