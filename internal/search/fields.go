@@ -122,7 +122,7 @@ var DefaultFields = map[QueryType]string{
     }
     pageInfo { hasNextPage endCursor }`,
 
-	QueryFlowInteractions: `flowInteractions {
+	QueryFlowInteractions: `interactions {
       interactionId
       flowId
       flowVersionId
@@ -131,14 +131,17 @@ var DefaultFields = map[QueryType]string{
       flowStartTime
       flowEndTime
       status
+      tagId
     }
-    pageInfo { hasNextPage totalPages totalHits }`,
+    pageInfo { pageSize currentPage totalPages totalRecords }`,
 
-	QueryFlowTraceEvents: `flowTraceEvents {
+	QueryFlowTraceEvents: `traces {
       interactionId
       flowId
+      flowVersionId
       activityName
       activityProcessId
+      nextLinkProcessId
       outcome
       activityInputs { name value }
       activityOutput { name type value }
@@ -146,5 +149,5 @@ var DefaultFields = map[QueryType]string{
       flowStartTime
       flowEndTime
     }
-    pageInfo { hasNextPage totalPages totalHits }`,
+    pageInfo { pageSize currentPage totalPages totalRecords }`,
 }

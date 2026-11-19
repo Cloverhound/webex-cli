@@ -23055,7 +23055,7 @@
      "Content-Type": "application/json",
      "Trackingid": "s-tracking-id"
     },
-    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 1 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 0 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
    }
   ]
  },
@@ -23075,7 +23075,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, filter: {}) { interactions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n      tagId\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    }
   ]
  },
@@ -23117,7 +23117,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 1 }) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, filter: {}, pagination: { pageSize: 100, currentPage: 0 }) { interactions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n      tagId\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    },
    {
     "method": "POST",
@@ -23127,7 +23127,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 2 }) { flowInteractions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowInteractions(from: 1767225600000, to: 1767312000000, filter: {}, pagination: { pageSize: 100, currentPage: 1 }) { interactions {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      entryPointName\\n      lastExecutedActivity\\n      flowStartTime\\n      flowEndTime\\n      status\\n      tagId\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    }
   ]
  },
@@ -23162,7 +23162,7 @@
      "Content-Type": "application/json",
      "Trackingid": "s-tracking-id"
     },
-    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 1 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, timeComparator: createdTime, filter: { and: [{ channelType: { equals: s-channel } }, { direction: { equals: \\\"s-direction\\\" } }, { status: { equals: \\\"s-status\\\" } }, { owner: { id: { equals: \\\"s-agent-id\\\" } } }, { lastQueue: { id: { equals: \\\"s-queue-id\\\" } } }, { golden: true }] }, pagination: { pageSize: 7, currentPage: 0 }, aggregations: [{ field: \\\"s-field\\\", type: count, name: \\\"s-name\\\" }], aggregationInterval: { interval: DAILY, timezone: \\\"s-timezone\\\" }) { s-fields } }\"}"
    }
   ]
  },
@@ -23182,7 +23182,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, filter: {}) { traces {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      activityName\\n      activityProcessId\\n      nextLinkProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    }
   ]
  },
@@ -23224,7 +23224,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 1 }) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, filter: {}, pagination: { pageSize: 100, currentPage: 0 }) { traces {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      activityName\\n      activityProcessId\\n      nextLinkProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    },
    {
     "method": "POST",
@@ -23234,7 +23234,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, pagination: { pageSize: 100, currentPage: 2 }) { flowTraceEvents {\\n      interactionId\\n      flowId\\n      activityName\\n      activityProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { hasNextPage totalPages totalHits } } }\"}"
+    "body": "{\"query\":\"{ flowTraceEvents(from: 1767225600000, to: 1767312000000, filter: {}, pagination: { pageSize: 100, currentPage: 1 }) { traces {\\n      interactionId\\n      flowId\\n      flowVersionId\\n      activityName\\n      activityProcessId\\n      nextLinkProcessId\\n      outcome\\n      activityInputs { name value }\\n      activityOutput { name type value }\\n      modifiedFlowVariables { name type value }\\n      flowStartTime\\n      flowEndTime\\n    }\\n    pageInfo { pageSize currentPage totalPages totalRecords } } }\"}"
    }
   ]
  },

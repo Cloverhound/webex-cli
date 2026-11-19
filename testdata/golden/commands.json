@@ -64264,7 +64264,7 @@
   "path": "webex cc search flow-interactions",
   "use": "flow-interactions",
   "short": "Query flow execution metadata",
-  "long": "Query flow execution summaries showing which flows ran and their outcomes.\n\nKey fields: interactionId, flowId, flowVersionId, entryPointName,\n  lastExecutedActivity, mainFlowActivities, eventFlowActivities,\n  flowStartTime, flowEndTime, status\n\nNote: Flow queries typically require a filter (e.g. by interactionId or flowId)\nand use page-based pagination (--page-size) instead of cursor-based.\n\nExamples:\n  webex cc search flow-interactions --last 24h --filter '{\"interactionId\":{\"equals\":\"task-uuid\"}}'\n  webex cc search flow-interactions --last 7d --page-size 100",
+  "long": "Query flow execution summaries showing which flows ran and their outcomes.\n\nFields, under interactions { }: interactionId, flowId, flowVersionId,\n  entryPointName, lastExecutedActivity, mainFlowActivities, mainFlowLinks,\n  eventFlowActivities, eventFlowLinks, flowStartTime, flowEndTime, status, tagId\nPaging, under pageInfo { }: pageSize, currentPage, totalPages, totalRecords\n\n--filter can match interactionId, flowId, flowVersionId, flowStartTime and\ntagId, combined with and, or and not. --channel, --direction, --status,\n--agent-id and --queue-id do not apply to flow queries.\n\nWithout --paginate, this returns the first page: --page-size items, or 20.\n\nExamples:\n  webex cc search flow-interactions --last 24h --filter '{\"interactionId\":{\"equals\":\"task-uuid\"}}'\n  webex cc search flow-interactions --last 7d --page-size 100",
   "flags": [
    {
     "name": "agent-id",
@@ -64382,7 +64382,7 @@
   "path": "webex cc search flow-trace",
   "use": "flow-trace",
   "short": "Query granular flow trace events",
-  "long": "Query per-activity flow trace records showing individual activity inputs,\noutputs, outcomes, and variable changes.\n\nKey fields: interactionId, flowId, activityName, activityProcessId, outcome,\n  activityInputs {name value}, activityOutput {name type value},\n  modifiedFlowVariables {name type value}, flowStartTime, flowEndTime\n\nNote: Flow queries typically require a filter (e.g. by interactionId) and\nuse page-based pagination (--page-size).\n\nExamples:\n  webex cc search flow-trace --last 24h --filter '{\"interactionId\":{\"equals\":\"task-uuid\"}}'\n  webex cc search flow-trace --last 7d --page-size 500",
+  "long": "Query per-activity flow trace records showing individual activity inputs,\noutputs, outcomes, and variable changes.\n\nFields, under traces { }: interactionId, flowId, flowVersionId, activityName,\n  activityProcessId, nextActivityProcessId, nextLinkProcessId, outcome,\n  activityInputs {name value}, activityOutput {name type value},\n  modifiedFlowVariables {name type value}, flowStartTime, flowEndTime\nPaging, under pageInfo { }: pageSize, currentPage, totalPages, totalRecords\n\n--filter can match interactionId, flowId and flowVersionId, combined with and,\nor and not. --channel, --direction, --status, --agent-id and --queue-id do not\napply to flow queries.\n\nWithout --paginate, this returns the first page: --page-size items, or 10.\n\nExamples:\n  webex cc search flow-trace --last 24h --filter '{\"interactionId\":{\"equals\":\"task-uuid\"}}' --paginate\n  webex cc search flow-trace --last 7d --page-size 500",
   "flags": [
    {
     "name": "agent-id",

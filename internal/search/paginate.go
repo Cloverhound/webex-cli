@@ -6,24 +6,22 @@ import (
 
 	"github.com/Cloverhound/webex-cli/internal/client"
 	"github.com/Cloverhound/webex-cli/internal/config"
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 )
 
-// PaginateGraphQL fetches all pages of a GraphQL search query and merges the results.
-// It rebuilds the query with updated cursor/page for each iteration.
+// PaginateGraphQL reads every page of a search query and returns their items as
+// one JSON array. It fails rather than return part of a list.
 func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID string) ([]byte, int, error) {
-	resultsKey := ResultsKey[queryType]
-	isFlowQuery := queryType == QueryFlowInteractions || queryType == QueryFlowTraceEvents
-
-	var allItems []json.RawMessage
-
-	if isFlowQuery && params.PageSize == 0 {
+	flow := isFlowQuery(queryType)
+	if params.PageSize < 0 {
+		return nil, 0, fmt.Errorf("--page-size must not be negative")
+	}
+	if flow && params.PageSize == 0 {
 		params.PageSize = 100
 	}
-	if isFlowQuery && params.CurrentPage == 0 {
-		params.CurrentPage = 1
-	}
 
-	for {
+	allItems := []json.RawMessage{}
+	for page := 1; ; page++ {
 		body, err := BuildQuery(queryType, params)
 		if err != nil {
 			return nil, 0, err
@@ -34,75 +32,92 @@ func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID strin
 		req.Header("TrackingId", trackingID)
 		req.SetBodyRaw(body)
 
-		resp, statusCode, err := req.Do()
+		resp, _, err := req.Do()
 		if err != nil {
-			return marshalItems(allItems)
-		}
-
-		// Parse response: { "data": { "<queryType>": { "<resultsKey>": [...], "pageInfo": {...} } } }
-		var envelope struct {
-			Data map[string]json.RawMessage `json:"data"`
-		}
-		if err := json.Unmarshal(resp, &envelope); err != nil {
-			return resp, statusCode, nil // can't parse, return as-is
-		}
-
-		queryData, ok := envelope.Data[string(queryType)]
-		if !ok {
-			return resp, statusCode, nil
-		}
-
-		var inner map[string]json.RawMessage
-		if err := json.Unmarshal(queryData, &inner); err != nil {
-			return resp, statusCode, nil
-		}
-
-		// Extract items
-		if itemsRaw, ok := inner[resultsKey]; ok {
-			var items []json.RawMessage
-			if err := json.Unmarshal(itemsRaw, &items); err == nil {
-				allItems = append(allItems, items...)
+			if page == 1 {
+				return nil, 0, err
 			}
+			return nil, 0, incomplete("page %d: %v", page, err)
 		}
+		items, info, err := readPage(resp, queryType)
+		if err != nil {
+			return nil, 0, incomplete("page %d: %v", page, err)
+		}
+		allItems = append(allItems, items...)
 
-		// Check pageInfo
-		pageInfoRaw, ok := inner["pageInfo"]
-		if !ok {
-			break
-		}
-		var pageInfo struct {
-			HasNextPage bool   `json:"hasNextPage"`
-			EndCursor   string `json:"endCursor"`
-		}
-		if err := json.Unmarshal(pageInfoRaw, &pageInfo); err != nil {
-			break
-		}
-
-		if !pageInfo.HasNextPage {
-			break
-		}
-
-		// Update pagination for next request
-		if isFlowQuery {
-			params.CurrentPage++
-		} else {
-			if pageInfo.EndCursor == "" {
+		if flow {
+			// totalPages is the record count divided by the page size, rounded
+			// down, so the end of a list is found by counting records.
+			if info.TotalRecords == nil {
+				return nil, 0, incomplete("page %d has no pageInfo.totalRecords", page)
+			}
+			if len(allItems) >= *info.TotalRecords {
 				break
 			}
-			params.Cursor = pageInfo.EndCursor
+			if len(items) == 0 {
+				return nil, 0, incomplete("page %d is empty after %d of %d records", page, len(allItems), *info.TotalRecords)
+			}
+			params.CurrentPage++
+			continue
 		}
+		if info.HasNextPage == nil {
+			return nil, 0, incomplete("page %d has no pageInfo.hasNextPage", page)
+		}
+		if !*info.HasNextPage {
+			break
+		}
+		if info.EndCursor == "" {
+			return nil, 0, incomplete("page %d has a next page but no endCursor", page)
+		}
+		params.Cursor = info.EndCursor
 	}
 
-	return marshalItems(allItems)
-}
-
-func marshalItems(items []json.RawMessage) ([]byte, int, error) {
-	if items == nil {
-		items = []json.RawMessage{}
-	}
-	data, err := json.Marshal(items)
+	data, err := json.Marshal(allItems)
 	if err != nil {
 		return nil, 0, fmt.Errorf("marshaling paginated results: %w", err)
 	}
 	return data, 200, nil
+}
+
+// pageInfo holds the paging fields of both kinds of search query.
+type pageInfo struct {
+	HasNextPage  *bool  `json:"hasNextPage"`
+	EndCursor    string `json:"endCursor"`
+	TotalRecords *int   `json:"totalRecords"`
+}
+
+// readPage is the items and paging of one page of search results:
+// { "data": { "<queryType>": { "<resultsKey>": [...], "pageInfo": {...} } } }.
+func readPage(resp []byte, queryType QueryType) ([]json.RawMessage, pageInfo, error) {
+	var envelope struct {
+		Data   map[string]json.RawMessage `json:"data"`
+		Errors []json.RawMessage          `json:"errors"`
+	}
+	if err := json.Unmarshal(resp, &envelope); err != nil {
+		return nil, pageInfo{}, fmt.Errorf("reading search response: %w", err)
+	}
+	if len(envelope.Errors) > 0 {
+		errs, _ := json.Marshal(envelope.Errors)
+		return nil, pageInfo{}, fmt.Errorf("search returned errors: %s", errs)
+	}
+
+	var result map[string]json.RawMessage
+	if err := json.Unmarshal(envelope.Data[string(queryType)], &result); err != nil || result == nil {
+		return nil, pageInfo{}, fmt.Errorf("search response has no %s results", queryType)
+	}
+	resultsKey := ResultsKey[queryType]
+	var items []json.RawMessage
+	if err := json.Unmarshal(result[resultsKey], &items); err != nil {
+		return nil, pageInfo{}, fmt.Errorf("search response has no %s list", resultsKey)
+	}
+	var info pageInfo
+	if err := json.Unmarshal(result["pageInfo"], &info); err != nil || result["pageInfo"] == nil {
+		return nil, pageInfo{}, fmt.Errorf("search response has no pageInfo; --fields must include it to page")
+	}
+	return items, info, nil
+}
+
+// incomplete is the error for a list that could not be read to its end.
+func incomplete(format string, args ...any) error {
+	return fmt.Errorf("%w: search: %s", webexapi.ErrIncompleteList, fmt.Sprintf(format, args...))
 }
