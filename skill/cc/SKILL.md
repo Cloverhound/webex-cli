@@ -167,6 +167,19 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 **Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
 
+## Custom functions
+
+`functions get` returns a function's code as `fnCode`, but `functions create` and `functions update` read it only from `sourceCode`. An update body copied from `get` output fails with "Invalid source code. Wrapper code is missing or tampered with": rename `fnCode` to `sourceCode`. The code must keep the wrapper that `functions list-options` shows for its runtime.
+
+`functions test` takes the input values as an object. It publishes the latest draft before it runs it:
+
+```bash
+webex cc functions list-options
+webex cc functions get --id <id>
+webex cc functions update --id <id> --body-file function.json
+webex cc functions test --id <id> --body '{"inputs":{"lookup_number":"+15550100"}}'
+```
+
 ## AI Agent Studio (unsupported private API)
 
 > **Caution:** `ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
