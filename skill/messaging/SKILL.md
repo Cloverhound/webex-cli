@@ -22,7 +22,7 @@ Alias: `webex msg <resource> <action> [flags]`
 | `attachment-actions` | get, create |
 | `room-tabs` | list, get, create, update, delete |
 | `events` | list |
-| `ecm-folder-linking` | list, get, create, delete |
+| `ecm-folder-linking` | list, get, create-configuration, update-linked, unlink-linked |
 | `hds` | (status/settings commands) |
 
 ## Messages
@@ -162,8 +162,8 @@ webex messaging teams delete --team-id <id>
 webex messaging team-memberships list --team-id <teamId>
 webex messaging team-memberships create --body '{"teamId":"<id>","personEmail":"user@example.com"}'
 webex messaging team-memberships create --body '{"teamId":"<id>","personId":"<id>","isModerator":true}'
-webex messaging team-memberships update --team-membership-id <id> --body '{"isModerator":true}'
-webex messaging team-memberships delete --team-membership-id <id>
+webex messaging team-memberships update --membership-id <id> --is-moderator
+webex messaging team-memberships delete --membership-id <id>
 ```
 
 ## Webhooks
@@ -220,7 +220,7 @@ webex messaging people get-my-own
 webex messaging people get-person --person-id <id>
 
 # Adaptive Card actions (from card button clicks)
-webex messaging attachment-actions get --attachment-action-id <id>
+webex messaging attachment-actions get --id <id>
 
 # Room tabs
 webex messaging room-tabs list --room-id <roomId>

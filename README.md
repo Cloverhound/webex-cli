@@ -40,7 +40,7 @@ webex login
 # Webex Calling
 webex calling people list --max 10
 webex calling locations list
-webex calling call-queue list-cxe
+webex calling call-queue list-customer-assist
 
 # Contact Center
 webex cc site list
@@ -60,7 +60,7 @@ webex admin organizations get --org-id <id>
 
 # Devices
 webex device devices list
-webex device xapi execute-command --device-id <id> --command-name <name>
+webex device xapi execute-command --command-name <name> --body '{"deviceId":"<id>"}'
 
 # Meetings
 webex meetings meetings list

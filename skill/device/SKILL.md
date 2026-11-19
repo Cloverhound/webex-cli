@@ -18,8 +18,8 @@ Alias: `webex devices <resource> <action>`
 | `xapi` | execute-command, query-status |
 | `workspace-locations` | list, get, create, update, delete, list-floors, get-floor, create-floor, update-floor, delete-floor |
 | `hot-desk` | list-sessions, delete-session |
-| `workspace-metrics` | get |
-| `workspace-personalization` | get, update |
+| `workspace-metrics` | workspace-metrics, duration |
+| `workspace-personalization` | personalize, get-task |
 | `device-call` | (calling settings for device-registered lines) |
 
 ## Devices
@@ -134,16 +134,15 @@ webex device device-configurations update --device-id <id> --body '{
 Execute RoomOS commands and query device status remotely.
 
 ```bash
-# Execute a command
+# Execute a command (the device ID and the command's arguments go in the body)
 webex device xapi execute-command \
-  --device-id <id> \
   --command-name "Dial" \
-  --body '{"Dial":{"Number":"12345@example.com","Protocol":"SIP"}}'
+  --body '{"deviceId":"<id>","arguments":{"Number":"12345@example.com","Protocol":"SIP"}}'
 
 # Common commands
-webex device xapi execute-command --device-id <id> --command-name "Standby.Deactivate" --body '{}'
-webex device xapi execute-command --device-id <id> --command-name "SystemUnit.Boot" --body '{"Action":"Restart"}'
-webex device xapi execute-command --device-id <id> --command-name "Audio.Volume.Set" --body '{"Audio":{"Volume":{"Level":50}}}'
+webex device xapi execute-command --command-name "Standby.Deactivate" --body '{"deviceId":"<id>"}'
+webex device xapi execute-command --command-name "SystemUnit.Boot" --body '{"deviceId":"<id>","arguments":{"Action":"Restart"}}'
+webex device xapi execute-command --command-name "Audio.Volume.Set" --body '{"deviceId":"<id>","arguments":{"Level":50}}'
 
 # Query status
 webex device xapi query-status --device-id <id>
@@ -159,16 +158,16 @@ Workspace locations are a legacy concept (superseded by `/locations` for Calling
 
 ```bash
 webex device workspace-locations list [--display-name <name>] [--address <text>]
-webex device workspace-locations get --workspace-location-id <id>
+webex device workspace-locations get --location-id <id>
 webex device workspace-locations create --body '{"displayName":"HQ Floor 2","address":"123 Main St"}'
-webex device workspace-locations update --workspace-location-id <id> --body '{...}'
-webex device workspace-locations delete --workspace-location-id <id>
+webex device workspace-locations update --location-id <id> --body '{...}'
+webex device workspace-locations delete --location-id <id>
 
 # Floors
-webex device workspace-locations list-floors --workspace-location-id <id>
-webex device workspace-locations create-floor --workspace-location-id <id> --body '{"floorNumber":1,"displayName":"Lobby"}'
-webex device workspace-locations update-floor --workspace-location-id <id> --floor-id <id> --body '{...}'
-webex device workspace-locations delete-floor --workspace-location-id <id> --floor-id <id>
+webex device workspace-locations list-floors --location-id <id>
+webex device workspace-locations create-floor --location-id <id> --floor-number 1 --display-name "Lobby"
+webex device workspace-locations update-floor --location-id <id> --floor-id <id> --body '{...}'
+webex device workspace-locations delete-floor --location-id <id> --floor-id <id>
 ```
 
 ## Hot Desking

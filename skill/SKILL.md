@@ -207,7 +207,7 @@ webex admin organizations list
 # Calling — locations, devices, queues, recordings
 webex calling locations list
 webex calling devices list
-webex calling call-queue list
+webex calling call-queue list-customer-assist
 webex calling converged-recordings list --last 720h
 webex calling converged-recordings download --recording-id <id> --output call.mp3
 
@@ -222,14 +222,14 @@ webex cc audio-files upload --file prompt.wav --name "Main Greeting"
 # Device — devices, workspaces, xAPI
 webex device devices list
 webex device workspaces list
-webex device xapi execute-command --device-id <id> --body '{"command":"..."}'
+webex device xapi execute-command --command-name "Standby.Deactivate" --body '{"deviceId":"<id>"}'
 
 # Meetings — schedule, recordings, transcripts
 webex meetings meetings list
 webex meetings recordings list
 webex meetings recordings download --recording-id <id> --output meeting.mp4 --type recording
 webex meetings recordings download --recording-id <id> --output meeting.vtt --type transcript
-webex meetings transcripts list
+webex meetings transcripts list-meeting
 
 # Messaging — see sub-skill for full reference
 webex messaging rooms list --type group --last 24h

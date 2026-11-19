@@ -22,7 +22,7 @@ Alias: `webex contact-center <resource> <action>`
 | `team` | list, create, get, update, delete |
 | `users` | list, get, get-along-profile-id, patch, update |
 | `agents` | login, logout, state-change, get-activities, get-statistics |
-| `flow` | list, export, import, publish |
+| `flow` | list, get, export, validate, import, patch-draft, publish, delete |
 | `audio-files` | list, get, create, update, delete |
 | `global-variables` | list, create, get, update, delete |
 | `business-hour` | list, create, get, update, delete |
@@ -33,7 +33,7 @@ Alias: `webex contact-center <resource> <action>`
 | `skill-profile` | list, create, get, update, delete |
 | `multimedia-profile` | list, create, get, update, delete |
 | `dial-plan` | list, create, get, update, delete |
-| `dial-number` | list, list-dialed-mapping, get |
+| `dial-number` | list-dialed-mapping, get-dialed-mapping-id, create-dialed-mapping, update-dialed-mapping-id, delete-dialed-mapping-id |
 | `outdial-ani` | list, create, get, update, delete |
 | `address-book` | list, create, get, update, delete |
 | `holiday-list` | list, create, get, update, delete |
@@ -89,8 +89,10 @@ webex cc site list-references --id <id>
 
 # Bulk operations
 webex cc site bulk-export
-webex cc site bulk-save --body '[{...},{...}]'
+webex cc site bulk-save --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
+
+Bulk save and bulk partial update take an object, not an array: each entry of `items` has an `itemIdentifier` you choose, a `requestAction`, and the object as `item`.
 
 **`update` replaces the whole object.** This applies to every configuration object, such as a site, team, queue or user. Fields left out of the body are cleared. Get the object first and send it back whole with the changes. `ai-agent update` is the exception: it keeps fields that are left out.
 
@@ -110,7 +112,7 @@ webex cc users list [flags]
 # Get user with profile
 webex cc users get --id <id>
 webex cc users get-along-profile-id --id <id>
-webex cc users get-ci-id --ci-id <ciUserId>
+webex cc users get-ci-id --id <ciUserId>
 
 # Update user (agent settings, team, profile)
 webex cc users patch --id <id> --body '{...}'
@@ -118,7 +120,7 @@ webex cc users update --id <id> --body '{...}'
 
 # Bulk
 webex cc users bulk-export
-webex cc users bulk-partial-update --body '[{...}]'
+webex cc users bulk-partial-update --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
 
 ## Agents (Live Session Control)
@@ -164,6 +166,29 @@ Bodies must be supplied with `--body` or `--body-file`; these generated commands
 Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
 **Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
+
+## Custom functions
+
+`functions get` returns a function's code as `fnCode`, but `functions create` and `functions update` read it only from `sourceCode`. An update body copied from `get` output fails with "Invalid source code. Wrapper code is missing or tampered with": rename `fnCode` to `sourceCode`. The code must keep the wrapper that `functions list-options` shows for its runtime.
+
+`functions test` takes the input values as an object. It publishes the latest draft before it runs it:
+
+```bash
+webex cc functions list-options
+webex cc functions get --id <id>
+webex cc functions update --id <id> --body-file function.json
+webex cc functions test --id <id> --body '{"inputs":{"lookup_number":"+15550100"}}'
+```
+
+## Dynamic skills
+
+`users bulk-update-dynamic-skills` assigns a dynamic skill to several users at once. Its example body lists every field of a user's skill record, but the server sets most of them. This body assigns a proficiency skill:
+
+```bash
+webex cc users bulk-update-dynamic-skills --skill-id <skill-id> --body '{"items":[{"itemIdentifier":0,"item":{"userId":"<user-id>","proficiencyValue":10},"requestAction":"SAVE"}]}'
+```
+
+`itemIdentifier` is a number you choose for each item; the response reports each item's result under it. The value goes in the field for the skill's type, such as `proficiencyValue`. If `itemIdentifier` is missing or the value field has the wrong name, Webex returns a 500 with no explanation.
 
 ## AI Agent Studio (unsupported private API)
 
@@ -254,17 +279,23 @@ webex cc <resource> update --id <id> --body '{...}'
 webex cc <resource> delete --id <id>
 webex cc <resource> list-references --id <id>
 webex cc <resource> bulk-export
-webex cc <resource> bulk-save --body '[{...}]'
+webex cc <resource> bulk-save --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 webex cc <resource> purge-inactive     # removes soft-deleted records (most resources)
 ```
 
-### Dial Numbers (exception — no CRUD)
+### Dial Numbers (dialed number to entry point mappings)
+
+Dial numbers use their own command names, ending in `-dialed-mapping`:
 
 ```bash
-# List DN→EP mappings
-webex cc dial-number list-dialed-mapping [--filter <rsql>]
-webex cc dial-number list [--filter <rsql>]
-webex cc dial-number get --id <id>
+webex cc dial-number list-dialed-mapping [--filter <rsql>] [--include-entry-point-name true]
+webex cc dial-number get-dialed-mapping-id --id <id>
+webex cc dial-number create-dialed-mapping --dialled-number <number> --entry-point-id <id>
+webex cc dial-number update-dialed-mapping-id --id <id> --body '{...}'
+webex cc dial-number delete-dialed-mapping-id --id <id>
+webex cc dial-number list-references-dialed-mapping --id <id>
+webex cc dial-number bulk-export-dialed-mapping
+webex cc dial-number bulk-save-dialed-mapping --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
 ```
 
 ### Outdial ANI (has entries sub-resource)
@@ -272,9 +303,10 @@ webex cc dial-number get --id <id>
 ```bash
 webex cc outdial-ani list
 webex cc outdial-ani get --id <id>
-webex cc outdial-ani list-entry --id <id>          # list ANI entries under an outdial ANI
-webex cc outdial-ani create-entry --body '{...}'
-webex cc outdial-ani delete-entry-id --id <entryId>
+webex cc outdial-ani list-entries-for-ani --out-dial-ani-id <id>   # entries of one outdial ANI
+webex cc outdial-ani list-entries                                  # entries of every outdial ANI
+webex cc outdial-ani create-entry --out-dial-ani-id <id> --body '{...}'
+webex cc outdial-ani delete-entry-id --out-dial-ani-id <id> --id <entryId>
 ```
 
 ### Address Book (has entries sub-resource)
@@ -282,11 +314,11 @@ webex cc outdial-ani delete-entry-id --id <entryId>
 ```bash
 webex cc address-book list
 webex cc address-book get --id <id>
-webex cc address-book list-entry --id <id>         # list contacts
-webex cc address-book create-entry --body '{...}'
-webex cc address-book bulk-save-entry --body '[{...}]'
-webex cc address-book update-entry-id --id <entryId> --body '{...}'
-webex cc address-book delete-entry-id --id <entryId>
+webex cc address-book list-entry --address-book-id <id>         # list contacts
+webex cc address-book create-entry --address-book-id <id> --body '{...}'
+webex cc address-book bulk-save-entry --address-book-id <id> --body '{"items":[{"itemIdentifier":1,"requestAction":"SAVE","item":{...}}]}'
+webex cc address-book update-entry-id --address-book-id <id> --id <entryId> --body '{...}'
+webex cc address-book delete-entry-id --address-book-id <id> --id <entryId>
 ```
 
 ## Key Gotchas
@@ -297,7 +329,7 @@ webex cc address-book delete-entry-id --id <entryId>
 
 3. **`get` not `get`** — most CC resources use `get --id <id>` (not `get --<resource>-id`). The `agents` resource is an exception: it has no `list` or `get` commands, only session control operations.
 
-4. **`flow` has no CRUD** — `flow` only has `list`, `export`, `import`, `publish`. To create or edit flows, use Webex Contact Center Flow Designer in Control Hub.
+4. **Flows are edited as whole documents** — there is no `flow create` or `flow update`. Export a flow, change the JSON, then `validate` and `import` it, or change a draft with `save-draft` or `patch-draft`, and `publish` it. See Flow authoring and migration above.
 
 5. **Agent statistics time window** — `agents get-activities` and `get-statistics` enforce a **24-hour** max window per request. Use multiple calls to cover longer periods.
 

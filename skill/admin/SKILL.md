@@ -26,8 +26,8 @@ Requires admin-level token scopes (`spark-admin:*`). Partner admins managing mul
 | `scim-2-groups` | search, get, create, update-put, update-patch, delete, get-members |
 | `hybrid-clusters` | list, get |
 | `hybrid-connectors` | list, get |
-| `authorizations` | list |
-| `service-apps` | list, get, authorize |
+| `authorizations` | list-user, delete, delete-org-client-id, get-expiration-status-token |
+| `service-apps` | create-access-token |
 
 ## People
 
@@ -230,16 +230,17 @@ webex admin scim-2-groups delete --group-id <id>
 ```bash
 # Hybrid clusters and connectors
 webex admin hybrid-clusters list
-webex admin hybrid-clusters get --cluster-id <id>
-webex admin hybrid-connectors list [--cluster-id <id>]
+webex admin hybrid-clusters get --hybrid-cluster-id <id>
+webex admin hybrid-connectors list
 webex admin hybrid-connectors get --connector-id <id>
 
-# Authorizations (OAuth integrations)
-webex admin authorizations list [--person-id <id>]
+# Authorizations (OAuth integrations) of one user
+webex admin authorizations list-user --person-email <email>
+webex admin authorizations list-user --person-id <id>
 
-# Service apps
-webex admin service-apps list
-webex admin service-apps get --service-app-id <id>
+# Service apps: get an access token for an organization that authorized the app
+webex admin service-apps create-access-token --application-id <id> \
+  --client-id <id> --client-secret <secret> --target-org-id <orgId>
 ```
 
 ## Key Gotchas
