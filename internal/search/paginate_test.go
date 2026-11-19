@@ -122,6 +122,30 @@ func TestCursorPagingFailsWithoutACursor(t *testing.T) {
 	}
 }
 
+func TestCursorPagingFailsWithoutHasNextPage(t *testing.T) {
+	searchServer(t, func(string) (int, string) {
+		return 200, `{"data":{"task":{"tasks":[{"id":"t1"}],"pageInfo":{"endCursor":"c1"}}}}`
+	})
+	_, _, err := PaginateGraphQL(QueryTask, Params{From: 1, To: 2}, "org", "")
+	if !errors.Is(err, webexapi.ErrIncompleteList) {
+		t.Errorf("err = %v, want incomplete list", err)
+	}
+}
+
+func TestFlowPagingRefusesANegativePageSize(t *testing.T) {
+	var requests int
+	searchServer(t, func(q string) (int, string) {
+		requests++
+		return 200, tracePage(t, q, 5)
+	})
+	if _, _, err := PaginateGraphQL(QueryFlowTraceEvents, Params{From: 1, To: 2, PageSize: -1}, "org", ""); err == nil {
+		t.Error("a negative page size was accepted")
+	}
+	if requests != 0 {
+		t.Errorf("%d requests sent", requests)
+	}
+}
+
 func TestCursorPagingFollowsTheCursor(t *testing.T) {
 	cursor := regexp.MustCompile(`cursor: "([^"]*)"`)
 	searchServer(t, func(q string) (int, string) {

@@ -210,6 +210,26 @@ Discover report types before creating a report; the collection does not enumerat
 
 For task controls, `unhold` (alias `resume`) resumes a held voice call; `pause-digital` and `resume-digital` handle paused non-real-time digital tasks. `append-message` retains `update-2` as an alias. Queue lookups use `list-agent-based`, `list-skill-based`, `list-team-based`, `list-by-skill-profile`, `list-by-dynamic-skills`, and `list-by-user-skill-profile`; pass IDs as flags. Whisper coaching is beta. The refresh also adds conference-participant removal, campaign-time lookup, and contact closure across a campaign chain.
 
+## Search (GraphQL)
+
+`webex cc search` queries completed tasks, agent sessions and flow executions. Each command needs a time window (`--last`, or `--from` and `--to`); `--help` lists its fields.
+
+```bash
+# Every task in the last day
+webex cc search tasks --last 24h --paginate
+
+# Which flows an interaction ran, then each activity they executed
+webex cc search flow-interactions --last 24h --filter '{"interactionId":{"equals":"<task-id>"}}'
+webex cc search flow-trace --last 24h --filter '{"interactionId":{"equals":"<task-id>"}}' --paginate
+
+# Only some fields; --paginate also needs the paging fields
+webex cc search flow-trace --last 24h --paginate \
+  --fields 'traces { activityName outcome } pageInfo { totalRecords }'
+```
+
+- Flow queries return their records under `traces` (flow-trace) or `interactions` (flow-interactions). `--filter` matches only `interactionId`, `flowId` and `flowVersionId` (and `flowStartTime` and `tagId` for interactions); `--channel`, `--direction`, `--status`, `--agent-id` and `--queue-id` do not apply to them.
+- With `--paginate`, `--fields` must include the paging fields: `pageInfo { totalRecords }` for flow queries, `pageInfo { hasNextPage endCursor }` for the others.
+
 ## Audio Files
 
 ```bash

@@ -13,6 +13,9 @@ import (
 // one JSON array. It fails rather than return part of a list.
 func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID string) ([]byte, int, error) {
 	flow := isFlowQuery(queryType)
+	if params.PageSize < 0 {
+		return nil, 0, fmt.Errorf("--page-size must not be negative")
+	}
 	if flow && params.PageSize == 0 {
 		params.PageSize = 100
 	}
@@ -57,7 +60,10 @@ func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID strin
 			params.CurrentPage++
 			continue
 		}
-		if !info.HasNextPage {
+		if info.HasNextPage == nil {
+			return nil, 0, incomplete("page %d has no pageInfo.hasNextPage", page)
+		}
+		if !*info.HasNextPage {
 			break
 		}
 		if info.EndCursor == "" {
@@ -75,7 +81,7 @@ func PaginateGraphQL(queryType QueryType, params Params, orgID, trackingID strin
 
 // pageInfo holds the paging fields of both kinds of search query.
 type pageInfo struct {
-	HasNextPage  bool   `json:"hasNextPage"`
+	HasNextPage  *bool  `json:"hasNextPage"`
 	EndCursor    string `json:"endCursor"`
 	TotalRecords *int   `json:"totalRecords"`
 }
