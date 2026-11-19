@@ -250,6 +250,11 @@ func goldenEnv(t *testing.T) *recorder {
 	if err := os.WriteFile(filepath.Join(work, goldenAudioFile), []byte("RIFF golden audio"), 0o644); err != nil {
 		t.Fatal(err)
 	}
+	// Go's own table has no .wav, so without this the host's MIME files would
+	// give the sample file's content type.
+	if err := mime.AddExtensionType(".wav", "audio/wav"); err != nil {
+		t.Fatal(err)
+	}
 
 	rec := &recorder{}
 	rec.startRun()
@@ -356,13 +361,17 @@ func resetFlags(c *cobra.Command) {
 }
 
 // run executes c with args. A list whose response is a JSON array refuses the
-// usual object response, and is run again with an array.
+// usual object response, and is run again with an array. An upload whose form
+// needs JSON is run again with a body, so its other parts are recorded too.
 func run(rec *recorder, c *cobra.Command, variant string, args []string) goldenRun {
 	out := runOnce(rec, c, variant, args)
 	if strings.Contains(out.Error, "is not an array") {
 		rec.bareArray = true
 		out = runOnce(rec, c, variant, args)
 		rec.bareArray = false
+	}
+	if variant == "all-flags" && strings.Contains(out.Error, "--body or --body-file is required") {
+		out = runOnce(rec, c, variant, append(append([]string{}, args...), `--body={"golden":true}`))
 	}
 	return out
 }
@@ -489,7 +498,7 @@ func TestGoldenFilesExerciseEachKindOfRequest(t *testing.T) {
 			return false
 		}
 		switch {
-		case r.Variant == "all-flags" && hasArg("--file="):
+		case r.Variant == "all-flags" && (hasArg("--file=") || hasArg("--logo-file=")):
 			uploads++
 			if !sentMultipart(r) {
 				t.Errorf("%s: upload sent no multipart request (error %q)", r.Command, r.Error)

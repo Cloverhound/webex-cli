@@ -239,6 +239,10 @@ func uploadForm(upload *webexops.Upload, values *flagValues, bodyRaw, bodyFile s
 		case webexops.PartFile:
 			path := values.text(part.Flag)
 			if path == "" {
+				// Cobra counts --file= as given, so a required flag can still be empty.
+				if part.Required {
+					return webexapi.Multipart{}, fmt.Errorf("--%s needs a path", part.Flag)
+				}
 				continue
 			}
 			data, err := os.ReadFile(path)

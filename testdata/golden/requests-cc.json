@@ -8129,10 +8129,21 @@
   "command": "cc channel create",
   "variant": "all-flags",
   "args": [
-   "--logo-file=golden.wav"
+   "--logo-file=golden.wav",
+   "--body={\"golden\":true}"
   ],
-  "requests": [],
-  "error": "--body or --body-file is required"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"golden\":true}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "cc channel create",
@@ -8439,10 +8450,21 @@
   "variant": "all-flags",
   "args": [
    "--id=s-id",
-   "--logo-file=golden.wav"
+   "--logo-file=golden.wav",
+   "--body={\"golden\":true}"
   ],
-  "requests": [],
-  "error": "--body or --body-file is required"
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel/s-id",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"golden\":true}\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFile\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
+   }
+  ]
  },
  {
   "command": "cc channel update",
@@ -23245,10 +23267,22 @@
   "command": "cc search raw",
   "variant": "all-flags",
   "args": [
-   "--tracking-id=s-tracking-id"
+   "--tracking-id=s-tracking-id",
+   "--body={\"golden\":true}"
   ],
-  "requests": [],
-  "error": "--body or --body-file is required"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
  },
  {
   "command": "cc search raw",
@@ -23280,10 +23314,22 @@
   "command": "cc search search-tasks",
   "variant": "all-flags",
   "args": [
-   "--tracking-id=s-tracking-id"
+   "--tracking-id=s-tracking-id",
+   "--body={\"golden\":true}"
   ],
-  "requests": [],
-  "error": "--body or --body-file is required"
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://api.wxcc-us1.cisco.com/search?orgId=6ab1d2c4-0000-4000-8000-00000000c1d0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json",
+     "Trackingid": "s-tracking-id"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
  },
  {
   "command": "cc search search-tasks",

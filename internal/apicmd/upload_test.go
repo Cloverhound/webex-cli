@@ -117,6 +117,16 @@ func TestUploadFormRefusesAMissingRequiredBody(t *testing.T) {
 	}
 }
 
+// `--file "$UNSET"` reaches the command as an empty path, which must not send a
+// form without its file.
+func TestUploadFormRefusesAnEmptyPathForARequiredFile(t *testing.T) {
+	upload := &webexops.Upload{Parts: []webexops.Part{{Name: "file", Kind: webexops.PartFile, Flag: "file", Required: true}}}
+	_, err := uploadForm(upload, uploadValues(map[string]string{"file": ""}), "", "")
+	if err == nil || !strings.Contains(err.Error(), "--file needs a path") {
+		t.Errorf("err = %v", err)
+	}
+}
+
 func TestUploadFormReportsAFileItCannotRead(t *testing.T) {
 	_, err := uploadForm(testUpload, uploadValues(map[string]string{"file": filepath.Join(t.TempDir(), "missing.png"), "file-name": ""}), "{}", "")
 	if err == nil || !strings.Contains(err.Error(), "reading --file") {

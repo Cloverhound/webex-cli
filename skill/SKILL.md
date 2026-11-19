@@ -260,7 +260,12 @@ Bodies must be supplied with `--body` or `--body-file`; these generated commands
 
 Current flow, activity, and event commands use unprefixed routes. Template discovery uses `/templates`. Legacy flow import/export retain their separate FDL contract.
 
-**Import limitations:** `flow import-legacy` and `functions import` are exposed but their generated commands do not implement the required upload body. Do not use them for migration until upload handling is implemented.
+**Imports from a file:** `flow import-legacy` and `functions import` upload the file that `--file` names, as `flow export-legacy` and `functions export` write it. The name comes from the file, so change it there to import a copy.
+
+```bash
+webex cc flow import-legacy --file legacy-flow.json --flow-type FLOW --overwrite no
+webex cc functions import --file function.json --overwrite false
+```
 
 
 ## Filtering and Pagination
