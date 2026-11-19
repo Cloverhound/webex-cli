@@ -116,15 +116,15 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 					call.Params[p.Name] = values.text(p.Flag)
 				}
 			}
-			// Diagnostics show a form's summary, not the files in it.
-			var formSummary string
+			var logBody string
 			switch {
 			case op.Upload != nil:
 				form, err := uploadForm(op.Upload, values, bodyRaw, bodyFile)
 				if err != nil {
 					return err
 				}
-				call.Body, call.ContentType, formSummary = form.Body, form.ContentType, form.Summary
+				// Diagnostics show a form's summary, not the files in it.
+				call.Body, call.ContentType, logBody = form.Body, form.ContentType, form.Summary
 			case op.Body != nil:
 				switch {
 				case bodyFile != "":
@@ -142,12 +142,9 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 					}
 					call.Body = body
 				}
+				logBody = string(call.Body)
 			}
 
-			logBody := string(call.Body)
-			if op.Upload != nil {
-				logBody = formSummary
-			}
 			api := client.API(op.Path, logBody)
 			ctx := context.Background()
 			if op.Paging != nil && config.Paginate() {
