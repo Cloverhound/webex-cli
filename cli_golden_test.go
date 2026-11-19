@@ -305,7 +305,7 @@ func sampleValue(f *pflag.Flag) string {
 		return "2026-01-01T00:00:00.000Z"
 	case "to":
 		return "2026-01-02T00:00:00.000Z"
-	case "file":
+	case "file", "logo-file":
 		return goldenAudioFile
 	// The Contact Center search commands parse these before building a request.
 	case "filter":

@@ -115,6 +115,41 @@ type BodyField struct {
 	Type string
 }
 
+// Upload says an operation's body is a multipart form. The collections describe
+// these forms only in words, if at all, so each was measured against Webex.
+type Upload struct {
+	// Parts are the form's parts, in the order they are sent.
+	Parts []Part
+}
+
+// PartKind says what a form part carries.
+type PartKind string
+
+const (
+	// PartFile is a file's contents, sent with the file's name.
+	PartFile PartKind = "file"
+
+	// PartJSON is a JSON document. The CLI reads it from --body or --body-file.
+	PartJSON PartKind = "json"
+
+	// PartFileName is a name for the upload's file part. The CLI takes it from
+	// that file's path unless the part's flag gives one.
+	PartFileName PartKind = "file-name"
+)
+
+// Part is one part of an upload's form.
+type Part struct {
+	// Name is the part's form field name.
+	Name string
+	Kind PartKind
+
+	// Flag is the CLI flag that gives a file's path or a file name. A JSON part
+	// has none.
+	Flag     string
+	Usage    string
+	Required bool
+}
+
 // Group is a set of operations published under one CLI command.
 type Group struct {
 	Area, Name string
@@ -150,6 +185,10 @@ type Operation struct {
 	// none. A body in Args is sent either way, such as a multipart upload the
 	// collection describes only in words.
 	Body *Body
+
+	// Upload is the multipart form the operation sends, nil when it sends none.
+	// Call sends the form that Args gives as its Body and ContentType.
+	Upload *Upload
 
 	// Paging is how the operation's list is read to its end; nil when it is not
 	// a list, or its paging is unknown.

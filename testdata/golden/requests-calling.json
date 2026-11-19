@@ -28382,7 +28382,9 @@
   "command": "calling device-call upload-background-image",
   "variant": "all-flags",
   "args": [
-   "--device-id=s-device-id"
+   "--device-id=s-device-id",
+   "--file=golden.wav",
+   "--file-name=s-file-name"
   ],
   "requests": [
    {
@@ -28390,8 +28392,10 @@
     "url": "https://webexapis.com/v1/telephony/config/devices/s-device-id/actions/backgroundImageUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"fileName\"\r\n\r\ns-file-name\r\n--golden-boundary--\r\n"
    }
   ]
  },
@@ -28399,7 +28403,8 @@
   "command": "calling device-call upload-background-image",
   "variant": "required",
   "args": [
-   "--device-id=s-device-id"
+   "--device-id=s-device-id",
+   "--file=golden.wav"
   ],
   "requests": [
    {
@@ -28407,8 +28412,10 @@
     "url": "https://webexapis.com/v1/telephony/config/devices/s-device-id/actions/backgroundImageUpload/invoke?orgId=Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"fileName\"\r\n\r\ngolden.wav\r\n--golden-boundary--\r\n"
    }
   ]
  },

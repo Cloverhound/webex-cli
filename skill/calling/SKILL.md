@@ -87,6 +87,11 @@ webex calling devices get --device-id <id>
 webex calling devices create-mac-address --body '{"mac":"00:11:22:33:44:55","workspaceId":"<id>"}'
 webex calling devices create-activation-code --body '{"workspaceId":"<id>"}'
 webex calling devices delete --device-id <id>
+
+# MPP phone background: stores the image for the organization (100 at most)
+# and sets it as this phone's background
+webex calling device-call upload-background-image --device-id <id> --file background.png [--file-name <name>]
+webex calling device-call list-background-images
 ```
 
 ## Call Queues (Customer Experience)
@@ -715,7 +720,7 @@ webex calling metrics get-call-quality-stats --help
 | `validate-list-mac-address` | `--org-id`, `--macs`, `--body`, `--body-file` |
 | `update-settings-across-org-location-job` | `--org-id`, `--body`, `--body-file` |
 | `rebuild-phones-configuration` | `--org-id`, `--location-id`, `--body`, `--body-file` |
-| `upload-background-image` | `--device-id` *(required)*, `--org-id` |
+| `upload-background-image` | `--device-id` *(required)*, `--org-id`, `--file` *(required)*, `--file-name` |
 | `get-customer-dynamic-settings` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |

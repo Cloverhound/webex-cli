@@ -149,9 +149,9 @@ SKIP_GROUPS = {
 }
 
 # Per-command skip list, keyed by collection → group → set of command names.
-# These require multipart/form-data file uploads that the table cannot describe
-# (it sends JSON or empty POST/PUT bodies). Each is replaced by a hand-written
-# custom_*.go implementation in the area's command package.
+# Each is replaced by a hand-written custom_*.go implementation in the area's
+# command package. Uploads that are only a form of files and JSON are described
+# by UPLOADS instead, and keep their generated commands.
 SKIP_COMMANDS = {
     # Same JSON flags, but files may require a multipart upload.
     # Replaced by: cmd/messaging/custom_messages.go
@@ -189,6 +189,41 @@ SKIP_COMMANDS = {
         },
     },
 }
+
+# Multipart forms, by route. The collections describe these bodies only in words,
+# if at all, so each form here was measured against a live organization. Parts are
+# listed in the order they are sent; a JSON part is read from --body or --body-file.
+_BACKGROUND_IMAGE_FORM = [
+    {'name': 'file', 'kind': 'PartFile', 'flag': 'file', 'required': True,
+     'usage': 'Path to the image: a .jpeg or .png file of at most 625 KB'},
+    {'name': 'fileName', 'kind': 'PartFileName', 'flag': 'file-name',
+     'usage': "Name of the image in Webex (default: the file's name)"},
+]
+_CHANNEL_FORM = [
+    {'name': 'logoFileInfo', 'kind': 'PartJSON', 'required': True,
+     'usage': 'The channel as JSON, sent as the form part logoFileInfo'},
+    {'name': 'logoFile', 'kind': 'PartFile', 'flag': 'logo-file',
+     'usage': 'Path to the logo, a 20x20 pixel image, for a channel whose logoType is LOGO_URL'},
+]
+UPLOADS = {
+    ("Webex Contact Center", "POST", "/flow-store/{orgId}/project/{projectId}/flows:import"): [
+        {'name': 'file', 'kind': 'PartFile', 'flag': 'file', 'required': True,
+         'usage': 'Path to the flow in the legacy format, as flow export-legacy writes it'},
+    ],
+    ("Webex Contact Center", "POST", "/v1/{orgId}/functions:import"): [
+        {'name': 'file', 'kind': 'PartFile', 'flag': 'file', 'required': True,
+         'usage': 'Path to the function, as functions export writes it'},
+    ],
+    ("Webex Contact Center", "POST", "/organization/{orgid}/channel"): _CHANNEL_FORM,
+    ("Webex Contact Center", "PUT", "/organization/{orgid}/channel/{id}"): _CHANNEL_FORM,
+    ("Webex Cloud Calling", "POST", "/telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke"):
+        _BACKGROUND_IMAGE_FORM,
+    ("Webex Device", "POST", "/telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke"):
+        _BACKGROUND_IMAGE_FORM,
+}
+
+# The UPLOADS routes the collections still list, so codegen can name the others.
+UPLOADS_USED = set()
 
 
 def camel_to_kebab(name):
@@ -326,6 +361,9 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
             'orgUUID': org_uuid(p),
         })
     for h in ep.get('extra_headers', []):
+        # Go's HTTP client sends the body's own length, never a Content-Length header it is given.
+        if h['name'].lower() == 'content-length':
+            continue
         if h['name'] == AGENT_TOKEN_HEADER:
             # Shares the --agent-id flag with an {agentId} path parameter when there is one.
             params.append({'name': h['name'], 'in': 'InAgentToken', 'flag': flags.setdefault('agentId', 'agent-id'),
@@ -334,8 +372,17 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
         params.append({'name': h['name'], 'in': 'InHeader', 'flag': flag_for(h['name'], camel_to_kebab(h['name'])),
                        'usage': h.get('description', ''), 'orgUUID': org_uuid(h)})
 
+    upload = UPLOADS.get((collection_name, method, path))
+    if upload:
+        UPLOADS_USED.add((collection_name, method, path))
+        taken = {p['flag'] for p in params if p.get('flag')} | {'body', 'body-file'}
+        for part in upload:
+            if part.get('flag') in taken:
+                raise SystemExit(f"{method} {path}: the form part {part['name']} has the flag "
+                                 f"--{part['flag']}, which another flag already uses")
+
     body = None
-    if ep.get('has_body', False):
+    if ep.get('has_body', False) and not upload:
         fields = []
         if not complex_body:
             for f in body_fields:
@@ -358,8 +405,8 @@ def operation(ep, collection_name, host, is_calling, paging_overrides=None):
     return {
         'command': ep['command'], 'aliases': ep.get('aliases') or [],
         'summary': ep.get('original_name', ep['command']), 'description': ep.get('description', ''),
-        'method': method, 'host': host, 'path': path, 'params': params, 'body': body,
-        'paging': paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
+        'method': method, 'host': host, 'path': path, 'params': params, 'body': body, 'upload': upload,
+        'paging':paging_literal(ep, host, paging_overrides), 'timeRange': time_range,
         # This endpoint returns a non-JSON deletion acknowledgement. Restricting
         # Accept to application/json causes the service to reject it with HTTP 406.
         'accept': '*/*' if method == 'DELETE' and path == '/v1/usage-reports/{reportId}' else '',
@@ -506,6 +553,17 @@ def operation_literal(op_id, area, group, op):
             lines.append('\t}},')
         else:
             lines.append('\tBody: &Body{},')
+    if op.get('upload'):
+        lines.append('\tUpload: &Upload{Parts: []Part{')
+        for part in op['upload']:
+            fields = [f'Name: {go_string(part["name"])}', f'Kind: {part["kind"]}']
+            if part.get('flag'):
+                fields.append(f'Flag: {go_string(part["flag"])}')
+            if part.get('required'):
+                fields.append('Required: true')
+            fields.append(f'Usage: {go_string(part["usage"])}')
+            lines.append('\t\t{' + ', '.join(fields) + '},')
+        lines.append('\t}},')
     if op['paging']:
         lines.append(f'\tPaging: {op["paging"]},')
     if op['timeRange']:
@@ -647,6 +705,11 @@ def main():
         print("command uses them. Remove them:")
         for route in redundant:
             print(f"  {route}")
+    unused = sorted(set(UPLOADS) - UPLOADS_USED)
+    if unused:
+        print("\nWARNING: no collection lists these UPLOADS routes in codegen/generate_cli.py. Remove them:")
+        for collection_name, method, path in unused:
+            print(f"  {collection_name}: {method} {path}")
 
     print("\nDone. Run 'go build ./...' to verify.")
 

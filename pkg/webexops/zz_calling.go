@@ -6488,6 +6488,10 @@ var CallingPostTelephonyConfigDevicesByDeviceIdActionsBackgroundImageUploadInvok
 		{Name: "deviceId", In: InPath, Flag: "device-id", Required: true, Usage: "Unique identifier for the device."},
 		{Name: "orgId", In: InQuery, Flag: "org-id", Usage: "Uploads the image in this organization."},
 	},
+	Upload: &Upload{Parts: []Part{
+		{Name: "file", Kind: PartFile, Flag: "file", Required: true, Usage: "Path to the image: a .jpeg or .png file of at most 625 KB"},
+		{Name: "fileName", Kind: PartFileName, Flag: "file-name", Usage: "Name of the image in Webex (default: the file's name)"},
+	}},
 }
 
 // CallingGetTelephonyConfigPeopleByPersonIdDevicesCount is "Get User Devices Count": GET /telephony/config/people/{personId}/devices/count.

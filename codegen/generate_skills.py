@@ -11,7 +11,7 @@ import os
 import re
 import sys
 
-from generate_cli import AGENT_TOKEN_HEADER
+from generate_cli import AGENT_TOKEN_HEADER, UPLOADS
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CLI_DIR = os.path.dirname(SCRIPT_DIR)
@@ -78,8 +78,9 @@ def method_sort_key(method):
     return {'GET': 0, 'POST': 1, 'PUT': 2, 'PATCH': 3, 'DELETE': 4}.get(method, 5)
 
 
-def format_flags(ep):
-    """Return a markdown string listing all flags for one endpoint."""
+def format_flags(ep, upload=None):
+    """Return a markdown string listing all flags for one endpoint. upload is
+    its multipart form from generate_cli.UPLOADS, if it sends one."""
     parts = []
     seen = set()
 
@@ -106,7 +107,13 @@ def format_flags(ep):
     if any(p['name'] == 'from' for p in ep.get('query_params', [])):
         parts.append("`--last`")
 
-    if ep.get('has_body'):
+    if upload:
+        for part in upload:
+            if part['kind'] == 'PartJSON':
+                parts.append("`--body` or `--body-file`" + (" *(required)*" if part.get('required') else ""))
+            else:
+                parts.append(f"`--{part['flag']}`" + (" *(required)*" if part.get('required') else ""))
+    elif ep.get('has_body'):
         if not ep.get('complex_body'):
             for f in ep.get('body_fields', []):
                 flag = camel_to_kebab(f['name'])
@@ -162,7 +169,8 @@ def generate_command_reference(area_cmd, groups, collection_name):
             name = f"`{ep['command']}`"
             if ep.get('aliases'):
                 name += ' (aliases: ' + ', '.join(f'`{a}`' for a in ep['aliases']) + ')'
-            lines.append(f"| {name} | {format_flags(ep)} |")
+            upload = UPLOADS.get((collection_name, ep['method'], ep['path']))
+            lines.append(f"| {name} | {format_flags(ep, upload)} |")
 
     return "\n".join(lines) + "\n"
 

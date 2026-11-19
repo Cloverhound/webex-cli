@@ -147,7 +147,7 @@ Resource operations use `get`, `delete`, `patch`, and `update` with `--id`; prev
 
 - Calling adds `call-controls-for-me` and `metrics get-call-quality-stats`.
 - Contact Center adds flow activity/event/template discovery, custom functions, assets/channels, usage reports, campaign groups, search metadata, and completed-task variable updates.
-- `cc flow import`/`export` now use the current FlowV2 format. Use `export-legacy` for raw FDL; `import-legacy` upload handling remains incomplete. `functions import` also needs multipart upload handling.
+- `cc flow import`/`export` now use the current FlowV2 format. Use `export-legacy` for raw FDL and `import-legacy --file` to import it. `functions import --file` imports a function that `functions export` wrote.
 - `cc tasks resume` still means voice unhold. Digital tasks use `pause-digital`/`resume-digital`.
 - Messaging consolidates HDS operations under `hds`, with `hybrid-data-security` as an alias. Admin and Meetings add body-based recording searches; Meetings also adds group service-app operations.
 

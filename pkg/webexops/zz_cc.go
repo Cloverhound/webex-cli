@@ -6148,8 +6148,10 @@ var CcPostFlowStoreByOrgIdProjectByProjectIdFlowsImport = &Operation{
 		{Name: "projectId", In: InPath, Value: "5e5c9ad6d61f870d6d778c1b"},
 		{Name: "overwrite", In: InQuery, Flag: "overwrite", Usage: "Determines whether to overwrite the existing flow or not. Possible values: yes/no."},
 		{Name: "flowType", In: InQuery, Flag: "flow-type", Usage: "Either of 'FLOW' or 'SUBFLOW'."},
-		{Name: "Content-Length", In: InHeader, Flag: "content-length", Usage: "Content length value in number of bytes."},
 	},
+	Upload: &Upload{Parts: []Part{
+		{Name: "file", Kind: PartFile, Flag: "file", Required: true, Usage: "Path to the flow in the legacy format, as flow export-legacy writes it"},
+	}},
 }
 
 // CcGetByOrgIdProjectByProjectIdFlows is "List Flows or Subflows": GET /{orgId}/project/{projectId}/flows.
@@ -7624,6 +7626,9 @@ var CcPostV1ByOrgIdFunctionsImport = &Operation{
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
 		{Name: "associatedRcs", In: InQuery, Flag: "associated-rcs", Usage: "Optional list of associated routing-context IDs."},
 	},
+	Upload: &Upload{Parts: []Part{
+		{Name: "file", Kind: PartFile, Flag: "file", Required: true, Usage: "Path to the function, as functions export writes it"},
+	}},
 }
 
 // CcPostV1ByOrgIdFunctionsByIdUnlock is "Unlock a Custom Function": POST /v1/{orgId}/functions/{id}:unlock.
@@ -7884,7 +7889,10 @@ var CcPostOrganizationByOrgidChannel = &Operation{
 	Params: []Param{
 		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 	},
-	Body: &Body{},
+	Upload: &Upload{Parts: []Part{
+		{Name: "logoFileInfo", Kind: PartJSON, Required: true, Usage: "The channel as JSON, sent as the form part logoFileInfo"},
+		{Name: "logoFile", Kind: PartFile, Flag: "logo-file", Usage: "Path to the logo, a 20x20 pixel image, for a channel whose logoType is LOGO_URL"},
+	}},
 }
 
 // CcPostOrganizationByOrgidChannelBulk is "Bulk save Channels": POST /organization/{orgid}/channel/bulk.
@@ -7924,6 +7932,10 @@ var CcPutOrganizationByOrgidChannelById = &Operation{
 		{Name: "orgid", In: InPath, Flag: "orgid", Required: true, OrgUUID: true, Usage: "Organization ID to be used for this operation. The specified security token must have permission to interact with the organization."},
 		{Name: "id", In: InPath, Flag: "id", Required: true, Usage: "Resource ID of the Channel"},
 	},
+	Upload: &Upload{Parts: []Part{
+		{Name: "logoFileInfo", Kind: PartJSON, Required: true, Usage: "The channel as JSON, sent as the form part logoFileInfo"},
+		{Name: "logoFile", Kind: PartFile, Flag: "logo-file", Usage: "Path to the logo, a 20x20 pixel image, for a channel whose logoType is LOGO_URL"},
+	}},
 }
 
 // CcDeleteOrganizationByOrgidChannelById is "Delete specific Channel by ID": DELETE /organization/{orgid}/channel/{id}.

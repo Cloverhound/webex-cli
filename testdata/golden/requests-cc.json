@@ -8128,32 +8128,18 @@
  {
   "command": "cc channel create",
   "variant": "all-flags",
-  "args": null,
-  "requests": [
-   {
-    "method": "POST",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "args": [
+   "--logo-file=golden.wav"
+  ],
+  "requests": [],
+  "error": "--body or --body-file is required"
  },
  {
   "command": "cc channel create",
   "variant": "required",
   "args": null,
-  "requests": [
-   {
-    "method": "POST",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "--body or --body-file is required"
  },
  {
   "command": "cc channel create",
@@ -8168,9 +8154,9 @@
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
-     "Content-Type": "application/json"
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
     },
-    "body": "{\"golden\":true}"
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"golden\":true}\r\n--golden-boundary--\r\n"
    }
   ]
  },
@@ -8452,18 +8438,11 @@
   "command": "cc channel update",
   "variant": "all-flags",
   "args": [
-   "--id=s-id"
+   "--id=s-id",
+   "--logo-file=golden.wav"
   ],
-  "requests": [
-   {
-    "method": "PUT",
-    "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel/s-id",
-    "headers": {
-     "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
-   }
-  ]
+  "requests": [],
+  "error": "--body or --body-file is required"
  },
  {
   "command": "cc channel update",
@@ -8471,14 +8450,26 @@
   "args": [
    "--id=s-id"
   ],
+  "requests": [],
+  "error": "--body or --body-file is required"
+ },
+ {
+  "command": "cc channel update",
+  "variant": "body",
+  "args": [
+   "--id=s-id",
+   "--body={\"golden\":true}"
+  ],
   "requests": [
    {
     "method": "PUT",
     "url": "https://api.wxcc-us1.cisco.com/organization/6ab1d2c4-0000-4000-8000-00000000c1d0/channel/s-id",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"logoFileInfo\"\r\nContent-Type: application/json\r\n\r\n{\"golden\":true}\r\n--golden-boundary--\r\n"
    }
   ]
  },
@@ -13935,7 +13926,7 @@
   "command": "cc flow import-legacy",
   "variant": "all-flags",
   "args": [
-   "--content-length=s-content-length",
+   "--file=golden.wav",
    "--flow-type=s-flow-type",
    "--overwrite=s-overwrite"
   ],
@@ -13946,23 +13937,28 @@
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
-     "Content-Length": "s-content-length"
-    }
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
   ]
  },
  {
   "command": "cc flow import-legacy",
   "variant": "required",
-  "args": null,
+  "args": [
+   "--file=golden.wav"
+  ],
   "requests": [
    {
     "method": "POST",
     "url": "https://api.wxcc-us1.cisco.com/flow-store/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows:import",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
   ]
  },
@@ -14616,6 +14612,7 @@
   "variant": "all-flags",
   "args": [
    "--associated-rcs=s-associated-rcs",
+   "--file=golden.wav",
    "--overwrite=s-overwrite"
   ],
   "requests": [
@@ -14624,23 +14621,29 @@
     "url": "https://api.wxcc-us1.cisco.com/v1/6ab1d2c4-0000-4000-8000-00000000c1d0/functions:import?associatedRcs=s-associated-rcs&overwrite=s-overwrite",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
   ]
  },
  {
   "command": "cc functions import",
   "variant": "required",
-  "args": null,
+  "args": [
+   "--file=golden.wav"
+  ],
   "requests": [
    {
     "method": "POST",
     "url": "https://api.wxcc-us1.cisco.com/v1/6ab1d2c4-0000-4000-8000-00000000c1d0/functions:import",
     "headers": {
      "Accept": "application/json",
-     "Authorization": "Bearer golden-token"
-    }
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary--\r\n"
    }
   ]
  },

@@ -7,8 +7,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"mime"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/Cloverhound/webex-cli/internal/aiagent"
@@ -16,6 +18,7 @@ import (
 	"github.com/Cloverhound/webex-cli/internal/config"
 	"github.com/Cloverhound/webex-cli/internal/output"
 	"github.com/Cloverhound/webex-cli/internal/timeutil"
+	"github.com/Cloverhound/webex-cli/pkg/webexapi"
 	"github.com/Cloverhound/webex-cli/pkg/webexops"
 	"github.com/spf13/cobra"
 )
@@ -113,7 +116,16 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 					call.Params[p.Name] = values.text(p.Flag)
 				}
 			}
-			if op.Body != nil {
+			// Diagnostics show a form's summary, not the files in it.
+			var formSummary string
+			switch {
+			case op.Upload != nil:
+				form, err := uploadForm(op.Upload, values, bodyRaw, bodyFile)
+				if err != nil {
+					return err
+				}
+				call.Body, call.ContentType, formSummary = form.Body, form.ContentType, form.Summary
+			case op.Body != nil:
 				switch {
 				case bodyFile != "":
 					data, err := os.ReadFile(bodyFile)
@@ -132,7 +144,11 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 				}
 			}
 
-			api := client.API(op.Path, string(call.Body))
+			logBody := string(call.Body)
+			if op.Upload != nil {
+				logBody = formSummary
+			}
+			api := client.API(op.Path, logBody)
 			ctx := context.Background()
 			if op.Paging != nil && config.Paginate() {
 				items, err := webexops.All(ctx, api, config.Hosts(), op, call)
@@ -190,10 +206,85 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 		flags.StringVar(&bodyRaw, "body", "", "Raw JSON body")
 		flags.StringVar(&bodyFile, "body-file", "", "Path to JSON body file")
 	}
+	if op.Upload != nil {
+		for _, part := range op.Upload.Parts {
+			if part.Kind == webexops.PartJSON {
+				flags.StringVar(&bodyRaw, "body", "", part.Usage)
+				flags.StringVar(&bodyFile, "body-file", "", "Path to a file that holds the value of --body")
+				continue
+			}
+			values.strings[part.Flag] = new(string)
+			flags.StringVar(values.strings[part.Flag], part.Flag, "", part.Usage)
+			if part.Required {
+				c.MarkFlagRequired(part.Flag)
+			}
+		}
+	}
 	if op.TimeRange != "" {
 		flags.StringVar(&last, "last", "", "Time range shorthand (e.g. 1h, 30m, 24h). Sets --from automatically.")
 	}
 	return c
+}
+
+// uploadForm is an upload's multipart form: each file part from the path its flag
+// gives, and its JSON part from --body or --body-file. A part that is not
+// required and not given is left out.
+func uploadForm(upload *webexops.Upload, values *flagValues, bodyRaw, bodyFile string) (webexapi.Multipart, error) {
+	var file string
+	for _, part := range upload.Parts {
+		if part.Kind == webexops.PartFile {
+			file = values.text(part.Flag)
+		}
+	}
+	var parts []webexapi.MultipartPart
+	for _, part := range upload.Parts {
+		switch part.Kind {
+		case webexops.PartFile:
+			path := values.text(part.Flag)
+			if path == "" {
+				continue
+			}
+			data, err := os.ReadFile(path)
+			if err != nil {
+				return webexapi.Multipart{}, fmt.Errorf("reading --%s: %w", part.Flag, err)
+			}
+			parts = append(parts, webexapi.MultipartPart{
+				FieldName: part.Name, FileName: filepath.Base(path), ContentType: fileType(path, data), Data: data,
+			})
+		case webexops.PartFileName:
+			name := values.text(part.Flag)
+			if name == "" && file != "" {
+				name = filepath.Base(file)
+			}
+			if name != "" {
+				parts = append(parts, webexapi.MultipartPart{FieldName: part.Name, Data: []byte(name)})
+			}
+		case webexops.PartJSON:
+			data := []byte(bodyRaw)
+			if bodyFile != "" {
+				var err error
+				if data, err = os.ReadFile(bodyFile); err != nil {
+					return webexapi.Multipart{}, fmt.Errorf("reading body file: %w", err)
+				}
+			}
+			if len(data) == 0 {
+				if part.Required {
+					return webexapi.Multipart{}, fmt.Errorf("--body or --body-file is required")
+				}
+				continue
+			}
+			parts = append(parts, webexapi.MultipartPart{FieldName: part.Name, ContentType: "application/json", Data: data})
+		}
+	}
+	return webexapi.EncodeMultipart(parts)
+}
+
+// fileType is a file's content type, from its extension or else its content.
+func fileType(path string, data []byte) string {
+	if t := mime.TypeByExtension(filepath.Ext(path)); t != "" {
+		return t
+	}
+	return http.DetectContentType(data)
 }
 
 // bodyFromFlags is the JSON body of the fields given by flags, or none when no

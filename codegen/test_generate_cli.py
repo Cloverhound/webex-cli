@@ -52,6 +52,41 @@ class GroupDescriptionTest(unittest.TestCase):
         self.assertIn('Summary: "Site commands"}', code)
 
 
+class UploadTest(unittest.TestCase):
+    channel = {'command': 'create', 'method': 'POST', 'path': '/organization/{orgid}/channel', 'has_body': True,
+               'path_params': [{'name': 'orgid'}], 'body_fields': [{'name': 'logoFileInfo', 'type': 'string'}]}
+
+    def test_an_upload_route_sends_its_form_in_place_of_the_collection_body(self):
+        op = operation(dict(self.channel), 'Webex Contact Center', 'cc', False)
+        self.assertIsNone(op['body'])
+        self.assertEqual([(p['name'], p['kind'], p.get('flag')) for p in op['upload']],
+                         [('logoFileInfo', 'PartJSON', None), ('logoFile', 'PartFile', 'logo-file')])
+
+    def test_the_table_declares_the_form(self):
+        code = area_file('cc', 'Webex Contact Center', 'cc', False, 'channel', [dict(self.channel)])
+        self.assertIn('Upload: &Upload{Parts: []Part{', code)
+        self.assertIn('{Name: "logoFile", Kind: PartFile, Flag: "logo-file", Usage: ', code)
+        self.assertNotIn('Body: &Body', code)
+
+    def test_other_routes_send_no_form(self):
+        op = operation({'command': 'create', 'method': 'POST', 'path': '/organization/{orgid}/site', 'has_body': True,
+                        'path_params': [{'name': 'orgid'}]}, 'Webex Contact Center', 'cc', False)
+        self.assertIsNone(op['upload'])
+        self.assertEqual(op['body'], [])
+
+    def test_a_content_length_header_gets_no_flag(self):
+        op = operation({'command': 'import-legacy', 'method': 'POST', 'path': '/flow-store/{orgId}/project/{projectId}/flows:import',
+                        'path_params': [{'name': 'orgId'}, {'name': 'projectId'}],
+                        'extra_headers': [{'name': 'Content-Length'}]}, 'Webex Contact Center', 'cc', False)
+        self.assertEqual([p['name'] for p in op['params']], ['orgId', 'projectId'])
+
+    def test_a_part_flag_another_flag_uses_stops_codegen(self):
+        ep = {'command': 'upload', 'method': 'POST', 'path': '/v1/{orgId}/functions:import',
+              'path_params': [{'name': 'orgId'}], 'query_params': [{'name': 'file'}]}
+        with self.assertRaises(SystemExit):
+            operation(ep, 'Webex Contact Center', 'cc', False)
+
+
 class UsageReportNegotiationTest(unittest.TestCase):
     def test_only_report_delete_accepts_non_json_acknowledgement(self):
         for method, path, expected in [

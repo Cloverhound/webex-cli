@@ -250,7 +250,7 @@ webex device hot-desk delete-session --session-id <id>
 | `validate-list-mac-address` | `--org-id`, `--macs`, `--body`, `--body-file` |
 | `update-settings-across-org-location-job` | `--org-id`, `--body`, `--body-file` |
 | `rebuild-phones-configuration` | `--org-id`, `--location-id`, `--body`, `--body-file` |
-| `upload-background-image` | `--device-id` *(required)*, `--org-id` |
+| `upload-background-image` | `--device-id` *(required)*, `--org-id`, `--file` *(required)*, `--file-name` |
 | `get-customer-dynamic-settings` | `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-location-dynamic-settings` | `--location-id` *(required)*, `--org-id`, `--family-or-model-display-name`, `--tags`, `--body`, `--body-file` |
 | `get-dynamic-settings` | `--device-id` *(required)*, `--org-id`, `--tags`, `--body`, `--body-file` |
