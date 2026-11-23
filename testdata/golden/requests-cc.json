@@ -1449,6 +1449,7 @@
   "command": "cc agent-summaries list-2",
   "variant": "all-flags",
   "args": [
+   "--interaction-id=s-interaction-id",
    "--search-type=s-search-type"
   ],
   "requests": [
@@ -1460,7 +1461,7 @@
      "Authorization": "Bearer golden-token",
      "Content-Type": "application/json"
     },
-    "body": "{\"orgId\":\"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA\",\"searchType\":\"s-search-type\"}"
+    "body": "{\"interactionId\":\"s-interaction-id\",\"orgId\":\"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi82YWIxZDJjNC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMGMxZDA\",\"searchType\":\"s-search-type\"}"
    }
   ]
  },
@@ -14128,14 +14129,13 @@
    "--comment=s-comment",
    "--flow-id=s-flow-id",
    "--flow-type=s-flow-type",
-   "--skip-validation=s-skip-validation",
    "--tag-ids=s-tag-ids-1,s-tag-ids-2",
    "--tracking-id=s-tracking-id"
   ],
   "requests": [
    {
     "method": "POST",
-    "url": "https://api.wxcc-us1.cisco.com/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows/s-flow-id:publish?flowType=s-flow-type&skipValidation=s-skip-validation",
+    "url": "https://api.wxcc-us1.cisco.com/6ab1d2c4-0000-4000-8000-00000000c1d0/project/5e5c9ad6d61f870d6d778c1b/flows/s-flow-id:publish?flowType=s-flow-type",
     "headers": {
      "Accept": "application/json",
      "Authorization": "Bearer golden-token",
