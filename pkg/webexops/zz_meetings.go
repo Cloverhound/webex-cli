@@ -442,7 +442,7 @@ var MeetingsPutMeetingParticipantsByParticipantId = &Operation{
 var MeetingsPostMeetingParticipantsAdmit = &Operation{
 	ID: "MeetingsPostMeetingParticipantsAdmit", Area: "meetings", Group: "participants", Command: "admit",
 	Summary:     "Admit Participants",
-	Description: "Admit multiple participants to a meeting in progress.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
+	Description: "To admit participants into a live meeting or its breakout sessions in bulk. If `breakoutSessionId` is null for all the requested participants, they are admitted into the main session of the meeting. If `breakoutSessionId` is not null for all the requested participants, they are admitted into the breakout sessions specified by each `breakoutSessionId`. It's not allowed that some requested participants have `breakoutSessionId` and the others haven't.\n\nThis API limits the maximum size of `items` in the request body to 100.\n\nEach `participantId` of `items` in the request body should have the same prefix of `meetingId`.",
 	Method:      "POST", Host: HostWebex, Path: "/meetingParticipants/admit",
 	Body: &Body{},
 }
