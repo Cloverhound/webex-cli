@@ -126,13 +126,28 @@ func TestBeforeSendCanStopARequest(t *testing.T) {
 	srv, seen := statusServer(t, []int{200}, `{}`, nil)
 	stop := errors.New("dry run")
 	var sent *http.Request
-	c := &Client{BeforeSend: func(r *http.Request) error { sent = r; return stop }}
+	c := &Client{
+		Token:      func(context.Context) (string, error) { return "tok", nil },
+		BeforeSend: func(r *http.Request) error { sent = r; return stop },
+	}
 	resp, err := c.Send(context.Background(), Request{Method: "DELETE", URL: srv.URL})
 	if !errors.Is(err, stop) || resp != nil || len(*seen) != 0 {
 		t.Fatalf("resp %v, err %v, requests %d", resp, err, len(*seen))
 	}
-	if sent.Header.Get("Authorization") != "Bearer " {
+	if sent.Header.Get("Authorization") != "Bearer tok" {
 		t.Fatalf("BeforeSend saw %v", sent.Header)
+	}
+}
+
+func TestNoTokenSendsNoAuthorization(t *testing.T) {
+	var got http.Header
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { got = r.Header }))
+	t.Cleanup(srv.Close)
+	if _, err := (&Client{}).Send(context.Background(), Request{Method: "GET", URL: srv.URL}); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := got["Authorization"]; ok {
+		t.Fatalf("sent Authorization %q", got.Get("Authorization"))
 	}
 }
 

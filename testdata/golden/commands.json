@@ -49379,6 +49379,106 @@
   ]
  },
  {
+  "path": "webex cc ai-agent-preview",
+  "use": "ai-agent-preview",
+  "short": "AI Agent Studio text preview conversations (unsupported private API)",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for ai-agent-preview"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview run",
+  "use": "run",
+  "short": "Start a conversation and send each --message in turn",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview run --agent-id <agent-id> --message \"Hello\" --message \"Where is my order?\" --brief",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for run"
+   },
+   {
+    "name": "message",
+    "type": "stringArray",
+    "default": "[]",
+    "usage": "Message to send; repeat for each turn",
+    "required": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview send",
+  "use": "send <message>",
+  "short": "Send a message in the saved conversation",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview send \"Where is my order?\"\n  webex cc ai-agent-preview send --agent-id <agent-id> \"Talk to a person\" --brief",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for send"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview start",
+  "use": "start",
+  "short": "Start a conversation and show the agent's first message",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview start --agent-id <agent-id>\n  webex cc ai-agent-preview send \"Where is my order?\"",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for start"
+   }
+  ]
+ },
+ {
   "path": "webex cc ai-agent-session",
   "use": "ai-agent-session",
   "short": "AI Agent Studio sessions and messages (unsupported private API)",

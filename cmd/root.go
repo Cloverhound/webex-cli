@@ -83,6 +83,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		config.SetToken(result.Token)
+		config.SetUser(result.UserEmail)
 
 		// Wire up token refresher for refreshable sources
 		switch {

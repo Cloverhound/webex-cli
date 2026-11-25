@@ -4093,6 +4093,274 @@
   ]
  },
  {
+  "command": "cc ai-agent-preview run",
+  "variant": "all-flags",
+  "args": [
+   "--agent-id=s-agent-id",
+   "--brief=true",
+   "--message=s-message-1,s-message-2"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"s-message-1,s-message-2\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"human\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-preview run",
+  "variant": "required",
+  "args": [
+   "--message=s-message-1,s-message-2"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"s-message-1,s-message-2\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"human\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-preview run",
+  "variant": "paginate",
+  "args": [
+   "--message=s-message-1,s-message-2",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"s-message-1,s-message-2\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"human\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-preview send",
+  "variant": "all-flags",
+  "args": [
+   "--agent-id=s-agent-id",
+   "--brief=true"
+  ],
+  "requests": [],
+  "error": "accepts 1 arg(s), received 0"
+ },
+ {
+  "command": "cc ai-agent-preview send",
+  "variant": "required",
+  "args": null,
+  "requests": [],
+  "error": "accepts 1 arg(s), received 0"
+ },
+ {
+  "command": "cc ai-agent-preview start",
+  "variant": "all-flags",
+  "args": [
+   "--agent-id=s-agent-id",
+   "--brief=true"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-preview start",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-preview start",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v2/organizations/6ab1d2c4-0000-4000-8000-00000000c1d0/agents/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "POST",
+    "url": "https://bot-appserver.produs1.ciscoccservice.com/api/v1/webhook/web/",
+    "headers": {
+     "Accept": "application/json",
+     "Bot-Access-Token": "golden-bot-token",
+     "Content-Type": "application/json",
+     "Origin": "https://preview.produs1.ciscoccservice.com"
+    },
+    "body": "{\"consumer\":{\"extra_params\":{\"socket_key\":\"golden-random\"},\"uid\":\"golden-random\"},\"is_test\":true,\"msg\":\"hi\",\"platform\":\"web\",\"transparency_msg_merged\":false,\"type\":\"bot\"}"
+   }
+  ]
+ },
+ {
   "command": "cc ai-agent-session get",
   "variant": "all-flags",
   "args": [

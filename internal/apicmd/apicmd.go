@@ -23,11 +23,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// privateAPINote ends the help of commands on an API Cisco does not support.
-const privateAPINote = "Caution: this command uses Webex AI Agent Studio's private API, which is not " +
-	"documented or supported by Cisco and can change or stop working without notice. " +
-	"Do not build production automation on it."
-
 // Register adds an area's groups and commands under parent and returns the group
 // commands by name, for handwritten commands to join.
 func Register(parent *cobra.Command, area string) map[string]*cobra.Command {
@@ -70,9 +65,9 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 	description := op.Description
 	if op.Private {
 		if description != "" {
-			description += "\n\n" + privateAPINote
+			description += "\n\n" + aiagent.HelpCaution
 		} else {
-			description = privateAPINote
+			description = aiagent.HelpCaution
 		}
 	}
 
