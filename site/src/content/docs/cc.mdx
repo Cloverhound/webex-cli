@@ -27,6 +27,7 @@ Requests go to the organization's Contact Center data center: the one saved with
 | `agent-wellbeing` | Agent wellbeing configuration |
 | `agents` | Agent state operations (login, logout, state change) |
 | `ai-agent` | AI Agent Studio agents: configuration, tools, publishing, export (private API) |
+| `ai-agent-kb` | AI Agent Studio knowledge bases, categories and documents (private API) |
 | `ai-agent-session` | AI Agent Studio conversation sessions and messages (private API) |
 | `ai-agent-transcript` | AI Agent Studio audited transcript reads (private API) |
 | `ai-assistant` | AI assistant configuration |
@@ -209,7 +210,7 @@ webex cc functions import --file function.json --overwrite false
 ## AI Agent Studio
 
 :::caution[Unsupported private API]
-The `ai-agent`, `ai-agent-session` and `ai-agent-transcript` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation, not as a dependency of production automation, integrations or scheduled jobs. Commands show this caution in `--help`, and the first one you run prints it once.
+The `ai-agent`, `ai-agent-session`, `ai-agent-transcript` and `ai-agent-kb` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation, not as a dependency of production automation, integrations or scheduled jobs. Commands show this caution in `--help`, and the first one you run prints it once.
 :::
 
 ```bash
@@ -228,6 +229,21 @@ webex cc ai-agent-session list --agent-id <agent-id> --paginate
 - In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
 - A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
 - Studio is in the organization's Contact Center data center, which `--cc-region` or `webex config set cc-region` selects, as for the rest of `webex cc`.
+
+### Knowledge bases
+
+```bash
+webex cc ai-agent-kb create --body '{"name":"Store hours","description":"Opening hours and contacts","is_public":true,"chunk_size":800,"metadata":{"rag_version":"v2"},"supported_bot_types":[],"use_for_agent_answers":false}'
+webex cc ai-agent-kb upload --kb-id <kb-id> --file hours.txt
+webex cc ai-agent-kb get-document --document-id <document-id>
+webex cc ai-agent-kb list-documents --kb_id <kb-id>
+```
+
+- `create` needs every field of its example body. With only `name` and `description`, Studio answers with a bare 500.
+- An uploaded document's `status` is `pending` until Studio has ingested it, then `success`. For a small text file this takes about a minute.
+- Uploading fails with 400 `AI_STUDIO_400_000028` until you have accepted Studio's "general sources" terms once in the Studio UI.
+- An agent uses a knowledge base once the knowledge base's ID is in the agent's `bot_metadata.kb_ids`. Send it with `ai-agent update`, with the rest of `bot_metadata` and `ai_engine` set to the exact engine; `kb_ids` at the top level is ignored. Callers get it after `publish`; preview uses it at once.
+- `approve-ingestion` is for website documents only. A file needs no approval.
 
 ## Other refreshed Contact Center APIs
 

@@ -3504,6 +3504,595 @@
   ]
  },
  {
+  "command": "cc ai-agent-kb approve-ingestion",
+  "variant": "all-flags",
+  "args": [
+   "--action=s-action",
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/approve_ingestion/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"action\":\"s-action\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb approve-ingestion",
+  "variant": "required",
+  "args": [
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/approve_ingestion/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb approve-ingestion",
+  "variant": "body",
+  "args": [
+   "--document-id=s-document-id",
+   "--body={\"golden\":true}"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/approve_ingestion/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create",
+  "variant": "all-flags",
+  "args": null,
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create",
+  "variant": "body",
+  "args": [
+   "--body={\"golden\":true}"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create-category",
+  "variant": "all-flags",
+  "args": [
+   "--kb_id=s-kb_id",
+   "--name=s-name"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"kb_id\":\"s-kb_id\",\"name\":\"s-name\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create-category",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb create-category",
+  "variant": "body",
+  "args": [
+   "--body={\"golden\":true}"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete",
+  "variant": "all-flags",
+  "args": [
+   "--kb-id=s-kb-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/s-kb-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete",
+  "variant": "required",
+  "args": [
+   "--kb-id=s-kb-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/s-kb-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete-category",
+  "variant": "all-flags",
+  "args": [
+   "--category-id=s-category-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/s-category-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete-category",
+  "variant": "required",
+  "args": [
+   "--category-id=s-category-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/s-category-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete-document",
+  "variant": "all-flags",
+  "args": [
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb delete-document",
+  "variant": "required",
+  "args": [
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "DELETE",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb get-document",
+  "variant": "all-flags",
+  "args": [
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb get-document",
+  "variant": "required",
+  "args": [
+   "--document-id=s-document-id"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb get-document",
+  "variant": "paginate",
+  "args": [
+   "--document-id=s-document-id",
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/s-document-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list",
+  "variant": "all-flags",
+  "args": [
+   "--id=s-id",
+   "--limit=s-limit",
+   "--offset=s-offset"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/?id=s-id&limit=s-limit&offset=s-offset",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-categories",
+  "variant": "all-flags",
+  "args": [
+   "--kb_id=s-kb_id",
+   "--limit=s-limit",
+   "--offset=s-offset"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/?kb_id=s-kb_id&limit=s-limit&offset=s-offset",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-categories",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-categories",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbCategories/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-documents",
+  "variant": "all-flags",
+  "args": [
+   "--kb_id=s-kb_id",
+   "--limit=s-limit",
+   "--offset=s-offset"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/?kb_id=s-kb_id&limit=s-limit&offset=s-offset",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-documents",
+  "variant": "required",
+  "args": null,
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb list-documents",
+  "variant": "paginate",
+  "args": [
+   "--paginate"
+  ],
+  "requests": [
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/?limit=100&offset=0",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   },
+   {
+    "method": "GET",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/?limit=100&offset=100",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb update",
+  "variant": "all-flags",
+  "args": [
+   "--description=s-description",
+   "--kb-id=s-kb-id",
+   "--name=s-name"
+  ],
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/s-kb-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"description\":\"s-description\",\"name\":\"s-name\"}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb update",
+  "variant": "required",
+  "args": [
+   "--kb-id=s-kb-id"
+  ],
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/s-kb-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token"
+    }
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb update",
+  "variant": "body",
+  "args": [
+   "--kb-id=s-kb-id",
+   "--body={\"golden\":true}"
+  ],
+  "requests": [
+   {
+    "method": "PUT",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/knowledgeBases/s-kb-id/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "application/json"
+    },
+    "body": "{\"golden\":true}"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb upload",
+  "variant": "all-flags",
+  "args": [
+   "--file=golden.wav",
+   "--kb-id=s-kb-id"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/upload/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"kb_id\"\r\n\r\ns-kb-id\r\n--golden-boundary--\r\n"
+   }
+  ]
+ },
+ {
+  "command": "cc ai-agent-kb upload",
+  "variant": "required",
+  "args": [
+   "--file=golden.wav",
+   "--kb-id=s-kb-id"
+  ],
+  "requests": [
+   {
+    "method": "POST",
+    "url": "https://studio.aiagent-us1.cisco.com/api/v1/kbDocuments/upload/",
+    "headers": {
+     "Accept": "application/json",
+     "Authorization": "Bearer golden-token",
+     "Content-Type": "multipart/form-data; boundary=golden-boundary"
+    },
+    "body": "--golden-boundary\r\nContent-Disposition: form-data; name=\"file\"; filename=\"golden.wav\"\r\nContent-Type: audio/wav\r\n\r\nRIFF golden audio\r\n--golden-boundary\r\nContent-Disposition: form-data; name=\"kb_id\"\r\n\r\ns-kb-id\r\n--golden-boundary--\r\n"
+   }
+  ]
+ },
+ {
   "command": "cc ai-agent-session get",
   "variant": "all-flags",
   "args": [

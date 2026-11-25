@@ -220,6 +220,13 @@ UPLOADS = {
         _BACKGROUND_IMAGE_FORM,
     ("Webex Device", "POST", "/telephony/config/devices/{deviceId}/actions/backgroundImageUpload/invoke"):
         _BACKGROUND_IMAGE_FORM,
+    # AI Agent Studio, from codegen/supplemental.
+    ("Webex Contact Center", "POST", "/api/v1/kbDocuments/upload/"): [
+        {'name': 'file', 'kind': 'PartFile', 'flag': 'file', 'required': True,
+         'usage': 'Path to the document to add to the knowledge base'},
+        {'name': 'kb_id', 'kind': 'PartText', 'flag': 'kb-id', 'required': True,
+         'usage': 'Knowledge base ID'},
+    ],
 }
 
 # The UPLOADS routes the collections still list, so codegen can name the others.

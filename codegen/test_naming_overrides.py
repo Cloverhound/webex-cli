@@ -4,17 +4,16 @@ import unittest
 import json
 from pathlib import Path
 
-from extract_api_spec import extract_collection, merge_folders, apply_naming_overrides
+from extract_api_spec import load_collections, merge_folders, apply_naming_overrides
 from naming_overrides import NAMING_OVERRIDES, RELEASED_ID_ALIASES
 
 
 class NamingOverridesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.raw = {}
-        for path in (Path(__file__).parent / 'postman').glob('*.json'):
-            name, folders = extract_collection(path)
-            cls.raw[name] = merge_folders(folders)
+        here = Path(__file__).parent
+        cls.raw = {name: merge_folders(folders)
+                   for name, folders in load_collections(here / 'postman', here / 'supplemental').items()}
 
     def resolved(self, area):
         return apply_naming_overrides(area, self.raw[area])

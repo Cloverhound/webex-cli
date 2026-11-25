@@ -48973,7 +48973,7 @@
   "path": "webex cc ai-agent update",
   "use": "update",
   "short": "Update AI agent",
-  "long": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. To give the agent knowledge bases, send their IDs as `bot_metadata.kb_ids`, with the rest of `bot_metadata`; `kb_ids` at the top level is ignored. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "agent-id",
@@ -49028,6 +49028,353 @@
     "type": "bool",
     "default": "false",
     "usage": "help for update-tool"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb",
+  "use": "ai-agent-kb",
+  "short": "AI Agent Studio knowledge bases, categories and documents (unsupported private API)",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for ai-agent-kb"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb approve-ingestion",
+  "use": "approve-ingestion",
+  "short": "Approve knowledge base document ingestion",
+  "long": "Approves or declines the ingestion of a website document. A file needs no approval.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "action",
+    "type": "string"
+   },
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for approve-ingestion"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb create",
+  "use": "create",
+  "short": "Create knowledge base",
+  "long": "Creates a knowledge base, with a default \"Unassigned\" category. Send every field of the example; without `is_public`, `chunk_size`, `metadata.rag_version`, `supported_bot_types` and `use_for_agent_answers`, Studio answers with a bare 500. An agent uses a knowledge base once its ID is in the agent's `bot_metadata.kb_ids` (see `ai-agent update`).\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for create"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb create-category",
+  "use": "create-category",
+  "short": "Create knowledge base category",
+  "long": "Adds a category to a knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for create-category"
+   },
+   {
+    "name": "kb_id",
+    "type": "string"
+   },
+   {
+    "name": "name",
+    "type": "string"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete",
+  "use": "delete",
+  "short": "Delete knowledge base",
+  "long": "Deletes a knowledge base and its documents.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID.",
+    "required": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete-category",
+  "use": "delete-category",
+  "short": "Delete knowledge base category",
+  "long": "Deletes a category.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "category-id",
+    "type": "string",
+    "usage": "Category ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete-category"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete-document",
+  "use": "delete-document",
+  "short": "Delete knowledge base document",
+  "long": "Deletes a document from its knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete-document"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb get-document",
+  "use": "get-document",
+  "short": "Get knowledge base document",
+  "long": "Gets a document, with its ingestion `status`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for get-document"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list",
+  "use": "list",
+  "short": "List knowledge bases",
+  "long": "Lists the organization's knowledge bases, with their document counts and `mapped_bots`, the agents that use each one.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list"
+   },
+   {
+    "name": "id",
+    "type": "string",
+    "usage": "Knowledge base ID, to list only that one."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of knowledge bases to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of knowledge bases to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list-categories",
+  "use": "list-categories",
+  "short": "List knowledge base categories",
+  "long": "Lists a knowledge base's categories.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-categories"
+   },
+   {
+    "name": "kb_id",
+    "type": "string",
+    "usage": "Knowledge base ID."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of categories to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of categories to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list-documents",
+  "use": "list-documents",
+  "short": "List knowledge base documents",
+  "long": "Lists documents. Without `kb_id`, it lists the documents of every knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-documents"
+   },
+   {
+    "name": "kb_id",
+    "type": "string",
+    "usage": "Knowledge base ID."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of documents to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of documents to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb update",
+  "use": "update",
+  "short": "Update knowledge base",
+  "long": "Updates a knowledge base. Fields left out keep their values.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "description",
+    "type": "string"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for update"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID.",
+    "required": true
+   },
+   {
+    "name": "name",
+    "type": "string"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb upload",
+  "use": "upload",
+  "short": "Upload knowledge base document",
+  "long": "Adds a file to a knowledge base. The document's `status` is `pending` until Studio has ingested it, then `success`; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "file",
+    "type": "string",
+    "usage": "Path to the document to add to the knowledge base",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for upload"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID",
+    "required": true
    }
   ]
  },

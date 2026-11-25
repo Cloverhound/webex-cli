@@ -135,6 +135,9 @@ const (
 	// PartFileName is a name for the upload's file part. The CLI takes it from
 	// that file's path unless the part's flag gives one.
 	PartFileName PartKind = "file-name"
+
+	// PartText is a plain value, such as an ID, which the part's flag gives.
+	PartText PartKind = "text"
 )
 
 // Part is one part of an upload's form.
@@ -143,8 +146,8 @@ type Part struct {
 	Name string
 	Kind PartKind
 
-	// Flag is the CLI flag that gives a file's path or a file name. A JSON part
-	// has none.
+	// Flag is the CLI flag that gives a file's path, a file name or a text
+	// value. A JSON part has none.
 	Flag     string
 	Usage    string
 	Required bool

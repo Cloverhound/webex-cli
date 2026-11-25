@@ -173,7 +173,7 @@ webex cc functions import --file function.json --overwrite false
 
 ## AI Agent Studio (unsupported private API)
 
-> **Caution:** `ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
+> **Caution:** `ai-agent`, `ai-agent-session`, `ai-agent-transcript` and `ai-agent-kb` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
 
 ```bash
 webex cc ai-agent list --paginate                       # ids for --agent-id
@@ -191,6 +191,23 @@ webex cc ai-agent-session list --agent-id <id> --paginate
 - To test writes, create a `zz-` agent, work only on it, and delete it afterwards.
 - `ai-agent-transcript create-audit-record` writes a permanent compliance entry under the user's name. Run it only for a reason the user gives, never in a loop. With a Webex login, messages of encrypted (Advanced Data Protection) sessions stay encrypted after the audit; preview sessions are never encrypted.
 - A voice session's `interaction_id` is the task ID for `webex cc captures list`.
+
+### Knowledge bases
+
+```bash
+webex cc ai-agent-kb list --paginate                                      # mapped_bots = agents using each
+webex cc ai-agent-kb create --body '{"name":"<name>","description":"<text>","is_public":true,"chunk_size":800,"metadata":{"rag_version":"v2"},"supported_bot_types":[],"use_for_agent_answers":false}'
+webex cc ai-agent-kb upload --kb-id <kb-id> --file facts.txt               # status pending, then success
+webex cc ai-agent-kb get-document --document-id <document-id>
+webex cc ai-agent-kb list-documents --kb_id <kb-id>                         # query flags keep Studio's snake_case
+```
+
+- `create` needs every field shown; with only `name` and `description` Studio returns a bare 500.
+- Upload fails with 400 `AI_STUDIO_400_000028` until the user has accepted Studio's "general sources" terms once in the Studio UI. That is the user's decision; tell them, don't work around it.
+- Wait for the document's `status` to be `success` (about a minute for a small text file) before testing answers from it.
+- To connect a knowledge base to an agent, `ai-agent update` with `bot_metadata.kb_ids`, sending the agent's whole `bot_metadata` back with `ai_engine` set to `engine_identifier`. Top-level `kb_ids` is silently ignored. Preview uses it at once; callers after `publish`.
+- `approve-ingestion` (`{"action":"approve"}` or `"decline"`) applies to website documents only.
+- Test with a `zz-` knowledge base, and `delete` it afterwards.
 
 ## Other refreshed Contact Center APIs
 
@@ -1200,5 +1217,22 @@ Group aliases: `flows`.
 | `get-session` | `--agent-id` *(required)*, `--id` |
 | `list-messages` | `--agent-id` *(required)*, `--room_id`, `--order_by`, `--limit`, `--offset` |
 | `create-audit-record` | `--agent-id` *(required)*, `--room_id`, `--decrypt_audit_type`, `--message`, `--body`, `--body-file` |
+
+### ai-agent-kb
+
+| Command | Flags |
+|---|---|
+| `list` | `--id`, `--limit`, `--offset` |
+| `list-categories` | `--kb_id`, `--limit`, `--offset` |
+| `list-documents` | `--kb_id`, `--limit`, `--offset` |
+| `get-document` | `--document-id` *(required)* |
+| `create` | `--body`, `--body-file` |
+| `create-category` | `--name`, `--kb_id`, `--body`, `--body-file` |
+| `upload` | `--file` *(required)*, `--kb-id` *(required)* |
+| `approve-ingestion` | `--document-id` *(required)*, `--action`, `--body`, `--body-file` |
+| `update` | `--kb-id` *(required)*, `--name`, `--description`, `--body`, `--body-file` |
+| `delete` | `--kb-id` *(required)* |
+| `delete-category` | `--category-id` *(required)* |
+| `delete-document` | `--document-id` *(required)* |
 
 <!-- codegen:end -->

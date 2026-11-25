@@ -166,7 +166,35 @@ func TestUploadCommandsTakeEachPartAsAFlag(t *testing.T) {
 			}
 		}
 	}
-	if uploads != 6 {
-		t.Errorf("%d uploads in the table, want 6", uploads)
+	if uploads != 7 {
+		t.Errorf("%d uploads in the table, want 7", uploads)
+	}
+}
+
+func TestUploadFormSendsTextParts(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "facts.txt")
+	if err := os.WriteFile(file, []byte("facts"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	upload := &webexops.Upload{Parts: []webexops.Part{
+		{Name: "file", Kind: webexops.PartFile, Flag: "file", Required: true},
+		{Name: "kb_id", Kind: webexops.PartText, Flag: "kb-id", Required: true},
+		{Name: "note", Kind: webexops.PartText, Flag: "note"},
+	}}
+	form, err := uploadForm(upload, uploadValues(map[string]string{"file": file, "kb-id": "kb-1", "note": ""}), "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := readForm(t, form.Body, form.ContentType)
+	want := []formPart{{"file", "facts.txt", "text/plain; charset=utf-8", "facts"}, {"kb_id", "", "", "kb-1"}}
+	if len(got) != len(want) || got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("parts %q, want %q", got, want)
+	}
+	if !strings.Contains(form.Summary, `{"field":"kb_id","value":"kb-1"}`) {
+		t.Errorf("summary %s should show the text part", form.Summary)
+	}
+
+	if _, err := uploadForm(upload, uploadValues(map[string]string{"file": file, "kb-id": ""}), "", ""); err == nil {
+		t.Error("sent a form without its required text part")
 	}
 }

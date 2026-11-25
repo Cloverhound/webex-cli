@@ -77,6 +77,7 @@ var ccGroups = []Group{
 	{Area: "cc", Name: "ai-agent", Summary: "AI Agent Studio agents, tools, publishing, export (unsupported private API)"},
 	{Area: "cc", Name: "ai-agent-session", Summary: "AI Agent Studio sessions and messages (unsupported private API)"},
 	{Area: "cc", Name: "ai-agent-transcript", Summary: "AI Agent Studio audited transcript reads (unsupported private API)"},
+	{Area: "cc", Name: "ai-agent-kb", Summary: "AI Agent Studio knowledge bases, categories and documents (unsupported private API)"},
 }
 
 // ccOperations are the Webex Contact Center operations, in collection order.
@@ -610,6 +611,18 @@ var ccOperations = []*Operation{
 	CcPostApiV1DecryptAudit,
 	CcGetApiV1Room,
 	CcGetApiV1Message,
+	CcGetApiV1KnowledgeBases,
+	CcPostApiV1KnowledgeBases,
+	CcPutApiV1KnowledgeBasesByKbId,
+	CcDeleteApiV1KnowledgeBasesByKbId,
+	CcGetApiV1KbCategories,
+	CcPostApiV1KbCategories,
+	CcDeleteApiV1KbCategoriesByCategoryId,
+	CcGetApiV1KbDocuments,
+	CcPostApiV1KbDocumentsUpload,
+	CcGetApiV1KbDocumentsByDocumentId,
+	CcDeleteApiV1KbDocumentsByDocumentId,
+	CcPostApiV1KbDocumentsByDocumentIdApproveIngestion,
 }
 
 // CcPostV1AgentburnoutSubscribe is "Subscribe for realtime burnout events": POST /v1/agentburnout/subscribe.
@@ -8377,7 +8390,7 @@ var CcPostApiV1Bot = &Operation{
 var CcPutApiV1BotByAgentId = &Operation{
 	ID: "CcPutApiV1BotByAgentId", Area: "cc", Group: "ai-agent", Command: "update",
 	Summary:     "Update AI agent",
-	Description: "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
+	Description: "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. To give the agent knowledge bases, send their IDs as `bot_metadata.kb_ids`, with the rest of `bot_metadata`; `kb_ids` at the top level is ignored. Callers get the change only after `publish`.",
 	Method:      "PUT", Host: HostAIAgent, Path: "/api/v1/bot/{agentId}/",
 	Params: []Param{
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
@@ -8601,6 +8614,178 @@ var CcGetApiV1Message = &Operation{
 		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
 	},
 	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
+	Redact:  true,
+	Private: true,
+}
+
+// CcGetApiV1KnowledgeBases is "List knowledge bases": GET /api/v1/knowledgeBases/.
+var CcGetApiV1KnowledgeBases = &Operation{
+	ID: "CcGetApiV1KnowledgeBases", Area: "cc", Group: "ai-agent-kb", Command: "list",
+	Summary:     "List knowledge bases",
+	Description: "Lists the organization's knowledge bases, with their document counts and `mapped_bots`, the agents that use each one.",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/knowledgeBases/",
+	Params: []Param{
+		{Name: "id", In: InQuery, Flag: "id", Usage: "Knowledge base ID, to list only that one."},
+		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of knowledge bases to return."},
+		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of knowledge bases to skip."},
+	},
+	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
+	Redact:  true,
+	Private: true,
+}
+
+// CcPostApiV1KnowledgeBases is "Create knowledge base": POST /api/v1/knowledgeBases/.
+var CcPostApiV1KnowledgeBases = &Operation{
+	ID: "CcPostApiV1KnowledgeBases", Area: "cc", Group: "ai-agent-kb", Command: "create",
+	Summary:     "Create knowledge base",
+	Description: "Creates a knowledge base, with a default \"Unassigned\" category. Send every field of the example; without `is_public`, `chunk_size`, `metadata.rag_version`, `supported_bot_types` and `use_for_agent_answers`, Studio answers with a bare 500. An agent uses a knowledge base once its ID is in the agent's `bot_metadata.kb_ids` (see `ai-agent update`).",
+	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/knowledgeBases/",
+	Body:    &Body{},
+	Redact:  true,
+	Private: true,
+}
+
+// CcPutApiV1KnowledgeBasesByKbId is "Update knowledge base": PUT /api/v1/knowledgeBases/{kbId}/.
+var CcPutApiV1KnowledgeBasesByKbId = &Operation{
+	ID: "CcPutApiV1KnowledgeBasesByKbId", Area: "cc", Group: "ai-agent-kb", Command: "update",
+	Summary:     "Update knowledge base",
+	Description: "Updates a knowledge base. Fields left out keep their values.",
+	Method:      "PUT", Host: HostAIAgent, Path: "/api/v1/knowledgeBases/{kbId}/",
+	Params: []Param{
+		{Name: "kbId", In: InPath, Flag: "kb-id", Required: true, Usage: "Knowledge base ID."},
+	},
+	Body: &Body{Fields: []BodyField{
+		{Name: "name", Flag: "name", Type: "string"},
+		{Name: "description", Flag: "description", Type: "string"},
+	}},
+	Redact:  true,
+	Private: true,
+}
+
+// CcDeleteApiV1KnowledgeBasesByKbId is "Delete knowledge base": DELETE /api/v1/knowledgeBases/{kbId}/.
+var CcDeleteApiV1KnowledgeBasesByKbId = &Operation{
+	ID: "CcDeleteApiV1KnowledgeBasesByKbId", Area: "cc", Group: "ai-agent-kb", Command: "delete",
+	Summary:     "Delete knowledge base",
+	Description: "Deletes a knowledge base and its documents.",
+	Method:      "DELETE", Host: HostAIAgent, Path: "/api/v1/knowledgeBases/{kbId}/",
+	Params: []Param{
+		{Name: "kbId", In: InPath, Flag: "kb-id", Required: true, Usage: "Knowledge base ID."},
+	},
+	Redact:  true,
+	Private: true,
+}
+
+// CcGetApiV1KbCategories is "List knowledge base categories": GET /api/v1/kbCategories/.
+var CcGetApiV1KbCategories = &Operation{
+	ID: "CcGetApiV1KbCategories", Area: "cc", Group: "ai-agent-kb", Command: "list-categories",
+	Summary:     "List knowledge base categories",
+	Description: "Lists a knowledge base's categories.",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/kbCategories/",
+	Params: []Param{
+		{Name: "kb_id", In: InQuery, Flag: "kb_id", Usage: "Knowledge base ID."},
+		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of categories to return."},
+		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of categories to skip."},
+	},
+	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
+	Redact:  true,
+	Private: true,
+}
+
+// CcPostApiV1KbCategories is "Create knowledge base category": POST /api/v1/kbCategories/.
+var CcPostApiV1KbCategories = &Operation{
+	ID: "CcPostApiV1KbCategories", Area: "cc", Group: "ai-agent-kb", Command: "create-category",
+	Summary:     "Create knowledge base category",
+	Description: "Adds a category to a knowledge base.",
+	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/kbCategories/",
+	Body: &Body{Fields: []BodyField{
+		{Name: "name", Flag: "name", Type: "string"},
+		{Name: "kb_id", Flag: "kb_id", Type: "string"},
+	}},
+	Redact:  true,
+	Private: true,
+}
+
+// CcDeleteApiV1KbCategoriesByCategoryId is "Delete knowledge base category": DELETE /api/v1/kbCategories/{categoryId}/.
+var CcDeleteApiV1KbCategoriesByCategoryId = &Operation{
+	ID: "CcDeleteApiV1KbCategoriesByCategoryId", Area: "cc", Group: "ai-agent-kb", Command: "delete-category",
+	Summary:     "Delete knowledge base category",
+	Description: "Deletes a category.",
+	Method:      "DELETE", Host: HostAIAgent, Path: "/api/v1/kbCategories/{categoryId}/",
+	Params: []Param{
+		{Name: "categoryId", In: InPath, Flag: "category-id", Required: true, Usage: "Category ID."},
+	},
+	Redact:  true,
+	Private: true,
+}
+
+// CcGetApiV1KbDocuments is "List knowledge base documents": GET /api/v1/kbDocuments/.
+var CcGetApiV1KbDocuments = &Operation{
+	ID: "CcGetApiV1KbDocuments", Area: "cc", Group: "ai-agent-kb", Command: "list-documents",
+	Summary:     "List knowledge base documents",
+	Description: "Lists documents. Without `kb_id`, it lists the documents of every knowledge base.",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/kbDocuments/",
+	Params: []Param{
+		{Name: "kb_id", In: InQuery, Flag: "kb_id", Usage: "Knowledge base ID."},
+		{Name: "limit", In: InQuery, Flag: "limit", Usage: "Maximum number of documents to return."},
+		{Name: "offset", In: InQuery, Flag: "offset", Usage: "Number of documents to skip."},
+	},
+	Paging:  &webexapi.Paging{Mode: webexapi.Offset, Start: "offset", Size: "limit", Items: "objects", TotalItems: "meta.total_count"},
+	Redact:  true,
+	Private: true,
+}
+
+// CcPostApiV1KbDocumentsUpload is "Upload knowledge base document": POST /api/v1/kbDocuments/upload/.
+var CcPostApiV1KbDocumentsUpload = &Operation{
+	ID: "CcPostApiV1KbDocumentsUpload", Area: "cc", Group: "ai-agent-kb", Command: "upload",
+	Summary:     "Upload knowledge base document",
+	Description: "Adds a file to a knowledge base. The document's `status` is `pending` until Studio has ingested it, then `success`; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
+	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/kbDocuments/upload/",
+	Upload: &Upload{Parts: []Part{
+		{Name: "file", Kind: PartFile, Flag: "file", Required: true, Usage: "Path to the document to add to the knowledge base"},
+		{Name: "kb_id", Kind: PartText, Flag: "kb-id", Required: true, Usage: "Knowledge base ID"},
+	}},
+	Redact:  true,
+	Private: true,
+}
+
+// CcGetApiV1KbDocumentsByDocumentId is "Get knowledge base document": GET /api/v1/kbDocuments/{documentId}/.
+var CcGetApiV1KbDocumentsByDocumentId = &Operation{
+	ID: "CcGetApiV1KbDocumentsByDocumentId", Area: "cc", Group: "ai-agent-kb", Command: "get-document",
+	Summary:     "Get knowledge base document",
+	Description: "Gets a document, with its ingestion `status`.",
+	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/kbDocuments/{documentId}/",
+	Params: []Param{
+		{Name: "documentId", In: InPath, Flag: "document-id", Required: true, Usage: "Document ID."},
+	},
+	Redact:  true,
+	Private: true,
+}
+
+// CcDeleteApiV1KbDocumentsByDocumentId is "Delete knowledge base document": DELETE /api/v1/kbDocuments/{documentId}/.
+var CcDeleteApiV1KbDocumentsByDocumentId = &Operation{
+	ID: "CcDeleteApiV1KbDocumentsByDocumentId", Area: "cc", Group: "ai-agent-kb", Command: "delete-document",
+	Summary:     "Delete knowledge base document",
+	Description: "Deletes a document from its knowledge base.",
+	Method:      "DELETE", Host: HostAIAgent, Path: "/api/v1/kbDocuments/{documentId}/",
+	Params: []Param{
+		{Name: "documentId", In: InPath, Flag: "document-id", Required: true, Usage: "Document ID."},
+	},
+	Redact:  true,
+	Private: true,
+}
+
+// CcPostApiV1KbDocumentsByDocumentIdApproveIngestion is "Approve knowledge base document ingestion": POST /api/v1/kbDocuments/{documentId}/approve_ingestion/.
+var CcPostApiV1KbDocumentsByDocumentIdApproveIngestion = &Operation{
+	ID: "CcPostApiV1KbDocumentsByDocumentIdApproveIngestion", Area: "cc", Group: "ai-agent-kb", Command: "approve-ingestion",
+	Summary:     "Approve knowledge base document ingestion",
+	Description: "Approves or declines the ingestion of a website document. A file needs no approval.",
+	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/kbDocuments/{documentId}/approve_ingestion/",
+	Params: []Param{
+		{Name: "documentId", In: InPath, Flag: "document-id", Required: true, Usage: "Document ID."},
+	},
+	Body: &Body{Fields: []BodyField{
+		{Name: "action", Flag: "action", Type: "string"},
+	}},
 	Redact:  true,
 	Private: true,
 }
