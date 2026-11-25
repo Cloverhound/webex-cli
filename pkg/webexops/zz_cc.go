@@ -8365,7 +8365,7 @@ var CcPostApiV1Bot = &Operation{
 var CcPutApiV1BotByAgentId = &Operation{
 	ID: "CcPutApiV1BotByAgentId", Area: "cc", Group: "ai-agent", Command: "update",
 	Summary:     "Update AI agent",
-	Description: "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
+	Description: "Updates an AI agent's draft. The agent's prompt is `description`: the goal and the instructions in one string, `<goal>\\n\\n### INSTRUCTIONS:\\n<instructions>`, at most 5120 characters. The model never reads `instruction`. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
 	Method:      "PUT", Host: HostAIAgent, Path: "/api/v1/bot/{agentId}/",
 	Params: []Param{
 		{Name: "agentId", In: InPath, Flag: "agent-id", Required: true, Usage: "AI agent ID."},
@@ -8394,7 +8394,7 @@ var CcDeleteApiV1BotByAgentId = &Operation{
 var CcGetApiV1LlmagentGetdefault = &Operation{
 	ID: "CcGetApiV1LlmagentGetdefault", Area: "cc", Group: "ai-agent", Command: "get-configuration",
 	Summary:     "Get AI agent configuration",
-	Description: "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
+	Description: "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt, stored as `**Goal**: <goal>` followed by the instructions. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
 	Method:      "GET", Host: HostAIAgent, Path: "/api/v1/llmagent/getdefault/",
 	Params: []Param{
 		{Name: "bot-access-token", In: InAgentToken, Flag: "agent-id", Required: true, Usage: "AI agent ID."},

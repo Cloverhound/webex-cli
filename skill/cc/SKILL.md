@@ -171,7 +171,7 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 ```bash
 webex cc ai-agent list --paginate                       # ids for --agent-id
-webex cc ai-agent get-configuration --agent-id <id>     # draft prompt, tools, state
+webex cc ai-agent get-configuration --agent-id <id>     # draft goal and instructions, tools, state
 webex cc ai-agent export --agent-id <id>                # configuration + tools snapshot
 webex cc ai-agent update --agent-id <id> --body-file changes.json
 webex cc ai-agent publish --agent-id <id> --description "<what changed>"
@@ -181,6 +181,7 @@ webex cc ai-agent-session list --agent-id <id> --paginate
 - Pass the agent's `id` as `--agent-id`; the CLI looks up the agent's runtime token itself and redacts tokens from output. Never try to print or reuse them.
 - Edits change the draft (`state: saved`); live calls use them only after `publish`. Publishing changes production behavior, so publish only when the user asks.
 - `update` keeps top-level fields that are left out. `get` reports `bot_metadata.ai_engine` as the family (`PRO`); send `engine_identifier` (`PRO_2_0_0`) as `ai_engine`, or the agent's engine changes.
+- The prompt is `description`: goal and instructions in one string, `<goal>\n\n### INSTRUCTIONS:\n<instructions>`, at most 5120 characters (400 "The agent goal cannot exceed 5120 characters" beyond). Studio accepts and echoes `instruction`, but the model never reads it. `get-configuration` shows the prompt as `configuration.llm_agent_description`.
 - `create` needs a unique `bot_unique_name`, and `transparency_configuration.disable_reason` when transparency is off. Tools need `input_entities` in JSON Schema form; copy one from `get-configuration`.
 - To test writes, create a `zz-` agent, work only on it, and delete it afterwards.
 - `ai-agent-transcript create-audit-record` writes a permanent compliance entry under the user's name. Run it only for a reason the user gives, never in a loop. With a Webex login, messages of encrypted (Advanced Data Protection) sessions stay encrypted after the audit; preview sessions are never encrypted.

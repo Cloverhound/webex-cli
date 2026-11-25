@@ -48839,7 +48839,7 @@
   "path": "webex cc ai-agent get-configuration",
   "use": "get-configuration",
   "short": "Get AI agent configuration",
-  "long": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt, stored as `**Goal**: <goal>` followed by the instructions. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "agent-id",
@@ -48962,7 +48962,7 @@
   "path": "webex cc ai-agent update",
   "use": "update",
   "short": "Update AI agent",
-  "long": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Updates an AI agent's draft. The agent's prompt is `description`: the goal and the instructions in one string, `<goal>\\n\\n### INSTRUCTIONS:\\n<instructions>`, at most 5120 characters. The model never reads `instruction`. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "agent-id",
