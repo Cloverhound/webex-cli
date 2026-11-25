@@ -225,6 +225,7 @@ webex cc ai-agent-session list --agent-id <agent-id> --paginate
 - `--agent-id` is the `id` from `ai-agent list`. Studio selects an agent by its runtime token, which the CLI looks up from the ID. Tokens never appear in output, and `--debug` shows only their length.
 - Edits change the agent's draft. Callers get them only after `publish`, and `list-versions` shows the draft and the published versions.
 - `update` keeps top-level fields you leave out. `get` reports `bot_metadata.ai_engine` as the engine family; send the exact engine (`engine_identifier`) back, or the agent's engine changes.
+- The agent's prompt is `description`: the goal and the instructions in one string, `<goal>\n\n### INSTRUCTIONS:\n<instructions>`, at most 5120 characters. Studio accepts and returns `instruction`, but the model never reads it.
 - A tool needs `input_entities` in JSON Schema form even when it takes no input. Start from a tool in `get-configuration`.
 - In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
 - A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
