@@ -60,7 +60,7 @@
           "name": "Update AI agent",
           "request": {
             "method": "PUT",
-            "description": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.",
+            "description": "Updates an AI agent's draft. The agent's prompt is `description`: the goal and the instructions in one string, `<goal>\\n\\n### INSTRUCTIONS:\\n<instructions>`, at most 5120 characters. The model never reads `instruction`. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. To give the agent knowledge bases, send their IDs as `bot_metadata.kb_ids`, with the rest of `bot_metadata`; `kb_ids` at the top level is ignored. Callers get the change only after `publish`.",
             "header": [
               {"key": "Content-Type", "value": "application/json"},
               {"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}
@@ -95,7 +95,7 @@
           "name": "Get AI agent configuration",
           "request": {
             "method": "GET",
-            "description": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
+            "description": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt, stored as `**Goal**: <goal>` followed by the instructions. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.",
             "header": [{"key": "bot-access-token", "value": "{{agentId}}", "description": "AI agent ID."}],
             "url": {
               "raw": "{{baseUrl}}/api/v1/llmagent/getdefault/",
@@ -324,6 +324,194 @@
                 {"key": "limit", "value": "100", "description": "Maximum number of messages to return."},
                 {"key": "offset", "value": "0", "description": "Number of messages to skip."}
               ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Agent KB",
+      "item": [
+        {
+          "name": "List knowledge bases",
+          "request": {
+            "method": "GET",
+            "description": "Lists the organization's knowledge bases, with their document counts and `mapped_bots`, the agents that use each one.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/knowledgeBases/?id=&limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "knowledgeBases", ""],
+              "query": [
+                {"key": "id", "value": "", "description": "Knowledge base ID, to list only that one."},
+                {"key": "limit", "value": "100", "description": "Maximum number of knowledge bases to return."},
+                {"key": "offset", "value": "0", "description": "Number of knowledge bases to skip."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create knowledge base",
+          "request": {
+            "method": "POST",
+            "description": "Creates a knowledge base, with a default \"Unassigned\" category. Send every field of the example; without `is_public`, `chunk_size`, `metadata.rag_version`, `supported_bot_types` and `use_for_agent_answers`, Studio answers with a bare 500. An agent uses a knowledge base once its ID is in the agent's `bot_metadata.kb_ids` (see `ai-agent update`).",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"<string>\", \"description\": \"<string>\", \"is_public\": true, \"chunk_size\": 800, \"metadata\": {\"rag_version\": \"v2\"}, \"supported_bot_types\": [], \"use_for_agent_answers\": false}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/knowledgeBases/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "knowledgeBases", ""]
+            }
+          }
+        },
+        {
+          "name": "Update knowledge base",
+          "request": {
+            "method": "PUT",
+            "description": "Updates a knowledge base. Fields left out keep their values.",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"name\": \"<string>\", \"description\": \"<string>\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/knowledgeBases/:kbId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "knowledgeBases", ":kbId", ""],
+              "variable": [{"key": "kbId", "description": "Knowledge base ID."}]
+            }
+          }
+        },
+        {
+          "name": "Delete knowledge base",
+          "request": {
+            "method": "DELETE",
+            "description": "Deletes a knowledge base and its documents.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/knowledgeBases/:kbId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "knowledgeBases", ":kbId", ""],
+              "variable": [{"key": "kbId", "description": "Knowledge base ID."}]
+            }
+          }
+        },
+        {
+          "name": "List knowledge base categories",
+          "request": {
+            "method": "GET",
+            "description": "Lists a knowledge base's categories.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbCategories/?kb_id=&limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbCategories", ""],
+              "query": [
+                {"key": "kb_id", "value": "", "description": "Knowledge base ID."},
+                {"key": "limit", "value": "100", "description": "Maximum number of categories to return."},
+                {"key": "offset", "value": "0", "description": "Number of categories to skip."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create knowledge base category",
+          "request": {
+            "method": "POST",
+            "description": "Adds a category to a knowledge base.",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"name\": \"<string>\", \"kb_id\": \"<string>\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbCategories/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbCategories", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete knowledge base category",
+          "request": {
+            "method": "DELETE",
+            "description": "Deletes a category.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbCategories/:categoryId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbCategories", ":categoryId", ""],
+              "variable": [{"key": "categoryId", "description": "Category ID."}]
+            }
+          }
+        },
+        {
+          "name": "List knowledge base documents",
+          "request": {
+            "method": "GET",
+            "description": "Lists documents. Without `kb_id`, it lists the documents of every knowledge base.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbDocuments/?kb_id=&limit=100&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbDocuments", ""],
+              "query": [
+                {"key": "kb_id", "value": "", "description": "Knowledge base ID."},
+                {"key": "limit", "value": "100", "description": "Maximum number of documents to return."},
+                {"key": "offset", "value": "0", "description": "Number of documents to skip."}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload knowledge base document",
+          "request": {
+            "method": "POST",
+            "description": "Adds a file to a knowledge base. The document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "file", "type": "file", "src": []},
+                {"key": "kb_id", "type": "text", "value": ""}
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbDocuments/upload/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbDocuments", "upload", ""]
+            }
+          }
+        },
+        {
+          "name": "Get knowledge base document",
+          "request": {
+            "method": "GET",
+            "description": "Gets a document, with its ingestion `status`.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbDocuments/:documentId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbDocuments", ":documentId", ""],
+              "variable": [{"key": "documentId", "description": "Document ID."}]
+            }
+          }
+        },
+        {
+          "name": "Delete knowledge base document",
+          "request": {
+            "method": "DELETE",
+            "description": "Deletes a document from its knowledge base.",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbDocuments/:documentId/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbDocuments", ":documentId", ""],
+              "variable": [{"key": "documentId", "description": "Document ID."}]
+            }
+          }
+        },
+        {
+          "name": "Approve knowledge base document ingestion",
+          "request": {
+            "method": "POST",
+            "description": "Approves or declines the ingestion of a website document. A file needs no approval.",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"action\": \"approve\"}"},
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/kbDocuments/:documentId/approve_ingestion/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "kbDocuments", ":documentId", "approve_ingestion", ""],
+              "variable": [{"key": "documentId", "description": "Document ID."}]
             }
           }
         }

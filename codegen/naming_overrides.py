@@ -219,6 +219,20 @@ NAMING_OVERRIDES = {
             ('usage-reports', 'delete', ()),
         ('usage-reports', 'GET', '/v1/usage-reports/{fileId}/download'):
             ('usage-reports', 'download-file', ()),
+        # From codegen/supplemental: the group already says "knowledge base".
+        ('ai-agent-kb', 'GET', '/api/v1/knowledgeBases/'): ('ai-agent-kb', 'list', ()),
+        ('ai-agent-kb', 'POST', '/api/v1/knowledgeBases/'): ('ai-agent-kb', 'create', ()),
+        ('ai-agent-kb', 'PUT', '/api/v1/knowledgeBases/{kbId}/'): ('ai-agent-kb', 'update', ()),
+        ('ai-agent-kb', 'DELETE', '/api/v1/knowledgeBases/{kbId}/'): ('ai-agent-kb', 'delete', ()),
+        ('ai-agent-kb', 'GET', '/api/v1/kbCategories/'): ('ai-agent-kb', 'list-categories', ()),
+        ('ai-agent-kb', 'POST', '/api/v1/kbCategories/'): ('ai-agent-kb', 'create-category', ()),
+        ('ai-agent-kb', 'DELETE', '/api/v1/kbCategories/{categoryId}/'): ('ai-agent-kb', 'delete-category', ()),
+        ('ai-agent-kb', 'GET', '/api/v1/kbDocuments/'): ('ai-agent-kb', 'list-documents', ()),
+        ('ai-agent-kb', 'POST', '/api/v1/kbDocuments/upload/'): ('ai-agent-kb', 'upload', ()),
+        ('ai-agent-kb', 'GET', '/api/v1/kbDocuments/{documentId}/'): ('ai-agent-kb', 'get-document', ()),
+        ('ai-agent-kb', 'DELETE', '/api/v1/kbDocuments/{documentId}/'): ('ai-agent-kb', 'delete-document', ()),
+        ('ai-agent-kb', 'POST', '/api/v1/kbDocuments/{documentId}/approve_ingestion/'):
+            ('ai-agent-kb', 'approve-ingestion', ()),
     },
     'Webex Messaging': {
         ('hybrid-data-security', 'GET', '/hds/organizations/{organizationId}'):
@@ -287,6 +301,7 @@ GROUP_DESCRIPTIONS = {
         'ai-agent': 'AI Agent Studio agents, tools, publishing, export (unsupported private API)',
         'ai-agent-session': 'AI Agent Studio sessions and messages (unsupported private API)',
         'ai-agent-transcript': 'AI Agent Studio audited transcript reads (unsupported private API)',
+        'ai-agent-kb': 'AI Agent Studio knowledge bases, categories and documents (unsupported private API)',
     },
 }
 

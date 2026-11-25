@@ -22,6 +22,13 @@ var (
 func SetToken(t string) { token = t }
 func Token() string     { return token }
 
+var user string
+
+// SetUser stores the email of the login the token belongs to. It is empty for a
+// token from --token or $WEBEX_TOKEN.
+func SetUser(email string) { user = email }
+func User() string         { return user }
+
 func SetMaxRetry(n int) { maxRetry = n }
 func MaxRetry() int     { return maxRetry }
 

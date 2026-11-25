@@ -19,7 +19,7 @@ import (
 )
 
 // Client sends requests. The zero value sends with http.DefaultClient, makes no
-// 429 retries, and sends an empty bearer token.
+// 429 retries, and sends no Authorization header.
 //
 // Redirects are never followed: a 3xx returns a *RedirectError. Following one
 // would let net/http carry the token and other credentials to another host, and
@@ -29,7 +29,8 @@ type Client struct {
 	HTTP *http.Client
 
 	// Token returns the bearer token. It is called before every attempt, so a
-	// token changed by Refresh is used on the retry.
+	// token changed by Refresh is used on the retry. Without it, no
+	// Authorization header is sent.
 	Token func(ctx context.Context) (string, error)
 
 	// Refresh renews the token after a 401. The request is then sent once more.
@@ -150,13 +151,13 @@ func (c *Client) attempt(ctx context.Context, r Request) (*Response, error) {
 		return nil, fmt.Errorf("building request: %w", err)
 	}
 
-	token := ""
 	if c.Token != nil {
-		if token, err = c.Token(ctx); err != nil {
+		token, err := c.Token(ctx)
+		if err != nil {
 			return nil, fmt.Errorf("getting token: %w", err)
 		}
+		httpReq.Header.Set("Authorization", "Bearer "+token)
 	}
-	httpReq.Header.Set("Authorization", "Bearer "+token)
 	if len(r.Body) > 0 {
 		contentType := r.ContentType
 		if contentType == "" {

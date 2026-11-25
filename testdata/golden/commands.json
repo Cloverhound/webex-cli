@@ -48850,7 +48850,7 @@
   "path": "webex cc ai-agent get-configuration",
   "use": "get-configuration",
   "short": "Get AI agent configuration",
-  "long": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Gets the agent's draft configuration and its tools. `configuration.llm_agent_description` is the prompt, stored as `**Goal**: <goal>` followed by the instructions. `state` is `saved` when the draft has unpublished changes and `cloned` when it matches the published version.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "agent-id",
@@ -48973,7 +48973,7 @@
   "path": "webex cc ai-agent update",
   "use": "update",
   "short": "Update AI agent",
-  "long": "Updates an AI agent's draft. `instruction` is the agent's prompt. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Updates an AI agent's draft. The agent's prompt is `description`: the goal and the instructions in one string, `<goal>\\n\\n### INSTRUCTIONS:\\n<instructions>`, at most 5120 characters. The model never reads `instruction`. Top-level fields left out keep their values. Send `bot_metadata.ai_engine` as the exact engine (`engine_identifier` from `get`), not the family that `get` reports in `ai_engine`, or the agent's engine changes. To give the agent knowledge bases, send their IDs as `bot_metadata.kb_ids`, with the rest of `bot_metadata`; `kb_ids` at the top level is ignored. Callers get the change only after `publish`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "agent-id",
@@ -49028,6 +49028,453 @@
     "type": "bool",
     "default": "false",
     "usage": "help for update-tool"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb",
+  "use": "ai-agent-kb",
+  "short": "AI Agent Studio knowledge bases, categories and documents (unsupported private API)",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for ai-agent-kb"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb approve-ingestion",
+  "use": "approve-ingestion",
+  "short": "Approve knowledge base document ingestion",
+  "long": "Approves or declines the ingestion of a website document. A file needs no approval.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "action",
+    "type": "string"
+   },
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for approve-ingestion"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb create",
+  "use": "create",
+  "short": "Create knowledge base",
+  "long": "Creates a knowledge base, with a default \"Unassigned\" category. Send every field of the example; without `is_public`, `chunk_size`, `metadata.rag_version`, `supported_bot_types` and `use_for_agent_answers`, Studio answers with a bare 500. An agent uses a knowledge base once its ID is in the agent's `bot_metadata.kb_ids` (see `ai-agent update`).\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for create"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb create-category",
+  "use": "create-category",
+  "short": "Create knowledge base category",
+  "long": "Adds a category to a knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for create-category"
+   },
+   {
+    "name": "kb_id",
+    "type": "string"
+   },
+   {
+    "name": "name",
+    "type": "string"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete",
+  "use": "delete",
+  "short": "Delete knowledge base",
+  "long": "Deletes a knowledge base and its documents.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID.",
+    "required": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete-category",
+  "use": "delete-category",
+  "short": "Delete knowledge base category",
+  "long": "Deletes a category.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "category-id",
+    "type": "string",
+    "usage": "Category ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete-category"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb delete-document",
+  "use": "delete-document",
+  "short": "Delete knowledge base document",
+  "long": "Deletes a document from its knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for delete-document"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb get-document",
+  "use": "get-document",
+  "short": "Get knowledge base document",
+  "long": "Gets a document, with its ingestion `status`.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "document-id",
+    "type": "string",
+    "usage": "Document ID.",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for get-document"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list",
+  "use": "list",
+  "short": "List knowledge bases",
+  "long": "Lists the organization's knowledge bases, with their document counts and `mapped_bots`, the agents that use each one.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list"
+   },
+   {
+    "name": "id",
+    "type": "string",
+    "usage": "Knowledge base ID, to list only that one."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of knowledge bases to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of knowledge bases to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list-categories",
+  "use": "list-categories",
+  "short": "List knowledge base categories",
+  "long": "Lists a knowledge base's categories.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-categories"
+   },
+   {
+    "name": "kb_id",
+    "type": "string",
+    "usage": "Knowledge base ID."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of categories to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of categories to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb list-documents",
+  "use": "list-documents",
+  "short": "List knowledge base documents",
+  "long": "Lists documents. Without `kb_id`, it lists the documents of every knowledge base.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for list-documents"
+   },
+   {
+    "name": "kb_id",
+    "type": "string",
+    "usage": "Knowledge base ID."
+   },
+   {
+    "name": "limit",
+    "type": "string",
+    "usage": "Maximum number of documents to return."
+   },
+   {
+    "name": "offset",
+    "type": "string",
+    "usage": "Number of documents to skip."
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb update",
+  "use": "update",
+  "short": "Update knowledge base",
+  "long": "Updates a knowledge base. Fields left out keep their values.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "body",
+    "type": "string",
+    "usage": "Raw JSON body"
+   },
+   {
+    "name": "body-file",
+    "type": "string",
+    "usage": "Path to JSON body file"
+   },
+   {
+    "name": "description",
+    "type": "string"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for update"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID.",
+    "required": true
+   },
+   {
+    "name": "name",
+    "type": "string"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-kb upload",
+  "use": "upload",
+  "short": "Upload knowledge base document",
+  "long": "Adds a file to a knowledge base. The document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "file",
+    "type": "string",
+    "usage": "Path to the document to add to the knowledge base",
+    "required": true
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for upload"
+   },
+   {
+    "name": "kb-id",
+    "type": "string",
+    "usage": "Knowledge base ID",
+    "required": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview",
+  "use": "ai-agent-preview",
+  "short": "AI Agent Studio text preview conversations (unsupported private API)",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "flags": [
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for ai-agent-preview"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview run",
+  "use": "run",
+  "short": "Start a conversation and send each --message in turn",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview run --agent-id <agent-id> --message \"Hello\" --message \"Where is my order?\" --brief",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for run"
+   },
+   {
+    "name": "message",
+    "type": "stringArray",
+    "default": "[]",
+    "usage": "Message to send; repeat for each turn",
+    "required": true
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview send",
+  "use": "send <message>",
+  "short": "Send a message in the saved conversation",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview send \"Where is my order?\"\n  webex cc ai-agent-preview send --agent-id <agent-id> \"Talk to a person\" --brief",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for send"
+   }
+  ]
+ },
+ {
+  "path": "webex cc ai-agent-preview start",
+  "use": "start",
+  "short": "Start a conversation and show the agent's first message",
+  "long": "Talks to an AI agent through AI Agent Studio's text preview, as the Preview\npanel in Studio does. It uses the agent's draft and needs only the regular\nWebex login.\n\nThe conversation is saved per user, organization and agent, so 'send' continues\nit. After the first use, --agent-id defaults to the last agent used.\n\nPreview can run the agent's actions, and their fulfillment can be real: a\nconfirmed order or transfer in preview may reach real systems. The output is\nthe runtime's full response: actions are in messageStore.tools, and a handover\nsets sendtoagent. --brief shows only the text sent and received, so it hides\nboth. Custom-event actions fail in text preview (errorCode 67405002), since\nStudio runs them only on voice.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.\n\nExamples:\n  webex cc ai-agent-preview start --agent-id <agent-id>\n  webex cc ai-agent-preview send \"Where is my order?\"",
+  "flags": [
+   {
+    "name": "agent-id",
+    "type": "string",
+    "usage": "AI agent ID (default: the last agent used)"
+   },
+   {
+    "name": "brief",
+    "type": "bool",
+    "default": "false",
+    "usage": "Show only the text sent and received"
+   },
+   {
+    "name": "help",
+    "shorthand": "h",
+    "type": "bool",
+    "default": "false",
+    "usage": "help for start"
    }
   ]
  },

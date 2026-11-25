@@ -15,7 +15,7 @@ That brings in `pkg/webexapi` too. Get the SDK packages rather than the module r
 |---|---|
 | `pkg/webexapi` | Sends requests: the bearer token, one refresh after a 401, waits for a 429's `Retry-After`, and errors that carry the failed response. Reads lists to their end, and fails rather than return part of a list. Names the hosts for each data region and Contact Center data center, and converts organization IDs. |
 | `pkg/webexops` | The operations the CLI generates from Cisco's Postman collections. Each is an exported `*Operation` with its route, host, parameters, body fields and paging. `Call` sends one; `All` reads a list to its end. |
-| `pkg/aiagent` | AI Agent Studio: looks up an agent's runtime token, and removes credentials from responses. Studio's API is private, and Cisco does not support it. |
+| `pkg/aiagent` | AI Agent Studio: looks up an agent's runtime token, holds text preview conversations, and removes credentials from responses. Studio's API is private, and Cisco does not support it. |
 
 The SDK has no login of its own. Give the client a token source, such as `webex auth token --output json --min-ttl 30m`.
 

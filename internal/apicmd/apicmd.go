@@ -23,11 +23,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// privateAPINote ends the help of commands on an API Cisco does not support.
-const privateAPINote = "Caution: this command uses Webex AI Agent Studio's private API, which is not " +
-	"documented or supported by Cisco and can change or stop working without notice. " +
-	"Do not build production automation on it."
-
 // Register adds an area's groups and commands under parent and returns the group
 // commands by name, for handwritten commands to join.
 func Register(parent *cobra.Command, area string) map[string]*cobra.Command {
@@ -70,9 +65,9 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 	description := op.Description
 	if op.Private {
 		if description != "" {
-			description += "\n\n" + privateAPINote
+			description += "\n\n" + aiagent.HelpCaution
 		} else {
-			description = privateAPINote
+			description = aiagent.HelpCaution
 		}
 	}
 
@@ -224,7 +219,8 @@ func NewCommand(op *webexops.Operation) *cobra.Command {
 }
 
 // uploadForm is an upload's multipart form: each file part from the path its flag
-// gives, and its JSON part from --body or --body-file. A part that is not
+// gives, each text part from its flag, and its JSON part from --body or
+// --body-file. A part that is not
 // required and not given is left out.
 func uploadForm(upload *webexops.Upload, values *flagValues, bodyRaw, bodyFile string) (webexapi.Multipart, error) {
 	var file string
@@ -260,6 +256,15 @@ func uploadForm(upload *webexops.Upload, values *flagValues, bodyRaw, bodyFile s
 			if name != "" {
 				parts = append(parts, webexapi.MultipartPart{FieldName: part.Name, Data: []byte(name)})
 			}
+		case webexops.PartText:
+			value := values.text(part.Flag)
+			if value == "" {
+				if part.Required {
+					return webexapi.Multipart{}, fmt.Errorf("--%s needs a value", part.Flag)
+				}
+				continue
+			}
+			parts = append(parts, webexapi.MultipartPart{FieldName: part.Name, Data: []byte(value)})
 		case webexops.PartJSON:
 			data := []byte(bodyRaw)
 			if bodyFile != "" {

@@ -17,7 +17,7 @@ here. Routes here keep their trailing slash, which the APIs below require.
 
 `AI Agent Studio.postman_collection.json` holds the private AI Agent Studio
 routes that accept a regular Webex token. They generate the `cc ai-agent`,
-`cc ai-agent-session` and `cc ai-agent-transcript` groups. Each route was
+`cc ai-agent-session`, `cc ai-agent-transcript` and `cc ai-agent-kb` groups. Each route was
 exercised against a live organization before it was added. Add only routes
 that work with a Webex OAuth token; routes that need Studio's own browser login
 belong elsewhere.
