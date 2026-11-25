@@ -167,7 +167,7 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 
 ## AI Agent Studio (unsupported private API)
 
-> **Caution:** `ai-agent`, `ai-agent-session` and `ai-agent-transcript` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
+> **Caution:** `ai-agent`, `ai-agent-session`, `ai-agent-transcript` and `ai-agent-preview` call AI Agent Studio's private API with the regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation. Do not build production automation, integrations or scheduled jobs on them, and tell the user about this limit when they ask for any of those. Re-check behavior after Studio updates.
 
 ```bash
 webex cc ai-agent list --paginate                       # ids for --agent-id
@@ -181,10 +181,26 @@ webex cc ai-agent-session list --agent-id <id> --paginate
 - Pass the agent's `id` as `--agent-id`; the CLI looks up the agent's runtime token itself and redacts tokens from output. Never try to print or reuse them.
 - Edits change the draft (`state: saved`); live calls use them only after `publish`. Publishing changes production behavior, so publish only when the user asks.
 - `update` keeps top-level fields that are left out. `get` reports `bot_metadata.ai_engine` as the family (`PRO`); send `engine_identifier` (`PRO_2_0_0`) as `ai_engine`, or the agent's engine changes.
-- `create` needs a unique `bot_unique_name`, and `transparency_configuration.disable_reason` when transparency is off. Tools need `input_entities` in JSON Schema form; copy one from `get-configuration`.
+- `create` needs a unique `bot_unique_name`, and `transparency_configuration.disable_reason` when transparency is off. Tools need `input_entities` in JSON Schema form; copy one from `get-configuration`. `create-tool` also needs `slots_view`, `system_tool` and `fulfillment` (`{}` for a tool that only collects input).
+- An agent whose only tool is the built-in Agent handover answers every message with "No action tools configured in the agent". Give a test agent one tool of its own.
 - To test writes, create a `zz-` agent, work only on it, and delete it afterwards.
 - `ai-agent-transcript create-audit-record` writes a permanent compliance entry under the user's name. Run it only for a reason the user gives, never in a loop. With a Webex login, messages of encrypted (Advanced Data Protection) sessions stay encrypted after the audit; preview sessions are never encrypted.
 - A voice session's `interaction_id` is the task ID for `webex cc captures list`.
+
+### Text preview
+
+```bash
+webex cc ai-agent-preview start --agent-id <id>              # new conversation, agent's first message
+webex cc ai-agent-preview send "Where is my order?"          # continue it
+webex cc ai-agent-preview run --agent-id <id> --message "Hello" --message "Where is my order?" --brief
+```
+
+- Preview uses the agent's draft, so test edits before `publish`. It needs only the regular Webex login.
+- `start` and `run` begin a new conversation, which appears in Studio as a test session; keep test matrices small. `send` continues the saved conversation (per user, organization and agent), and `--agent-id` defaults to the last agent used. `send` takes the message as an argument; `--message` belongs to `run`.
+- Preview runs the agent's actions, and fulfillment can be real. Get the user's authorization before testing a write-like action, use fictional data, and stop before the agent's confirmation step unless the user asks for the action to run.
+- `--brief` shows only `{in, out}` text. It hides `messageStore.tools` (actions, with `state`, `input`, `output`, `errorCode`) and `sendtoagent`, so never conclude from it that no action or transfer happened. `state: SUCCESS` means the action ran, not that the business operation succeeded; read `output`.
+- A handover sets `sendtoagent: true` and an `exit_session` classification. Custom-event actions fail in text with errorCode 67405002 (voice only), while the text may still promise a transfer.
+- `--dry-run` prints each request without sending it. Read-only mode refuses preview.
 
 ## Other refreshed Contact Center APIs
 

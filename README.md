@@ -52,6 +52,7 @@ webex cc entry-point list
 # not for production automation (see the Contact Center docs)
 webex cc ai-agent list
 webex cc ai-agent export --agent-id <id>
+webex cc ai-agent-preview run --agent-id <id> --message "Hello" --brief
 
 # Admin
 webex admin people list

@@ -29,6 +29,7 @@ Requests go to the organization's Contact Center data center: the one saved with
 | `ai-agent` | AI Agent Studio agents: configuration, tools, publishing, export (private API) |
 | `ai-agent-session` | AI Agent Studio conversation sessions and messages (private API) |
 | `ai-agent-transcript` | AI Agent Studio audited transcript reads (private API) |
+| `ai-agent-preview` | AI Agent Studio text preview conversations (private API) |
 | `ai-assistant` | AI assistant configuration |
 | `ai-feature` | AI feature management |
 | `audio-files` | IVR prompts and audio files |
@@ -203,7 +204,7 @@ Current flow, activity, and event commands use unprefixed routes. Template disco
 ## AI Agent Studio
 
 :::caution[Unsupported private API]
-The `ai-agent`, `ai-agent-session` and `ai-agent-transcript` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation, not as a dependency of production automation, integrations or scheduled jobs. Commands show this caution in `--help`, and the first one you run prints it once.
+The `ai-agent`, `ai-agent-session`, `ai-agent-transcript` and `ai-agent-preview` groups call AI Agent Studio's private API with your regular Webex login. Cisco does not document or support this API, and it can change, break or be blocked at any time without notice. Use these commands for interactive administration and investigation, not as a dependency of production automation, integrations or scheduled jobs. Commands show this caution in `--help`, and the first one you run prints it once.
 :::
 
 ```bash
@@ -222,6 +223,23 @@ webex cc ai-agent-session list --agent-id <agent-id> --paginate
 - In an organization with Advanced Data Protection, the messages of live sessions are encrypted. `ai-agent-transcript create-audit-record` adds a permanent compliance entry under your name, and with a regular Webex login the messages stay encrypted afterwards.
 - A voice session's `interaction_id` is the Contact Center task ID that `captures list` accepts.
 - Studio is in the organization's Contact Center data center, which `--cc-region` or `webex config set cc-region` selects, as for the rest of `webex cc`.
+
+### Text preview
+
+`ai-agent-preview` talks to an agent as Studio's Preview panel does, using the agent's draft. It needs only the regular Webex login.
+
+```bash
+webex cc ai-agent-preview start --agent-id <agent-id>
+webex cc ai-agent-preview send "Where is my order?"
+webex cc ai-agent-preview run --agent-id <agent-id> --message "Hello" --message "Where is my order?" --brief
+```
+
+- `start` and `run` begin a new conversation, which Studio lists as a test session. `send` continues the saved one. Conversations are saved per user, organization and agent in `~/.webex-cli/ai-agent-preview.json`, and `--agent-id` defaults to the last agent used.
+- The output is the runtime's full response for each turn. Actions the agent ran are in `messageStore.tools`, and a handover sets `sendtoagent`. `--brief` shows only the text sent and received, so it hides both.
+- Preview runs the agent's actions, and their fulfillment can reach real systems. Use test data, and stop before the agent confirms an action you do not want carried out.
+- Custom-event actions fail in text preview with errorCode 67405002, since Studio runs them only on voice. The agent's text may still promise a transfer.
+- An agent whose only tool is the built-in Agent handover answers every message with "No action tools configured in the agent".
+- `--dry-run` looks up the agent and prints each request without sending it. Read-only mode refuses preview, since it can run actions.
 
 ## Other refreshed Contact Center APIs
 

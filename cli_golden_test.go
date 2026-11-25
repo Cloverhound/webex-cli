@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -75,6 +76,10 @@ const maxRequestsPerRun = 20
 // goldenBoundary replaces a multipart body's random boundary.
 const goldenBoundary = "golden-boundary"
 
+// previewIDs are the random consumer UID and socket key of an AI agent preview
+// conversation.
+var previewIDs = regexp.MustCompile(`("(?:uid|socket_key)":)"[^"]*"`)
+
 func (r *recorder) RoundTrip(req *http.Request) (*http.Response, error) {
 	rec := recordedRequest{Method: req.Method, URL: canonicalURL(req), Headers: map[string]string{}}
 	boundary := ""
@@ -92,6 +97,9 @@ func (r *recorder) RoundTrip(req *http.Request) (*http.Response, error) {
 		rec.Body = string(data)
 		if boundary != "" {
 			rec.Body = strings.ReplaceAll(rec.Body, boundary, goldenBoundary)
+		}
+		if req.URL.Path == "/api/v1/webhook/web/" {
+			rec.Body = previewIDs.ReplaceAllString(rec.Body, `$1"golden-random"`)
 		}
 	}
 	r.requests = append(r.requests, rec)

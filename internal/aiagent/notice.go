@@ -18,6 +18,11 @@ var noticeOutput = defaultNoticeOutput
 // agents that run these commands repeatedly are not flooded with it.
 const noticeMarker = "private-api-notice-shown"
 
+// HelpCaution ends the help of every command on AI Agent Studio's private API.
+const HelpCaution = "Caution: this command uses Webex AI Agent Studio's private API, which is not " +
+	"documented or supported by Cisco and can change or stop working without notice. " +
+	"Do not build production automation on it."
+
 // PrivateAPINotice tells the user, once, that the command uses an API Cisco
 // does not document or support. Every such command repeats the caution in
 // its --help.
