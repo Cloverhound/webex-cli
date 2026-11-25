@@ -8738,7 +8738,7 @@ var CcGetApiV1KbDocuments = &Operation{
 var CcPostApiV1KbDocumentsUpload = &Operation{
 	ID: "CcPostApiV1KbDocumentsUpload", Area: "cc", Group: "ai-agent-kb", Command: "upload",
 	Summary:     "Upload knowledge base document",
-	Description: "Adds a file to a knowledge base. The document's `status` is `pending` until Studio has ingested it, then `success`; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
+	Description: "Adds a file to a knowledge base. The document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
 	Method:      "POST", Host: HostAIAgent, Path: "/api/v1/kbDocuments/upload/",
 	Upload: &Upload{Parts: []Part{
 		{Name: "file", Kind: PartFile, Flag: "file", Required: true, Usage: "Path to the document to add to the knowledge base"},

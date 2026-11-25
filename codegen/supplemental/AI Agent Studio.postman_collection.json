@@ -459,7 +459,7 @@
           "name": "Upload knowledge base document",
           "request": {
             "method": "POST",
-            "description": "Adds a file to a knowledge base. The document's `status` is `pending` until Studio has ingested it, then `success`; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
+            "description": "Adds a file to a knowledge base. The document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.",
             "body": {
               "mode": "formdata",
               "formdata": [

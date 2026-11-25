@@ -199,14 +199,14 @@ webex cc ai-agent-session list --agent-id <id> --paginate
 ```bash
 webex cc ai-agent-kb list --paginate                                      # mapped_bots = agents using each
 webex cc ai-agent-kb create --body '{"name":"<name>","description":"<text>","is_public":true,"chunk_size":800,"metadata":{"rag_version":"v2"},"supported_bot_types":[],"use_for_agent_answers":false}'
-webex cc ai-agent-kb upload --kb-id <kb-id> --file facts.txt               # status pending, then success
+webex cc ai-agent-kb upload --kb-id <kb-id> --file facts.txt               # status pending, processing, success
 webex cc ai-agent-kb get-document --document-id <document-id>
 webex cc ai-agent-kb list-documents --kb_id <kb-id>                         # query flags keep Studio's snake_case
 ```
 
 - `create` needs every field shown; with only `name` and `description` Studio returns a bare 500.
 - Upload fails with 400 `AI_STUDIO_400_000028` until the user has accepted Studio's "general sources" terms once in the Studio UI. That is the user's decision; tell them, don't work around it.
-- Wait for the document's `status` to be `success` (about a minute for a small text file) before testing answers from it.
+- Wait for the document's `status` to be `success` (under a minute for a small text file) before testing answers from it.
 - To connect a knowledge base to an agent, `ai-agent update` with `bot_metadata.kb_ids`, sending the agent's whole `bot_metadata` back with `ai_engine` set to `engine_identifier`. Top-level `kb_ids` is silently ignored. Preview uses it at once; callers after `publish`.
 - `approve-ingestion` (`{"action":"approve"}` or `"decline"`) applies to website documents only.
 - Test with a `zz-` knowledge base, and `delete` it afterwards.

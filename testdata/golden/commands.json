@@ -49355,7 +49355,7 @@
   "path": "webex cc ai-agent-kb upload",
   "use": "upload",
   "short": "Upload knowledge base document",
-  "long": "Adds a file to a knowledge base. The document's `status` is `pending` until Studio has ingested it, then `success`; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
+  "long": "Adds a file to a knowledge base. The document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it; check it with `get-document`. Until the user has accepted Studio's \"general sources\" terms once in the Studio UI, this fails with 400 AI_STUDIO_400_000028.\n\nCaution: this command uses Webex AI Agent Studio's private API, which is not documented or supported by Cisco and can change or stop working without notice. Do not build production automation on it.",
   "flags": [
    {
     "name": "file",

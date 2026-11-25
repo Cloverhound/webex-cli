@@ -242,7 +242,7 @@ webex cc ai-agent-kb list-documents --kb_id <kb-id>
 ```
 
 - `create` needs every field of its example body. With only `name` and `description`, Studio answers with a bare 500.
-- An uploaded document's `status` is `pending` until Studio has ingested it, then `success`. For a small text file this takes about a minute.
+- An uploaded document's `status` goes from `pending` to `processing`, and is `success` once Studio has ingested it. For a small text file this takes under a minute.
 - Uploading fails with 400 `AI_STUDIO_400_000028` until you have accepted Studio's "general sources" terms once in the Studio UI.
 - An agent uses a knowledge base once the knowledge base's ID is in the agent's `bot_metadata.kb_ids`. Send it with `ai-agent update`, with the rest of `bot_metadata` and `ai_engine` set to the exact engine; `kb_ids` at the top level is ignored. Callers get it after `publish`; preview uses it at once.
 - `approve-ingestion` is for website documents only. A file needs no approval.
